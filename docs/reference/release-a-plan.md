@@ -28,9 +28,9 @@ This plan tracks capability-provider tasks required to complete Chora Release A 
 
 - CI workflow added at `.github/workflows/chora-ci.yml` (runs manifest/behavior/scenario validators + pytest).
 - Local validator runs (exit code 0):
-  - Manifest: `mcp-orchestrator manifest-validate manifests/star.yaml` → success
-  - Behaviors: `mcp-orchestrator behavior-validate docs/capabilities/behaviors` → success
-  - Scenarios: `mcp-orchestrator scenario-validate manifests/star.yaml` → success
-- Pytest: all tests passed locally.
+  - Manifest: `PYTHONPATH=src python -m mcp_orchestrator.cli manifest-validate manifests/star.yaml` → success
+  - Behaviors: `PYTHONPATH=src python -m mcp_orchestrator.cli behavior-validate docs/capabilities/behaviors` → success
+  - Scenarios: `PYTHONPATH=src python -m mcp_orchestrator.cli scenario-validate manifests/star.yaml` → success
+- Pytest: `PYTHONPATH=src pytest -q` → all tests passed locally.
 
 Scenario status: ready (guide and tests referenced; validator passing).
