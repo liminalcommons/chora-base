@@ -1,0 +1,21 @@
+[build-system]
+requires = ["setuptools>=61.0"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "mcp-orchestration"
+version = "0.0.1"
+description = "MCP orchestration capability provider"
+authors = [{name = "Victor Piper"}]
+readme = "README.md"
+requires-python = ">=3.10"
+dependencies = ["chora-validator @ file:///Users/victorpiper/code/chora-platform/dist/chora_validator-0.0.1-py3-none-any.whl"]
+
+[project.optional-dependencies]
+dev = ["pytest>=7.0"]
+
+[project.scripts]
+mcp-orchestrator = "mcp_orchestrator.cli:main"
+
+[tool.pytest.ini_options]
+pythonpath = ["src"]
