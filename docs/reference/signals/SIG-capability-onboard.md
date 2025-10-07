@@ -34,3 +34,10 @@ Tracks onboarding of manifests/behaviors to Chora platform standards.
 - Implemented CI overview freshness gate.
 - Prepared liminal bundle and created ingestion signal.
 - Next: coordinate `SIG-telemetry-adoption` with platform and migrate to platform emitter.
+
+### Weekly Progress — 2025-10-07 (closure validation)
+- Validators: manifest, behaviors, scenarios → success.
+- Pytest: all tests passed.
+- Telemetry counts (JSONL): `manifest.validate=1`, `behavior.validate=1`, `scenario.validate=1`.
+- Liminal bundle SHA256: `4ea87f798ae0f1d94db83c28f6bf3cd63db2a2a9a7534f30a942a3960eb4ddbd` (size: 2432 bytes).
+- Pending coordination: reference platform `SIG-telemetry-adoption` once confirmed.
