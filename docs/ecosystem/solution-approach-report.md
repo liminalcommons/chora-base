@@ -214,14 +214,19 @@ This repository owns the shared deliverables in each release (standards, validat
   - Change Signal: `SIG-release-a-complete` (requires standards published, packages/templates released, catalog generated, change queue live, first capability provider onboarded with manifests, behaviors, and value scenario).
 
 - **Release B — Ecosystem Adoption & Observability**  
-  - Participating repositories: platform-tooling repo (ships offline mirror CLI, telemetry libraries/dashboards, updates capability catalog/templates), MCP orchestration repo (continues adoption), plus 3–5 additional capability-provider repos (e.g., agent runtime services) onboarding to manifest/behavior/telemetry standards.  
-  - Deliverables: onboard additional capability providers; offline mirror CLI with TTL enforcement published; telemetry schema embedded in shared libraries and surfaced through RBAC-protected dashboards; capability catalog and templates refreshed.  
-  - Change Signal: `SIG-release-b-complete` (requires break-detection scenario passing, mirror prototype validated, telemetry events visible in shared dashboards, catalog updated).
+  - Participating repositories: platform-tooling repo (ships offline mirror CLI, telemetry libraries/dashboards, repo-overview generator, updates capability catalog/templates, prototypes the `chora-liminal` hub), MCP orchestration repo (continues adoption), plus 3–5 additional capability-provider repos (e.g., agent runtime services) onboarding to manifest/behavior/telemetry standards.  
+  - Deliverables: onboard additional capability providers; offline mirror CLI with TTL enforcement published; telemetry schema embedded in shared libraries and surfaced through RBAC-protected dashboards; repository overview template/generator available; initial `chora-liminal` hub demonstrating the signal inbox; capability catalog and templates refreshed.  
+  - Change Signal: `SIG-release-b-complete` (requires break-detection scenario passing, mirror prototype validated, telemetry events visible in shared dashboards, catalog & repo overviews updated, liminal hub spike delivered).
 
 - **Release C — Runtime Interop & Hardening**  
   - Participating repositories: platform-tooling repo (hardens indexer, publishes negotiation library, authors architecture ADR) plus the two capability-provider repos exercising the runtime pilot (e.g., MCP orchestration provider and the consuming service).  
-  - Deliverables: protocol negotiation module exercised on a runtime service pair and published as a reusable library; discovery indexer hardened (incremental updates, signing, authz) with compatibility matrix published; architecture ADR capturing long-term discovery model.  
+  - Deliverables: protocol negotiation module exercised on a runtime service pair and published as a reusable library; discovery indexer hardened (incremental updates, signing, authz) with compatibility matrix published; architecture ADR capturing long-term discovery model; launch of a separate ecosystem-overview capability repo aggregating multi-repo signals/catalog data.  
   - Change Signal: `SIG-release-c-complete` (requires successful runtime pilot, hardened indexer deployed, ADR merged).
+
+- **Release D — Interactive Liminal Experience**  
+  - Participating repositories: platform-tooling repo (updates standards/templates and exposes telemetry hooks), `chora-signal` (push-based change-signal adapters), `chora-privacy` (privacy controls and policy enforcement), `chora-voice` (voice assistant pipeline), `chora-hud` (Godot HUD assets/SDK), and the `chora-liminal` capability repo that composes these capabilities into the user-facing hub. Additional capability providers may opt in by exposing liminal-ready manifests/scenarios.  
+  - Deliverables: push-enabled change-signal service with subscription controls (`chora-signal`); reusable privacy templates and policy checks (`chora-privacy`); voice interface flows with sample prompts/actions (`chora-voice`); baseline Godot HUD package and Diátaxis docs (`chora-hud`); `chora-liminal` integrating these modules to present voice + HUD inbox, scenario dashboard, and telemetry view; platform repo publishes updated standards/templates to support the new components.  
+  - Change Signal: `SIG-release-d-complete` (requires the liminal hub to consume the new capabilities end-to-end, push signal service live, privacy guidelines published, voice/HUD interfaces operational, telemetry flowing into liminal dashboards).
   
 ## Naming Conventions
 
@@ -232,10 +237,18 @@ Consistent names reinforce the ontology and improve discoverability. Adopt the f
 - **Change Signals**: `SIG.<scope>.<subject>.<state>` (e.g., `SIG.release.a.complete`, `SIG.capability.mcp.registry.update`). Use hyphenated sequences for iterations (`SIG.capability.mcp.registry.update-2`).
 - **Packages/CLI**: prefix shared tooling with `chora-` (e.g., `chora-validator`, `chora-cli`) to signal ecosystem affiliation.
 - **Docs & Standards**: organize under `docs/standards/<standard>.md`, `docs/capabilities/<capability>.md`, `docs/reference/<artifact>.md` reflecting capability and lifecycle stage.
-- **Templates**: publish reusable assets (CI workflows, AGENTS snippets, CLI scaffolds) under a shared `templates/` namespace so capability repos can adopt them without bespoke setup.
+- **Templates**: publish reusable assets (CI workflows, AGENTS snippets, CLI scaffolds, repo overview package) under a shared `templates/` namespace so capability repos can adopt them without bespoke setup.
 - **Value Scenario IDs**: follow `<domain>.<capability>.<verb>` (e.g., `mcp.registry.manage.create-doc`) and store supporting guides/tests under predictable paths (`docs/how-to/`, `docs/reference/value-scenarios/`, `tests/value-scenarios/`).
 
 Document all deviations via change signals and update the naming guidelines alongside releases to keep the ecosystem coherent.
+
+## Backlog & Future Directions
+
+- **Decentralized Runtime Exploration** – Prototype running Chora capabilities (including `chora-liminal`) on decentralized frameworks (e.g., Holochain) once runtime interop stabilizes.
+- **Advanced HUD / Godot Multiplayer** – Extend the HUD from local preview to multi-user spaces with authentication, private workrooms, and collaborative signal handling.
+- **Automated Template Application** – Enhance `chora-cli template apply` with parameterization, PR scaffolding, and additional template types (issue/PR templates, project configs).
+- **Signal-driven Automation** – Introduce rule-based responders that can acknowledge or execute change signals automatically on behalf of capabilities.
+- **Security & Privacy Hardening** – Encrypt signal feeds, add fine-grained RBAC for liminal data, and integrate secrets/identity services across liminal deployments.
 
 Scope guardrail: pause new capability scope if any release metrics fall below target for two consecutive weeks; resume after corrective action documented via change signal.
 

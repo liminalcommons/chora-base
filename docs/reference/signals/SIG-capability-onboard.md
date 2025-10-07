@@ -19,5 +19,6 @@ Tracks onboarding of manifests/behaviors to Chora platform standards.
 - Value scenario `mcp.registry.manage.create-doc` added with guide and stub test; will connect to full automation in CI.
 
 ## Status
-- closed (Release A onboarding tasks complete; telemetry stubs scheduled for next release)
-- CI: `.github/workflows/chora-ci.yml` added; validator and test steps pass locally and will run in PR.
+- closed (Release A complete)
+- Release B: telemetry integration started; events emitted to `var/telemetry/events.jsonl` and uploaded via CI artifact.
+- Overview generated at `docs/reference/overview.md`.

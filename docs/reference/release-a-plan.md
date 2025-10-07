@@ -15,7 +15,7 @@ This plan tracks capability-provider tasks required to complete Chora Release A 
 - [x] Run `mcp-orchestrator manifest-validate manifests/star.yaml` locally and in CI.
 - [x] Add a value scenario definition (metadata + doc + automated test) for `mcp.registry.manage.create-doc`.
 - [x] Populate `docs/reference/signals/SIG-capability-onboard.md` with status updates.
-- [ ] Add telemetry stubs/logs as per telemetry schema when available.
+- [ ] Add telemetry stubs/logs as per telemetry schema when available. *(Deferred to Release B; see `docs/reference/release-b-plan.md`.)*
 
 ## Acceptance Criteria
 - Manifest passes Chora validator without overrides.
@@ -34,3 +34,8 @@ This plan tracks capability-provider tasks required to complete Chora Release A 
 - Pytest: `PYTHONPATH=src pytest -q` → all tests passed locally.
 
 Scenario status: ready (guide and tests referenced; validator passing).
+
+## Release A Closure Summary (Implemented 2025-10-06)
+- Shared CI pipeline validates manifest, behaviors, and value scenario on every push.
+- Change signal `docs/reference/signals/SIG-capability-onboard.md` marked complete with validator output links.
+- Telemetry adoption item migrated to Release B workstream alongside new platform emitter.

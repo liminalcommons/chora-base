@@ -37,3 +37,14 @@ jobs:
         run: |
           pytest -q
 
+      - name: Generate overview
+        run: |
+          python scripts/generate_repo_overview.py manifests/star.yaml -o docs/reference/overview.md
+
+      - name: Upload artifacts (telemetry + overview)
+        uses: actions/upload-artifact@v4
+        with:
+          name: repo-artifacts
+          path: |
+            var/telemetry/events.jsonl
+            docs/reference/overview.md

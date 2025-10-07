@@ -4,6 +4,7 @@ import argparse
 
 from chora_validator.policy import load_policy
 from chora_validator.validators import validate_manifest
+from mcp_orchestrator.telemetry import get_emitter
 
 
 class CLI:
@@ -28,12 +29,14 @@ class CLI:
             help="Manifest file to read scenarios from",
         )
         self.parser = parser
+        self.emitter = get_emitter()
 
     def run(self, argv=None) -> int:
         args = self.parser.parse_args(argv)
         if args.command == "manifest-validate":
             validate_manifest(args.file, load_policy())
             print("Manifest valid")
+            self.emitter.emit("manifest.validate", file=str(args.file), result="ok")
         elif args.command == "behavior-validate":
             # Prefer chora-validator behavior validation if available; otherwise, do minimal tag checks.
             try:
@@ -41,6 +44,7 @@ class CLI:
 
                 validate_behaviors(args.path, load_policy())  # type: ignore
                 print("Behaviors valid")
+                self.emitter.emit("behavior.validate", path=str(args.path), result="ok")
             except Exception:
                 # Fallback: ensure at least one spec exists and has required tags
                 import os
@@ -60,12 +64,14 @@ class CLI:
                 if not found:
                     raise SystemExit("No behavior specs found")
                 print("Behaviors minimally validated (tags present)")
+                self.emitter.emit("behavior.validate.minimal", path=str(args.path), result="ok")
         elif args.command == "scenario-validate":
             try:
                 from chora_validator.validators import validate_scenarios  # type: ignore
 
                 validate_scenarios(args.manifest)  # type: ignore
                 print("Scenarios valid")
+                self.emitter.emit("scenario.validate", manifest=str(args.manifest), result="ok")
             except Exception as e:
                 raise SystemExit(str(e))
         return 0

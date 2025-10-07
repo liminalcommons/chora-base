@@ -15,3 +15,8 @@ python scripts/apply_manifest_policy.py manifests/star.yaml
 ```
 
 See `docs/` for capability descriptions and signals.
+
+## Release Coordination
+
+- Release plans: `docs/reference/release-a-plan.md`, `docs/reference/release-b-plan.md`
+- Codex agent instructions: `.codex/release-b-prompt.md`
