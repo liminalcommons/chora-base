@@ -47,6 +47,13 @@ Release B focuses on adopting the platform telemetry/overview tooling and integr
 - [ ] Close coordination with platform (`SIG-telemetry-adoption`) and document alignment in the plan.
 - [ ] Cut Release B tag and publish release notes once validation succeeds ("released" means tagged release artifacts are created).
 
+### Release Checklist (after validation)
+1. Check working tree: `git status`
+2. Tag release: `git tag release-b`
+3. Push tag: `git push origin release-b`
+4. Publish GitHub release: `gh release create release-b --notes-file docs/reference/release-b-plan.md`
+5. Update `docs/reference/signals/SIG-capability-onboard.md` with release URL and telemetry summary
+
 ## Acceptance Criteria
 1. Telemetry events generated for manifest and scenario validation commands; emitter outputs validated in tests.
 2. Repository overview kept in sync with manifest and value scenario metadata (CI enforcement).

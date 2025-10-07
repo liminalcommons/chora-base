@@ -11,7 +11,7 @@ Telemetry, overview, CI validators, and liminal bundle packaging are live. Focus
 ## Next Objectives
 1. **Overview Freshness Gate** — Keep the CI check green; adjust scripts if metadata changes and record outcomes in the plan/signals.
 2. **Final Validation Run** — Execute validators, pytest, and liminal bundle ingestion; capture telemetry and append evidence to `docs/reference/release-b-plan.md` and signals.
-3. **Release Prep** — Coordinate with platform signals, then use `git`/`gh` to stage Release B notes and tag once validation passes ("released" means a tagged release is created).
+3. **Release Prep** — After validation passes: `git status` → `git tag release-b` → `git push origin release-b` → `gh release create release-b --notes-file docs/reference/release-b-plan.md`. Record the release URL in `docs/reference/signals/SIG-capability-onboard.md`.
 4. **Telemetry Migration Prep** — Plan the transition from local shim to platform `TelemetryEmitter`; document remaining actions while keeping evidence logs current.
 
 ## Workflow Expectations
