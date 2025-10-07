@@ -1,6 +1,6 @@
 # Codex Instructions — Release B (MCP Orchestration)
 
-Telemetry, overview, CI validators, and liminal bundle packaging are live. Focus on remaining Release B gates and coordination tasks.
+Telemetry, overview, CI validators, and liminal bundle packaging are live. Focus on remaining Release B gates, execute end-to-end validation, and prepare to tag the release. You may run `git` and `gh` commands for coordination and publishing.
 
 ## Context
 - Release docs: `docs/reference/release-b-plan.md` (freshness gate done; liminal signal created), `docs/reference/release-a-plan.md` (closure notes).
@@ -9,10 +9,10 @@ Telemetry, overview, CI validators, and liminal bundle packaging are live. Focus
 - Change signals: `docs/reference/signals/SIG-capability-onboard.md` captures Release B run; `docs/reference/signals/SIG-liminal-inbox-prototype.md` tracks bundle ingestion.
 
 ## Next Objectives
-1. **Overview Freshness Gate** — Implemented in CI; ensure it remains green on future changes.
-2. **Liminal Signal Emission** — Created; next verify ingestion and mark complete with evidence.
-3. **Telemetry Migration Prep** — Plan the transition from local shim to platform `TelemetryEmitter`. Document required changes and dependencies in the release plan.
-4. **Evidence Hygiene** — Continue logging validator/test commands, bundle metadata, and coordination notes in `docs/reference/release-b-plan.md` and signals (timestamps + artifact links).
+1. **Overview Freshness Gate** — Keep the CI check green; adjust scripts if metadata changes and record outcomes in the plan/signals.
+2. **Final Validation Run** — Execute validators, pytest, and liminal bundle ingestion; capture telemetry and append evidence to `docs/reference/release-b-plan.md` and signals.
+3. **Release Prep** — Coordinate with platform signals, then use `git`/`gh` to stage Release B notes and tag once validation passes ("released" means a tagged release is created).
+4. **Telemetry Migration Prep** — Plan the transition from local shim to platform `TelemetryEmitter`; document remaining actions while keeping evidence logs current.
 
 ## Workflow Expectations
 - Review outstanding checklist items before editing.
@@ -23,3 +23,4 @@ Telemetry, overview, CI validators, and liminal bundle packaging are live. Focus
 - Preserve stdout JSON-RPC purity for CLI tools; log diagnostics to stderr.
 - Keep telemetry/bundle outputs under `var/`; documentation updates under `docs/`.
 - Coordinate schema changes with platform signals prior to merging.
+ - Align with ecosystem docs: ensure value scenarios, change signals, and naming follow `docs/ecosystem/solution-neutral-intent.md` and `docs/ecosystem/solution-approach-report.md` (e.g., capability IDs like `mcp.registry.manage`, signals under `docs/reference/signals/`).

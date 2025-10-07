@@ -29,3 +29,8 @@ Tracks onboarding of manifests/behaviors to Chora platform standards.
 - Overview generated (`docs/reference/overview.md`).
 - Liminal bundle packaged (`var/bundles/liminal/mcp-orchestration-bundle.zip`).
 - Liminal signal created: `docs/reference/signals/SIG-liminal-inbox-prototype.md` (status: prepared).
+
+### Weekly Progress — 2025-10-07
+- Implemented CI overview freshness gate.
+- Prepared liminal bundle and created ingestion signal.
+- Next: coordinate `SIG-telemetry-adoption` with platform and migrate to platform emitter.

@@ -60,6 +60,13 @@ python scripts/apply_manifest_policy.py manifests/star.yaml
 ```
 
 See `docs/` for capability descriptions and signals.
+
+## Release Coordination
+
+- Release plans: `docs/reference/release-a-plan.md`, `docs/reference/release-b-plan.md`
+- Repository overview: `docs/reference/overview.md`
+- Telemetry how-to: `docs/how-to/telemetry.md`
+- Codex agent instructions: `.codex/release-b-prompt.md`
 ```
 
 ## docs/capabilities/.gitkeep
@@ -351,14 +358,19 @@ This repository owns the shared deliverables in each release (standards, validat
   - Change Signal: `SIG-release-a-complete` (requires standards published, packages/templates released, catalog generated, change queue live, first capability provider onboarded with manifests, behaviors, and value scenario).
 
 - **Release B — Ecosystem Adoption & Observability**  
-  - Participating repositories: platform-tooling repo (ships offline mirror CLI, telemetry libraries/dashboards, updates capability catalog/templates), MCP orchestration repo (continues adoption), plus 3–5 additional capability-provider repos (e.g., agent runtime services) onboarding to manifest/behavior/telemetry standards.  
-  - Deliverables: onboard additional capability providers; offline mirror CLI with TTL enforcement published; telemetry schema embedded in shared libraries and surfaced through RBAC-protected dashboards; capability catalog and templates refreshed.  
-  - Change Signal: `SIG-release-b-complete` (requires break-detection scenario passing, mirror prototype validated, telemetry events visible in shared dashboards, catalog updated).
+  - Participating repositories: platform-tooling repo (ships offline mirror CLI, telemetry libraries/dashboards, repo-overview generator, updates capability catalog/templates, prototypes the `chora-liminal` hub), MCP orchestration repo (continues adoption), plus 3–5 additional capability-provider repos (e.g., agent runtime services) onboarding to manifest/behavior/telemetry standards.  
+  - Deliverables: onboard additional capability providers; offline mirror CLI with TTL enforcement published; telemetry schema embedded in shared libraries and surfaced through RBAC-protected dashboards; repository overview template/generator available; initial `chora-liminal` hub demonstrating the signal inbox; capability catalog and templates refreshed.  
+  - Change Signal: `SIG-release-b-complete` (requires break-detection scenario passing, mirror prototype validated, telemetry events visible in shared dashboards, catalog & repo overviews updated, liminal hub spike delivered).
 
 - **Release C — Runtime Interop & Hardening**  
   - Participating repositories: platform-tooling repo (hardens indexer, publishes negotiation library, authors architecture ADR) plus the two capability-provider repos exercising the runtime pilot (e.g., MCP orchestration provider and the consuming service).  
-  - Deliverables: protocol negotiation module exercised on a runtime service pair and published as a reusable library; discovery indexer hardened (incremental updates, signing, authz) with compatibility matrix published; architecture ADR capturing long-term discovery model.  
+  - Deliverables: protocol negotiation module exercised on a runtime service pair and published as a reusable library; discovery indexer hardened (incremental updates, signing, authz) with compatibility matrix published; architecture ADR capturing long-term discovery model; launch of a separate ecosystem-overview capability repo aggregating multi-repo signals/catalog data.  
   - Change Signal: `SIG-release-c-complete` (requires successful runtime pilot, hardened indexer deployed, ADR merged).
+
+- **Release D — Interactive Liminal Experience**  
+  - Participating repositories: platform-tooling repo (updates standards/templates and exposes telemetry hooks), `chora-signal` (push-based change-signal adapters), `chora-privacy` (privacy controls and policy enforcement), `chora-voice` (voice assistant pipeline), `chora-hud` (Godot HUD assets/SDK), and the `chora-liminal` capability repo that composes these capabilities into the user-facing hub. Additional capability providers may opt in by exposing liminal-ready manifests/scenarios.  
+  - Deliverables: push-enabled change-signal service with subscription controls (`chora-signal`); reusable privacy templates and policy checks (`chora-privacy`); voice interface flows with sample prompts/actions (`chora-voice`); baseline Godot HUD package and Diátaxis docs (`chora-hud`); `chora-liminal` integrating these modules to present voice + HUD inbox, scenario dashboard, and telemetry view; platform repo publishes updated standards/templates to support the new components.  
+  - Change Signal: `SIG-release-d-complete` (requires the liminal hub to consume the new capabilities end-to-end, push signal service live, privacy guidelines published, voice/HUD interfaces operational, telemetry flowing into liminal dashboards).
   
 ## Naming Conventions
 
@@ -369,10 +381,18 @@ Consistent names reinforce the ontology and improve discoverability. Adopt the f
 - **Change Signals**: `SIG.<scope>.<subject>.<state>` (e.g., `SIG.release.a.complete`, `SIG.capability.mcp.registry.update`). Use hyphenated sequences for iterations (`SIG.capability.mcp.registry.update-2`).
 - **Packages/CLI**: prefix shared tooling with `chora-` (e.g., `chora-validator`, `chora-cli`) to signal ecosystem affiliation.
 - **Docs & Standards**: organize under `docs/standards/<standard>.md`, `docs/capabilities/<capability>.md`, `docs/reference/<artifact>.md` reflecting capability and lifecycle stage.
-- **Templates**: publish reusable assets (CI workflows, AGENTS snippets, CLI scaffolds) under a shared `templates/` namespace so capability repos can adopt them without bespoke setup.
+- **Templates**: publish reusable assets (CI workflows, AGENTS snippets, CLI scaffolds, repo overview package) under a shared `templates/` namespace so capability repos can adopt them without bespoke setup.
 - **Value Scenario IDs**: follow `<domain>.<capability>.<verb>` (e.g., `mcp.registry.manage.create-doc`) and store supporting guides/tests under predictable paths (`docs/how-to/`, `docs/reference/value-scenarios/`, `tests/value-scenarios/`).
 
 Document all deviations via change signals and update the naming guidelines alongside releases to keep the ecosystem coherent.
+
+## Backlog & Future Directions
+
+- **Decentralized Runtime Exploration** – Prototype running Chora capabilities (including `chora-liminal`) on decentralized frameworks (e.g., Holochain) once runtime interop stabilizes.
+- **Advanced HUD / Godot Multiplayer** – Extend the HUD from local preview to multi-user spaces with authentication, private workrooms, and collaborative signal handling.
+- **Automated Template Application** – Enhance `chora-cli template apply` with parameterization, PR scaffolding, and additional template types (issue/PR templates, project configs).
+- **Signal-driven Automation** – Introduce rule-based responders that can acknowledge or execute change signals automatically on behalf of capabilities.
+- **Security & Privacy Hardening** – Encrypt signal feeds, add fine-grained RBAC for liminal data, and integrate secrets/identity services across liminal deployments.
 
 Scope guardrail: pause new capability scope if any release metrics fall below target for two consecutive weeks; resume after corrective action documented via change signal.
 
@@ -560,6 +580,8 @@ This document captures problem framing and intent without prescribing an impleme
 - **Capability Discovery** – Participants can search the ecosystem to answer “Who provides X?” or “Is there a behavior covering Y?”
 - **Documentation & Templates** – Every capability exposes Diátaxis-aligned docs (tutorial/guide/reference/explanation) and reusable templates (CLI help, AGENTS snippets, CI workflows) so humans and LLM agents can onboard quickly.
 - **Value Scenarios** – Each capability publishes user-testable scenarios with manual and automated verification paths, linked to change signals and telemetry so outcomes can be proven repeatedly.
+- **Repository Overview** – Every repository publishes an autogenerated overview (front page) summarizing current capabilities, value scenarios, signals, and telemetry, making orientation simple for humans and LLM agents.
+- **Liminal Capability** – Operators may run a personal or shared control capability (e.g., `chora-liminal`) that consumes manifests, signals, and telemetry from the platform and composes other Chora capabilities (signal adapters, privacy controls, voice/HUD modules). The capability must follow the same standards for manifests, scenarios, templates, and privacy.
 - **Change Signaling** – Needs, risks, and proposals flow through a structured channel that captures scope, impact, and resolution status.
 - **Integration Contracts** – Automated checks ensure manifests, behaviors, and runtime interfaces remain compatible as projects evolve.
 - **Security & Compliance** – Common baselines for dependency audits, secret handling, logging separation, and release approval.
@@ -861,9 +883,106 @@ Automation Notes
 
 ```
 
+## docs/how-to/share-with-liminal.md
+
+```md
+# How to Share Bundles with Chora Liminal
+
+This guide describes how to package a liminal-ready bundle and where CI publishes it.
+
+Bundle contents
+- `manifests/star.yaml`
+- `docs/reference/overview.md`
+- `docs/reference/signals/SIG-capability-onboard.md` (status closed; includes validation notes)
+- `var/telemetry/events.jsonl` (CLI validation events)
+
+Local packaging (manual)
+```bash
+mkdir -p var/bundles/liminal
+zip -j var/bundles/liminal/mcp-orchestration-bundle.zip \
+  manifests/star.yaml \
+  docs/reference/overview.md \
+  docs/reference/signals/SIG-capability-onboard.md \
+  var/telemetry/events.jsonl
+```
+
+CI packaging
+- Workflow: `.github/workflows/chora-ci.yml`
+- Steps: generates overview, uploads telemetry + overview, and builds a zip under `var/bundles/liminal/` uploaded as artifact `liminal-bundle`.
+
+Next steps
+- Provide the bundle to the liminal inbox prototype and record results via a change signal (e.g., `SIG-liminal-inbox-prototype`).
+```
+
+## docs/how-to/telemetry.md
+
+```md
+# How to Emit Telemetry
+
+This repository emits simple JSONL telemetry for key CLI flows using a shared emitter shim compatible with Chora Release B.
+
+Emitter
+- Module: `chora_platform_tools.telemetry.TelemetryEmitter`
+- Output: `var/telemetry/events.jsonl` (one JSON object per line)
+
+Event shape
+```json
+{"name":"manifest.validate","ts":"<RFC3339>","fields":{"file":"manifests/star.yaml","result":"ok"}}
+```
+
+Commands that write telemetry
+- `PYTHONPATH=src python -m mcp_orchestrator.cli manifest-validate manifests/star.yaml`
+- `PYTHONPATH=src python -m mcp_orchestrator.cli behavior-validate docs/capabilities/behaviors`
+- `PYTHONPATH=src python -m mcp_orchestrator.cli scenario-validate manifests/star.yaml`
+
+Local verification
+```bash
+PYTHONPATH=src python -m mcp_orchestrator.cli manifest-validate manifests/star.yaml
+PYTHONPATH=src python -m mcp_orchestrator.cli behavior-validate docs/capabilities/behaviors
+PYTHONPATH=src python -m mcp_orchestrator.cli scenario-validate manifests/star.yaml
+tail -n +1 var/telemetry/events.jsonl
+```
+
+CI
+- Workflow `.github/workflows/chora-ci.yml` runs validators and tests, generates the repository overview, and uploads telemetry + overview as artifacts.
+
+Notes
+- This emitter is a minimal shim for Release B and can be swapped for the official platform emitter when available.
+```
+
 ## docs/reference/.gitkeep
 
 ```
+
+```
+
+## docs/reference/overview.md
+
+```md
+# Repository Overview — MCP Orchestration
+
+- id: `mcp-orchestration`
+- version: `0.0.1`
+- owner: `team-mcp`
+- lifecycle_stage: `operate`
+- tags: chora, capability-provider, mcp, registry, orchestration
+
+## Capabilities
+- `mcp.registry.manage`
+  - behavior: `MCP.REGISTRY.MANAGE` status=`draft` ref=`docs/capabilities/mcp-registry-manage.md`
+
+## Value Scenarios
+- `mcp.registry.manage.create-doc` — status=`ready`
+  - guide: `docs/how-to/create-doc.md`
+  - test: `tests/value-scenarios/test_create_doc.py`
+  - test: `docs/capabilities/behaviors/mcp-registry-manage.feature`
+
+## Telemetry Signals
+- `SIG.capability.mcp.registry.onboard` — status=`in_progress` doc=`docs/reference/signals/SIG-capability-onboard.md`
+
+## Dependencies
+- `chora-validator` type=`tool` version=`>=0.0.1` scope=`dev`
+- `mcp.runtime` type=`service` version=`>=1.0.0` scope=`runtime`
 
 ```
 
@@ -887,7 +1006,7 @@ This plan tracks capability-provider tasks required to complete Chora Release A 
 - [x] Run `mcp-orchestrator manifest-validate manifests/star.yaml` locally and in CI.
 - [x] Add a value scenario definition (metadata + doc + automated test) for `mcp.registry.manage.create-doc`.
 - [x] Populate `docs/reference/signals/SIG-capability-onboard.md` with status updates.
-- [ ] Add telemetry stubs/logs as per telemetry schema when available.
+- [ ] Add telemetry stubs/logs as per telemetry schema when available. *(Deferred to Release B; see `docs/reference/release-b-plan.md`.)*
 
 ## Acceptance Criteria
 - Manifest passes Chora validator without overrides.
@@ -906,6 +1025,84 @@ This plan tracks capability-provider tasks required to complete Chora Release A 
 - Pytest: `PYTHONPATH=src pytest -q` → all tests passed locally.
 
 Scenario status: ready (guide and tests referenced; validator passing).
+
+## Release A Closure Summary (Implemented 2025-10-06)
+- Shared CI pipeline validates manifest, behaviors, and value scenario on every push.
+- Change signal `docs/reference/signals/SIG-capability-onboard.md` marked complete with validator output links.
+- Telemetry adoption item migrated to Release B workstream alongside new platform emitter.
+```
+
+## docs/reference/release-b-plan.md
+
+```md
+---
+title: Release B Plan — Telemetry & Liminal Integration
+status: draft
+version: 0.1.0
+last_updated: 2025-10-07
+---
+
+# Release B Plan — MCP Orchestration
+
+Release B focuses on adopting the platform telemetry/overview tooling and integrating with the liminal inbox prototype.
+
+## Objectives
+- Emit telemetry for key CLI flows using the shared emitter.
+- Publish repository overviews alongside manifests and value scenarios.
+- Provide liminal-ready bundles (manifest + telemetry + signals) for inbox ingestion.
+- Track progress via change signals and update documentation accordingly.
+
+## Workstreams & Status
+
+### 1. Telemetry Adoption
+- [x] Import telemetry emitter (shim) and write CLI events to `var/telemetry/events.jsonl`.
+- [x] Document telemetry usage in `docs/how-to/telemetry.md` (commands + schema).
+- [x] Update CI to archive telemetry samples for liminal testing.
+
+### 2. Repository Overview Publication
+- [x] Run `scripts/generate_repo_overview.py manifests/star.yaml -o docs/reference/overview.md` and commit output.
+- [x] Include overview link in README + change signal updates.
+ - [x] Add automation step (CI) to refresh overview and fail if stale.
+
+### 3. Liminal Bundle Prep
+- [x] Package manifest, overview, telemetry, and change signal notes under `var/bundles/liminal/` (README + structure).
+- [x] Provide usage notes for liminal repo (`docs/how-to/share-with-liminal.md`).
+ - [x] Emit signal update `SIG-liminal-inbox-prototype` referencing bundle location.
+
+### 4. Governance & Comms
+- [x] Update `docs/reference/release-b-plan.md` checkboxes as work completes.
+- [ ] Add weekly progress note to `docs/reference/signals/SIG-capability-onboard.md` during Release B.
+- [ ] Confirm adoption by referencing platform change signal `SIG-telemetry-adoption`.
+
+### 5. Telemetry Migration Prep
+- [ ] Replace local emitter with platform `TelemetryEmitter` once available.
+- [ ] Update `docs/how-to/telemetry.md` and CI to reflect platform emitter configuration.
+- [ ] Add compatibility note in signal doc linking to the migration PR.
+
+## Acceptance Criteria
+1. Telemetry events generated for manifest and scenario validation commands; emitter outputs validated in tests.
+2. Repository overview kept in sync with manifest and value scenario metadata (CI enforcement).
+3. Liminal bundle available with documentation, consumed successfully by inbox prototype (evidence via change signal).
+4. Release documentation updated with links to telemetry files, overview artifacts, and liminal bundle instructions.
+
+## Evidence Checklist
+- `var/telemetry/events.jsonl`
+- `docs/reference/overview.md`
+- `var/bundles/liminal/README.md` (or equivalent packaging notes)
+- Change signal updates referencing telemetry + bundle locations
+
+Keep this plan current; mark tasks complete with timestamps and link supporting PRs or commits.
+
+## Verification
+
+- Validators (local):
+  - `PYTHONPATH=src python -m mcp_orchestrator.cli manifest-validate manifests/star.yaml` → success
+  - `PYTHONPATH=src python -m mcp_orchestrator.cli behavior-validate docs/capabilities/behaviors` → success
+  - `PYTHONPATH=src python -m mcp_orchestrator.cli scenario-validate manifests/star.yaml` → success
+- Overview: generated `docs/reference/overview.md`
+- Telemetry: events written to `var/telemetry/events.jsonl` (JSONL)
+- Bundle: `var/bundles/liminal/mcp-orchestration-bundle.zip` verified (`zip -Tv`)
+- Tests: `PYTHONPATH=src pytest -q` → all tests passed
 ```
 
 ## docs/reference/signals/.gitkeep
@@ -938,8 +1135,45 @@ Tracks onboarding of manifests/behaviors to Chora platform standards.
 - Value scenario `mcp.registry.manage.create-doc` added with guide and stub test; will connect to full automation in CI.
 
 ## Status
-- closed (Release A onboarding tasks complete; telemetry stubs scheduled for next release)
-- CI: `.github/workflows/chora-ci.yml` added; validator and test steps pass locally and will run in PR.
+- closed (Release A complete)
+- Release B: telemetry integration started; events emitted to `var/telemetry/events.jsonl` and uploaded via CI artifact.
+- Overview generated at `docs/reference/overview.md`.
+
+### Release B Log — 2025-10-07
+- Validators: manifest, behaviors, scenarios → success (local).
+- Telemetry events written (see `var/telemetry/events.jsonl`).
+- Overview generated (`docs/reference/overview.md`).
+- Liminal bundle packaged (`var/bundles/liminal/mcp-orchestration-bundle.zip`).
+- Liminal signal created: `docs/reference/signals/SIG-liminal-inbox-prototype.md` (status: prepared).
+```
+
+## docs/reference/signals/SIG-liminal-inbox-prototype.md
+
+```md
+---
+title: SIG-liminal-inbox-prototype
+status: in_progress
+last_updated: 2025-10-07
+---
+
+# SIG-liminal-inbox-prototype
+
+Tracks preparation and ingestion of the liminal-ready bundle for the inbox prototype.
+
+## Artifacts
+- Bundle: `var/bundles/liminal/mcp-orchestration-bundle.zip`
+- Overview: `docs/reference/overview.md`
+- Telemetry: `var/telemetry/events.jsonl`
+- Source PR: feature/release-b
+
+## Validation
+- Bundle packaged locally and by CI; archived as workflow artifact.
+- Validators executed locally with success (manifest/behavior/scenario) and telemetry events recorded.
+
+## Status
+- prepared — bundle created and ready for ingestion testing.
+- next — verify ingestion on the liminal inbox prototype and update this signal to `complete` with notes and timestamp.
+
 ```
 
 ## docs/standards/.gitkeep
@@ -1233,6 +1467,123 @@ if __name__ == "__main__":
     raise SystemExit(main())
 ```
 
+## scripts/generate_repo_overview.py
+
+```py
+#!/usr/bin/env python3
+from __future__ import annotations
+
+import argparse
+from pathlib import Path
+from typing import Any, Dict, List
+
+import yaml
+
+
+def load_manifest(path: Path) -> Dict[str, Any]:
+    return yaml.safe_load(path.read_text(encoding="utf-8"))
+
+
+def fmt_list(values: List[str]) -> str:
+    return ", ".join(values) if values else "-"
+
+
+def render_overview(data: Dict[str, Any]) -> str:
+    lines: List[str] = []
+    lines.append("# Repository Overview — MCP Orchestration")
+    lines.append("")
+    lines.append(f"- id: `{data.get('id')}`")
+    lines.append(f"- version: `{data.get('version')}`")
+    lines.append(f"- owner: `{data.get('owner')}`")
+    lines.append(f"- lifecycle_stage: `{data.get('lifecycle_stage')}`")
+    tags = data.get("tags") or []
+    lines.append(f"- tags: {fmt_list(tags)}")
+    lines.append("")
+    lines.append("## Capabilities")
+    for cap in data.get("capabilities", []):
+        lines.append(f"- `{cap.get('id')}`")
+        behs = cap.get("behaviors") or []
+        for b in behs:
+            lines.append(f"  - behavior: `{b.get('id')}` status=`{b.get('status')}` ref=`{b.get('ref')}`")
+    lines.append("")
+    lines.append("## Value Scenarios")
+    for s in data.get("value_scenarios", []) or []:
+        lines.append(f"- `{s.get('id')}` — status=`{s.get('status')}`")
+        lines.append(f"  - guide: `{s.get('guide')}`")
+        tests = s.get("tests") or []
+        for t in tests:
+            lines.append(f"  - test: `{t}`")
+    lines.append("")
+    lines.append("## Telemetry Signals")
+    for sig in (data.get("telemetry") or {}).get("signals", []) or []:
+        lines.append(f"- `{sig.get('id')}` — status=`{sig.get('status')}` doc=`{sig.get('doc')}`")
+    lines.append("")
+    lines.append("## Dependencies")
+    for d in data.get("dependencies", []) or []:
+        lines.append(f"- `{d.get('id')}` type=`{d.get('type')}` version=`{d.get('version')}` scope=`{d.get('scope')}`")
+    lines.append("")
+    return "\n".join(lines) + "\n"
+
+
+def main() -> int:
+    ap = argparse.ArgumentParser(description="Generate repository overview from manifest")
+    ap.add_argument("manifest", default="manifests/star.yaml")
+    ap.add_argument("-o", "--output", default="docs/reference/overview.md")
+    args = ap.parse_args()
+    data = load_manifest(Path(args.manifest))
+    out = Path(args.output)
+    out.parent.mkdir(parents=True, exist_ok=True)
+    out.write_text(render_overview(data), encoding="utf-8")
+    print(f"Wrote {out}")
+    return 0
+
+
+if __name__ == "__main__":
+    raise SystemExit(main())
+
+```
+
+## src/chora_platform_tools/telemetry.py
+
+```py
+from __future__ import annotations
+
+import json
+import os
+from dataclasses import dataclass, asdict
+from datetime import datetime, timezone
+from pathlib import Path
+from typing import Any, Dict, Optional
+
+
+def _utc_now_iso() -> str:
+    return datetime.now(timezone.utc).isoformat()
+
+
+@dataclass
+class TelemetryEvent:
+    name: str
+    ts: str
+    fields: Dict[str, Any]
+
+
+class TelemetryEmitter:
+    """Minimal JSONL emitter for Release B.
+
+    Writes one JSON object per line to the configured path.
+    """
+
+    def __init__(self, path: os.PathLike[str] | str = "var/telemetry/events.jsonl") -> None:
+        self.path = Path(path)
+        self.path.parent.mkdir(parents=True, exist_ok=True)
+
+    def emit(self, name: str, **fields: Any) -> None:
+        evt = TelemetryEvent(name=name, ts=_utc_now_iso(), fields=fields)
+        with self.path.open("a", encoding="utf-8") as fh:
+            fh.write(json.dumps(asdict(evt), separators=(",", ":")) + "\n")
+
+```
+
 ## src/chora_validator/__init__.py
 
 ```py
@@ -1386,6 +1737,7 @@ import argparse
 
 from chora_validator.policy import load_policy
 from chora_validator.validators import validate_manifest
+from mcp_orchestrator.telemetry import get_emitter
 
 
 class CLI:
@@ -1410,12 +1762,14 @@ class CLI:
             help="Manifest file to read scenarios from",
         )
         self.parser = parser
+        self.emitter = get_emitter()
 
     def run(self, argv=None) -> int:
         args = self.parser.parse_args(argv)
         if args.command == "manifest-validate":
             validate_manifest(args.file, load_policy())
             print("Manifest valid")
+            self.emitter.emit("manifest.validate", file=str(args.file), result="ok")
         elif args.command == "behavior-validate":
             # Prefer chora-validator behavior validation if available; otherwise, do minimal tag checks.
             try:
@@ -1423,6 +1777,7 @@ class CLI:
 
                 validate_behaviors(args.path, load_policy())  # type: ignore
                 print("Behaviors valid")
+                self.emitter.emit("behavior.validate", path=str(args.path), result="ok")
             except Exception:
                 # Fallback: ensure at least one spec exists and has required tags
                 import os
@@ -1442,12 +1797,14 @@ class CLI:
                 if not found:
                     raise SystemExit("No behavior specs found")
                 print("Behaviors minimally validated (tags present)")
+                self.emitter.emit("behavior.validate.minimal", path=str(args.path), result="ok")
         elif args.command == "scenario-validate":
             try:
                 from chora_validator.validators import validate_scenarios  # type: ignore
 
                 validate_scenarios(args.manifest)  # type: ignore
                 print("Scenarios valid")
+                self.emitter.emit("scenario.validate", manifest=str(args.manifest), result="ok")
             except Exception as e:
                 raise SystemExit(str(e))
         return 0
@@ -1455,6 +1812,53 @@ class CLI:
 
 def main(argv=None) -> int:
     return CLI().run(argv)
+```
+
+## src/mcp_orchestrator/telemetry.py
+
+```py
+from __future__ import annotations
+
+from typing import Any
+
+try:
+    # Prefer platform emitter when available
+    from chora_platform_tools.telemetry import TelemetryEmitter as PlatformEmitter  # type: ignore
+except Exception:  # pragma: no cover - fallback path
+    PlatformEmitter = None  # type: ignore
+
+from pathlib import Path
+from dataclasses import dataclass, asdict
+from datetime import datetime, timezone
+import json
+
+
+def _utc_now_iso() -> str:
+    return datetime.now(timezone.utc).isoformat()
+
+
+@dataclass
+class _Evt:
+    name: str
+    ts: str
+    fields: dict[str, Any]
+
+
+class LocalEmitter:
+    def __init__(self, path: str = "var/telemetry/events.jsonl") -> None:
+        self.path = Path(path)
+        self.path.parent.mkdir(parents=True, exist_ok=True)
+
+    def emit(self, name: str, **fields: Any) -> None:
+        evt = _Evt(name=name, ts=_utc_now_iso(), fields=fields)
+        with self.path.open("a", encoding="utf-8") as fh:
+            fh.write(json.dumps(asdict(evt)) + "\n")
+
+
+def get_emitter() -> Any:
+    # For Release B in this repo, always use the local emitter to ensure
+    # consistent event shape. Swap to platform emitter in a future PR.
+    return LocalEmitter()
 ```
 
 ## tests/.gitkeep
@@ -1490,6 +1894,39 @@ def test_manifest_template():
     assert main(["manifest-validate", "manifests/star.yaml"]) == 0
 ```
 
+## tests/test_telemetry.py
+
+```py
+import json
+from pathlib import Path
+
+from mcp_orchestrator.cli import main
+
+
+def read_events(p: Path):
+    if not p.exists():
+        return []
+    return [json.loads(line) for line in p.read_text(encoding="utf-8").splitlines() if line.strip()]
+
+
+def test_telemetry_emitted_for_cli_commands(tmp_path):
+    events_file = Path("var/telemetry/events.jsonl")
+    # reset events file
+    if events_file.exists():
+        events_file.unlink()
+
+    assert main(["manifest-validate", "manifests/star.yaml"]) == 0
+    assert main(["behavior-validate", "docs/capabilities/behaviors"]) == 0
+    assert main(["scenario-validate", "manifests/star.yaml"]) == 0
+
+    events = read_events(events_file)
+    names = [e.get("name") for e in events]
+    assert "manifest.validate" in names
+    assert any(n.startswith("behavior.validate") for n in names)
+    assert "scenario.validate" in names
+
+```
+
 ## tests/value-scenarios/test_create_doc.py
 
 ```py
@@ -1503,5 +1940,41 @@ def test_value_scenario_create_doc_stub():
 
 ```
 
+```
+
+## var/bundles/liminal/README.md
+
+```md
+# Liminal Bundle (Release B)
+
+This directory will contain a bundle consumable by the Chora Liminal inbox prototype.
+
+Suggested contents
+- `manifests/star.yaml`
+- `docs/reference/overview.md`
+- `docs/reference/signals/SIG-capability-onboard.md` (or extracted snippet)
+- `var/telemetry/events.jsonl`
+
+Packaging
+- A simple `.zip` of the repo subset is sufficient for prototype testing.
+- Example:
+  ```bash
+  zip -r var/bundles/liminal/mcp-orchestration-bundle.zip \
+    manifests/star.yaml \
+    docs/reference/overview.md \
+    docs/reference/signals/SIG-capability-onboard.md \
+    var/telemetry/events.jsonl
+  ```
+
+CI artifacts
+- Workflow `.github/workflows/chora-ci.yml` builds and uploads the bundle as artifact `liminal-bundle`.
+```
+
+## var/telemetry/events.jsonl
+
+```jsonl
+{"name": "manifest.validate", "ts": "2025-10-07T04:52:07.826258+00:00", "fields": {"file": "manifests/star.yaml", "result": "ok"}}
+{"name": "behavior.validate", "ts": "2025-10-07T04:52:07.826713+00:00", "fields": {"path": "docs/capabilities/behaviors", "result": "ok"}}
+{"name": "scenario.validate", "ts": "2025-10-07T04:52:07.830340+00:00", "fields": {"manifest": "manifests/star.yaml", "result": "ok"}}
 ```
 

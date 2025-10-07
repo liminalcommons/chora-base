@@ -42,6 +42,11 @@ Release B focuses on adopting the platform telemetry/overview tooling and integr
 - [ ] Update `docs/how-to/telemetry.md` and CI to reflect platform emitter configuration.
 - [ ] Add compatibility note in signal doc linking to the migration PR.
 
+### 6. Final Validation & Release
+- [ ] Execute full Release B validation (validators + pytest + bundle ingestion by liminal) and capture evidence in signals/plan.
+- [ ] Close coordination with platform (`SIG-telemetry-adoption`) and document alignment in the plan.
+- [ ] Cut Release B tag and publish release notes once validation succeeds ("released" means tagged release artifacts are created).
+
 ## Acceptance Criteria
 1. Telemetry events generated for manifest and scenario validation commands; emitter outputs validated in tests.
 2. Repository overview kept in sync with manifest and value scenario metadata (CI enforcement).
