@@ -18,3 +18,6 @@ Packaging
     docs/reference/signals/SIG-capability-onboard.md \
     var/telemetry/events.jsonl
   ```
+
+CI artifacts
+- Workflow `.github/workflows/chora-ci.yml` builds and uploads the bundle as artifact `liminal-bundle`.
