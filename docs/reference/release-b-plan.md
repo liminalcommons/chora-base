@@ -25,17 +25,22 @@ Release B focuses on adopting the platform telemetry/overview tooling and integr
 ### 2. Repository Overview Publication
 - [x] Run `scripts/generate_repo_overview.py manifests/star.yaml -o docs/reference/overview.md` and commit output.
 - [x] Include overview link in README + change signal updates.
-- [ ] Add automation step (Makefile or script) to refresh overview and fail CI if stale.
+ - [x] Add automation step (CI) to refresh overview and fail if stale.
 
 ### 3. Liminal Bundle Prep
 - [x] Package manifest, overview, telemetry, and change signal notes under `var/bundles/liminal/` (README + structure).
 - [x] Provide usage notes for liminal repo (`docs/how-to/share-with-liminal.md`).
-- [ ] Emit signal update `SIG-liminal-inbox-prototype` referencing bundle location.
+ - [x] Emit signal update `SIG-liminal-inbox-prototype` referencing bundle location.
 
 ### 4. Governance & Comms
-- [ ] Update `docs/reference/release-b-plan.md` checkboxes as work completes.
+- [x] Update `docs/reference/release-b-plan.md` checkboxes as work completes.
 - [ ] Add weekly progress note to `docs/reference/signals/SIG-capability-onboard.md` during Release B.
 - [ ] Confirm adoption by referencing platform change signal `SIG-telemetry-adoption`.
+
+### 5. Telemetry Migration Prep
+- [ ] Replace local emitter with platform `TelemetryEmitter` once available.
+- [ ] Update `docs/how-to/telemetry.md` and CI to reflect platform emitter configuration.
+- [ ] Add compatibility note in signal doc linking to the migration PR.
 
 ## Acceptance Criteria
 1. Telemetry events generated for manifest and scenario validation commands; emitter outputs validated in tests.

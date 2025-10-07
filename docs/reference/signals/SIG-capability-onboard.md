@@ -28,3 +28,4 @@ Tracks onboarding of manifests/behaviors to Chora platform standards.
 - Telemetry events written (see `var/telemetry/events.jsonl`).
 - Overview generated (`docs/reference/overview.md`).
 - Liminal bundle packaged (`var/bundles/liminal/mcp-orchestration-bundle.zip`).
+- Liminal signal created: `docs/reference/signals/SIG-liminal-inbox-prototype.md` (status: prepared).
