@@ -18,7 +18,7 @@ See `docs/` for capability descriptions and signals.
 
 ## Release Coordination
 
-- Release plans: `docs/reference/release-a-plan.md`, `docs/reference/release-b-plan.md`, `docs/reference/release-plan-b.md`
+- Release plans: `docs/reference/release-a-plan.md`, `docs/reference/release-b-plan.md`, `docs/reference/release-plan-b.md`, `docs/reference/release-c-plan.md`
 - Repository overview: `docs/reference/overview.md`
 - Telemetry how-to: `docs/how-to/telemetry.md`
 - Codex agent instructions: `.codex/release-b-prompt.md`

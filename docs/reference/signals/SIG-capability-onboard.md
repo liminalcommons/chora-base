@@ -41,3 +41,6 @@ Tracks onboarding of manifests/behaviors to Chora platform standards.
 - Telemetry counts (JSONL): `manifest.validate=1`, `behavior.validate=1`, `scenario.validate=1`.
 - Liminal bundle SHA256: `4ea87f798ae0f1d94db83c28f6bf3cd63db2a2a9a7534f30a942a3960eb4ddbd` (size: 2432 bytes).
 - Pending coordination: reference platform `SIG-telemetry-adoption` once confirmed.
+
+### Coordination — 2025-10-07
+- Platform signal confirmed: `SIG-telemetry-adoption` (referenced by Release B). This repo emits telemetry per shared guidance and will track migration to the shared emitter in Release C.
