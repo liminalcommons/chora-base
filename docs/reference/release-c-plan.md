@@ -25,6 +25,13 @@ Aligns with:
 - [ ] Update CI to exercise platform emitter and archive samples.
 - [ ] Add migration note and link to platform change signal `SIG-telemetry-adoption`.
 - [ ] Confirm no schema deviations; document any via change signals.
+ - [ ] Remove local shim (`src/mcp_orchestrator/telemetry.py`) after migration; update tests accordingly.
+ - [ ] Add backout plan (toggle to local shim) if platform emitter is unavailable.
+ - [ ] Bump version and annotate changelog/release notes with migration details.
+
+## Backlog / Follow-ups
+- Add dashboard link(s) once platform telemetry dashboards are available.
+- Coordinate with discovery/indexer team for any related schema or index updates.
 
 ## Acceptance Criteria
 1. CLI emits platform-compliant telemetry; local and CI validation succeed.
@@ -34,4 +41,3 @@ Aligns with:
 ## Evidence & Links
 - Platform signal: `SIG-telemetry-adoption` (referenced from capability signal).
 - Telemetry samples archived in CI artifacts.
-

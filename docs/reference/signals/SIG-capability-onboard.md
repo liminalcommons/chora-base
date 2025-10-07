@@ -43,4 +43,4 @@ Tracks onboarding of manifests/behaviors to Chora platform standards.
 - Pending coordination: reference platform `SIG-telemetry-adoption` once confirmed.
 
 ### Coordination — 2025-10-07
-- Platform signal confirmed: `SIG-telemetry-adoption` (referenced by Release B). This repo emits telemetry per shared guidance and will track migration to the shared emitter in Release C.
+- Platform signal confirmed: `SIG-telemetry-adoption` (referenced by Release B digest). This repo emits telemetry per shared guidance and will track migration to the shared emitter in Release C.
