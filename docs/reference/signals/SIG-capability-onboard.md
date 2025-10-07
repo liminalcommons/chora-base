@@ -22,3 +22,9 @@ Tracks onboarding of manifests/behaviors to Chora platform standards.
 - closed (Release A complete)
 - Release B: telemetry integration started; events emitted to `var/telemetry/events.jsonl` and uploaded via CI artifact.
 - Overview generated at `docs/reference/overview.md`.
+
+### Release B Log — 2025-10-07
+- Validators: manifest, behaviors, scenarios → success (local).
+- Telemetry events written (see `var/telemetry/events.jsonl`).
+- Overview generated (`docs/reference/overview.md`).
+- Liminal bundle packaged (`var/bundles/liminal/mcp-orchestration-bundle.zip`).

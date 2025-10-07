@@ -1,25 +1,26 @@
 # Codex Instructions — Release B (MCP Orchestration)
 
-Value scenario onboarding is complete; finish telemetry adoption and bundle delivery for Release B.
+Release B telemetry, overview, and bundling are in place; drive the remaining gates to completion.
 
 ## Context
-- Release docs: `docs/reference/release-b-plan.md` (active), `docs/reference/release-a-plan.md` (closure notes).
-- Assets: `manifests/star.yaml`, behaviors under `docs/capabilities/behaviors/`, value scenario docs/tests, telemetry sink `var/telemetry/events.jsonl`, bundle directory `var/bundles/liminal/`.
-- Documentation: `docs/how-to/create-doc.md`, telemetry/bundle stubs (`docs/how-to/telemetry.md`, `docs/how-to/share-with-liminal.md`).
-- Change signal: `docs/reference/signals/SIG-capability-onboard.md` (log weekly progress).
+- Release docs: `docs/reference/release-b-plan.md` (telemetry + overview tasks checked off, remaining items highlighted), `docs/reference/release-a-plan.md` (closure notes).
+- Automation: `.github/workflows/chora-ci.yml` runs validators, pytest, generates `docs/reference/overview.md`, uploads telemetry and liminal bundle artifacts.
+- Telemetry: CLI shim emits JSONL to `var/telemetry/events.jsonl`; documented in `docs/how-to/telemetry.md`.
+- Bundles: `var/bundles/liminal/mcp-orchestration-bundle.zip` generated locally/CI with manifest, overview, telemetry, signal snippet; packaging steps in `docs/how-to/share-with-liminal.md`.
+- Change signals: `docs/reference/signals/SIG-capability-onboard.md` closed for Release A with Release B notes; liminal signal still pending.
 
-## Priorities
-1. **Telemetry Integration** — Vendor/import `TelemetryEmitter` from platform tooling, emit events for validator CLI commands + key flows, and capture examples in `docs/how-to/telemetry.md`. Add regression tests covering JSONL output.
-2. **CI & Validator Coverage** — Add/update automation (workflow or script) to run manifest/behavior/scenario validators and pytest on every change. Record evidence in release plan and change signal.
-3. **Liminal Bundle Prep** — Populate `var/bundles/liminal/` with manifest, overview, telemetry snapshot, and signal note. Document packaging/consumption steps in `docs/how-to/share-with-liminal.md` and reference bundle hashes in change signals.
-4. **Overview Publication** — Generate `docs/reference/overview.md` via `scripts/generate_repo_overview.py`, enforce freshness (pre-commit or CI), and link from README + signals.
+## Remaining Objectives
+1. **Overview Freshness Gate** — Implement CI enforcement that fails when `docs/reference/overview.md` is stale relative to `manifests/star.yaml`. Update release plan and signal once active.
+2. **Liminal Signal Emission** — After the next liminal ingestion run, emit `SIG-liminal-inbox-prototype` entry referencing the bundle zip and telemetry evidence. Document steps in the release plan.
+3. **Telemetry Migration** — Plan swap from local shim to platform `TelemetryEmitter`; capture actions/risks when the shared package is available.
+4. **Continuous Evidence** — Keep `docs/reference/release-b-plan.md` and signal notes updated with timestamps, command outputs, and artifact paths; link CI artifacts where applicable.
 
 ## Workflow Expectations
-- Review outstanding checkboxes in `docs/reference/release-b-plan.md` before new work.
-- After running validators/tests, update release docs and change signals with command outputs and timestamps.
-- Keep telemetry artifacts organised under `var/` and share bundle metadata when coordinating with `chora-liminal`.
+- Start by reviewing unchecked tasks in `docs/reference/release-b-plan.md`.
+- Run validators + pytest locally (PYTHONPATH=src) after changes touching manifests or telemetry.
+- When CI artifacts update, mirror the evidence (bundle paths, overview hash) into docs/signals.
 
 ## Guardrails
-- Maintain stdout JSON-RPC purity for CLI scripts; log diagnostics to stderr.
-- Coordinate schema updates with platform signals before merging breaking changes.
-- Run `pytest -q` (and validator commands) whenever telemetry or manifest logic changes.
+- Maintain stdout JSON-RPC purity for CLI tools; send diagnostics to stderr.
+- Store telemetry/bundle outputs under `var/` and documentation under `docs/` as already structured.
+- Coordinate schema changes with platform signals before shipping breaking updates.

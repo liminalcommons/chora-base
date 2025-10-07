@@ -50,3 +50,14 @@ Release B focuses on adopting the platform telemetry/overview tooling and integr
 - Change signal updates referencing telemetry + bundle locations
 
 Keep this plan current; mark tasks complete with timestamps and link supporting PRs or commits.
+
+## Verification
+
+- Validators (local):
+  - `PYTHONPATH=src python -m mcp_orchestrator.cli manifest-validate manifests/star.yaml` → success
+  - `PYTHONPATH=src python -m mcp_orchestrator.cli behavior-validate docs/capabilities/behaviors` → success
+  - `PYTHONPATH=src python -m mcp_orchestrator.cli scenario-validate manifests/star.yaml` → success
+- Overview: generated `docs/reference/overview.md`
+- Telemetry: events written to `var/telemetry/events.jsonl` (JSONL)
+- Bundle: `var/bundles/liminal/mcp-orchestration-bundle.zip` verified (`zip -Tv`)
+- Tests: `PYTHONPATH=src pytest -q` → all tests passed
