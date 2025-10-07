@@ -1,24 +1,25 @@
 # Codex Instructions — Release B (MCP Orchestration)
 
-Own Release B adoption for the MCP orchestration capability and stay aligned with platform guidance.
+Value scenario onboarding is complete; finish telemetry adoption and bundle delivery for Release B.
 
 ## Context
-- Release docs: `docs/reference/release-a-plan.md` (closed) and `docs/reference/release-b-plan.md` (active tracker).
-- Operational assets: `manifests/star.yaml`, `docs/capabilities/behaviors/`, value scenario docs/tests, `scripts/`, and telemetry sink `var/telemetry/events.jsonl`.
-- Coordination: platform digests (`chora-platform/docs/reference/release-b-digest/`), liminal bundle expectations, change signal `docs/reference/signals/SIG-capability-onboard.md`.
+- Release docs: `docs/reference/release-b-plan.md` (active), `docs/reference/release-a-plan.md` (closure notes).
+- Assets: `manifests/star.yaml`, behaviors under `docs/capabilities/behaviors/`, value scenario docs/tests, telemetry sink `var/telemetry/events.jsonl`, bundle directory `var/bundles/liminal/`.
+- Documentation: `docs/how-to/create-doc.md`, telemetry/bundle stubs (`docs/how-to/telemetry.md`, `docs/how-to/share-with-liminal.md`).
+- Change signal: `docs/reference/signals/SIG-capability-onboard.md` (log weekly progress).
 
-## Objectives
-1. **Telemetry Integration** — Import `TelemetryEmitter` from `chora_platform_tools` (vendored or vendored copy) into CLI pathways (manifest/behavior/scenario validators, automation scripts). Emit structured events to `var/telemetry/events.jsonl`, add regression tests, and document usage under `docs/how-to/telemetry.md`.
-2. **Repository Overview Publication** — Generate `docs/reference/overview.md` (Markdown + optional JSON) using `scripts/generate_repo_overview.py`. Add a refresh command/CI check to prevent drift and link the overview from README + change signals.
-3. **Liminal Bundle Delivery** — Package manifest, overview, telemetry snapshot, and the latest signal note into `var/bundles/liminal/`. Provide instructions for consumers (`docs/how-to/share-with-liminal.md`) and reference bundle commit hashes in `SIG-liminal-inbox-prototype`.
-4. **Governance Updates** — Keep `docs/reference/release-b-plan.md` and `docs/reference/signals/SIG-capability-onboard.md` current (timestamps, evidence links, dependencies on platform artifacts).
+## Priorities
+1. **Telemetry Integration** — Vendor/import `TelemetryEmitter` from platform tooling, emit events for validator CLI commands + key flows, and capture examples in `docs/how-to/telemetry.md`. Add regression tests covering JSONL output.
+2. **CI & Validator Coverage** — Add/update automation (workflow or script) to run manifest/behavior/scenario validators and pytest on every change. Record evidence in release plan and change signal.
+3. **Liminal Bundle Prep** — Populate `var/bundles/liminal/` with manifest, overview, telemetry snapshot, and signal note. Document packaging/consumption steps in `docs/how-to/share-with-liminal.md` and reference bundle hashes in change signals.
+4. **Overview Publication** — Generate `docs/reference/overview.md` via `scripts/generate_repo_overview.py`, enforce freshness (pre-commit or CI), and link from README + signals.
 
 ## Workflow Expectations
-- Sync with the latest platform release digest before starting work; pull any schema or bundle updates.
-- Run required validators/tests (`python -m mcp_orchestrator.cli ...`, `pytest -q`) whenever manifests, behaviors, or telemetry code changes.
-- After each milestone, update release docs and change signals, and drop breadcrumbs (paths/commands) other agents can reuse.
+- Review outstanding checkboxes in `docs/reference/release-b-plan.md` before new work.
+- After running validators/tests, update release docs and change signals with command outputs and timestamps.
+- Keep telemetry artifacts organised under `var/` and share bundle metadata when coordinating with `chora-liminal`.
 
 ## Guardrails
-- Maintain stdout JSON-RPC purity for CLI scripts; emit diagnostics to stderr.
-- Keep telemetry artifacts under `var/` and document any vendored platform modules.
-- Coordinate schema changes with platform signals before committing breaking updates.
+- Maintain stdout JSON-RPC purity for CLI scripts; log diagnostics to stderr.
+- Coordinate schema updates with platform signals before merging breaking changes.
+- Run `pytest -q` (and validator commands) whenever telemetry or manifest logic changes.

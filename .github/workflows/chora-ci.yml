@@ -48,3 +48,18 @@ jobs:
           path: |
             var/telemetry/events.jsonl
             docs/reference/overview.md
+
+      - name: Package liminal bundle
+        run: |
+          mkdir -p var/bundles/liminal
+          zip -j var/bundles/liminal/mcp-orchestration-bundle.zip \
+            manifests/star.yaml \
+            docs/reference/overview.md \
+            docs/reference/signals/SIG-capability-onboard.md \
+            var/telemetry/events.jsonl || true
+
+      - name: Upload liminal bundle
+        uses: actions/upload-artifact@v4
+        with:
+          name: liminal-bundle
+          path: var/bundles/liminal/mcp-orchestration-bundle.zip

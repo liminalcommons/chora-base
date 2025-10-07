@@ -24,12 +24,12 @@ Release B focuses on adopting the platform telemetry/overview tooling and integr
 
 ### 2. Repository Overview Publication
 - [x] Run `scripts/generate_repo_overview.py manifests/star.yaml -o docs/reference/overview.md` and commit output.
-- [ ] Include overview link in README + change signal updates.
+- [x] Include overview link in README + change signal updates.
 - [ ] Add automation step (Makefile or script) to refresh overview and fail CI if stale.
 
 ### 3. Liminal Bundle Prep
 - [x] Package manifest, overview, telemetry, and change signal notes under `var/bundles/liminal/` (README + structure).
-- [ ] Provide usage notes for liminal repo (`docs/how-to/share-with-liminal.md`).
+- [x] Provide usage notes for liminal repo (`docs/how-to/share-with-liminal.md`).
 - [ ] Emit signal update `SIG-liminal-inbox-prototype` referencing bundle location.
 
 ### 4. Governance & Comms
