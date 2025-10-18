@@ -1,0 +1,198 @@
+# chora-base: Python Project Template
+# Based on mcp-n8n Phase 4.5/4.6 - LLM-Intelligent Developer Experience
+# https://github.com/liminalcommons/mcp-n8n
+
+_min_copier_version: "9.0.0"
+
+# === Project Metadata ===
+
+project_name:
+  type: str
+  help: What is your project name?
+  default: my-chora-project
+  validator: >-
+    {% if not (project_name | regex_search('^[a-z][a-z0-9\-]+$')) %}
+    Must start with lowercase letter, followed by letters, digits, or dashes
+    {% endif %}
+
+project_slug:
+  type: str
+  help: Project slug (for directory names, URLs)
+  default: "{{ project_name | lower | replace(' ', '-') | replace('_', '-') }}"
+
+package_name:
+  type: str
+  help: Python package name (must be valid Python identifier)
+  default: "{{ project_slug | replace('-', '_') }}"
+  validator: >-
+    {% if not (package_name | regex_search('^[a-z][a-z0-9_]+$')) %}
+    Must be valid Python identifier (lowercase letters, digits, underscores)
+    {% endif %}
+
+project_description:
+  type: str
+  help: Short description of your project
+  default: A Python project built with chora-base template
+
+project_version:
+  type: str
+  help: Initial version number
+  default: "0.1.0"
+  validator: >-
+    {% if not (project_version | regex_search('^\d+\.\d+\.\d+$')) %}
+    Must be semantic version (e.g., 0.1.0)
+    {% endif %}
+
+# === Author Information ===
+
+author_name:
+  type: str
+  help: Author name for project metadata
+  default: Your Name
+
+author_email:
+  type: str
+  help: Author email for project metadata
+  default: your.email@example.com
+  validator: >-
+    {% if not (author_email | regex_search('^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$')) %}
+    Must be valid email address
+    {% endif %}
+
+github_username:
+  type: str
+  help: GitHub username or organization
+  default: liminalcommons
+
+# === Python Configuration ===
+
+python_version:
+  type: str
+  help: Minimum Python version to target
+  choices:
+    - "3.11"
+    - "3.12"
+    - "3.13"
+  default: "3.11"
+
+# === Project Type & Features ===
+
+project_type:
+  type: str
+  help: What type of project is this?
+  choices:
+    - mcp_server
+    - library
+    - cli_tool
+    - web_service
+  default: mcp_server
+
+include_cli:
+  type: bool
+  help: Include CLI interface (chora-memory or custom)?
+  default: true
+
+cli_framework:
+  type: str
+  help: Which CLI framework?
+  choices:
+    - click
+    - typer
+  default: click
+  when: "{{ include_cli }}"
+
+# === Chora Ecosystem Features ===
+
+include_memory_system:
+  type: bool
+  help: Include Agent Memory System (.chora/memory/)? [Event log, knowledge graph, trace context]
+  default: true
+
+include_agents_md:
+  type: bool
+  help: Include AGENTS.md (machine-readable instructions for AI agents)?
+  default: true
+
+# === Testing & Quality ===
+
+include_tests:
+  type: bool
+  help: Include testing infrastructure?
+  default: true
+
+test_coverage_threshold:
+  type: int
+  help: Minimum test coverage percentage
+  default: 85
+  validator: >-
+    {% if test_coverage_threshold < 0 or test_coverage_threshold > 100 %}
+    Must be between 0 and 100
+    {% endif %}
+  when: "{{ include_tests }}"
+
+include_pre_commit:
+  type: bool
+  help: Include pre-commit hooks (ruff, black, mypy)?
+  default: true
+
+include_github_actions:
+  type: bool
+  help: Include GitHub Actions CI/CD workflows?
+  default: true
+
+# === Documentation ===
+
+include_contributing:
+  type: bool
+  help: Include CONTRIBUTING.md?
+  default: true
+
+include_development_docs:
+  type: bool
+  help: Include DEVELOPMENT.md (developer deep dive)?
+  default: true
+
+include_troubleshooting:
+  type: bool
+  help: Include TROUBLESHOOTING.md?
+  default: true
+
+# === License ===
+
+license:
+  type: str
+  help: Project license
+  choices:
+    - MIT
+    - Apache-2.0
+    - GPL-3.0
+    - BSD-3-Clause
+    - Proprietary
+  default: MIT
+
+# === Development Tools ===
+
+include_justfile:
+  type: bool
+  help: Include justfile for task automation?
+  default: true
+
+include_docker:
+  type: bool
+  help: Include Docker configuration (Dockerfile, docker-compose.yml)?
+  default: false
+
+# === Computed Values (not questions) ===
+
+_templates_suffix: ".jinja"
+
+_skip_if_exists:
+  - .env
+  - .chora/memory/events/**
+  - .chora/memory/knowledge/**
+  - .chora/memory/profiles/**
+
+_tasks:
+  - "{% if include_pre_commit %}echo 'Run: pre-commit install'{% endif %}"
+  - "{% if include_justfile %}echo 'Run: just --list to see available commands'{% endif %}"
+  - echo "Setup complete! Run './scripts/setup.sh' to install dependencies"

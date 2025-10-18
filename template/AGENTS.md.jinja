@@ -1,0 +1,781 @@
+# AGENTS.md
+
+This file provides machine-readable instructions for AI coding agents working with {{ project_name }}.
+
+---
+
+## Project Overview
+
+**{{ project_name }}** is {% if project_type == 'mcp_server' %}a Model Context Protocol (MCP) server that provides [describe your server's capabilities]{% elif project_type == 'library' %}a Python library that [describe your library's purpose]{% elif project_type == 'cli_tool' %}a command-line tool that [describe what your tool does]{% elif project_type == 'web_service' %}a web service/API that [describe your service]{% endif %}.
+
+{% if project_type == 'mcp_server' -%}
+**Core Architecture:** [Describe your architecture pattern]
+- [Key architecture point 1]
+- [Key architecture point 2]
+- [Key architecture point 3]
+
+**Key Components:**
+- **Main Module** (`[main_module].py`) - [Description]
+- **[Component 2]** (`[module].py`) - [Description]
+- **[Component 3]** (`[module].py`) - [Description]
+
+{% endif -%}
+---
+
+## Dev Environment Tips
+
+### Prerequisites
+- **Python {{ python_version }}+** required ({{ python_version }}+ recommended)
+- **Git** for version control
+{% if include_justfile -%}
+- **just** (optional but recommended) - Task runner for common commands
+{% endif -%}
+- **[Add project-specific prerequisites]**
+
+### Installation
+
+```bash
+# Clone repository
+git clone https://github.com/{{ github_username }}/{{ project_slug }}.git
+cd {{ project_slug }}
+
+# One-command setup (recommended)
+./scripts/setup.sh
+
+# Manual setup alternative
+python -m venv .venv
+source .venv/bin/activate  # or .venv\Scripts\activate on Windows
+pip install -e ".[dev]"
+{% if include_pre_commit -%}
+pre-commit install
+{% endif -%}
+```
+
+### Environment Variables
+
+Create a `.env` file in project root:
+
+```env
+# Application configuration
+{{ package_name | upper }}_LOG_LEVEL=INFO     # DEBUG, INFO, WARNING, ERROR, CRITICAL
+{{ package_name | upper }}_DEBUG=0             # Set to 1 for debug mode
+
+# Add your environment variables here
+```
+
+{% if project_type == 'mcp_server' -%}
+### Client Configuration
+
+#### Claude Desktop (macOS)
+
+**Development Mode (Editable Install):**
+```json
+{
+  "mcpServers": {
+    "{{ project_slug }}-dev": {
+      "command": "/path/to/{{ project_slug }}/.venv/bin/python",
+      "args": ["-m", "{{ package_name }}.server"],
+      "cwd": "/path/to/{{ project_slug }}",
+      "env": {
+        "{{ package_name | upper }}_DEBUG": "1"
+      }
+    }
+  }
+}
+```
+
+**Production Mode (Installed Package):**
+```json
+{
+  "mcpServers": {
+    "{{ project_slug }}": {
+      "command": "{{ project_slug }}",
+      "args": [],
+      "env": {}
+    }
+  }
+}
+```
+
+**Config file location:** `~/Library/Application Support/Claude/claude_desktop_config.json`
+
+#### Cursor
+
+See `.config/cursor-mcp.example.json` for complete examples.
+
+**Config file location:** `~/.cursor/mcp.json`
+
+{% endif -%}
+---
+
+## Testing Instructions
+
+### Run All Tests
+
+```bash
+{% if include_justfile -%}
+# Using just (recommended)
+just test
+
+{% endif -%}
+# Direct pytest
+pytest
+
+# With coverage report
+{% if include_justfile -%}
+just test-coverage
+# OR
+{% endif -%}
+pytest --cov={{ package_name }} --cov-report=term-missing
+```
+
+{% if include_tests -%}
+### Smoke Tests (Quick Validation)
+
+```bash
+{% if include_justfile -%}
+# Fast smoke tests (<30 seconds)
+just smoke
+
+{% endif -%}
+# Direct pytest
+pytest tests/smoke/ -v
+```
+
+### Test Categories
+
+```bash
+# Unit tests only
+pytest tests/ -k "not integration and not smoke" -v
+
+# Integration tests
+pytest tests/integration/ -v
+
+# Specific test file
+pytest tests/test_example.py -v
+
+# Specific test function
+pytest tests/test_example.py::test_function -v
+```
+
+{% endif -%}
+{% if include_pre_commit -%}
+### Pre-Commit Hooks
+
+```bash
+{% if include_justfile -%}
+# Run all pre-commit checks
+just pre-commit
+# OR
+{% endif -%}
+pre-commit run --all-files
+
+# Install hooks (one-time setup)
+pre-commit install
+
+# Run specific hook
+pre-commit run ruff --all-files
+pre-commit run mypy --all-files
+```
+
+### Linting & Type Checking
+
+```bash
+{% if include_justfile -%}
+# All quality checks (lint + typecheck + format)
+just check
+
+# Individual checks
+just lint       # Ruff linting
+just typecheck  # Mypy type checking
+just format     # Ruff formatting
+
+{% endif -%}
+# Manual commands
+ruff check src/{{ package_name }} tests/
+mypy src/{{ package_name }}
+ruff format src/{{ package_name }} tests/
+
+# Auto-fix linting issues
+ruff check --fix src/{{ package_name }} tests/
+```
+
+{% endif -%}
+{% if include_tests -%}
+### Coverage Requirements
+
+- **Overall coverage:** ≥{{ test_coverage_threshold }}%
+- **Critical paths:** 100% ([list critical paths])
+- **[Module name]:** ≥90% ([describe module])
+
+{% endif -%}
+{% if include_justfile -%}
+### Pre-Merge Verification
+
+```bash
+# Full verification before submitting PR
+just pre-merge
+
+# Equivalent to:
+{% if include_pre_commit -%}
+# - pre-commit run --all-files
+{% endif -%}
+{% if include_tests -%}
+# - pytest (smoke + full test suite)
+# - coverage check
+{% endif -%}
+```
+
+{% endif -%}
+---
+
+## PR Instructions
+
+### Branch Naming
+
+```
+feature/descriptive-name     # New features
+fix/issue-description        # Bug fixes
+hotfix/critical-fix          # Production hotfixes
+docs/documentation-update    # Documentation only
+refactor/code-improvement    # Refactoring
+```
+
+### Commit Message Format
+
+Follow **Conventional Commits** style:
+
+```
+type(scope): brief description
+
+Detailed explanation of changes (if needed)
+
+Closes #issue-number
+```
+
+**Types:** `feat`, `fix`, `docs`, `refactor`, `test`, `chore`, `perf`
+
+**Scopes:** [List your project-specific scopes]
+
+**Examples:**
+```
+feat(core): add new feature X
+
+Implement feature X with comprehensive error handling
+and unit tests.
+
+Closes #23
+
+---
+
+fix(server): handle edge case gracefully
+
+When [condition], system now [behavior] instead of
+crashing.
+
+Fixes #45
+```
+
+### PR Checklist
+
+**Before opening PR:**
+- [ ] Branch is up to date with `main`
+{% if include_tests -%}
+- [ ] All tests pass locally (`{% if include_justfile %}just test{% else %}pytest{% endif %}`)
+- [ ] Coverage maintained or improved (≥{{ test_coverage_threshold }}%)
+{% endif -%}
+{% if include_pre_commit -%}
+- [ ] Linting passes (`{% if include_justfile %}just lint{% else %}ruff check{% endif %}`)
+- [ ] Type checking passes (`{% if include_justfile %}just typecheck{% else %}mypy src/{% endif %}`)
+- [ ] Pre-commit hooks pass (`{% if include_justfile %}just pre-commit{% else %}pre-commit run --all-files{% endif %}`)
+- [ ] Code formatted (`{% if include_justfile %}just format{% else %}ruff format{% endif %}`)
+{% endif -%}
+
+**Documentation (if applicable):**
+- [ ] README.md updated (if user-facing changes)
+{% if include_agents_md -%}
+- [ ] AGENTS.md updated (if agent workflow changes)
+{% endif -%}
+- [ ] API reference docs updated (if new tools/capabilities)
+- [ ] CHANGELOG.md entry added (for releases)
+
+**Testing:**
+{% if include_tests -%}
+- [ ] Unit tests added/updated
+- [ ] Integration tests added (if applicable)
+- [ ] Smoke tests pass (`{% if include_justfile %}just smoke{% else %}pytest tests/smoke/{% endif %}`)
+{% endif -%}
+- [ ] Manual testing completed
+
+**Review:**
+- [ ] Self-review completed
+- [ ] Code follows project style guide
+- [ ] No debug code or commented-out code
+- [ ] Error messages are clear and actionable
+- [ ] Logging statements use appropriate levels
+
+{% if include_pre_commit -%}
+### Quality Gates (must pass)
+
+1. **Lint:** `ruff check` → No errors
+2. **Format:** `ruff format --check` → Formatted
+3. **Types:** `mypy` → Type safe
+{% if include_tests -%}
+4. **Tests:** All tests pass
+5. **Coverage:** ≥{{ test_coverage_threshold }}%
+{% endif -%}
+6. **Pre-commit:** All hooks pass
+
+{% endif -%}
+### PR Review Process
+
+- **Required approvals:** 1+ reviewer
+- **Merge strategy:** Squash and merge (clean history)
+{% if include_github_actions -%}
+- **CI/CD:** All quality gates must pass
+{% endif -%}
+- **Timeline:** Most PRs reviewed within 24-48 hours
+
+---
+
+## Architecture Overview
+
+[Describe your project's architecture here. Include diagrams, key design patterns, and architectural decisions.]
+
+### Key Design Patterns
+
+- **[Pattern 1]:** [Description]
+- **[Pattern 2]:** [Description]
+- **[Pattern 3]:** [Description]
+
+### Configuration Management
+
+[Describe how configuration works in your project, including environment variables, config files, etc.]
+
+---
+
+## Key Constraints & Design Decisions
+
+### Target Audience
+
+{{ project_description }}
+
+{% if project_type == 'mcp_server' -%}
+**CRITICAL:** {{ project_name }} is designed for **LLM-intelligent MCP clients** (Claude Desktop, Cursor, Roo Code).
+
+- ✅ **FOR LLM agents** - Claude Desktop, Cursor, custom MCP clients
+- ✅ **FOR programmatic use** - Python API, automation workflows
+- ❌ **NOT for human CLI users** - No interactive wizards or watch modes
+
+**Implication:** All features prioritize agent ergonomics over human UX.
+
+{% endif -%}
+### [Additional Constraints]
+
+[Document your project-specific constraints and design decisions here.]
+
+---
+
+## Common Tasks for Agents
+
+### Task 1: [Common Task Name]
+
+```python
+# Example code for common task
+# [Provide clear, copy-paste ready examples]
+```
+
+### Task 2: [Common Task Name]
+
+```python
+# Example code
+```
+
+### Task 3: [Common Task Name]
+
+```bash
+# Example bash commands
+```
+
+[Add 3-5 common tasks that agents will frequently perform with your project]
+
+---
+
+## Project Structure
+
+```
+{{ project_slug }}/
+├── src/{{ package_name }}/       # Main source code
+│   ├── __init__.py
+{% if project_type == 'mcp_server' -%}
+│   ├── server.py               # MCP server entry point
+{% elif project_type == 'cli_tool' or include_cli -%}
+│   ├── cli/                    # CLI interface
+│   │   └── main.py
+{% endif -%}
+{% if include_memory_system -%}
+│   ├── memory/                 # Agent memory system
+│   │   ├── event_log.py
+│   │   ├── knowledge_graph.py
+│   │   └── trace.py
+{% endif -%}
+│   └── [your modules]
+{% if include_tests -%}
+├── tests/                      # Test suite
+│   ├── smoke/                  # Smoke tests (<30s)
+│   ├── integration/            # Integration tests
+│   └── test_*.py               # Unit tests
+{% endif -%}
+├── scripts/                    # Automation scripts
+│   ├── setup.sh                # One-command setup
+│   ├── venv-create.sh          # Create virtual environment
+│   └── [other scripts]
+{% if include_development_docs or include_troubleshooting -%}
+├── docs/                       # Documentation
+{% if include_development_docs -%}
+│   ├── DEVELOPMENT.md          # Developer deep dive
+{% endif -%}
+{% if include_troubleshooting -%}
+│   └── TROUBLESHOOTING.md      # Problem-solution guide
+{% endif -%}
+{% endif -%}
+{% if include_github_actions -%}
+├── .github/workflows/          # CI/CD pipelines
+│   ├── test.yml                # Test workflow
+│   └── lint.yml                # Lint workflow
+{% endif -%}
+{% if include_memory_system -%}
+├── .chora/memory/              # Agent memory (gitignored)
+│   └── README.md               # Memory architecture docs
+{% endif -%}
+├── pyproject.toml              # Python packaging & tool config
+{% if include_justfile -%}
+├── justfile                    # Task runner commands
+{% endif -%}
+├── .env.example                # Example environment variables
+├── .gitignore                  # Git ignore patterns
+├── README.md                   # Human-readable project overview
+├── AGENTS.md                   # This file (machine-readable instructions)
+{% if include_contributing -%}
+├── CONTRIBUTING.md             # Contribution guidelines
+{% endif -%}
+└── LICENSE                     # {{ license }} license
+```
+
+---
+
+## Documentation Philosophy
+
+### Diátaxis Framework
+
+All documentation follows the [Diátaxis framework](https://diataxis.fr/):
+
+1. **Tutorials** (learning-oriented) - Step-by-step lessons for newcomers
+2. **How-To Guides** (task-oriented) - Recipes for specific tasks
+3. **Reference** (information-oriented) - Technical specifications
+4. **Explanation** (understanding-oriented) - Conceptual background
+
+**For agents:** Reference docs are most useful (AGENTS.md, API docs). Tutorials are for humans.
+
+### Documentation Hierarchy
+
+- **README.md** - Human-readable overview, quick start, high-level features
+- **AGENTS.md** - Machine-readable instructions for AI agents (this file)
+{% if include_contributing -%}
+- **CONTRIBUTING.md** - Human contributor guide (code style, PR process)
+{% endif -%}
+{% if include_development_docs -%}
+- **DEVELOPMENT.md** - Developer deep dive (architecture, debugging, testing)
+{% endif -%}
+{% if include_troubleshooting -%}
+- **TROUBLESHOOTING.md** - Problem-solution guide (common issues)
+{% endif -%}
+
+### DDD/BDD/TDD Workflow
+
+This project follows the Chora ecosystem's integrated DDD/BDD/TDD workflow:
+
+1. **DDD Phase** - Write API reference docs FIRST (documentation-driven design)
+2. **BDD Phase** - Write scenarios SECOND (behavior-driven development)
+3. **TDD Phase** - Red-Green-Refactor THIRD (test-driven development)
+4. **CI Phase** - Automated quality gates
+5. **Merge & Release** - Semantic versioning
+
+---
+
+## Troubleshooting
+
+### Application Won't Start
+
+```bash
+# Check Python version
+python --version  # Must be {{ python_version }}+
+
+# Check virtual environment
+which python  # Should be .venv/bin/python
+
+# Reinstall dependencies
+./scripts/venv-create.sh
+
+# Check environment variables
+cat .env
+
+# Test application directly
+python -m {{ package_name }}{% if project_type == 'mcp_server' %}.server{% elif project_type == 'cli_tool' or include_cli %}.cli.main{% endif %}
+```
+
+{% if include_tests -%}
+### Test Failures
+
+```bash
+# Run specific test with verbose output
+pytest tests/test_example.py::test_function -vvs
+
+# Show full error trace
+pytest --tb=long
+
+# Run with debugger
+pytest --pdb
+
+# Check test coverage
+pytest --cov={{ package_name }} --cov-report=term-missing
+
+# Clean test cache
+pytest --cache-clear
+rm -rf .pytest_cache __pycache__
+```
+
+{% endif -%}
+{% if include_pre_commit -%}
+### Type Checking Errors
+
+```bash
+# Run mypy with verbose output
+mypy src/{{ package_name }} --show-error-codes --pretty
+
+# Check specific file
+mypy src/{{ package_name }}/[module].py
+
+# Ignore specific error (if intentional)
+# Add to line:
+# type: ignore[error-code]
+
+# Update mypy configuration
+# Edit [tool.mypy] in pyproject.toml
+```
+
+{% endif -%}
+{% if include_tests -%}
+### Coverage Drop
+
+```bash
+# Show missing coverage lines
+pytest --cov={{ package_name }} --cov-report=term-missing
+
+# Generate HTML report
+pytest --cov={{ package_name }} --cov-report=html
+open htmlcov/index.html
+
+# Check coverage for specific module
+pytest --cov={{ package_name }}.[module] --cov-report=term-missing
+
+# Identify untested code
+coverage report --show-missing
+```
+
+{% endif -%}
+{% if include_pre_commit -%}
+### Pre-Commit Hook Failures
+
+```bash
+# Run specific hook
+pre-commit run ruff --all-files
+pre-commit run mypy --all-files
+
+# Update hook versions
+pre-commit autoupdate
+
+# Bypass hooks (emergency only, NOT recommended)
+git commit --no-verify
+
+# Clear pre-commit cache
+pre-commit clean
+```
+
+{% endif -%}
+---
+
+{% if include_memory_system -%}
+## Agent Memory System
+
+### Overview
+
+{{ project_name }} includes a stateful memory infrastructure for cross-session learning and knowledge persistence, implementing A-MEM (Agentic Memory) principles.
+
+**Memory capabilities:**
+- **Event Log** - Append-only operation history with trace correlation
+- **Knowledge Graph** - Structured learnings with Zettelkasten-style linking
+- **Trace Context** - Multi-step workflow tracking via `CHORA_TRACE_ID`
+- **Cross-Session Learning** - Avoid repeating mistakes across sessions
+
+### Memory Location
+
+All memory data stored in `.chora/memory/`:
+
+```
+.chora/memory/
+├── README.md                    # Memory architecture documentation
+├── events/                      # Event log storage (monthly partitions)
+│   ├── 2025-01/
+│   │   ├── events.jsonl         # Daily aggregated events
+│   │   └── traces/              # Per-trace details
+│   └── index.json               # Event index (searchable)
+├── knowledge/                   # Knowledge graph
+│   ├── notes/                   # Individual knowledge notes
+│   ├── links.json               # Note connections
+│   └── tags.json                # Tag index
+├── profiles/                    # Agent-specific profiles
+└── queries/                     # Saved queries
+```
+
+**Privacy:** Memory directory is in `.gitignore` by default (contains ephemeral learning data, not source code).
+
+### Event Log Usage
+
+**Emit events during operations:**
+
+```python
+from {{ package_name }}.memory import emit_event, TraceContext
+
+# Start workflow with trace context
+with TraceContext() as trace_id:
+    # Emit operation events
+    emit_event(
+        "app.operation_completed",
+        trace_id=trace_id,
+        status="success",
+        operation_name="example",
+        duration_ms=1234
+    )
+```
+
+**Query recent events:**
+
+```python
+from {{ package_name }}.memory import query_events
+
+# Find failures in last 24 hours
+failures = query_events(
+    event_type="app.operation_failed",
+    status="failure",
+    since_hours=24
+)
+
+# Analyze patterns
+for failure in failures:
+    error = failure["metadata"]["error"]
+    print(f"Operation failed: {error}")
+```
+
+### Knowledge Graph Usage
+
+**Create learning notes:**
+
+```python
+from {{ package_name }}.memory import KnowledgeGraph
+
+kg = KnowledgeGraph()
+
+# Create note from learned pattern
+note_id = kg.create_note(
+    title="[Learning Title]",
+    content="[Detailed learning content]",
+    tags=["tag1", "tag2"],
+    confidence="high"
+)
+```
+
+**Search knowledge:**
+
+```python
+# Find notes by tag
+notes = kg.search(tags=["error", "fix"])
+
+# Find notes by content
+notes = kg.search(text="timeout")
+
+# Get related notes
+related = kg.get_related("note-id", max_distance=2)
+```
+
+{% if include_cli -%}
+### CLI Tools for Agents
+
+**Query events via bash:**
+
+```bash
+# Find recent failures
+{{ project_slug }}-memory query --type "app.failed" --status failure --since "24h"
+
+# Get all events from last 7 days
+{{ project_slug }}-memory query --since "7d" --limit 100
+
+# Get events as JSON for processing
+{{ project_slug }}-memory query --type "app.started" --json
+```
+
+**Get trace timeline:**
+
+```bash
+# Show workflow timeline
+{{ project_slug }}-memory trace abc123
+
+# Get trace as JSON
+{{ project_slug }}-memory trace abc123 --json
+```
+
+**Search and manage knowledge:**
+
+```bash
+# Find notes about errors
+{{ project_slug }}-memory knowledge search --tag error
+
+# Create knowledge note
+echo "Fix content" | {{ project_slug }}-memory knowledge create "Title" --tag tag1 --confidence high
+
+# Show note details
+{{ project_slug }}-memory knowledge show note-id
+```
+
+**View statistics:**
+
+```bash
+# Stats for last 7 days
+{{ project_slug }}-memory stats
+
+# Stats for last 24 hours with JSON output
+{{ project_slug }}-memory stats --since 24h --json
+```
+
+{% endif -%}
+See [.chora/memory/README.md](.chora/memory/README.md) for complete memory architecture documentation.
+
+---
+
+{% endif -%}
+## Related Resources
+
+- **Repository:** https://github.com/{{ github_username }}/{{ project_slug }}
+- **Chora Base Template:** https://github.com/liminalcommons/chora-base
+- **Chora Composer:** https://github.com/liminalcommons/chora-composer
+- **Chora Platform:** https://github.com/liminalcommons/chora-platform
+{% if project_type == 'mcp_server' -%}
+- **MCP Specification:** https://modelcontextprotocol.io/
+{% endif -%}
+
+---
+
+**Version:** {{ project_version }}
+**Last Updated:** [Update date]
+**Format:** AGENTS.md standard (OpenAI/Google/Sourcegraph)
+🤖 Generated with [chora-base](https://github.com/liminalcommons/chora-base) template
