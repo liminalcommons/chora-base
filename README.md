@@ -50,26 +50,52 @@ chora-base is a production-ready Python project template extracted from [mcp-n8n
 - [Copier](https://copier.readthedocs.io/) (`pipx install copier`)
 - Git
 
-### Generate a New Project
+### New Project
 
 ```bash
 # Install copier
 pipx install copier
 
 # Generate project from template
-copier copy gh:liminalcommons/chora-base /path/to/new-project
+copier copy gh:liminalcommons/chora-base my-new-project
 
-# Answer prompts...
-# Project name: my-awesome-project
-# Author name: Your Name
-# ... etc
+# Answer prompts (project name, author, features, etc.)
 
-# Setup project
-cd /path/to/new-project
+# Setup and start developing
+cd my-new-project
 ./scripts/setup.sh
-
-# Start developing!
 ```
+
+### Existing Project (Adoption)
+
+Want to adopt chora-base infrastructure in your existing Python project? **No submodule required** - Copier generates files directly into your repo.
+
+```bash
+# In your existing repo (make sure you have a clean git state!)
+copier copy gh:liminalcommons/chora-base .
+
+# Answer prompts (use your existing project name/details)
+
+# Review what changed
+git diff
+
+# Selectively keep what you want
+git add -p  # Interactive staging
+git commit -m "feat: Adopt chora-base template infrastructure"
+
+# Later: Update incrementally (smart merge, not rip-and-replace)
+copier update
+```
+
+**How It Works:**
+- Copier generates files directly into your repo (no linking/submodule)
+- You review changes with `git diff` and keep what makes sense
+- `.copier-answers.yml` tracks template version for future updates
+- `copier update` merges improvements like `git merge` (not blind overwrite)
+
+**See Also:**
+- [How-To: Rip-and-Replace Existing Server](docs/how-to/02-rip-and-replace-existing-server.md) - Complete 8-phase migration guide
+- [Rip-and-Replace Decision Matrix](docs/reference/rip-and-replace-decision-matrix.md) - When to adopt vs stay custom
 
 ### Template Questions
 
