@@ -147,6 +147,64 @@ my-awesome-project/
 ├── .pre-commit-config.yaml      # Pre-commit hooks
 ├── AGENTS.md                    # Machine-readable docs
 ├── CHANGELOG.md                 # Version history
+├── CONTRIBUTING.md              # How to contribute
+├── justfile                     # Task automation
+├── pyproject.toml               # Project config
+└── README.md                    # This file
+```
+
+## Documentation
+
+chora-base uses the [Diátaxis framework](https://diataxis.fr/) to serve two first-class audiences:
+1. **Human Developers** - Learning, understanding, decision-making
+2. **AI Agents** - Task execution, reference lookup, machine-readable instructions
+
+### Documentation Structure
+
+```
+docs/
+├── DOCUMENTATION_PLAN.md     # Complete documentation strategy
+├── tutorials/                # Learning-oriented (for humans)
+│   ├── 01-first-mcp-server.md
+│   └── 02-rip-and-replace-migration.md
+├── how-to/                   # Task-oriented (humans + agents)
+│   ├── 01-generate-new-mcp-server.md
+│   ├── 02-rip-and-replace-existing-server.md
+│   └── ...
+├── reference/                # Information-oriented (humans + agents)
+│   ├── template-configuration.md
+│   ├── rip-and-replace-decision-matrix.md
+│   └── ...
+└── explanation/              # Understanding-oriented (for humans)
+    ├── why-rip-and-replace.md
+    ├── memory-system-architecture.md
+    └── ...
+```
+
+### For Human Developers
+
+- **New to chora-base?** Start with [Tutorial: Your First MCP Server](docs/tutorials/01-first-mcp-server.md) (coming soon)
+- **Migrating existing project?** See [How-To: Rip-and-Replace](docs/how-to/02-rip-and-replace-existing-server.md)
+- **Need quick reference?** Check [Template Configuration](docs/reference/template-configuration.md)
+- **Want to understand concepts?** Read [Explanations](docs/explanation/)
+
+### For AI Agents
+
+- **Quick start:** [How-To: Generate New MCP Server](docs/how-to/01-generate-new-mcp-server.md)
+- **Complete reference:** [Template Configuration](docs/reference/template-configuration.md)
+- **Decision support:** [Rip-and-Replace Decision Matrix](docs/reference/rip-and-replace-decision-matrix.md)
+- **Machine-readable instructions:** AGENTS.md (generated for each project)
+
+---
+
+## Generated Project Structure
+
+```
+my-awesome-project/
+├── .chora/memory/            # Agent memory (if included)
+├── .github/workflows/        # CI/CD (7 workflows)
+├── docs/                     # Documentation
+├── scripts/                  # Automation (18 scripts)
 ├── CONTRIBUTING.md              # Contribution guide
 ├── justfile                     # Task automation
 ├── LICENSE                      # Project license
