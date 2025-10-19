@@ -6,7 +6,7 @@ A comprehensive [Copier](https://copier.readthedocs.io/) template for Python pro
 
 ## What is chora-base?
 
-chora-base is a production-ready Python project template extracted from [mcp-n8n](https://github.com/liminalcommons/mcp-n8n) (Phase 4.5/4.6), featuring:
+chora-base is a production-ready Python project template featuring:
 
 - **🤖 AI Agent Support** - Machine-readable AGENTS.md, stateful memory system
 - **📝 Comprehensive Documentation** - README, CONTRIBUTING, DEVELOPMENT, TROUBLESHOOTING
