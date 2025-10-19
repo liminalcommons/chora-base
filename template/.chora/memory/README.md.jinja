@@ -1,6 +1,6 @@
 # Agent Memory Architecture
 
-This directory contains the stateful memory infrastructure for AI coding agents working with mcp-n8n, implementing cross-session learning and knowledge persistence.
+This directory contains the stateful memory infrastructure for AI coding agents working with {{ project_slug }}, implementing cross-session learning and knowledge persistence.
 
 ## Overview
 
@@ -59,10 +59,10 @@ All events follow the Chora ecosystem event schema (v1.0):
   "status": "success",
   "schema_version": "1.0",
   "event_type": "gateway.tool_call",
-  "source": "mcp-n8n",
+  "source": "{{ project_slug }}",
   "metadata": {
-    "tool_name": "chora:assemble_artifact",
-    "backend": "chora-composer",
+    "tool_name": "example:tool_name",
+    "backend": "example-backend",
     "duration_ms": 1234
   }
 }
@@ -240,7 +240,7 @@ When backend startup failures occur, check:
   "context_switches": {
     "total": 15,
     "last_handoff": {
-      "to": "chora-composer",
+      "to": "other-project",
       "timestamp": "2025-01-16T16:00:00Z",
       "trace_id": "xyz789"
     }
@@ -320,10 +320,10 @@ create_knowledge_note(
 ### 4. Context Switch Support
 
 ```python
-# Agent preparing to hand off to chora-composer
+# Agent preparing to hand off to another project
 handoff_context = {
-    "from_agent": "claude-code-mcp-n8n",
-    "to_project": "chora-composer",
+    "from_agent": "claude-code-{{ project_slug }}",
+    "to_project": "other-project",
     "trace_id": generate_trace_id(),
     "pending_tasks": get_pending_tasks(),
     "recent_failures": query_recent_failures(),
@@ -474,7 +474,7 @@ clusters = kg.find_clusters(min_size=3)
    - Automatic link suggestion
 
 2. **Cross-Project Memory**
-   - Share learnings between mcp-n8n and chora-composer
+   - Share learnings between {{ project_slug }} and other projects
    - Ecosystem-wide knowledge graph
    - Federated agent profiles
 
@@ -490,6 +490,6 @@ clusters = kg.find_clusters(min_size=3)
 
 ---
 
-**Version:** 1.0.0 (Phase 4.5)
+**Version:** 1.0.0
 **Last Updated:** 2025-01
-**Compatible with:** mcp-n8n v0.1.0+, chora-composer v1.1.0+
+**Compatible with:** {{ project_slug }} v{{ project_version }}+
