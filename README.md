@@ -15,6 +15,8 @@ chora-base is a production-ready Python project template featuring:
 - **🧠 Memory Infrastructure** - Event log, knowledge graph, trace context for cross-session learning
 - **🛠️ Developer Experience** - Setup scripts, justfile tasks, automated tooling
 
+**📖 [Read the full benefits guide](docs/BENEFITS.md)** - Learn how chora-base saves 52+ hours per project and delivers ROI through automation, AI-native workflows, and production-ready infrastructure.
+
 ## Features
 
 ### Core Infrastructure
