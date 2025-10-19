@@ -7,7 +7,9 @@ on:
 
 permissions:
   contents: write  # For creating GitHub releases
-  id-token: write  # For PyPI trusted publishing
+{% if pypi_auth_method == 'trusted_publishing' -%}
+  id-token: write  # For PyPI trusted publishing (OIDC)
+{% endif -%}
 
 jobs:
   build:
@@ -73,9 +75,11 @@ jobs:
     name: Publish to PyPI
     needs: [build, test]
     runs-on: ubuntu-latest
+{% if pypi_auth_method == 'trusted_publishing' -%}
     environment:
       name: pypi
       url: https://pypi.org/p/{{ project_slug }}
+{% endif -%}
 
     steps:
       - name: Download distribution artifacts
@@ -84,12 +88,22 @@ jobs:
           name: python-package-distributions
           path: dist/
 
-      - name: Publish to PyPI
+{% if pypi_auth_method == 'token' -%}
+      - name: Publish to PyPI using token
         uses: pypa/gh-action-pypi-publish@release/v1
         with:
-          # Uses OIDC trusted publishing (no API token needed)
-          # Configure at: https://pypi.org/manage/account/publishing/
+          password: ${{ "{{" }} secrets.PYPI_TOKEN }}
           print-hash: true
+          # To use: Create token at https://pypi.org/manage/account/token/
+          # Add as repository secret: PYPI_TOKEN
+{% else -%}
+      - name: Publish to PyPI using trusted publishing
+        uses: pypa/gh-action-pypi-publish@release/v1
+        with:
+          print-hash: true
+          # Uses OIDC trusted publishing (no API token needed)
+          # Configure publisher at: https://pypi.org/manage/account/publishing/
+{% endif -%}
 
   github-release:
     name: Create GitHub Release

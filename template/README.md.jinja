@@ -66,24 +66,6 @@ pre-commit install
 {% endif -%}
 ```
 
-{% if include_justfile -%}
-### Using Just (Recommended)
-
-Install [just](https://github.com/casey/just) for easier task management:
-
-```bash
-# macOS
-brew install just
-
-# Other platforms: https://github.com/casey/just#installation
-```
-
-View available commands:
-```bash
-just --list
-```
-{% endif -%}
-
 ## Configuration
 
 ### Environment Variables
@@ -146,32 +128,85 @@ Create a `.env` file:
 ## Development
 
 {% if include_justfile -%}
-### Using Just (Recommended)
+### Quick Reference
 
+**Discover all available commands:**
 ```bash
-# Show all available commands
 just --list
-
-# Run tests
-just test
-
-# Run quality checks
-just check
-
-# Run smoke tests
-just smoke
-
-# Clean build artifacts
-just clean
 ```
-{% endif -%}
 
-### Manual Commands
+**Common tasks:**
+```bash
+just test            # Run test suite
+just lint            # Check code style
+just pre-merge       # Run all checks (required before PR)
+just build           # Build distribution packages
+just help            # Show common workflows
+```
+
+The [justfile](justfile) is self-documenting - run `just` or `just --list` to see all commands.
+
+### Common Workflows
+
+**Running tests:**
+```bash
+just test           # Full test suite
+just smoke          # Quick smoke tests (~10 sec)
+just test-coverage  # With coverage report
+```
+
+**Code quality:**
+```bash
+just lint           # Check style
+just lint-fix       # Auto-fix issues
+just format         # Format code
+just typecheck      # Type checking
+just check          # All quality checks
+```
+
+**Before creating PR:**
+```bash
+just pre-merge      # Run lint + test + coverage (required)
+```
+
+**Building & releasing:**
+```bash
+just build                  # Build distribution packages
+just prepare-release patch  # Bump version, update CHANGELOG
+just publish-test           # Publish to TestPyPI
+just publish-prod           # Publish to PyPI
+```
+
+**Application:**
+```bash
+just run            # Start the application
+{{ project_slug }}  # Or run directly
+```
+
+### Without `just` (Fallback)
+
+If `just` installation fails, use commands directly:
+
+| Task | Command |
+|------|---------|
+| Run tests | `pytest` |
+| Build | `./scripts/build-dist.sh` |
+| Lint | `ruff check src/{{ package_name }} tests` |
+| Format | `black src/{{ package_name }} tests` |
+| Pre-merge | `./scripts/pre-merge.sh` |
+| Type check | `mypy src/{{ package_name }}` |
+
+See [justfile](justfile) for complete command mappings.
+{% else -%}
+### Common Development Tasks
 
 ```bash
 {% if include_tests -%}
 # Run tests
 pytest
+
+# Run tests with coverage
+pytest --cov={{ package_name }} --cov-report=html --cov-report=term
 
 # Type checking
 mypy src/{{ package_name }}
@@ -179,13 +214,37 @@ mypy src/{{ package_name }}
 {% endif -%}
 {% if include_pre_commit -%}
 # Linting
-ruff check src/{{ package_name }}
-black --check src/{{ package_name }}
+ruff check src/{{ package_name }} tests
+
+# Auto-fix linting issues
+ruff check --fix src/{{ package_name }} tests
+
+# Code formatting
+black src/{{ package_name }} tests
+
+# Check formatting without changes
+black --check src/{{ package_name }} tests
+
+# Run all pre-commit hooks
+pre-commit run --all-files
 
 {% endif -%}
+# Build distribution packages
+./scripts/build-dist.sh
+
+# Run smoke tests (quick validation)
+./scripts/smoke-test.sh
+
+# Run pre-merge checks (lint + test + coverage)
+./scripts/pre-merge.sh
+
+# Clean build artifacts
+rm -rf build/ dist/ *.egg-info/ .pytest_cache/ .mypy_cache/ .ruff_cache/
+
 # Run application
 {{ project_slug }}
 ```
+{% endif -%}
 
 ## Documentation
 

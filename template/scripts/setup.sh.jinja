@@ -26,18 +26,42 @@ fi
 echo -e "${GREEN}✓ Python ${PYTHON_VERSION}${NC}"
 echo ""
 
-# Check for just command runner
-echo -e "${YELLOW}Checking for 'just' command runner...${NC}"
+# Install just command runner (primary development interface)
+echo -e "${YELLOW}Installing 'just' command runner...${NC}"
 if ! command -v just &> /dev/null; then
-    echo -e "${YELLOW}Warning: 'just' not found. Install it for easier task automation:${NC}"
-    echo "  brew install just  # macOS"
-    echo "  cargo install just # Rust"
-    echo "  https://github.com/casey/just"
-    echo ""
+    if [[ "$OSTYPE" == "darwin"* ]]; then
+        # macOS: Try brew first, fallback to curl
+        if command -v brew &> /dev/null; then
+            echo "  Using Homebrew..."
+            brew install just
+        else
+            echo "  Using curl installer..."
+            curl --proto '=https' --tlsv1.2 -sSf https://just.systems/install.sh | bash -s -- --to ~/.local/bin
+            export PATH="$HOME/.local/bin:$PATH"
+        fi
+    else
+        # Linux/Other: Use curl installer
+        echo "  Using curl installer..."
+        curl --proto '=https' --tlsv1.2 -sSf https://just.systems/install.sh | bash -s -- --to ~/.local/bin
+        export PATH="$HOME/.local/bin:$PATH"
+    fi
+
+    if command -v just &> /dev/null; then
+        echo -e "${GREEN}✓ just installed successfully${NC}"
+        just --version
+    else
+        echo -e "${RED}✗ Failed to install just${NC}"
+        echo "  Please install manually:"
+        echo "    macOS:   brew install just"
+        echo "    Linux:   cargo install just"
+        echo "    Other:   https://github.com/casey/just#installation"
+        echo ""
+    fi
 else
-    echo -e "${GREEN}✓ just found${NC}"
-    echo ""
+    echo -e "${GREEN}✓ just already installed${NC}"
+    just --version
 fi
+echo ""
 
 # Install Python dependencies
 echo -e "${YELLOW}Installing Python dependencies...${NC}"
@@ -93,10 +117,13 @@ echo ""
 # Summary
 echo "=== Setup Complete ==="
 echo ""
-echo "Quick start commands:"
-echo "  just run          # Start the gateway"
-echo "  just test         # Run tests"
-echo "  just verify       # Run all checks before committing"
+echo "Development commands (via 'just'):"
 echo "  just --list       # Show all available commands"
+echo "  just test         # Run test suite"
+echo "  just lint         # Check code style"
+echo "  just pre-merge    # Run all checks before PR"
+echo "  just run          # Start the application"
+echo ""
+echo "For help: just help"
 echo ""
 echo -e "${GREEN}Ready to develop!${NC}"

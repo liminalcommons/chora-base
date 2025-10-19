@@ -170,6 +170,17 @@ include_github_actions:
   help: Include GitHub Actions CI/CD workflows?
   default: true
 
+# === PyPI Publishing Configuration ===
+
+pypi_auth_method:
+  type: str
+  help: "PyPI authentication: token (simpler, local scripts) or trusted_publishing (more secure, GitHub only)"
+  choices:
+    - token
+    - trusted_publishing
+  default: token
+  when: "{{ include_github_actions }}"
+
 # === Documentation ===
 
 include_contributing:

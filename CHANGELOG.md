@@ -5,6 +5,84 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.4.0] - 2025-10-19
+
+### Added
+
+**PyPI Publishing Setup for Generated Projects**
+
+Based on feedback from mcp-n8n team, eliminate friction when adopters publish their packages to PyPI:
+
+- **New copier.yml prompt**: `pypi_auth_method` (choices: `token`, `trusted_publishing`)
+  - Default: `token` (simpler, works with local scripts)
+  - Alternative: `trusted_publishing` (more secure, GitHub Actions only)
+  - Helps adopters choose authentication method for their project
+  - Conditional on `include_github_actions`
+- **Conditional GitHub Actions workflow** (`.github/workflows/release.yml.jinja`)
+  - Token mode: Uses `PYPI_TOKEN` secret, clear setup instructions
+  - Trusted publishing mode: Uses OIDC with `id-token: write`
+  - Eliminates mixed signals that confused mcp-n8n team
+- **PYPI_SETUP.md guide** (~420 lines)
+  - Step-by-step setup for chosen authentication method
+  - TestPyPI workflow for safe testing
+  - Migration guides between authentication methods
+  - Comprehensive troubleshooting
+
+**Developer Experience: `just` as Primary Interface**
+
+Make generated projects easier to work with for both human developers and AI agents:
+
+- **Auto-install `just`** in `scripts/setup.sh`
+  - macOS: `brew install just` with curl fallback
+  - Linux: curl installer to `~/.local/bin`
+  - Transparent, automatic during project setup
+  - Eliminates "command not found" friction
+- **Self-documenting task catalog**
+  - `just --list` reveals all development tasks instantly
+  - Machine-readable format for AI agents
+  - No need to parse prose documentation
+- **Consistent command vocabulary**
+  - Same commands across all chora-base projects
+  - `just test`, `just build`, `just pre-merge`
+  - Better knowledge transfer between projects
+- **Documentation restructured** around `just` interface
+  - README: Lead with `just --list` for task discovery
+  - CONTRIBUTING: All examples use `just` commands
+  - AGENTS.md: Emphasize agent ergonomics benefits
+  - Fallback instructions for edge cases
+- **Enhanced justfile**
+  - Added `help` command for common workflows
+  - Better inline documentation
+  - Clear comments explaining each task
+
+### Changed
+
+**Template Files Updated:**
+- `template/scripts/setup.sh.jinja` - Auto-install `just`
+- `template/scripts/check-env.sh.jinja` - Verify `just` availability
+- `template/README.md.jinja` - Lead with `just` commands
+- `template/CONTRIBUTING.md.jinja` - Use `just` in all examples
+- `template/AGENTS.md.jinja` - Task Discovery section for agents
+- `template/justfile.jinja` - Enhanced documentation, help command
+- `template/.github/workflows/release.yml.jinja` - Conditional PyPI auth
+
+**Total Additions**: ~800 lines (documentation + automation)
+
+### Benefits for Adopters
+
+- ✅ PyPI publishing setup is crystal clear (no confusion)
+- ✅ Choose authentication method that fits workflow
+- ✅ Unified developer interface via `just` commands
+- ✅ Faster task discovery (`just --list` vs reading docs)
+- ✅ AI agents get machine-readable task catalog
+- ✅ Consistent patterns across chora-base ecosystem
+- ✅ Reduced onboarding time for new contributors
+- ✅ Better knowledge transfer between projects
+
+**Based On**: mcp-n8n team feedback (2025-10-19)
+
+**Principles**: Adopter ergonomics, self-documenting interfaces, agent-friendly design, ecosystem consistency
+
 ## [1.3.1] - 2025-10-19
 
 ### Added
@@ -273,6 +351,9 @@ Enable all chora-base adopters to document long-term evolutionary vision alongsi
 - Memory Architecture: Event schema v1.0, CHORA_TRACE_ID propagation
 - Copier template with 30+ configuration variables
 
+[1.4.0]: https://github.com/liminalcommons/chora-base/compare/v1.3.1...v1.4.0
+[1.3.1]: https://github.com/liminalcommons/chora-base/compare/v1.3.0...v1.3.1
+[1.3.0]: https://github.com/liminalcommons/chora-base/compare/v1.2.0...v1.3.0
 [1.2.0]: https://github.com/liminalcommons/chora-base/compare/v1.1.1...v1.2.0
 [1.1.1]: https://github.com/liminalcommons/chora-base/compare/v1.1.0...v1.1.1
 [1.1.0]: https://github.com/liminalcommons/chora-base/compare/v1.0.0...v1.1.0

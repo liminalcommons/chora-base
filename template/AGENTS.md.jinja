@@ -648,6 +648,57 @@ async def create_item(item: Item):
 
 ## Common Tasks for Agents
 
+{% if include_justfile -%}
+### Task Discovery (START HERE)
+
+**First step when working in this project: Discover available tasks**
+
+```bash
+just --list
+```
+
+This provides a machine-readable catalog of all development tasks.
+
+**Why `just` for agents:**
+- **Self-documenting**: `just --list` reveals all tasks instantly (no prose parsing)
+- **Consistent**: Same commands across all chora-base projects
+- **Structured**: Machine-parseable task catalog
+- **Composable**: `just --show <task>` reveals implementation details
+- **Transferable**: Commands learned here work in all chora-base projects
+
+**Pattern**: Always start with `just --list` when working in a new chora-base project. Store commands as ecosystem-wide patterns, not project-specific.
+
+**Example workflow:**
+```bash
+# Discover tasks
+just --list
+# Output: test, lint, pre-merge, build, etc.
+
+# Understand a specific task
+just --show pre-merge
+# Output: shows it runs ./scripts/pre-merge.sh
+
+# Execute
+just pre-merge
+```
+
+**Memory note**: Store as:
+```json
+{
+  "ecosystem": "chora-base",
+  "discovery_command": "just --list",
+  "common_tasks": {
+    "test": "just test",
+    "pre_merge": "just pre-merge",
+    "build": "just build"
+  },
+  "applies_to": "all_chora_base_projects"
+}
+```
+
+This knowledge transfers to mcp-n8n, chora-compose, and all future chora-base projects.
+
+{% endif -%}
 {% if project_type == 'mcp_server' -%}
 ### Adding a New MCP Tool
 

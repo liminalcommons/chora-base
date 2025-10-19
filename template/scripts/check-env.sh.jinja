@@ -106,8 +106,32 @@ else
 fi
 echo ""
 
-# Check 8: Project-specific dependencies (customize as needed)
-echo -e "${YELLOW}[8/8] Checking project dependencies...${NC}"
+# Check 8: just command runner (primary development interface)
+echo -e "${YELLOW}[8/9] Checking 'just' command runner...${NC}"
+if command -v just &> /dev/null; then
+    echo -e "  ${GREEN}✓${NC} just is available"
+    just --version
+else
+    echo -e "  ${RED}✗${NC} 'just' not installed"
+    echo ""
+    echo "    'just' is the primary development interface for this project."
+    echo "    Run ./scripts/setup.sh to install it automatically, or:"
+    echo ""
+    echo "    Manual installation:"
+    echo "      macOS: brew install just"
+    echo "      Linux: cargo install just"
+    echo "      Other: https://github.com/casey/just#installation"
+    echo ""
+    echo "    Without 'just', you can use commands directly:"
+    echo "      just test → pytest"
+    echo "      just build → ./scripts/build-dist.sh"
+    echo "      just pre-merge → ./scripts/pre-merge.sh"
+    ERRORS=$((ERRORS + 1))
+fi
+echo ""
+
+# Check 9: Project-specific dependencies (customize as needed)
+echo -e "${YELLOW}[9/9] Checking project dependencies...${NC}"
 # Add your project-specific dependency checks here
 # Example:
 # if [ -d "/path/to/required/dependency" ]; then

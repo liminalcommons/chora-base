@@ -1,8 +1,37 @@
 # {{ project_slug }} task automation
-# Install just: https://github.com/casey/just
+#
+# This justfile provides the primary developer interface for this project.
+# All development tasks are accessed via 'just <task>'.
+#
+# Quick start:
+#   just --list     # Show all available commands
+#   just help       # Show common workflows
+#   just test       # Run test suite
+#
+# Installation: Automatically handled by ./scripts/setup.sh
+# More info: https://github.com/casey/just
 
 # Default recipe (show available commands)
 default:
+    @just --list
+
+# Show help and common workflows
+help:
+    @echo "=== {{ project_slug }} - Development Commands ==="
+    @echo ""
+    @echo "Quick validation:"
+    @echo "  just test           # Run test suite (~1 min)"
+    @echo "  just smoke          # Quick smoke tests (~10 sec)"
+    @echo "  just lint           # Check code style"
+    @echo ""
+    @echo "Before creating PR:"
+    @echo "  just pre-merge      # Run all checks (required)"
+    @echo ""
+    @echo "Building & releasing:"
+    @echo "  just build          # Build distribution packages"
+    @echo "  just prepare patch  # Prepare patch release"
+    @echo ""
+    @echo "Full command list:"
     @just --list
 
 # Install all dependencies (including dev)
@@ -38,6 +67,8 @@ rollback:
 verify-stable:
     ./scripts/verify-stable.sh
 
+# Run pre-merge validation (lint + test + coverage ≥85%)
+# Required before creating pull request (~2 minutes)
 pre-merge:
     ./scripts/pre-merge.sh
 
@@ -110,12 +141,16 @@ verify: pre-commit smoke test
     @echo "✓ All checks passed!"
 
 # Build & Release (Phase 3)
+# Build distribution packages (wheel + sdist)
+# Output: dist/*.whl and dist/*.tar.gz
 build:
     ./scripts/build-dist.sh
 
+# Publish to TestPyPI (for testing before production release)
 publish-test:
     ./scripts/publish-test.sh
 
+# Publish to production PyPI
 publish-prod:
     ./scripts/publish-prod.sh
 

@@ -83,15 +83,21 @@ pre-commit install
 4. **Verify installation:**
 
 ```bash
-# Run environment checks
-just check-env
+# Check environment and discover commands
+just check-env  # Validate environment
+just --list     # Show all available commands
 
 # Run smoke tests
-just smoke
+just smoke      # Quick validation
 
 # Run full test suite
 just test
 ```
+
+**Note:** `setup.sh` installs `just` automatically. Commands map to:
+- `just test` → `pytest`
+- `just smoke` → `./scripts/smoke-test.sh`
+- `just check-env` → `./scripts/check-env.sh`
 
 5. **Configure environment:**
 
@@ -315,12 +321,16 @@ All code changes must include tests and pass existing tests.
 just smoke
 
 # Full test suite with coverage
-just test
+just test           # Runs pytest with coverage, fails if <85%
 
-# Coverage report (HTML)
-pytest --cov=src/{{ package_name }} --cov-report=html
-open htmlcov/index.html
+# Detailed coverage report (HTML)
+just test-coverage  # Opens in browser
 ```
+
+**Without `just`:**
+- `just smoke` → `./scripts/smoke-test.sh`
+- `just test` → `pytest --cov=src/{{ package_name }} --cov-report=term --cov-fail-under=85`
+- `just test-coverage` → `pytest --cov... --cov-report=html && open htmlcov/index.html`
 
 ### Writing Tests
 
@@ -404,6 +414,8 @@ This runs:
 - Smoke tests
 - Full test suite with ≥85% coverage
 - CHANGELOG.md validation
+
+**Without `just`:** `./scripts/pre-merge.sh`
 
 2. **Update CHANGELOG.md:**
 
@@ -642,17 +654,41 @@ Thank you for contributing to {{ project_slug }}! 🎉
 
 ## Quick Reference
 
-**Common Commands:**
+**All commands use `just` - run `just --list` for full catalog**
 
 ```bash
-just check-env      # Validate environment
+# Discovery
+just --list         # Show all available commands
+just help           # Show common workflows
+
+# Development
+just test           # Run test suite
 just smoke          # Quick tests (<30 sec)
-just test           # Full test suite
-just pre-merge      # Pre-PR validation
 just lint           # Check code style
 just format         # Auto-format code
 just typecheck      # Type checking
+just pre-merge      # Pre-PR validation (required)
+
+# Building
+just build          # Build distribution packages
+just clean          # Clean build artifacts
+
+# Releasing (maintainers)
+just prepare-release patch  # Bump version, update CHANGELOG
+just publish-test   # Publish to TestPyPI
+just publish-prod   # Publish to PyPI
 ```
+
+**Without `just` (fallback):**
+
+| Task | Direct Command |
+|------|----------------|
+| Test | `pytest` |
+| Smoke | `./scripts/smoke-test.sh` |
+| Lint | `ruff check src/{{ package_name }} tests` |
+| Format | `black src/{{ package_name }} tests` |
+| Pre-merge | `./scripts/pre-merge.sh` |
+| Build | `./scripts/build-dist.sh` |
 
 **Useful Links:**
 
