@@ -106,24 +106,17 @@ else
 fi
 echo ""
 
-# Check 8: Backend availability (quick check)
-echo -e "${YELLOW}[8/8] Checking backend paths...${NC}"
-CHORA_PATH="/Users/victorpiper/code/chora-compose"
-CODA_PATH="/Users/victorpiper/code/mcp-server-coda"
-
-if [ -d "$CHORA_PATH" ]; then
-    echo -e "  ${GREEN}✓${NC} chora-compose found"
-else
-    echo -e "  ${YELLOW}⚠${NC} chora-compose not found at $CHORA_PATH"
-    WARNINGS=$((WARNINGS + 1))
-fi
-
-if [ -d "$CODA_PATH" ]; then
-    echo -e "  ${GREEN}✓${NC} coda-mcp found"
-else
-    echo -e "  ${YELLOW}⚠${NC} coda-mcp not found at $CODA_PATH"
-    WARNINGS=$((WARNINGS + 1))
-fi
+# Check 8: Project-specific dependencies (customize as needed)
+echo -e "${YELLOW}[8/8] Checking project dependencies...${NC}"
+# Add your project-specific dependency checks here
+# Example:
+# if [ -d "/path/to/required/dependency" ]; then
+#     echo -e "  ${GREEN}✓${NC} dependency found"
+# else
+#     echo -e "  ${YELLOW}⚠${NC} dependency not found"
+#     WARNINGS=$((WARNINGS + 1))
+# fi
+echo -e "  ${GREEN}✓${NC} No additional dependencies to check"
 echo ""
 
 # Summary

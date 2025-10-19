@@ -64,6 +64,15 @@ github_username:
   help: GitHub username or organization
   default: liminalcommons
 
+security_email:
+  type: str
+  help: Email for security vulnerability reports
+  default: "{{ author_email }}"
+  validator: >-
+    {% if not (security_email | regex_search('^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$')) %}
+    Must be valid email address
+    {% endif %}
+
 # === Python Configuration ===
 
 python_version:

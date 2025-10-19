@@ -34,7 +34,7 @@ We are committed to providing a welcoming and inclusive environment for all cont
 - Publishing others' private information
 - Any conduct that would be inappropriate in a professional setting
 
-**Reporting:** If you experience or witness unacceptable behavior, please contact the maintainers at security@example.com.
+**Reporting:** If you experience or witness unacceptable behavior, please contact the maintainers at {{ security_email }}.
 
 ---
 
@@ -56,7 +56,7 @@ git clone https://github.com/YOUR_USERNAME/{{ project_slug }}.git
 cd {{ project_slug }}
 
 # Add upstream remote
-git remote add upstream https://github.com/yourusername/{{ project_slug }}.git
+git remote add upstream https://github.com/{{ github_username }}/{{ project_slug }}.git
 ```
 
 2. **Create virtual environment:**
@@ -611,7 +611,7 @@ Releases follow semantic versioning (MAJOR.MINOR.PATCH).
 - **GitHub Issues** - Bug reports, feature requests
 - **GitHub Discussions** - Questions, ideas, show & tell
 - **Pull Requests** - Code review, implementation discussion
-- **Email** - security@example.com for security issues
+- **Email** - {{ security_email }} for security issues
 
 ### Response Times
 

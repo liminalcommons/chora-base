@@ -189,10 +189,12 @@ echo "  4. Close all IDE files and terminal sessions"
 echo ""
 echo "  5. Switch to $TARGET codebase:"
 if [ "$TARGET" = "{{ project_slug }}" ]; then
-    echo "     cd /Users/victorpiper/code/{{ project_slug }}"
+    echo "     cd /path/to/{{ project_slug }}"
 else
-    echo "     cd /Users/victorpiper/code/chora-compose"
+    echo "     cd /path/to/chora-composer"
 fi
+echo ""
+echo "  NOTE: Update paths in this script for your local setup"
 echo ""
 echo "  6. Open $TARGET in fresh IDE instance"
 echo ""

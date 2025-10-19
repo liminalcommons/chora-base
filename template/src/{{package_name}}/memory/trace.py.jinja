@@ -63,7 +63,7 @@ def emit_event(
     event_type: str,
     trace_id: str | None = None,
     status: str = "success",
-    source: str = "mcp-n8n",
+    source: str = "{{ project_slug }}",
     **metadata: Any,
 ) -> dict[str, Any]:
     """Emit event to memory system.

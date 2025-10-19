@@ -38,8 +38,9 @@ REQUEST=$(cat <<EOF
 EOF
 )
 
-# Change to {{ project_slug }} directory
-MCP_DIR="/Users/victorpiper/code/{{ project_slug }}"
+# Get project directory (script is in project/scripts/, so go up one level)
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+MCP_DIR="$(dirname "$SCRIPT_DIR")"
 cd "$MCP_DIR"
 
 # Activate virtual environment if it exists
