@@ -617,7 +617,13 @@ mypy src/{{ package_name }} --pretty --show-error-codes
 {% endif -%}
 {% if include_memory_system -%}
 ├── .chora/memory/              # Agent memory (gitignored)
-│   └── README.md               # Memory architecture docs
+│   ├── README.md               # Memory architecture docs
+│   ├── events/                 # Event log (JSONL format)
+│   ├── knowledge/              # Knowledge notes (YAML frontmatter)
+│   │   ├── notes/*.md          # Individual notes
+│   │   ├── links.json          # Bidirectional links
+│   │   └── tags.json           # Tag index
+│   └── profiles/               # Agent-specific profiles
 {% endif -%}
 ├── pyproject.toml              # Python packaging & tool config
 {% if include_justfile -%}
@@ -633,6 +639,64 @@ mypy src/{{ package_name }} --pretty --show-error-codes
 └── LICENSE                     # {{ license }} license
 ```
 
+{% if include_memory_system -%}
+### Knowledge Note Metadata Standards
+
+Knowledge notes (`.chora/memory/knowledge/notes/*.md`) use **YAML frontmatter** following Zettelkasten best practices for machine-readable metadata.
+
+**Required Frontmatter Fields:**
+- `id`: Unique note identifier (kebab-case)
+- `created`: ISO 8601 timestamp
+- `updated`: ISO 8601 timestamp
+- `tags`: Array of topic tags for search/organization
+
+**Optional Frontmatter Fields:**
+- `confidence`: `low` | `medium` | `high` - Solution reliability
+- `source`: `agent-learning` | `human-curated` | `external` | `research`
+- `linked_to`: Array of related note IDs (bidirectional linking)
+- `status`: `draft` | `validated` | `deprecated`
+- `author`: Agent or human creator
+- `related_traces`: Array of trace IDs that led to this knowledge
+
+**Example Knowledge Note:**
+
+```markdown
+---
+id: api-timeout-solution
+created: 2025-01-17T10:00:00Z
+updated: 2025-01-17T12:30:00Z
+tags: [troubleshooting, api, performance]
+confidence: high
+source: agent-learning
+linked_to: [connection-pool-tuning, retry-patterns]
+status: validated
+author: claude-code
+related_traces: [abc123, def456]
+---
+
+# API Timeout Solution
+
+## Problem
+API calls timing out after 30s during high load...
+
+## Solution
+Increase timeout to 60s and implement retry with exponential backoff...
+
+## Evidence
+- Trace abc123: Successful completion at 45s
+- Trace def456: Successful completion at 52s
+- Load test: 98% success rate with new settings
+```
+
+**Why YAML Frontmatter?**
+- ✅ **Semantic Search**: Query by confidence, tags, or date (`grep "confidence: high"`)
+- ✅ **Tool Compatibility**: Works with Obsidian, Zettlr, LogSeq, Foam
+- ✅ **Knowledge Graph**: Enables bidirectional linking and visualization
+- ✅ **Agent Decision-Making**: Filter by confidence level for solution reliability
+
+**Reference:** See [.chora/memory/README.md](.chora/memory/README.md) for complete schema documentation.
+
+{% endif -%}
 ---
 
 ## Documentation Philosophy
