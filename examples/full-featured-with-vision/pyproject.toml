@@ -1,0 +1,41 @@
+[project]
+name = "example-mcp-vision"
+version = ""
+description = ""
+authors = [
+    {name = "", email = ""}
+]
+readme = "README.md"
+license = {text = ""}
+requires-python = ">="
+dependencies = [
+"fastmcp>=0.3.0",
+    "pydantic>=2.0.0",
+    "pydantic-settings>=2.0.0",
+    "python-dotenv>=1.0.0",
+]
+
+[project.optional-dependencies]
+dev = [
+]
+release = [
+    "build==1.0.3",
+    "twine==4.0.2",
+]
+
+[project.scripts]
+example-mcp-vision = ".server:main"
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/"]
+
+[tool..logging]
+format = "json"              # json or text
+level = "INFO"               # DEBUG, INFO, WARNING, ERROR, CRITICAL
+file = "logs/example-mcp-vision.log"    # Log file path
+max_bytes = 10485760         # 10MB max file size
+backup_count = 5             # Keep 5 rotated log files
+retention_days = 30          # Delete logs older than 30 days

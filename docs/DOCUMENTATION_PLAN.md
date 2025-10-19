@@ -111,6 +111,14 @@ docs/
    - Resolve conflicts
    - Test and validate
 
+6. **06-maintain-vision-documents.md** (500 lines) ✅ CREATED
+   - Create vision document from template
+   - Structure capability waves
+   - Set decision criteria
+   - Quarterly review process
+   - Archive waves (delivered/deferred)
+   - Integration with ROADMAP.md and AGENTS.md
+
 ---
 
 ### Reference (Information-Oriented) - For Humans + Agents
@@ -196,6 +204,15 @@ docs/
    - v1.0.0 as "infrastructure maturity signal"
    - Not about API stability
 
+5. **vision-driven-development.md** (700 lines) ✅ CREATED
+   - Problem: Premature optimization and gold-plating
+   - Solution: Vision documents guide strategic decisions
+   - Relationship to agile/iterative development
+   - Decision frameworks deep-dive
+   - Case study: chora-compose content intelligence
+   - Benefits for AI agents and teams
+   - Common pitfalls and mitigations
+
 ---
 
 ## AGENTS.md (Machine-Readable) - For AI Agents
@@ -235,11 +252,11 @@ docs/
 | Document Type | Count | Estimated Lines | Primary Audience |
 |---------------|-------|-----------------|------------------|
 | **Tutorials** | 2 | 1,200 lines | Humans (new users) |
-| **How-To Guides** | 5 | 2,000 lines | Humans + Agents |
+| **How-To Guides** | 6 | 2,500 lines | Humans + Agents |
 | **Reference** | 5 | 2,000 lines | Humans + Agents |
-| **Explanation** | 4 | 2,400 lines | Humans (understanding) |
-| **AGENTS.md Template** | 1 | 900 lines | AI Agents |
-| **Total** | 17 docs | **8,500 lines** | Mixed audience |
+| **Explanation** | 5 | 3,100 lines | Humans (understanding) |
+| **AGENTS.md Template** | 1 | 1,995 lines | AI Agents |
+| **Total** | 19 docs | **10,795 lines** | Mixed audience |
 
 ---
 
@@ -250,13 +267,15 @@ docs/
 **Goal:** Enable new users and AI agents to generate projects and perform rip-and-replace
 
 **Priority Documents:**
-1. ✅ **How-To 01:** Generate New MCP Server (CREATED)
+1. ✅ **How-To 01:** Generate New MCP Server (CREATED v1.0.0)
 2. **How-To 02:** Rip-and-Replace Existing Server
-3. **Reference 01:** Template Configuration
-4. **Reference 02:** Rip-and-Replace Decision Matrix
-5. **AGENTS.md Template:** Enhanced with A-MEM
+3. ✅ **How-To 06:** Maintain Vision Documents (CREATED v1.3.1)
+4. **Reference 01:** Template Configuration
+5. **Reference 02:** Rip-and-Replace Decision Matrix
+6. ✅ **AGENTS.md Template:** Enhanced with A-MEM and Strategic Design (v1.3.0)
 
 **Deliverable:** Minimal viable documentation for template usage
+**Status:** Partially complete (3/6 docs created)
 
 ---
 
@@ -269,9 +288,11 @@ docs/
 7. **Tutorial 02:** Rip-and-Replace Migration
 8. **Explanation 01:** Why Rip-and-Replace?
 9. **Explanation 02:** Memory System Architecture
-10. **How-To 03:** Customize AGENTS.md
+10. ✅ **Explanation 05:** Vision-Driven Development (CREATED v1.3.1)
+11. **How-To 03:** Customize AGENTS.md
 
 **Deliverable:** Full documentation coverage for all use cases
+**Status:** Partially complete (1/6 docs created)
 
 ---
 
@@ -382,9 +403,10 @@ docs/
 
 ---
 
-**Documentation Plan Version:** 1.0.0
-**Template Version:** chora-base v1.0.0
+**Documentation Plan Version:** 1.1.0
+**Template Version:** chora-base v1.3.1
 **Created:** 2025-10-17
-**Status:** Phase 1 in progress (1/17 docs created)
+**Last Updated:** 2025-10-19
+**Status:** Phase 1-2 in progress (5/19 docs created)
 
 🤖 This plan ensures LLM agents are first-class users alongside human developers.

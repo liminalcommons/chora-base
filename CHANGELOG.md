@@ -5,6 +5,53 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.3.1] - 2025-10-19
+
+### Added
+
+**Documentation for Vision & Strategic Design Framework**
+
+Complete the v1.3.0 vision framework with comprehensive documentation for human developers and AI agents.
+
+**New Documentation:**
+- `docs/how-to/06-maintain-vision-documents.md` (~500 lines)
+  - Task-oriented guide for creating, updating, and archiving vision docs
+  - Structuring capability waves with decision criteria
+  - Quarterly review process and checklist
+  - Integration workflows with ROADMAP.md and AGENTS.md
+  - Troubleshooting table for common issues
+
+- `docs/explanation/vision-driven-development.md` (~700 lines)
+  - Philosophy and conceptual understanding of vision-driven development
+  - Relationship to agile/iterative development (complements, not replaces)
+  - Decision frameworks deep-dive with real examples from chora-compose
+  - Benefits for AI agents (stateful memory, cross-session learning)
+  - Benefits for teams (alignment, reduced bike-shedding, onboarding)
+  - Common pitfalls and mitigations (scope creep, stale docs, gold-plating)
+
+**Example Project:**
+- `examples/full-featured-with-vision/`
+  - Complete MCP server example with vision framework
+  - Generated with all vision features enabled
+  - Demonstrates real-world vision framework usage in template output
+
+### Changed
+
+- `docs/DOCUMENTATION_PLAN.md`
+  - Added How-To 06 and Explanation 05 to documentation plan
+  - Updated metrics: 17 → 19 docs, 8,500 → 10,795 lines
+  - Updated AGENTS.md line count: 900 → 1,995 lines (reflects v1.3.0 enhancements)
+  - Marked Phase 1 and Phase 2 documentation as partially complete (5/19 docs created)
+  - Updated plan version to 1.1.0, template version to v1.3.1
+
+**Total Additions:** ~1,200 documentation lines + example project
+
+**Benefits:**
+- Human developers can understand vision philosophy and maintain vision docs
+- AI agents have comprehensive guides for strategic design decisions
+- Adopters see complete vision framework in action via example project
+- Documentation suite provides full coverage of vision framework
+
 ## [1.3.0] - 2025-10-19
 
 ### Added
