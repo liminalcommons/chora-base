@@ -20,8 +20,7 @@
 | v1.3.1 | v1.4.0 | [v1.3-to-v1.4.md](v1.3-to-v1.4.md) | 2-4 hrs | MEDIUM (workflow change) |
 
 **Status**:
-- ✅ v1.3-to-v1.4: Complete (reference implementation)
-- 🚧 v1.0-to-v1.1, v1.1-to-v1.2, v1.2-to-v1.3: Coming in Phase 2
+- ✅ All version-specific guides complete (100% coverage)
 - 📝 Cumulative guides: Coming in Phase 3
 
 ### Cumulative Guides (Multi-Version Jumps)
@@ -233,10 +232,15 @@ This is a living system based on real adoption experiences:
 |  |  | - UPGRADE_GUIDE_TEMPLATE.md created |
 |  |  | - v1.3-to-v1.4.md (reference implementation) |
 |  |  | - template/UPGRADING.md.jinja added |
+| 2.0 | 2025-10-19 | Complete upgrade guide coverage (Phase 2) |
+|  |  | - v1.0-to-v1.1.md (docs enhancements) |
+|  |  | - v1.1-to-v1.2.md (critical fixes) |
+|  |  | - v1.2-to-v1.3.md (vision framework) |
+|  |  | - 100% coverage for v1.0.0 → v1.4.0 |
 
 **Roadmap**:
-- **Phase 2** (Next): Backfill v1.0→v1.1, v1.1→v1.2, v1.2→v1.3 guides
-- **Phase 3** (Priority): Create CUMULATIVE_v1.0-to-v1.4.md for original adopters
+- **Phase 2** (Complete): ✅ All version-specific guides (v1.0→v1.4)
+- **Phase 3** (Next): Create CUMULATIVE_v1.0-to-v1.4.md for original adopters
 - **Phase 4**: Add copier.yml upgrade mode prompts
 - **Phase 5**: Validate with real-world upgrade case study
 

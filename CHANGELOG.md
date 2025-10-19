@@ -5,6 +5,49 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.5.0] - 2025-10-19
+
+### Added
+
+**Complete Upgrade Documentation Suite (Phase 2)**
+
+Backfill all remaining upgrade guides to provide **100% coverage** for adopters upgrading from v1.0.0 to v1.4.0.
+
+**New Upgrade Guides** (~3,300 lines):
+
+- **`docs/upgrades/v1.0-to-v1.1.md`** (~700 lines) - Documentation enhancements
+  - Effort: 30 min | Risk: LOW (docs only)
+  - A-MEM workflows, memory troubleshooting, Diátaxis documentation
+  - Simplest upgrade (pure documentation, zero conflicts)
+
+- **`docs/upgrades/v1.1-to-v1.2.md`** (~1,400 lines) - Critical fixes
+  - Effort: 1-2 hrs | Risk: HIGH (required upgrade)
+  - ImportError fixes, hardcoded path removal, placeholder cleanup
+  - Most complex upgrade (extensive conflict resolution strategies)
+  - Based on generalization audit (47 issues identified, 18 fixed)
+
+- **`docs/upgrades/v1.2-to-v1.3.md`** (~1,200 lines) - Vision framework
+  - Effort: 2-3 hrs | Risk: MEDIUM (integration needed)
+  - Strategic design framework, ROADMAP.md, AGENTS.md enhancements
+  - Integration strategies for existing planning docs
+  - Based on chora-compose production patterns
+
+### Changed
+
+- `docs/upgrades/README.md` - Updated status (100% coverage), added Phase 2 history
+
+**Total System**: ~5,500 lines across 8 files (complete upgrade documentation)
+
+**Coverage**: 100% (all version transitions v1.0.0 → v1.4.0 documented)
+
+**Benefits**:
+- Original adopters upgrade from any version with structured guidance
+- AI agents: 60-80% autonomous decisions via decision trees
+- Humans: Time estimates, real transcripts, rollback procedures
+- Ecosystem: Consistent patterns with displacement transparency
+
+**Next**: Phase 3 (cumulative v1.0→v1.4 guide for multi-version jumps)
+
 ## [1.4.0] - 2025-10-19
 
 ### Added
@@ -351,6 +394,7 @@ Enable all chora-base adopters to document long-term evolutionary vision alongsi
 - Memory Architecture: Event schema v1.0, CHORA_TRACE_ID propagation
 - Copier template with 30+ configuration variables
 
+[1.5.0]: https://github.com/liminalcommons/chora-base/compare/v1.4.0...v1.5.0
 [1.4.0]: https://github.com/liminalcommons/chora-base/compare/v1.3.1...v1.4.0
 [1.3.1]: https://github.com/liminalcommons/chora-base/compare/v1.3.0...v1.3.1
 [1.3.0]: https://github.com/liminalcommons/chora-base/compare/v1.2.0...v1.3.0
