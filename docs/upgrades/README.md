@@ -21,17 +21,17 @@
 
 **Status**:
 - ✅ All version-specific guides complete (100% coverage)
-- 📝 Cumulative guides: Coming in Phase 3
+- ✅ Cumulative guides complete (Phase 3)
 
 ### Cumulative Guides (Multi-Version Jumps)
 
 For adopters multiple versions behind:
 
-| From | To | Guide | Effort |
-|------|----|----|--------|
-| v1.0.0 | v1.4.0 | [CUMULATIVE_v1.0-to-v1.4.md](CUMULATIVE_v1.0-to-v1.4.md) | 4-6 hrs |
+| From | To | Guide | Effort | vs Incremental |
+|------|----|----|--------|----------------|
+| v1.0.0 | v1.4.0 | [CUMULATIVE_v1.0-to-v1.4.md](CUMULATIVE_v1.0-to-v1.4.md) | 4-6 hrs | 30-40% faster |
 
-**Status**: 📝 Coming in Phase 3 (priority for original adopters)
+**Status**: ✅ Complete (Phase 3) - Priority for original adopters (chora-compose, mcp-n8n teams)
 
 ### For Upgrade Guide Authors
 
@@ -237,11 +237,15 @@ This is a living system based on real adoption experiences:
 |  |  | - v1.1-to-v1.2.md (critical fixes) |
 |  |  | - v1.2-to-v1.3.md (vision framework) |
 |  |  | - 100% coverage for v1.0.0 → v1.4.0 |
+| 3.0 | 2025-10-19 | Cumulative upgrade guide (Phase 3) |
+|  |  | - CUMULATIVE_v1.0-to-v1.4.md (multi-version jump) |
+|  |  | - Strategy comparison (cumulative vs incremental vs hybrid) |
+|  |  | - 30-40% time savings for original adopters |
 
 **Roadmap**:
 - **Phase 2** (Complete): ✅ All version-specific guides (v1.0→v1.4)
-- **Phase 3** (Next): Create CUMULATIVE_v1.0-to-v1.4.md for original adopters
-- **Phase 4**: Add copier.yml upgrade mode prompts
+- **Phase 3** (Complete): ✅ CUMULATIVE_v1.0-to-v1.4.md for original adopters
+- **Phase 4** (Next): Add copier.yml upgrade mode prompts
 - **Phase 5**: Validate with real-world upgrade case study
 
 ---
