@@ -306,13 +306,44 @@ cd /path/to/your-project
 copier update
 
 # Or update to specific version
-copier update --vcs-ref=v1.2.0
+copier update --vcs-ref=v1.4.0
 ```
 
 This will:
 1. Merge template changes with your project
 2. Ask about conflicts
 3. Preserve your customizations
+
+### Upgrade Guides for AI Agents & Humans
+
+chora-base provides comprehensive upgrade documentation with AI-optimized decision trees:
+
+**Upgrade Philosophy**:
+- [Upgrade Philosophy & Decision Framework](docs/upgrades/PHILOSOPHY.md) - Understand chora-base's upgrade promise, displacement policy, and customization preservation strategies
+
+**Version-Specific Guides**:
+- [v1.3 → v1.4](docs/upgrades/v1.3-to-v1.4.md) - PyPI setup + `just` as primary interface
+- [More upgrade guides...](docs/upgrades/) - Step-by-step migration instructions
+
+**For AI Agents**:
+Each upgrade guide includes:
+- Decision trees (structured IF/THEN criteria)
+- Displacement analysis (required vs optional changes)
+- Merge strategies (preserve customizations)
+- Knowledge migration patterns (ecosystem-wide vs project-specific)
+
+**For Human Developers**:
+Each upgrade guide includes:
+- Time estimates and effort assessment
+- Example upgrade sessions (real transcripts)
+- Conflict resolution strategies
+- Rollback procedures
+
+**In Generated Projects**:
+Every generated project includes `UPGRADING.md` with:
+- Customization tracking (document what you've changed)
+- Upgrade workflow (step-by-step checklist)
+- Version history (track your upgrade path)
 
 ## Examples
 
