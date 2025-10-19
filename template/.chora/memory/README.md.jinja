@@ -101,7 +101,36 @@ Total workflow: 1920ms
 
 ### Knowledge Notes
 
-Markdown files with YAML frontmatter:
+Markdown files with YAML frontmatter following **Zettelkasten best practices**.
+
+#### Frontmatter Schema
+
+All knowledge notes use standardized YAML frontmatter for machine-readable metadata:
+
+**Required Fields:**
+- `id` (string): Unique note identifier in kebab-case (e.g., `backend-timeout-fix`)
+- `created` (ISO 8601): Creation timestamp (e.g., `2025-01-17T12:00:00Z`)
+- `updated` (ISO 8601): Last modification timestamp
+- `tags` (array[string]): Topical tags for search and organization (e.g., `[troubleshooting, backend]`)
+
+**Optional Fields:**
+- `confidence` (enum): Solution reliability - `low` | `medium` | `high`
+  - `low`: Untested hypothesis or early exploration
+  - `medium`: Tested in limited scenarios
+  - `high`: Production-validated, multiple confirmations
+- `source` (string): Knowledge origin - `agent-learning` | `human-curated` | `external` | `research`
+- `linked_to` (array[string]): Related note IDs for bidirectional linking (knowledge graph)
+- `status` (enum): Note lifecycle - `draft` | `validated` | `deprecated`
+- `author` (string): Agent or human who created the note
+- `related_traces` (array[string]): Trace IDs that led to this learning
+
+**Standards Compliance:**
+- ✅ Compatible with Obsidian, Zettlr, LogSeq, Foam
+- ✅ Follows Zettelkasten methodology (atomic notes, bidirectional linking)
+- ✅ Enables semantic search and confidence-based filtering
+- ✅ Supports knowledge graph visualization and traversal
+
+**Example:**
 
 ```markdown
 ---
@@ -112,6 +141,9 @@ tags: [troubleshooting, backend, timeout]
 confidence: high
 source: agent-learning
 linked_to: [trace-context-pattern, error-handling-best-practices]
+status: validated
+author: claude-code
+related_traces: [abc123, def456]
 ---
 
 # Backend Timeout Fix
