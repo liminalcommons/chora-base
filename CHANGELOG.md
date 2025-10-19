@@ -5,6 +5,76 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.3.0] - 2025-10-19
+
+### Added
+
+**Vision & Strategic Design Framework**
+
+Enable all chora-base adopters to document long-term evolutionary vision alongside committed roadmaps, guide AI agents in strategic implementation decisions, and balance immediate deliverables with future architectural needs.
+
+**New Template Files:**
+- `template/dev-docs/vision/README.md.jinja` (~370 lines) - Vision directory guide
+  - What are vision documents (exploratory vs committed)
+  - Decision frameworks and review process
+  - Archive policy and quarterly reviews
+  - Integration with ROADMAP.md and AGENTS.md
+- `template/dev-docs/vision/CAPABILITY_EVOLUTION.example.md.jinja` (~670 lines) - Example vision document
+  - 4-wave capability evolution structure
+  - Decision criteria templates (go/no-go frameworks)
+  - Success metrics and technical sketches
+  - Project-type specific examples (MCP, library, CLI, web service)
+- `template/ROADMAP.md.jinja` (~195 lines) - Roadmap template with vision integration
+  - Current focus and near-term roadmap
+  - Vision highlights linking to dev-docs/vision/
+  - Release history and roadmap philosophy
+
+**Enhanced Template Files:**
+- `template/AGENTS.md.jinja` (+255 lines, 1740 → 1995 lines total)
+  - Added "Strategic Context" subsection to Project Overview
+    - Current priority and long-term vision links
+    - Design principle statement
+  - Added "Strategic Design" section with:
+    - Vision-aware implementation pattern
+    - Refactoring decision framework (ASCII flowchart)
+    - Practical examples (conditional on project_type: mcp_server, library, cli_tool, web_service)
+    - Knowledge capture patterns (A-MEM integration)
+    - Quick reference checklist
+  - Added "Design Decision: Check Against Vision" task to Common Tasks
+    - Step-by-step decision documentation workflow
+    - ADR template (when memory_system=false)
+    - Knowledge note template (when memory_system=true)
+    - Example decision walkthrough
+
+**New Template Variables (copier.yml):**
+- `include_vision_docs` (bool, default: true, when: include_agents_md) - Include vision framework
+- `include_roadmap` (bool, default: true) - Include ROADMAP.md template
+- `initial_version` (str, default: "0.1.0", validator: semver) - Initial project version
+
+**Infrastructure Changes:**
+- Added `_exclude` patterns in copier.yml for conditional file generation
+  - Excludes dev-docs/vision/ when include_vision_docs=false
+  - Excludes ROADMAP.md.jinja when include_roadmap=false
+
+**Benefits:**
+- AI agents get clear framework for design decisions (reduces premature optimization)
+- Structured way to document long-term plans (separates exploratory from committed)
+- Enhanced AGENTS.md with systems thinking mindset (Section 2.2 of Agentic Coding Best Practices Research)
+- Better agent collaboration (agents understand project evolution direction)
+- Proven patterns based on chora-compose production use
+
+**Based On:**
+- chora-compose production patterns (real-world validation)
+- Agentic Coding Best Practices Research (Section 2.2: Systems Thinking, Section 4.3: A-MEM)
+- chora-base A-MEM infrastructure (stateful memory integration)
+
+**Total Additions:** ~1,490 template lines + infrastructure changes
+
+### Changed
+
+- README.md: Added "Vision & Strategic Design" to AI Agent Features section
+- copier.yml: Added vision framework variables and exclusion patterns
+
 ## [1.2.0] - 2025-10-18
 
 ### Fixed

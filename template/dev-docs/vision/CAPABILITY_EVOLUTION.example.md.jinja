@@ -1,0 +1,671 @@
+# Capability Evolution - {{ project_name }}
+
+This document describes the potential evolutionary path for {{ project_name }} across multiple capability waves. These are **exploratory directions**, not committed features.
+
+**Purpose:** Guide strategic design decisions today while keeping future doors open.
+
+---
+
+## Overview: Capability Waves
+
+```
+Wave 1: Foundation          Wave 2: Integration       Wave 3: Intelligence      Wave 4: Ecosystem
+     (Current)            (Post-v1.0, Exploratory)  (Post-v2.0, Exploratory)  (Post-v3.0, Exploratory)
+        │                         │                         │                         │
+        ├─ Core functionality     ├─ External systems      ├─ AI/ML features        ├─ Platform features
+        ├─ Basic tools            ├─ API integrations      ├─ Smart automation      ├─ Plugin system
+        ├─ Local operation        ├─ Data sync             ├─ Learning systems      ├─ Third-party tools
+        └─ Single-user            └─ Workflow support      └─ Insights & analytics  └─ Community extensions
+```
+
+**Current Status:** Wave 1 (Foundation) - Delivering core capabilities
+
+**Decision Cadence:** Review quarterly after milestone completion
+
+---
+
+## Wave 1: Foundation (Current)
+
+### Status
+
+**Current:** In Active Development
+**Target:** v1.0.0 ({{ initial_version }})
+**Timeline:** Current sprint/milestone
+
+### Capability Theme
+
+Establish core functionality that delivers immediate value:
+
+{% if project_type == 'mcp_server' -%}
+- **MCP Server Infrastructure** - Standard MCP protocol implementation
+- **Essential Tools** - 3-5 high-value tools for common operations
+- **Error Handling** - Robust error reporting and recovery
+- **Basic Configuration** - Environment-based config (`.env`)
+- **Developer Experience** - Setup scripts, testing, documentation
+{% elif project_type == 'library' -%}
+- **Core API** - Essential functions/classes for primary use case
+- **Type Safety** - Full type hints and validation
+- **Error Handling** - Clear exceptions and error messages
+- **Documentation** - API reference, examples, tutorials
+- **Developer Experience** - Testing framework, CI/CD, packaging
+{% elif project_type == 'cli_tool' -%}
+- **Core Commands** - 3-5 essential CLI commands
+- **User Experience** - Help text, progress indicators, clear output
+- **Configuration** - Config file support, environment variables
+- **Error Handling** - Friendly error messages, recovery options
+- **Developer Experience** - Testing, distribution, documentation
+{% elif project_type == 'web_service' -%}
+- **Core Endpoints** - Essential API routes for primary use case
+- **Data Models** - Core entities with validation
+- **Error Handling** - HTTP error codes, error responses
+- **Documentation** - OpenAPI/Swagger specs, examples
+- **Developer Experience** - Local dev setup, testing, deployment
+{% endif -%}
+
+### Motivation
+
+Why Wave 1 matters:
+
+1. **User Need:** Solve the core problem that {{ project_name }} addresses
+2. **Market Signal:** Validate product-market fit before expanding
+3. **Technical Foundation:** Establish architecture patterns for future waves
+4. **Learning Opportunity:** Gather user feedback to inform Wave 2+
+
+### Technical Sketch
+
+**Architecture Principles:**
+- Keep it simple (YAGNI - don't build Wave 2 features yet)
+- Extensible design (prepare for Wave 2 without implementing it)
+- Clear abstractions (easy to add capabilities later)
+
+{% if project_type == 'mcp_server' -%}
+**Example: Tool Interface Design**
+```python
+# Wave 1: Simple function-based tools
+async def tool_get_info(query: str) -> dict:
+    """Get basic information."""
+    return {"result": process_query(query)}
+
+# Extension point for Wave 2 (tool chaining)
+# Design: Return structured dict (not plain str) to enable future composition
+```
+{% elif project_type == 'library' -%}
+**Example: Core API Design**
+```python
+# Wave 1: Basic functionality
+class Processor:
+    def process(self, data: str) -> str:
+        """Process data with basic algorithm."""
+        return self._basic_transform(data)
+
+    # Extension point for Wave 2 (plugins)
+    # Design: Use protocols/interfaces to allow future plugin system
+```
+{% endif -%}
+
+### Success Metrics
+
+How we'll know Wave 1 succeeded:
+
+| Metric | Target | Measurement |
+|--------|--------|-------------|
+{% if project_type == 'mcp_server' -%}
+| **Adoption** | 10+ users install and use | GitHub stars, download count |
+| **Core Tools Usage** | 80%+ tools used weekly | Event log queries |
+| **Error Rate** | <5% tool call failures | Error tracking |
+| **Setup Time** | <5 minutes first use | User feedback |
+{% elif project_type == 'library' -%}
+| **Adoption** | 50+ PyPI downloads/month | PyPI stats |
+| **API Coverage** | Core API handles 80% of use cases | User feedback, GitHub issues |
+| **Error Rate** | <2% API call failures | Error tracking, bug reports |
+| **Documentation** | <10 "how do I..." issues/month | GitHub issues tagged "docs" |
+{% elif project_type == 'cli_tool' -%}
+| **Adoption** | 25+ active users | Download stats |
+| **Command Usage** | All core commands used | Telemetry (if opted in) |
+| **Error Rate** | <5% command failures | Error logs |
+| **User Satisfaction** | 4/5 stars average | User surveys |
+{% elif project_type == 'web_service' -%}
+| **Adoption** | 20+ API consumers | API key registrations |
+| **Endpoint Usage** | Core endpoints handle 80% of requests | Access logs |
+| **Error Rate** | <1% 5xx errors | Monitoring |
+| **Response Time** | p95 <200ms | APM |
+{% endif -%}
+
+### Decision: Committed
+
+**Status:** ✅ Committed to current roadmap
+**Rationale:** Core functionality required for product to exist
+**Timeline:** Current sprint → v{{ initial_version }} release
+
+---
+
+## Wave 2: Integration (Post-v1.0, Exploratory)
+
+### Status
+
+**Current:** Exploratory (Not Committed)
+**Target:** TBD (after v1.0 stabilizes)
+**Review Date:** Quarterly review after v1.0.0 ships
+
+### Capability Theme
+
+Integrate with external systems and workflows:
+
+{% if project_type == 'mcp_server' -%}
+- **Tool Chaining** - Compose multiple tools in sequences
+- **External APIs** - Connect to third-party services (e.g., databases, APIs)
+- **Data Persistence** - Cache results, maintain session state
+- **Advanced Configuration** - Per-tool config, environment profiles
+- **Workflow Integration** - Hooks for automation platforms
+{% elif project_type == 'library' -%}
+- **Plugin System** - Allow third-party extensions
+- **Data Source Adapters** - Connect to multiple backends
+- **Serialization** - Export/import in multiple formats (JSON, YAML, XML)
+- **Integration Helpers** - Adapters for popular frameworks
+- **Configuration System** - Advanced config with profiles
+{% elif project_type == 'cli_tool' -%}
+- **Pipeline Support** - Chain commands via stdin/stdout
+- **Config Profiles** - Multiple config profiles (dev, prod, etc.)
+- **Plugin System** - Third-party command extensions
+- **Integration Adapters** - Connect to external tools (git, docker, etc.)
+- **Automation Support** - Scripting-friendly output formats
+{% elif project_type == 'web_service' -%}
+- **Webhook System** - Event notifications to external systems
+- **OAuth Integration** - Third-party authentication
+- **Data Export** - Bulk export in multiple formats
+- **Webhook Receivers** - Accept events from external systems
+- **Integration Dashboard** - Manage connected services
+{% endif -%}
+
+### Motivation
+
+Why Wave 2 might matter:
+
+1. **User Signal:** Users request integrations with their existing tools
+2. **Market Trend:** Ecosystem integrations drive adoption (network effects)
+3. **Competitive:** Standalone tools have less moat than integrated platforms
+4. **Technical:** Wave 1 architecture can support integrations with refactoring
+
+### Technical Sketch
+
+{% if project_type == 'mcp_server' -%}
+**Tool Chaining Example:**
+```python
+# Wave 2: Tool composition
+class ToolChain:
+    def __init__(self, tools: List[Tool]):
+        self.tools = tools
+
+    async def execute(self, input: dict) -> dict:
+        """Execute tools in sequence, passing outputs as inputs."""
+        result = input
+        for tool in self.tools:
+            result = await tool.execute(result)
+        return result
+
+# Enables: tool_A → tool_B → tool_C workflows
+```
+
+**Data Persistence:**
+```python
+# Wave 2: Cache layer
+class CachedTool(Tool):
+    def __init__(self, tool: Tool, cache: Cache):
+        self.tool = tool
+        self.cache = cache
+
+    async def execute(self, params: dict) -> dict:
+        cache_key = hash_params(params)
+        if cached := self.cache.get(cache_key):
+            return cached
+
+        result = await self.tool.execute(params)
+        self.cache.set(cache_key, result, ttl=3600)
+        return result
+```
+{% elif project_type == 'library' -%}
+**Plugin System Example:**
+```python
+# Wave 2: Plugin interface
+class ProcessorPlugin(Protocol):
+    def name(self) -> str: ...
+    def process(self, data: Any) -> Any: ...
+
+class PluginManager:
+    def __init__(self):
+        self.plugins: Dict[str, ProcessorPlugin] = {}
+
+    def register(self, plugin: ProcessorPlugin):
+        self.plugins[plugin.name()] = plugin
+
+    def get(self, name: str) -> Optional[ProcessorPlugin]:
+        return self.plugins.get(name)
+
+# Enables: Third-party extensions via entry points
+```
+{% endif -%}
+
+### Decision Criteria
+
+Explicit go/no-go criteria for Wave 2:
+
+| Criterion | Target | Current | Status |
+|-----------|--------|---------|--------|
+| **Wave 1 Stable** | v1.0 shipped, <5 critical bugs | TBD | ⏳ Pending v1.0 |
+| **User Demand** | 50+ users requesting integrations | TBD | ⏳ Track after v1.0 |
+{% if project_type == 'mcp_server' -%}
+| **API Availability** | Partner APIs documented, accessible | TBD | ⏳ Survey ecosyst
+
+em |
+{% elif project_type == 'library' -%}
+| **Plugin Interest** | 10+ developers interested in plugins | TBD | ⏳ Survey community |
+{% endif -%}
+| **Team Capacity** | 3+ months eng time available | TBD | ⏳ Budget planning |
+
+**Decision Framework:**
+```
+IF all criteria met:
+  → COMMIT to roadmap (move to ROADMAP.md)
+ELSE IF 2-3 criteria met:
+  → VALIDATE (run spike/prototype)
+ELSE:
+  → DEFER (keep exploratory, review quarterly)
+```
+
+### Success Metrics (If Committed)
+
+| Metric | Target | Measurement |
+|--------|--------|-------------|
+{% if project_type == 'mcp_server' -%}
+| **Integrations Used** | 3+ external APIs connected | Usage telemetry |
+| **Tool Chains Created** | 20+ users chain tools | Event log analysis |
+| **Cache Hit Rate** | >60% for repeated queries | Cache metrics |
+{% elif project_type == 'library' -%}
+| **Third-Party Plugins** | 5+ community plugins | Plugin registry |
+| **Adapter Usage** | 3+ data sources used | Import telemetry |
+| **Framework Integrations** | 2+ popular frameworks | GitHub examples |
+{% endif -%}
+
+### Dependencies
+
+What must be true before Wave 2:
+
+1. **Wave 1 Delivered:** Core functionality stable and adopted
+2. **Architecture Review:** Confirm Wave 1 architecture supports extensions
+3. **User Research:** Validate which integrations matter most
+4. **Partner APIs:** External APIs available and documented (if applicable)
+
+### Risk Assessment
+
+| Risk | Impact | Mitigation |
+|------|--------|-----------|
+| **Complexity Explosion** | High | Limit to 3-5 integrations in Wave 2.0, expand in 2.1/2.2 |
+| **Maintenance Burden** | Medium | Partner APIs change → Use adapter pattern, version pins |
+| **User Adoption** | Low | If Wave 1 successful, users will want integrations |
+
+---
+
+## Wave 3: Intelligence (Post-v2.0, Exploratory)
+
+### Status
+
+**Current:** Exploratory (Not Committed)
+**Target:** TBD (after Wave 2 evaluates)
+**Review Date:** Quarterly review after v2.0.0 ships
+
+### Capability Theme
+
+Add AI/ML-powered features for smart automation:
+
+{% if project_type == 'mcp_server' -%}
+- **Smart Tool Selection** - Recommend tools based on user intent
+- **Predictive Caching** - Pre-fetch likely next queries
+- **Insight Generation** - Analyze usage patterns, suggest optimizations
+- **Natural Language Queries** - Translate plain English to tool calls
+- **Learning from Feedback** - Improve recommendations over time
+{% elif project_type == 'library' -%}
+- **Auto-Configuration** - Infer optimal settings from data
+- **Anomaly Detection** - Flag unusual patterns in processing
+- **Smart Defaults** - Learn user preferences over time
+- **Performance Optimization** - Suggest algorithm choices based on data
+- **Insight API** - Expose analytics and recommendations
+{% elif project_type == 'cli_tool' -%}
+- **Command Suggestions** - Predict next command based on history
+- **Error Recovery** - Suggest fixes for common errors
+- **Workflow Detection** - Identify repeated patterns, offer automation
+- **Smart Completion** - Context-aware autocomplete
+- **Learning Profiles** - Adapt to user style over time
+{% elif project_type == 'web_service' -%}
+- **Usage Analytics** - Real-time insights dashboard
+- **Anomaly Detection** - Flag unusual API usage patterns
+- **Rate Limit Optimization** - Dynamic rate limits based on behavior
+- **Smart Caching** - Predict and pre-cache likely requests
+- **Recommendation Engine** - Suggest relevant endpoints/features
+{% endif -%}
+
+### Motivation
+
+Why Wave 3 might matter:
+
+1. **User Need:** As adoption grows, users want automation (reduce manual work)
+2. **Market Trend:** AI/ML features become table stakes in 2025+
+3. **Competitive:** Smart features differentiate from basic tools
+4. **Technical:** Wave 2 data (usage patterns) enables ML training
+
+### Technical Sketch
+
+{% if project_type == 'mcp_server' -%}
+**Smart Tool Selection Example:**
+```python
+# Wave 3: ML-powered tool routing
+class SmartRouter:
+    def __init__(self, model: ToolSelectionModel):
+        self.model = model
+
+    async def route(self, user_query: str) -> List[Tool]:
+        """Use ML to predict best tool(s) for user intent."""
+        # Embed query → Compare to tool embeddings → Rank by relevance
+        embeddings = self.model.embed(user_query)
+        tool_scores = self.model.score_tools(embeddings)
+        return self.model.top_k_tools(tool_scores, k=3)
+
+# Requires: Training data from Wave 1-2 usage logs
+```
+{% elif project_type == 'library' -%}
+**Auto-Configuration Example:**
+```python
+# Wave 3: Infer optimal settings
+class SmartProcessor:
+    def auto_configure(self, sample_data: Any) -> Config:
+        """Analyze data characteristics, recommend config."""
+        stats = analyze_data(sample_data)
+
+        if stats.size > 1_000_000:
+            return Config(algorithm="streaming", batch_size=10000)
+        elif stats.complexity > 0.8:
+            return Config(algorithm="precise", batch_size=100)
+        else:
+            return Config(algorithm="fast", batch_size=1000)
+```
+{% endif -%}
+
+### Decision Criteria
+
+| Criterion | Target | Current | Status |
+|-----------|--------|---------|--------|
+| **Wave 2 Delivered** | v2.0 shipped, integrations adopted | TBD | ⏳ Pending Wave 2 |
+| **Training Data** | 10,000+ usage events collected | TBD | ⏳ Collecting in Wave 1-2 |
+| **User Demand** | 100+ users requesting AI features | TBD | ⏳ Track feedback |
+| **ML Expertise** | Team has ML eng or partner available | TBD | ⏳ Hiring/partnering |
+| **Compute Budget** | GPU resources for training/inference | TBD | ⏳ Cost modeling |
+
+### Dependencies
+
+1. **Wave 2 Data:** Need usage patterns from integrations to train models
+2. **ML Infrastructure:** Training pipeline, model serving, monitoring
+3. **Privacy Review:** Ensure data collection complies with privacy policies
+4. **User Trust:** Users must opt-in to data collection for training
+
+### Risk Assessment
+
+| Risk | Impact | Mitigation |
+|------|--------|-----------|
+| **Model Accuracy** | High | Start with rule-based heuristics, add ML incrementally |
+| **Compute Costs** | Medium | Use small models, edge inference, cache aggressively |
+| **Privacy Concerns** | High | Strict opt-in, local models where possible, privacy audit |
+| **Feature Complexity** | Medium | Ship MVPs (e.g., simple recommendations before full NLP) |
+
+---
+
+## Wave 4: Ecosystem (Post-v3.0, Exploratory)
+
+### Status
+
+**Current:** Exploratory (Not Committed)
+**Target:** TBD (after Wave 3 evaluates)
+**Review Date:** Quarterly review after v3.0.0 ships
+
+### Capability Theme
+
+Enable third-party developers to extend {{ project_name }}:
+
+{% if project_type == 'mcp_server' -%}
+- **Tool Marketplace** - Registry of community-built tools
+- **Tool SDK** - Simplified API for building custom tools
+- **Sandboxed Execution** - Safe execution of third-party tool code
+- **Monetization** - Revenue sharing for premium tools (optional)
+- **Community Hub** - Forums, docs, tool showcases
+{% elif project_type == 'library' -%}
+- **Plugin Marketplace** - Discover and install community plugins
+- **Plugin SDK** - Simplified API for plugin development
+- **Plugin Verification** - Code review, security scanning for plugins
+- **Documentation Portal** - Guides, examples, API reference
+- **Community Resources** - Discord, forums, office hours
+{% elif project_type == 'cli_tool' -%}
+- **Command Marketplace** - Registry of community commands
+- **Command SDK** - Simplified API for custom commands
+- **Package Manager Integration** - Install via `brew`, `apt`, `pipx`
+- **Template Gallery** - Starter templates for common use cases
+- **Community Hub** - Showcase user workflows
+{% elif project_type == 'web_service' -%}
+- **API Partner Program** - Third-party apps build on {{ project_name }}
+- **SDK Libraries** - Client libraries for popular languages
+- **Developer Portal** - Docs, API console, examples
+- **Webhooks Directory** - Pre-built integrations for partners
+- **Revenue Sharing** - Monetization for partner apps (optional)
+{% endif -%}
+
+### Motivation
+
+Why Wave 4 might matter:
+
+1. **Network Effects:** Community extensions accelerate feature growth
+2. **Market Expansion:** Partners reach use cases core team can't address
+3. **Competitive Moat:** Ecosystem lock-in (users invested in extensions)
+4. **Sustainability:** Community contributions reduce core team burden
+
+### Technical Sketch
+
+{% if project_type == 'mcp_server' -%}
+**Tool Marketplace Architecture:**
+```
+┌─────────────────────────────────────┐
+│      Tool Marketplace Registry      │
+│  (GitHub repo or package registry)  │
+└─────────────┬───────────────────────┘
+              │
+              ├─ Community Tool 1 (pypi package)
+              ├─ Community Tool 2 (pypi package)
+              └─ Community Tool 3 (pypi package)
+                      ↓
+┌─────────────────────────────────────┐
+│    {{ project_name }} Server         │
+│  - Tool discovery (search registry)  │
+│  - Tool installation (pip install)   │
+│  - Sandboxed execution (containers)  │
+└─────────────────────────────────────┘
+```
+
+**Tool SDK Example:**
+```python
+# Wave 4: Simplified tool creation
+from {{ package_name }}.sdk import Tool, register
+
+@register
+class MyCustomTool(Tool):
+    name = "my_custom_tool"
+    description = "Does something useful"
+
+    async def execute(self, params: dict) -> dict:
+        # Community developer writes this
+        return {"result": "custom logic here"}
+
+# Published as PyPI package: {{ project_slug }}-tool-mycustom
+# Installed: pip install {{ project_slug }}-tool-mycustom
+# Discovered: Automatically loaded by {{ project_name }}
+```
+{% elif project_type == 'library' -%}
+**Plugin Marketplace Architecture:**
+```
+┌─────────────────────────────────────┐
+│     Plugin Registry (website)       │
+│    (Discover, rate, install)        │
+└─────────────┬───────────────────────┘
+              │
+              ├─ Plugin A (entry point)
+              ├─ Plugin B (entry point)
+              └─ Plugin C (entry point)
+                      ↓
+┌─────────────────────────────────────┐
+│      {{ package_name }} Library      │
+│  - Plugin discovery (entry points)   │
+│  - Plugin loading (stevedore)        │
+│  - Plugin validation (security scan) │
+└─────────────────────────────────────┘
+```
+{% endif -%}
+
+### Decision Criteria
+
+| Criterion | Target | Current | Status |
+|-----------|--------|---------|--------|
+| **Wave 3 Delivered** | v3.0 shipped, AI features adopted | TBD | ⏳ Pending Wave 3 |
+| **Community Size** | 500+ active users | TBD | ⏳ Growing user base |
+| **Extension Demand** | 50+ requests for custom tools/plugins | TBD | ⏳ Track GitHub issues |
+| **Platform Maturity** | Stable APIs, <1 breaking change/year | TBD | ⏳ API stability focus |
+| **Resources** | 6+ months eng time, community manager | TBD | ⏳ Budget planning |
+
+### Dependencies
+
+1. **Stable APIs:** No breaking changes for 12 months (ecosystem needs stability)
+2. **Security Infrastructure:** Code review, scanning, sandboxing for third-party code
+3. **Legal Review:** Terms for marketplace, liability, content moderation
+4. **Community Management:** Dedicated community manager or team
+
+### Risk Assessment
+
+| Risk | Impact | Mitigation |
+|------|--------|-----------|
+| **Security Vulnerabilities** | Critical | Mandatory security scans, sandboxed execution, code review |
+| **Low-Quality Extensions** | Medium | Rating system, featured/verified badges, moderation |
+| **API Breakage** | High | API versioning, deprecation policy (12-month notice) |
+| **Support Burden** | Medium | Clear boundaries (core vs community support) |
+
+---
+
+## Cross-Wave Principles
+
+### Design for Future Waves
+
+**When building Wave N, consider Wave N+1:**
+
+1. **Extensibility:** Use interfaces/protocols, not concrete implementations
+2. **Data Collection:** Emit events for future ML training (with privacy controls)
+3. **API Stability:** Minimize breaking changes (easier to add than change)
+4. **Documentation:** Explain architecture decisions for future maintainers
+
+### Refactoring Decision Framework
+
+**Should I refactor now, or defer?**
+
+```
+┌─────────────────────────────────────────────────────┐
+│ 1. Does this help current wave (Wave 1)?           │
+│    NO → DEFER (focus on current work)              │
+│    YES → Continue ↓                                 │
+├─────────────────────────────────────────────────────┤
+│ 2. Does this block future waves (Wave 2-4)?        │
+│    YES → REFACTOR (strategic investment)           │
+│    NO → Continue ↓                                  │
+├─────────────────────────────────────────────────────┤
+│ 3. Cost vs. benefit?                                │
+│    HIGH COST → DEFER (wait until Wave 2 committed) │
+│    LOW COST → REFACTOR (small prep pays off)       │
+└─────────────────────────────────────────────────────┘
+```
+
+**Example Decisions:**
+
+| Scenario | Decision | Rationale |
+|----------|----------|-----------|
+| Return `dict` instead of `str` in tool responses | ✅ REFACTOR | Low cost, unblocks Wave 2 (tool chaining) |
+| Build full plugin system in Wave 1 | ❌ DEFER | High cost, Wave 2 not committed yet |
+| Add structured logging with trace IDs | ✅ REFACTOR | Low cost, enables Wave 3 (ML training data) |
+| Implement ML model serving infra | ❌ DEFER | High cost, Wave 3 not validated yet |
+
+---
+
+## Review History
+
+### 2025-10-19 (Initial Vision)
+
+**Decisions:**
+- Wave 1 (Foundation): COMMITTED to v{{ initial_version }} roadmap
+- Wave 2 (Integration): EXPLORATORY (review after v1.0 ships)
+- Wave 3 (Intelligence): EXPLORATORY (depends on Wave 2 data)
+- Wave 4 (Ecosystem): EXPLORATORY (long-term vision, 2+ years out)
+
+**Next Review:** After v1.0.0 ships (target: [INSERT TARGET DATE])
+
+---
+
+## How to Use This Document
+
+### For Maintainers
+
+**During implementation:**
+1. Check current wave (Wave 1) for context
+2. Apply refactoring decision framework before architectural changes
+3. Document decisions in ADRs or knowledge notes
+
+**During quarterly reviews:**
+1. Update decision criteria status
+2. Move delivered waves to archive/
+3. Add new waves based on learnings
+4. Adjust timelines based on actual velocity
+
+### For AI Coding Agents
+
+**When implementing features:**
+1. Read [AGENTS.md](../../AGENTS.md) Section 3: Strategic Design
+2. Check this vision doc: "Does design block future waves?"
+3. Apply refactoring framework
+4. Document decision:
+   ```bash
+{% if include_memory_system -%}
+   # Record decision in knowledge graph
+   echo "Decision: Return dict instead of str in tool responses
+   Rationale: Enables Wave 2 tool chaining without breaking changes
+   Tags: architecture, vision, wave-2
+   " | {{ package_name }}-memory knowledge create "Tool Response Format Decision"
+{% else -%}
+   # Record in dev-docs/architecture/ADR-XXX.md
+{% endif -%}
+   ```
+
+### For Contributors
+
+**When proposing features:**
+1. Check if feature aligns with current wave
+2. If Wave 2+ feature, add to exploratory wave (don't build yet)
+3. If Wave 1 feature, ensure it doesn't block future waves
+
+---
+
+## Related Documentation
+
+- [README.md](README.md) - Vision directory guide
+- [ROADMAP.md](../../ROADMAP.md) - Committed features and timelines
+- [AGENTS.md](../../AGENTS.md) - Machine-readable agent instructions
+- [CHANGELOG.md](../../CHANGELOG.md) - Delivered features
+{% if include_memory_system -%}
+- [.chora/memory/](../../.chora/memory/) - Agent memory for decision tracking
+{% endif -%}
+
+---
+
+**Last Updated:** 2025-10-19 (update manually during quarterly reviews)
+**Template Version:** chora-base v1.3.0
+**Status:** Living document (review quarterly)
+
+🧭 This vision guides strategic decisions across multiple years of evolution.

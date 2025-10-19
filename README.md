@@ -31,6 +31,11 @@ chora-base is a production-ready Python project template featuring:
 ### AI Agent Features (Optional)
 
 - 🤖 **AGENTS.md** - Machine-readable instructions (OpenAI/Google/Sourcegraph standard)
+- 🎯 **Vision & Strategic Design** - Long-term capability evolution framework
+  - Exploratory vision documents (non-committed future directions)
+  - Strategic design guidance for AI agents
+  - Decision frameworks (refactor now vs. defer)
+  - Quarterly review process
 - 🧠 **Memory System** - Event log, knowledge graph, trace context
   - Event correlation via `CHORA_TRACE_ID`
   - Zettelkasten-inspired knowledge notes

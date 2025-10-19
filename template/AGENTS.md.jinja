@@ -20,6 +20,24 @@ This file provides machine-readable instructions for AI coding agents working wi
 - **[Component 3]** (`[module].py`) - [Description]
 
 {% endif -%}
+
+{% if include_vision_docs -%}
+### Strategic Context
+
+**Current Priority:** [Describe current sprint/milestone focus]
+- See [ROADMAP.md](ROADMAP.md) for committed work
+- Focus: [List 2-3 key deliverables]
+
+**Long-Term Vision:** [Describe evolutionary direction]
+- See [dev-docs/vision/](dev-docs/vision/) for future capabilities
+- Waves: [List 2-4 high-level capability themes]
+
+**Design Principle:** Deliver current commitments while keeping future doors open.
+- Don't build future features now
+- Do design extension points and document decisions
+- Do refactor when it serves both present and future
+
+{% endif -%}
 ---
 
 ## Dev Environment Tips
@@ -374,6 +392,258 @@ Fixes #45
 
 [Document your project-specific constraints and design decisions here.]
 
+{% if include_vision_docs -%}
+
+---
+
+## Strategic Design
+
+### Balancing Current Priorities with Future Vision
+
+**The Balance:**
+- ✅ **Deliver:** Ship current commitments on time
+- ✅ **Design for evolution:** Keep future doors open (extension points)
+- ✅ **Refactor strategically:** When it serves both present and future
+- ❌ **NOT:** Premature optimization, gold plating, scope creep
+
+**Key Insight:** Build for today, design for tomorrow. Don't implement Wave 2 features in Wave 1, but don't paint yourself into corners either.
+
+### Vision-Aware Implementation Pattern
+
+**When implementing features, ask:**
+
+1. **Architecture Check:** "Does this design block future capabilities in [dev-docs/vision/](dev-docs/vision/)?"
+   - ✅ YES → Refactor before implementing
+   - ✅ NO → Proceed
+
+2. **Refactoring Signal:** "Should I refactor this now?"
+   ```
+   ┌─────────────────────────────────────────────────────┐
+   │ Does it help current work (Wave 1)?                 │
+   │   NO → DEFER (focus on current deliverables)       │
+   │   YES → Continue ↓                                  │
+   ├─────────────────────────────────────────────────────┤
+   │ Does it unblock future capabilities?                │
+   │   YES → LIKELY REFACTOR (strategic investment)     │
+   │   NO → Continue ↓                                   │
+   ├─────────────────────────────────────────────────────┤
+   │ Cost vs. benefit?                                    │
+   │   HIGH COST → DEFER (wait for Wave 2 commitment)   │
+   │   LOW COST → REFACTOR (small prep, big payoff)     │
+   └─────────────────────────────────────────────────────┘
+   ```
+
+3. **Decision Documentation:** Where to record decisions
+{% if include_memory_system -%}
+   - **Knowledge notes:** `{{ package_name }}-memory knowledge create "Decision: [topic]"`
+   - **Tags:** Use `architecture`, `vision`, `wave-N` tags for discoverability
+{% else -%}
+   - **Architecture Decision Records (ADRs):** `dev-docs/architecture/ADR-00X-name.md`
+   - **Code comments:** Explain why (not what) in critical sections
+{% endif -%}
+
+### Practical Examples
+
+{% if project_type == 'mcp_server' -%}
+**Example: Building Tool Interface**
+
+**Scenario:** Wave 1 needs simple tool responses. Wave 2 vision includes tool chaining.
+
+**❌ DON'T (Premature Optimization):**
+```python
+# DON'T build tool chaining now
+async def get_data(query: str) -> str:
+    # Implements full chaining system (Wave 2 feature)
+    return chain_tools([tool_a, tool_b])(query)  # Not needed yet!
+```
+
+**✅ DO (Extension Point):**
+```python
+# DO return structured data (enables future chaining)
+async def get_data(query: str) -> dict:
+    """Returns structured response (extensible for Wave 2)."""
+    return {
+        "result": process_query(query),
+        "metadata": {"timestamp": now(), "version": "1.0"}
+    }
+    # Wave 2 can add: "next_tool": "tool_b", "chain_id": "..."
+```
+
+{% elif project_type == 'library' -%}
+**Example: API Design**
+
+**Scenario:** Wave 1 needs basic processing. Wave 2 vision includes plugin system.
+
+**❌ DON'T (Gold Plating):**
+```python
+# DON'T build plugin system now
+class Processor:
+    def __init__(self):
+        self.plugin_manager = PluginManager()  # Not needed yet!
+        self.plugins = self.plugin_manager.discover()
+
+    def process(self, data: str) -> str:
+        # Complex plugin orchestration
+        return self.plugin_manager.execute_all(data)
+```
+
+**✅ DO (Protocol/Interface):**
+```python
+# DO use protocols (extensible for Wave 2 plugins)
+from typing import Protocol
+
+class ProcessorStrategy(Protocol):
+    """Strategy interface (enables future plugins)."""
+    def process(self, data: str) -> str: ...
+
+class Processor:
+    def __init__(self, strategy: ProcessorStrategy | None = None):
+        self.strategy = strategy or DefaultStrategy()
+
+    def process(self, data: str) -> str:
+        return self.strategy.process(data)
+        # Wave 2 can add: plugin discovery, registration
+```
+
+{% elif project_type == 'cli_tool' -%}
+**Example: Command Structure**
+
+**Scenario:** Wave 1 needs basic commands. Wave 2 vision includes plugin commands.
+
+**❌ DON'T (Scope Creep):**
+```python
+# DON'T build plugin loading now
+@click.group()
+def cli():
+    load_plugins()  # Not needed yet!
+    discover_external_commands()  # Not needed yet!
+```
+
+**✅ DO (Modular Structure):**
+```python
+# DO organize commands modularly (enables future plugins)
+@click.group()
+def cli():
+    """Main CLI (extensible for Wave 2 plugins)."""
+    pass
+
+# Each command is a module
+cli.add_command(cmd_process)
+cli.add_command(cmd_analyze)
+# Wave 2 can add: plugin discovery, external command loading
+```
+
+{% elif project_type == 'web_service' -%}
+**Example: API Endpoint Design**
+
+**Scenario:** Wave 1 needs basic CRUD. Wave 2 vision includes webhooks.
+
+**❌ DON'T (Future Feature Now):**
+```python
+# DON'T implement webhooks now
+@app.post("/items")
+async def create_item(item: Item):
+    result = db.create(item)
+    await webhook_manager.notify_all(result)  # Not needed yet!
+    return result
+```
+
+**✅ DO (Event Hook):**
+```python
+# DO emit events (enables future webhooks)
+@app.post("/items")
+async def create_item(item: Item):
+    result = db.create(item)
+    await event_bus.emit("item.created", result)  # Hook for Wave 2
+    return result
+    # Wave 2 can add: webhook subscriptions to event_bus
+```
+{% endif -%}
+
+### Refactoring Decision Framework
+
+**Use this checklist before refactoring:**
+
+- [ ] **Current Work:** Does this help Wave 1 deliverables?
+- [ ] **Future Vision:** Check [dev-docs/vision/](dev-docs/vision/) - does this prepare for next wave?
+- [ ] **Cost Assessment:** Low cost (<2 hours) or high cost (>1 day)?
+- [ ] **Decision:** Apply framework above → Refactor now or defer?
+- [ ] **Documentation:** Record decision ({% if include_memory_system %}knowledge note{% else %}ADR{% endif %})
+
+### Capturing Knowledge for Future Agents
+
+{% if include_memory_system -%}
+**Use A-MEM (Agentic Memory) patterns:**
+
+1. **Emit Events:** Track architectural decisions
+   ```python
+   from {{ package_name }}.memory import emit_event
+
+   emit_event(
+       event_type="architecture.decision",
+       data={
+           "decision": "Use dict returns for tool extensibility",
+           "rationale": "Enables Wave 2 tool chaining",
+           "wave": "wave-2-preparation"
+       },
+       status="success"
+   )
+   ```
+
+2. **Create Knowledge Notes:**
+   ```bash
+   echo "Decision: Tool Response Format
+
+   Context: Wave 1 tools return simple data, Wave 2 vision includes tool chaining.
+
+   Decision: Return dict (not str) from all tools.
+
+   Rationale:
+   - Low cost refactor (1 hour)
+   - Unblocks Wave 2 tool chaining
+   - Backward compatible (wrap str in dict)
+
+   Tags: architecture, vision, wave-2, tools
+   " | {{ package_name }}-memory knowledge create "Tool Response Format"
+   ```
+
+3. **Link to Vision:**
+   - Reference vision waves in knowledge notes
+   - Tag notes with `wave-N` for future discoverability
+   - Query past decisions: `{{ package_name }}-memory knowledge search --tag wave-2`
+
+{% else -%}
+**Use Architecture Decision Records (ADRs):**
+
+1. **Create ADR:**
+   ```bash
+   touch dev-docs/architecture/ADR-001-tool-response-format.md
+   ```
+
+2. **Link to Vision:**
+   - Reference [dev-docs/vision/CAPABILITY_EVOLUTION.md](dev-docs/vision/CAPABILITY_EVOLUTION.md) in ADR
+   - Explain which wave this prepares for
+   - Document decision criteria applied
+
+3. **Update Vision Doc:**
+   - If decision affects wave feasibility, update vision document
+   - Record in quarterly review section
+{% endif -%}
+
+### Quick Reference: Strategic Design Checklist
+
+**Before implementing any feature:**
+
+1. ✅ **Check ROADMAP.md:** Is this in current committed work?
+2. ✅ **Check vision:** Does this align with evolutionary direction?
+3. ✅ **Apply framework:** Refactor now or defer? (use flowchart above)
+4. ✅ **Document:** Record decision for future agents
+5. ✅ **Code:** Implement with extension points, not future features
+
+**Remember:** Deliver today, design for tomorrow. No gold plating!
+
+{% endif -%}
+
 ---
 
 ## Common Tasks for Agents
@@ -569,6 +839,104 @@ mypy src/{{ package_name }} --pretty --show-error-codes
 # Add type: ignore[error-code] comment to problematic line
 ```
 {% endif %}
+
+{% if include_vision_docs -%}
+### Design Decision: Check Against Vision
+
+**When:** Before making architectural decisions or significant refactors
+
+**Steps:**
+
+1. **Check current priority:**
+   ```bash
+   cat ROADMAP.md | head -50
+   # Current: [Your current sprint/milestone]
+   ```
+
+2. **Check long-term vision:**
+   ```bash
+   cat dev-docs/vision/CAPABILITY_EVOLUTION.md | head -100
+   # Future waves: [Your capability themes]
+   ```
+
+3. **Apply decision framework:**
+   - **Does this help current work?** (YES → continue)
+   - **Does this align with vision?** (YES → good sign)
+   - **Cost vs. benefit?** (LOW COST → likely proceed)
+
+4. **Document decision:**
+{% if include_memory_system -%}
+   ```bash
+   # Create knowledge note
+   echo "Decision: [Your decision]
+
+   Context: [Current situation]
+
+   Decision: [What you decided]
+
+   Rationale:
+   - Helps Wave 1 deliverables: [How]
+   - Aligns with Wave 2 vision: [Which capability]
+   - Low cost: [Effort estimate]
+
+   Outcome: [Expected result]
+
+   Tags: architecture, vision, wave-N, decision
+   " | {{ package_name }}-memory knowledge create "Decision: [Topic]"
+   ```
+{% else -%}
+   ```bash
+   # Create architecture decision record
+   touch dev-docs/architecture/ADR-00X-decision-name.md
+   ```
+
+   **ADR Template:**
+   ```markdown
+   # ADR-00X: [Decision Title]
+
+   **Status:** Accepted
+   **Date:** YYYY-MM-DD
+   **Wave:** Wave N preparation
+
+   ## Context
+   [Current situation requiring decision]
+
+   ## Decision
+   [What we decided to do]
+
+   ## Rationale
+   - Helps current work: [How]
+   - Aligns with vision: [Which wave/capability]
+   - Cost vs. benefit: [Analysis]
+
+   ## Consequences
+   - Positive: [Benefits]
+   - Negative: [Trade-offs]
+   - Neutral: [Other impacts]
+
+   ## Related
+   - [Link to vision doc wave]
+   - [Link to related ADRs]
+   ```
+{% endif -%}
+
+5. **Link to vision:**
+   - If prepares for future waves, note it in documentation
+{% if include_memory_system -%}
+   - Add tags to knowledge notes for discoverability: `wave-2`, `architecture`, `vision`
+{% endif -%}
+   - Update vision document if decision affects feasibility
+
+**Example Decision:**
+
+**Scenario:** Should we refactor tool responses from `str` to `dict`?
+
+1. **Current work:** Wave 1 needs simple responses → `str` works
+2. **Vision:** Wave 2 includes tool chaining → needs structured data (`dict`)
+3. **Cost:** Low (1-2 hours to refactor)
+4. **Decision:** ✅ REFACTOR NOW (serves both present and future)
+
+{% endif -%}
 
 ---
 

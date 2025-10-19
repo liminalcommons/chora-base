@@ -122,6 +122,27 @@ include_agents_md:
   help: Include AGENTS.md (machine-readable instructions for AI agents)?
   default: true
 
+include_vision_docs:
+  type: bool
+  help: Include vision document templates and strategic design guidance?
+  default: true
+  when: "{{ include_agents_md }}"
+
+include_roadmap:
+  type: bool
+  help: Include ROADMAP.md template?
+  default: true
+
+initial_version:
+  type: str
+  help: Initial project version (semver)
+  default: "0.1.0"
+  validator: >-
+    {% if not (initial_version | regex_search('^\d+\.\d+\.\d+$')) %}
+    Must be semantic version (e.g., 0.1.0)
+    {% endif %}
+  when: "{{ include_roadmap }}"
+
 # === Testing & Quality ===
 
 include_tests:
@@ -194,6 +215,11 @@ include_docker:
 # === Computed Values (not questions) ===
 
 _templates_suffix: ".jinja"
+
+_exclude:
+  - "{% if not include_vision_docs %}dev-docs/vision/{% endif %}"
+  - "{% if not include_roadmap %}ROADMAP.md.jinja{% endif %}"
+  - "{% if not include_vision_docs %}dev-docs/vision/*{% endif %}"
 
 _skip_if_exists:
   - .env
