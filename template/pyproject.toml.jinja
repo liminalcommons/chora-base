@@ -45,7 +45,7 @@ release = [
 
 [project.scripts]
 {% if project_type == 'mcp_server' -%}
-{{ project_slug }} = "{{ package_name }}.server:main"
+{{ project_slug }} = "{{ package_name }}.mcp.server:main"
 {% elif project_type == 'cli_tool' or include_cli -%}
 {{ project_slug }} = "{{ package_name }}.cli.main:cli"
 {% endif -%}

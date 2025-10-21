@@ -234,6 +234,36 @@ include_docker:
   help: Include Docker configuration (Dockerfile, docker-compose.yml)?
   default: false
 
+# === MCP Namespace Configuration (v1.8.0) ===
+
+mcp_namespace:
+  type: str
+  help: "MCP namespace for tools/resources (e.g., 'myproject' → myproject:tool_name)"
+  default: "{{ project_slug | replace('-', '') }}"
+  validator: >-
+    {% if not (mcp_namespace | regex_search('^[a-z][a-z0-9]{2,19}$')) %}
+    Must be lowercase, 3-20 chars, alphanumeric only (no hyphens/underscores)
+    {% endif %}
+  when: "{{ project_type == 'mcp_server' }}"
+
+mcp_enable_namespacing:
+  type: bool
+  help: "Prefix tools with namespace? Recommended for ecosystem integration (myproject:tool_name)"
+  default: true
+  when: "{{ project_type == 'mcp_server' }}"
+
+mcp_resource_uri_scheme:
+  type: bool
+  help: "Generate resource URI helpers? (myproject://type/id)"
+  default: true
+  when: "{{ project_type == 'mcp_server' }}"
+
+mcp_validate_names:
+  type: bool
+  help: "Include runtime namespace validation and pre-commit hooks?"
+  default: true
+  when: "{{ project_type == 'mcp_server' and mcp_enable_namespacing }}"
+
 # === Computed Values (not questions) ===
 
 _templates_suffix: ".jinja"
@@ -250,6 +280,12 @@ _exclude:
   - "{% if not include_documentation_standard %}scripts/extract_tests.py.jinja{% endif %}"
   - "{% if not documentation_advanced_features %}scripts/docs_metrics.py.jinja{% endif %}"
   - "{% if not documentation_advanced_features %}scripts/query_docs.py.jinja{% endif %}"
+  - "{% if project_type != 'mcp_server' %}src/{{package_name}}/mcp/{% endif %}"
+  - "{% if project_type != 'mcp_server' %}NAMESPACES.md.jinja{% endif %}"
+  - "{% if project_type != 'mcp_server' %}scripts/validate_mcp_names.py.jinja{% endif %}"
+  - "{% if project_type != 'mcp_server' %}scripts/migrate_namespace.sh.jinja{% endif %}"
+  - "{% if not mcp_validate_names %}scripts/validate_mcp_names.py.jinja{% endif %}"
+  - "{% if not mcp_validate_names %}scripts/migrate_namespace.sh.jinja{% endif %}"
 
 _skip_if_exists:
   - .env

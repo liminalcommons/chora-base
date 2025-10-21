@@ -5,6 +5,223 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.8.0] - 2025-10-21
+
+### Added
+
+**Chora MCP Conventions v1.0 - Opinionated, Ergonomic, Robust MCP Naming**
+
+Complete implementation of standardized MCP tool/resource naming conventions for ecosystem integration.
+
+**Philosophy:**
+- **Opinionated:** Single canonical way to name tools/resources
+- **Ergonomic:** Helper functions, validation, migration tooling
+- **Robust:** Runtime validation, pre-commit hooks, versioned standard
+
+**New copier.yml Options (MCP servers only):**
+
+1. `mcp_namespace` (type: str, default: `project_slug` without hyphens)
+   - MCP namespace for tools/resources (e.g., `myproject`)
+   - Validates: 3-20 chars, lowercase alphanumeric only
+   - Used for tool names: `myproject:tool_name`
+   - Used for resource URIs: `myproject://type/id`
+
+2. `mcp_enable_namespacing` (type: bool, default: true)
+   - Prefix tools with namespace? (recommended for ecosystem integration)
+   - When enabled: Tools follow `namespace:tool_name` pattern
+   - When disabled: Tools use simple names (standalone mode)
+
+3. `mcp_resource_uri_scheme` (type: bool, default: true)
+   - Generate resource URI helpers?
+   - Implements: `namespace://type/id[?query]` pattern
+   - Helper: `make_resource_uri("type", "id", query)`
+
+4. `mcp_validate_names` (type: bool, default: true)
+   - Include runtime validation and pre-commit hooks?
+   - Validates tool names and resource URIs against conventions
+   - Prevents invalid names from being committed
+
+**New Template Files (~1,500 lines):**
+
+1. **`template/src/{{package_name}}/mcp/__init__.py.jinja`** (~285 lines)
+   - Namespace utilities and validation
+   - Helper functions: `make_tool_name()`, `make_resource_uri()`
+   - Parsing functions: `parse_tool_name()`, `parse_resource_uri()`
+   - Validation: `validate_tool_name()`, `validate_resource_uri()`, `validate_namespace()`
+   - Regex patterns for naming conventions
+   - Auto-validates namespace on import
+
+2. **`template/src/{{package_name}}/mcp/server.py.jinja`** (~156 lines)
+   - MCP server template with namespace support
+   - Example tools demonstrating namespaced naming
+   - Resource implementation using URI scheme
+   - Integration with FastMCP
+   - Entry point: `{package}.mcp.server:main`
+
+3. **`template/NAMESPACES.md.jinja`** (~243 lines)
+   - Namespace registry template
+   - Documents all tools/resources
+   - Migration guide
+   - Ecosystem registration instructions
+   - Changelog for namespace changes
+
+4. **`template/scripts/validate_mcp_names.py.jinja`** (~412 lines)
+   - AST-based Python code validation
+   - Validates tool names against conventions
+   - Validates resource URIs
+   - Exit codes for CI integration
+   - Suggestions for fixing violations
+
+5. **`template/scripts/migrate_namespace.sh.jinja`** (~298 lines)
+   - Automated namespace migration
+   - Validates new namespace format
+   - Git safety checks (requires clean state)
+   - Updates source files, NAMESPACES.md, README
+   - Post-migration checklist
+   - Diff summary
+
+**Standards Documentation (~1,279 lines):**
+
+1. **`docs/standards/CHORA_MCP_CONVENTIONS_v1.0.md`** (~756 lines)
+   - Canonical specification for MCP naming
+   - Tool naming pattern: `namespace:tool_name`
+   - Resource URI scheme: `namespace://type/id[?query]`
+   - Namespace registry (chora, coda, n8n reserved)
+   - Validation patterns and helper functions
+   - Versioning & evolution guidelines
+   - mcp-n8n gateway integration
+   - Complete examples and FAQ
+
+2. **`docs/reference/mcp-naming-best-practices.md`** (~523 lines)
+   - Practical guide for adopters
+   - When to use namespacing
+   - Choosing good namespaces
+   - Resource URI design patterns
+   - Common patterns from ecosystem (chora-compose, coda, mcp-n8n)
+   - Tool naming conventions (verbs, anti-patterns)
+   - Validation patterns
+   - Migration strategies
+   - Troubleshooting guide
+
+**Upgrade Documentation (~370 lines):**
+
+1. **`docs/upgrades/v1.7-to-v1.8.md`**
+   - Comprehensive upgrade guide
+   - Decision trees for upgrade paths
+   - Full upgrade path (new servers)
+   - Selective upgrade path (production servers)
+   - Quick upgrade (non-MCP projects)
+   - Troubleshooting section
+   - Rollback procedure
+   - Example upgrade sessions
+   - Post-upgrade tasks
+
+### Changed
+
+- **`template/pyproject.toml.jinja`**
+  - MCP server entry point: `{package}.server:main` → `{package}.mcp.server:main`
+  - Reflects new MCP module structure
+
+- **`copier.yml`**
+  - Added MCP namespace configuration section (4 new options)
+  - Added exclusions for MCP-specific files (only for `project_type: mcp_server`)
+  - Conditional generation based on MCP options
+
+### Benefits for Adopters
+
+**Ecosystem Integration:**
+- ✅ Seamless integration with mcp-n8n gateway
+- ✅ Namespace-based routing (e.g., `chora:*` → chora-compose backend)
+- ✅ Multi-server MCP client support
+- ✅ Collision avoidance across ecosystem
+
+**Developer Experience:**
+- ✅ One-command validation: `python scripts/validate_mcp_names.py`
+- ✅ Automated migration: `./scripts/migrate_namespace.sh old new`
+- ✅ Helper functions enforce conventions (can't make mistakes)
+- ✅ Pre-commit hooks prevent bad names
+
+**Documentation:**
+- ✅ Comprehensive standards (Chora MCP Conventions v1.0)
+- ✅ Best practices from production servers
+- ✅ Upgrade guide with decision trees
+- ✅ Example patterns from ecosystem
+
+**Future-Proof:**
+- ✅ Versioned standard (v1.0)
+- ✅ Clear evolution guidelines
+- ✅ Migration tooling for namespace changes
+- ✅ Backward compatibility path
+
+### Technical Details
+
+**Total Additions:** ~2,450 lines across 15 files
+- Template code: ~800 lines
+- Validation tooling: ~500 lines
+- Standards docs: ~1,279 lines
+- Upgrade guide: ~370 lines
+- Config: ~150 lines
+
+**Namespace Pattern:**
+```
+namespace   ::= [a-z][a-z0-9]{2,19}      # 3-20 chars, lowercase alphanumeric
+tool_name   ::= namespace:tool            # e.g., myproject:create_task
+resource_uri ::= namespace://type/id      # e.g., myproject://templates/report.md
+```
+
+**Integration Points:**
+- mcp-n8n gateway routing
+- FastMCP tool/resource registration
+- Claude Desktop MCP client
+- Ecosystem namespace registry
+
+**Validation Levels:**
+1. Copier validation (namespace format)
+2. Runtime validation (Python code)
+3. Pre-commit validation (git hooks)
+4. CI validation (validate_mcp_names.py)
+
+### Ecosystem Alignment
+
+**Established Patterns:**
+- mcp-n8n: Tool routing via namespace prefixes
+- chora-compose: `chora:*` tool naming (`generate_content`, `assemble_artifact`)
+- mcp-server-coda: `coda:*` tool naming (`list_docs`, `create_doc`)
+
+**New Patterns:**
+- chora-base adopters: Automatic namespace generation from project-slug
+- Resource URIs: Standardized `namespace://type/id` across ecosystem
+- Namespace registry: Central documentation in chora-base
+
+### Migration Path
+
+**For Existing Adopters:**
+1. Non-MCP projects: No action required (docs-only changes)
+2. New MCP servers: Enable all features (recommended defaults)
+3. Existing MCP servers: Selective adoption (see upgrade guide)
+
+**Breaking Change Policy:**
+- No breaking changes for existing projects (all opt-in)
+- Namespace changes in adopter projects are breaking (requires major version bump)
+- Template version: Minor bump (v1.7.0 → v1.8.0)
+
+### Inspiration
+
+- **mcp-n8n:** Gateway routing architecture, namespace-based tool discovery
+- **chora-compose:** Production MCP server patterns, tool naming conventions
+- **MCP Community:** Resource URI patterns, server-name disambiguation
+- **Ecosystem coordination:** mcp-n8n and chora-compose proposals synthesized
+
+### References
+
+- [Chora MCP Conventions v1.0](docs/standards/CHORA_MCP_CONVENTIONS_v1.0.md)
+- [MCP Naming Best Practices](docs/reference/mcp-naming-best-practices.md)
+- [v1.7 → v1.8 Upgrade Guide](docs/upgrades/v1.7-to-v1.8.md)
+- [mcp-n8n Gateway](https://github.com/liminalcommons/mcp-n8n)
+- [chora-compose MCP Server](https://github.com/liminalcommons/chora-compose)
+
+---
+
 ## [1.7.0] - 2025-10-21
 
 ### Added
