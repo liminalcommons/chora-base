@@ -394,19 +394,80 @@ docs/
 
 ---
 
+## Documentation Standard for Generated Projects
+
+### Overview
+
+As of v1.6.0, chora-base includes an **optional Documentation Standard** feature that helps generated projects maintain high-quality documentation following Documentation-as-Product principles.
+
+This feature was inspired by [mcp-n8n's Documentation Standard](https://github.com/liminalcommons/mcp-n8n/blob/main/docs/process/DOCUMENTATION_STANDARD.md) and adapted for chora-base adopters.
+
+### What's Included
+
+When `include_documentation_standard: true` (default), generated projects get:
+
+**1. Three-Directory Structure:**
+- **`user-docs/`** - End-user documentation (tutorials, how-to, reference, explanation)
+- **`project-docs/`** - Project planning (roadmap, ADRs, releases, sprints)
+- **`dev-docs/`** - Developer documentation (contributing, development, troubleshooting, vision)
+
+**2. DOCUMENTATION_STANDARD.md Template:**
+- Frontmatter schema specification (required/optional fields)
+- Document templates for each Diátaxis type
+- Writing standards and best practices
+- Cross-reference requirements
+- Maintenance policies (staleness, deprecation)
+
+**3. Automation Scripts:**
+- **`validate_docs.py`** - Check frontmatter, broken links, staleness, bidirectional refs
+- **`generate_docs_map.py`** - Auto-generate DOCUMENTATION_MAP.md from frontmatter
+- **`extract_tests.py`** - Extract code examples for testing (Documentation Driven Design)
+
+**4. CI Integration:**
+- **`.github/workflows/docs-quality.yml`** - Enforce documentation quality in PR reviews
+
+### Benefits for Adopters
+
+✅ **Clear separation of concerns** - User, project, and developer docs don't mix
+✅ **Machine-readable frontmatter** - YAML frontmatter enables automation
+✅ **Automated enforcement** - CI validates quality (not manual vigilance)
+✅ **Living documentation** - Test extraction keeps examples executable
+✅ **Staleness detection** - Warns about docs >90 days old
+✅ **Knowledge graph** - Bidirectional cross-references
+
+### When to Use
+
+**Enable (`include_documentation_standard: true`):**
+- Projects with 10+ documentation files
+- Teams with multiple contributors
+- Public APIs or libraries
+- Projects requiring documentation-as-product
+
+**Disable (`include_documentation_standard: false`):**
+- Simple scripts or tools
+- Solo projects with minimal docs
+- Internal tools with low documentation needs
+
+### Example
+
+See [examples/full-featured-with-docs/](../examples/full-featured-with-docs/) for a complete demonstration of the documentation standard in action.
+
+---
+
 ## Related Resources
 
 - [README.md](../../README.md) - Template overview
 - [Agentic Coding Best Practices Research](../research/Agentic%20Coding%20Best%20Practices%20Research.pdf) - Foundational research
 - [Diátaxis Framework](https://diataxis.fr/) - Documentation system
 - [A-MEM Paper](https://arxiv.org/abs/2502.12110) - Agentic Memory for LLM Agents
+- [mcp-n8n Documentation Standard](https://github.com/liminalcommons/mcp-n8n/blob/main/docs/process/DOCUMENTATION_STANDARD.md) - Inspiration
 
 ---
 
-**Documentation Plan Version:** 1.1.0
-**Template Version:** chora-base v1.3.1
+**Documentation Plan Version:** 1.2.0
+**Template Version:** chora-base v1.6.0
 **Created:** 2025-10-17
-**Last Updated:** 2025-10-19
-**Status:** Phase 1-2 in progress (5/19 docs created)
+**Last Updated:** 2025-10-21
+**Status:** Phase 1-2 in progress (5/19 docs created) + Documentation Standard feature added
 
 🤖 This plan ensures LLM agents are first-class users alongside human developers.

@@ -248,22 +248,65 @@ rm -rf build/ dist/ *.egg-info/ .pytest_cache/ .mypy_cache/ .ruff_cache/
 
 ## Documentation
 
+{% if include_documentation_standard -%}
+This project follows the [Diátaxis framework](https://diataxis.fr/) with three documentation directories:
+
+### For End Users (user-docs/)
+Learn how to **use** {{ project_name }}:
+- **[Getting Started Tutorial](user-docs/tutorials/01-getting-started.md)** - Learn the basics
+- **[How-To Guides](user-docs/how-to/)** - Solve specific problems
+- **[API Reference](user-docs/reference/)** - Look up specifications
+- **[Explanations](user-docs/explanation/)** - Understand concepts
+
+### For Project Planning (project-docs/)
+Project roadmap and architecture decisions:
+{% if include_roadmap -%}
+- **[ROADMAP.md](project-docs/ROADMAP.md)** - Long-term vision and milestones
+{% endif -%}
+- **[Release Notes](project-docs/releases/)** - Version history and changes
+- **[Architecture Decisions](project-docs/decisions/)** - ADRs and design choices
+
+### For Contributors (dev-docs/)
+Learn how to **build** {{ project_name }}:
+{% if include_contributing -%}
+- **[CONTRIBUTING.md](dev-docs/CONTRIBUTING.md)** - Contribution guidelines
+{% endif -%}
+{% if include_development_docs -%}
+- **[DEVELOPMENT.md](dev-docs/DEVELOPMENT.md)** - Developer setup and architecture
+{% endif -%}
+{% if include_troubleshooting -%}
+- **[TROUBLESHOOTING.md](dev-docs/TROUBLESHOOTING.md)** - Common development issues
+{% endif -%}
+{% if include_vision_docs -%}
+- **[Vision Documents](dev-docs/vision/)** - Strategic design guidance
+{% endif -%}
+
+{% if include_agents_md -%}
+### For AI Coding Agents
+- **[AGENTS.md](AGENTS.md)** - Machine-readable instructions (OpenAI/Google standard)
+{% endif -%}
+
+**Documentation Standard:**
+- **[DOCUMENTATION_STANDARD.md](DOCUMENTATION_STANDARD.md)** - Writing guidelines and templates
+
+{% else -%}
 **For Human Contributors:**
 - **[README.md](README.md)** - This file (project overview)
 {% if include_contributing -%}
-- **[CONTRIBUTING.md](CONTRIBUTING.md)** - Contribution guidelines, code style, PR process
+- **[dev-docs/CONTRIBUTING.md](dev-docs/CONTRIBUTING.md)** - Contribution guidelines
 {% endif -%}
 {% if include_development_docs -%}
-- **[docs/DEVELOPMENT.md](docs/DEVELOPMENT.md)** - Developer deep dive, architecture, debugging
+- **[dev-docs/DEVELOPMENT.md](dev-docs/DEVELOPMENT.md)** - Developer deep dive
 {% endif -%}
 {% if include_troubleshooting -%}
-- **[docs/TROUBLESHOOTING.md](docs/TROUBLESHOOTING.md)** - Common issues and solutions
+- **[dev-docs/TROUBLESHOOTING.md](dev-docs/TROUBLESHOOTING.md)** - Common issues
 {% endif -%}
 
 {% if include_agents_md -%}
 **For AI Coding Agents:**
-- **[AGENTS.md](AGENTS.md)** - Machine-readable project instructions (OpenAI/Google/Sourcegraph standard)
+- **[AGENTS.md](AGENTS.md)** - Machine-readable project instructions
 
+{% endif -%}
 {% endif -%}
 ## Project Principles
 
