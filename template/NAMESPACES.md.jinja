@@ -122,19 +122,24 @@ Runtime validation is **disabled**:
 - Manual review required
 
 {% endif -%}
-### Ecosystem Registration
+### Namespace Declaration
 
-This namespace is registered in the Chora ecosystem registry.
+This document serves as the canonical declaration of this project's MCP namespace.
 
-**Registry entry:**
-| Namespace | Project | Repository | Status |
-|-----------|---------|------------|--------|
-| `{{ mcp_namespace }}` | {{ project_name }} | [{{ github_username }}/{{ project_slug }}](https://github.com/{{ github_username }}/{{ project_slug }}) | Active |
+**Project Information:**
+| Field | Value |
+|-------|-------|
+| Namespace | `{{ mcp_namespace }}` |
+| Project | {{ project_name }} |
+| Repository | [{{ github_username }}/{{ project_slug }}](https://github.com/{{ github_username }}/{{ project_slug }}) |
+| Status | Active |
+| Convention | [Chora MCP Conventions v1.0](https://github.com/liminalcommons/chora-base/blob/main/docs/standards/CHORA_MCP_CONVENTIONS_v1.0.md) |
 
-**To register with ecosystem:**
-1. Submit PR to [chora-base](https://github.com/liminalcommons/chora-base)
-2. Add entry to `docs/standards/CHORA_MCP_CONVENTIONS_v1.0.md § Ecosystem Registry`
-3. Wait for review and merge
+**Namespace Coordination:**
+To avoid conflicts with other MCP servers, consider:
+1. Searching [MCP Server Registry](https://github.com/modelcontextprotocol/servers) for similar names
+2. Announcing your namespace in MCP community discussions
+3. Making this document easily discoverable in your README
 
 {% else -%}
 ### Tool Naming

@@ -5,6 +5,48 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.8.1] - 2025-10-21
+
+### Changed
+
+**Namespace Conventions Clarification - Standards vs Values**
+
+Refined the MCP namespace conventions to properly separate concerns: chora-base defines **standards** (format/validation), but does NOT prescribe **specific namespace values** for other projects.
+
+**Key Changes:**
+
+1. **CHORA_MCP_CONVENTIONS_v1.0.md (v1.0.0 → v1.0.1)**
+   - Removed "Reserved Namespaces" section declaring `chora`, `coda`, `n8n` namespaces
+   - Removed "Ecosystem Registry" maintaining central list of namespace values
+   - Replaced with "Namespace Coordination" guidance on avoiding conflicts
+   - Updated all examples to use generic project names (`projecta`, `myproject`, `datatools`)
+   - Clarified: Each project declares its own namespace in its own repository
+
+2. **NAMESPACES.md.jinja Template**
+   - Removed ecosystem registry submission instructions
+   - Changed to "Namespace Declaration" - this is YOUR project's namespace
+   - Added namespace coordination guidance (search MCP registry, announce in community)
+
+3. **Template Examples**
+   - Updated smoke-test.sh.jinja examples (`chora:*` → `projecta:*`)
+   - Updated CONTRIBUTING.md.jinja examples (`chora:*` → `projecta:*`)
+
+**Rationale:**
+
+As a template project, chora-base should:
+- ✅ Define namespace **format standards** (3-20 chars, lowercase, etc.)
+- ✅ Provide **validation tooling** (helpers, validators, migration scripts)
+- ✅ Offer **coordination guidance** (how to avoid conflicts)
+- ❌ NOT prescribe **specific namespace values** for other projects
+
+Each adopter (including chora-compose, mcp-server-coda, etc.) defines their own namespace in their own documentation.
+
+**Impact:**
+- No breaking changes to template functionality
+- Standards remain the same (format, validation, tooling)
+- Only documentation/examples updated for clarity
+- Projects should document their namespace in their own NAMESPACES.md
+
 ## [1.8.0] - 2025-10-21
 
 ### Added

@@ -33,7 +33,7 @@ This document defines the **canonical naming conventions** for Model Context Pro
 
 **Rationale:**
 - Prevents collisions when multiple servers expose similar tools
-- Enables routing based on namespace (e.g., `chora:*` → chora-compose backend)
+- Enables routing based on namespace (e.g., `projecta:*` → Project A backend)
 - Makes tool origins explicit in traces and logs
 
 **Example:**
@@ -107,10 +107,10 @@ tool_name   ::= [a-z][a-z0-9_]+          # Snake_case, lowercase
 #### Examples
 ```
 ✅ Valid:
-  - chora:generate_content
+  - projecta:generate_content
   - myproject:create_task
-  - coda:list_docs
-  - n8n:execute_workflow
+  - acmetools:list_docs
+  - workflow:execute
 
 ❌ Invalid:
   - MyProject:CreateTask     # Uppercase not allowed
@@ -151,8 +151,8 @@ query_params    ::= key=value(&key=value)*       # Optional filters
 ✅ Valid URIs:
   - myproject://templates/daily-report.md
   - myproject://configs/settings.json
-  - chora://capabilities/server
-  - coda://docs/abc123/tables/grid-1?limit=100
+  - projecta://capabilities/server
+  - datatools://docs/abc123/tables/grid-1?limit=100
   - myproject://artifacts/2024-01/report-v2.pdf
 
 ❌ Invalid URIs:
@@ -185,17 +185,7 @@ uri = make_resource_uri("docs", "123", {"format": "json", "limit": "10"})
 # → "myproject://docs/123?format=json&limit=10"
 ```
 
-### Namespace Registry
-
-#### Reserved Namespaces
-The following namespaces are **reserved** for ecosystem infrastructure:
-
-| Namespace | Owner | Purpose |
-|-----------|-------|---------|
-| `chora` | chora-compose | Content generation, artifact assembly |
-| `coda` | mcp-server-coda | Coda document operations |
-| `n8n` | mcp-n8n | Workflow orchestration, gateway routing |
-| `mcp` | Core MCP | Protocol-level tools (reserved, not yet used) |
+### Namespace Coordination
 
 #### Choosing a Namespace
 
@@ -209,27 +199,34 @@ namespace = "myawesomeserver"  # Remove hyphens
 namespace = "mas"  # If full name is too long (discouraged unless >20 chars)
 ```
 
-**Rules:**
-1. Check [Chora Ecosystem Namespace Registry](#ecosystem-registry) for conflicts
-2. Document in your `NAMESPACES.md` file
-3. Use consistently across all tools/resources
-4. Never change after first release (treat as immutable)
+**Guidelines:**
+1. **Check for conflicts** - Search existing MCP servers to avoid duplicates
+2. **Document your choice** - Create `NAMESPACES.md` in your project documenting:
+   - Your namespace value
+   - All tools using that namespace
+   - All resources using that namespace
+3. **Use consistently** - Same namespace across all tools/resources in your project
+4. **Treat as immutable** - Changing namespace is a breaking change for clients
 
-#### Ecosystem Registry
+#### Avoiding Namespace Conflicts
 
-**Current Registered Namespaces (2025-10-21):**
+**Why uniqueness matters:**
+- Multiple MCP servers may run simultaneously in gateways or clients
+- Namespace collisions prevent proper tool routing
+- Clear ownership prevents confusion
 
-| Namespace | Project | Repository | Status |
-|-----------|---------|------------|--------|
-| `chora` | chora-compose | [liminalcommons/chora-compose](https://github.com/liminalcommons/chora-compose) | Active |
-| `coda` | mcp-server-coda | [liminalcommons/mcp-server-coda](https://github.com/liminalcommons/mcp-server-coda) | Active |
-| `n8n` | mcp-n8n | [liminalcommons/mcp-n8n](https://github.com/liminalcommons/mcp-n8n) | Active |
+**How to coordinate:**
+1. **Search GitHub** - Look for existing MCP servers with similar names
+2. **Check MCP community** - Browse [MCP Server Registry](https://github.com/modelcontextprotocol/servers)
+3. **Announce your namespace** - Share in MCP community discussions
+4. **Document in your project** - Make your namespace discoverable via README/docs
 
-**How to Register:**
-1. Check for conflicts in table above
-2. Submit PR to chora-base adding your namespace
-3. Update `NAMESPACES.md` in your project
-4. Announce in ecosystem discussions
+**Common namespace patterns:**
+- **Product name:** `coda`, `notion`, `github`
+- **Project slug:** `myawesomeserver` (from `my-awesome-server`)
+- **Organization prefix:** `acme` (for Acme Corp's internal tools)
+
+**Note:** Each project defines its own namespace. chora-base provides the standard format and tooling, but does not maintain a central registry of namespace values.
 
 ---
 
@@ -359,20 +356,20 @@ If breaking changes are unavoidable:
 
 ---
 
-## Integration with mcp-n8n Gateway
+## Gateway Integration
 
-chora-base servers are designed to integrate seamlessly with [mcp-n8n](https://github.com/liminalcommons/mcp-n8n), the gateway/orchestration layer.
+chora-base servers work with MCP gateway/orchestration layers that route tools across multiple backends.
 
-### Gateway Routing
+### Gateway Routing Pattern
 
-mcp-n8n routes tool calls based on namespace prefixes:
+Gateways route tool calls based on namespace prefixes:
 
 ```python
-# Gateway configuration (mcp-n8n/src/mcp_n8n/config.py)
+# Example gateway configuration
 backends = {
-    "chora": BackendConfig(
-        namespace="chora",
-        command="chora-compose"
+    "projecta": BackendConfig(
+        namespace="projecta",
+        command="projecta-server"
     ),
     "myproject": BackendConfig(
         namespace="myproject",
@@ -394,11 +391,11 @@ Gateway aggregates tools from all backends:
 ```python
 # List all tools across ecosystem
 tools = [
-    "chora:generate_content",
-    "chora:assemble_artifact",
+    "projecta:generate_content",
+    "projecta:assemble_artifact",
     "myproject:create_task",    # Your tools appear here
     "myproject:list_tasks",
-    "coda:list_docs"
+    "datatools:list_docs"
 ]
 ```
 
@@ -409,9 +406,9 @@ Gateway merges resources from all backends:
 ```python
 # List all resources
 resources = [
-    "chora://capabilities/server",
+    "projecta://capabilities/server",
     "myproject://templates/daily-report.md",  # Your resources
-    "coda://docs/abc123"
+    "datatools://docs/abc123"
 ]
 ```
 
@@ -511,14 +508,12 @@ if __name__ == "__main__":
 - **Format:** `myproject:{tool_name}` for tools
 - **Format:** `myproject://{type}/{id}` for resources
 - **Validation:** Runtime validation enabled (see `src/myproject/mcp/__init__.py`)
-- **Registry:** Registered in Chora Ecosystem (2025-10-21)
 
 ---
 
 ## References
 
 - [Chora MCP Conventions v1.0](https://github.com/liminalcommons/chora-base/blob/main/docs/standards/CHORA_MCP_CONVENTIONS_v1.0.md)
-- [mcp-n8n Gateway](https://github.com/liminalcommons/mcp-n8n)
 ```
 
 ---
@@ -528,9 +523,9 @@ if __name__ == "__main__":
 ### When should I use namespacing?
 
 **Always** when your server will integrate with:
-- mcp-n8n gateway
+- MCP gateways/orchestration layers
 - Multi-server MCP clients
-- Chora ecosystem workflows
+- Ecosystem workflows with multiple tools
 
 **Optional** for standalone servers with single-client usage.
 
@@ -572,22 +567,26 @@ myproject:create_user
 
 ## Changelog
 
+### v1.0.1 (2025-10-21)
+- Removed prescriptive namespace value declarations
+- Changed from central registry to coordination guidance
+- Updated examples to use generic project names
+- Clarified: chora-base defines standards, projects define their own namespaces
+
 ### v1.0.0 (2025-10-21)
 - Initial stable release
 - Established tool naming pattern (`namespace:tool_name`)
 - Defined resource URI scheme (`namespace://type/id`)
-- Created namespace registry
 - Documented validation patterns
-- Integrated with mcp-n8n gateway architecture
+- Gateway integration patterns
 
 ---
 
 ## References
 
 - [Model Context Protocol Specification](https://modelcontextprotocol.io/specification)
-- [mcp-n8n Gateway Architecture](https://github.com/liminalcommons/mcp-n8n)
-- [chora-compose MCP Tools](https://github.com/liminalcommons/chora-compose)
-- [FastMCP Documentation](https://github.com/jlowin/fastmcp)
+- [MCP Server Registry](https://github.com/modelcontextprotocol/servers) - Community MCP servers
+- [FastMCP Documentation](https://github.com/jlowin/fastmcp) - Python MCP framework
 
 ---
 
