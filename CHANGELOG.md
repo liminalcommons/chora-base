@@ -5,6 +5,125 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.7.0] - 2025-10-21
+
+### Added
+
+**Advanced Documentation Features (Phase 4)**
+
+Complete Phase 4 implementation adding advanced documentation features for power users.
+
+**New copier.yml Option:**
+- `documentation_advanced_features` (type: bool, default: false)
+  - Opt-in advanced documentation tooling for large projects (50+ docs)
+  - Conditional on `include_documentation_standard: true`
+  - Excludes advanced scripts when disabled (keeps projects lean)
+
+**New Scripts** (~550 lines):
+
+1. **`template/scripts/docs_metrics.py.jinja`** (~300 lines)
+   - Generate `DOCUMENTATION_METRICS.md` with comprehensive metrics
+   - Health score (0-100): Broken links (40 pts), staleness (30 pts), frontmatter (30 pts)
+   - Coverage tracking: % of code modules documented
+   - Activity metrics: Docs updated in 30/60/90 days
+   - Quality metrics: Cross-reference density, test extraction usage
+   - Actionable recommendations based on metrics
+   - Usage: `python scripts/docs_metrics.py`
+
+2. **`template/scripts/query_docs.py.jinja`** (~250 lines)
+   - CLI for programmatic documentation search (AI agent friendly)
+   - Full-text search with relevance scoring (title: 1.0, tag: 0.8, content: 0.1/match)
+   - Tag-based filtering (multiple tags supported)
+   - Graph traversal (find related docs via `related:` links)
+   - Type filtering (tutorial, how-to, reference, explanation)
+   - JSON output for machine consumption
+   - Usage: `python scripts/query_docs.py --topic authentication --type how-to`
+
+**Enhanced Scripts** (~270 lines added):
+
+- **`template/scripts/extract_tests.py.jinja`** (enhanced from ~200 to ~470 lines)
+  - **Fixture Support:** Extract pytest fixtures with `# FIXTURE: name` marker
+  - **Async/Await Support:** Auto-detect async functions, add `@pytest.mark.asyncio`
+  - **Parameterized Tests:** Extract with `# PARAMETERIZE:` marker
+  - **Bash Test Support:** Extract bash tests with `# EXPECT_EXIT:` and `# EXPECT_OUTPUT:` markers
+  - Generates executable `test_from_docs.sh` with colored output
+
+**Documentation** (~490 lines):
+
+- **`template/DOCUMENTATION_STANDARD.md.jinja`** - Added Advanced Features section (~310 lines)
+  - Documents all 7 advanced features with usage examples
+  - Fixture, async, parameterized, bash test extraction examples
+  - Metrics and query tool documentation
+  - Benefits section and AI agent integration examples
+  - Conditional on `documentation_advanced_features: true`
+
+- **`docs/DOCUMENTATION_PLAN.md`** - Added Phase 4 section (~180 lines)
+  - Complete Phase 4 overview and rationale
+  - When to enable/disable guidelines
+  - Implementation details and metrics
+  - Benefits for adopters
+  - Updated to v1.3.0, template v1.7.0
+
+### Changed
+
+- **`template/.github/workflows/docs-quality.yml.jinja`**
+  - Added `generate-metrics` job (runs on push to main/develop, not PRs)
+  - Generates `DOCUMENTATION_METRICS.md` and uploads as artifact (30-day retention)
+  - Displays metrics summary in CI logs
+  - Non-blocking (doesn't fail build)
+  - Conditional on `documentation_advanced_features: true`
+
+- **`copier.yml`**
+  - Added `_exclude` rules for `docs_metrics.py.jinja` and `query_docs.py.jinja`
+  - Keeps `extract_tests.py` in basic docs (valuable even without advanced features)
+
+**Total Additions:** ~1,360 lines across Phase 4 (4a+4b+4c)
+
+### Benefits for Adopters
+
+**Living Documentation:**
+- All test types supported (sync, async, fixtures, parameterized, bash)
+- Bash integration tests extractable from docs
+- Examples stay executable across refactoring
+
+**Visibility:**
+- Metrics show doc health at a glance
+- Health score provides actionable targets
+- Coverage tracking ensures completeness
+
+**Discoverability:**
+- Query tool helps find relevant docs fast
+- Tag-based navigation for AI agents
+- Graph traversal for exploring related content
+
+**AI-Friendly:**
+- JSON output for machine consumption
+- Relevance scoring for ranking results
+- Structured frontmatter for metadata extraction
+
+### When to Enable
+
+**Enable (`documentation_advanced_features: true`):**
+- Large projects (50+ docs)
+- Complex codebases with async patterns
+- Projects needing documentation metrics tracking
+- AI agent integrations requiring programmatic doc access
+- Teams tracking documentation health over time
+
+**Disable (`documentation_advanced_features: false`, default):**
+- Small projects (<20 docs)
+- Teams new to documentation standards
+- Projects not using async/fixtures/parameterized tests
+- Simple documentation needs
+
+### Inspiration
+
+Based on:
+- mcp-n8n documentation-as-product practices
+- chora-compose production patterns
+- Pytest best practices (fixtures, async, parameterized)
+- AI agent programmatic access requirements
+
 ## [1.5.1] - 2025-10-19
 
 ### Added
