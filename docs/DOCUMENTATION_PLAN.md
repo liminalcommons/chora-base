@@ -454,6 +454,188 @@ See [examples/full-featured-with-docs/](../examples/full-featured-with-docs/) fo
 
 ---
 
+## Phase 4: Advanced Documentation Features (v1.7.0)
+
+### Overview
+
+Building on the v1.6.0 documentation standard, Phase 4 adds advanced features for power users who want even more sophisticated documentation tooling.
+
+These features are **opt-in** via `documentation_advanced_features: true` (default: `false`) to avoid overwhelming new adopters.
+
+### What's Included
+
+When `documentation_advanced_features: true`, generated projects get:
+
+#### 1. Advanced Test Extraction
+
+Enhanced `extract_tests.py` with support for:
+
+**Fixture Support:**
+- Extract pytest fixtures from docs using `# FIXTURE: name` marker
+- Auto-generated `@pytest.fixture` decorators
+- Fixtures available to all tests in same file
+
+**Async/Await Support:**
+- Auto-detect async functions and `await` keywords
+- Generate `@pytest.mark.asyncio` decorators
+- Auto-import `pytest_asyncio` with installation warning
+
+**Parameterized Tests:**
+- Extract data-driven tests using `# PARAMETERIZE:` marker
+- Generate `@pytest.mark.parametrize` decorators
+- Supports multiple parameter sets
+
+**Bash Test Support:**
+- Extract bash/shell tests from documentation
+- Generate executable `test_from_docs.sh` with colored output
+- Support `# EXPECT_EXIT:` and `# EXPECT_OUTPUT:` markers
+
+#### 2. Documentation Metrics (`scripts/docs_metrics.py`)
+
+Generate comprehensive `DOCUMENTATION_METRICS.md` report with:
+
+**Coverage Metrics:**
+- % of code modules with corresponding docs
+- API documentation count
+
+**Health Score (0-100):**
+- Broken Links (40 points): No broken internal links
+- Staleness (30 points): <10% of docs >90 days old
+- Frontmatter Completeness (30 points): >90% have all required fields
+
+**Score Interpretation:**
+- 🟢 80-100: Excellent health
+- 🟡 60-79: Good, needs attention
+- 🔴 <60: Poor, requires immediate action
+
+**Activity Metrics:**
+- Docs updated in last 30/60/90 days
+- New (draft) documents count
+- Deprecated documents count
+
+**Quality Metrics:**
+- Cross-reference density (% with `related:` links)
+- Test extraction usage (% with `test_extraction: true`)
+- Document type distribution
+
+**Recommendations:**
+- Actionable items based on metrics
+- Prioritized by impact
+
+#### 3. Documentation Query Tool (`scripts/query_docs.py`)
+
+CLI for programmatic documentation search (AI agent friendly):
+
+**Search Methods:**
+- **Full-text search** with relevance scoring
+- **Tag-based filtering** (multiple tags supported)
+- **Graph traversal** (find related docs via `related:` links)
+- **Type filtering** (tutorial, how-to, reference, explanation)
+- **Combined queries** (topic + type, etc.)
+
+**Relevance Scoring:**
+- Title match: 1.0
+- Tag match: 0.8
+- Content match: 0.1 per occurrence (capped at 0.5)
+
+**Output:**
+- JSON format for machine consumption
+- Sorted by relevance
+- Includes all frontmatter fields
+
+**AI Agent Integration:**
+```python
+import subprocess, json
+result = subprocess.run(
+    ["python", "scripts/query_docs.py", "--topic", "authentication"],
+    capture_output=True, text=True
+)
+docs = json.loads(result.stdout)["results"]
+```
+
+#### 4. Enhanced CI Workflow
+
+When `documentation_advanced_features: true`, `.github/workflows/docs-quality.yml` includes:
+
+**New Job: `generate-metrics`**
+- Runs on push to main/develop (not PRs)
+- Generates `DOCUMENTATION_METRICS.md`
+- Uploads as artifact (30-day retention)
+- Displays summary in CI logs
+- Non-blocking (doesn't fail build)
+
+### Benefits for Adopters
+
+**Living Documentation:**
+- All test types supported (sync, async, fixtures, parameterized, bash)
+- Examples stay executable across refactoring
+- Bash integration tests extractable from docs
+
+**Visibility:**
+- Metrics show doc health at a glance
+- Health score provides actionable targets
+- Coverage tracking ensures completeness
+
+**Discoverability:**
+- Query tool helps find relevant docs fast
+- Tag-based navigation for AI agents
+- Graph traversal for exploring related content
+
+**AI-Friendly:**
+- JSON output for machine consumption
+- Relevance scoring for ranking results
+- Structured frontmatter for metadata extraction
+
+### When to Enable
+
+**Enable (`documentation_advanced_features: true`):**
+- Large projects (50+ docs)
+- Complex codebases with async patterns
+- Projects needing documentation metrics tracking
+- AI agent integrations requiring programmatic doc access
+- Teams tracking documentation health over time
+
+**Disable (`documentation_advanced_features: false`, default):**
+- Small projects (<20 docs)
+- Teams new to documentation standards
+- Projects not using async/fixtures/parameterized tests
+- Simple documentation needs
+
+### Implementation Details
+
+**Total Additions:** ~1,020 lines of Python code
+
+**Scripts Enhanced:**
+- `extract_tests.py` - Enhanced from ~200 to ~470 lines
+
+**Scripts Created:**
+- `docs_metrics.py` - ~300 lines
+- `query_docs.py` - ~250 lines
+
+**Files Modified:**
+- `copier.yml` - Added `documentation_advanced_features` option
+- `DOCUMENTATION_STANDARD.md` - Added ~310 line Advanced Features section
+- `.github/workflows/docs-quality.yml` - Added `generate-metrics` job
+
+**Advanced Features:**
+1. Fixture extraction with `# FIXTURE:` marker
+2. Async test detection and `@pytest.mark.asyncio` decoration
+3. Parameterized tests with `# PARAMETERIZE:` marker
+4. Bash test extraction with expectations
+5. Documentation health scoring (0-100)
+6. Metrics generation with recommendations
+7. Programmatic doc query with JSON output
+
+### Inspiration
+
+Advanced features were developed based on:
+- mcp-n8n's documentation-as-product practices
+- Real-world usage patterns in chora-compose
+- AI agent requirements for programmatic doc access
+- Pytest best practices (fixtures, async, parameterized)
+
+---
+
 ## Related Resources
 
 - [README.md](../../README.md) - Template overview
@@ -464,10 +646,10 @@ See [examples/full-featured-with-docs/](../examples/full-featured-with-docs/) fo
 
 ---
 
-**Documentation Plan Version:** 1.2.0
-**Template Version:** chora-base v1.6.0
+**Documentation Plan Version:** 1.3.0
+**Template Version:** chora-base v1.7.0
 **Created:** 2025-10-17
 **Last Updated:** 2025-10-21
-**Status:** Phase 1-2 in progress (5/19 docs created) + Documentation Standard feature added
+**Status:** Phase 1-2 in progress (5/19 docs created) + Documentation Standard (v1.6.0) + Advanced Features (v1.7.0)
 
 🤖 This plan ensures LLM agents are first-class users alongside human developers.

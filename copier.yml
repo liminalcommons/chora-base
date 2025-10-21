@@ -203,6 +203,12 @@ include_documentation_standard:
   help: Include DOCUMENTATION_STANDARD.md and doc automation scripts?
   default: true
 
+documentation_advanced_features:
+  type: bool
+  help: Enable advanced doc features (metrics, query tool, test extraction enhancements)?
+  default: false
+  when: "{{ include_documentation_standard }}"
+
 # === License ===
 
 license:
@@ -242,6 +248,8 @@ _exclude:
   - "{% if not include_documentation_standard %}scripts/validate_docs.py.jinja{% endif %}"
   - "{% if not include_documentation_standard %}scripts/generate_docs_map.py.jinja{% endif %}"
   - "{% if not include_documentation_standard %}scripts/extract_tests.py.jinja{% endif %}"
+  - "{% if not documentation_advanced_features %}scripts/docs_metrics.py.jinja{% endif %}"
+  - "{% if not documentation_advanced_features %}scripts/query_docs.py.jinja{% endif %}"
 
 _skip_if_exists:
   - .env
