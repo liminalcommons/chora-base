@@ -302,6 +302,10 @@ _exclude:
   - "{% if not include_docker %}DOCKER_BEST_PRACTICES.md.jinja{% endif %}"
   - "{% if include_docker and docker_strategy == 'ci-only' %}Dockerfile.jinja{% endif %}"
   - "{% if include_docker and docker_strategy == 'ci-only' %}docker-compose.yml.jinja{% endif %}"
+  # v2.0.0: Nested AGENTS.md files (exclude if feature not enabled)
+  - "{% if not include_tests %}tests/AGENTS.md.jinja{% endif %}"
+  - "{% if not include_memory_system %}.chora/memory/AGENTS.md.jinja{% endif %}"
+  - "{% if not include_docker %}docker/AGENTS.md.jinja{% endif %}"
 
 _skip_if_exists:
   - .env

@@ -1,0 +1,361 @@
+# Automation Scripts for {{ project_name }}
+
+**Purpose**: Reference guide for automation scripts and task runners.
+
+**Parent**: See [../AGENTS.md](../AGENTS.md) for project overview and other topics.
+
+---
+
+## Quick Reference
+
+{% if include_justfile -%}
+**Primary Interface**: Use `just --list` to discover all available tasks.
+
+```bash
+# Discover all tasks
+just --list
+
+# Common tasks
+just test              # Run test suite
+just check             # Lint + typecheck + format
+just pre-merge         # Full pre-merge validation
+{% if include_docker -%}
+just docker-build      # Build Docker image
+{% endif -%}
+```
+
+**Design Principle**: `just` is the ergonomic interface. Scripts in `scripts/` are the implementation. Agents should prefer `just` commands when available.
+
+{% else -%}
+**Primary Interface**: Bash scripts in `scripts/` directory.
+
+```bash
+# Common scripts
+./scripts/setup.sh              # One-command setup
+./scripts/check-env.sh          # Environment validation
+./scripts/pre-merge.sh          # Pre-merge validation
+./scripts/integration-test.sh   # Integration tests
+```
+{% endif -%}
+
+---
+
+## Available Scripts
+
+### Setup & Environment
+
+**`setup.sh`** - One-command project setup
+```bash
+./scripts/setup.sh
+
+# What it does:
+# 1. Creates virtual environment (.venv)
+# 2. Installs dependencies (pip install -e ".[dev]")
+# 3. Installs pre-commit hooks
+# 4. Runs smoke tests
+# 5. Displays next steps
+```
+
+**`check-env.sh`** - Validate development environment
+```bash
+./scripts/check-env.sh
+
+# Validates:
+# - Python version ({{ python_version }}+)
+# - Required dependencies installed
+# - Virtual environment activated
+# - Environment variables set
+```
+
+**`venv-create.sh`** - Create virtual environment
+```bash
+./scripts/venv-create.sh
+```
+
+**`venv-clean.sh`** - Remove virtual environment
+```bash
+./scripts/venv-clean.sh
+```
+
+---
+
+### Testing & Quality
+
+**`pre-merge.sh`** - Full pre-merge validation
+```bash
+./scripts/pre-merge.sh
+
+# Runs:
+{% if include_pre_commit -%}
+# - pre-commit run --all-files
+{% endif -%}
+{% if include_tests -%}
+# - pytest (full test suite)
+# - Coverage check (≥{{ test_coverage_threshold }}%)
+{% endif -%}
+# - Smoke tests
+```
+
+**`smoke-test.sh`** - Quick validation (<30 seconds)
+```bash
+./scripts/smoke-test.sh
+
+# Validates:
+# - Package imports successfully
+# - Core functionality works
+# - No obvious regressions
+```
+
+**`integration-test.sh`** - Full integration tests
+```bash
+./scripts/integration-test.sh
+
+# Runs:
+# - Integration test suite
+# - End-to-end workflows
+# - External dependency tests
+```
+
+---
+
+### Development & Debugging
+
+{% if project_type == 'mcp_server' -%}
+**`dev-server.sh`** - Run MCP server in development mode
+```bash
+./scripts/dev-server.sh
+
+# Runs server with:
+# - Debug logging enabled
+# - Auto-reload on code changes
+# - Development environment variables
+```
+
+{% endif -%}
+**`diagnose.sh`** - Automated diagnostics
+```bash
+./scripts/diagnose.sh
+
+# Checks:
+# - Environment configuration
+# - Dependency versions
+# - Common issues
+# - System health
+```
+
+---
+
+### Build & Release
+
+**`build-dist.sh`** - Build distribution packages
+```bash
+./scripts/build-dist.sh
+
+# Creates:
+# - Wheel package (.whl)
+# - Source distribution (.tar.gz)
+# - Validates package metadata
+```
+
+**`bump-version.sh`** - Bump project version
+```bash
+./scripts/bump-version.sh <major|minor|patch>
+
+# Updates:
+# - pyproject.toml version
+# - __init__.py __version__
+# - CHANGELOG.md (adds entry)
+```
+
+---
+
+{% if project_type == 'mcp_server' -%}
+### MCP-Specific Scripts
+
+**`mcp-tool.sh`** - Scaffold new MCP tool
+```bash
+./scripts/mcp-tool.sh <tool_name>
+
+# Generates:
+# - Tool implementation template
+# - Test file
+# - Documentation stub
+```
+
+{% if mcp_validate_names -%}
+**`validate_mcp_names.py`** - Validate MCP naming conventions
+```bash
+python scripts/validate_mcp_names.py
+
+# Validates:
+# - Tool names use namespace prefix
+# - Resource URIs follow scheme
+# - No naming conflicts
+```
+
+**`migrate_namespace.sh`** - Migrate to new namespace
+```bash
+./scripts/migrate_namespace.sh <old_namespace> <new_namespace>
+
+# Updates:
+# - Tool names in code
+# - Resource URI schemes
+# - Documentation references
+# - Test fixtures
+```
+{% endif -%}
+
+{% endif -%}
+---
+
+{% if include_documentation_standard -%}
+### Documentation Scripts
+
+**`validate_docs.py`** - Validate documentation structure
+```bash
+python scripts/validate_docs.py
+
+# Validates:
+# - Required sections present
+# - Links not broken
+# - Code examples valid
+# - Diátaxis structure followed
+```
+
+**`generate_docs_map.py`** - Generate documentation map
+```bash
+python scripts/generate_docs_map.py
+
+# Generates:
+# - DOCUMENTATION_MAP.md
+# - Hierarchical doc structure
+# - Quick navigation links
+```
+
+**`extract_tests.py`** - Extract examples from tests
+```bash
+python scripts/extract_tests.py
+
+# Extracts:
+# - Test cases → documentation examples
+# - Validates examples are current
+# - Syncs test patterns to docs
+```
+
+{% if documentation_advanced_features -%}
+**`docs_metrics.py`** - Generate documentation metrics
+```bash
+python scripts/docs_metrics.py
+
+# Generates:
+# - DOCUMENTATION_METRICS.md
+# - Health score (0-100)
+# - Coverage analysis
+# - Actionable recommendations
+```
+
+**`query_docs.py`** - Query documentation programmatically
+```bash
+python scripts/query_docs.py --query "authentication"
+
+# Provides:
+# - JSON API for doc queries
+# - AI agent integration
+# - Semantic search
+```
+{% endif -%}
+
+{% endif -%}
+---
+
+## Script Organization
+
+### Categories
+
+1. **Setup** - `setup.sh`, `check-env.sh`, `venv-*.sh`
+2. **Testing** - `*-test.sh`, `pre-merge.sh`
+3. **Development** - `dev-server.sh`, `diagnose.sh`
+4. **Build/Release** - `build-dist.sh`, `bump-version.sh`
+{% if project_type == 'mcp_server' -%}
+5. **MCP Tools** - `mcp-tool.sh`, `validate_mcp_names.py`, `migrate_namespace.sh`
+{% endif -%}
+{% if include_documentation_standard -%}
+6. **Documentation** - `validate_docs.py`, `generate_docs_map.py`, `extract_tests.py`{% if documentation_advanced_features %}, `docs_metrics.py`, `query_docs.py`{% endif %}
+{% endif -%}
+
+### Naming Conventions
+
+- **Shell scripts**: `kebab-case.sh` (e.g., `pre-merge.sh`)
+- **Python scripts**: `snake_case.py` (e.g., `validate_docs.py`)
+- **Executability**: All scripts are executable (`chmod +x`)
+
+---
+
+## Usage Patterns for AI Agents
+
+### Pattern 1: Environment Setup
+
+```bash
+# First-time setup
+./scripts/setup.sh
+
+# Validate environment
+./scripts/check-env.sh
+
+# Fix issues if validation fails
+./scripts/venv-clean.sh
+./scripts/venv-create.sh
+pip install -e ".[dev]"
+```
+
+### Pattern 2: Pre-Commit Workflow
+
+```bash
+{% if include_justfile -%}
+# Using just (recommended)
+just check          # Lint, typecheck, format
+just test           # Run tests
+just pre-merge      # Full validation
+
+{% else -%}
+# Direct scripts
+./scripts/pre-merge.sh  # Full pre-commit validation
+{% endif -%}
+```
+
+### Pattern 3: Debugging
+
+```bash
+# Diagnose issues
+./scripts/diagnose.sh
+
+{% if project_type == 'mcp_server' -%}
+# Run server in debug mode
+./scripts/dev-server.sh
+
+{% endif -%}
+# Check environment
+./scripts/check-env.sh
+```
+
+---
+
+## Related Documentation
+
+- **[Main AGENTS.md](../AGENTS.md)** - Project overview, architecture, common tasks
+- **[Testing AGENTS.md](../tests/AGENTS.md)** - Testing instructions
+{% if include_memory_system -%}
+- **[Memory System AGENTS.md](../.chora/memory/AGENTS.md)** - Cross-session learning
+{% endif -%}
+{% if include_docker -%}
+- **[Docker AGENTS.md](../docker/AGENTS.md)** - Container operations
+{% endif -%}
+{% if include_justfile -%}
+- **[justfile](../justfile)** - Task definitions (ergonomic interface)
+{% endif -%}
+
+---
+
+**End of Scripts Reference**
+
+For questions or issues not covered here, see the main [AGENTS.md](../AGENTS.md) or run `./scripts/diagnose.sh` for automated diagnostics.
