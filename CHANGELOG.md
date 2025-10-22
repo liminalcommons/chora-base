@@ -5,6 +5,69 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.9.3] - 2025-10-22
+
+### Enhanced
+
+**AGENTS.md - Advanced Agent Patterns from Industry Research**
+
+Based on "Agentic Coding Best Practices Research" (15-page industry analysis), added ~150 lines of advanced documentation to AGENTS.md.jinja to align with cutting-edge agentic coding practices.
+
+**Note:** This is the final release before v2.0.0 architectural refactoring, which will split AGENTS.md into nested, modular files following research-recommended "nearest file wins" pattern.
+
+**New Documentation Sections Added:**
+
+1. **System-Level Validation (Super-Tests)** (~50 lines)
+   - Added to Testing Instructions section
+   - Philosophy: Test workflows and system behavior, not just individual units
+   - Documents when to write super-tests (pre-release, post-bugfix, integrations, critical journeys)
+   - Provides project-type-specific examples:
+     - **MCP Server:** Full lifecycle test (start → register tools → execute → shutdown)
+     - **CLI Tool:** End-to-end workflow test (init → process → export)
+     - **Web Service:** Complete API workflow test (auth → CRUD → verify)
+   - Benefits: Catch integration bugs, validate realistic scenarios, verify error handling in context
+   - Balance guidance: 70-80% unit tests (fast feedback), 20-30% super-tests (deployment confidence)
+
+2. **Memory Architecture Overview (3-Tier Model)** (~40 lines)
+   - Added to Agent Memory System section
+   - Documents tiered memory architecture for AI agent workflows:
+     - **Tier 1: Ephemeral Memory** - Session context, conversation history (agent's context window)
+     - **Tier 2: Persistent Conversation Memory** - Event log with trace correlation (.chora/memory/events/)
+     - **Tier 3: Structured Knowledge** - Knowledge graph with Zettelkasten linking (.chora/memory/knowledge/)
+   - Visual diagram showing tier relationships and data flow
+   - Decision table: "When agents use each tier" with 6 common scenarios
+   - Memory flow example: Task execution → Event emission → Pattern discovery → Knowledge creation → Solution reuse
+   - Benefits: Fast event access, semantic knowledge search, automatic context pruning, incremental knowledge building
+
+3. **Advanced Memory Query Patterns for Agents** (~60 lines)
+   - Added after CLI Tools section, before A-MEM Self-Service Workflow
+   - Five production-ready query patterns with Python examples:
+     - **Pattern 1: Semantic Search** - Find similar problems by extracting keywords and searching events + knowledge
+     - **Pattern 2: Temporal Analysis** - Detect performance trends over time, identify degradation points
+     - **Pattern 3: Confidence-Filtered Queries** - Apply only high-confidence solutions to production code
+     - **Pattern 4: Multi-Hop Knowledge Traversal** - Gather deep context via Zettelkasten-style links (2-hop neighbors)
+     - **Pattern 5: Hybrid Query** - Combine events (what happened) with knowledge (what we learned)
+   - Each pattern includes: use case, code example, "why this works" explanation
+   - Decision table: "When to use which pattern" mapping 5 situations to optimal patterns
+
+**Research Alignment:**
+
+These enhancements align chora-base with industry best practices identified in research:
+- ✅ Super-tests validate agent-generated code at system level (not just units)
+- ✅ Tiered memory architecture supports A-MEM (Agentic Memory) principles
+- ✅ Advanced query patterns enable semantic search and confidence-based decision making
+- ✅ Documentation provides agents with actionable, production-ready patterns
+
+**Impact:**
+
+- Agents can now understand and use memory system at production-grade level
+- Super-test philosophy guides agents to validate workflows, not just units
+- Tiered architecture clarifies when to use event log vs. knowledge graph vs. session context
+- ~150 lines of advanced documentation added to AGENTS.md.jinja
+- Zero breaking changes (all documentation enhancements)
+
+**Inspiration:** "Agentic Coding Best Practices Research" - Industry analysis of A-MEM principles, super-tests, and production agent patterns
+
 ## [1.9.2] - 2025-10-22
 
 ### Enhanced

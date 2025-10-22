@@ -20,6 +20,20 @@ chora-base is a production-ready Python project template featuring:
 
 ## Recent Updates
 
+### v1.9.3 (2025-10-22) - Advanced Agent Patterns 🧠
+
+**Research-Aligned Enhancements**
+
+Based on "Agentic Coding Best Practices Research," added ~150 lines of advanced agent documentation:
+
+- **Super-Tests** - System-level validation guidance (test workflows, not just units)
+- **Memory Architecture** - 3-tier model documentation (ephemeral → persistent → structured)
+- **Advanced Query Patterns** - 5 production-ready patterns (semantic search, temporal analysis, confidence filtering)
+
+**Note:** Final release before v2.0.0 architectural refactoring (nested AGENTS.md structure)
+
+📄 [CHANGELOG](CHANGELOG.md) | 📦 [Upgrade Guide](docs/upgrades/v1.9.2-to-v1.9.3.md)
+
 ### v1.9.2 (2025-10-22) - Ergonomic Agent Interfaces 🤖
 
 **AGENTS.md Enhancements - Feature Discoverability**
@@ -33,7 +47,7 @@ Made optional features discoverable for AI agents by surfacing them in AGENTS.md
 
 **Key Principle:** AGENTS.md is the **capability catalog** linking to detailed guides, with clear template vs. adopter responsibilities.
 
-📄 [CHANGELOG](CHANGELOG.md) | 🔗 [Full Details](https://github.com/liminalcommons/chora-base/commit/334c1f0)
+📄 [CHANGELOG](CHANGELOG.md) | 📦 [Upgrade Guide](docs/upgrades/v1.9.1-to-v1.9.2.md)
 
 ### v1.9.1 (2025-10-22) - Docker Enhancements 🐳
 
@@ -46,7 +60,7 @@ Production-proven Docker patterns integrated from three adopter projects:
 
 New justfile commands: `docker-build-multi`, `docker-verify`, `docker-shell`, `docker-push`, `docker-release`
 
-📄 [CHANGELOG](CHANGELOG.md) | 📦 [Upgrade Guide](UPGRADE_1.9.0_TO_1.9.1.md)
+📄 [CHANGELOG](CHANGELOG.md) | 📦 [Upgrade Guide](docs/upgrades/v1.9.0-to-v1.9.1.md)
 
 ## Features
 

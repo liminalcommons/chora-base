@@ -245,6 +245,114 @@ just pre-merge
 ```
 
 {% endif -%}
+{% if include_tests -%}
+
+### System-Level Validation (Super-Tests)
+
+**Philosophy:** Test workflows and system behavior, not just individual units.
+
+Super-tests validate **end-to-end scenarios** that users actually experience, rather than granular unit tests. This approach catches integration issues, configuration problems, and emergent behavior that unit tests miss.
+
+**When to write super-tests:**
+- ✅ Before releasing a new feature (does the full workflow work?)
+- ✅ After fixing a bug (does the scenario now succeed end-to-end?)
+- ✅ When adding integrations (do all components work together?)
+- ✅ For critical user journeys (can users accomplish their goals?)
+
+**Example super-test patterns:**
+
+```bash
+{% if include_justfile -%}
+# Run system-level validation
+just super-test
+
+# What this validates:
+{% endif -%}
+# 1. Full application startup and initialization
+# 2. End-to-end workflow completion
+# 3. Integration between all components
+# 4. Configuration loading and environment setup
+# 5. Error handling in realistic scenarios
+```
+
+{% if project_type == 'mcp_server' -%}
+**MCP Server Super-Test Example:**
+```python
+# tests/super/test_full_workflow.py
+def test_mcp_server_lifecycle():
+    """Validate complete MCP server lifecycle: start → register tools → execute → shutdown."""
+    # Start server
+    server = create_server()
+
+    # Verify all tools registered
+    tools = server.list_tools()
+    assert len(tools) == EXPECTED_TOOL_COUNT
+
+    # Execute representative workflow
+    result = server.call_tool("primary_tool", {"param": "value"})
+    assert result.success
+
+    # Verify side effects (files written, state updated, etc.)
+    assert expected_output_exists()
+
+    # Clean shutdown
+    server.shutdown()
+```
+
+{% elif project_type == 'cli_tool' -%}
+**CLI Tool Super-Test Example:**
+```python
+# tests/super/test_full_workflow.py
+def test_cli_end_to_end_workflow(tmp_path):
+    """Validate complete CLI workflow: init → process → output."""
+    # Run full workflow
+    result = run_cli([
+        "init", "--config", str(tmp_path / "config.yml"),
+        "process", "--input", "test_data.json",
+        "export", "--format", "csv"
+    ])
+
+    # Verify end state
+    assert result.exit_code == 0
+    assert (tmp_path / "output.csv").exists()
+    assert validate_output_format(tmp_path / "output.csv")
+```
+
+{% elif project_type == 'web_service' -%}
+**Web Service Super-Test Example:**
+```python
+# tests/super/test_full_workflow.py
+async def test_api_end_to_end_workflow(test_client):
+    """Validate complete API workflow: auth → create → retrieve → update → delete."""
+    # Authenticate
+    auth_response = await test_client.post("/auth/login", json=credentials)
+    token = auth_response.json()["access_token"]
+
+    # Full CRUD workflow
+    created = await test_client.post("/items", json=item_data, headers={"Authorization": f"Bearer {token}"})
+    retrieved = await test_client.get(f"/items/{created.json()['id']}", headers={"Authorization": f"Bearer {token}"})
+    updated = await test_client.put(f"/items/{created.json()['id']}", json=updated_data, headers={"Authorization": f"Bearer {token}"})
+
+    # Verify end state
+    assert retrieved.status_code == 200
+    assert updated.json()["field"] == updated_data["field"]
+```
+
+{% endif -%}
+**Benefits of super-tests:**
+- 🎯 Catch integration bugs unit tests miss
+- 🎯 Validate realistic user scenarios
+- 🎯 Test configuration and environment setup
+- 🎯 Verify error handling in context
+- 🎯 Build confidence before releases
+
+**Balance with unit tests:**
+- **Unit tests:** Fast, focused, validate logic in isolation (70-80% of tests)
+- **Super-tests:** Slower, comprehensive, validate workflows (20-30% of tests)
+
+Use both. Unit tests give fast feedback during development. Super-tests give confidence before deployment.
+
+{% endif -%}
 ---
 
 ## PR Instructions
@@ -1861,6 +1969,69 @@ with TraceContext() as trace_id:
 - **Trace Context** - Multi-step workflow tracking via `CHORA_TRACE_ID`
 - **Cross-Session Learning** - Avoid repeating mistakes across sessions
 
+### Memory Architecture (3-Tier Model)
+
+{{ project_name }} implements a **three-tier memory architecture** optimized for AI agent workflows:
+
+```
+┌──────────────────────────────────────────────────────────────┐
+│ TIER 1: EPHEMERAL MEMORY (Session Context)                  │
+├──────────────────────────────────────────────────────────────┤
+│ • Agent's working memory within single conversation         │
+│ • Current task context, intermediate results                │
+│ • Conversation history (messages, tool calls)               │
+│ • Lifetime: Single session only                             │
+│ • Storage: Agent's context window (not persisted)           │
+└──────────────────────────────────────────────────────────────┘
+                         ↓ (session completes)
+┌──────────────────────────────────────────────────────────────┐
+│ TIER 2: PERSISTENT CONVERSATION MEMORY (Event Log)          │
+├──────────────────────────────────────────────────────────────┤
+│ • Timestamped operation events (start, complete, fail)      │
+│ • Trace-correlated multi-step workflows                     │
+│ • Searchable event history (time-based queries)             │
+│ • Lifetime: Months (monthly partitions)                     │
+│ • Storage: .chora/memory/events/                            │
+│ • Use when: Analyzing patterns, debugging recent issues     │
+└──────────────────────────────────────────────────────────────┘
+                         ↓ (summarize → distill)
+┌──────────────────────────────────────────────────────────────┐
+│ TIER 3: STRUCTURED KNOWLEDGE (Knowledge Graph)               │
+├──────────────────────────────────────────────────────────────┤
+│ • Distilled learnings from events (fixes, patterns)         │
+│ • Zettelkasten-style bidirectional linking                  │
+│ • Tag-based categorization, confidence scores               │
+│ • Lifetime: Indefinite (permanent knowledge)                │
+│ • Storage: .chora/memory/knowledge/                         │
+│ • Use when: Applying proven solutions to new problems       │
+└──────────────────────────────────────────────────────────────┘
+```
+
+**When agents use each tier:**
+
+| Situation | Tier | Query Pattern |
+|-----------|------|---------------|
+| **Current task context** | Tier 1 | Access conversation history directly |
+| **"What failed last week?"** | Tier 2 | `query_events(status="failure", since_hours=168)` |
+| **"How did we solve X before?"** | Tier 3 | `kg.search(tags=["problem-type"], text="solution")` |
+| **Debugging recent issue** | Tier 2 | `query_events(trace_id="abc123")` - see full workflow |
+| **Learning from mistakes** | Tier 2→3 | Event log → distill → knowledge note |
+| **Avoiding repeated errors** | Tier 3 | Query knowledge graph before attempting risky operation |
+
+**Memory flow example:**
+
+1. **Agent executes task** → Ephemeral working memory (Tier 1)
+2. **Emit events during workflow** → Event log (Tier 2): `emit_event("task.completed", metadata={...})`
+3. **Task fails, agent searches history** → Event log (Tier 2): `query_events(type="task.failed", since_hours=720)`
+4. **Agent finds pattern, creates note** → Knowledge graph (Tier 3): `kg.create_note("How to handle timeout in X", tags=["error-handling"])`
+5. **Next session encounters similar issue** → Query knowledge (Tier 3): `kg.search(tags=["error-handling"])` → Apply proven solution
+
+**Benefits of tiered architecture:**
+- ✅ Fast access to recent events (Tier 2: time-indexed)
+- ✅ Semantic search of learnings (Tier 3: tag and content indexed)
+- ✅ Automatic context pruning (Tier 1 clears each session)
+- ✅ Incremental knowledge building (Tier 2 → Tier 3 distillation)
+
 ### Memory Location
 
 All memory data stored in `.chora/memory/`:
@@ -2001,6 +2172,213 @@ echo "Fix content" | {{ project_slug }}-memory knowledge create "Title" --tag ta
 ```
 
 {% endif -%}
+### Advanced Memory Query Patterns for Agents
+
+This section provides **production-ready query patterns** for AI agents to effectively use the memory system. These patterns go beyond basic API calls to implement semantic search, temporal analysis, and confidence-filtered queries.
+
+#### Pattern 1: Semantic Search (Find Similar Problems)
+
+**Use case:** Agent encounters an error and wants to find similar past issues.
+
+```python
+from {{ package_name }}.memory import query_events, KnowledgeGraph
+
+# Step 1: Extract key terms from current error
+current_error = "ConnectionTimeout: Failed to connect to database after 30s"
+keywords = ["timeout", "database", "connection"]
+
+# Step 2: Search event log for similar failures
+similar_events = query_events(
+    event_type="app.failed",
+    since_hours=720,  # Last 30 days
+    metadata_contains=keywords  # Semantic match
+)
+
+# Step 3: If events found, check for documented solutions
+if similar_events:
+    kg = KnowledgeGraph()
+    solutions = kg.search(
+        tags=["database", "timeout"],
+        confidence_min="medium",  # Only proven solutions
+        sort_by="confidence_desc"
+    )
+
+    if solutions:
+        print(f"Found {len(solutions)} documented solutions")
+        # Apply highest-confidence solution first
+        return solutions[0]
+```
+
+**Why this works:** Combines time-based event search (Tier 2) with confidence-filtered knowledge retrieval (Tier 3) to find proven solutions to similar problems.
+
+#### Pattern 2: Temporal Analysis (Trend Detection)
+
+**Use case:** Agent detects performance degradation and wants to identify when it started.
+
+```python
+from {{ package_name }}.memory import query_events
+from datetime import datetime, timedelta
+
+# Query last 14 days of operation metrics
+events = query_events(
+    event_type="app.operation_completed",
+    since_hours=336,  # 14 days
+    limit=1000
+)
+
+# Analyze trend by day
+daily_avg_duration = {}
+for event in events:
+    day = datetime.fromisoformat(event["timestamp"]).date()
+    duration = event["metadata"]["duration_ms"]
+
+    if day not in daily_avg_duration:
+        daily_avg_duration[day] = []
+    daily_avg_duration[day].append(duration)
+
+# Find degradation point
+for day, durations in sorted(daily_avg_duration.items()):
+    avg = sum(durations) / len(durations)
+    if avg > BASELINE_THRESHOLD * 1.5:  # 50% slower than baseline
+        print(f"Performance degraded starting {day}")
+
+        # Query events from that day for root cause
+        degradation_events = query_events(
+            event_type="app.operation_completed",
+            since=day.isoformat(),
+            until=(day + timedelta(days=1)).isoformat()
+        )
+        # Analyze for correlation (code deploy, config change, etc.)
+```
+
+**Why this works:** Time-series analysis of event log (Tier 2) to identify inflection points and correlate with environmental changes.
+
+#### Pattern 3: Confidence-Filtered Queries
+
+**Use case:** Agent wants to apply only high-confidence learnings to production code.
+
+```python
+from {{ package_name }}.memory import KnowledgeGraph
+
+kg = KnowledgeGraph()
+
+# Get only high-confidence solutions for critical operation
+solutions = kg.search(
+    tags=["error-handling", "production"],
+    confidence="high",  # Only apply proven solutions
+    updated_since_days=90  # Recent learnings (patterns evolve)
+)
+
+# Verify solution before applying
+for solution in solutions:
+    # Check if solution has been successfully applied recently
+    verification_events = query_events(
+        event_type="app.fix_applied",
+        metadata_match={"solution_id": solution["id"], "outcome": "success"},
+        since_hours=168  # Last 7 days
+    )
+
+    if verification_events:
+        print(f"Solution {solution['id']} verified in production")
+        return solution  # Safe to apply
+    else:
+        # Downgrade confidence if not recently verified
+        kg.update_note(solution["id"], confidence="medium")
+```
+
+**Why this works:** Combines confidence scoring (Tier 3) with verification from recent events (Tier 2) to ensure safe application of learnings.
+
+#### Pattern 4: Multi-Hop Knowledge Traversal
+
+**Use case:** Agent needs deep context about a problem, not just direct matches.
+
+```python
+from {{ package_name }}.memory import KnowledgeGraph
+
+kg = KnowledgeGraph()
+
+# Start with initial problem
+initial_notes = kg.search(tags=["authentication", "error"])
+
+# Traverse related notes (2 hops)
+all_context = []
+for note in initial_notes:
+    all_context.append(note)
+
+    # Get 1-hop neighbors (directly linked)
+    hop1 = kg.get_related(note["id"], max_distance=1)
+    all_context.extend(hop1)
+
+    # Get 2-hop neighbors (friends of friends)
+    for hop1_note in hop1:
+        hop2 = kg.get_related(hop1_note["id"], max_distance=1)
+        all_context.extend(hop2)
+
+# Deduplicate and rank by confidence
+unique_context = {n["id"]: n for n in all_context}.values()
+ranked = sorted(unique_context, key=lambda n: n["confidence"], reverse=True)
+
+# Agent now has comprehensive context from knowledge graph
+print(f"Gathered {len(ranked)} related notes for context")
+```
+
+**Why this works:** Zettelkasten-style bidirectional linking enables agents to gather comprehensive context beyond exact keyword matches.
+
+#### Pattern 5: Hybrid Query (Events + Knowledge)
+
+**Use case:** Agent wants to see both what happened (events) and what was learned (knowledge).
+
+```python
+from {{ package_name }}.memory import query_events, KnowledgeGraph
+
+def hybrid_query(problem_type: str, since_hours: int = 168):
+    """Query both event log and knowledge graph for comprehensive view."""
+
+    # Part 1: What happened? (Event Log - Tier 2)
+    events = query_events(
+        event_type=f"app.{problem_type}",
+        since_hours=since_hours,
+        limit=50
+    )
+
+    # Part 2: What did we learn? (Knowledge Graph - Tier 3)
+    kg = KnowledgeGraph()
+    learnings = kg.search(
+        tags=[problem_type],
+        confidence_min="medium"
+    )
+
+    # Part 3: Cross-reference
+    result = {
+        "events": events,
+        "learnings": learnings,
+        "summary": {
+            "occurrences": len(events),
+            "documented_solutions": len(learnings),
+            "most_recent": events[0]["timestamp"] if events else None,
+            "highest_confidence_solution": max(learnings, key=lambda l: l["confidence"]) if learnings else None
+        }
+    }
+
+    return result
+
+# Agent uses hybrid query for comprehensive understanding
+insight = hybrid_query("timeout_error", since_hours=720)  # Last 30 days
+print(f"{insight['summary']['occurrences']} timeouts, {insight['summary']['documented_solutions']} solutions documented")
+```
+
+**Why this works:** Combines raw event data (what happened) with distilled knowledge (what we learned) for agents to make informed decisions.
+
+**When to use which pattern:**
+
+| Situation | Pattern | Why |
+|-----------|---------|-----|
+| Similar error encountered | Semantic Search | Find proven solutions to analogous problems |
+| Performance degrading | Temporal Analysis | Identify when degradation started and correlate |
+| Applying fix to production | Confidence-Filtered | Only use verified solutions in critical paths |
+| Need deep context | Multi-Hop Traversal | Gather comprehensive understanding via links |
+| General investigation | Hybrid Query | See both events and learnings together |
+
 ### A-MEM Self-Service Workflow (Agent Learning Loop)
 
 **The agent learning loop implements A-MEM (Agentic Memory) principles:**
