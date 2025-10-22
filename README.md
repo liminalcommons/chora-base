@@ -20,6 +20,21 @@ chora-base is a production-ready Python project template featuring:
 
 ## Recent Updates
 
+### v1.9.2 (2025-10-22) - Ergonomic Agent Interfaces 🤖
+
+**AGENTS.md Enhancements - Feature Discoverability**
+
+Made optional features discoverable for AI agents by surfacing them in AGENTS.md:
+
+- **Docker Operations** - 17 commands now documented with workflows
+- **Documentation System** - Health metrics, query API, extraction tools
+- **CI/CD Expectations** - What CI checks, how to verify locally
+- **Pattern Established** - Standard template for future features
+
+**Key Principle:** AGENTS.md is the **capability catalog** linking to detailed guides, with clear template vs. adopter responsibilities.
+
+📄 [CHANGELOG](CHANGELOG.md) | 🔗 [Full Details](https://github.com/liminalcommons/chora-base/commit/334c1f0)
+
 ### v1.9.1 (2025-10-22) - Docker Enhancements 🐳
 
 Production-proven Docker patterns integrated from three adopter projects:
