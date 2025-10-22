@@ -17,29 +17,45 @@ services:
     env_file:
       - .env
     environment:
+      # Environment-based configuration (pattern from chora-compose)
       - {{ package_name | upper }}_LOG_LEVEL=${{'{'}}{{ package_name | upper }}_LOG_LEVEL:-INFO}
       - PYTHONUNBUFFERED=1
+      # Uncomment for SSE/HTTP transport:
+      # - MCP_TRANSPORT=sse
+      # - MCP_SERVER_HOST=0.0.0.0
+      # - MCP_SERVER_PORT=8000
+    {% if include_memory_system -%}
+    # Uncomment to expose MCP server via HTTP/SSE
+    # ports:
+    #   - "${{'{'}}MCP_PORT:-8000}:8000"
+    {% endif -%}
     volumes:
-      # Persist logs
+      # Three-tier volume strategy (pattern from chora-compose):
+      # 1. Configs (read-mostly, hot-reload without rebuild)
+      # - ./configs:/app/configs:ro
+
+      # 2. Ephemeral (session data, survives restarts)
+      # - ./ephemeral:/app/ephemeral
+
+      # 3. Persistent (long-term artifacts and logs)
       - ./logs:/app/logs
-      # Persist data (optional)
       - ./data:/app/data
 {% if include_memory_system -%}
-      # Persist agent memory
+      # Agent memory persistence
       - ./.chora/memory/events:/app/.chora/memory/events
       - ./.chora/memory/knowledge:/app/.chora/memory/knowledge
 {% endif -%}
     networks:
       - {{ project_slug }}-network
-    # Health check
+    # Health check (import-based pattern from coda-mcp)
     healthcheck:
-      test: ["CMD", "{{ project_slug }}", "--version"]
+      test: ["CMD", "python", "-c", "import {{ package_name }}; assert {{ package_name }}.__version__"]
       interval: 30s
-      timeout: 10s
+      timeout: 3s
       retries: 3
       start_period: 5s
 
-  # Optional: n8n workflow orchestration (if integrating with MCP gateway)
+  # Optional: n8n workflow orchestration (pattern from chora-compose)
   # Uncomment to enable n8n integration
   # n8n:
   #   image: n8nio/n8n:latest
@@ -52,12 +68,23 @@ services:
   #   environment:
   #     - TZ=${{'{'}}TZ:-UTC}
   #     - GENERIC_TIMEZONE=${{'{'}}GENERIC_TIMEZONE:-UTC}
+  #     # Enable MCP tool usage in AI Agent workflows
+  #     - N8N_COMMUNITY_PACKAGES_ALLOW_TOOL_USAGE=true
+  #     # MCP server connection URL (if using SSE transport)
+  #     - MCP_SERVER_URL=http://{{ project_slug }}:8000/sse
   #   volumes:
   #     - ./n8n_data:/home/node/.n8n
   #   networks:
   #     - {{ project_slug }}-network
   #   depends_on:
-  #     - {{ project_slug }}
+  #     {{ project_slug }}:
+  #       condition: service_healthy  # Wait for MCP server health (pattern from chora-compose)
+  #   healthcheck:
+  #     test: ["CMD", "wget", "--spider", "-q", "http://localhost:5678/healthz"]
+  #     interval: 30s
+  #     timeout: 5s
+  #     retries: 3
+  #     start_period: 10s
 
 {% elif project_type == 'web_service' -%}
   # {{ project_name }} Web Service
@@ -73,12 +100,16 @@ services:
     env_file:
       - .env
     environment:
+      # Environment-based configuration with sensible defaults
       - {{ package_name | upper }}_LOG_LEVEL=${{'{'}}{{ package_name | upper }}_LOG_LEVEL:-INFO}
       - PYTHONUNBUFFERED=1
-      - PORT=8000
+      - PYTHONDONTWRITEBYTECODE=1
+      - PORT=${{'{'}}PORT:-8000}
     volumes:
-      # Persist logs
+      # Persist logs and data
       - ./logs:/app/logs
+      # Uncomment for config hot-reload:
+      # - ./configs:/app/configs:ro
     networks:
       - {{ project_slug }}-network
     # Health check
@@ -149,6 +180,7 @@ services:
 networks:
   {{ project_slug }}-network:
     driver: bridge
+    name: {{ project_slug }}-network  # Explicit name for service discovery
 
 volumes:
 {% if project_type == 'mcp_server' -%}

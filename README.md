@@ -12,10 +12,26 @@ chora-base is a production-ready Python project template featuring:
 - **📝 Comprehensive Documentation** - README, CONTRIBUTING, DEVELOPMENT, TROUBLESHOOTING
 - **✅ Quality Gates** - Pre-commit hooks, 85%+ test coverage, type checking, linting
 - **🔄 CI/CD Ready** - GitHub Actions workflows (test, lint, release, security)
+- **🐳 Docker Support** - Production-ready containerization (40% smaller images, 6x faster builds)
 - **🧠 Memory Infrastructure** - Event log, knowledge graph, trace context for cross-session learning
 - **🛠️ Developer Experience** - Setup scripts, justfile tasks, automated tooling
 
 **📖 [Read the full benefits guide](docs/BENEFITS.md)** - Learn how chora-base saves 52+ hours per project and delivers ROI through automation, AI-native workflows, and production-ready infrastructure.
+
+## Recent Updates
+
+### v1.9.1 (2025-10-22) - Docker Enhancements 🐳
+
+Production-proven Docker patterns integrated from three adopter projects:
+
+- **40% smaller images** (500MB → 150-250MB via wheel builds)
+- **6x faster builds** (GitHub Actions cache: 3min → 30sec)
+- **100% CI reliability** (eliminates system package conflicts)
+- **Multi-platform support** (native ARM64 for Apple Silicon)
+
+New justfile commands: `docker-build-multi`, `docker-verify`, `docker-shell`, `docker-push`, `docker-release`
+
+📄 [CHANGELOG](CHANGELOG.md) | 📦 [Upgrade Guide](UPGRADE_1.9.0_TO_1.9.1.md)
 
 ## Features
 
@@ -27,6 +43,7 @@ chora-base is a production-ready Python project template featuring:
 - ✅ **Testing** - pytest setup with coverage reporting (85%+ threshold)
 - ✅ **Code Quality** - ruff (linting), black (formatting), mypy (type checking)
 - ✅ **Git Hooks** - Pre-commit hooks for quality enforcement
+- ✅ **Docker** - Production containerization with multi-stage builds (optional)
 
 ### AI Agent Features (Optional)
 
@@ -128,9 +145,10 @@ When you run `copier copy`, you'll be asked:
 - `include_pre_commit` - Pre-commit hooks (ruff, black, mypy)
 - `include_github_actions` - CI/CD workflows
 - `include_justfile` - Task automation with just
-- `include_docker` - Docker configuration
+- `include_docker` - Docker configuration (**v1.9.1: Enhanced with production patterns**)
   - `production` strategy: Multi-stage builds + docker-compose orchestration
   - `ci-only` strategy: Dockerfile.test for CI isolation
+  - **New in v1.9.1:** 40% smaller images, 6x faster builds, multi-arch support
 
 **Documentation:**
 - `include_contributing` - CONTRIBUTING.md

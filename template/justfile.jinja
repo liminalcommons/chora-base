@@ -187,9 +187,9 @@ docs:
 # === Docker Commands ===
 
 # Build production Docker image
-docker-build:
-    @echo "Building production Docker image..."
-    docker build -t {{ project_slug }}:latest .
+docker-build TAG="latest":
+    @echo "Building production Docker image {{ project_slug }}:{{TAG}}..."
+    docker build -t {{ project_slug }}:{{TAG}} .
 
 # Build test Docker image (for CI)
 docker-build-test:
@@ -202,21 +202,54 @@ docker-test:
     docker run --rm {{ project_slug }}:test
 
 {% if docker_strategy == 'production' -%}
+# Build multi-architecture image (amd64 + arm64)
+docker-build-multi TAG="latest":
+    @echo "Building multi-architecture Docker image (amd64, arm64)..."
+    docker buildx build --platform linux/amd64,linux/arm64 \
+        -t {{ project_slug }}:{{TAG}} --load .
+
+# Verify Docker image health
+docker-verify TAG="latest":
+    @echo "Verifying Docker image {{ project_slug }}:{{TAG}}..."
+    docker run --rm {{ project_slug }}:{{TAG}} python -c "import {{ package_name }}; print(f'✓ {{ package_name }} v{{'{'}}{{ package_name }}.__version__}')"
+
+# Interactive shell in Docker container
+docker-shell TAG="latest":
+    @echo "Starting interactive shell in {{ project_slug }}:{{TAG}}..."
+    docker run --rm -it {{ project_slug }}:{{TAG}} /bin/bash
+
+# Push Docker image to registry
+docker-push REGISTRY TAG:
+    @echo "Pushing {{ project_slug }}:{{TAG}} to {{REGISTRY}}..."
+    docker tag {{ project_slug }}:{{TAG}} {{REGISTRY}}/{{ project_slug }}:{{TAG}}
+    docker push {{REGISTRY}}/{{ project_slug }}:{{TAG}}
+
+# Full release workflow (build, verify, tag, push)
+docker-release VERSION REGISTRY="ghcr.io/{{ github_username }}":
+    @echo "Releasing {{ project_slug }} v{{VERSION}} to {{REGISTRY}}..."
+    just docker-build {{VERSION}}
+    just docker-verify {{VERSION}}
+    just docker-push {{REGISTRY}} {{VERSION}}
+    @echo "Tagging and pushing 'latest'..."
+    docker tag {{ project_slug }}:{{VERSION}} {{ project_slug }}:latest
+    just docker-push {{REGISTRY}} latest
+    @echo "✓ Release complete: {{REGISTRY}}/{{ project_slug }}:{{VERSION}}"
+
 # Run production container
-docker-run:
+docker-run TAG="latest":
     @echo "Starting {{ project_slug }} container..."
 {% if project_type == 'mcp_server' -%}
     docker run -d --name {{ project_slug }} \
         -v $(pwd)/logs:/app/logs \
         -v $(pwd)/.env:/app/.env:ro \
-        {{ project_slug }}:latest
+        {{ project_slug }}:{{TAG}}
 {% elif project_type == 'web_service' -%}
     docker run -d --name {{ project_slug }} \
         -p 8000:8000 \
         -v $(pwd)/.env:/app/.env:ro \
-        {{ project_slug }}:latest
+        {{ project_slug }}:{{TAG}}
 {% else -%}
-    docker run -it --rm {{ project_slug }}:latest
+    docker run -it --rm {{ project_slug }}:{{TAG}}
 {% endif -%}
 
 # Start all services with docker-compose

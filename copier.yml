@@ -299,6 +299,7 @@ _exclude:
   - "{% if not include_docker %}Dockerfile.test.jinja{% endif %}"
   - "{% if not include_docker %}.dockerignore.jinja{% endif %}"
   - "{% if not include_docker %}docker-compose.yml.jinja{% endif %}"
+  - "{% if not include_docker %}DOCKER_BEST_PRACTICES.md.jinja{% endif %}"
   - "{% if include_docker and docker_strategy == 'ci-only' %}Dockerfile.jinja{% endif %}"
   - "{% if include_docker and docker_strategy == 'ci-only' %}docker-compose.yml.jinja{% endif %}"
 
