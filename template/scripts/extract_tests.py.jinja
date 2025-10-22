@@ -44,7 +44,7 @@ class TestExtractor:
 
     def run(self) -> None:
         """Run test extraction and generate test file."""
-        print(f"Extracting tests from documentation in {self.root_dir}...")
+        print("Extracting tests from documentation in {}...".format(self.root_dir))
         print()
 
         # Step 1: Find docs with test_extraction: true
@@ -55,7 +55,7 @@ class TestExtractor:
             print("Skipping test file generation.")
             return
 
-        print(f"Found {len(self.docs_with_tests)} documents with test_extraction: true")
+        print("Found {} documents with test_extraction: true".format(len(self.docs_with_tests)))
         print()
 
         # Step 2: Extract code blocks
@@ -150,7 +150,7 @@ class TestExtractor:
 
         # Generate test function name (safe identifier)
         safe_title = re.sub(r"[^a-zA-Z0-9_]", "_", doc_title.lower())
-        test_name = f"test_{safe_title}_example_{idx}"
+        test_name = "test_{}_example_{}".format(safe_title, idx)
 
         if is_parameterized:
             self._extract_parameterized_test(test_name, doc_title, doc_path, code, idx)
@@ -173,13 +173,13 @@ class TestExtractor:
         code_lines = [line for line in code_lines if not line.strip().startswith("# FIXTURE:")]
         clean_code = "\n".join(code_lines)
 
-{% raw %}        # Generate fixture
-        fixture_code = f'''
+        # Generate fixture
+{% raw %}        fixture_code = '''
 @pytest.fixture
-def {fixture_name}():
-    """Fixture extracted from documentation: {doc_title}"""
-{self._indent(clean_code, 4)}
-'''
+def {}():
+    """Fixture extracted from documentation: {}"""
+{}
+'''.format(fixture_name, doc_title, self._indent(clean_code, 4)){% endraw %}
 
         self.extracted_fixtures.append(fixture_code)
 
@@ -190,18 +190,18 @@ def {fixture_name}():
         self.requires_async = True
 
         # Generate async test function
-        test_code = f'''
+{% raw %}        test_code = '''
 @pytest.mark.asyncio
-async def {test_name}():
+async def {}():
     """
-    Async test extracted from documentation: {doc_title}
-    Source: {doc_path}
-    Example {idx}
+    Async test extracted from documentation: {}
+    Source: {}
+    Example {}
     """
-{self._indent(code, 4)}
-'''
+{}
+'''.format(test_name, doc_title, doc_path, idx, self._indent(code, 4)){% endraw %}
 
-        self.extracted_tests.append(test_code){% endraw %}
+        self.extracted_tests.append(test_code)
 
     def _extract_parameterized_test(
         self, test_name: str, doc_title: str, doc_path: Path, code: str, idx: int
@@ -224,17 +224,17 @@ async def {test_name}():
         code_lines = [line for line in code_lines if not line.strip().startswith("# PARAMETERIZE:")]
         clean_code = "\n".join(code_lines)
 
-{% raw %}        # Generate parameterized test
-        test_code = f'''
-@pytest.mark.parametrize({param_spec})
-def {test_name}():
+        # Generate parameterized test
+{% raw %}        test_code = '''
+@pytest.mark.parametrize({})
+def {}():
     """
-    Parameterized test extracted from documentation: {doc_title}
-    Source: {doc_path}
-    Example {idx}
+    Parameterized test extracted from documentation: {}
+    Source: {}
+    Example {}
     """
-{self._indent(clean_code, 4)}
-'''
+{}
+'''.format(param_spec, test_name, doc_title, doc_path, idx, self._indent(clean_code, 4)){% endraw %}
 
         self.extracted_tests.append(test_code)
 
@@ -243,15 +243,15 @@ def {test_name}():
     ) -> None:
         """Extract a regular (non-async, non-parameterized) test function."""
         # Generate test function
-        test_code = f'''
-def {test_name}():
+{% raw %}        test_code = '''
+def {}():
     """
-    Test extracted from documentation: {doc_title}
-    Source: {doc_path}
-    Example {idx}
+    Test extracted from documentation: {}
+    Source: {}
+    Example {}
     """
-{self._indent(code, 4)}
-'''{% endraw %}
+{}
+'''.format(test_name, doc_title, doc_path, idx, self._indent(code, 4)){% endraw %}
 
         self.extracted_tests.append(test_code)
 
@@ -286,31 +286,31 @@ def {test_name}():
 
         # Generate bash test
         safe_title = re.sub(r"[^a-zA-Z0-9_]", "_", doc_title.lower())
-        test_name = f"test_{safe_title}_bash_example_{idx}"
+        test_name = "test_{}_bash_example_{}".format(safe_title, idx)
 
-{% raw %}        bash_test = f'''
-test_{safe_title}_bash_example_{idx}() {{
-    # Test extracted from documentation: {doc_title}
-    # Source: {doc_path}
-    # Example {idx}
+{% raw %}        bash_test = '''
+test_{}_bash_example_{}() {{
+    # Test extracted from documentation: {}
+    # Source: {}
+    # Example {}
 
-{self._indent(clean_code, 4)}
+{}
 
     local exit_code=$?
-    if [ $exit_code -ne {expected_exit} ]; then
-        echo "FAILED: Expected exit code {expected_exit}, got $exit_code"
+    if [ $exit_code -ne {} ]; then
+        echo "FAILED: Expected exit code {}, got $exit_code"
         return 1
     fi
-'''
+'''.format(safe_title, idx, doc_title, doc_path, idx, self._indent(clean_code, 4), expected_exit, expected_exit){% endraw %}
 
         if expected_output:
-            bash_test += f'''
+{% raw %}            bash_test += '''
     # Check output contains expected string
-    if ! echo "$output" | grep -q "{expected_output}"; then
-        echo "FAILED: Expected output to contain: {expected_output}"
+    if ! echo "$output" | grep -q "{}"; then
+        echo "FAILED: Expected output to contain: {}"
         return 1
     fi
-'''{% endraw %}
+'''.format(expected_output, expected_output){% endraw %}
 
         bash_test += '''
     echo "PASSED"
@@ -338,25 +338,33 @@ test_{safe_title}_bash_example_{idx}() {{
         if self.requires_async:
             imports.insert(1, "import pytest_asyncio")
 
-{% raw %}        header = f'''"""
+        # Build features list
+        features = []
+        if self.requires_async:
+            features.append('- Async tests (pytest-asyncio)')
+        if self.requires_pytest_params:
+            features.append('- Parameterized tests')
+        if self.extracted_fixtures:
+            features.append('- Fixtures')
+        features_text = '\n'.join(features) if features else ''
+
+{% raw %}        header = '''"""
 Tests extracted from documentation code examples.
 
 This file is auto-generated by scripts/extract_tests.py.
 Do not edit manually - update the documentation instead.
 
 Features used:
-{'- Async tests (pytest-asyncio)' if self.requires_async else ''}
-{'- Parameterized tests' if self.requires_pytest_params else ''}
-{'- Fixtures' if self.extracted_fixtures else ''}
+{}
 """
 
-{chr(10).join(imports)}
+{}
 
 # Add src to path for imports
 src_dir = Path(__file__).parent.parent.parent / "src"
 sys.path.insert(0, str(src_dir))
 
-'''{% endraw %}
+'''.format(features_text, '\n'.join(imports)){% endraw %}
 
         # Add fixtures section
         if self.extracted_fixtures:
@@ -370,12 +378,12 @@ sys.path.insert(0, str(src_dir))
         # Write to file
         output_file.write_text(content, encoding="utf-8")
 
-        print(f"✅ Generated {output_file}")
-        print(f"   Extracted {len(self.extracted_tests)} test functions")
+        print("✅ Generated {}".format(output_file))
+        print("   Extracted {} test functions".format(len(self.extracted_tests)))
         if self.extracted_fixtures:
-            print(f"   Extracted {len(self.extracted_fixtures)} fixtures")
+            print("   Extracted {} fixtures".format(len(self.extracted_fixtures)))
         if self.requires_async:
-            print(f"   ⚠️  Requires pytest-asyncio: pip install pytest-asyncio")
+            print("   ⚠️  Requires pytest-asyncio: pip install pytest-asyncio")
         print()
         print("Run tests with: pytest tests/integration/test_from_docs.py")
 
@@ -422,16 +430,16 @@ echo
             match = re.search(r'(test_\w+)\(\)', bash_test)
             if match:
                 test_name = match.group(1)
-{% raw %}                content += f'''
-if {test_name}; then
-    echo -e "${{GREEN}}✓${{NC}} {test_name}"
+{% raw %}                content += '''
+if {}; then
+    echo -e "${{GREEN}}✓${{NC}} {}"
     ((TESTS_PASSED++))
 else
-    echo -e "${{RED}}✗${{NC}} {test_name}"
+    echo -e "${{RED}}✗${{NC}} {}"
     ((TESTS_FAILED++))
 fi
 ((TESTS_RUN++))
-'''{% endraw %}
+'''.format(test_name, test_name, test_name){% endraw %}
 
         content += '''
 echo
@@ -451,8 +459,8 @@ fi
         output_file.write_text(content, encoding="utf-8")
         output_file.chmod(0o755)  # Make executable
 
-        print(f"✅ Generated {output_file}")
-        print(f"   Extracted {len(self.bash_tests)} bash tests")
+        print("✅ Generated {}".format(output_file))
+        print("   Extracted {} bash tests".format(len(self.bash_tests)))
         print()
         print("Run tests with: ./tests/integration/test_from_docs.sh")
 

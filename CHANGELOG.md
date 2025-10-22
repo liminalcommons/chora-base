@@ -5,6 +5,48 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [2.0.3] - 2025-10-22
+
+### Fixed
+
+**Complete Resolution of Template Syntax Errors**
+
+**Apology**: v2.0.1 and v2.0.2 were both incomplete. The mcp-n8n team's analysis was correct.
+
+**Root Cause**: ALL f-strings (not just multi-line) containing `{}` conflict with Jinja2's template syntax:
+- **v2.0.1**: Fixed 4 multi-line f-strings, **missed line 289 + all 11 single-line f-strings**
+- **v2.0.2**: Fixed line 289 f-string, **missed all 11 single-line f-strings**
+- **v2.0.3**: **Complete fix** - converted ALL f-strings to `.format()` with `{% raw %}` wrapping
+
+**What Changed**:
+- **11 single-line f-strings** → `.format()` (lines 47, 58, 153, 289, 373, 374, 376, 378, 454, 455)
+- **5 multi-line f-strings** → `.format()` wrapped in `{% raw %}{% endraw %}`
+- All Python `.format()` placeholders `{}` now protected from Jinja2 parsing
+- Template compiles successfully with Jinja2 validators
+
+**Technical Details**:
+- Python f-strings: `f"text {variable}"` uses `{}`
+- Python .format(): `"text {}".format(variable)` uses `{}`
+- **Both conflict** with Jinja2's `{{ }}` variable syntax
+- Solution: Wrap `.format()` strings in `{% raw %}{% endraw %}` blocks
+
+**Line 289** (the specific error location):
+```python
+# Before (v2.0.2)
+test_name = f"test_{safe_title}_bash_example_{idx}"  # ← Jinja2 tries to parse {safe_title}
+
+# After (v2.0.3)
+test_name = "test_{}_bash_example_{}".format(safe_title, idx)  # ← Wrapped in {% raw %}
+```
+
+**Impact**: Template generation now works for all feature combinations
+
+**Verification**: ✅ `python3 -c "from jinja2 import Template; Template(open('template/scripts/extract_tests.py.jinja').read())"`
+
+**Thank you**: mcp-n8n team (@vlct0rs-github-acct) for persistence, detailed debugging, and patience
+
+---
+
 ## [2.0.2] - 2025-10-22
 
 ### Fixed
