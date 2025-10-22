@@ -422,7 +422,7 @@ echo
             match = re.search(r'(test_\w+)\(\)', bash_test)
             if match:
                 test_name = match.group(1)
-                content += f'''
+{% raw %}                content += f'''
 if {test_name}; then
     echo -e "${{GREEN}}✓${{NC}} {test_name}"
     ((TESTS_PASSED++))
@@ -431,7 +431,7 @@ else
     ((TESTS_FAILED++))
 fi
 ((TESTS_RUN++))
-'''
+'''{% endraw %}
 
         content += '''
 echo

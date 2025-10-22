@@ -25,6 +25,7 @@
 | v1.9.1 | v1.9.2 | [v1.9.1-to-v1.9.2.md](v1.9.1-to-v1.9.2.md) | 5-10 min | ZERO (docs discovery) |
 | v1.9.2 | v1.9.3 | [v1.9.2-to-v1.9.3.md](v1.9.2-to-v1.9.3.md) | <10 min | ZERO (docs-only) |
 | v1.9.3 | v2.0.0 | [v1.9.3-to-v2.0.0.md](v1.9.3-to-v2.0.0.md) | <10 min | ZERO (docs structure) |
+| v2.0.1 | v2.0.2 | [v2.0.1-to-v2.0.2.md](v2.0.1-to-v2.0.2.md) | <5 min | ZERO (bug fix) |
 
 **Status**:
 - ✅ All version-specific guides complete (100% coverage v1.0.0 → v1.9.0)

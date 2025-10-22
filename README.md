@@ -20,6 +20,17 @@ chora-base is a production-ready Python project template featuring:
 
 ## Recent Updates
 
+### v2.0.2 (2025-10-22) - Complete Template Fix 🔧
+
+**Bug Fix**: Complete resolution of template syntax error in extract_tests.py.jinja
+
+- **Issue**: v2.0.1 fix was incomplete (missed one f-string at line 425)
+- **Complete Fix**: All 5 f-string sections now properly escaped with `{% raw %}{% endraw %}` blocks
+- **Impact**: Template generation now works for all adopters upgrading to v2.0.x
+- **Thank you**: mcp-n8n team for the detailed bug report and patience
+
+📄 [CHANGELOG](CHANGELOG.md)
+
 ### v2.0.0 (2025-10-22) - Nested AGENTS.md Architecture 🏗️
 
 **BREAKING CHANGE**: Refactored monolithic AGENTS.md into modular, topic-specific guides.

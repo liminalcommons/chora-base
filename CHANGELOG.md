@@ -5,6 +5,32 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [2.0.2] - 2025-10-22
+
+### Fixed
+
+**Complete Template Syntax Fix for extract_tests.py.jinja**
+
+- **Acknowledgment**: v2.0.1 fix was incomplete. The mcp-n8n team's bug report was correct - the error persisted.
+- **Root Cause**: One additional unprotected f-string at line 425 in `_generate_bash_test_file()` method
+- **Complete Fix**: Wrapped all 5 f-string sections in `{% raw %}{% endraw %}` blocks:
+  - Lines 176-204: Fixture + async test generation ✅ (v2.0.1)
+  - Lines 227-254: Parameterized + regular test generation ✅ (v2.0.1)
+  - Lines 291-313: Bash test generation ✅ (v2.0.1)
+  - Lines 341-359: Header generation ✅ (v2.0.1)
+  - **Lines 425-434: Bash test runner generation ✅ (v2.0.2 NEW)**
+
+**Verification**:
+- Jinja2 template now compiles successfully
+- All f-string interpolations (`{variable}`) protected from Jinja2 parsing
+- Template generates correctly with all feature combinations
+
+**Impact**: All adopters can now successfully run `copier update --vcs-ref v2.0.2`
+
+**Apology**: Thank you to the mcp-n8n team for the excellent bug report and patience. v2.0.2 contains the complete fix.
+
+---
+
 ## [2.0.1] - 2025-10-22
 
 ### Fixed
