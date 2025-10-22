@@ -5,6 +5,56 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [Unreleased]
+
+### Enhanced
+
+**AGENTS.md - Ergonomic Feature Discovery for AI Agents**
+
+Improved agent discoverability of optional features by surfacing them in AGENTS.md with ergonomic interfaces and clear adopter responsibilities.
+
+**New Feature Sections Added:**
+
+1. **Docker Operations** (conditional on `include_docker`)
+   - Lists all 17 docker-* commands with descriptions
+   - Common workflows (build, verify, compose up/down)
+   - Links to DOCKER_BEST_PRACTICES.md for details
+   - Clarifies adopter wiring responsibilities (health endpoints, env vars, registry creds)
+   - Shows expected metrics (image size, build time, health check latency)
+
+2. **Documentation System** (conditional on `include_documentation_standard`)
+   - Documents docs_metrics.py, query_docs.py, extract_tests.py scripts
+   - Explains health scoring system (0-100 scale)
+   - Emphasizes query_docs.py for programmatic doc access
+   - Links to DOCUMENTATION_STANDARD.md
+
+3. **CI/CD Expectations** (conditional on `include_github_actions`)
+   - Lists all 7 GitHub Actions workflows with triggers
+   - Explains what CI checks before merge
+   - Shows how to verify locally (`just pre-merge`)
+   - Provides CI failure recovery steps
+
+**Pattern Documentation:**
+
+Added Jinja comment block documenting the standard pattern for future feature sections:
+- Conditional on feature flag (`{% if include_feature %}`)
+- Discovery via `just --list | grep feature`
+- Link to detailed guide (don't duplicate)
+- Clarify adopter wiring responsibilities
+- Include expected metrics/results
+
+**Key Principle Established:**
+> AGENTS.md is the **capability catalog**. Detailed guides are **reference manuals**. The catalog must be complete for discoverability, but should link to details rather than duplicate them.
+
+**Impact:**
+
+- Agents can now discover Docker, documentation, and CI capabilities via AGENTS.md
+- Clear separation: template provides infrastructure, adopters wire project-specific logic
+- Establishes repeatable pattern for adding future optional features
+- ~150 lines added to AGENTS.md template
+
+**Addresses Issue:** Docker enhancements from v1.9.1 were not surfaced in AGENTS.md, making them non-discoverable via standard agent workflows.
+
 ## [1.9.1] - 2025-10-22
 
 ### Enhanced

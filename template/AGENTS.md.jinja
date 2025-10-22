@@ -354,6 +354,85 @@ Fixes #45
 {% endif -%}
 - **Timeline:** Most PRs reviewed within 24-48 hours
 
+{% if include_github_actions -%}
+
+### CI/CD Expectations
+
+**When enabled** (`include_github_actions: true`), this project includes automated quality gates that agents should be aware of.
+
+**GitHub Actions workflows:**
+
+{% if include_github_actions -%}
+1. **test.yml** - Full test suite on every push/PR
+   - Runs: `pytest` with coverage
+   - Required: ≥{{ test_coverage_threshold if include_tests else '85' }}% coverage
+   - Triggers: Push to all branches, pull requests
+
+2. **lint.yml** - Code quality checks
+   - Runs: `ruff check`, `ruff format --check`, `mypy`
+   - Required: No linting errors, formatted code, type-safe
+   - Triggers: Push to all branches, pull requests
+
+3. **smoke.yml** - Quick smoke tests
+   - Runs: Fast validation tests (<30s)
+   - Required: Basic functionality works
+   - Triggers: Every push (fast feedback)
+
+{% if include_docker -%}
+4. **docker.yml** - Container builds (if Docker enabled)
+   - Runs: `docker build`, `docker-compose up`, health checks
+   - Required: Image builds successfully, services start healthy
+   - Triggers: Push to main, pull requests touching Docker files
+{% endif -%}
+
+5. **release.yml** - Automated releases
+   - Runs: Version bump, changelog, PyPI publish
+   - Required: Tests pass, version valid, PyPI credentials configured
+   - Triggers: Manual workflow dispatch, tags
+
+6. **codeql.yml** - Security scanning
+   - Runs: CodeQL analysis for vulnerabilities
+   - Required: No critical security issues
+   - Triggers: Weekly schedule, pull requests
+
+7. **dependency-review.yml** - Dependency vulnerabilities
+   - Runs: Dependency vulnerability scanning
+   - Required: No high/critical vulnerabilities in new dependencies
+   - Triggers: Pull requests
+{% endif -%}
+
+**What CI will check before merge:**
+
+```bash
+{% if include_justfile -%}
+# Locally verify CI will pass
+just pre-merge
+
+{% endif -%}# This runs the same checks as CI:
+{% if include_pre_commit -%}
+# 1. Linting: ruff check → No errors
+# 2. Formatting: ruff format --check → Code formatted
+# 3. Type checking: mypy → Type-safe
+{% endif -%}
+{% if include_tests -%}
+# 4. Tests: pytest → All tests pass
+# 5. Coverage: pytest --cov → ≥{{ test_coverage_threshold if include_tests else '85' }}%
+{% endif -%}
+{% if include_docker -%}
+# 6. Docker: docker build → Image builds successfully
+{% endif -%}
+```
+
+**For agents:** Run {% if include_justfile %}`just pre-merge`{% else %}`pytest` and linting checks{% endif %} before creating PRs to avoid CI failures.
+
+**CI failure recovery:**
+1. Check workflow logs in GitHub Actions tab
+2. Run failing command locally to reproduce
+3. Fix issue and push new commit (CI will re-run)
+4. If tests pass locally but fail in CI, check for environment differences
+
+{% endif -%}
+
 ---
 
 ## Architecture Overview
@@ -648,6 +727,68 @@ async def create_item(item: Item):
 
 ## Common Tasks for Agents
 
+{#
+  PATTERN FOR FEATURE SECTIONS
+  ============================
+
+  When adding new optional features to chora-base, follow this pattern for
+  ergonomic agent discoverability:
+
+  {% if include_feature_name -%}
+  ### Feature Name
+
+  **When enabled** (`include_feature_name: true`), brief description.
+
+  **Discovery:**
+  ```bash
+  {% if include_justfile -%}
+  # List feature commands
+  just --list | grep feature
+
+  {% endif -%}# Available commands:
+  # - command-name           Description
+  # - another-command        Description
+  ```
+
+  **Common workflows:**
+
+  ```bash
+  {% if include_justfile -%}
+  # Workflow 1
+  just command-name
+
+  # Workflow 2
+  just another-command
+  {% else -%}
+  # Direct commands (no justfile)
+  direct-command args
+  {% endif -%}
+  ```
+
+  **For detailed workflows:** See [FEATURE_GUIDE.md](FEATURE_GUIDE.md)
+
+  **Adopter responsibilities (wiring required):**
+  - [ ] Configuration item 1
+  - [ ] Configuration item 2
+  - [ ] Testing requirement
+
+  **Expected results:**
+  - Metric 1: value
+  - Metric 2: value
+
+  {% endif -%}
+
+  KEY PRINCIPLES:
+  1. Conditional on feature flag ({% if include_feature %})
+  2. Discovery via `just --list | grep` (ergonomic for agents)
+  3. Link to detailed docs (don't duplicate content)
+  4. Clarify adopter wiring responsibilities
+  5. Include expected metrics/results
+
+  This keeps AGENTS.md as capability catalog while detailed guides remain
+  as reference manuals.
+#}
+
 {% if include_justfile -%}
 ### Task Discovery (START HERE)
 
@@ -749,6 +890,137 @@ async def your_tool(param: str) -> dict:
 {% endif -%}
         return {"success": False, "error": str(e)}
 ```
+
+{% endif -%}
+{% if include_docker -%}
+### Docker Operations
+
+**When enabled** (`include_docker: true`), this project includes production-ready Docker support with ergonomic commands.
+
+**Discovery:**
+```bash
+{% if include_justfile -%}
+# List all Docker commands
+just --list | grep docker
+
+{% endif -%}# Available commands:
+# - docker-build [TAG]          Build production image
+# - docker-build-multi [TAG]    Build for amd64 + arm64
+# - docker-verify [TAG]          Smoke test image health
+# - docker-shell [TAG]           Interactive debugging shell
+# - docker-test                  Run tests in isolated container
+# - docker-compose-up            Start all services
+# - docker-compose-down          Stop all services
+# - docker-logs                  View service logs
+# - docker-clean                 Remove images and containers
+{% if docker_strategy == 'production' -%}
+# - docker-push REGISTRY TAG     Push to container registry
+# - docker-release VERSION REG   Full release workflow
+{% endif -%}
+```
+
+**Common workflows:**
+
+```bash
+{% if include_justfile -%}
+# Build and verify image
+just docker-build
+just docker-verify
+
+# Run services locally
+just docker-compose-up
+just docker-logs
+
+# Stop services
+just docker-compose-down
+
+# Clean up
+just docker-clean
+{% else -%}
+# Build and verify image
+docker build -t {{ project_slug }}:latest .
+docker run --rm {{ project_slug }}:latest python -c "import {{ package_name }}; assert {{ package_name }}.__version__"
+
+# Run services
+docker-compose up -d
+docker-compose logs -f
+
+# Stop services
+docker-compose down
+{% endif -%}
+```
+
+**For detailed Docker workflows:** See {% if include_docker %}[DOCKER_BEST_PRACTICES.md](DOCKER_BEST_PRACTICES.md){% else %}project documentation{% endif %}
+
+**Adopter responsibilities (wiring required):**
+{% if project_type == 'web_service' -%}
+- [ ] Implement `/health` endpoint in your application
+- [ ] Test health check returns 200 OK when healthy
+{% elif project_type == 'mcp_server' -%}
+- [ ] Ensure `{{ package_name }}.__version__` is defined
+- [ ] Test import-based health check works
+{% endif -%}
+- [ ] Configure project-specific environment variables in `.env`
+- [ ] Set service dependencies in `docker-compose.yml` (if using multiple services)
+{% if docker_strategy == 'production' -%}
+- [ ] Configure registry credentials for `docker-push` (if publishing)
+- [ ] Test multi-architecture builds (if deploying to ARM64)
+{% endif -%}
+
+**Image optimization results:**
+- Expected size: 150-250MB (wheel builds)
+- Build time: ~2-3 minutes (first), ~30 seconds (cached)
+- Health check: <100ms (import-based validation)
+
+{% endif -%}
+{% if include_documentation_standard -%}
+### Documentation System
+
+**When enabled** (`include_documentation_standard: true`), this project includes machine-readable documentation with health metrics and programmatic querying.
+
+**Discovery:**
+```bash
+{% if include_justfile -%}
+# Documentation commands
+just --list | grep docs
+
+{% endif -%}# Available commands (via scripts):
+# - python scripts/docs_metrics.py    Generate health metrics
+# - python scripts/query_docs.py      Query docs programmatically
+# - python scripts/extract_tests.py   Extract test scenarios
+```
+
+**Common workflows:**
+
+```bash
+# Check documentation health
+python scripts/docs_metrics.py
+
+# Query documentation (JSON API for AI agents)
+python scripts/query_docs.py function get_example
+
+# Extract test scenarios from docstrings
+python scripts/extract_tests.py
+
+# View metrics report
+cat DOCUMENTATION_METRICS.md
+```
+
+**Documentation health scoring:**
+- **90-100:** Excellent (comprehensive, up-to-date)
+- **70-89:** Good (minor gaps)
+- **50-69:** Needs improvement (significant gaps)
+- **0-49:** Critical (major documentation debt)
+
+**For agents:** Use `query_docs.py` to programmatically discover functions, parameters, return types, and examples without parsing source code.
+
+**Adopter responsibilities (wiring required):**
+- [ ] Write comprehensive docstrings following NumPy/Google style
+- [ ] Include `# TEST:` markers in docstrings for extractable scenarios
+- [ ] Review DOCUMENTATION_METRICS.md quarterly and address gaps
+- [ ] Add examples to critical functions (user-facing API)
+
+**See:** [DOCUMENTATION_STANDARD.md](DOCUMENTATION_STANDARD.md) for complete documentation guidelines.
 
 {% endif -%}
 {% if include_tests -%}
