@@ -183,6 +183,84 @@ docs:
     @echo "  - docs/TROUBLESHOOTING.md - Problem solving"
     @echo "  - docs/RELEASE_CHECKLIST.md - Release process"
 
+{% if include_docker -%}
+# === Docker Commands ===
+
+# Build production Docker image
+docker-build:
+    @echo "Building production Docker image..."
+    docker build -t {{ project_slug }}:latest .
+
+# Build test Docker image (for CI)
+docker-build-test:
+    @echo "Building test Docker image..."
+    docker build -t {{ project_slug }}:test -f Dockerfile.test .
+
+# Run tests in Docker container (isolated environment)
+docker-test:
+    @echo "Running tests in Docker container..."
+    docker run --rm {{ project_slug }}:test
+
+{% if docker_strategy == 'production' -%}
+# Run production container
+docker-run:
+    @echo "Starting {{ project_slug }} container..."
+{% if project_type == 'mcp_server' -%}
+    docker run -d --name {{ project_slug }} \
+        -v $(pwd)/logs:/app/logs \
+        -v $(pwd)/.env:/app/.env:ro \
+        {{ project_slug }}:latest
+{% elif project_type == 'web_service' -%}
+    docker run -d --name {{ project_slug }} \
+        -p 8000:8000 \
+        -v $(pwd)/.env:/app/.env:ro \
+        {{ project_slug }}:latest
+{% else -%}
+    docker run -it --rm {{ project_slug }}:latest
+{% endif -%}
+
+# Start all services with docker-compose
+docker-compose-up:
+    @echo "Starting services with docker-compose..."
+    docker-compose up -d
+
+# Stop all services
+docker-compose-down:
+    @echo "Stopping services..."
+    docker-compose down
+
+# View logs from docker-compose services
+docker-logs:
+    docker-compose logs -f {{ project_slug }}
+
+# Rebuild and restart services
+docker-rebuild:
+    @echo "Rebuilding and restarting services..."
+    docker-compose up -d --build
+
+{% endif -%}
+# Stop and remove Docker container
+docker-stop:
+    @echo "Stopping {{ project_slug }} container..."
+    docker stop {{ project_slug }} || true
+    docker rm {{ project_slug }} || true
+
+# Remove Docker images
+docker-clean:
+    @echo "Removing Docker images..."
+    docker rmi {{ project_slug }}:latest {{ project_slug }}:test || true
+
+# Full Docker cleanup (containers + images + volumes)
+docker-clean-all:
+    @echo "Cleaning up all Docker artifacts..."
+{% if docker_strategy == 'production' -%}
+    docker-compose down -v || true
+{% endif -%}
+    docker stop {{ project_slug }} || true
+    docker rm {{ project_slug }} || true
+    docker rmi {{ project_slug }}:latest {{ project_slug }}:test || true
+
+{% endif -%}
 # Show environment info
 info:
     @echo "Python version:"
@@ -192,4 +270,4 @@ info:
     @pip show {{ project_slug }} || echo "Package not installed"
     @echo ""
     @echo "Environment variables:"
-    @env | grep MCP_N8N || echo "No MCP_N8N_* variables set"
+    @env | grep {{ package_name | upper }} || echo "No {{ package_name | upper }}_* variables set"

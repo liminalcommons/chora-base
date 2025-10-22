@@ -129,6 +129,8 @@ When you run `copier copy`, you'll be asked:
 - `include_github_actions` - CI/CD workflows
 - `include_justfile` - Task automation with just
 - `include_docker` - Docker configuration
+  - `production` strategy: Multi-stage builds + docker-compose orchestration
+  - `ci-only` strategy: Dockerfile.test for CI isolation
 
 **Documentation:**
 - `include_contributing` - CONTRIBUTING.md
@@ -175,12 +177,16 @@ my-awesome-project/
 ├── tests/                       # Test suite
 │   ├── test_*.py
 │   └── conftest.py
+├── .dockerignore                # Docker build exclusions (optional)
 ├── .editorconfig                # Editor configuration
 ├── .gitignore                   # Git ignore patterns
 ├── .pre-commit-config.yaml      # Pre-commit hooks
 ├── AGENTS.md                    # Machine-readable docs
 ├── CHANGELOG.md                 # Version history
 ├── CONTRIBUTING.md              # How to contribute
+├── Dockerfile                   # Production build (optional)
+├── Dockerfile.test              # CI/test build (optional)
+├── docker-compose.yml           # Service orchestration (optional)
 ├── justfile                     # Task automation
 ├── pyproject.toml               # Project config
 └── README.md                    # This file

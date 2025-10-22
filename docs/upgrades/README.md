@@ -20,9 +20,10 @@
 | v1.3.1 | v1.4.0 | [v1.3-to-v1.4.md](v1.3-to-v1.4.md) | 2-4 hrs | MEDIUM (workflow change) |
 | v1.7.0 | v1.8.0 | [v1.7-to-v1.8.md](v1.7-to-v1.8.md) | 15-30 min | LOW (MCP naming) |
 | v1.8.1 | v1.8.2 | [v1.8.1-to-v1.8.2.md](v1.8.1-to-v1.8.2.md) | 5-10 min | LOW (version fix) |
+| v1.8.2 | v1.9.0 | [v1.8.2-to-v1.9.0.md](v1.8.2-to-v1.9.0.md) | 10-20 min | LOW (Docker opt-in) |
 
 **Status**:
-- ✅ All version-specific guides complete (100% coverage)
+- ✅ All version-specific guides complete (100% coverage v1.0.0 → v1.9.0)
 - ✅ Cumulative guides complete (Phase 3)
 
 ### Cumulative Guides (Multi-Version Jumps)

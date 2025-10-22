@@ -5,6 +5,156 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.9.0] - 2025-10-21
+
+### Added
+
+**Docker Support - Production-Ready Containerization**
+
+Implement comprehensive Docker support to eliminate CI environment issues, enable production deployment, and provide microservices orchestration capabilities.
+
+**New copier.yml Options:**
+
+1. `docker_strategy` (type: str, choices: `production`, `ci-only`, default: `production`)
+   - `production`: Multi-stage builds + docker-compose orchestration
+   - `ci-only`: Just Dockerfile.test for CI testing (no production deployment)
+   - Conditional on `include_docker: true`
+
+**New Template Files (~550 lines):**
+
+1. **`template/Dockerfile.jinja`** (~130 lines)
+   - Multi-stage build (builder + runtime)
+   - Security best practices (non-root user, minimal base image)
+   - Health checks for MCP servers and web services
+   - Project-type specific configurations:
+     - MCP servers: Log directories, health checks
+     - Web services: Port exposure, curl health checks
+     - CLI tools: Interactive mode support
+     - Libraries: Python REPL default
+   - Base image: `python:{{ python_version }}-slim`
+
+2. **`template/Dockerfile.test.jinja`** (~60 lines)
+   - CI/test-focused image with dev dependencies
+   - Solves CI isolation issues (system vs pip package conflicts)
+   - Includes pytest with coverage validation
+   - GitHub Actions cache integration examples
+
+3. **`template/.dockerignore.jinja`** (~145 lines)
+   - Optimized build context (excludes unnecessary files)
+   - Project-type aware exclusions:
+     - Tests (excluded from production, included in Dockerfile.test)
+     - Documentation (excluded from runtime)
+     - Development tools (.vscode, .pre-commit, etc.)
+     - Agent memory (events, knowledge - mount as volumes instead)
+
+4. **`template/docker-compose.yml.jinja`** (~200 lines)
+   - Production orchestration configuration
+   - Project-type specific services:
+     - MCP servers: Log/data persistence, memory volumes
+     - Web services: Port mapping, nginx reverse proxy (commented)
+     - CLI tools: On-demand execution with `profiles`
+   - Optional n8n integration (commented, ready to enable)
+   - Named networks for microservices communication
+   - Volume management for persistence
+
+**Justfile Enhancements (+80 lines):**
+
+Added Docker commands section (conditional on `include_docker`):
+- `docker-build` - Build production image
+- `docker-build-test` - Build CI/test image
+- `docker-test` - Run tests in isolated container
+- `docker-run` - Start production container
+- `docker-compose-up` - Start all services
+- `docker-compose-down` - Stop services
+- `docker-logs` - View service logs
+- `docker-rebuild` - Rebuild and restart
+- `docker-stop` - Stop and remove container
+- `docker-clean` - Remove images
+- `docker-clean-all` - Full cleanup (containers + images + volumes)
+
+**Benefits:**
+
+✅ **CI Isolation**: Eliminates system vs pip package conflicts (mcp-n8n's exact issue)
+✅ **Production Ready**: Multi-stage builds, security hardening, health checks
+✅ **Microservices**: docker-compose orchestration for MCP gateway + backends
+✅ **Developer Experience**: `just docker-*` commands for common workflows
+✅ **Project-Type Aware**: Different defaults for MCP servers vs web services vs libraries
+✅ **Opt-In**: Disabled by default (`include_docker: false`)
+
+**Use Cases:**
+
+1. **CI Testing** (`docker_strategy: ci-only`):
+   - GitHub Actions runs tests in isolated Docker container
+   - Prevents version conflicts between system packages and pip
+   - Faster feedback with Docker layer caching
+
+2. **Production Deployment** (`docker_strategy: production`):
+   - MCP servers deployed as containerized services
+   - docker-compose orchestrates multiple services (n8n + MCP gateway + backends)
+   - Volume persistence for logs, data, agent memory
+
+3. **Development** (hybrid):
+   - Local development in venv (fast iteration)
+   - Docker for integration testing (matches production)
+   - `just docker-test` validates before pushing
+
+**Architecture Decisions:**
+
+- **Multi-stage builds**: Smaller runtime images (~100MB vs ~400MB)
+- **Non-root user**: Security best practice for production
+- **Health checks**: Built-in monitoring for container orchestration
+- **Conditional generation**: Only includes files when `include_docker: true`
+- **Strategy choice**: Developers pick `production` or `ci-only` based on needs
+
+**Total Additions:** ~555 template lines + 80 justfile lines + ~400 documentation lines
+
+### Changed
+
+- **`template/justfile.jinja`** (+80 lines)
+  - Added Docker commands section (11 new recipes)
+  - Conditional on `include_docker: true`
+  - Project-type aware `docker-run` command
+
+- **`copier.yml`**
+  - Added `docker_strategy` option (production vs ci-only)
+  - Added Docker file exclusions (8 new rules)
+  - Conditional generation based on `include_docker` and `docker_strategy`
+
+### Impact
+
+**New Projects:**
+- Can enable Docker with `include_docker: true` during generation
+- Choose strategy: `production` (full stack) or `ci-only` (just testing)
+
+**Existing Projects:**
+- Can adopt via manual file creation or copier update
+- Upgrade guide provides step-by-step migration
+
+**mcp-n8n Team:**
+- Can immediately adopt Dockerfile.test to solve CI issue
+- Can migrate to production deployment with docker-compose
+- Patterns generalized from mcp-n8n's Phase 1 implementation
+
+**Ecosystem:**
+- Consistent Docker patterns across all chora-base projects
+- Microservices architecture support (MCP gateway + backends)
+- Production deployment ready out-of-box
+
+### Inspiration
+
+- **mcp-n8n Docker Implementation Plan**: Phase 1-5 design (CI isolation, production deployment, microservices)
+- **FastMCP upstream**: Container deployment patterns for MCP servers
+- **Docker best practices**: Multi-stage builds, security hardening, health checks
+- **chora-compose production needs**: Real-world deployment requirements
+
+### References
+
+- [Docker Deployment Guide](docs/how-to/docker-deployment.md) - Comprehensive deployment guide
+- [mcp-n8n Docker Issue](https://github.com/liminalcommons/mcp-n8n) - Original CI isolation problem
+- [Docker Best Practices](https://docs.docker.com/develop/dev-best-practices/) - Official Docker guidance
+
+---
+
 ## [1.8.2] - 2025-10-21
 
 ### Fixed

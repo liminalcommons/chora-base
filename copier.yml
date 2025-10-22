@@ -234,6 +234,15 @@ include_docker:
   help: Include Docker configuration (Dockerfile, docker-compose.yml)?
   default: false
 
+docker_strategy:
+  type: str
+  help: "Docker deployment strategy?"
+  choices:
+    - production  # Multi-stage production build + docker-compose
+    - ci-only     # Just Dockerfile.test for CI (no production deployment)
+  default: production
+  when: "{{ include_docker }}"
+
 # === MCP Namespace Configuration (v1.8.0) ===
 
 mcp_namespace:
@@ -286,6 +295,12 @@ _exclude:
   - "{% if project_type != 'mcp_server' %}scripts/migrate_namespace.sh.jinja{% endif %}"
   - "{% if not mcp_validate_names %}scripts/validate_mcp_names.py.jinja{% endif %}"
   - "{% if not mcp_validate_names %}scripts/migrate_namespace.sh.jinja{% endif %}"
+  - "{% if not include_docker %}Dockerfile.jinja{% endif %}"
+  - "{% if not include_docker %}Dockerfile.test.jinja{% endif %}"
+  - "{% if not include_docker %}.dockerignore.jinja{% endif %}"
+  - "{% if not include_docker %}docker-compose.yml.jinja{% endif %}"
+  - "{% if include_docker and docker_strategy == 'ci-only' %}Dockerfile.jinja{% endif %}"
+  - "{% if include_docker and docker_strategy == 'ci-only' %}docker-compose.yml.jinja{% endif %}"
 
 _skip_if_exists:
   - .env

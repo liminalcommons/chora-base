@@ -49,7 +49,8 @@ All configuration options for `copier copy gh:liminalcommons/chora-base`
 | `include_pre_commit` | bool | `true` | Pre-commit hooks | `.pre-commit-config.yaml` |
 | `include_github_actions` | bool | `true` | CI/CD workflows | `.github/workflows/` (7 workflows) |
 | `include_justfile` | bool | `true` | Task automation | `justfile` (20+ tasks) |
-| `include_docker` | bool | `false` | Docker configuration | `Dockerfile`, `docker-compose.yml` |
+| `include_docker` | bool | `false` | Docker configuration | `Dockerfile`, `Dockerfile.test`, `.dockerignore`, `docker-compose.yml` (conditional) |
+| `docker_strategy` | str | `production` | Docker deployment strategy (when `include_docker=true`) | Choices: `production` (full stack), `ci-only` (test only) |
 
 ## Documentation
 
