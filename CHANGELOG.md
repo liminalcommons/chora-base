@@ -5,6 +5,31 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [2.0.1] - 2025-10-22
+
+### Fixed
+
+**Template Syntax Error in extract_tests.py.jinja**
+
+- Fixed Jinja2 template syntax error preventing project generation
+- **Issue**: Python f-strings with curly braces `{}` were being interpreted by Jinja2's template engine, causing `TemplateSyntaxError` at line 293
+- **Fix**: Wrapped all multi-line f-strings in `{% raw %}{% endraw %}` blocks to prevent Jinja2 from parsing Python f-string interpolations
+- **Impact**: All adopters can now successfully run `copier update --vcs-ref v2.0.1`
+
+**Affected sections**:
+- Fixture generation (lines 176-184)
+- Async test generation (lines 192-204)
+- Parameterized test generation (lines 227-239)
+- Regular test generation (lines 245-256)
+- Bash test generation (lines 291-313)
+- Header generation (lines 341-359)
+
+**Reported by**: mcp-n8n team - thank you for the bug report!
+
+**Testing**: Template now generates successfully with all feature combinations.
+
+---
+
 ## [2.0.0] - 2025-10-22
 
 ### BREAKING CHANGE
