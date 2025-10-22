@@ -21,6 +21,10 @@
 | v1.7.0 | v1.8.0 | [v1.7-to-v1.8.md](v1.7-to-v1.8.md) | 15-30 min | LOW (MCP naming) |
 | v1.8.1 | v1.8.2 | [v1.8.1-to-v1.8.2.md](v1.8.1-to-v1.8.2.md) | 5-10 min | LOW (version fix) |
 | v1.8.2 | v1.9.0 | [v1.8.2-to-v1.9.0.md](v1.8.2-to-v1.9.0.md) | 10-20 min | LOW (Docker opt-in) |
+| v1.9.0 | v1.9.1 | [v1.9.0-to-v1.9.1.md](v1.9.0-to-v1.9.1.md) | 10-15 min | LOW (Docker enhancements) |
+| v1.9.1 | v1.9.2 | [v1.9.1-to-v1.9.2.md](v1.9.1-to-v1.9.2.md) | 5-10 min | ZERO (docs discovery) |
+| v1.9.2 | v1.9.3 | [v1.9.2-to-v1.9.3.md](v1.9.2-to-v1.9.3.md) | <10 min | ZERO (docs-only) |
+| v1.9.3 | v2.0.0 | [v1.9.3-to-v2.0.0.md](v1.9.3-to-v2.0.0.md) | <10 min | ZERO (docs structure) |
 
 **Status**:
 - ✅ All version-specific guides complete (100% coverage v1.0.0 → v1.9.0)

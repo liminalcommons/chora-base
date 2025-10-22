@@ -5,6 +5,86 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [2.0.0] - 2025-10-22
+
+### BREAKING CHANGE
+
+**Nested AGENTS.md Architecture** - Refactored monolithic AGENTS.md into topic-specific guides following "nearest file wins" principle.
+
+**Impact on Adopters**: Documentation structure only (no code changes required). Template update merges cleanly for most projects.
+
+### Changed
+
+**AGENTS.md Structure Refactoring**
+
+- **Main AGENTS.md**: Reduced from 2,539 → 1,239 lines (51.2% reduction)
+  - Removed extracted sections (testing, memory, Docker)
+  - Added "Documentation Structure (Nearest File Wins)" discovery index
+  - Preserved all core content (overview, PR instructions, architecture, common tasks)
+  - Maintained all Jinja2 conditionals exactly
+
+### Added
+
+**Nested AGENTS.md Files** (4 new files):
+
+1. **`tests/AGENTS.md.jinja`** (~330 lines)
+   - Testing instructions (run tests, smoke tests, test categories)
+   - Pre-commit hooks, linting, type checking
+   - Coverage requirements, pre-merge verification
+   - Super-tests philosophy with project-type examples
+   - Troubleshooting (test failures, type errors, coverage, hooks)
+
+2. **`.chora/memory/AGENTS.md.jinja`** (~620 lines) - Conditional (`include_memory_system`)
+   - 3-tier memory architecture documentation
+   - Event log & knowledge graph usage patterns
+   - CLI tools for agents
+   - 5 advanced query patterns (semantic search, temporal analysis, confidence filtering, multi-hop traversal, hybrid queries)
+   - A-MEM self-service workflow
+   - Comprehensive troubleshooting (CLI, event log, knowledge graph, trace context)
+
+3. **`docker/AGENTS.md.jinja`** (~90 lines) - Conditional (`include_docker`)
+   - Docker operations (build, verify, deploy)
+   - Common workflows
+   - Adopter responsibilities
+   - Image optimization metrics
+
+4. **`scripts/AGENTS.md.jinja`** (~260 lines)
+   - Automation scripts reference
+   - Setup, testing, build, development scripts
+   - Usage patterns for AI agents
+
+**Template Configuration**:
+- Updated `copier.yml` with conditional exclusions for nested AGENTS.md files
+
+**Upgrade Documentation**:
+- Created comprehensive [v1.9.3-to-v2.0.0 upgrade guide](docs/upgrades/v1.9.3-to-v2.0.0.md)
+
+### Research Alignment
+
+Implements recommendation from "Agentic Coding Best Practices Research.pdf":
+
+> "For large projects or monorepos, a best practice is to use a modular architecture with nested AGENTS.md files. An agent will automatically read the file nearest to the code it is working on, which ensures subprojects receive tailored guidance. This approach prevents the need for a single, giant file."
+
+### Benefits
+
+- ✅ **Reduced cognitive load** - 51% smaller main file
+- ✅ **Better separation of concerns** - Topic-specific guides in nested locations
+- ✅ **Improved discoverability** - "Nearest file wins" + clear navigation index
+- ✅ **Scalable architecture** - Easy to add more nested guides as needed
+- ✅ **Research-backed design** - Follows industry best practices
+
+### Upgrade Path
+
+```bash
+copier update --vcs-ref v2.0.0
+git diff  # Review changes
+git commit -m "chore: Upgrade chora-base v1.9.3 → v2.0.0 (nested AGENTS.md)"
+```
+
+See [upgrade guide](docs/upgrades/v1.9.3-to-v2.0.0.md) for detailed instructions.
+
+---
+
 ## [1.9.3] - 2025-10-22
 
 ### Enhanced

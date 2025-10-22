@@ -20,6 +20,23 @@ chora-base is a production-ready Python project template featuring:
 
 ## Recent Updates
 
+### v2.0.0 (2025-10-22) - Nested AGENTS.md Architecture 🏗️
+
+**BREAKING CHANGE**: Refactored monolithic AGENTS.md into modular, topic-specific guides.
+
+**"Nearest File Wins" Principle** - Agents read the AGENTS.md closest to the code they're working on:
+- **Main AGENTS.md**: Project overview, architecture, PR workflow (1,239 lines, 51% reduction)
+- **tests/AGENTS.md**: Testing guide (run tests, coverage, linting, troubleshooting)
+- **.chora/memory/AGENTS.md**: Memory system (event log, knowledge graph, A-MEM workflows)
+- **docker/AGENTS.md**: Docker operations (build, deploy, optimization)
+- **scripts/AGENTS.md**: Automation scripts reference
+
+**Benefits**: Reduced cognitive load, improved discoverability, scalable architecture
+
+**Impact**: Documentation-only change (no code changes required)
+
+📄 [CHANGELOG](CHANGELOG.md) | 📦 [Upgrade Guide](docs/upgrades/v1.9.3-to-v2.0.0.md) | 📖 [Research](docs/research/)
+
 ### v1.9.3 (2025-10-22) - Advanced Agent Patterns 🧠
 
 **Research-Aligned Enhancements**
@@ -29,8 +46,6 @@ Based on "Agentic Coding Best Practices Research," added ~150 lines of advanced 
 - **Super-Tests** - System-level validation guidance (test workflows, not just units)
 - **Memory Architecture** - 3-tier model documentation (ephemeral → persistent → structured)
 - **Advanced Query Patterns** - 5 production-ready patterns (semantic search, temporal analysis, confidence filtering)
-
-**Note:** Final release before v2.0.0 architectural refactoring (nested AGENTS.md structure)
 
 📄 [CHANGELOG](CHANGELOG.md) | 📦 [Upgrade Guide](docs/upgrades/v1.9.2-to-v1.9.3.md)
 
