@@ -487,9 +487,80 @@ uri = make_resource_uri("templates", "daily-report.md")  # Always correct
 
 ---
 
+## Version Management
+
+### Problem: Version Drift
+
+**Issue:** Hardcoded versions in MCP server initialization drift from `pyproject.toml`.
+
+```python
+# ❌ Anti-Pattern: Hardcoded version
+mcp = FastMCP(
+    name="my-project",
+    version="0.1.0",  # Drifts when you update pyproject.toml
+)
+```
+
+**Result:** MCP clients report stale version in `serverInfo`.
+
+### Solution: Dynamic Version Resolution
+
+**Pattern:** Use `importlib.metadata` for single source of truth.
+
+```python
+from importlib.metadata import PackageNotFoundError, version
+from fastmcp import FastMCP
+
+def _get_version() -> str:
+    """Get package version from installed metadata.
+
+    Returns version from pyproject.toml (via package metadata) to ensure
+    single source of truth. Falls back to development version if package
+    is not installed (e.g., during development without editable install).
+
+    Returns:
+        Package version string (e.g., "1.5.0") or "0.0.0-dev" if not found.
+    """
+    try:
+        return version("my_package_name")  # Replace with your package name
+    except PackageNotFoundError:
+        return "0.0.0-dev"
+
+# ✅ Correct: Dynamic version from pyproject.toml
+mcp = FastMCP(
+    name="my-project",
+    version=_get_version(),  # Auto-syncs with pyproject.toml
+)
+```
+
+**Benefits:**
+- ✅ Single source of truth: `pyproject.toml`
+- ✅ Auto-syncs when you bump version
+- ✅ Works with all build systems (hatchling, setuptools, poetry)
+- ✅ Graceful dev fallback (`0.0.0-dev`)
+
+**Usage:**
+```bash
+# 1. Update version in pyproject.toml
+sed -i 's/version = "0.1.0"/version = "1.0.0"/' pyproject.toml
+
+# 2. Reinstall package (updates metadata)
+pip install -e .
+
+# 3. Version auto-updates (no code changes needed!)
+your-mcp-server
+# Output: Starting my-project MCP server...
+#         Version: 1.0.0 ✅
+```
+
+**Note:** chora-base v1.8.2+ templates include this pattern by default.
+
+---
+
 ## References
 
 - [Chora MCP Conventions v1.0](../standards/CHORA_MCP_CONVENTIONS_v1.0.md) - Full specification
+- [v1.8.1 → v1.8.2 Upgrade Guide](../upgrades/v1.8.1-to-v1.8.2.md) - Version management migration
 - [mcp-n8n Gateway](https://github.com/liminalcommons/mcp-n8n) - Routing implementation
 - [chora-compose](https://github.com/liminalcommons/chora-compose) - Reference implementation
 - [Model Context Protocol](https://modelcontextprotocol.io/) - Core protocol spec

@@ -16,6 +16,7 @@ Reference: https://github.com/liminalcommons/chora-base/blob/main/docs/standards
 """
 
 import logging
+from importlib.metadata import PackageNotFoundError, version
 from typing import Any
 
 from fastmcp import FastMCP
@@ -36,11 +37,29 @@ from .{{ '' if package_name else '../' }}mcp import (
 # Configure logging
 logger = logging.getLogger(__name__)
 
+# === Version Resolution ===
+
+def _get_version() -> str:
+    """Get package version from installed metadata.
+
+    Returns version from pyproject.toml (via package metadata) to ensure
+    single source of truth. Falls back to development version if package
+    is not installed (e.g., during development without editable install).
+
+    Returns:
+        Package version string (e.g., "1.5.0") or "0.0.0-dev" if not found.
+    """
+    try:
+        return version("{{ package_name }}")
+    except PackageNotFoundError:
+        # Development fallback when package not installed
+        return "0.0.0-dev"
+
 # === MCP Server Instance ===
 
 mcp = FastMCP(
     name="{{ project_name }}",
-    version="{{ project_version }}",
+    version=_get_version(),
 )
 
 # === Example Tools ===
@@ -155,7 +174,7 @@ async def get_capabilities() -> dict[str, Any]:
     return {
         "name": "{{ project_name }}",
         "namespace": NAMESPACE,
-        "version": "{{ project_version }}",
+        "version": _get_version(),
         "tools": [
 {% if mcp_enable_namespacing -%}
             make_tool_name("example_tool"),
@@ -183,7 +202,7 @@ async def get_capabilities() -> dict[str, Any]:
     """
     return {
         "name": "{{ project_name }}",
-        "version": "{{ project_version }}",
+        "version": _get_version(),
         "tools": [
             "example_tool",
             "hello_world",

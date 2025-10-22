@@ -18,6 +18,8 @@
 | v1.1.0 | v1.2.0 | [v1.1-to-v1.2.md](v1.1-to-v1.2.md) | 1-2 hrs | HIGH (fixes + customizations) |
 | v1.2.0 | v1.3.0 | [v1.2-to-v1.3.md](v1.2-to-v1.3.md) | 2-3 hrs | MEDIUM (vision framework) |
 | v1.3.1 | v1.4.0 | [v1.3-to-v1.4.md](v1.3-to-v1.4.md) | 2-4 hrs | MEDIUM (workflow change) |
+| v1.7.0 | v1.8.0 | [v1.7-to-v1.8.md](v1.7-to-v1.8.md) | 15-30 min | LOW (MCP naming) |
+| v1.8.1 | v1.8.2 | [v1.8.1-to-v1.8.2.md](v1.8.1-to-v1.8.2.md) | 5-10 min | LOW (version fix) |
 
 **Status**:
 - ✅ All version-specific guides complete (100% coverage)

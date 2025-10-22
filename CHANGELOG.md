@@ -5,6 +5,52 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.8.2] - 2025-10-21
+
+### Fixed
+
+**MCP Server Version Drift - Dynamic Version Resolution**
+
+Resolved version synchronization issue where MCP servers generated from chora-base had hardcoded versions that would drift from `pyproject.toml` when adopters updated their package version.
+
+**Problem:**
+- MCP server instance used hardcoded `version="{{ project_version }}"` (evaluated at template generation time)
+- When developers updated `pyproject.toml` from `0.1.0` → `1.5.0`, FastMCP still reported `0.1.0`
+- Required manual sync in two places: `pyproject.toml` AND `server.py`
+- Violated DRY principle and caused confusion during debugging
+
+**Solution:**
+- Implemented dynamic version resolution using `importlib.metadata.version()`
+- Single source of truth: `pyproject.toml` version field
+- Auto-syncs in both development and production environments
+- Falls back to `"0.0.0-dev"` when package not installed
+
+**Template Changes:**
+
+- **`template/src/{{package_name}}/mcp/server.py.jinja`**
+  - Added `_get_version()` helper function
+  - Uses `importlib.metadata.version("{{ package_name }}")` for version lookup
+  - Replaced hardcoded `version="{{ project_version }}"` with `version=_get_version()`
+  - Updated `get_capabilities()` resource to use dynamic version
+  - Graceful fallback for development environments
+
+**Benefits:**
+- ✅ Version updates now require only ONE change (pyproject.toml)
+- ✅ MCP clients always see correct version in serverInfo
+- ✅ Works with existing hatchling build system (no additional dependencies)
+- ✅ Compatible with Python 3.11+ (chora-base requirement)
+- ✅ Handles both `pip install -e .` and production installs
+- ✅ No breaking changes (existing projects continue to work)
+
+**Impact:**
+- **Existing Projects:** Can adopt pattern via upgrade guide (see docs/upgrades/v1.8.1-to-v1.8.2.md)
+- **New Projects:** Automatic version sync from first generation
+- **Ecosystem:** Aligns with Python packaging best practices (importlib.metadata)
+
+**Reported by:** chora-compose team (2025-10-21)
+
+**Inspiration:** Python packaging best practices, FastMCP upstream patterns, chora-compose production feedback
+
 ## [1.8.1] - 2025-10-21
 
 ### Changed
