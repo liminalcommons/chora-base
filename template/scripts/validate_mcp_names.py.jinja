@@ -58,9 +58,9 @@ class ValidationError:
         self.suggestion = suggestion
 
     def __str__(self) -> str:
-        msg = f"{self.file_path}:{self.line_number}: {self.violation_type}: {self.message}"
+        msg = "{}: {}: {}".format(self.file_path, self.line_number, self.violation_type) + ": {}".format(self.message)
         if self.suggestion:
-            msg += f"\n  Suggestion: {self.suggestion}"
+            msg += "\n  Suggestion: {}".format(self.suggestion)
         return msg
 
 
@@ -77,11 +77,11 @@ def validate_tool_name(name: str, namespacing_enabled: bool) -> Tuple[bool, str]
     """
     if namespacing_enabled:
         if not TOOL_NAME_PATTERN.match(name):
-            return False, f"Tool name must match pattern: {MCP_NAMESPACE}:tool_name (snake_case)"
+            return False, "Tool name must match pattern: {}:tool_name (snake_case)".format(MCP_NAMESPACE)
 
         namespace, tool = name.split(":", 1)
         if namespace != MCP_NAMESPACE:
-            return False, f"Wrong namespace. Expected: {MCP_NAMESPACE}:*, got: {name}"
+            return False, "Wrong namespace. Expected: {}:*, got: {}".format(MCP_NAMESPACE, name)
 
         return True, ""
     else:
@@ -102,11 +102,11 @@ def validate_resource_uri(uri: str, namespacing_enabled: bool) -> Tuple[bool, st
         return True, ""
 
     if not RESOURCE_URI_PATTERN.match(uri):
-        return False, f"Resource URI must match pattern: {MCP_NAMESPACE}://type/id"
+        return False, "Resource URI must match pattern: {}://type/id".format(MCP_NAMESPACE)
 
     namespace = uri.split("://", 1)[0]
     if namespace != MCP_NAMESPACE:
-        return False, f"Wrong namespace. Expected: {MCP_NAMESPACE}://*, got: {uri}"
+        return False, "Wrong namespace. Expected: {}://*, got: {}".format(MCP_NAMESPACE, uri)
 
     return True, ""
 
@@ -121,7 +121,7 @@ def extract_tool_names_from_file(file_path: Path) -> List[Tuple[int, str]]:
         content = file_path.read_text()
         tree = ast.parse(content)
     except Exception as e:
-        print(f"Warning: Could not parse {file_path}: {e}", file=sys.stderr)
+        print("Warning: Could not parse {}: {}".format(file_path, e), file=sys.stderr)
         return []
 
     tool_names = []
@@ -152,7 +152,7 @@ def extract_resource_uris_from_file(file_path: Path) -> List[Tuple[int, str]]:
         content = file_path.read_text()
         tree = ast.parse(content)
     except Exception as e:
-        print(f"Warning: Could not parse {file_path}: {e}", file=sys.stderr)
+        print("Warning: Could not parse {}: {}".format(file_path, e), file=sys.stderr)
         return []
 
     uris = []
@@ -163,7 +163,7 @@ def extract_resource_uris_from_file(file_path: Path) -> List[Tuple[int, str]]:
             value = node.value
             if "://" in value and (
                 RESOURCE_URI_PATTERN.match(value) or
-                value.startswith(f"{MCP_NAMESPACE}://")
+                value.startswith("{}://".format(MCP_NAMESPACE))
             ):
                 uris.append((node.lineno, value))
 
@@ -185,7 +185,7 @@ def validate_file(file_path: Path) -> List[ValidationError]:
         if not is_valid:
             suggestion = ""
             if ENABLE_NAMESPACING and ":" not in tool_name:
-                suggestion = f"Use: {MCP_NAMESPACE}:{tool_name}"
+                suggestion = "Use: {}:{}".format(MCP_NAMESPACE, tool_name)
             errors.append(
                 ValidationError(
                     file_path=file_path,
@@ -202,11 +202,11 @@ def validate_file(file_path: Path) -> List[ValidationError]:
         is_valid, error_msg = validate_resource_uri(uri, ENABLE_NAMESPACING)
         if not is_valid:
             suggestion = ""
-            if ENABLE_NAMESPACING and "://" in uri and not uri.startswith(f"{MCP_NAMESPACE}://"):
+            if ENABLE_NAMESPACING and "://" in uri and not uri.startswith("{}://".format(MCP_NAMESPACE)):
                 # Try to extract type/id and suggest correct URI
                 try:
                     _, rest = uri.split("://", 1)
-                    suggestion = f"Use: {MCP_NAMESPACE}://{rest}"
+                    suggestion = "Use: {}://{}".format(MCP_NAMESPACE, rest)
                 except Exception:
                     pass
             errors.append(
@@ -229,7 +229,7 @@ def validate_codebase() -> List[ValidationError]:
         List of all validation errors found
     """
     if not SRC_DIR.exists():
-        print(f"Error: Source directory not found: {SRC_DIR}", file=sys.stderr)
+        print("Error: Source directory not found: {}".format(SRC_DIR), file=sys.stderr)
         sys.exit(2)
 
     all_errors = []
@@ -238,10 +238,10 @@ def validate_codebase() -> List[ValidationError]:
     python_files = list(SRC_DIR.rglob("*.py"))
 
     if not python_files:
-        print(f"Warning: No Python files found in {SRC_DIR}", file=sys.stderr)
+        print("Warning: No Python files found in {}".format(SRC_DIR), file=sys.stderr)
         return []
 
-    print(f"Validating {len(python_files)} Python files...")
+    print("Validating {} Python files...".format(len(python_files)))
 
     for file_path in python_files:
         errors = validate_file(file_path)
@@ -260,7 +260,7 @@ def validate_namespace_config() -> List[ValidationError]:
                 file_path=Path("copier.yml"),
                 line_number=0,
                 violation_type="InvalidNamespace",
-                message=f"Namespace '{MCP_NAMESPACE}' doesn't follow conventions",
+                message="Namespace '{}' doesn't follow conventions".format(MCP_NAMESPACE),
                 suggestion="Must be lowercase, 3-20 chars, alphanumeric only",
             )
         )
@@ -292,10 +292,10 @@ def main() -> int:
     args = parser.parse_args()
 
     if args.verbose:
-        print(f"Configuration:")
-        print(f"  Namespace: {MCP_NAMESPACE}")
-        print(f"  Namespacing enabled: {ENABLE_NAMESPACING}")
-        print(f"  Source directory: {SRC_DIR}")
+        print("Configuration:")
+        print("  Namespace: {}".format(MCP_NAMESPACE))
+        print("  Namespacing enabled: {}".format(ENABLE_NAMESPACING))
+        print("  Source directory: {}".format(SRC_DIR))
         print()
 
     # Validate namespace configuration
@@ -311,13 +311,13 @@ def main() -> int:
         return 0
 
     # Print errors
-    print(f"\n❌ Found {len(all_errors)} naming convention violation(s):\n")
+    print("\n❌ Found {} naming convention violation(s):\n".format(len(all_errors)))
 
     for error in all_errors:
         print(str(error))
         print()
 
-    print(f"Total violations: {len(all_errors)}")
+    print("Total violations: {}".format(len(all_errors)))
     print()
     print("Reference:")
     print("  https://github.com/liminalcommons/chora-base/blob/main/docs/standards/CHORA_MCP_CONVENTIONS_v1.0.md")

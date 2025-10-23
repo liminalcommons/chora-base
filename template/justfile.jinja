@@ -211,7 +211,7 @@ docker-build-multi TAG="latest":
 # Verify Docker image health
 docker-verify TAG="latest":
     @echo "Verifying Docker image {{ project_slug }}:{{TAG}}..."
-    docker run --rm {{ project_slug }}:{{TAG}} python -c "import {{ package_name }}; print(f'✓ {{ package_name }} v{{'{'}}{{ package_name }}.__version__}')"
+    docker run --rm {{ project_slug }}:{{TAG}} python -c "import {{ package_name }}; print('✓ {{ package_name }} v{}'.format({{ package_name }}.__version__))"
 
 # Interactive shell in Docker container
 docker-shell TAG="latest":

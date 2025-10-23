@@ -91,7 +91,7 @@ async def example_tool(message: str) -> dict[str, Any]:
     validate_tool_name(tool_name, expected_namespace=NAMESPACE)
 {% endif -%}
 
-    logger.info(f"Tool called: {tool_name} with message: {message}")
+    logger.info("Tool called: {} with message: {}".format(tool_name, message))
 
     return {
         "status": "success",
@@ -110,7 +110,7 @@ async def hello_world() -> str:
     Returns:
         Greeting message
     """
-    return f"Hello from {NAMESPACE}!"
+    return "Hello from {}!".format(NAMESPACE)
 
 {% else -%}
 # Non-namespaced tools (standalone mode)
@@ -127,7 +127,7 @@ async def example_tool(message: str) -> dict[str, Any]:
     Returns:
         Dict with tool response
     """
-    logger.info(f"Tool called: example_tool with message: {message}")
+    logger.info("Tool called: example_tool with message: {}".format(message))
 
     return {
         "status": "success",
@@ -225,8 +225,8 @@ def main() -> None:
     """
     logger.info("Starting {{ project_name }} MCP server...")
 {% if mcp_enable_namespacing -%}
-    logger.info(f"Namespace: {NAMESPACE}")
-    logger.info(f"Namespacing enabled: {True}")
+    logger.info("Namespace: {}".format(NAMESPACE))
+    logger.info("Namespacing enabled: {}".format(True))
 {% else -%}
     logger.info("Namespacing: Disabled (standalone mode)")
 {% endif -%}

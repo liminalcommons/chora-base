@@ -58,7 +58,7 @@ class DocumentationValidator:
 
     def run(self) -> int:
         """Run all validation checks. Returns 0 if pass, 1 if fail."""
-        print(f"Validating documentation in {self.root_dir}...")
+        print("Validating documentation in {}...".format(self.root_dir))
         print()
 
         # Step 1: Find all markdown files
@@ -67,7 +67,7 @@ class DocumentationValidator:
             print("No markdown files found in documentation directories.")
             return 0
 
-        print(f"Found {len(md_files)} markdown files")
+        print("Found {} markdown files".format(len(md_files)))
         print()
 
         # Step 2: Parse frontmatter
@@ -109,13 +109,13 @@ class DocumentationValidator:
         try:
             content = md_file.read_text(encoding="utf-8")
         except Exception as e:
-            self.errors.append(f"{md_file}: Failed to read file: {e}")
+            self.errors.append("{}: Failed to read file: {}".format(md_file, e))
             return
 
         # Check for frontmatter (--- ... ---)
         match = re.match(r"^---\n(.*?)\n---\n", content, re.DOTALL)
         if not match:
-            self.errors.append(f"{md_file}: Missing frontmatter (no --- ... ---)")
+            self.errors.append("{}: Missing frontmatter (no --- ... ---)".format(md_file))
             return
 
         # Parse YAML
@@ -123,11 +123,11 @@ class DocumentationValidator:
             frontmatter = yaml.safe_load(match.group(1))
             if not isinstance(frontmatter, dict):
                 self.errors.append(
-                    f"{md_file}: Frontmatter is not a valid YAML dictionary"
+                    "{}: Frontmatter is not a valid YAML dictionary".format(md_file)
                 )
                 return
         except yaml.YAMLError as e:
-            self.errors.append(f"{md_file}: Invalid YAML in frontmatter: {e}")
+            self.errors.append("{}: Invalid YAML in frontmatter: {}".format(md_file, e))
             return
 
         self.docs[md_file] = frontmatter
@@ -139,7 +139,7 @@ class DocumentationValidator:
             for field in self.REQUIRED_FIELDS:
                 if field not in frontmatter:
                     self.errors.append(
-                        f"{md_file}: Missing required frontmatter field: {field}"
+                        "{}: Missing required frontmatter field: {}".format(md_file, field)
                     )
 
             # Validate 'type' field
@@ -147,8 +147,9 @@ class DocumentationValidator:
                 doc_type = frontmatter["type"]
                 if doc_type not in self.VALID_TYPES:
                     self.errors.append(
-                        f"{md_file}: Invalid type '{doc_type}' "
-                        f"(must be one of: {', '.join(self.VALID_TYPES)})"
+                        "{}: Invalid type '{}' (must be one of: {})".format(
+                            md_file, doc_type, ', '.join(self.VALID_TYPES)
+                        )
                     )
 
             # Validate 'status' field
@@ -156,8 +157,9 @@ class DocumentationValidator:
                 status = frontmatter["status"]
                 if status not in self.VALID_STATUS:
                     self.errors.append(
-                        f"{md_file}: Invalid status '{status}' "
-                        f"(must be one of: {', '.join(self.VALID_STATUS)})"
+                        "{}: Invalid status '{}' (must be one of: {})".format(
+                            md_file, status, ', '.join(self.VALID_STATUS)
+                        )
                     )
 
             # Validate 'last_updated' format (YYYY-MM-DD)
@@ -165,8 +167,9 @@ class DocumentationValidator:
                 last_updated = frontmatter["last_updated"]
                 if not re.match(r"^\d{4}-\d{2}-\d{2}$", str(last_updated)):
                     self.errors.append(
-                        f"{md_file}: Invalid last_updated format "
-                        f"(must be YYYY-MM-DD, got: {last_updated})"
+                        "{}: Invalid last_updated format (must be YYYY-MM-DD, got: {})".format(
+                            md_file, last_updated
+                        )
                     )
 
     def _check_broken_links(self) -> None:
@@ -197,8 +200,9 @@ class DocumentationValidator:
                 # Check if target exists
                 if not target_path.exists():
                     self.errors.append(
-                        f"{md_file}: Broken link to '{link_path}' "
-                        f"(resolved to {target_path}, but file not found)"
+                        "{}: Broken link to '{}' (resolved to {}, but file not found)".format(
+                            md_file, link_path, target_path
+                        )
                     )
 
     def _check_staleness(self) -> None:
@@ -219,8 +223,9 @@ class DocumentationValidator:
             if last_updated < threshold:
                 days_old = (today - last_updated).days
                 self.warnings.append(
-                    f"{md_file}: Stale document (last updated {days_old} days ago, "
-                    f"threshold is {self.STALENESS_THRESHOLD} days)"
+                    "{}: Stale document (last updated {} days ago, threshold is {} days)".format(
+                        md_file, days_old, self.STALENESS_THRESHOLD
+                    )
                 )
 
     def _check_bidirectional_refs(self) -> None:
@@ -235,7 +240,7 @@ class DocumentationValidator:
             related = frontmatter["related"]
             if not isinstance(related, list):
                 self.errors.append(
-                    f"{md_file}: 'related' field must be a list, got: {type(related)}"
+                    "{}: 'related' field must be a list, got: {}".format(md_file, type(related))
                 )
                 continue
 
@@ -259,8 +264,9 @@ class DocumentationValidator:
                 # Check if doc_b references doc_a back
                 if doc_b not in related_map:
                     self.warnings.append(
-                        f"{doc_a}: References {doc_b} in 'related:', "
-                        f"but {doc_b} has no 'related:' field (not bidirectional)"
+                        "{}: References {} in 'related:', but {} has no 'related:' field (not bidirectional)".format(
+                            doc_a, doc_b, doc_b
+                        )
                     )
                     continue
 
@@ -274,8 +280,9 @@ class DocumentationValidator:
 
                 if doc_a not in related_map[doc_b]:
                     self.warnings.append(
-                        f"{doc_a}: References {doc_b} in 'related:', "
-                        f"but {doc_b} does not reference {doc_a} back (not bidirectional)"
+                        "{}: References {} in 'related:', but {} does not reference {} back (not bidirectional)".format(
+                            doc_a, doc_b, doc_b, doc_a
+                        )
                     )
 
     def _print_results(self) -> None:
@@ -286,29 +293,29 @@ class DocumentationValidator:
         print()
 
         if self.errors:
-            print(f"❌ ERRORS ({len(self.errors)}):")
+            print("❌ ERRORS ({}):".format(len(self.errors)))
             print()
             for error in self.errors:
-                print(f"  {error}")
+                print("  {}".format(error))
             print()
         else:
             print("✅ No errors found")
             print()
 
         if self.warnings:
-            print(f"⚠️  WARNINGS ({len(self.warnings)}):")
+            print("⚠️  WARNINGS ({}):".format(len(self.warnings)))
             print()
             for warning in self.warnings:
-                print(f"  {warning}")
+                print("  {}".format(warning))
             print()
         else:
             print("✅ No warnings")
             print()
 
         print("=" * 70)
-        print(f"Checked {len(self.docs)} documents")
-        print(f"Errors: {len(self.errors)}")
-        print(f"Warnings: {len(self.warnings)}")
+        print("Checked {} documents".format(len(self.docs)))
+        print("Errors: {}".format(len(self.errors)))
+        print("Warnings: {}".format(len(self.warnings)))
         print("=" * 70)
 
 
