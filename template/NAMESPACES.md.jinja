@@ -94,11 +94,11 @@ This document registers the MCP namespace and all tools/resources for [[ project
 ### Tool Naming
 - **Format:** `[[ mcp_namespace ]]:{tool_name}`
 - **Example:** `[[ mcp_namespace ]]:create_task`
-- **Pattern:** namespace:[a-z][a-z0-9_]+ (snake_case)
+- **Pattern:** [% raw %]namespace:[a-z][a-z0-9_]+[% endraw %] (snake_case)
 
 ### Resource URIs
 [% if mcp_resource_uri_scheme -%]
-- **Format:** `[[ mcp_namespace ]]://{resource_type}/{resource_id}[?query]`
+- **Format:** `[[ mcp_namespace ]]://{resource_type}/{resource_id}` (optional: `?query`)
 - **Example:** `[[ mcp_namespace ]]://templates/daily-report.md`
 - **Pattern:** namespace://[a-z0-9_/\-\.]+(\?.*)?
 
@@ -127,13 +127,12 @@ Runtime validation is **disabled**:
 This document serves as the canonical declaration of this project's MCP namespace.
 
 **Project Information:**
-| Field | Value |
-|-------|-------|
-| Namespace | `[[ mcp_namespace ]]` |
-| Project | [[ project_name ]] |
-| Repository | [[[ github_username ]]/[[ project_slug ]]](https://github.com/[[ github_username ]]/[[ project_slug ]]) |
-| Status | Active |
-| Convention | [Chora MCP Conventions v1.0](https://github.com/liminalcommons/chora-base/blob/main/docs/standards/CHORA_MCP_CONVENTIONS_v1.0.md) |
+
+- **Namespace**: `[[ mcp_namespace ]]`
+- **Project**: [[ project_name ]]
+- **Repository**: [[ github_username ]]/[[ project_slug ]]
+- **Status**: Active
+- **Convention**: [Chora MCP Conventions v1.0](https://github.com/liminalcommons/chora-base/blob/main/docs/standards/CHORA_MCP_CONVENTIONS_v1.0.md)
 
 **Namespace Coordination:**
 To avoid conflicts with other MCP servers, consider:
@@ -145,7 +144,7 @@ To avoid conflicts with other MCP servers, consider:
 ### Tool Naming
 - **Format:** Non-namespaced (e.g., `tool_name`)
 - **Example:** `create_task`
-- **Pattern:** [a-z][a-z0-9_]+ (snake_case)
+- **Pattern:** [% raw %][a-z][a-z0-9_]+[% endraw %] (snake_case)
 
 ### Resource URIs
 - **Format:** Custom URI scheme

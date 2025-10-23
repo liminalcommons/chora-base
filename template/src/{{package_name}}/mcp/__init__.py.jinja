@@ -24,7 +24,7 @@ ENABLE_VALIDATION = [[ mcp_validate_names | lower ]]
 """Whether to validate naming conventions at runtime."""
 
 # === Validation Patterns ===
-
+[% raw %]
 NAMESPACE_PATTERN = re.compile(r'^[a-z][a-z0-9]{2,19}$')
 """Valid namespace: 3-20 chars, lowercase alphanumeric."""
 
@@ -33,7 +33,7 @@ TOOL_NAME_PATTERN = re.compile(r'^[a-z][a-z0-9_]+:[a-z][a-z0-9_]+$')
 
 RESOURCE_URI_PATTERN = re.compile(r'^[a-z][a-z0-9]+://[a-z0-9_/\-\.]+(\?.*)?$')
 """Valid resource URI: namespace://type/id[?query]."""
-
+[% endraw %]
 # === Helper Functions ===
 
 def make_tool_name(tool: str) -> str:
@@ -181,10 +181,10 @@ def validate_namespace(namespace: str) -> None:
         >>> validate_namespace("My-Project")  # Raises ValueError
     """
     if not NAMESPACE_PATTERN.match(namespace):
-        raise ValueError(
+        raise ValueError([% raw %]
             "Invalid namespace: {}. Must be lowercase, 3-20 chars, alphanumeric only. Pattern: [a-z][a-z0-9]{2,19}".format(
                 namespace
-            )
+            )[% endraw %]
         )
 
 

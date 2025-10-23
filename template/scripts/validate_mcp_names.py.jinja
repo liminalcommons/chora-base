@@ -32,12 +32,12 @@ MCP_NAMESPACE = "[[ mcp_namespace ]]"
 ENABLE_NAMESPACING = [[ mcp_enable_namespacing | lower ]]
 
 # === Validation Patterns (from Chora MCP Conventions v1.0) ===
-
+[% raw %]
 NAMESPACE_PATTERN = re.compile(r'^[a-z][a-z0-9]{2,19}$')
 TOOL_NAME_PATTERN = re.compile(r'^[a-z][a-z0-9_]+:[a-z][a-z0-9_]+$')
 RESOURCE_URI_PATTERN = re.compile(r'^[a-z][a-z0-9]+://[a-z0-9_/\-\.]+(\?.*)?$')
 NON_NAMESPACED_TOOL_PATTERN = re.compile(r'^[a-z][a-z0-9_]+$')
-
+[% endraw %]
 # === Validation Functions ===
 
 class ValidationError:
