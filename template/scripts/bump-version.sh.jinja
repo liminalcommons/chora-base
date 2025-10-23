@@ -65,7 +65,7 @@ if [[ ! "$CURRENT_VERSION" =~ ^[0-9]+\.[0-9]+\.[0-9]+$ ]]; then
 fi
 
 # Parse version components
-IFS='.' read -r MAJOR MINOR PATCH {{< "$CURRENT_VERSION"
+IFS='.' read -r MAJOR MINOR PATCH <<< "$CURRENT_VERSION"
 
 # Calculate new version
 case "$BUMP_TYPE" in
