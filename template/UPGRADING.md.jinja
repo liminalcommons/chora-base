@@ -286,7 +286,7 @@ See docs/upgrades/vOLD-to-vNEW.md for details"
 git checkout --theirs justfile
 
 # 2. Re-add your custom tasks at bottom
-cat }} justfile {{'EOF'
+cat >> justfile <<'EOF'
 
 # === Project-Specific Tasks ===
 
