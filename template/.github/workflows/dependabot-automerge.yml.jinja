@@ -31,11 +31,11 @@ jobs:
 
           UPDATE_TYPE="${{ "{{" }} steps.metadata.outputs.update-type }}"
 
-          if [[ "$UPDATE_TYPE" == "version-update:semver-minor" }} || {{ "$UPDATE_TYPE" == "version-update:semver-patch" ]]; then
-            echo "auto_merge=true" }} $GITHUB_OUTPUT
+          if [[ "$UPDATE_TYPE" == "version-update:semver-minor" ]] || [[ "$UPDATE_TYPE" == "version-update:semver-patch" ]]; then
+            echo "auto_merge=true" >> $GITHUB_OUTPUT
             echo "✅ Safe to auto-merge: $UPDATE_TYPE"
           else
-            echo "auto_merge=false" }} $GITHUB_OUTPUT
+            echo "auto_merge=false" >> $GITHUB_OUTPUT
             echo "⚠️ Requires manual review: $UPDATE_TYPE"
           fi
 
