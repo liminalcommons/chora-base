@@ -5,7 +5,48 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [2.0.8] - 2025-10-23
+## [2.0.9] - 2025-10-23
+
+### Fixed
+
+**Complete Fix: Wrapped All `.format()` Calls in Raw Blocks**
+
+v2.0.8 fixed shell/TOML/YAML syntax but still failed due to unprotected `.format()` calls in `extract_tests.py.jinja`.
+
+**Root Cause**: The 479-line `extract_tests.py.jinja` file has 16 `.format()` calls with `{}` placeholders. While simple `.format()` calls work fine with `{{ }}` delimiters (tested successfully in minimal cases), the parser in large complex files treats `{}` as incomplete Jinja2 syntax.
+
+**Error Details**:
+- File: `template/scripts/extract_tests.py.jinja`, line 293
+- Error: `unexpected char '#' at 9814`
+- Character 9814: The `}` from line 289's `.format(safe_title, idx)`
+- Parser expected `}}` (Jinja2 closing), never found it, reached line 293 (`# Test...`) and failed
+
+**The Fix**: Wrapped all 16 `.format()` calls in `{% raw %}{% endraw %}` blocks:
+- Lines 47, 58: print statements
+- Line 153: test_name assignment
+- Lines 182, 202, 237, 254: multi-line test/fixture `.format()` calls
+- Line 289: **THE ERROR LINE** - test_name assignment (was outside raw block that started line 291)
+- Lines 313, 367, 381-384, 442, 462-463: Additional `.format()` calls
+
+**Testing**:
+- ✅ `copier copy` generates complete projects successfully
+- ✅ All 16 `.format()` calls now protected
+- ✅ Template uses standard `{{ }}` delimiters (industry best practice)
+
+**Validation Method**: Created minimal reproduction cases that proved:
+1. Simple `.format()` calls work fine with standard delimiters
+2. Inline `{% raw %}` blocks work fine
+3. The issue was specifically line 289 being outside the raw block
+
+**Impact**: Template finally works with both standard delimiters AND complex Python code generation. The comprehensive research was correct - standard delimiters ARE the solution, but large files need careful raw block placement.
+
+**Version**: chora-base v2.0.9 (PATCH - complete `.format()` protection)
+
+---
+
+## [2.0.8] - 2025-10-23 - ⚠️ INCOMPLETE (use v2.0.9)
+
+**Status**: Fixed shell/TOML/YAML syntax but `.format()` calls still cause failures. Upgrade to v2.0.9.
 
 ### Fixed
 

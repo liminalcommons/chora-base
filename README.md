@@ -20,30 +20,29 @@ chora-base is a production-ready Python project template featuring:
 
 ## Recent Updates
 
-### v2.0.8 (2025-10-23) - COMPLETE FIX ✅
+### v2.0.9 (2025-10-23) - COMPLETE FIX ✅
 
-**Template Finally Works!** After 8 failed releases, v2.0.8 successfully combines standard Jinja2 delimiters with proper syntax preservation.
+**Template Finally Works!** After 9 attempts, v2.0.9 wraps all `.format()` calls to work with standard Jinja2 delimiters.
 
-- **What Was Wrong**: v2.0.7 correctly chose standard `{{ }}` delimiters, but migration script corrupted shell/Python/TOML syntax
-- **The Fix**:
-  - Created static NAMESPACES.md (workaround for Copier bug)
-  - Fixed heredocs: `{{EOF` → `<<EOF` (6 files)
-  - Fixed here-strings: `{{<` → `<<<` (2 files)
-  - Fixed shell tests: `{{ condition }}` → `[[ condition ]]` (9+ files)
-  - Fixed TOML arrays: `{{tool.mypy}}` → `[[tool.mypy]]`
-  - Wrapped Python bash templates in `{% raw %}` blocks
-- **Impact**: Template now generates complete projects successfully with industry-standard delimiters
-- **All Adopters**: Upgrade immediately from v1.9.3 or v2.0.7
+- **What Was Still Wrong**: v2.0.8 fixed shell/TOML syntax but line 289 had `.format()` OUTSIDE the `{% raw %}` block
+- **The Fix**: Wrapped all 16 `.format()` calls in `{% raw %}{% endraw %}` blocks
+- **Root Cause**: Large files cause parser to treat `{}` in `.format()` as incomplete Jinja2 syntax
+- **Impact**: Template generates successfully with industry-standard `{{ }}` delimiters
+- **All Adopters**: Upgrade immediately to v2.0.9
 
-📄 [CHANGELOG](CHANGELOG.md#208---2025-10-23) | 📦 [Upgrade Guide](docs/upgrades/v2.0.7-to-v2.0.8.md)
+📄 [CHANGELOG](CHANGELOG.md#209---2025-10-23)
 
-### v2.0.7 (2025-10-22) - BROKEN (use v2.0.8) ⚠️
+### v2.0.8 (2025-10-23) - INCOMPLETE (use v2.0.9) ⚠️
 
-**Status**: Template generation fails due to shell/Python/TOML syntax corruption. Use v2.0.8 instead.
+**Status**: Fixed shell/TOML/YAML syntax but `.format()` calls still cause failures. Use v2.0.9.
 
-### v2.0.6 (2025-10-22) - BROKEN (use v2.0.8) ⚠️
+### v2.0.7 (2025-10-22) - BROKEN (use v2.0.9) ⚠️
 
-**Status**: Template generation still fails. Use v2.0.8 instead.
+**Status**: Template generation fails. Use v2.0.9 instead.
+
+### v2.0.6 (2025-10-22) - BROKEN (use v2.0.9) ⚠️
+
+**Status**: Template generation fails. Use v2.0.9 instead.
 
 📄 [CHANGELOG](CHANGELOG.md#206---2025-10-22) | 📦 [Upgrade Guide](docs/upgrades/v2.0.5-to-v2.0.6.md)
 
