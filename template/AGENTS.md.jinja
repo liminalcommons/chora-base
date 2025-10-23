@@ -754,13 +754,19 @@ This knowledge transfers to mcp-n8n, chora-compose, and all future chora-base pr
 {% if project_type == 'mcp_server' -%}
 ### Adding a New MCP Tool
 
+**Before you start**: Read [NAMESPACES.md](NAMESPACES.md) for naming conventions and namespace registry.
+
 1. Create tool function in `src/{{ package_name }}/tools/your_tool.py`
-2. Register tool with `@mcp.tool()` decorator
-3. {% if include_memory_system %}Add memory integration (emit events)
-4. {% endif %}Add unit test in `tests/unit/test_your_tool.py`
-5. {% if include_memory_system %}Add integration test with memory validation
-6. {% endif %}Update README.md tool list
-7. Run tests: `{% if include_justfile %}just test{% else %}pytest{% endif %}`
+2. Register tool with `@mcp.tool()` decorator{% if mcp_enable_namespacing %}
+3. Use `make_tool_name("your_tool")` for consistent namespacing
+4. {% else %}
+3. Choose a descriptive snake_case name
+4. {% endif %}{% if include_memory_system %}Add memory integration (emit events)
+5. {% endif %}Add unit test in `tests/unit/test_your_tool.py`
+6. {% if include_memory_system %}Add integration test with memory validation
+7. {% endif %}Update README.md tool list
+8. **Update [NAMESPACES.md](NAMESPACES.md) registry** - Add your tool to the table
+9. Run tests: `{% if include_justfile %}just test{% else %}pytest{% endif %}`
 
 **Example:**
 ```python

@@ -314,7 +314,8 @@ _exclude:
   - "{% if not documentation_advanced_features %}scripts/docs_metrics.py.jinja{% endif %}"
   - "{% if not documentation_advanced_features %}scripts/query_docs.py.jinja{% endif %}"
   - "{% if project_type != 'mcp_server' %}src/{{package_name}}/mcp/{% endif %}"
-  - "{% if project_type != 'mcp_server' %}NAMESPACES.md.jinja{% endif %}"
+  - "NAMESPACES.md.jinja"  # Always exclude - using static NAMESPACES.md instead (Copier bug workaround)
+  - "{% if project_type != 'mcp_server' %}NAMESPACES.md{% endif %}"  # Exclude static version for non-MCP projects
   - "{% if project_type != 'mcp_server' %}scripts/validate_mcp_names.py.jinja{% endif %}"
   - "{% if project_type != 'mcp_server' %}scripts/migrate_namespace.sh.jinja{% endif %}"
   - "{% if not mcp_validate_names %}scripts/validate_mcp_names.py.jinja{% endif %}"
