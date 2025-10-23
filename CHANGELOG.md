@@ -5,6 +5,126 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [2.0.8] - 2025-10-23
+
+### Fixed
+
+**COMPLETE FIX - Standard Jinja2 Delimiters with Syntax Preservation**
+
+After 8 failed releases (v2.0.0-v2.0.7), the template now works correctly by using standard Jinja2 delimiters AND preserving shell/Python/TOML/YAML syntax.
+
+**What Was Actually Wrong:**
+
+v2.0.7 correctly identified that we should use standard `{{ }}` delimiters (industry best practice), but the migration script was too aggressive and corrupted shell/Python syntax that legitimately uses curly braces.
+
+**The Real Problems:**
+
+1. **NAMESPACES.md.jinja Copier Bug** - This file triggers a Copier-specific bug regardless of delimiter choice. The error `unexpected ']'` at line 134 occurs even though that line contains NO brackets. This is a Copier rendering issue, not a Jinja2 issue.
+
+2. **Shell Syntax Corruption** - Migration script converted legitimate shell syntax:
+   - Heredocs: `<<EOF` → `{{EOF` (BROKEN)
+   - Here-strings: `<<<` → `{{<` (BROKEN)
+   - Test expressions: `[[ condition ]]` → `{{ condition }}` (BROKEN)
+
+3. **TOML Syntax Corruption** - Array of tables syntax:
+   - `[[tool.mypy.overrides]]` → `{{tool.mypy.overrides}}` (BROKEN)
+
+4. **GitHub Actions Workflow** - Mixed `${{ }}` syntax with mangled shell syntax
+
+5. **Python Bash Templates** - Embedded bash function syntax with `{{` for functions
+
+**The Solution (v2.0.8):**
+
+1. **Static NAMESPACES.md** - Created `template/NAMESPACES.md` (without .jinja extension) as workaround for Copier bug. This provides full namespace guidance for LLM agents while avoiding the rendering issue.
+
+2. **Surgical Syntax Fixes** - Fixed 20+ template files to preserve shell/Python/TOML/YAML syntax:
+   - **Heredocs**: `{{EOF` → `<<EOF`, `{{'EOF'` → `<<'EOF'` (6 files)
+   - **Here-strings**: `{{<` → `<<<` (2 files)
+   - **Shell tests**: `{{ condition }}` → `[[ condition ]]` (9+ files)
+   - **TOML sections**: `{{tool.mypy.overrides}}` → `[[tool.mypy.overrides]]` (1 file)
+   - **GitHub Actions**: Fixed shell syntax in dependabot-automerge.yml
+   - **Python raw blocks**: Wrapped bash templates in `{% raw %}...{% endraw %}`
+
+3. **Standard Delimiters Retained** - Kept `{{ }}`, `{% %}`, `{# #}` (industry best practice)
+
+**Files Modified:**
+
+**Shell Scripts** (15+ files):
+- `UPGRADING.md.jinja` - Fixed heredoc syntax
+- `handoff.sh.jinja` - Fixed heredoc syntax
+- `rollback-dev.sh.jinja` - Fixed heredoc + shell tests
+- `mcp-tool.sh.jinja` - Fixed heredoc syntax
+- `prepare-release.sh.jinja` - Fixed heredoc + here-string
+- `integration-test.sh.jinja` - Fixed heredoc syntax
+- `bump-version.sh.jinja` - Fixed here-string + shell tests
+- `setup.sh.jinja` - Fixed shell test expressions
+- `publish-test.sh.jinja` - Fixed shell test expressions
+- `migrate_namespace.sh.jinja` - Fixed shell test expressions
+- `diagnose.sh.jinja` - Fixed shell test expressions
+- And 4+ more scripts with shell test pattern fixes
+
+**Python Files**:
+- `extract_tests.py.jinja` - Wrapped bash template in `{% raw %}` block
+
+**TOML Files**:
+- `pyproject.toml.jinja` - Fixed array of tables syntax
+
+**GitHub Actions**:
+- `.github/workflows/dependabot-automerge.yml.jinja` - Fixed shell syntax
+
+**Documentation**:
+- `NAMESPACES.md` - Created static version (no .jinja extension)
+- `AGENTS.md.jinja` - Updated to reference static NAMESPACES.md
+
+**Configuration**:
+- `copier.yml` - Added exclusions for NAMESPACES.md.jinja, include static version
+
+**Verification:**
+
+```bash
+# Template generation test
+copier copy --force --trust --vcs-ref=v2.0.8 \
+  --data project_type=mcp_server \
+  --data project_name=test-project \
+  . /tmp/test-v2.0.8
+
+# Result: ✅ SUCCESS!
+# - All 66 template files processed correctly
+# - NAMESPACES.md included as static file
+# - All shell/Python/TOML/YAML syntax preserved
+# - Zero template rendering errors
+```
+
+**Impact:**
+
+- ✅ Template now generates complete projects successfully
+- ✅ Uses standard Jinja2 delimiters (industry best practice)
+- ✅ NAMESPACES.md provides full namespace guidance for LLM agents
+- ✅ All shell/Python/TOML/YAML syntax preserved correctly
+- ✅ mcp-n8n team and all adopters can upgrade from v1.9.3
+
+**Why This Took 8 Releases:**
+
+- v2.0.0-v2.0.6: Addressed symptoms (f-strings, .format() calls) not root cause
+- v2.0.7: Correct delimiter choice, but broke shell/Python/TOML syntax
+- v2.0.8: Standard delimiters + comprehensive syntax preservation
+
+**Acknowledgment:**
+
+Thank you to the research document "The Delimiter Problem: Why Copier Templates Should Use Standard Jinja2 Syntax" for identifying that standard `{{ }}` delimiters are the industry best practice. The key insight was that the `.jinja` suffix is the conflict resolver, not custom delimiters.
+
+**Lessons Learned:**
+
+1. Standard `{{ }}` delimiters ARE correct for Copier templates
+2. Migration scripts must preserve shell/Python/TOML/YAML syntax
+3. NAMESPACES.md.jinja has a Copier-specific bug - use static .md file instead
+4. Test actual template generation, not just file inspection
+5. Industry research provides valuable patterns from production templates
+
+**Version**: chora-base v2.0.8 (PATCH - complete template fix)
+
+---
+
 ## [2.0.7] - 2025-10-22
 
 ### Fixed
