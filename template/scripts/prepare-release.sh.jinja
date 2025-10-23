@@ -157,7 +157,7 @@ echo -e "${YELLOW}[4/4] Creating release commit...${NC}"
 
 git add pyproject.toml CHANGELOG.md
 
-git commit -m "$(cat {{EOF
+git commit -m "$(cat <<EOF
 Release v${NEW_VERSION}
 
 Bump version to ${NEW_VERSION} and update CHANGELOG.

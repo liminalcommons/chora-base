@@ -31,7 +31,7 @@ echo "  (In Sprint 2, this will call chora-composer to emit real events)"
 echo ""
 
 # Mock event data (replace with actual chora-composer call in Sprint 2)
-cat > "${EVENTS_FILE}" {{EOF
+cat > "${EVENTS_FILE}" <<EOF
 {"timestamp": "2025-10-17T12:00:00Z", "trace_id": "test-trace-123", "status": "success", "schema_version": "1.0", "event_type": "chora.content_generated", "content_config_id": "test-config", "generator_type": "markdown", "duration_ms": 150, "size_bytes": 1024}
 {"timestamp": "2025-10-17T12:00:01Z", "trace_id": "test-trace-123", "status": "success", "schema_version": "1.0", "event_type": "chora.artifact_assembled", "artifact_config_id": "test-artifact", "output_path": "/tmp/test.md", "duration_ms": 300, "size_bytes": 2048, "num_content_pieces": 2}
 {"timestamp": "2025-10-17T12:00:02Z", "trace_id": "test-trace-456", "status": "error", "schema_version": "1.0", "event_type": "chora.content_generation_failed", "content_config_id": "bad-config", "error_type": "ValidationError", "error_message": "Invalid configuration"}

@@ -84,7 +84,7 @@ TIMESTAMP=$(date -u +"%Y-%m-%d %H:%M:%S UTC")
 BRANCH=$(git branch --show-current)
 LAST_COMMIT=$(git log -1 --oneline)
 
-cat > "$HANDOFF_FILE" {{EOF
+cat > "$HANDOFF_FILE" <<EOF
 # Sprint Handoff: $CURRENT → $TARGET
 
 **Date:** $TIMESTAMP
