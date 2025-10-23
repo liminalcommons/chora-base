@@ -7,9 +7,9 @@ on:
 
 permissions:
   contents: write  # For creating GitHub releases
-[% if pypi_auth_method == 'trusted_publishing' -%]
+<% if pypi_auth_method == 'trusted_publishing' -%>
   id-token: write  # For PyPI trusted publishing (OIDC)
-[% endif -%]
+<% endif -%>
 
 jobs:
   build:
@@ -54,10 +54,10 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
-      - name: Set up Python $[[ "[[" ]] matrix.python-version ]]
+      - name: Set up Python $<< "<<" >> matrix.python-version >>
         uses: actions/setup-python@v5
         with:
-          python-version: $[[ "[[" ]] matrix.python-version ]]
+          python-version: $<< "<<" >> matrix.python-version >>
 
       - name: Install dependencies
         run: |
@@ -69,17 +69,17 @@ jobs:
         timeout-minutes: 2
 
       - name: Run full test suite
-        run: pytest --cov=src/[[ package_name ]] --cov-report=term --cov-fail-under=85
+        run: pytest --cov=src/<< package_name >> --cov-report=term --cov-fail-under=85
 
   publish-pypi:
     name: Publish to PyPI
     needs: [build, test]
     runs-on: ubuntu-latest
-[% if pypi_auth_method == 'trusted_publishing' -%]
+<% if pypi_auth_method == 'trusted_publishing' -%>
     environment:
       name: pypi
-      url: https://pypi.org/p/[[ project_slug ]]
-[% endif -%]
+      url: https://pypi.org/p/<< project_slug >>
+<% endif -%>
 
     steps:
       - name: Download distribution artifacts
@@ -88,22 +88,22 @@ jobs:
           name: python-package-distributions
           path: dist/
 
-[% if pypi_auth_method == 'token' -%]
+<% if pypi_auth_method == 'token' -%>
       - name: Publish to PyPI using token
         uses: pypa/gh-action-pypi-publish@release/v1
         with:
-          password: $[[ "[[" ]] secrets.PYPI_TOKEN ]]
+          password: $<< "<<" >> secrets.PYPI_TOKEN >>
           print-hash: true
           # To use: Create token at https://pypi.org/manage/account/token/
           # Add as repository secret: PYPI_TOKEN
-[% else -%]
+<% else -%>
       - name: Publish to PyPI using trusted publishing
         uses: pypa/gh-action-pypi-publish@release/v1
         with:
           print-hash: true
           # Uses OIDC trusted publishing (no API token needed)
           # Configure publisher at: https://pypi.org/manage/account/publishing/
-[% endif -%]
+<% endif -%>
 
   github-release:
     name: Create GitHub Release
@@ -127,7 +127,7 @@ jobs:
       - name: Extract changelog for this version
         id: changelog
         run: |
-          VERSION="$[[ "[[" ]] steps.tag.outputs.version ]]"
+          VERSION="$<< "<<" >> steps.tag.outputs.version >>"
           # Extract changelog section for this version
           awk "/## \[${VERSION}\]/,/## \[/" CHANGELOG.md | sed '$d' > release_notes.md
           # If empty, use a default message
@@ -143,7 +143,7 @@ jobs:
           draft: false
           prerelease: false
         env:
-          GITHUB_TOKEN: $[[ "[[" ]] secrets.GITHUB_TOKEN ]]
+          GITHUB_TOKEN: $<< "<<" >> secrets.GITHUB_TOKEN >>
 
   post-release:
     name: Post-release notifications
@@ -157,9 +157,9 @@ jobs:
 
       - name: Release summary
         run: |
-          echo "✅ Release $[[ "[[" ]] steps.tag.outputs.version ]] published successfully!"
+          echo "✅ Release $<< "<<" >> steps.tag.outputs.version >> published successfully!"
           echo ""
-          echo "📦 PyPI: https://pypi.org/project/[[ project_slug ]]/$[[ "[[" ]] steps.tag.outputs.version ]]/"
-          echo "🐙 GitHub: $[[ "[[" ]] github.server_url ]]/$[[ "[[" ]] github.repository ]]/releases/tag/v$[[ "[[" ]] steps.tag.outputs.version ]]"
+          echo "📦 PyPI: https://pypi.org/project/<< project_slug >>/$<< "<<" >> steps.tag.outputs.version >>/"
+          echo "🐙 GitHub: $<< "<<" >> github.server_url >>/$<< "<<" >> github.repository >>/releases/tag/v$<< "<<" >> steps.tag.outputs.version >>"
           echo ""
-          echo "Install with: pip install [[ project_slug ]]==$[[ "[[" ]] steps.tag.outputs.version ]]"
+          echo "Install with: pip install << project_slug >>==$<< "<<" >> steps.tag.outputs.version >>"

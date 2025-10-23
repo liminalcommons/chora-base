@@ -1,17 +1,17 @@
 # PyPI Publishing Setup Guide
 
-This guide explains how to set up PyPI publishing for [[ project_slug ]].
+This guide explains how to set up PyPI publishing for << project_slug >>.
 
 ## Quick Start
 
-[% if pypi_auth_method == 'token' -%]
+<% if pypi_auth_method == 'token' -%>
 This project is configured to use **token-based authentication** for PyPI publishing.
 
 ### Step 1: Create PyPI API Token
 
 1. Go to [https://pypi.org/manage/account/token/](https://pypi.org/manage/account/token/)
 2. Click "Add API token"
-3. **Name**: `GitHub Actions - [[ project_slug ]]`
+3. **Name**: `GitHub Actions - << project_slug >>`
 4. **Scope**: Choose one:
    - **"Entire account"** (easier, works immediately)
    - **Specific project** (more secure, requires project to exist first)
@@ -21,7 +21,7 @@ This project is configured to use **token-based authentication** for PyPI publis
 
 ### Step 2: Add Token to GitHub Secrets
 
-1. Go to your repository settings: `https://github.com/[[ github_username ]]/[[ project_slug ]]/settings/secrets/actions`
+1. Go to your repository settings: `https://github.com/<< github_username >>/<< project_slug >>/settings/secrets/actions`
 2. Click "New repository secret"
 3. **Name**: `PYPI_TOKEN`
 4. **Secret**: Paste your PyPI token (the one starting with `pypi-...`)
@@ -46,7 +46,7 @@ Once everything is tested:
 
 ```bash
 # Tag and push (triggers GitHub Actions)
-git tag v[[ project_version ]]
+git tag v<< project_version >>
 git push --tags
 
 # Or publish manually:
@@ -77,12 +77,12 @@ For enhanced security, you can migrate to PyPI trusted publishing (no long-lived
 ### Migration Steps
 
 1. **Configure PyPI Publisher:**
-   - Go to [https://pypi.org/manage/project/[[ project_slug ]]/settings/publishing/](https://pypi.org/manage/project/[[ project_slug ]]/settings/publishing/)
+   - Go to [https://pypi.org/manage/project/<< project_slug >>/settings/publishing/](https://pypi.org/manage/project/<< project_slug >>/settings/publishing/)
    - Click "Add a new publisher"
    - Fill in:
-     - **PyPI Project Name**: `[[ project_slug ]]`
-     - **Owner**: `[[ github_username ]]`
-     - **Repository name**: `[[ project_slug ]]`
+     - **PyPI Project Name**: `<< project_slug >>`
+     - **Owner**: `<< github_username >>`
+     - **Repository name**: `<< project_slug >>`
      - **Workflow filename**: `release.yml`
      - **Environment name**: `pypi` (optional)
    - Click "Add"
@@ -97,7 +97,7 @@ For enhanced security, you can migrate to PyPI trusted publishing (no long-lived
      publish-pypi:
        environment:
          name: pypi
-         url: https://pypi.org/p/[[ project_slug ]]
+         url: https://pypi.org/p/<< project_slug >>
        steps:
          - name: Publish to PyPI using trusted publishing
            uses: pypa/gh-action-pypi-publish@release/v1
@@ -109,12 +109,12 @@ For enhanced security, you can migrate to PyPI trusted publishing (no long-lived
 
 4. **Test the Setup:**
    ```bash
-   git tag v[[ project_version ]]
+   git tag v<< project_version >>
    git push --tags
    # GitHub Actions will publish using trusted publishing
    ```
 
-[% else -%]
+<% else -%>
 This project is configured to use **trusted publishing (OIDC)** for PyPI publishing.
 
 ### Step 1: Publish Your First Release
@@ -136,12 +136,12 @@ Before PyPI trusted publishing can work, your project must exist on PyPI. Use a 
 
 Once your project exists on PyPI:
 
-1. Go to [https://pypi.org/manage/project/[[ project_slug ]]/settings/publishing/](https://pypi.org/manage/project/[[ project_slug ]]/settings/publishing/)
+1. Go to [https://pypi.org/manage/project/<< project_slug >>/settings/publishing/](https://pypi.org/manage/project/<< project_slug >>/settings/publishing/)
 2. Click "Add a new publisher"
 3. Fill in:
-   - **PyPI Project Name**: `[[ project_slug ]]`
-   - **Owner**: `[[ github_username ]]`
-   - **Repository name**: `[[ project_slug ]]`
+   - **PyPI Project Name**: `<< project_slug >>`
+   - **Owner**: `<< github_username >>`
+   - **Repository name**: `<< project_slug >>`
    - **Workflow filename**: `release.yml`
    - **Environment name**: `pypi`
 4. Click "Add"
@@ -159,7 +159,7 @@ jobs:
   publish-pypi:
     environment:
       name: pypi
-      url: https://pypi.org/p/[[ project_slug ]]
+      url: https://pypi.org/p/<< project_slug >>
     steps:
       - name: Publish to PyPI
         uses: pypa/gh-action-pypi-publish@release/v1
@@ -205,7 +205,7 @@ If you prefer simpler token-based publishing (works with local scripts):
          - name: Publish to PyPI using token
            uses: pypa/gh-action-pypi-publish@release/v1
            with:
-             password: $[[ "[[" ]] secrets.PYPI_TOKEN ]]
+             password: $<< "<<" >> secrets.PYPI_TOKEN >>
    ```
 
 ### Benefits of Token-Based
@@ -217,7 +217,7 @@ If you prefer simpler token-based publishing (works with local scripts):
 ❌ **Less secure** - Long-lived token
 ❌ **Token rotation** - Must rotate periodically
 
-[% endif -%]
+<% endif -%>
 
 ---
 
@@ -236,9 +236,9 @@ If you prefer simpler token-based publishing (works with local scripts):
 ./scripts/publish-test.sh
 
 # Verify installation from TestPyPI
-pip install --index-url https://test.pypi.org/simple/ [[ project_slug ]]
+pip install --index-url https://test.pypi.org/simple/ << project_slug >>
 
-# Publish to production PyPI[% if pypi_auth_method == 'token' %] (requires PYPI_TOKEN in .env)[% else %] (requires manual token)[% endif %]
+# Publish to production PyPI<% if pypi_auth_method == 'token' %> (requires PYPI_TOKEN in .env)<% else %> (requires manual token)<% endif %>
 ./scripts/publish-prod.sh
 ```
 
@@ -264,28 +264,28 @@ twine upload dist/*
 
 ### Error: "Invalid or non-existent authentication information"
 
-[% if pypi_auth_method == 'token' -%]
+<% if pypi_auth_method == 'token' -%>
 - **Cause**: `PYPI_TOKEN` secret is missing or incorrect
 - **Fix**: Verify token in GitHub repository secrets
 - **Check**: Token should start with `pypi-`
-[% else -%]
+<% else -%>
 - **Cause**: Trusted publisher not configured on PyPI.org
 - **Fix**: Follow [Step 2: Configure Trusted Publisher](#step-2-configure-trusted-publisher-on-pypi)
 - **Check**: Verify repository, workflow filename, and environment name match exactly
-[% endif -%]
+<% endif -%>
 
 ### Error: "Project name already exists"
 
-- **Cause**: Project name `[[ project_slug ]]` is already taken on PyPI
+- **Cause**: Project name `<< project_slug >>` is already taken on PyPI
 - **Fix**: Choose a different name in `pyproject.toml`:
   ```toml
   [project]
-  name = "[[ project_slug ]]-yourname"  # Make it unique
+  name = "<< project_slug >>-yourname"  # Make it unique
   ```
 
 ### Error: "File already exists"
 
-- **Cause**: Version `[[ project_version ]]` already published
+- **Cause**: Version `<< project_version >>` already published
 - **Fix**: Bump version number:
   ```bash
   ./scripts/prepare-release.sh patch  # Increments version
@@ -309,7 +309,7 @@ twine upload dist/*
 1. **Always test on TestPyPI first**
    ```bash
    ./scripts/publish-test.sh
-   pip install --index-url https://test.pypi.org/simple/ [[ project_slug ]]
+   pip install --index-url https://test.pypi.org/simple/ << project_slug >>
    ```
 
 2. **Use semantic versioning**
@@ -330,7 +330,7 @@ twine upload dist/*
 
 5. **Tag releases in git**
    ```bash
-   git tag v[[ project_version ]]
+   git tag v<< project_version >>
    git push --tags
    ```
 
@@ -346,4 +346,4 @@ twine upload dist/*
 
 ---
 
-**Need help?** Open an issue at [the project repository](https://github.com/[[ github_username ]]/[[ project_slug ]]/issues)
+**Need help?** Open an issue at [the project repository](https://github.com/<< github_username >>/<< project_slug >>/issues)

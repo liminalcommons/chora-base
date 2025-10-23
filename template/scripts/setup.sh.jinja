@@ -1,11 +1,11 @@
 #!/usr/bin/env bash
-# setup.sh - One-command project setup for [[ project_slug ]]
+# setup.sh - One-command project setup for << project_slug >>
 #
 # Usage: ./scripts/setup.sh
 
 set -euo pipefail
 
-echo "=== [[ project_slug ]] Setup Script ==="
+echo "=== << project_slug >> Setup Script ==="
 echo ""
 
 # Color codes for output
@@ -29,7 +29,7 @@ echo ""
 # Install just command runner (primary development interface)
 echo -e "${YELLOW}Installing 'just' command runner...${NC}"
 if ! command -v just &> /dev/null; then
-    if [[ "$OSTYPE" == "darwin"* ]]; then
+    if << "$OSTYPE" == "darwin"* >>; then
         # macOS: Try brew first, fallback to curl
         if command -v brew &> /dev/null; then
             echo "  Using Homebrew..."
@@ -100,10 +100,10 @@ if command -v just &> /dev/null; then
     just check
 else
     echo "Running linting..."
-    ruff check src/[[ package_name ]] tests || true
+    ruff check src/<< package_name >> tests || true
     echo ""
     echo "Running type checking..."
-    mypy src/[[ package_name ]] || true
+    mypy src/<< package_name >> || true
 fi
 echo -e "${GREEN}✓ Quality checks complete${NC}"
 echo ""

@@ -44,12 +44,12 @@ echo ""
 
 # Check 3: Full test suite with coverage
 echo -e "${YELLOW}[3/6] Running full test suite with coverage...${NC}"
-if pytest tests/ --cov=src/[[ package_name ]] --cov-report=term-missing --cov-fail-under=85 > /dev/null 2>&1; then
-    COVERAGE=$(pytest tests/ --cov=src/[[ package_name ]] --cov-report=term 2>/dev/null | grep "TOTAL" | awk '{print $4}' || echo "unknown")
+if pytest tests/ --cov=src/<< package_name >> --cov-report=term-missing --cov-fail-under=85 > /dev/null 2>&1; then
+    COVERAGE=$(pytest tests/ --cov=src/<< package_name >> --cov-report=term 2>/dev/null | grep "TOTAL" | awk '{print $4}' || echo "unknown")
     echo -e "  ${GREEN}✓${NC} Tests passed with $COVERAGE coverage"
 else
     echo -e "  ${RED}✗${NC} Tests failed or coverage below 85%"
-    echo "    Run: pytest tests/ --cov=src/[[ package_name ]] --cov-report=term-missing"
+    echo "    Run: pytest tests/ --cov=src/<< package_name >> --cov-report=term-missing"
     ERRORS=$((ERRORS + 1))
 fi
 echo ""

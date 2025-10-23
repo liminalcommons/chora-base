@@ -1,6 +1,6 @@
-# Capability Evolution - [[ project_name ]]
+# Capability Evolution - << project_name >>
 
-This document describes the potential evolutionary path for [[ project_name ]] across multiple capability waves. These are **exploratory directions**, not committed features.
+This document describes the potential evolutionary path for << project_name >> across multiple capability waves. These are **exploratory directions**, not committed features.
 
 **Purpose:** Guide strategic design decisions today while keeping future doors open.
 
@@ -29,44 +29,44 @@ Wave 1: Foundation          Wave 2: Integration       Wave 3: Intelligence      
 ### Status
 
 **Current:** In Active Development
-**Target:** v1.0.0 ([[ initial_version ]])
+**Target:** v1.0.0 (<< initial_version >>)
 **Timeline:** Current sprint/milestone
 
 ### Capability Theme
 
 Establish core functionality that delivers immediate value:
 
-[% if project_type == 'mcp_server' -%]
+<% if project_type == 'mcp_server' -%>
 - **MCP Server Infrastructure** - Standard MCP protocol implementation
 - **Essential Tools** - 3-5 high-value tools for common operations
 - **Error Handling** - Robust error reporting and recovery
 - **Basic Configuration** - Environment-based config (`.env`)
 - **Developer Experience** - Setup scripts, testing, documentation
-[% elif project_type == 'library' -%]
+<% elif project_type == 'library' -%>
 - **Core API** - Essential functions/classes for primary use case
 - **Type Safety** - Full type hints and validation
 - **Error Handling** - Clear exceptions and error messages
 - **Documentation** - API reference, examples, tutorials
 - **Developer Experience** - Testing framework, CI/CD, packaging
-[% elif project_type == 'cli_tool' -%]
+<% elif project_type == 'cli_tool' -%>
 - **Core Commands** - 3-5 essential CLI commands
 - **User Experience** - Help text, progress indicators, clear output
 - **Configuration** - Config file support, environment variables
 - **Error Handling** - Friendly error messages, recovery options
 - **Developer Experience** - Testing, distribution, documentation
-[% elif project_type == 'web_service' -%]
+<% elif project_type == 'web_service' -%>
 - **Core Endpoints** - Essential API routes for primary use case
 - **Data Models** - Core entities with validation
 - **Error Handling** - HTTP error codes, error responses
 - **Documentation** - OpenAPI/Swagger specs, examples
 - **Developer Experience** - Local dev setup, testing, deployment
-[% endif -%]
+<% endif -%>
 
 ### Motivation
 
 Why Wave 1 matters:
 
-1. **User Need:** Solve the core problem that [[ project_name ]] addresses
+1. **User Need:** Solve the core problem that << project_name >> addresses
 2. **Market Signal:** Validate product-market fit before expanding
 3. **Technical Foundation:** Establish architecture patterns for future waves
 4. **Learning Opportunity:** Gather user feedback to inform Wave 2+
@@ -78,7 +78,7 @@ Why Wave 1 matters:
 - Extensible design (prepare for Wave 2 without implementing it)
 - Clear abstractions (easy to add capabilities later)
 
-[% if project_type == 'mcp_server' -%]
+<% if project_type == 'mcp_server' -%>
 **Example: Tool Interface Design**
 ```python
 # Wave 1: Simple function-based tools
@@ -89,7 +89,7 @@ async def tool_get_info(query: str) -> dict:
 # Extension point for Wave 2 (tool chaining)
 # Design: Return structured dict (not plain str) to enable future composition
 ```
-[% elif project_type == 'library' -%]
+<% elif project_type == 'library' -%>
 **Example: Core API Design**
 ```python
 # Wave 1: Basic functionality
@@ -101,7 +101,7 @@ class Processor:
     # Extension point for Wave 2 (plugins)
     # Design: Use protocols/interfaces to allow future plugin system
 ```
-[% endif -%]
+<% endif -%>
 
 ### Success Metrics
 
@@ -109,33 +109,33 @@ How we'll know Wave 1 succeeded:
 
 | Metric | Target | Measurement |
 |--------|--------|-------------|
-[% if project_type == 'mcp_server' -%]
+<% if project_type == 'mcp_server' -%>
 | **Adoption** | 10+ users install and use | GitHub stars, download count |
 | **Core Tools Usage** | 80%+ tools used weekly | Event log queries |
 | **Error Rate** | <5% tool call failures | Error tracking |
 | **Setup Time** | <5 minutes first use | User feedback |
-[% elif project_type == 'library' -%]
+<% elif project_type == 'library' -%>
 | **Adoption** | 50+ PyPI downloads/month | PyPI stats |
 | **API Coverage** | Core API handles 80% of use cases | User feedback, GitHub issues |
 | **Error Rate** | <2% API call failures | Error tracking, bug reports |
 | **Documentation** | <10 "how do I..." issues/month | GitHub issues tagged "docs" |
-[% elif project_type == 'cli_tool' -%]
+<% elif project_type == 'cli_tool' -%>
 | **Adoption** | 25+ active users | Download stats |
 | **Command Usage** | All core commands used | Telemetry (if opted in) |
 | **Error Rate** | <5% command failures | Error logs |
 | **User Satisfaction** | 4/5 stars average | User surveys |
-[% elif project_type == 'web_service' -%]
+<% elif project_type == 'web_service' -%>
 | **Adoption** | 20+ API consumers | API key registrations |
 | **Endpoint Usage** | Core endpoints handle 80% of requests | Access logs |
 | **Error Rate** | <1% 5xx errors | Monitoring |
 | **Response Time** | p95 <200ms | APM |
-[% endif -%]
+<% endif -%>
 
 ### Decision: Committed
 
 **Status:** ✅ Committed to current roadmap
 **Rationale:** Core functionality required for product to exist
-**Timeline:** Current sprint → v[[ initial_version ]] release
+**Timeline:** Current sprint → v<< initial_version >> release
 
 ---
 
@@ -151,31 +151,31 @@ How we'll know Wave 1 succeeded:
 
 Integrate with external systems and workflows:
 
-[% if project_type == 'mcp_server' -%]
+<% if project_type == 'mcp_server' -%>
 - **Tool Chaining** - Compose multiple tools in sequences
 - **External APIs** - Connect to third-party services (e.g., databases, APIs)
 - **Data Persistence** - Cache results, maintain session state
 - **Advanced Configuration** - Per-tool config, environment profiles
 - **Workflow Integration** - Hooks for automation platforms
-[% elif project_type == 'library' -%]
+<% elif project_type == 'library' -%>
 - **Plugin System** - Allow third-party extensions
 - **Data Source Adapters** - Connect to multiple backends
 - **Serialization** - Export/import in multiple formats (JSON, YAML, XML)
 - **Integration Helpers** - Adapters for popular frameworks
 - **Configuration System** - Advanced config with profiles
-[% elif project_type == 'cli_tool' -%]
+<% elif project_type == 'cli_tool' -%>
 - **Pipeline Support** - Chain commands via stdin/stdout
 - **Config Profiles** - Multiple config profiles (dev, prod, etc.)
 - **Plugin System** - Third-party command extensions
 - **Integration Adapters** - Connect to external tools (git, docker, etc.)
 - **Automation Support** - Scripting-friendly output formats
-[% elif project_type == 'web_service' -%]
+<% elif project_type == 'web_service' -%>
 - **Webhook System** - Event notifications to external systems
 - **OAuth Integration** - Third-party authentication
 - **Data Export** - Bulk export in multiple formats
 - **Webhook Receivers** - Accept events from external systems
 - **Integration Dashboard** - Manage connected services
-[% endif -%]
+<% endif -%>
 
 ### Motivation
 
@@ -188,7 +188,7 @@ Why Wave 2 might matter:
 
 ### Technical Sketch
 
-[% if project_type == 'mcp_server' -%]
+<% if project_type == 'mcp_server' -%>
 **Tool Chaining Example:**
 ```python
 # Wave 2: Tool composition
@@ -223,7 +223,7 @@ class CachedTool(Tool):
         self.cache.set(cache_key, result, ttl=3600)
         return result
 ```
-[% elif project_type == 'library' -%]
+<% elif project_type == 'library' -%>
 **Plugin System Example:**
 ```python
 # Wave 2: Plugin interface
@@ -243,7 +243,7 @@ class PluginManager:
 
 # Enables: Third-party extensions via entry points
 ```
-[% endif -%]
+<% endif -%>
 
 ### Decision Criteria
 
@@ -253,13 +253,13 @@ Explicit go/no-go criteria for Wave 2:
 |-----------|--------|---------|--------|
 | **Wave 1 Stable** | v1.0 shipped, <5 critical bugs | TBD | ⏳ Pending v1.0 |
 | **User Demand** | 50+ users requesting integrations | TBD | ⏳ Track after v1.0 |
-[% if project_type == 'mcp_server' -%]
+<% if project_type == 'mcp_server' -%>
 | **API Availability** | Partner APIs documented, accessible | TBD | ⏳ Survey ecosyst
 
 em |
-[% elif project_type == 'library' -%]
+<% elif project_type == 'library' -%>
 | **Plugin Interest** | 10+ developers interested in plugins | TBD | ⏳ Survey community |
-[% endif -%]
+<% endif -%>
 | **Team Capacity** | 3+ months eng time available | TBD | ⏳ Budget planning |
 
 **Decision Framework:**
@@ -276,15 +276,15 @@ ELSE:
 
 | Metric | Target | Measurement |
 |--------|--------|-------------|
-[% if project_type == 'mcp_server' -%]
+<% if project_type == 'mcp_server' -%>
 | **Integrations Used** | 3+ external APIs connected | Usage telemetry |
 | **Tool Chains Created** | 20+ users chain tools | Event log analysis |
 | **Cache Hit Rate** | >60% for repeated queries | Cache metrics |
-[% elif project_type == 'library' -%]
+<% elif project_type == 'library' -%>
 | **Third-Party Plugins** | 5+ community plugins | Plugin registry |
 | **Adapter Usage** | 3+ data sources used | Import telemetry |
 | **Framework Integrations** | 2+ popular frameworks | GitHub examples |
-[% endif -%]
+<% endif -%>
 
 ### Dependencies
 
@@ -317,31 +317,31 @@ What must be true before Wave 2:
 
 Add AI/ML-powered features for smart automation:
 
-[% if project_type == 'mcp_server' -%]
+<% if project_type == 'mcp_server' -%>
 - **Smart Tool Selection** - Recommend tools based on user intent
 - **Predictive Caching** - Pre-fetch likely next queries
 - **Insight Generation** - Analyze usage patterns, suggest optimizations
 - **Natural Language Queries** - Translate plain English to tool calls
 - **Learning from Feedback** - Improve recommendations over time
-[% elif project_type == 'library' -%]
+<% elif project_type == 'library' -%>
 - **Auto-Configuration** - Infer optimal settings from data
 - **Anomaly Detection** - Flag unusual patterns in processing
 - **Smart Defaults** - Learn user preferences over time
 - **Performance Optimization** - Suggest algorithm choices based on data
 - **Insight API** - Expose analytics and recommendations
-[% elif project_type == 'cli_tool' -%]
+<% elif project_type == 'cli_tool' -%>
 - **Command Suggestions** - Predict next command based on history
 - **Error Recovery** - Suggest fixes for common errors
 - **Workflow Detection** - Identify repeated patterns, offer automation
 - **Smart Completion** - Context-aware autocomplete
 - **Learning Profiles** - Adapt to user style over time
-[% elif project_type == 'web_service' -%]
+<% elif project_type == 'web_service' -%>
 - **Usage Analytics** - Real-time insights dashboard
 - **Anomaly Detection** - Flag unusual API usage patterns
 - **Rate Limit Optimization** - Dynamic rate limits based on behavior
 - **Smart Caching** - Predict and pre-cache likely requests
 - **Recommendation Engine** - Suggest relevant endpoints/features
-[% endif -%]
+<% endif -%>
 
 ### Motivation
 
@@ -354,7 +354,7 @@ Why Wave 3 might matter:
 
 ### Technical Sketch
 
-[% if project_type == 'mcp_server' -%]
+<% if project_type == 'mcp_server' -%>
 **Smart Tool Selection Example:**
 ```python
 # Wave 3: ML-powered tool routing
@@ -371,7 +371,7 @@ class SmartRouter:
 
 # Requires: Training data from Wave 1-2 usage logs
 ```
-[% elif project_type == 'library' -%]
+<% elif project_type == 'library' -%>
 **Auto-Configuration Example:**
 ```python
 # Wave 3: Infer optimal settings
@@ -387,7 +387,7 @@ class SmartProcessor:
         else:
             return Config(algorithm="fast", batch_size=1000)
 ```
-[% endif -%]
+<% endif -%>
 
 ### Decision Criteria
 
@@ -427,33 +427,33 @@ class SmartProcessor:
 
 ### Capability Theme
 
-Enable third-party developers to extend [[ project_name ]]:
+Enable third-party developers to extend << project_name >>:
 
-[% if project_type == 'mcp_server' -%]
+<% if project_type == 'mcp_server' -%>
 - **Tool Marketplace** - Registry of community-built tools
 - **Tool SDK** - Simplified API for building custom tools
 - **Sandboxed Execution** - Safe execution of third-party tool code
 - **Monetization** - Revenue sharing for premium tools (optional)
 - **Community Hub** - Forums, docs, tool showcases
-[% elif project_type == 'library' -%]
+<% elif project_type == 'library' -%>
 - **Plugin Marketplace** - Discover and install community plugins
 - **Plugin SDK** - Simplified API for plugin development
 - **Plugin Verification** - Code review, security scanning for plugins
 - **Documentation Portal** - Guides, examples, API reference
 - **Community Resources** - Discord, forums, office hours
-[% elif project_type == 'cli_tool' -%]
+<% elif project_type == 'cli_tool' -%>
 - **Command Marketplace** - Registry of community commands
 - **Command SDK** - Simplified API for custom commands
 - **Package Manager Integration** - Install via `brew`, `apt`, `pipx`
 - **Template Gallery** - Starter templates for common use cases
 - **Community Hub** - Showcase user workflows
-[% elif project_type == 'web_service' -%]
-- **API Partner Program** - Third-party apps build on [[ project_name ]]
+<% elif project_type == 'web_service' -%>
+- **API Partner Program** - Third-party apps build on << project_name >>
 - **SDK Libraries** - Client libraries for popular languages
 - **Developer Portal** - Docs, API console, examples
 - **Webhooks Directory** - Pre-built integrations for partners
 - **Revenue Sharing** - Monetization for partner apps (optional)
-[% endif -%]
+<% endif -%>
 
 ### Motivation
 
@@ -466,7 +466,7 @@ Why Wave 4 might matter:
 
 ### Technical Sketch
 
-[% if project_type == 'mcp_server' -%]
+<% if project_type == 'mcp_server' -%>
 **Tool Marketplace Architecture:**
 ```
 ┌─────────────────────────────────────┐
@@ -479,7 +479,7 @@ Why Wave 4 might matter:
               └─ Community Tool 3 (pypi package)
                       ↓
 ┌─────────────────────────────────────┐
-│    [[ project_name ]] Server         │
+│    << project_name >> Server         │
 │  - Tool discovery (search registry)  │
 │  - Tool installation (pip install)   │
 │  - Sandboxed execution (containers)  │
@@ -489,7 +489,7 @@ Why Wave 4 might matter:
 **Tool SDK Example:**
 ```python
 # Wave 4: Simplified tool creation
-from [[ package_name ]].sdk import Tool, register
+from << package_name >>.sdk import Tool, register
 
 @register
 class MyCustomTool(Tool):
@@ -500,11 +500,11 @@ class MyCustomTool(Tool):
         # Community developer writes this
         return {"result": "custom logic here"}
 
-# Published as PyPI package: [[ project_slug ]]-tool-mycustom
-# Installed: pip install [[ project_slug ]]-tool-mycustom
-# Discovered: Automatically loaded by [[ project_name ]]
+# Published as PyPI package: << project_slug >>-tool-mycustom
+# Installed: pip install << project_slug >>-tool-mycustom
+# Discovered: Automatically loaded by << project_name >>
 ```
-[% elif project_type == 'library' -%]
+<% elif project_type == 'library' -%>
 **Plugin Marketplace Architecture:**
 ```
 ┌─────────────────────────────────────┐
@@ -517,13 +517,13 @@ class MyCustomTool(Tool):
               └─ Plugin C (entry point)
                       ↓
 ┌─────────────────────────────────────┐
-│      [[ package_name ]] Library      │
+│      << package_name >> Library      │
 │  - Plugin discovery (entry points)   │
 │  - Plugin loading (stevedore)        │
 │  - Plugin validation (security scan) │
 └─────────────────────────────────────┘
 ```
-[% endif -%]
+<% endif -%>
 
 ### Decision Criteria
 
@@ -600,7 +600,7 @@ class MyCustomTool(Tool):
 ### 2025-10-19 (Initial Vision)
 
 **Decisions:**
-- Wave 1 (Foundation): COMMITTED to v[[ initial_version ]] roadmap
+- Wave 1 (Foundation): COMMITTED to v<< initial_version >> roadmap
 - Wave 2 (Integration): EXPLORATORY (review after v1.0 ships)
 - Wave 3 (Intelligence): EXPLORATORY (depends on Wave 2 data)
 - Wave 4 (Ecosystem): EXPLORATORY (long-term vision, 2+ years out)
@@ -632,15 +632,15 @@ class MyCustomTool(Tool):
 3. Apply refactoring framework
 4. Document decision:
    ```bash
-[% if include_memory_system -%]
+<% if include_memory_system -%>
    # Record decision in knowledge graph
    echo "Decision: Return dict instead of str in tool responses
    Rationale: Enables Wave 2 tool chaining without breaking changes
    Tags: architecture, vision, wave-2
-   " | [[ package_name ]]-memory knowledge create "Tool Response Format Decision"
-[% else -%]
+   " | << package_name >>-memory knowledge create "Tool Response Format Decision"
+<% else -%>
    # Record in dev-docs/architecture/ADR-XXX.md
-[% endif -%]
+<% endif -%>
    ```
 
 ### For Contributors
@@ -658,9 +658,9 @@ class MyCustomTool(Tool):
 - [ROADMAP.md](../../ROADMAP.md) - Committed features and timelines
 - [AGENTS.md](../../AGENTS.md) - Machine-readable agent instructions
 - [CHANGELOG.md](../../CHANGELOG.md) - Delivered features
-[% if include_memory_system -%]
+<% if include_memory_system -%>
 - [.chora/memory/](../../.chora/memory/) - Agent memory for decision tracking
-[% endif -%]
+<% endif -%>
 
 ---
 

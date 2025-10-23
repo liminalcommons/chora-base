@@ -1,0 +1,251 @@
+# MCP Namespace Registry
+
+**Project:** [[ project_name ]]
+**Namespace:** `[[ mcp_namespace ]]`
+**Convention:** Chora MCP Conventions v1.0
+**Status:** Active
+**Last Updated:** [[ "now" | strftime("%Y-%m-%d") ]]
+
+---
+
+## Overview
+
+This document registers the MCP namespace and all tools/resources for [[ project_name ]].
+
+[% if mcp_enable_namespacing -%]
+**Namespacing:** ✅ Enabled (ecosystem-aware mode)
+- Tools follow pattern: `[[ mcp_namespace ]]:tool_name`
+- Resources follow pattern: `[[ mcp_namespace ]]://type/id`
+
+[% else -%]
+**Namespacing:** ❌ Disabled (standalone mode)
+- Tools use non-namespaced names (e.g., `tool_name`)
+- Resources use custom URIs
+
+[% endif -%]
+[% if mcp_validate_names -%]
+**Validation:** ✅ Runtime validation enabled
+- Pre-commit hooks validate naming conventions
+- See: `scripts/validate_mcp_names.py`
+
+[% endif -%]
+---
+
+## Registered Tools
+
+[% if mcp_enable_namespacing -%]
+| Tool Name | Full Name | Description | Version |
+|-----------|-----------|-------------|---------|
+| example_tool | [[ mcp_namespace ]]:example_tool | Example tool demonstrating namespaced naming | [[ project_version ]] |
+| hello_world | [[ mcp_namespace ]]:hello_world | Simple hello world tool | [[ project_version ]] |
+
+[% else -%]
+| Tool Name | Description | Version |
+|-----------|-------------|---------|
+| example_tool | Example tool | [[ project_version ]] |
+| hello_world | Simple hello world tool | [[ project_version ]] |
+
+[% endif -%]
+**Adding New Tools:**
+1. Implement tool in `src/[[ package_name ]]/mcp/server.py`
+[% if mcp_enable_namespacing -%]
+2. Use `make_tool_name("your_tool")` for consistent naming
+3. Add entry to this table
+[% if mcp_validate_names -%]
+4. Run `python scripts/validate_mcp_names.py` before committing
+[% endif -%]
+[% else -%]
+2. Add entry to this table
+[% endif -%]
+
+---
+
+## Registered Resources
+
+[% if mcp_resource_uri_scheme -%]
+| Resource URI | Description | Type |
+|--------------|-------------|------|
+| [[ mcp_namespace ]]://capabilities/server | Server metadata and capabilities | application/json |
+
+[% else -%]
+| Resource URI | Description | Type |
+|--------------|-------------|------|
+| capabilities://server | Server metadata and capabilities | application/json |
+
+[% endif -%]
+**Adding New Resources:**
+1. Implement resource in `src/[[ package_name ]]/mcp/server.py`
+[% if mcp_resource_uri_scheme -%]
+2. Use `make_resource_uri("type", "id")` for consistent URIs
+3. Add entry to this table
+[% if mcp_validate_names -%]
+4. Run `python scripts/validate_mcp_names.py` before committing
+[% endif -%]
+[% else -%]
+2. Choose descriptive URI scheme
+3. Add entry to this table
+[% endif -%]
+
+---
+
+## Namespace Rules
+
+[% if mcp_enable_namespacing -%]
+### Tool Naming
+- **Format:** `[[ mcp_namespace ]]:{tool_name}`
+- **Example:** `[[ mcp_namespace ]]:create_task`
+- **Pattern:** [% raw %]namespace:[a-z][a-z0-9_]+[% endraw %] (snake_case)
+
+### Resource URIs
+[% if mcp_resource_uri_scheme -%]
+- **Format:** `[[ mcp_namespace ]]://{resource_type}/{resource_id}` (optional: `?query`)
+- **Example:** `[[ mcp_namespace ]]://templates/daily-report.md`
+- **Pattern:** namespace://[a-z0-9_/\-\.]+(\?.*)?
+
+[% else -%]
+- **Format:** Custom URI scheme (no standard enforced)
+- **Example:** `capabilities://server`
+
+[% endif -%]
+### Validation
+[% if mcp_validate_names -%]
+Runtime validation is **enabled**:
+- Invalid tool names raise `ValueError`
+- Invalid resource URIs raise `ValueError`
+- Pre-commit hooks prevent bad names from being committed
+
+See: `src/[[ package_name ]]/mcp/__init__.py`
+
+[% else -%]
+Runtime validation is **disabled**:
+- No automatic validation of naming conventions
+- Manual review required
+
+[% endif -%]
+### Namespace Declaration
+
+This document serves as the canonical declaration of this project's MCP namespace.
+
+**Project Information:**
+
+- **Namespace**: `[[ mcp_namespace ]]`
+- **Project**: [[ project_name ]]
+- **Repository**: [[ github_username ]]/[[ project_slug ]]
+- **Status**: Active
+- **Convention**: [% raw %][Chora MCP Conventions v1.0](https://github.com/liminalcommons/chora-base/blob/main/docs/standards/CHORA_MCP_CONVENTIONS_v1.0.md)[% endraw %]
+
+**Namespace Coordination:**
+To avoid conflicts with other MCP servers, consider:
+1. Searching [% raw %][MCP Server Registry](https://github.com/modelcontextprotocol/servers)[% endraw %] for similar names
+2. Announcing your namespace in MCP community discussions
+3. Making this document easily discoverable in your README
+
+[% else -%]
+### Tool Naming
+- **Format:** Non-namespaced (e.g., `tool_name`)
+- **Example:** `create_task`
+- **Pattern:** [% raw %][a-z][a-z0-9_]+[% endraw %] (snake_case)
+
+### Resource URIs
+- **Format:** Custom URI scheme
+- **Example:** `capabilities://server`
+
+### Ecosystem Registration
+Not applicable (standalone mode - no namespace registration needed).
+
+[% endif -%]
+---
+
+## Migration Guide
+
+[% if mcp_enable_namespacing -%]
+### Adding Namespacing to Existing Server
+
+If you started without namespacing and need to add it:
+
+1. **Update copier.yml answers:**
+   ```bash
+   copier update --vcs-ref=v1.8.0
+   # Answer "true" to mcp_enable_namespacing
+   ```
+
+2. **Use migration script:**
+   ```bash
+   ./scripts/migrate_namespace.sh "" "[[ mcp_namespace ]]"
+   ```
+
+3. **Update client configurations:**
+   - Claude Desktop: Update tool calls to use `[[ mcp_namespace ]]:*`
+   - Gateway config: Add namespace routing rules
+
+4. **Test thoroughly before releasing**
+
+### Changing Namespace (Breaking Change)
+
+⚠️ **WARNING:** Changing namespace is a breaking change for clients.
+
+If absolutely necessary:
+
+1. **Use migration script:**
+   ```bash
+   ./scripts/migrate_namespace.sh "old_namespace" "[[ mcp_namespace ]]"
+   ```
+
+2. **Update this file** with new namespace
+
+3. **Version bump:** Increment major version (breaking change)
+
+4. **Update ecosystem registry**
+
+5. **Notify users** via CHANGELOG.md
+
+[% else -%]
+### Adding Namespacing
+
+To enable namespacing:
+
+1. **Update copier.yml answers:**
+   ```bash
+   copier update --vcs-ref=v1.8.0
+   # Answer "true" to mcp_enable_namespacing
+   # Set mcp_namespace to desired value
+   ```
+
+2. **Regenerate project:**
+   - Review changes with `git diff`
+   - Keep customizations
+   - Commit changes
+
+3. **Update clients** to use namespaced tool names
+
+[% endif -%]
+---
+
+## References
+[% raw %]
+- [Chora MCP Conventions v1.0](https://github.com/liminalcommons/chora-base/blob/main/docs/standards/CHORA_MCP_CONVENTIONS_v1.0.md) - Full specification
+- [MCP Naming Best Practices](https://github.com/liminalcommons/chora-base/blob/main/docs/reference/mcp-naming-best-practices.md) - Practical guide
+- [Model Context Protocol](https://modelcontextprotocol.io/) - Core protocol spec
+[% endraw %]
+[% if mcp_enable_namespacing -%]
+[% raw %]- [mcp-n8n Gateway](https://github.com/liminalcommons/mcp-n8n) - Routing implementation[% endraw %]
+[% endif -%]
+
+---
+
+## Changelog
+
+### [[ project_version ]] ([[ "now" | strftime("%Y-%m-%d") ]])
+- Initial namespace registration
+[% if mcp_enable_namespacing -%]
+- Namespacing enabled: [[ mcp_namespace ]]:*
+[% else -%]
+- Standalone mode (no namespacing)
+[% endif -%]
+- Registered tools: example_tool, hello_world
+- Registered resources: capabilities/server
+
+---
+
+**Maintained by:** [[ author_name ]] ([[ author_email ]])
+**License:** [[ license ]]

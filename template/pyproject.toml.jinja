@@ -1,42 +1,42 @@
 [project]
-name = "[[ project_slug ]]"
-version = "[[ project_version ]]"
-description = "[[ project_description ]]"
+name = "<< project_slug >>"
+version = "<< project_version >>"
+description = "<< project_description >>"
 authors = [
-    {name = "[[ author_name ]]", email = "[[ author_email ]]"}
+    {name = "<< author_name >>", email = "<< author_email >>"}
 ]
 readme = "README.md"
-license = {text = "[[ license ]]"}
-requires-python = ">=[[ python_version ]]"
+license = {text = "<< license >>"}
+requires-python = ">=<< python_version >>"
 dependencies = [
-[% if project_type == 'mcp_server' -%]
+<% if project_type == 'mcp_server' -%>
     "fastmcp>=0.3.0",
     "pydantic>=2.0.0",
     "pydantic-settings>=2.0.0",
     "python-dotenv>=1.0.0",
-[% endif -%]
-[% if include_cli -%]
-[% if cli_framework == 'click' -%]
+<% endif -%>
+<% if include_cli -%>
+<% if cli_framework == 'click' -%>
     "click>=8.0.0",
-[% elif cli_framework == 'typer' -%]
+<% elif cli_framework == 'typer' -%>
     "typer>=0.9.0",
-[% endif -%]
-[% endif -%]
+<% endif -%>
+<% endif -%>
 ]
 
 [project.optional-dependencies]
 dev = [
-[% if include_tests -%]
+<% if include_tests -%>
     "pytest==8.3.0",
     "pytest-asyncio==0.24.0",
     "pytest-cov==6.0.0",
-[% endif -%]
-[% if include_pre_commit -%]
+<% endif -%>
+<% if include_pre_commit -%>
     "mypy==1.11.0",
     "ruff==0.7.0",
     "black==24.10.0",
     "pre-commit==4.0.1",
-[% endif -%]
+<% endif -%>
 ]
 release = [
     "build==1.0.3",
@@ -44,23 +44,23 @@ release = [
 ]
 
 [project.scripts]
-[% if project_type == 'mcp_server' -%]
-[[ project_slug ]] = "[[ package_name ]].mcp.server:main"
-[% elif project_type == 'cli_tool' or include_cli -%]
-[[ project_slug ]] = "[[ package_name ]].cli.main:cli"
-[% endif -%]
-[% if include_memory_system and include_cli -%]
-[[ project_slug ]]-memory = "[[ package_name ]].cli.main:cli"
-[% endif -%]
+<% if project_type == 'mcp_server' -%>
+<< project_slug >> = "<< package_name >>.mcp.server:main"
+<% elif project_type == 'cli_tool' or include_cli -%>
+<< project_slug >> = "<< package_name >>.cli.main:cli"
+<% endif -%>
+<% if include_memory_system and include_cli -%>
+<< project_slug >>-memory = "<< package_name >>.cli.main:cli"
+<% endif -%>
 
 [build-system]
 requires = ["hatchling"]
 build-backend = "hatchling.build"
 
 [tool.hatch.build.targets.wheel]
-packages = ["src/[[ package_name ]]"]
+packages = ["src/<< package_name >>"]
 
-[% if include_tests -%]
+<% if include_tests -%>
 [tool.pytest.ini_options]
 asyncio_mode = "auto"
 testpaths = ["tests"]
@@ -68,10 +68,10 @@ python_files = ["test_*.py"]
 python_classes = ["Test*"]
 python_functions = ["test_*"]
 
-[% endif -%]
-[% if include_pre_commit -%]
+<% endif -%>
+<% if include_pre_commit -%>
 [tool.mypy]
-python_version = "[[ python_version ]]"
+python_version = "<< python_version >>"
 strict = true
 warn_return_any = true
 warn_unused_configs = true
@@ -79,39 +79,39 @@ disallow_untyped_defs = true
 exclude = ["temp/"]
 
 # Allow missing imports for third-party libraries without stubs
-[[tool.mypy.overrides]]
+<<tool.mypy.overrides>>
 module = ["fastmcp", "fastmcp.*"]
 ignore_missing_imports = true
 
-[[tool.mypy.overrides]]
+<<tool.mypy.overrides>>
 module = ["pytest", "pytest.*"]
 ignore_missing_imports = true
 
-[[tool.mypy.overrides]]
+<<tool.mypy.overrides>>
 module = ["pydantic", "pydantic.*", "pydantic_settings"]
 ignore_missing_imports = true
 
-[% if include_cli -%]
-[[tool.mypy.overrides]]
-module = ["[[ cli_framework ]]", "[[ cli_framework ]].*"]
+<% if include_cli -%>
+<<tool.mypy.overrides>>
+module = ["<< cli_framework >>", "<< cli_framework >>.*"]
 ignore_missing_imports = true
 
-[% endif -%]
+<% endif -%>
 [tool.ruff]
 line-length = 88
-target-version = "py[[ python_version | replace('.', '') ]]"
+target-version = "py<< python_version | replace('.', '') >>"
 
 [tool.ruff.lint]
 select = ["E", "F", "I", "N", "W", "UP"]
 
 [tool.black]
 line-length = 88
-target-version = ["py[[ python_version | replace('.', '') ]]"]
+target-version = ["py<< python_version | replace('.', '') >>"]
 
-[% endif -%]
-[% if include_tests -%]
+<% endif -%>
+<% if include_tests -%>
 [tool.coverage.run]
-source = ["src/[[ package_name ]]"]
+source = ["src/<< package_name >>"]
 omit = [
     "*/tests/*",
     "*/test_*.py",
@@ -123,7 +123,7 @@ omit = [
 precision = 2
 show_missing = true
 skip_covered = false
-fail_under = [[ test_coverage_threshold ]].0
+fail_under = << test_coverage_threshold >>.0
 exclude_lines = [
     "pragma: no cover",
     "def __repr__",
@@ -133,11 +133,11 @@ exclude_lines = [
     "if TYPE_CHECKING:",
 ]
 
-[% endif -%]
-[tool.[[ package_name ]].logging]
+<% endif -%>
+[tool.<< package_name >>.logging]
 format = "json"              # json or text
 level = "INFO"               # DEBUG, INFO, WARNING, ERROR, CRITICAL
-file = "logs/[[ project_slug ]].log"    # Log file path
+file = "logs/<< project_slug >>.log"    # Log file path
 max_bytes = 10485760         # 10MB max file size
 backup_count = 5             # Keep 5 rotated log files
 retention_days = 30          # Delete logs older than 30 days

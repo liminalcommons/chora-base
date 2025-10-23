@@ -1,16 +1,16 @@
-"""[[ project_name ]] MCP Server.
+"""<< project_name >> MCP Server.
 
 This server implements the Model Context Protocol (MCP) following
 Chora MCP Conventions v1.0 for tool/resource naming.
 
-[% if mcp_enable_namespacing -%]
-Tools are namespaced as: [[ mcp_namespace ]]:tool_name
-[% else -%]
+<% if mcp_enable_namespacing -%>
+Tools are namespaced as: << mcp_namespace >>:tool_name
+<% else -%>
 Tools use non-namespaced names (standalone mode).
-[% endif -%]
-[% if mcp_resource_uri_scheme -%]
-Resources use URI scheme: [[ mcp_namespace ]]://type/id
-[% endif -%]
+<% endif -%>
+<% if mcp_resource_uri_scheme -%>
+Resources use URI scheme: << mcp_namespace >>://type/id
+<% endif -%>
 
 Reference: https://github.com/liminalcommons/chora-base/blob/main/docs/standards/CHORA_MCP_CONVENTIONS_v1.0.md
 """
@@ -20,19 +20,19 @@ from importlib.metadata import PackageNotFoundError, version
 from typing import Any
 
 from fastmcp import FastMCP
-[% if mcp_enable_namespacing or mcp_resource_uri_scheme -%]
-from .[[ '' if package_name else '../' ]]mcp import (
+<% if mcp_enable_namespacing or mcp_resource_uri_scheme -%>
+from .<< '' if package_name else '../' >>mcp import (
     NAMESPACE,
-[% if mcp_enable_namespacing -%]
+<% if mcp_enable_namespacing -%>
     make_tool_name,
     validate_tool_name,
-[% endif -%]
-[% if mcp_resource_uri_scheme -%]
+<% endif -%>
+<% if mcp_resource_uri_scheme -%>
     make_resource_uri,
     validate_resource_uri,
-[% endif -%]
+<% endif -%>
 )
-[% endif -%]
+<% endif -%>
 
 # Configure logging
 logger = logging.getLogger(__name__)
@@ -50,7 +50,7 @@ def _get_version() -> str:
         Package version string (e.g., "1.5.0") or "0.0.0-dev" if not found.
     """
     try:
-        return version("[[ package_name ]]")
+        return version("<< package_name >>")
     except PackageNotFoundError:
         # Development fallback when package not installed
         return "0.0.0-dev"
@@ -58,21 +58,21 @@ def _get_version() -> str:
 # === MCP Server Instance ===
 
 mcp = FastMCP(
-    name="[[ project_name ]]",
+    name="<< project_name >>",
     version=_get_version(),
 )
 
 # === Example Tools ===
 
-[% if mcp_enable_namespacing -%]
+<% if mcp_enable_namespacing -%>
 # Tool names are automatically namespaced via make_tool_name()
-# Full name will be: [[ mcp_namespace ]]:example_tool
+# Full name will be: << mcp_namespace >>:example_tool
 
 @mcp.tool()
 async def example_tool(message: str) -> dict[str, Any]:
     """Example tool demonstrating namespaced naming.
 
-    Tool name: [[ mcp_namespace ]]:example_tool
+    Tool name: << mcp_namespace >>:example_tool
 
     Args:
         message: Example message parameter
@@ -82,14 +82,14 @@ async def example_tool(message: str) -> dict[str, Any]:
 
     Example:
         # Call via MCP client:
-        await client.call_tool("[[ mcp_namespace ]]:example_tool", {"message": "Hello"})
+        await client.call_tool("<< mcp_namespace >>:example_tool", {"message": "Hello"})
     """
     tool_name = make_tool_name("example_tool")
 
-[% if mcp_validate_names -%]
+<% if mcp_validate_names -%>
     # Validate naming convention
     validate_tool_name(tool_name, expected_namespace=NAMESPACE)
-[% endif -%]
+<% endif -%>
 
     logger.info("Tool called: {} with message: {}".format(tool_name, message))
 
@@ -105,14 +105,14 @@ async def example_tool(message: str) -> dict[str, Any]:
 async def hello_world() -> str:
     """Simple hello world tool.
 
-    Tool name: [[ mcp_namespace ]]:hello_world
+    Tool name: << mcp_namespace >>:hello_world
 
     Returns:
         Greeting message
     """
     return "Hello from {}!".format(NAMESPACE)
 
-[% else -%]
+<% else -%>
 # Non-namespaced tools (standalone mode)
 
 @mcp.tool()
@@ -144,45 +144,45 @@ async def hello_world() -> str:
     Returns:
         Greeting message
     """
-    return "Hello from [[ project_name ]]!"
+    return "Hello from << project_name >>!"
 
-[% endif -%]
+<% endif -%>
 
 # === Example Resources ===
 
-[% if mcp_resource_uri_scheme -%]
-# Resources use URI scheme: [[ mcp_namespace ]]://type/id
+<% if mcp_resource_uri_scheme -%>
+# Resources use URI scheme: << mcp_namespace >>://type/id
 
 @mcp.resource(uri=make_resource_uri("capabilities", "server"))
 async def get_capabilities() -> dict[str, Any]:
     """Server capabilities resource.
 
-    Resource URI: [[ mcp_namespace ]]://capabilities/server
+    Resource URI: << mcp_namespace >>://capabilities/server
 
     Returns:
         Server metadata and capabilities
 
     Example:
         # Access via MCP client:
-        capabilities = await client.get_resource("[[ mcp_namespace ]]://capabilities/server")
+        capabilities = await client.get_resource("<< mcp_namespace >>://capabilities/server")
     """
-[% if mcp_validate_names -%]
+<% if mcp_validate_names -%>
     uri = make_resource_uri("capabilities", "server")
     validate_resource_uri(uri, expected_namespace=NAMESPACE)
-[% endif -%]
+<% endif -%>
 
     return {
-        "name": "[[ project_name ]]",
+        "name": "<< project_name >>",
         "namespace": NAMESPACE,
         "version": _get_version(),
         "tools": [
-[% if mcp_enable_namespacing -%]
+<% if mcp_enable_namespacing -%>
             make_tool_name("example_tool"),
             make_tool_name("hello_world"),
-[% else -%]
+<% else -%>
             "example_tool",
             "hello_world",
-[% endif -%]
+<% endif -%>
         ],
         "resources": [
             make_resource_uri("capabilities", "server"),
@@ -190,7 +190,7 @@ async def get_capabilities() -> dict[str, Any]:
         "conventions": "Chora MCP Conventions v1.0",
     }
 
-[% else -%]
+<% else -%>
 @mcp.resource(uri="capabilities://server")
 async def get_capabilities() -> dict[str, Any]:
     """Server capabilities resource.
@@ -201,7 +201,7 @@ async def get_capabilities() -> dict[str, Any]:
         Server metadata and capabilities
     """
     return {
-        "name": "[[ project_name ]]",
+        "name": "<< project_name >>",
         "version": _get_version(),
         "tools": [
             "example_tool",
@@ -212,7 +212,7 @@ async def get_capabilities() -> dict[str, Any]:
         ],
     }
 
-[% endif -%]
+<% endif -%>
 
 # === Main Entry Point ===
 
@@ -221,15 +221,15 @@ def main() -> None:
 
     This is the entry point registered in pyproject.toml:
         [project.scripts]
-        [[ project_slug ]] = "[[ package_name ]].mcp.server:main"
+        << project_slug >> = "<< package_name >>.mcp.server:main"
     """
-    logger.info("Starting [[ project_name ]] MCP server...")
-[% if mcp_enable_namespacing -%]
+    logger.info("Starting << project_name >> MCP server...")
+<% if mcp_enable_namespacing -%>
     logger.info("Namespace: {}".format(NAMESPACE))
     logger.info("Namespacing enabled: {}".format(True))
-[% else -%]
+<% else -%>
     logger.info("Namespacing: Disabled (standalone mode)")
-[% endif -%]
+<% endif -%>
     mcp.run()
 
 

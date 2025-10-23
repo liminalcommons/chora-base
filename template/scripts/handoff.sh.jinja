@@ -2,10 +2,10 @@
 # handoff.sh - Automate context-switch protocol for single-dev multi-instance workflow
 #
 # This script prepares a clean handoff between Claude Code instances when switching
-# between [[ project_slug ]] and chora-composer codebases.
+# between << project_slug >> and chora-composer codebases.
 #
 # Usage: ./scripts/handoff.sh [TARGET_INSTANCE]
-#   TARGET_INSTANCE: "[[ project_slug ]]" or "chora-composer"
+#   TARGET_INSTANCE: "<< project_slug >>" or "chora-composer"
 
 set -euo pipefail
 
@@ -22,19 +22,19 @@ NC='\033[0m'
 TARGET="${1:-}"
 if [ -z "$TARGET" ]; then
     echo "Usage: ./scripts/handoff.sh [TARGET_INSTANCE]"
-    echo "  TARGET_INSTANCE: '[[ project_slug ]]' or 'chora-composer'"
+    echo "  TARGET_INSTANCE: '<< project_slug >>' or 'chora-composer'"
     exit 1
 fi
 
-if [ "$TARGET" != "[[ project_slug ]]" ] && [ "$TARGET" != "chora-composer" ]; then
-    echo -e "${RED}Error: TARGET_INSTANCE must be '[[ project_slug ]]' or 'chora-composer'${NC}"
+if [ "$TARGET" != "<< project_slug >>" ] && [ "$TARGET" != "chora-composer" ]; then
+    echo -e "${RED}Error: TARGET_INSTANCE must be '<< project_slug >>' or 'chora-composer'${NC}"
     exit 1
 fi
 
 # Determine current instance
 CURRENT_DIR=$(basename "$PWD")
-if [ "$CURRENT_DIR" = "[[ project_slug ]]" ]; then
-    CURRENT="[[ project_slug ]]"
+if [ "$CURRENT_DIR" = "<< project_slug >>" ]; then
+    CURRENT="<< project_slug >>"
 elif [ "$CURRENT_DIR" = "chora-compose" ] || [ "$CURRENT_DIR" = "chora-composer" ]; then
     CURRENT="chora-composer"
 else
@@ -188,8 +188,8 @@ echo ""
 echo "  4. Close all IDE files and terminal sessions"
 echo ""
 echo "  5. Switch to $TARGET codebase:"
-if [ "$TARGET" = "[[ project_slug ]]" ]; then
-    echo "     cd /path/to/[[ project_slug ]]"
+if [ "$TARGET" = "<< project_slug >>" ]; then
+    echo "     cd /path/to/<< project_slug >>"
 else
     echo "     cd /path/to/chora-composer"
 fi

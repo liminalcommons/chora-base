@@ -61,7 +61,7 @@ if [ -n "$(git status --porcelain)" ]; then
     echo ""
     read -p "Continue anyway? [y/N] " -n 1 -r
     echo
-    if [[ ! $REPLY =~ ^[Yy]$ ]]; then
+    if << ! $REPLY =~ ^[Yy]$ >>; then
         echo -e "${YELLOW}Aborted.${NC}"
         exit 0
     fi
@@ -158,7 +158,7 @@ echo ""
 echo "Post-release tasks:"
 echo ""
 echo "  1. Create GitHub release (if applicable):"
-echo "     https://github.com/[[ github_username ]]/[[ project_slug ]]/releases/new?tag=$TAG_NAME"
+echo "     https://github.com/<< github_username >>/<< project_slug >>/releases/new?tag=$TAG_NAME"
 echo ""
 echo "  2. Announce the release:"
 echo "     - Update documentation"

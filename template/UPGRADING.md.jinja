@@ -1,8 +1,8 @@
-# Upgrading [[ project_name ]]
+# Upgrading << project_name >>
 
-**Project**: [[ project_name ]]
-**Generated with**: chora-base [[ _copier_conf.vcs_ref_hash ]]
-**Package**: [[ package_name ]]
+**Project**: << project_name >>
+**Generated with**: chora-base << _copier_conf.vcs_ref_hash >>
+**Package**: << package_name >>
 
 ---
 
@@ -78,14 +78,14 @@ Track which template files you've modified and why:
 - [ ] `CONTRIBUTING.md` - Customization: [describe]
 - [ ] Other: [file] - Customization: [describe]
 
-[% if include_justfile -%]
+<% if include_justfile -%>
 #### Task Automation
 
 - [ ] `justfile` - Custom tasks: [list task names]
   - `task-name`: [purpose]
   - `another-task`: [purpose]
 
-[% endif -%]
+<% endif -%>
 #### Configuration
 
 - [ ] `pyproject.toml` - Customization: [dependencies added, config changed]
@@ -97,11 +97,11 @@ Track which template files you've modified and why:
 
 Note: Source code is yours to customize freely. This section tracks template-generated code that you've modified.
 
-- [ ] `src/[[ package_name ]]/__init__.py` - Customization: [describe]
-[% if include_memory_system -%]
-- [ ] `src/[[ package_name ]]/memory/__init__.py` - Customization: [describe]
-- [ ] `src/[[ package_name ]]/memory/trace.py` - Customization: [describe]
-[% endif -%]
+- [ ] `src/<< package_name >>/__init__.py` - Customization: [describe]
+<% if include_memory_system -%>
+- [ ] `src/<< package_name >>/memory/__init__.py` - Customization: [describe]
+- [ ] `src/<< package_name >>/memory/trace.py` - Customization: [describe]
+<% endif -%>
 - [ ] Other: [file] - Customization: [describe]
 
 ---
@@ -114,7 +114,7 @@ Track your upgrade path for reference:
 
 | Date | From Version | To Version | Notes |
 |------|--------------|------------|-------|
-| [[ now().strftime('%Y-%m-%d') ]] | - | [[ _copier_conf.vcs_ref_hash ]] | Initial generation |
+| << now().strftime('%Y-%m-%d') >> | - | << _copier_conf.vcs_ref_hash >> | Initial generation |
 
 **Example entries** (fill in as you upgrade):
 ```
@@ -128,7 +128,7 @@ Track significant customization work:
 
 | Date | File(s) | Change | Reason |
 |------|---------|--------|--------|
-| [[ now().strftime('%Y-%m-%d') ]] | [file] | [change] | [reason] |
+| << now().strftime('%Y-%m-%d') >> | [file] | [change] | [reason] |
 
 **Example entries**:
 ```
@@ -192,7 +192,7 @@ git diff
 
 **4. Validation** (10-30 minutes):
 ```bash
-[% if include_justfile -%]
+<% if include_justfile -%>
 # Check environment
 just check  # or: ./scripts/check-env.sh
 
@@ -201,7 +201,7 @@ just test   # or: pytest
 
 # Run full validation
 just pre-merge  # or: ./scripts/pre-merge.sh
-[% else -%]
+<% else -%>
 # Check environment
 ./scripts/check-env.sh
 
@@ -210,7 +210,7 @@ pytest
 
 # Run full validation
 ./scripts/pre-merge.sh
-[% endif -%]
+<% endif -%>
 
 # Verify customizations preserved
 # Check files listed in "Customized Files" section above
@@ -274,7 +274,7 @@ See docs/upgrades/vOLD-to-vNEW.md for details"
 - Keep your custom task sections
 - Use clear section headers to separate
 
-[% if include_justfile -%]
+<% if include_justfile -%>
 #### Conflict: justfile (Task Automation)
 
 **Template likely changed**: Improved existing tasks, added new common tasks
@@ -300,7 +300,7 @@ just --list
 # Should show both template AND custom tasks
 ```
 
-[% endif -%]
+<% endif -%>
 #### Conflict: scripts/* (Automation)
 
 **Template likely changed**: Bug fixes, improved error handling
@@ -405,9 +405,9 @@ ELSE
 
 ```json
 {
-  "id": "[[ project_slug ]]-upgrade-vOLD-to-vNEW",
+  "id": "<< project_slug >>-upgrade-vOLD-to-vNEW",
   "created": "YYYY-MM-DD",
-  "tags": ["[[ project_slug ]]", "chora-base", "upgrade"],
+  "tags": ["<< project_slug >>", "chora-base", "upgrade"],
 
   "upgrade": {
     "from": "vOLD",
@@ -461,5 +461,5 @@ ELSE
 
 **This document is part of your project**. Update it as you customize and upgrade!
 
-**Template generated**: [[ now().strftime('%Y-%m-%d') ]]
-**Template version**: [[ _copier_conf.vcs_ref_hash ]]
+**Template generated**: << now().strftime('%Y-%m-%d') >>
+**Template version**: << _copier_conf.vcs_ref_hash >>

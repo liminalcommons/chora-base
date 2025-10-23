@@ -1,4 +1,4 @@
-# Testing Guide for [[ project_name ]]
+# Testing Guide for << project_name >>
 
 **Purpose**: Comprehensive testing instructions for AI agents and human developers.
 
@@ -8,10 +8,10 @@
 
 ## Quick Reference
 
-- **Run all tests**: `[% if include_justfile %]just test[% else %]pytest[% endif %]`
-- **Run with coverage**: `[% if include_justfile %]just test-coverage[% else %]pytest --cov=[[ package_name ]][% endif %]`
-- **Smoke tests**: `[% if include_justfile %]just smoke[% else %]pytest tests/smoke/[% endif %]`
-- **Pre-merge check**: `[% if include_justfile %]just pre-merge[% else %]./scripts/pre-merge.sh[% endif %]`
+- **Run all tests**: `<% if include_justfile %>just test<% else %>pytest<% endif %>`
+- **Run with coverage**: `<% if include_justfile %>just test-coverage<% else %>pytest --cov=<< package_name >><% endif %>`
+- **Smoke tests**: `<% if include_justfile %>just smoke<% else %>pytest tests/smoke/<% endif %>`
+- **Pre-merge check**: `<% if include_justfile %>just pre-merge<% else %>./scripts/pre-merge.sh<% endif %>`
 
 ---
 
@@ -20,31 +20,31 @@
 ### Run All Tests
 
 ```bash
-[% if include_justfile -%]
+<% if include_justfile -%>
 # Using just (recommended)
 just test
 
-[% endif -%]
+<% endif -%>
 # Direct pytest
 pytest
 
 # With coverage report
-[% if include_justfile -%]
+<% if include_justfile -%>
 just test-coverage
 # OR
-[% endif -%]
-pytest --cov=[[ package_name ]] --cov-report=term-missing
+<% endif -%>
+pytest --cov=<< package_name >> --cov-report=term-missing
 ```
 
-[% if include_tests -%]
+<% if include_tests -%>
 ### Smoke Tests (Quick Validation)
 
 ```bash
-[% if include_justfile -%]
+<% if include_justfile -%>
 # Fast smoke tests (<30 seconds)
 just smoke
 
-[% endif -%]
+<% endif -%>
 # Direct pytest
 pytest tests/smoke/ -v
 ```
@@ -65,16 +65,16 @@ pytest tests/test_example.py -v
 pytest tests/test_example.py::test_function -v
 ```
 
-[% endif -%]
-[% if include_pre_commit -%]
+<% endif -%>
+<% if include_pre_commit -%>
 ### Pre-Commit Hooks
 
 ```bash
-[% if include_justfile -%]
+<% if include_justfile -%>
 # Run all pre-commit checks
 just pre-commit
 # OR
-[% endif -%]
+<% endif -%>
 pre-commit run --all-files
 
 # Install hooks (one-time setup)
@@ -88,7 +88,7 @@ pre-commit run mypy --all-files
 ### Linting & Type Checking
 
 ```bash
-[% if include_justfile -%]
+<% if include_justfile -%>
 # All quality checks (lint + typecheck + format)
 just check
 
@@ -97,26 +97,26 @@ just lint       # Ruff linting
 just typecheck  # Mypy type checking
 just format     # Ruff formatting
 
-[% endif -%]
+<% endif -%>
 # Manual commands
-ruff check src/[[ package_name ]] tests/
-mypy src/[[ package_name ]]
-ruff format src/[[ package_name ]] tests/
+ruff check src/<< package_name >> tests/
+mypy src/<< package_name >>
+ruff format src/<< package_name >> tests/
 
 # Auto-fix linting issues
-ruff check --fix src/[[ package_name ]] tests/
+ruff check --fix src/<< package_name >> tests/
 ```
 
-[% endif -%]
-[% if include_tests -%]
+<% endif -%>
+<% if include_tests -%>
 ### Coverage Requirements
 
-- **Overall coverage:** ≥[[ test_coverage_threshold ]]%
+- **Overall coverage:** ≥<< test_coverage_threshold >>%
 - **Critical paths:** 100% ([list critical paths])
 - **[Module name]:** ≥90% ([describe module])
 
-[% endif -%]
-[% if include_justfile -%]
+<% endif -%>
+<% if include_justfile -%>
 ### Pre-Merge Verification
 
 ```bash
@@ -124,17 +124,17 @@ ruff check --fix src/[[ package_name ]] tests/
 just pre-merge
 
 # Equivalent to:
-[% if include_pre_commit -%]
+<% if include_pre_commit -%>
 # - pre-commit run --all-files
-[% endif -%]
-[% if include_tests -%]
+<% endif -%>
+<% if include_tests -%>
 # - pytest (smoke + full test suite)
 # - coverage check
-[% endif -%]
+<% endif -%>
 ```
 
-[% endif -%]
-[% if include_tests -%]
+<% endif -%>
+<% if include_tests -%>
 
 ### System-Level Validation (Super-Tests)
 
@@ -151,12 +151,12 @@ Super-tests validate **end-to-end scenarios** that users actually experience, ra
 **Example super-test patterns:**
 
 ```bash
-[% if include_justfile -%]
+<% if include_justfile -%>
 # Run system-level validation
 just super-test
 
 # What this validates:
-[% endif -%]
+<% endif -%>
 # 1. Full application startup and initialization
 # 2. End-to-end workflow completion
 # 3. Integration between all components
@@ -164,7 +164,7 @@ just super-test
 # 5. Error handling in realistic scenarios
 ```
 
-[% if project_type == 'mcp_server' -%]
+<% if project_type == 'mcp_server' -%>
 **MCP Server Super-Test Example:**
 ```python
 # tests/super/test_full_workflow.py
@@ -188,7 +188,7 @@ def test_mcp_server_lifecycle():
     server.shutdown()
 ```
 
-[% elif project_type == 'cli_tool' -%]
+<% elif project_type == 'cli_tool' -%>
 **CLI Tool Super-Test Example:**
 ```python
 # tests/super/test_full_workflow.py
@@ -207,7 +207,7 @@ def test_cli_end_to_end_workflow(tmp_path):
     assert validate_output_format(tmp_path / "output.csv")
 ```
 
-[% elif project_type == 'web_service' -%]
+<% elif project_type == 'web_service' -%>
 **Web Service Super-Test Example:**
 
 ```python
@@ -229,7 +229,7 @@ async def test_api_end_to_end_workflow(test_client):
 ```
 
 
-[% endif -%]
+<% endif -%>
 **Benefits of super-tests:**
 - 🎯 Catch integration bugs unit tests miss
 - 🎯 Validate realistic user scenarios
@@ -243,18 +243,18 @@ async def test_api_end_to_end_workflow(test_client):
 
 Use both. Unit tests give fast feedback during development. Super-tests give confidence before deployment.
 
-[% endif -%]
+<% endif -%>
 ---
 
 ## Running Tests for Specific Modules
 
-[% if include_tests -%]
+<% if include_tests -%>
 ```bash
 # Test specific module
-pytest tests/test_[[ package_name ]]_module.py -v
+pytest tests/test_<< package_name >>_module.py -v
 
 # Test with coverage for module
-pytest tests/test_module.py --cov=[[ package_name ]].module --cov-report=term-missing
+pytest tests/test_module.py --cov=<< package_name >>.module --cov-report=term-missing
 
 # Test specific function
 pytest tests/test_module.py::test_function_name -vv
@@ -263,8 +263,8 @@ pytest tests/test_module.py::test_function_name -vv
 pytest tests/test_module.py --pdb
 ```
 
-[% endif -%]
-[% if include_pre_commit -%]
+<% endif -%>
+<% if include_pre_commit -%>
 
 ---
 
@@ -272,24 +272,24 @@ pytest tests/test_module.py --pdb
 
 ```bash
 # Auto-fix linting issues
-ruff check --fix src/[[ package_name ]]
+ruff check --fix src/<< package_name >>
 
 # Format code
-ruff format src/[[ package_name ]]
+ruff format src/<< package_name >>
 
 # Check types and show errors
-mypy src/[[ package_name ]] --pretty --show-error-codes
+mypy src/<< package_name >> --pretty --show-error-codes
 
 # Fix specific type error
 # Add type: ignore[error-code] comment to problematic line
 ```
-[% endif %]
+<% endif %>
 
 ---
 
 ## Troubleshooting
 
-[% if include_tests -%]
+<% if include_tests -%>
 ### Test Failures
 
 ```bash
@@ -303,23 +303,23 @@ pytest --tb=long
 pytest --pdb
 
 # Check test coverage
-pytest --cov=[[ package_name ]] --cov-report=term-missing
+pytest --cov=<< package_name >> --cov-report=term-missing
 
 # Clean test cache
 pytest --cache-clear
 rm -rf .pytest_cache __pycache__
 ```
 
-[% endif -%]
-[% if include_pre_commit -%]
+<% endif -%>
+<% if include_pre_commit -%>
 ### Type Checking Errors
 
 ```bash
 # Run mypy with verbose output
-mypy src/[[ package_name ]] --show-error-codes --pretty
+mypy src/<< package_name >> --show-error-codes --pretty
 
 # Check specific file
-mypy src/[[ package_name ]]/[module].py
+mypy src/<< package_name >>/[module].py
 
 # Ignore specific error (if intentional)
 # Add to line:
@@ -329,27 +329,27 @@ mypy src/[[ package_name ]]/[module].py
 # Edit [tool.mypy] in pyproject.toml
 ```
 
-[% endif -%]
-[% if include_tests -%]
+<% endif -%>
+<% if include_tests -%>
 ### Coverage Drop
 
 ```bash
 # Show missing coverage lines
-pytest --cov=[[ package_name ]] --cov-report=term-missing
+pytest --cov=<< package_name >> --cov-report=term-missing
 
 # Generate HTML report
-pytest --cov=[[ package_name ]] --cov-report=html
+pytest --cov=<< package_name >> --cov-report=html
 open htmlcov/index.html
 
 # Check coverage for specific module
-pytest --cov=[[ package_name ]].[module] --cov-report=term-missing
+pytest --cov=<< package_name >>.[module] --cov-report=term-missing
 
 # Identify untested code
 coverage report --show-missing
 ```
 
-[% endif -%]
-[% if include_pre_commit -%]
+<% endif -%>
+<% if include_pre_commit -%>
 ### Pre-Commit Hook Failures
 
 ```bash
@@ -367,19 +367,19 @@ git commit --no-verify
 pre-commit clean
 ```
 
-[% endif -%]
+<% endif -%>
 
 ---
 
 ## Related Documentation
 
 - **[Main AGENTS.md](../AGENTS.md)** - Project overview, architecture, common tasks
-[% if include_memory_system -%]
+<% if include_memory_system -%>
 - **[Memory System AGENTS.md](../.chora/memory/AGENTS.md)** - Cross-session learning, knowledge management
-[% endif -%]
-[% if include_docker -%]
+<% endif -%>
+<% if include_docker -%>
 - **[Docker AGENTS.md](../docker/AGENTS.md)** - Container operations, deployment
-[% endif -%]
+<% endif -%>
 - **[scripts/AGENTS.md](../scripts/AGENTS.md)** - Automation scripts reference
 
 ---

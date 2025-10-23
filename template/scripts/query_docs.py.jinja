@@ -146,7 +146,7 @@ class DocumentationQuery:
 
             # Check if doc has matching tags
             if "tags" in fm and isinstance(fm["tags"], list):
-                doc_tags_lower = [tag.lower() for tag in fm["tags"]]
+                doc_tags_lower = [tag.lower() for tag in fm["tags">>
                 matching_tags = [tag for tag in tags_lower if tag in doc_tags_lower]
 
                 if matching_tags:

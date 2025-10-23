@@ -1,4 +1,4 @@
-# Automation Scripts for [[ project_name ]]
+# Automation Scripts for << project_name >>
 
 **Purpose**: Reference guide for automation scripts and task runners.
 
@@ -8,7 +8,7 @@
 
 ## Quick Reference
 
-[% if include_justfile -%]
+<% if include_justfile -%>
 **Primary Interface**: Use `just --list` to discover all available tasks.
 
 ```bash
@@ -19,14 +19,14 @@ just --list
 just test              # Run test suite
 just check             # Lint + typecheck + format
 just pre-merge         # Full pre-merge validation
-[% if include_docker -%]
+<% if include_docker -%>
 just docker-build      # Build Docker image
-[% endif -%]
+<% endif -%>
 ```
 
 **Design Principle**: `just` is the ergonomic interface. Scripts in `scripts/` are the implementation. Agents should prefer `just` commands when available.
 
-[% else -%]
+<% else -%>
 **Primary Interface**: Bash scripts in `scripts/` directory.
 
 ```bash
@@ -36,7 +36,7 @@ just docker-build      # Build Docker image
 ./scripts/pre-merge.sh          # Pre-merge validation
 ./scripts/integration-test.sh   # Integration tests
 ```
-[% endif -%]
+<% endif -%>
 
 ---
 
@@ -61,7 +61,7 @@ just docker-build      # Build Docker image
 ./scripts/check-env.sh
 
 # Validates:
-# - Python version ([[ python_version ]]+)
+# - Python version (<< python_version >>+)
 # - Required dependencies installed
 # - Virtual environment activated
 # - Environment variables set
@@ -86,13 +86,13 @@ just docker-build      # Build Docker image
 ./scripts/pre-merge.sh
 
 # Runs:
-[% if include_pre_commit -%]
+<% if include_pre_commit -%>
 # - pre-commit run --all-files
-[% endif -%]
-[% if include_tests -%]
+<% endif -%>
+<% if include_tests -%>
 # - pytest (full test suite)
-# - Coverage check (≥[[ test_coverage_threshold ]]%)
-[% endif -%]
+# - Coverage check (≥<< test_coverage_threshold >>%)
+<% endif -%>
 # - Smoke tests
 ```
 
@@ -120,7 +120,7 @@ just docker-build      # Build Docker image
 
 ### Development & Debugging
 
-[% if project_type == 'mcp_server' -%]
+<% if project_type == 'mcp_server' -%>
 **`dev-server.sh`** - Run MCP server in development mode
 ```bash
 ./scripts/dev-server.sh
@@ -131,7 +131,7 @@ just docker-build      # Build Docker image
 # - Development environment variables
 ```
 
-[% endif -%]
+<% endif -%>
 **`diagnose.sh`** - Automated diagnostics
 ```bash
 ./scripts/diagnose.sh
@@ -169,7 +169,7 @@ just docker-build      # Build Docker image
 
 ---
 
-[% if project_type == 'mcp_server' -%]
+<% if project_type == 'mcp_server' -%>
 ### MCP-Specific Scripts
 
 **`mcp-tool.sh`** - Scaffold new MCP tool
@@ -182,7 +182,7 @@ just docker-build      # Build Docker image
 # - Documentation stub
 ```
 
-[% if mcp_validate_names -%]
+<% if mcp_validate_names -%>
 **`validate_mcp_names.py`** - Validate MCP naming conventions
 ```bash
 python scripts/validate_mcp_names.py
@@ -203,12 +203,12 @@ python scripts/validate_mcp_names.py
 # - Documentation references
 # - Test fixtures
 ```
-[% endif -%]
+<% endif -%>
 
-[% endif -%]
+<% endif -%>
 ---
 
-[% if include_documentation_standard -%]
+<% if include_documentation_standard -%>
 ### Documentation Scripts
 
 **`validate_docs.py`** - Validate documentation structure
@@ -242,7 +242,7 @@ python scripts/extract_tests.py
 # - Syncs test patterns to docs
 ```
 
-[% if documentation_advanced_features -%]
+<% if documentation_advanced_features -%>
 **`docs_metrics.py`** - Generate documentation metrics
 ```bash
 python scripts/docs_metrics.py
@@ -263,9 +263,9 @@ python scripts/query_docs.py --query "authentication"
 # - AI agent integration
 # - Semantic search
 ```
-[% endif -%]
+<% endif -%>
 
-[% endif -%]
+<% endif -%>
 ---
 
 ## Script Organization
@@ -276,12 +276,12 @@ python scripts/query_docs.py --query "authentication"
 2. **Testing** - `*-test.sh`, `pre-merge.sh`
 3. **Development** - `dev-server.sh`, `diagnose.sh`
 4. **Build/Release** - `build-dist.sh`, `bump-version.sh`
-[% if project_type == 'mcp_server' -%]
+<% if project_type == 'mcp_server' -%>
 5. **MCP Tools** - `mcp-tool.sh`, `validate_mcp_names.py`, `migrate_namespace.sh`
-[% endif -%]
-[% if include_documentation_standard -%]
-6. **Documentation** - `validate_docs.py`, `generate_docs_map.py`, `extract_tests.py`[% if documentation_advanced_features %], `docs_metrics.py`, `query_docs.py`[% endif %]
-[% endif -%]
+<% endif -%>
+<% if include_documentation_standard -%>
+6. **Documentation** - `validate_docs.py`, `generate_docs_map.py`, `extract_tests.py`<% if documentation_advanced_features %>, `docs_metrics.py`, `query_docs.py`<% endif %>
+<% endif -%>
 
 ### Naming Conventions
 
@@ -311,16 +311,16 @@ pip install -e ".[dev]"
 ### Pattern 2: Pre-Commit Workflow
 
 ```bash
-[% if include_justfile -%]
+<% if include_justfile -%>
 # Using just (recommended)
 just check          # Lint, typecheck, format
 just test           # Run tests
 just pre-merge      # Full validation
 
-[% else -%]
+<% else -%>
 # Direct scripts
 ./scripts/pre-merge.sh  # Full pre-commit validation
-[% endif -%]
+<% endif -%>
 ```
 
 ### Pattern 3: Debugging
@@ -329,11 +329,11 @@ just pre-merge      # Full validation
 # Diagnose issues
 ./scripts/diagnose.sh
 
-[% if project_type == 'mcp_server' -%]
+<% if project_type == 'mcp_server' -%>
 # Run server in debug mode
 ./scripts/dev-server.sh
 
-[% endif -%]
+<% endif -%>
 # Check environment
 ./scripts/check-env.sh
 ```
@@ -344,15 +344,15 @@ just pre-merge      # Full validation
 
 - **[Main AGENTS.md](../AGENTS.md)** - Project overview, architecture, common tasks
 - **[Testing AGENTS.md](../tests/AGENTS.md)** - Testing instructions
-[% if include_memory_system -%]
+<% if include_memory_system -%>
 - **[Memory System AGENTS.md](../.chora/memory/AGENTS.md)** - Cross-session learning
-[% endif -%]
-[% if include_docker -%]
+<% endif -%>
+<% if include_docker -%>
 - **[Docker AGENTS.md](../docker/AGENTS.md)** - Container operations
-[% endif -%]
-[% if include_justfile -%]
+<% endif -%>
+<% if include_justfile -%>
 - **[justfile](../justfile)** - Task definitions (ergonomic interface)
-[% endif -%]
+<% endif -%>
 
 ---
 

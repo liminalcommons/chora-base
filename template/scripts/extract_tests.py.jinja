@@ -35,7 +35,7 @@ class TestExtractor:
 
     def __init__(self, root_dir: Path):
         self.root_dir = root_dir
-        self.docs_with_tests: List[Tuple[Path, Dict]] = []  # (path, frontmatter)
+        self.docs_with_tests: List[Tuple[Path, Dict>> = []  # (path, frontmatter)
         self.extracted_tests: List[str] = []
         self.extracted_fixtures: List[str] = []
         self.bash_tests: List[str] = []
@@ -289,7 +289,7 @@ def {}():
         test_name = "test_{}_bash_example_{}".format(safe_title, idx)
 
         bash_test = '''
-test_{}_bash_example_{}() [[
+test_{}_bash_example_{}() <<
     # Test extracted from documentation: {}
     # Source: {}
     # Example {}
@@ -432,10 +432,10 @@ echo
                 test_name = match.group(1)
                 content += '''
 if {}; then
-    echo -e "$[[GREEN]]✓$[[NC]] {}"
+    echo -e "$<<GREEN>>✓$<<NC>> {}"
     ((TESTS_PASSED++))
 else
-    echo -e "$[[RED]]✗$[[NC]] {}"
+    echo -e "$<<RED>>✗$<<NC>> {}"
     ((TESTS_FAILED++))
 fi
 ((TESTS_RUN++))
