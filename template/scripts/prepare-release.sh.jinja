@@ -33,7 +33,7 @@ if [ $# -eq 0 ]; then
     exit 1
 fi
 
-if {{ ! "$BUMP_TYPE" =~ ^(major|minor|patch)$ }}; then
+if [[ ! "$BUMP_TYPE" =~ ^(major|minor|patch)$ ]]; then
     echo -e "${RED}Error: Invalid bump type '$BUMP_TYPE'${NC}"
     echo "Must be one of: major, minor, patch"
     exit 1
@@ -73,7 +73,7 @@ esac
 echo "  Current: $CURRENT_VERSION → New: $NEW_VERSION"
 
 # Update version in pyproject.toml
-if {{ "$OSTYPE" == "darwin"* }}; then
+if [[ "$OSTYPE" == "darwin"* ]]; then
     sed -i.bak "s/^version = \".*\"/version = \"$NEW_VERSION\"/" pyproject.toml
     rm pyproject.toml.bak
 else

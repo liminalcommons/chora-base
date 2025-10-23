@@ -87,7 +87,7 @@ fi
 
 read -p "Continue? (yes/no): " -r
 echo
-if {{ ! $REPLY =~ ^[Yy][Ee][Ss]$ }}; then
+if [[ ! $REPLY =~ ^[Yy][Ee][Ss]$ ]]; then
     echo "Migration cancelled."
     exit 0
 fi
@@ -106,7 +106,7 @@ replace_in_files() {
     echo "  $description"
 
     # Use different find syntax depending on platform
-    if {{ "$OSTYPE" == "darwin"* }}; then
+    if [[ "$OSTYPE" == "darwin"* ]]; then
         # macOS
         find src/ -name "*.py" -exec sed -i '' "s|${pattern}|${replacement}|g" {} \;
     else
@@ -139,7 +139,7 @@ fi
 # Update NAMESPACES.md
 if [ -f "NAMESPACES.md" ]; then
     echo "  Updating NAMESPACES.md"
-    if {{ "$OSTYPE" == "darwin"* }}; then
+    if [[ "$OSTYPE" == "darwin"* ]]; then
         if [ -z "$OLD_NAMESPACE" ]; then
             sed -i '' "s/Namespace:** /Namespace:** ${NEW_NAMESPACE}/g" NAMESPACES.md
         else
@@ -161,7 +161,7 @@ fi
 # Update MCP module configuration
 if [ -f "src/{{ package_name }}/mcp/__init__.py" ]; then
     echo "  Updating src/{{ package_name }}/mcp/__init__.py"
-    if {{ "$OSTYPE" == "darwin"* }}; then
+    if [[ "$OSTYPE" == "darwin"* ]]; then
         sed -i '' "s/NAMESPACE = \"${OLD_NAMESPACE}\"/NAMESPACE = \"${NEW_NAMESPACE}\"/g" \
             src/{{ package_name }}/mcp/__init__.py
     else
@@ -173,7 +173,7 @@ fi
 # Update README.md if it contains namespace references
 if [ -f "README.md" ] && grep -q "$OLD_NAMESPACE" README.md 2>/dev/null; then
     echo "  Updating README.md"
-    if {{ "$OSTYPE" == "darwin"* }}; then
+    if [[ "$OSTYPE" == "darwin"* ]]; then
         sed -i '' "s/${OLD_NAMESPACE}:/${NEW_NAMESPACE}:/g" README.md
         sed -i '' "s/${OLD_NAMESPACE}:\/\//${NEW_NAMESPACE}:\/\//g" README.md
     else

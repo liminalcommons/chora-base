@@ -37,7 +37,7 @@ if [ "${2:-}" = "--dry-run" ]; then
 fi
 
 # Validate bump type
-if {{ ! "$BUMP_TYPE" =~ ^(major|minor|patch)$ }}; then
+if [[ ! "$BUMP_TYPE" =~ ^(major|minor|patch)$ ]]; then
     echo -e "${RED}Error: Invalid bump type '$BUMP_TYPE'${NC}"
     echo "Must be one of: major, minor, patch"
     exit 1
@@ -58,7 +58,7 @@ if [ -z "$CURRENT_VERSION" ]; then
 fi
 
 # Validate version format (semver: X.Y.Z)
-if {{ ! "$CURRENT_VERSION" =~ ^[0-9]+\.[0-9]+\.[0-9]+$ }}; then
+if [[ ! "$CURRENT_VERSION" =~ ^[0-9]+\.[0-9]+\.[0-9]+$ ]]; then
     echo -e "${RED}Error: Invalid version format '$CURRENT_VERSION'${NC}"
     echo "Expected semver format: X.Y.Z (e.g., 0.1.0)"
     exit 1
@@ -107,14 +107,14 @@ fi
 # Confirm before updating
 read -p "Update version in $PYPROJECT_FILE? [y/N] " -n 1 -r
 echo
-if {{ ! $REPLY =~ ^[Yy]$ }}; then
+if [[ ! $REPLY =~ ^[Yy]$ ]]; then
     echo -e "${YELLOW}Aborted.${NC}"
     exit 0
 fi
 
 # Update version in pyproject.toml
 # Use portable sed syntax that works on both macOS and Linux
-if {{ "$OSTYPE" == "darwin"* }}; then
+if [[ "$OSTYPE" == "darwin"* ]]; then
     # macOS requires -i with backup extension
     sed -i.bak "s/^version = \".*\"/version = \"$NEW_VERSION\"/" "$PYPROJECT_FILE"
     rm "${PYPROJECT_FILE}.bak"

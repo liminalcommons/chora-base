@@ -29,7 +29,7 @@ echo ""
 # Install just command runner (primary development interface)
 echo -e "${YELLOW}Installing 'just' command runner...${NC}"
 if ! command -v just &> /dev/null; then
-    if {{ "$OSTYPE" == "darwin"* }}; then
+    if [[ "$OSTYPE" == "darwin"* ]]; then
         # macOS: Try brew first, fallback to curl
         if command -v brew &> /dev/null; then
             echo "  Using Homebrew..."

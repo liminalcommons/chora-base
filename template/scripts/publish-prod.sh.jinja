@@ -61,7 +61,7 @@ if [ -n "$(git status --porcelain)" ]; then
     echo ""
     read -p "Continue anyway? [y/N] " -n 1 -r
     echo
-    if {{ ! $REPLY =~ ^[Yy]$ }}; then
+    if [[ ! $REPLY =~ ^[Yy]$ ]]; then
         echo -e "${YELLOW}Aborted.${NC}"
         exit 0
     fi
