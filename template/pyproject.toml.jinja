@@ -79,20 +79,20 @@ disallow_untyped_defs = true
 exclude = ["temp/"]
 
 # Allow missing imports for third-party libraries without stubs
-{{tool.mypy.overrides}}
+[[tool.mypy.overrides]]
 module = ["fastmcp", "fastmcp.*"]
 ignore_missing_imports = true
 
-{{tool.mypy.overrides}}
+[[tool.mypy.overrides]]
 module = ["pytest", "pytest.*"]
 ignore_missing_imports = true
 
-{{tool.mypy.overrides}}
+[[tool.mypy.overrides]]
 module = ["pydantic", "pydantic.*", "pydantic_settings"]
 ignore_missing_imports = true
 
 {% if include_cli -%}
-{{tool.mypy.overrides}}
+[[tool.mypy.overrides]]
 module = ["{{ cli_framework }}", "{{ cli_framework }}.*"]
 ignore_missing_imports = true
 
