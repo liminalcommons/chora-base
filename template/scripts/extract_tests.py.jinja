@@ -288,7 +288,7 @@ def {}():
         safe_title = re.sub(r"[^a-zA-Z0-9_]", "_", doc_title.lower())
         test_name = "test_{}_bash_example_{}".format(safe_title, idx)
 
-        bash_test = '''
+        {% raw %}bash_test = '''
 test_{}_bash_example_{}() {{
     # Test extracted from documentation: {}
     # Source: {}
@@ -301,7 +301,7 @@ test_{}_bash_example_{}() {{
         echo "FAILED: Expected exit code {}, got $exit_code"
         return 1
     fi
-'''.format(safe_title, idx, doc_title, doc_path, idx, self._indent(clean_code, 4), expected_exit, expected_exit)
+'''.format(safe_title, idx, doc_title, doc_path, idx, self._indent(clean_code, 4), expected_exit, expected_exit){% endraw %}
 
         if expected_output:
             bash_test += '''
