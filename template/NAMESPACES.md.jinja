@@ -8,19 +8,24 @@
 
 ---
 
-## For LLM Agents
+## For LLM Agents: How to Use This Document
 
-This document serves as the **canonical namespace registry** for << project_name >>.
+This is the **canonical namespace registry** for << project_name >>. Use this document to:
 
-**How to use this file:**
-1. **Read programmatically** - If your tooling supports file reading, parse this markdown for namespace/tool information
-2. **Manual reference** - If programmatic access isn't available, use this as human-readable documentation
-3. **Namespace validation** - All tool names and resource URIs follow the patterns documented below
+1. **Understand the namespace** - All MCP tools and resources are documented here
+2. **Register new tools** - Follow the instructions in "Adding Tools" section below
+3. **Register new resources** - Follow the instructions in "Adding Resources" section below
+4. **Validate changes** - <% if mcp_validate_names %>Run validation scripts before committing<% else %>Manually review naming conventions<% endif %>
 
 **Key Information:**
 - Namespace: `<< mcp_namespace >>`
-- Convention: Chora MCP Conventions v1.0 (see References section for specification URL)
-- Validation: <% if mcp_validate_names %>Enabled (runtime checks active)<% else %>Disabled (manual review required)<% endif %>
+- Convention: Chora MCP Conventions v1.0
+- Validation: <% if mcp_validate_names %>Enabled<% else %>Disabled<% endif %>
+<% if mcp_enable_namespacing -%>
+- Namespacing: Enabled (all tools use namespace:toolname format)
+<% else -%>
+- Namespacing: Disabled (standalone tool names)
+<% endif -%>
 
 ---
 
@@ -29,20 +34,33 @@ This document serves as the **canonical namespace registry** for << project_name
 This document registers the MCP namespace and all tools/resources for << project_name >>.
 
 <% if mcp_enable_namespacing -%>
-**Namespacing:** ✅ Enabled (ecosystem-aware mode)
-- Tools follow pattern: `<< mcp_namespace >>:tool_name`
-- Resources follow pattern: `<< mcp_namespace >>://type/id`
+**Ecosystem Integration Mode:**
+- Tools are namespaced to avoid conflicts: `<< mcp_namespace >>:tool_name`
+<% if mcp_resource_uri_scheme -%>
+- Resources use URI scheme: `<< mcp_namespace >>://type/id`
+<% else -%>
+- Resources use custom URIs
+<% endif -%>
+- Designed for use in multi-server MCP environments
 
 <% else -%>
-**Namespacing:** ❌ Disabled (standalone mode)
-- Tools use non-namespaced names (e.g., `tool_name`)
-- Resources use custom URIs
+**Standalone Mode:**
+- Tools use simple names without namespace prefix
+- Resources use custom URI schemes
+- Optimized for single-server deployments
 
 <% endif -%>
 <% if mcp_validate_names -%>
-**Validation:** ✅ Runtime validation enabled
-- Pre-commit hooks validate naming conventions
-- See: `scripts/validate_mcp_names.py`
+**Runtime Validation:**
+- All tool and resource names are validated at runtime
+- Pre-commit hooks prevent invalid names from being committed
+- Validation script: `scripts/validate_mcp_names.py`
+- See implementation: `src/<< package_name >>/mcp/__init__.py`
+
+<% else -%>
+**Manual Validation:**
+- No automatic validation (manual review required)
+- Follow naming conventions carefully when adding tools/resources
 
 <% endif -%>
 ---
@@ -62,16 +80,17 @@ This document registers the MCP namespace and all tools/resources for << project
 | hello_world | Simple hello world tool | << project_version >> |
 
 <% endif -%>
-**Adding New Tools:**
+**To add a new tool:**
 1. Implement tool in `src/<< package_name >>/mcp/server.py`
 <% if mcp_enable_namespacing -%>
-2. Use `make_tool_name("your_tool")` for consistent naming
+2. Use `make_tool_name("your_tool")` helper for consistent naming
 3. Add entry to this table
 <% if mcp_validate_names -%>
 4. Run `python scripts/validate_mcp_names.py` before committing
 <% endif -%>
 <% else -%>
-2. Add entry to this table
+2. Choose a descriptive tool name
+3. Add entry to this table
 <% endif -%>
 
 ---
@@ -79,44 +98,52 @@ This document registers the MCP namespace and all tools/resources for << project
 ## Registered Resources
 
 <% if mcp_resource_uri_scheme -%>
-| Resource URI | Description | Type |
-|--------------|-------------|------|
+| URI | Description | Content Type |
+|-----|-------------|--------------|
 | << mcp_namespace >>://capabilities/server | Server metadata and capabilities | application/json |
 
-<% else -%>
-| Resource URI | Description | Type |
-|--------------|-------------|------|
-| capabilities://server | Server metadata and capabilities | application/json |
-
-<% endif -%>
-**Adding New Resources:**
+**To add a new resource:**
 1. Implement resource in `src/<< package_name >>/mcp/server.py`
-<% if mcp_resource_uri_scheme -%>
 2. Use `make_resource_uri("type", "id")` for consistent URIs
 3. Add entry to this table
 <% if mcp_validate_names -%>
 4. Run `python scripts/validate_mcp_names.py` before committing
 <% endif -%>
+
 <% else -%>
+| URI | Description | Content Type |
+|-----|-------------|--------------|
+| capabilities://server | Server metadata | application/json |
+
+**To add a new resource:**
+1. Implement resource in `src/<< package_name >>/mcp/server.py`
 2. Choose descriptive URI scheme
 3. Add entry to this table
-<% endif -%>
 
+<% endif -%>
 ---
 
-## Namespace Rules
-
 <% if mcp_enable_namespacing -%>
+## Naming Conventions
+
 ### Tool Naming
-- **Format:** `<< mcp_namespace >>:{tool_name}`
+- **Format:** `<< mcp_namespace >>:tool_name`
 - **Example:** `<< mcp_namespace >>:create_task`
-- **Pattern:** <% raw %>namespace:[a-z][a-z0-9_]+<% endraw %> (snake_case)
+- **Rules:**
+  - Tool name must be in snake_case format
+  - Start with a lowercase letter (a through z)
+  - Continue with lowercase letters, digits, or underscores
+  - Use descriptive names indicating the tool's purpose
 
 ### Resource URIs
 <% if mcp_resource_uri_scheme -%>
-- **Format:** `<< mcp_namespace >>://{resource_type}/{resource_id}` (optional: `?query`)
+- **Format:** `<< mcp_namespace >>://resource_type/resource_id`
 - **Example:** `<< mcp_namespace >>://templates/daily-report.md`
-- **Pattern:** <% raw %>namespace://[a-z0-9_/\-\.]+(\?.*)?<% endraw %>
+- **Rules:**
+  - Resource type describes the category (e.g., templates, data, configs)
+  - Resource ID uniquely identifies the resource
+  - May include optional query parameters after a question mark
+  - Use forward slashes for hierarchical paths
 
 <% else -%>
 - **Format:** Custom URI scheme (no standard enforced)
@@ -126,8 +153,8 @@ This document registers the MCP namespace and all tools/resources for << project
 ### Validation
 <% if mcp_validate_names -%>
 Runtime validation is **enabled**:
-- Invalid tool names raise `ValueError`
-- Invalid resource URIs raise `ValueError`
+- Invalid tool names raise ValueError
+- Invalid resource URIs raise ValueError
 - Pre-commit hooks prevent bad names from being committed
 
 See: `src/<< package_name >>/mcp/__init__.py`
@@ -161,10 +188,16 @@ To avoid conflicts with other MCP servers, consider:
 3. Making this document easily discoverable in your README
 
 <% else -%>
+## Naming Conventions
+
 ### Tool Naming
 - **Format:** Non-namespaced (e.g., `tool_name`)
 - **Example:** `create_task`
-- **Pattern:** <% raw %>[a-z][a-z0-9_]+<% endraw %> (snake_case)
+- **Rules:**
+  - Tool name must be in snake_case format
+  - Start with a lowercase letter (a through z)
+  - Continue with lowercase letters, digits, or underscores
+  - Use descriptive names indicating the tool's purpose
 
 ### Resource URIs
 - **Format:** Custom URI scheme
@@ -176,69 +209,95 @@ Not applicable (standalone mode - no namespace registration needed).
 <% endif -%>
 ---
 
-## Migration Guide
+## For LLM Agents: Step-by-Step Instructions
 
+### Adding a New Tool
+
+**Step 1: Implement the tool**
+- Open file: `src/<< package_name >>/mcp/server.py`
+- Add your tool implementation using the @server.call_tool decorator
+- Follow existing patterns in the file
+
+**Step 2: Name the tool**
 <% if mcp_enable_namespacing -%>
-### Adding Namespacing to Existing Server
-
-If you started without namespacing and need to add it:
-
-1. **Update copier.yml answers:**
-   ```bash
-   copier update --vcs-ref=v1.8.0
-   # Answer "true" to mcp_enable_namespacing
-   ```
-
-2. **Use migration script:**
-   ```bash
-   ./scripts/migrate_namespace.sh "" "<< mcp_namespace >>"
-   ```
-
-3. **Update client configurations:**
-   - Claude Desktop: Update tool calls to use `<< mcp_namespace >>:*`
-   - Gateway config: Add namespace routing rules
-
-4. **Test thoroughly before releasing**
-
-### Changing Namespace (Breaking Change)
-
-⚠️ **WARNING:** Changing namespace is a breaking change for clients.
-
-If absolutely necessary:
-
-1. **Use migration script:**
-   ```bash
-   ./scripts/migrate_namespace.sh "old_namespace" "<< mcp_namespace >>"
-   ```
-
-2. **Update this file** with new namespace
-
-3. **Version bump:** Increment major version (breaking change)
-
-4. **Update ecosystem registry**
-
-5. **Notify users** via CHANGELOG.md
-
+- Use the helper function: `make_tool_name("your_tool_name")`
+- This ensures consistent namespacing: `<< mcp_namespace >>:your_tool_name`
+- Tool name should be snake_case (lowercase with underscores)
 <% else -%>
-### Adding Namespacing
-
-To enable namespacing:
-
-1. **Update copier.yml answers:**
-   ```bash
-   copier update --vcs-ref=v1.8.0
-   # Answer "true" to mcp_enable_namespacing
-   # Set mcp_namespace to desired value
-   ```
-
-2. **Regenerate project:**
-   - Review changes with `git diff`
-   - Keep customizations
-   - Commit changes
-
-3. **Update clients** to use namespaced tool names
-
+- Choose a descriptive snake_case name
+- Example: my_tool, process_data, fetch_info
 <% endif -%>
+
+**Step 3: Update this registry**
+- Add a row to the "Registered Tools" table above
+- Include: tool name, description, current version
+
+**Step 4: Validate (if enabled)**
+<% if mcp_validate_names -%>
+- Run: `python scripts/validate_mcp_names.py`
+- Fix any reported naming issues
+- Commit only after validation passes
+<% else -%>
+- Manually verify the tool name follows snake_case convention
+- Ensure the name is descriptive and unique
+<% endif -%>
+
+**Step 5: Test the tool**
+- Run the MCP server locally
+- Test the tool using an MCP client
+- Verify it appears in the server's capabilities
+
+### Adding a New Resource
+
+**Step 1: Implement the resource**
+- Open file: `src/<< package_name >>/mcp/server.py`
+- Add your resource implementation using the @server.list_resources decorator
+- Follow existing patterns in the file
+
+**Step 2: Create the resource URI**
+<% if mcp_resource_uri_scheme -%>
+- Use the helper function: `make_resource_uri("type", "id")`
+- This ensures consistent format: `<< mcp_namespace >>://type/id`
+- Type should describe the category, ID should be unique
+<% else -%>
+- Choose a descriptive custom URI scheme
+- Example: capabilities://server, templates://daily
+<% endif -%>
+
+**Step 3: Update this registry**
+- Add a row to the "Registered Resources" table above
+- Include: URI, description, content type
+
+**Step 4: Validate (if enabled)**
+<% if mcp_validate_names -%>
+- Run: `python scripts/validate_mcp_names.py`
+- Fix any reported naming issues
+- Commit only after validation passes
+<% else -%>
+- Manually verify the URI is well-formed
+- Ensure it follows your chosen convention
+<% endif -%>
+
+**Step 5: Test the resource**
+- Run the MCP server locally
+- Request the resource using an MCP client
+- Verify the content is returned correctly
+
+### Updating This Document
+
+**When to update:**
+- After adding any new tool or resource
+- When changing tool/resource names
+- When updating descriptions or metadata
+- When incrementing the version number
+
+**How to update:**
+1. Edit this file: `NAMESPACES.md`
+2. Update the relevant table (Tools or Resources)
+3. Update the Changelog section below with your changes
+4. Update the "Last Updated" date at the top of this file
+5. Commit the changes with a descriptive message
+
 ---
 
 ## References
@@ -264,14 +323,11 @@ https://github.com/liminalcommons/mcp-n8n
 ### << project_version >> (<< "now" | strftime("%Y-%m-%d") >>)
 - Initial namespace registration
 <% if mcp_enable_namespacing -%>
-- Namespacing enabled: << mcp_namespace >>:*
-<% else -%>
-- Standalone mode (no namespacing)
+- Namespace: `<< mcp_namespace >>`
 <% endif -%>
-- Registered tools: example_tool, hello_world
-- Registered resources: capabilities/server
+- Convention: Chora MCP Conventions v1.0
+- Example tools: example_tool, hello_world
 
 ---
 
 **Maintained by:** << author_name >> (<< author_email >>)
-**License:** << license >>
