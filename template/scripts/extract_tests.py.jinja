@@ -44,7 +44,7 @@ class TestExtractor:
 
     def run(self) -> None:
         """Run test extraction and generate test file."""
-        print("Extracting tests from documentation in {}...".format(self.root_dir))
+        {% raw %}print("Extracting tests from documentation in {}...".format(self.root_dir)){% endraw %}
         print()
 
         # Step 1: Find docs with test_extraction: true
@@ -55,7 +55,7 @@ class TestExtractor:
             print("Skipping test file generation.")
             return
 
-        print("Found {} documents with test_extraction: true".format(len(self.docs_with_tests)))
+        {% raw %}print("Found {} documents with test_extraction: true".format(len(self.docs_with_tests))){% endraw %}
         print()
 
         # Step 2: Extract code blocks
@@ -150,7 +150,7 @@ class TestExtractor:
 
         # Generate test function name (safe identifier)
         safe_title = re.sub(r"[^a-zA-Z0-9_]", "_", doc_title.lower())
-        test_name = "test_{}_example_{}".format(safe_title, idx)
+        {% raw %}test_name = "test_{}_example_{}".format(safe_title, idx){% endraw %}
 
         if is_parameterized:
             self._extract_parameterized_test(test_name, doc_title, doc_path, code, idx)
@@ -286,7 +286,7 @@ def {}():
 
         # Generate bash test
         safe_title = re.sub(r"[^a-zA-Z0-9_]", "_", doc_title.lower())
-        test_name = "test_{}_bash_example_{}".format(safe_title, idx)
+        {% raw %}test_name = "test_{}_bash_example_{}".format(safe_title, idx){% endraw %}
 
 {% raw %}        bash_test = '''
 test_{}_bash_example_{}() {{
@@ -312,11 +312,11 @@ test_{}_bash_example_{}() {{
     fi
 '''.format(expected_output, expected_output){% endraw %}
 
-        bash_test += '''
+{% raw %}        bash_test += '''
     echo "PASSED"
     return 0
 }
-'''
+'''{% endraw %}
 
         self.bash_tests.append(bash_test)
 
@@ -378,10 +378,10 @@ sys.path.insert(0, str(src_dir))
         # Write to file
         output_file.write_text(content, encoding="utf-8")
 
-        print("✅ Generated {}".format(output_file))
-        print("   Extracted {} test functions".format(len(self.extracted_tests)))
+        {% raw %}print("✅ Generated {}".format(output_file)){% endraw %}
+        {% raw %}print("   Extracted {} test functions".format(len(self.extracted_tests))){% endraw %}
         if self.extracted_fixtures:
-            print("   Extracted {} fixtures".format(len(self.extracted_fixtures)))
+            {% raw %}print("   Extracted {} fixtures".format(len(self.extracted_fixtures))){% endraw %}
         if self.requires_async:
             print("   ⚠️  Requires pytest-asyncio: pip install pytest-asyncio")
         print()
@@ -441,7 +441,7 @@ fi
 ((TESTS_RUN++))
 '''.format(test_name, test_name, test_name){% endraw %}
 
-        content += '''
+{% raw %}        content += '''
 echo
 echo "===== Results ====="
 echo "Tests run: $TESTS_RUN"
@@ -453,14 +453,14 @@ else
     echo "All tests passed!"
     exit 0
 fi
-'''
+'''{% endraw %}
 
         # Write to file
         output_file.write_text(content, encoding="utf-8")
         output_file.chmod(0o755)  # Make executable
 
-        print("✅ Generated {}".format(output_file))
-        print("   Extracted {} bash tests".format(len(self.bash_tests)))
+        {% raw %}print("✅ Generated {}".format(output_file)){% endraw %}
+        {% raw %}print("   Extracted {} bash tests".format(len(self.bash_tests))){% endraw %}
         print()
         print("Run tests with: ./tests/integration/test_from_docs.sh")
 

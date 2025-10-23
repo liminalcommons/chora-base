@@ -20,16 +20,23 @@ chora-base is a production-ready Python project template featuring:
 
 ## Recent Updates
 
-### v2.0.5 (2025-10-22) - COMPLETE F-String Audit (ALL Files) 🔍
+### v2.0.6 (2025-10-22) - ACTUAL Root Cause Fix 🔧
 
-**Bug Fix**: Final 7 files fixed - mcp-n8n team identified 60+ remaining f-strings after v2.0.4
+**Critical Bug Fix**: v2.0.5 still failed - mcp-n8n team's verification testing revealed the true issue
 
-- **Scope**: Fixed 149 f-strings total across 14 template files
-- **v2.0.3**: Fixed scripts/extract_tests.py.jinja (16 f-strings)
-- **v2.0.4**: Fixed 6 Python files + justfile (73 f-strings)
-- **v2.0.5**: Fixed 2 Python scripts + 5 markdown files (60 f-strings)
-- **Acknowledgment**: Thank you to mcp-n8n team for comprehensive bug report
-- **Verification**: ALL 14 files verified, zero unprotected f-strings remain
+- **Root Cause**: `.format()` calls outside `{% raw %}` blocks had unprotected `{}` placeholders
+- **The Problem**: Jinja2 parsed `{}` in `.format()` as template variables → TemplateSyntaxError
+- **The Fix**: Wrapped ALL 11 lines with `.format()` in `{% raw %}{% endraw %}`
+- **Line 289**: `test_name = "test_{}_bash_example_{}".format(...)` ← Near reported error at line 293!
+- **Character 9814**: Corresponds to this area, explaining the error location
+- **Apology**: v2.0.1-v2.0.5 were incomplete. v2.0.6 fixes the actual root cause.
+- **Thank You**: mcp-n8n team for persistence and verification testing
+
+📄 [CHANGELOG](CHANGELOG.md#206---2025-10-22) | 📦 [Upgrade Guide](docs/upgrades/v2.0.5-to-v2.0.6.md)
+
+### v2.0.5 (2025-10-22) - INCOMPLETE (use v2.0.6 instead) ⚠️
+
+**Status**: Upgrade fails with same error as v2.0.3. Use v2.0.6 instead.
 
 📄 [CHANGELOG](CHANGELOG.md#205---2025-10-22) | 📦 [Upgrade Guide](docs/upgrades/v2.0.4-to-v2.0.5.md)
 

@@ -5,6 +5,61 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [2.0.6] - 2025-10-22
+
+### Fixed
+
+**ACTUAL ROOT CAUSE - Fix `.format()` Calls Outside `{% raw %}` Blocks**
+
+**Critical Acknowledgment**: Thank you to the mcp-n8n team for testing v2.0.5 and reporting that it STILL FAILED with the same error. Your verification testing revealed the true root cause.
+
+**What Was Wrong with v2.0.3-v2.0.5**:
+
+We converted f-strings to `.format()` but ONLY wrapped multi-line strings in `{% raw %}` blocks. **Single-line `.format()` calls were left UNPROTECTED**, causing Jinja2 to parse `{}` placeholders as template variables.
+
+**Example of the Bug**:
+```python
+# Line 47 (OUTSIDE any {% raw %} block) - BROKEN in v2.0.5
+print("Found {} documents".format(count))
+#              ^^
+# Jinja2 sees {} and tries to parse it as {{ }} template variable!
+# Result: TemplateSyntaxError: unexpected char '#' at 9814
+```
+
+**The Fix (v2.0.6)**:
+
+Wrapped ALL 11 lines with `.format()` calls in `{% raw %}{% endraw %}`:
+
+1. Line 47: `print("Extracting tests from documentation in {}...".format(...))`
+2. Line 58: `print("Found {} documents with test_extraction: true".format(...))`
+3. Line 153: `test_name = "test_{}_example_{}".format(safe_title, idx)`
+4. Line 289: `test_name = "test_{}_bash_example_{}".format(safe_title, idx)` ← **Near line 293 in error!**
+5. Lines 315-319: Bash test closing brace `}`
+6. Line 381: `print("✅ Generated {}".format(output_file))`
+7. Line 382: `print("   Extracted {} test functions".format(...))`
+8. Line 384: `print("   Extracted {} fixtures".format(...))`
+9. Lines 444-456: Bash variable references `${GREEN}`, `${RED}`, `${NC}`
+10. Line 462: `print("✅ Generated {}".format(output_file))`
+11. Line 463: `print("   Extracted {} bash tests".format(...))`
+
+**Character position 9814** corresponds to the area around line 289, which explains why the error was reported at line 293.
+
+**Verification**:
+- ✅ Zero unprotected `{}` remain outside `{% raw %}` blocks
+- ✅ Template compiles successfully with Jinja2
+- ✅ All `.format()` placeholders protected
+
+**Why v2.0.5 Failed**:
+
+Our verification was flawed:
+- ✅ Checked: `grep -c 'f"' → 0` (correct, no f-strings)
+- ❌ Missed: `.format()` calls with `{}` outside `{% raw %}` blocks
+- ❌ Missed: Testing with actual `copier update` command
+
+**mcp-n8n team was right**: We should have tested the actual upgrade, not just file inspection.
+
+**Apology**: We apologize for the incomplete fixes in v2.0.1-v2.0.5. v2.0.6 addresses the actual root cause identified by mcp-n8n's verification testing.
+
 ## [2.0.5] - 2025-10-22
 
 ### Fixed
