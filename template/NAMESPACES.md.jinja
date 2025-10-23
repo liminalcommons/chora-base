@@ -8,6 +8,22 @@
 
 ---
 
+## For LLM Agents
+
+This document serves as the **canonical namespace registry** for << project_name >>.
+
+**How to use this file:**
+1. **Read programmatically** - If your tooling supports file reading, parse this markdown for namespace/tool information
+2. **Manual reference** - If programmatic access isn't available, use this as human-readable documentation
+3. **Namespace validation** - All tool names and resource URIs follow the patterns documented below
+
+**Key Information:**
+- Namespace: `<< mcp_namespace >>`
+- Convention: Chora MCP Conventions v1.0 (see References section for specification URL)
+- Validation: <% if mcp_validate_names %>Enabled (runtime checks active)<% else %>Disabled (manual review required)<% endif %>
+
+---
+
 ## Overview
 
 This document registers the MCP namespace and all tools/resources for << project_name >>.
@@ -227,11 +243,18 @@ To enable namespacing:
 
 ## References
 
-- [Chora MCP Conventions v1.0](https://github.com/liminalcommons/chora-base/blob/main/docs/standards/CHORA_MCP_CONVENTIONS_v1.0.md) - Full specification
-- [MCP Naming Best Practices](https://github.com/liminalcommons/chora-base/blob/main/docs/reference/mcp-naming-best-practices.md) - Practical guide
-- [Model Context Protocol](https://modelcontextprotocol.io/) - Core protocol spec
+**Chora MCP Conventions v1.0** - Full specification
+https://github.com/liminalcommons/chora-base/blob/main/docs/standards/CHORA_MCP_CONVENTIONS_v1.0.md
+
+**MCP Naming Best Practices** - Practical guide
+https://github.com/liminalcommons/chora-base/blob/main/docs/reference/mcp-naming-best-practices.md
+
+**Model Context Protocol** - Core protocol spec
+https://modelcontextprotocol.io/
 <% if mcp_enable_namespacing -%>
-- [mcp-n8n Gateway](https://github.com/liminalcommons/mcp-n8n) - Routing implementation
+
+**mcp-n8n Gateway** - Routing implementation
+https://github.com/liminalcommons/mcp-n8n
 <% endif -%>
 
 ---
