@@ -36,7 +36,7 @@ check_item() {
     echo -n "Checking $name... "
 
     if output=$(eval "$command" 2>&1); then
-        if [ -n "$expected" ] && {{ ! "$output" =~ $expected ]]; then
+        if [ -n "$expected" ] && [[ ! "$output" =~ $expected ]]; then
             echo -e "${YELLOW}⚠${NC} Unexpected: $output"
             WARNINGS=$((WARNINGS + 1))
         else
