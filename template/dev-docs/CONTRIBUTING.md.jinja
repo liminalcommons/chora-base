@@ -1,6 +1,6 @@
-# Contributing to << project_slug >>
+# Contributing to {{ project_slug }}
 
-Thank you for your interest in contributing to << project_slug >>! This guide will help you get started with contributing code, documentation, bug reports, and feature requests.
+Thank you for your interest in contributing to {{ project_slug }}! This guide will help you get started with contributing code, documentation, bug reports, and feature requests.
 
 ---
 
@@ -34,7 +34,7 @@ We are committed to providing a welcoming and inclusive environment for all cont
 - Publishing others' private information
 - Any conduct that would be inappropriate in a professional setting
 
-**Reporting:** If you experience or witness unacceptable behavior, please contact the maintainers at << security_email >>.
+**Reporting:** If you experience or witness unacceptable behavior, please contact the maintainers at {{ security_email }}.
 
 ---
 
@@ -52,11 +52,11 @@ We are committed to providing a welcoming and inclusive environment for all cont
 
 ```bash
 # Fork on GitHub first, then clone your fork
-git clone https://github.com/YOUR_USERNAME/<< project_slug >>.git
-cd << project_slug >>
+git clone https://github.com/YOUR_USERNAME/{{ project_slug }}.git
+cd {{ project_slug }}
 
 # Add upstream remote
-git remote add upstream https://github.com/<< github_username >>/<< project_slug >>.git
+git remote add upstream https://github.com/{{ github_username }}/{{ project_slug }}.git
 ```
 
 2. **Create virtual environment:**
@@ -331,7 +331,7 @@ just test-coverage  # Opens in browser
 
 **Without `just`:**
 - `just smoke` → `./scripts/smoke-test.sh`
-- `just test` → `pytest --cov=src/<< package_name >> --cov-report=term --cov-fail-under=85`
+- `just test` → `pytest --cov=src/{{ package_name }} --cov-report=term --cov-fail-under=85`
 - `just test-coverage` → `pytest --cov... --cov-report=html && open htmlcov/index.html`
 
 ### Writing Tests
@@ -339,7 +339,7 @@ just test-coverage  # Opens in browser
 Tests go in `tests/` directory, mirroring `src/` structure:
 
 ```
-src/<< package_name >>/
+src/{{ package_name }}/
   backends/
     registry.py
 tests/
@@ -352,7 +352,7 @@ tests/
 
 ```python
 import pytest
-from << package_name >>.backends.registry import BackendRegistry
+from {{ package_name }}.backends.registry import BackendRegistry
 
 def test_registry_add_backend():
     """Test adding a backend to registry."""
@@ -523,7 +523,7 @@ Use the **Bug Report** template on GitHub Issues:
 - **Reproduction steps:** How to trigger the bug
 - **Expected behavior:** What should happen
 - **Actual behavior:** What actually happened
-- **Environment:** Python version, OS, << project_slug >> version
+- **Environment:** Python version, OS, {{ project_slug }} version
 - **Logs:** Relevant error messages or stack traces
 
 **Example:**
@@ -536,7 +536,7 @@ Gateway fails to start when CODA_API_KEY is missing.
 
 **Steps to Reproduce:**
 1. Remove CODA_API_KEY from .env
-2. Run `<< project_slug >>`
+2. Run `{{ project_slug }}`
 3. Observe error
 
 **Expected:**
@@ -548,12 +548,12 @@ Gateway crashes with KeyError.
 **Environment:**
 - Python: 3.11.9
 - OS: macOS 14.5
-- << project_slug >>: 0.1.0
+- {{ project_slug }}: 0.1.0
 
 **Error Log:**
 ```
 KeyError: 'CODA_API_KEY'
-  File "src/<< package_name >>/backends/coda_mcp.py", line 42
+  File "src/{{ package_name }}/backends/coda_mcp.py", line 42
 ```
 ```
 
@@ -594,10 +594,10 @@ For detailed architecture information, see:
 **Backend System:**
 - `BackendRegistry` - Manages backend lifecycle
 - `BaseBackend` - Abstract backend interface
-- Backend implementations in `src/<< package_name >>/backends/`
+- Backend implementations in `src/{{ package_name }}/backends/`
 
 **Configuration:**
-- Pydantic models in `src/<< package_name >>/config.py`
+- Pydantic models in `src/{{ package_name }}/config.py`
 - Environment variables via `.env`
 - Backend-specific config sections
 
@@ -625,7 +625,7 @@ Releases follow semantic versioning (MAJOR.MINOR.PATCH).
 - **GitHub Issues** - Bug reports, feature requests
 - **GitHub Discussions** - Questions, ideas, show & tell
 - **Pull Requests** - Code review, implementation discussion
-- **Email** - << security_email >> for security issues
+- **Email** - {{ security_email }} for security issues
 
 ### Response Times
 
@@ -650,7 +650,7 @@ Contributors are recognized in:
 - **GitHub Contributors** - Automatic recognition
 - **Release Notes** - Significant features highlighted
 
-Thank you for contributing to << project_slug >>! 🎉
+Thank you for contributing to {{ project_slug }}! 🎉
 
 ---
 
@@ -687,8 +687,8 @@ just publish-prod   # Publish to PyPI
 |------|----------------|
 | Test | `pytest` |
 | Smoke | `./scripts/smoke-test.sh` |
-| Lint | `ruff check src/<< package_name >> tests` |
-| Format | `black src/<< package_name >> tests` |
+| Lint | `ruff check src/{{ package_name }} tests` |
+| Format | `black src/{{ package_name }} tests` |
 | Pre-merge | `./scripts/pre-merge.sh` |
 | Build | `./scripts/build-dist.sh` |
 

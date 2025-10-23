@@ -1,14 +1,14 @@
 # AGENTS.md
 
-This file provides machine-readable instructions for AI coding agents working with << project_name >>.
+This file provides machine-readable instructions for AI coding agents working with {{ project_name }}.
 
 ---
 
 ## Project Overview
 
-**<< project_name >>** is <% if project_type == 'mcp_server' %>a Model Context Protocol (MCP) server that provides [describe your server's capabilities]<% elif project_type == 'library' %>a Python library that [describe your library's purpose]<% elif project_type == 'cli_tool' %>a command-line tool that [describe what your tool does]<% elif project_type == 'web_service' %>a web service/API that [describe your service]<% endif %>.
+**{{ project_name }}** is {% if project_type == 'mcp_server' %}a Model Context Protocol (MCP) server that provides [describe your server's capabilities]{% elif project_type == 'library' %}a Python library that [describe your library's purpose]{% elif project_type == 'cli_tool' %}a command-line tool that [describe what your tool does]{% elif project_type == 'web_service' %}a web service/API that [describe your service]{% endif %}.
 
-<% if project_type == 'mcp_server' -%>
+{% if project_type == 'mcp_server' -%}
 **Core Architecture:** [Describe your architecture pattern]
 - [Key architecture point 1]
 - [Key architecture point 2]
@@ -19,9 +19,9 @@ This file provides machine-readable instructions for AI coding agents working wi
 - **[Component 2]** (`[module].py`) - [Description]
 - **[Component 3]** (`[module].py`) - [Description]
 
-<% endif -%>
+{% endif -%}
 
-<% if include_vision_docs -%>
+{% if include_vision_docs -%}
 ### Strategic Context
 
 **Current Priority:** [Describe current sprint/milestone focus]
@@ -37,27 +37,27 @@ This file provides machine-readable instructions for AI coding agents working wi
 - Do design extension points and document decisions
 - Do refactor when it serves both present and future
 
-<% endif -%>
+{% endif -%}
 ---
 
 ## Documentation Structure (Nearest File Wins)
 
-**<< project_name >> uses nested AGENTS.md files** for focused, topic-specific guidance.
+**{{ project_name }} uses nested AGENTS.md files** for focused, topic-specific guidance.
 
 **Discovery principle**: Agents should read the AGENTS.md file nearest to the code they're working on.
 
 ### Available Guides
 
 - **[AGENTS.md](AGENTS.md)** (this file) - Project overview, architecture, PR workflow, common tasks
-<% if include_tests -%>
+{% if include_tests -%}
 - **[tests/AGENTS.md](tests/AGENTS.md)** - Testing guide (run tests, coverage, linting, troubleshooting)
-<% endif -%>
-<% if include_memory_system -%>
+{% endif -%}
+{% if include_memory_system -%}
 - **[.chora/memory/AGENTS.md](.chora/memory/AGENTS.md)** - Memory system (event log, knowledge graph, A-MEM workflows)
-<% endif -%>
-<% if include_docker -%>
+{% endif -%}
+{% if include_docker -%}
 - **[docker/AGENTS.md](docker/AGENTS.md)** - Docker operations (build, deploy, troubleshooting)
-<% endif -%>
+{% endif -%}
 - **[scripts/AGENTS.md](scripts/AGENTS.md)** - Automation scripts reference
 
 **When to use which guide:**
@@ -75,19 +75,19 @@ This file provides machine-readable instructions for AI coding agents working wi
 ## Dev Environment Tips
 
 ### Prerequisites
-- **Python << python_version >>+** required (<< python_version >>+ recommended)
+- **Python {{ python_version }}+** required ({{ python_version }}+ recommended)
 - **Git** for version control
-<% if include_justfile -%>
+{% if include_justfile -%}
 - **just** (optional but recommended) - Task runner for common commands
-<% endif -%>
+{% endif -%}
 - **[Add project-specific prerequisites]**
 
 ### Installation
 
 ```bash
 # Clone repository
-git clone https://github.com/<< github_username >>/<< project_slug >>.git
-cd << project_slug >>
+git clone https://github.com/{{ github_username }}/{{ project_slug }}.git
+cd {{ project_slug }}
 
 # One-command setup (recommended)
 ./scripts/setup.sh
@@ -96,9 +96,9 @@ cd << project_slug >>
 python -m venv .venv
 source .venv/bin/activate  # or .venv\Scripts\activate on Windows
 pip install -e ".[dev]"
-<% if include_pre_commit -%>
+{% if include_pre_commit -%}
 pre-commit install
-<% endif -%>
+{% endif -%}
 ```
 
 ### Environment Variables
@@ -107,13 +107,13 @@ Create a `.env` file in project root:
 
 ```env
 # Application configuration
-<< package_name | upper >>_LOG_LEVEL=INFO     # DEBUG, INFO, WARNING, ERROR, CRITICAL
-<< package_name | upper >>_DEBUG=0             # Set to 1 for debug mode
+{{ package_name | upper }}_LOG_LEVEL=INFO     # DEBUG, INFO, WARNING, ERROR, CRITICAL
+{{ package_name | upper }}_DEBUG=0             # Set to 1 for debug mode
 
 # Add your environment variables here
 ```
 
-<% if project_type == 'mcp_server' -%>
+{% if project_type == 'mcp_server' -%}
 ### Client Configuration
 
 #### Claude Desktop (macOS)
@@ -122,12 +122,12 @@ Create a `.env` file in project root:
 ```json
 {
   "mcpServers": {
-    "<< project_slug >>-dev": {
-      "command": "/path/to/<< project_slug >>/.venv/bin/python",
-      "args": ["-m", "<< package_name >>.server"],
-      "cwd": "/path/to/<< project_slug >>",
+    "{{ project_slug }}-dev": {
+      "command": "/path/to/{{ project_slug }}/.venv/bin/python",
+      "args": ["-m", "{{ package_name }}.server"],
+      "cwd": "/path/to/{{ project_slug }}",
       "env": {
-        "<< package_name | upper >>_DEBUG": "1"
+        "{{ package_name | upper }}_DEBUG": "1"
       }
     }
   }
@@ -138,8 +138,8 @@ Create a `.env` file in project root:
 ```json
 {
   "mcpServers": {
-    "<< project_slug >>": {
-      "command": "<< project_slug >>",
+    "{{ project_slug }}": {
+      "command": "{{ project_slug }}",
       "args": [],
       "env": {}
     }
@@ -155,7 +155,7 @@ See `.config/cursor-mcp.example.json` for complete examples.
 
 **Config file location:** `~/.cursor/mcp.json`
 
-<% endif -%>
+{% endif -%}
 ---
 
 ## PR Instructions
@@ -209,31 +209,31 @@ Fixes #45
 
 **Before opening PR:**
 - [ ] Branch is up to date with `main`
-<% if include_tests -%>
-- [ ] All tests pass locally (`<% if include_justfile %>just test<% else %>pytest<% endif %>`)
-- [ ] Coverage maintained or improved (≥<< test_coverage_threshold >>%)
-<% endif -%>
-<% if include_pre_commit -%>
-- [ ] Linting passes (`<% if include_justfile %>just lint<% else %>ruff check<% endif %>`)
-- [ ] Type checking passes (`<% if include_justfile %>just typecheck<% else %>mypy src/<% endif %>`)
-- [ ] Pre-commit hooks pass (`<% if include_justfile %>just pre-commit<% else %>pre-commit run --all-files<% endif %>`)
-- [ ] Code formatted (`<% if include_justfile %>just format<% else %>ruff format<% endif %>`)
-<% endif -%>
+{% if include_tests -%}
+- [ ] All tests pass locally (`{% if include_justfile %}just test{% else %}pytest{% endif %}`)
+- [ ] Coverage maintained or improved (≥{{ test_coverage_threshold }}%)
+{% endif -%}
+{% if include_pre_commit -%}
+- [ ] Linting passes (`{% if include_justfile %}just lint{% else %}ruff check{% endif %}`)
+- [ ] Type checking passes (`{% if include_justfile %}just typecheck{% else %}mypy src/{% endif %}`)
+- [ ] Pre-commit hooks pass (`{% if include_justfile %}just pre-commit{% else %}pre-commit run --all-files{% endif %}`)
+- [ ] Code formatted (`{% if include_justfile %}just format{% else %}ruff format{% endif %}`)
+{% endif -%}
 
 **Documentation (if applicable):**
 - [ ] README.md updated (if user-facing changes)
-<% if include_agents_md -%>
+{% if include_agents_md -%}
 - [ ] AGENTS.md updated (if agent workflow changes)
-<% endif -%>
+{% endif -%}
 - [ ] API reference docs updated (if new tools/capabilities)
 - [ ] CHANGELOG.md entry added (for releases)
 
 **Testing:**
-<% if include_tests -%>
+{% if include_tests -%}
 - [ ] Unit tests added/updated
 - [ ] Integration tests added (if applicable)
-- [ ] Smoke tests pass (`<% if include_justfile %>just smoke<% else %>pytest tests/smoke/<% endif %>`)
-<% endif -%>
+- [ ] Smoke tests pass (`{% if include_justfile %}just smoke{% else %}pytest tests/smoke/{% endif %}`)
+{% endif -%}
 - [ ] Manual testing completed
 
 **Review:**
@@ -243,29 +243,29 @@ Fixes #45
 - [ ] Error messages are clear and actionable
 - [ ] Logging statements use appropriate levels
 
-<% if include_pre_commit -%>
+{% if include_pre_commit -%}
 ### Quality Gates (must pass)
 
 1. **Lint:** `ruff check` → No errors
 2. **Format:** `ruff format --check` → Formatted
 3. **Types:** `mypy` → Type safe
-<% if include_tests -%>
+{% if include_tests -%}
 4. **Tests:** All tests pass
-5. **Coverage:** ≥<< test_coverage_threshold >>%
-<% endif -%>
+5. **Coverage:** ≥{{ test_coverage_threshold }}%
+{% endif -%}
 6. **Pre-commit:** All hooks pass
 
-<% endif -%>
+{% endif -%}
 ### PR Review Process
 
 - **Required approvals:** 1+ reviewer
 - **Merge strategy:** Squash and merge (clean history)
-<% if include_github_actions -%>
+{% if include_github_actions -%}
 - **CI/CD:** All quality gates must pass
-<% endif -%>
+{% endif -%}
 - **Timeline:** Most PRs reviewed within 24-48 hours
 
-<% if include_github_actions -%>
+{% if include_github_actions -%}
 
 ### CI/CD Expectations
 
@@ -273,10 +273,10 @@ Fixes #45
 
 **GitHub Actions workflows:**
 
-<% if include_github_actions -%>
+{% if include_github_actions -%}
 1. **test.yml** - Full test suite on every push/PR
    - Runs: `pytest` with coverage
-   - Required: ≥<< test_coverage_threshold if include_tests else '85' >>% coverage
+   - Required: ≥{{ test_coverage_threshold if include_tests else '85' }}% coverage
    - Triggers: Push to all branches, pull requests
 
 2. **lint.yml** - Code quality checks
@@ -289,12 +289,12 @@ Fixes #45
    - Required: Basic functionality works
    - Triggers: Every push (fast feedback)
 
-<% if include_docker -%>
+{% if include_docker -%}
 4. **docker.yml** - Container builds (if Docker enabled)
    - Runs: `docker build`, `docker-compose up`, health checks
    - Required: Image builds successfully, services start healthy
    - Triggers: Push to main, pull requests touching Docker files
-<% endif -%>
+{% endif -%}
 
 5. **release.yml** - Automated releases
    - Runs: Version bump, changelog, PyPI publish
@@ -310,31 +310,31 @@ Fixes #45
    - Runs: Dependency vulnerability scanning
    - Required: No high/critical vulnerabilities in new dependencies
    - Triggers: Pull requests
-<% endif -%>
+{% endif -%}
 
 **What CI will check before merge:**
 
 ```bash
-<% if include_justfile -%>
+{% if include_justfile -%}
 # Locally verify CI will pass
 just pre-merge
 
-<% endif -%># This runs the same checks as CI:
-<% if include_pre_commit -%>
+{% endif -%}# This runs the same checks as CI:
+{% if include_pre_commit -%}
 # 1. Linting: ruff check → No errors
 # 2. Formatting: ruff format --check → Code formatted
 # 3. Type checking: mypy → Type-safe
-<% endif -%>
-<% if include_tests -%>
+{% endif -%}
+{% if include_tests -%}
 # 4. Tests: pytest → All tests pass
-# 5. Coverage: pytest --cov → ≥<< test_coverage_threshold if include_tests else '85' >>%
-<% endif -%>
-<% if include_docker -%>
+# 5. Coverage: pytest --cov → ≥{{ test_coverage_threshold if include_tests else '85' }}%
+{% endif -%}
+{% if include_docker -%}
 # 6. Docker: docker build → Image builds successfully
-<% endif -%>
+{% endif -%}
 ```
 
-**For agents:** Run <% if include_justfile %>`just pre-merge`<% else %>`pytest` and linting checks<% endif %> before creating PRs to avoid CI failures.
+**For agents:** Run {% if include_justfile %}`just pre-merge`{% else %}`pytest` and linting checks{% endif %} before creating PRs to avoid CI failures.
 
 **CI failure recovery:**
 1. Check workflow logs in GitHub Actions tab
@@ -342,7 +342,7 @@ just pre-merge
 3. Fix issue and push new commit (CI will re-run)
 4. If tests pass locally but fail in CI, check for environment differences
 
-<% endif -%>
+{% endif -%}
 
 ---
 
@@ -366,10 +366,10 @@ just pre-merge
 
 ### Target Audience
 
-<< project_description >>
+{{ project_description }}
 
-<% if project_type == 'mcp_server' -%>
-**CRITICAL:** << project_name >> is designed for **LLM-intelligent MCP clients** (Claude Desktop, Cursor, Roo Code).
+{% if project_type == 'mcp_server' -%}
+**CRITICAL:** {{ project_name }} is designed for **LLM-intelligent MCP clients** (Claude Desktop, Cursor, Roo Code).
 
 - ✅ **FOR LLM agents** - Claude Desktop, Cursor, custom MCP clients
 - ✅ **FOR programmatic use** - Python API, automation workflows
@@ -377,12 +377,12 @@ just pre-merge
 
 **Implication:** All features prioritize agent ergonomics over human UX.
 
-<% endif -%>
+{% endif -%}
 ### [Additional Constraints]
 
 [Document your project-specific constraints and design decisions here.]
 
-<% if include_vision_docs -%>
+{% if include_vision_docs -%}
 
 ---
 
@@ -424,17 +424,17 @@ just pre-merge
    ```
 
 3. **Decision Documentation:** Where to record decisions
-<% if include_memory_system -%>
-   - **Knowledge notes:** `<< package_name >>-memory knowledge create "Decision: [topic]"`
+{% if include_memory_system -%}
+   - **Knowledge notes:** `{{ package_name }}-memory knowledge create "Decision: [topic]"`
    - **Tags:** Use `architecture`, `vision`, `wave-N` tags for discoverability
-<% else -%>
+{% else -%}
    - **Architecture Decision Records (ADRs):** `dev-docs/architecture/ADR-00X-name.md`
    - **Code comments:** Explain why (not what) in critical sections
-<% endif -%>
+{% endif -%}
 
 ### Practical Examples
 
-<% if project_type == 'mcp_server' -%>
+{% if project_type == 'mcp_server' -%}
 **Example: Building Tool Interface**
 
 **Scenario:** Wave 1 needs simple tool responses. Wave 2 vision includes tool chaining.
@@ -459,7 +459,7 @@ async def get_data(query: str) -> dict:
     # Wave 2 can add: "next_tool": "tool_b", "chain_id": "..."
 ```
 
-<% elif project_type == 'library' -%>
+{% elif project_type == 'library' -%}
 **Example: API Design**
 
 **Scenario:** Wave 1 needs basic processing. Wave 2 vision includes plugin system.
@@ -495,7 +495,7 @@ class Processor:
         # Wave 2 can add: plugin discovery, registration
 ```
 
-<% elif project_type == 'cli_tool' -%>
+{% elif project_type == 'cli_tool' -%}
 **Example: Command Structure**
 
 **Scenario:** Wave 1 needs basic commands. Wave 2 vision includes plugin commands.
@@ -523,7 +523,7 @@ cli.add_command(cmd_analyze)
 # Wave 2 can add: plugin discovery, external command loading
 ```
 
-<% elif project_type == 'web_service' -%>
+{% elif project_type == 'web_service' -%}
 **Example: API Endpoint Design**
 
 **Scenario:** Wave 1 needs basic CRUD. Wave 2 vision includes webhooks.
@@ -548,7 +548,7 @@ async def create_item(item: Item):
     return result
     # Wave 2 can add: webhook subscriptions to event_bus
 ```
-<% endif -%>
+{% endif -%}
 
 ### Refactoring Decision Framework
 
@@ -558,16 +558,16 @@ async def create_item(item: Item):
 - [ ] **Future Vision:** Check [dev-docs/vision/](dev-docs/vision/) - does this prepare for next wave?
 - [ ] **Cost Assessment:** Low cost (<2 hours) or high cost (>1 day)?
 - [ ] **Decision:** Apply framework above → Refactor now or defer?
-- [ ] **Documentation:** Record decision (<% if include_memory_system %>knowledge note<% else %>ADR<% endif %>)
+- [ ] **Documentation:** Record decision ({% if include_memory_system %}knowledge note{% else %}ADR{% endif %})
 
 ### Capturing Knowledge for Future Agents
 
-<% if include_memory_system -%>
+{% if include_memory_system -%}
 **Use A-MEM (Agentic Memory) patterns:**
 
 1. **Emit Events:** Track architectural decisions
    ```python
-   from << package_name >>.memory import emit_event
+   from {{ package_name }}.memory import emit_event
 
    emit_event(
        event_type="architecture.decision",
@@ -594,15 +594,15 @@ async def create_item(item: Item):
    - Backward compatible (wrap str in dict)
 
    Tags: architecture, vision, wave-2, tools
-   " | << package_name >>-memory knowledge create "Tool Response Format"
+   " | {{ package_name }}-memory knowledge create "Tool Response Format"
    ```
 
 3. **Link to Vision:**
    - Reference vision waves in knowledge notes
    - Tag notes with `wave-N` for future discoverability
-   - Query past decisions: `<< package_name >>-memory knowledge search --tag wave-2`
+   - Query past decisions: `{{ package_name }}-memory knowledge search --tag wave-2`
 
-<% else -%>
+{% else -%}
 **Use Architecture Decision Records (ADRs):**
 
 1. **Create ADR:**
@@ -618,7 +618,7 @@ async def create_item(item: Item):
 3. **Update Vision Doc:**
    - If decision affects wave feasibility, update vision document
    - Record in quarterly review section
-<% endif -%>
+{% endif -%}
 
 ### Quick Reference: Strategic Design Checklist
 
@@ -632,31 +632,31 @@ async def create_item(item: Item):
 
 **Remember:** Deliver today, design for tomorrow. No gold plating!
 
-<% endif -%>
+{% endif -%}
 
 ---
 
 ## Common Tasks for Agents
 
-<#
+{#
   PATTERN FOR FEATURE SECTIONS
   ============================
 
   When adding new optional features to chora-base, follow this pattern for
   ergonomic agent discoverability:
 
-  <% if include_feature_name -%>
+  {% if include_feature_name -%}
   ### Feature Name
 
   **When enabled** (`include_feature_name: true`), brief description.
 
   **Discovery:**
   ```bash
-  <% if include_justfile -%>
+  {% if include_justfile -%}
   # List feature commands
   just --list | grep feature
 
-  <% endif -%># Available commands:
+  {% endif -%}# Available commands:
   # - command-name           Description
   # - another-command        Description
   ```
@@ -664,16 +664,16 @@ async def create_item(item: Item):
   **Common workflows:**
 
   ```bash
-  <% if include_justfile -%>
+  {% if include_justfile -%}
   # Workflow 1
   just command-name
 
   # Workflow 2
   just another-command
-  <% else -%>
+  {% else -%}
   # Direct commands (no justfile)
   direct-command args
-  <% endif -%>
+  {% endif -%}
   ```
 
   **For detailed workflows:** See [FEATURE_GUIDE.md](FEATURE_GUIDE.md)
@@ -687,10 +687,10 @@ async def create_item(item: Item):
   - Metric 1: value
   - Metric 2: value
 
-  <% endif -%>
+  {% endif -%}
 
   KEY PRINCIPLES:
-  1. Conditional on feature flag (<% if include_feature %>)
+  1. Conditional on feature flag ({% if include_feature %})
   2. Discovery via `just --list | grep` (ergonomic for agents)
   3. Link to detailed docs (don't duplicate content)
   4. Clarify adopter wiring responsibilities
@@ -698,9 +698,9 @@ async def create_item(item: Item):
 
   This keeps AGENTS.md as capability catalog while detailed guides remain
   as reference manuals.
-#>
+#}
 
-<% if include_justfile -%>
+{% if include_justfile -%}
 ### Task Discovery (START HERE)
 
 **First step when working in this project: Discover available tasks**
@@ -750,26 +750,26 @@ just pre-merge
 
 This knowledge transfers to mcp-n8n, chora-compose, and all future chora-base projects.
 
-<% endif -%>
-<% if project_type == 'mcp_server' -%>
+{% endif -%}
+{% if project_type == 'mcp_server' -%}
 ### Adding a New MCP Tool
 
-1. Create tool function in `src/<< package_name >>/tools/your_tool.py`
+1. Create tool function in `src/{{ package_name }}/tools/your_tool.py`
 2. Register tool with `@mcp.tool()` decorator
-3. <% if include_memory_system %>Add memory integration (emit events)
-4. <% endif %>Add unit test in `tests/unit/test_your_tool.py`
-5. <% if include_memory_system %>Add integration test with memory validation
-6. <% endif %>Update README.md tool list
-7. Run tests: `<% if include_justfile %>just test<% else %>pytest<% endif %>`
+3. {% if include_memory_system %}Add memory integration (emit events)
+4. {% endif %}Add unit test in `tests/unit/test_your_tool.py`
+5. {% if include_memory_system %}Add integration test with memory validation
+6. {% endif %}Update README.md tool list
+7. Run tests: `{% if include_justfile %}just test{% else %}pytest{% endif %}`
 
 **Example:**
 ```python
-<% if include_memory_system -%>
-from << package_name >>.memory import emit_event, TraceContext
-<% endif -%>
+{% if include_memory_system -%}
+from {{ package_name }}.memory import emit_event, TraceContext
+{% endif -%}
 from mcp.server.fastmcp import FastMCP
 
-mcp = FastMCP("<< project_name >>")
+mcp = FastMCP("{{ project_name }}")
 
 @mcp.tool()
 async def your_tool(param: str) -> dict:
@@ -781,40 +781,40 @@ async def your_tool(param: str) -> dict:
     Returns:
         Result dictionary
     """
-<% if include_memory_system -%>
+{% if include_memory_system -%}
     # Emit start event
     emit_event("tool.your_tool.started", status="pending", metadata={"param": param})
 
-<% endif -%>
+{% endif -%}
     try:
         # Your tool logic here
         result = process(param)
-<% if include_memory_system -%>
+{% if include_memory_system -%}
         # Emit success event
         emit_event("tool.your_tool.completed", status="success", metadata={"result_count": len(result)})
-<% endif -%>
+{% endif -%}
         return {"success": True, "data": result}
     except Exception as e:
-<% if include_memory_system -%>
+{% if include_memory_system -%}
         # Emit failure event
         emit_event("tool.your_tool.failed", status="failure", metadata={"error": str(e)})
-<% endif -%>
+{% endif -%}
         return {"success": False, "error": str(e)}
 ```
 
-<% endif -%>
-<% if include_documentation_standard -%>
+{% endif -%}
+{% if include_documentation_standard -%}
 ### Documentation System
 
 **When enabled** (`include_documentation_standard: true`), this project includes machine-readable documentation with health metrics and programmatic querying.
 
 **Discovery:**
 ```bash
-<% if include_justfile -%>
+{% if include_justfile -%}
 # Documentation commands
 just --list | grep docs
 
-<% endif -%># Available commands (via scripts):
+{% endif -%}# Available commands (via scripts):
 # - python scripts/docs_metrics.py    Generate health metrics
 # - python scripts/query_docs.py      Query docs programmatically
 # - python scripts/extract_tests.py   Extract test scenarios
@@ -852,28 +852,28 @@ cat DOCUMENTATION_METRICS.md
 
 **See:** [DOCUMENTATION_STANDARD.md](DOCUMENTATION_STANDARD.md) for complete documentation guidelines.
 
-<% endif -%>
+{% endif -%}
 ### Debugging Common Issues
 
 ```bash
 # Check logs
-<% if include_justfile -%>
+{% if include_justfile -%}
 just logs  # If justfile has log task
 # OR
-<% endif -%>
-tail -f logs/<< package_name >>.log
+{% endif -%}
+tail -f logs/{{ package_name }}.log
 
 # Test single component
-python -m << package_name >>.module_name
+python -m {{ package_name }}.module_name
 
 # Check environment
-env | grep << package_name | upper >>
+env | grep {{ package_name | upper }}
 
 # Validate configuration
-python -c "from << package_name >> import config; print(config)"
+python -c "from {{ package_name }} import config; print(config)"
 ```
 
-<% if include_vision_docs -%>
+{% if include_vision_docs -%}
 ### Design Decision: Check Against Vision
 
 **When:** Before making architectural decisions or significant refactors
@@ -898,7 +898,7 @@ python -c "from << package_name >> import config; print(config)"
    - **Cost vs. benefit?** (LOW COST → likely proceed)
 
 4. **Document decision:**
-<% if include_memory_system -%>
+{% if include_memory_system -%}
    ```bash
    # Create knowledge note
    echo "Decision: [Your decision]
@@ -915,9 +915,9 @@ python -c "from << package_name >> import config; print(config)"
    Outcome: [Expected result]
 
    Tags: architecture, vision, wave-N, decision
-   " | << package_name >>-memory knowledge create "Decision: [Topic]"
+   " | {{ package_name }}-memory knowledge create "Decision: [Topic]"
    ```
-<% else -%>
+{% else -%}
    ```bash
    # Create architecture decision record
    touch dev-docs/architecture/ADR-00X-decision-name.md
@@ -951,13 +951,13 @@ python -c "from << package_name >> import config; print(config)"
    - [Link to vision doc wave]
    - [Link to related ADRs]
    ```
-<% endif -%>
+{% endif -%}
 
 5. **Link to vision:**
    - If prepares for future waves, note it in documentation
-<% if include_memory_system -%>
+{% if include_memory_system -%}
    - Add tags to knowledge notes for discoverability: `wave-2`, `architecture`, `vision`
-<% endif -%>
+{% endif -%}
    - Update vision document if decision affects feasibility
 
 **Example Decision:**
@@ -969,54 +969,54 @@ python -c "from << package_name >> import config; print(config)"
 3. **Cost:** Low (1-2 hours to refactor)
 4. **Decision:** ✅ REFACTOR NOW (serves both present and future)
 
-<% endif -%>
+{% endif -%}
 
 ---
 
 ## Project Structure
 
 ```
-<< project_slug >>/
-├── src/<< package_name >>/       # Main source code
+{{ project_slug }}/
+├── src/{{ package_name }}/       # Main source code
 │   ├── __init__.py
-<% if project_type == 'mcp_server' -%>
+{% if project_type == 'mcp_server' -%}
 │   ├── server.py               # MCP server entry point
-<% elif project_type == 'cli_tool' or include_cli -%>
+{% elif project_type == 'cli_tool' or include_cli -%}
 │   ├── cli/                    # CLI interface
 │   │   └── main.py
-<% endif -%>
-<% if include_memory_system -%>
+{% endif -%}
+{% if include_memory_system -%}
 │   ├── memory/                 # Agent memory system
 │   │   ├── event_log.py
 │   │   ├── knowledge_graph.py
 │   │   └── trace.py
-<% endif -%>
+{% endif -%}
 │   └── [your modules]
-<% if include_tests -%>
+{% if include_tests -%}
 ├── tests/                      # Test suite
 │   ├── smoke/                  # Smoke tests (<30s)
 │   ├── integration/            # Integration tests
 │   └── test_*.py               # Unit tests
-<% endif -%>
+{% endif -%}
 ├── scripts/                    # Automation scripts
 │   ├── setup.sh                # One-command setup
 │   ├── venv-create.sh          # Create virtual environment
 │   └── [other scripts]
-<% if include_development_docs or include_troubleshooting -%>
+{% if include_development_docs or include_troubleshooting -%}
 ├── docs/                       # Documentation
-<% if include_development_docs -%>
+{% if include_development_docs -%}
 │   ├── DEVELOPMENT.md          # Developer deep dive
-<% endif -%>
-<% if include_troubleshooting -%>
+{% endif -%}
+{% if include_troubleshooting -%}
 │   └── TROUBLESHOOTING.md      # Problem-solution guide
-<% endif -%>
-<% endif -%>
-<% if include_github_actions -%>
+{% endif -%}
+{% endif -%}
+{% if include_github_actions -%}
 ├── .github/workflows/          # CI/CD pipelines
 │   ├── test.yml                # Test workflow
 │   └── lint.yml                # Lint workflow
-<% endif -%>
-<% if include_memory_system -%>
+{% endif -%}
+{% if include_memory_system -%}
 ├── .chora/memory/              # Agent memory (gitignored)
 │   ├── README.md               # Memory architecture docs
 │   ├── events/                 # Event log (JSONL format)
@@ -1025,22 +1025,22 @@ python -c "from << package_name >> import config; print(config)"
 │   │   ├── links.json          # Bidirectional links
 │   │   └── tags.json           # Tag index
 │   └── profiles/               # Agent-specific profiles
-<% endif -%>
+{% endif -%}
 ├── pyproject.toml              # Python packaging & tool config
-<% if include_justfile -%>
+{% if include_justfile -%}
 ├── justfile                    # Task runner commands
-<% endif -%>
+{% endif -%}
 ├── .env.example                # Example environment variables
 ├── .gitignore                  # Git ignore patterns
 ├── README.md                   # Human-readable project overview
 ├── AGENTS.md                   # This file (machine-readable instructions)
-<% if include_contributing -%>
+{% if include_contributing -%}
 ├── CONTRIBUTING.md             # Contribution guidelines
-<% endif -%>
-└── LICENSE                     # << license >> license
+{% endif -%}
+└── LICENSE                     # {{ license }} license
 ```
 
-<% if include_memory_system -%>
+{% if include_memory_system -%}
 ### Knowledge Note Metadata Standards
 
 Knowledge notes (`.chora/memory/knowledge/notes/*.md`) use **YAML frontmatter** following Zettelkasten best practices for machine-readable metadata.
@@ -1097,14 +1097,14 @@ Increase timeout to 60s and implement retry with exponential backoff...
 
 **Reference:** See [.chora/memory/README.md](.chora/memory/README.md) for complete schema documentation.
 
-<% endif -%>
+{% endif -%}
 ---
 
 ## Documentation Philosophy
 
 ### Diátaxis Framework
 
-<< project_name >> documentation follows the [Diátaxis framework](https://diataxis.fr/), serving **two first-class audiences**:
+{{ project_name }} documentation follows the [Diátaxis framework](https://diataxis.fr/), serving **two first-class audiences**:
 
 1. **Human Developers** - Learning, understanding, decision-making
 2. **AI Agents** - Task execution, reference lookup, machine-readable instructions
@@ -1113,14 +1113,14 @@ Increase timeout to 60s and implement retry with exponential backoff...
 
 | Type | Purpose | Primary Audience | When to Use |
 |------|---------|------------------|-------------|
-| **Tutorials** | Learning-oriented | Humans (new users) | "I want to learn how << project_name >> works" |
+| **Tutorials** | Learning-oriented | Humans (new users) | "I want to learn how {{ project_name }} works" |
 | **How-To Guides** | Task-oriented | Humans + Agents | "I want to accomplish a specific task" |
 | **Reference** | Information-oriented | Humans + Agents | "I need to look up a fact/command/API" |
 | **Explanation** | Understanding-oriented | Humans | "I want to understand why/how this works" |
 
 ### For AI Agents (Recommended Reading Order)
 
-**When starting work on << project_name >>:**
+**When starting work on {{ project_name }}:**
 
 1. **Start here:** AGENTS.md (this file) - Machine-readable project instructions
 2. **Quick reference:** How-To Guides - Executable task recipes
@@ -1142,13 +1142,13 @@ Increase timeout to 60s and implement retry with exponential backoff...
 
 ### For Human Developers (Recommended Learning Path)
 
-**New to << project_name >>:**
+**New to {{ project_name }}:**
 
 1. **README.md** - Project overview, quick start (5 minutes)
 2. **Tutorial** - Guided learning experience (30-60 minutes)
-<% if include_development_docs -%>
+{% if include_development_docs -%}
 3. **DEVELOPMENT.md** - Developer deep dive (architecture, debugging)
-<% endif -%>
+{% endif -%}
 4. **How-To Guides** - Task-specific recipes (as needed)
 5. **Reference Docs** - Lookup API details (as needed)
 6. **Explanation Docs** - Understand design decisions (optional)
@@ -1159,15 +1159,15 @@ Increase timeout to 60s and implement retry with exponential backoff...
 docs/
 ├── README.md                   # Human entry point (project overview)
 ├── AGENTS.md                   # Agent entry point (this file)
-<% if include_contributing -%>
+{% if include_contributing -%}
 ├── CONTRIBUTING.md             # Human contributor guide
-<% endif -%>
-<% if include_development_docs -%>
+{% endif -%}
+{% if include_development_docs -%}
 ├── DEVELOPMENT.md              # Developer deep dive
-<% endif -%>
-<% if include_troubleshooting -%>
+{% endif -%}
+{% if include_troubleshooting -%}
 ├── TROUBLESHOOTING.md          # Problem-solution guide
-<% endif -%>
+{% endif -%}
 └── [additional docs]/
 ```
 
@@ -1204,7 +1204,7 @@ This project follows the Chora ecosystem's integrated DDD/BDD/TDD workflow:
 
 ```bash
 # Check Python version
-python --version  # Must be << python_version >>+
+python --version  # Must be {{ python_version }}+
 
 # Check virtual environment
 which python  # Should be .venv/bin/python
@@ -1216,24 +1216,24 @@ which python  # Should be .venv/bin/python
 cat .env
 
 # Test application directly
-python -m << package_name >><% if project_type == 'mcp_server' %>.server<% elif project_type == 'cli_tool' or include_cli %>.cli.main<% endif %>
+python -m {{ package_name }}{% if project_type == 'mcp_server' %}.server{% elif project_type == 'cli_tool' or include_cli %}.cli.main{% endif %}
 ```
 
 ---
 
 ## Related Resources
 
-- **Repository:** https://github.com/<< github_username >>/<< project_slug >>
+- **Repository:** https://github.com/{{ github_username }}/{{ project_slug }}
 - **Chora Base Template:** https://github.com/liminalcommons/chora-base
 - **Chora Composer:** https://github.com/liminalcommons/chora-composer
 - **Chora Platform:** https://github.com/liminalcommons/chora-platform
-<% if project_type == 'mcp_server' -%>
+{% if project_type == 'mcp_server' -%}
 - **MCP Specification:** https://modelcontextprotocol.io/
-<% endif -%>
+{% endif -%}
 
 ---
 
-**Version:** << project_version >>
+**Version:** {{ project_version }}
 **Last Updated:** [Update date]
 **Format:** AGENTS.md standard (OpenAI/Google/Sourcegraph)
 🤖 Generated with [chora-base](https://github.com/liminalcommons/chora-base) template

@@ -1,4 +1,4 @@
-# << project_slug >> task automation
+# {{ project_slug }} task automation
 #
 # This justfile provides the primary developer interface for this project.
 # All development tasks are accessed via 'just <task>'.
@@ -17,7 +17,7 @@ default:
 
 # Show help and common workflows
 help:
-    @echo "=== << project_slug >> - Development Commands ==="
+    @echo "=== {{ project_slug }} - Development Commands ==="
     @echo ""
     @echo "Quick validation:"
     @echo "  just test           # Run test suite (~1 min)"
@@ -83,31 +83,31 @@ bump-patch:
     ./scripts/bump-version.sh patch
 
 prepare-release TYPE:
-    ./scripts/prepare-release.sh <<TYPE>>
+    ./scripts/prepare-release.sh {{TYPE}}
 
 # Run tests with coverage
 test-coverage:
-    pytest --cov=<< package_name >> --cov-report=html --cov-report=term
+    pytest --cov={{ package_name }} --cov-report=html --cov-report=term
 
 # Run linting (ruff)
 lint:
-    ruff check src/<< package_name >> tests
+    ruff check src/{{ package_name }} tests
 
 # Run linting with auto-fix
 lint-fix:
-    ruff check --fix src/<< package_name >> tests
+    ruff check --fix src/{{ package_name }} tests
 
 # Run code formatting (black)
 format:
-    black src/<< package_name >> tests
+    black src/{{ package_name }} tests
 
 # Run type checking (mypy)
 typecheck:
-    mypy src/<< package_name >>
+    mypy src/{{ package_name }}
 
 # Run all quality checks (lint + typecheck + format check)
 check: lint typecheck
-    black --check src/<< package_name >> tests
+    black --check src/{{ package_name }} tests
 
 # Run pre-commit on all files
 pre-commit:
@@ -115,11 +115,11 @@ pre-commit:
 
 # Start the gateway server
 run:
-    << project_slug >>
+    {{ project_slug }}
 
 # Start the gateway with debug logging
 run-debug:
-    MCP_N8N_LOG_LEVEL=DEBUG MCP_N8N_DEBUG=1 << project_slug >>
+    MCP_N8N_LOG_LEVEL=DEBUG MCP_N8N_DEBUG=1 {{ project_slug }}
 
 # Clean build artifacts
 clean:
@@ -155,8 +155,8 @@ publish-prod:
     ./scripts/publish-prod.sh
 
 release TYPE:
-    @echo "Starting full release workflow for <<TYPE>> version..."
-    just prepare-release <<TYPE>>
+    @echo "Starting full release workflow for {{TYPE}} version..."
+    just prepare-release {{TYPE}}
     just build
     @echo ""
     @echo "Build complete. Test on TestPyPI first:"
@@ -183,74 +183,74 @@ docs:
     @echo "  - docs/TROUBLESHOOTING.md - Problem solving"
     @echo "  - docs/RELEASE_CHECKLIST.md - Release process"
 
-<% if include_docker -%>
+{% if include_docker -%}
 # === Docker Commands ===
 
 # Build production Docker image
 docker-build TAG="latest":
-    @echo "Building production Docker image << project_slug >>:<<TAG>>..."
-    docker build -t << project_slug >>:<<TAG>> .
+    @echo "Building production Docker image {{ project_slug }}:{{TAG}}..."
+    docker build -t {{ project_slug }}:{{TAG}} .
 
 # Build test Docker image (for CI)
 docker-build-test:
     @echo "Building test Docker image..."
-    docker build -t << project_slug >>:test -f Dockerfile.test .
+    docker build -t {{ project_slug }}:test -f Dockerfile.test .
 
 # Run tests in Docker container (isolated environment)
 docker-test:
     @echo "Running tests in Docker container..."
-    docker run --rm << project_slug >>:test
+    docker run --rm {{ project_slug }}:test
 
-<% if docker_strategy == 'production' -%>
+{% if docker_strategy == 'production' -%}
 # Build multi-architecture image (amd64 + arm64)
 docker-build-multi TAG="latest":
     @echo "Building multi-architecture Docker image (amd64, arm64)..."
     docker buildx build --platform linux/amd64,linux/arm64 \
-        -t << project_slug >>:<<TAG>> --load .
+        -t {{ project_slug }}:{{TAG}} --load .
 
 # Verify Docker image health
 docker-verify TAG="latest":
-    @echo "Verifying Docker image << project_slug >>:<<TAG>>..."
-    docker run --rm << project_slug >>:<<TAG>> python -c "import << package_name >>; print('✓ << package_name >> v{}'.format(<< package_name >>.__version__))"
+    @echo "Verifying Docker image {{ project_slug }}:{{TAG}}..."
+    docker run --rm {{ project_slug }}:{{TAG}} python -c "import {{ package_name }}; print('✓ {{ package_name }} v{}'.format({{ package_name }}.__version__))"
 
 # Interactive shell in Docker container
 docker-shell TAG="latest":
-    @echo "Starting interactive shell in << project_slug >>:<<TAG>>..."
-    docker run --rm -it << project_slug >>:<<TAG>> /bin/bash
+    @echo "Starting interactive shell in {{ project_slug }}:{{TAG}}..."
+    docker run --rm -it {{ project_slug }}:{{TAG}} /bin/bash
 
 # Push Docker image to registry
 docker-push REGISTRY TAG:
-    @echo "Pushing << project_slug >>:<<TAG>> to <<REGISTRY>>..."
-    docker tag << project_slug >>:<<TAG>> <<REGISTRY>>/<< project_slug >>:<<TAG>>
-    docker push <<REGISTRY>>/<< project_slug >>:<<TAG>>
+    @echo "Pushing {{ project_slug }}:{{TAG}} to {{REGISTRY}}..."
+    docker tag {{ project_slug }}:{{TAG}} {{REGISTRY}}/{{ project_slug }}:{{TAG}}
+    docker push {{REGISTRY}}/{{ project_slug }}:{{TAG}}
 
 # Full release workflow (build, verify, tag, push)
-docker-release VERSION REGISTRY="ghcr.io/<< github_username >>":
-    @echo "Releasing << project_slug >> v<<VERSION>> to <<REGISTRY>>..."
-    just docker-build <<VERSION>>
-    just docker-verify <<VERSION>>
-    just docker-push <<REGISTRY>> <<VERSION>>
+docker-release VERSION REGISTRY="ghcr.io/{{ github_username }}":
+    @echo "Releasing {{ project_slug }} v{{VERSION}} to {{REGISTRY}}..."
+    just docker-build {{VERSION}}
+    just docker-verify {{VERSION}}
+    just docker-push {{REGISTRY}} {{VERSION}}
     @echo "Tagging and pushing 'latest'..."
-    docker tag << project_slug >>:<<VERSION>> << project_slug >>:latest
-    just docker-push <<REGISTRY>> latest
-    @echo "✓ Release complete: <<REGISTRY>>/<< project_slug >>:<<VERSION>>"
+    docker tag {{ project_slug }}:{{VERSION}} {{ project_slug }}:latest
+    just docker-push {{REGISTRY}} latest
+    @echo "✓ Release complete: {{REGISTRY}}/{{ project_slug }}:{{VERSION}}"
 
 # Run production container
 docker-run TAG="latest":
-    @echo "Starting << project_slug >> container..."
-<% if project_type == 'mcp_server' -%>
-    docker run -d --name << project_slug >> \
+    @echo "Starting {{ project_slug }} container..."
+{% if project_type == 'mcp_server' -%}
+    docker run -d --name {{ project_slug }} \
         -v $(pwd)/logs:/app/logs \
         -v $(pwd)/.env:/app/.env:ro \
-        << project_slug >>:<<TAG>>
-<% elif project_type == 'web_service' -%>
-    docker run -d --name << project_slug >> \
+        {{ project_slug }}:{{TAG}}
+{% elif project_type == 'web_service' -%}
+    docker run -d --name {{ project_slug }} \
         -p 8000:8000 \
         -v $(pwd)/.env:/app/.env:ro \
-        << project_slug >>:<<TAG>>
-<% else -%>
-    docker run -it --rm << project_slug >>:<<TAG>>
-<% endif -%>
+        {{ project_slug }}:{{TAG}}
+{% else -%}
+    docker run -it --rm {{ project_slug }}:{{TAG}}
+{% endif -%}
 
 # Start all services with docker-compose
 docker-compose-up:
@@ -264,43 +264,43 @@ docker-compose-down:
 
 # View logs from docker-compose services
 docker-logs:
-    docker-compose logs -f << project_slug >>
+    docker-compose logs -f {{ project_slug }}
 
 # Rebuild and restart services
 docker-rebuild:
     @echo "Rebuilding and restarting services..."
     docker-compose up -d --build
 
-<% endif -%>
+{% endif -%}
 # Stop and remove Docker container
 docker-stop:
-    @echo "Stopping << project_slug >> container..."
-    docker stop << project_slug >> || true
-    docker rm << project_slug >> || true
+    @echo "Stopping {{ project_slug }} container..."
+    docker stop {{ project_slug }} || true
+    docker rm {{ project_slug }} || true
 
 # Remove Docker images
 docker-clean:
     @echo "Removing Docker images..."
-    docker rmi << project_slug >>:latest << project_slug >>:test || true
+    docker rmi {{ project_slug }}:latest {{ project_slug }}:test || true
 
 # Full Docker cleanup (containers + images + volumes)
 docker-clean-all:
     @echo "Cleaning up all Docker artifacts..."
-<% if docker_strategy == 'production' -%>
+{% if docker_strategy == 'production' -%}
     docker-compose down -v || true
-<% endif -%>
-    docker stop << project_slug >> || true
-    docker rm << project_slug >> || true
-    docker rmi << project_slug >>:latest << project_slug >>:test || true
+{% endif -%}
+    docker stop {{ project_slug }} || true
+    docker rm {{ project_slug }} || true
+    docker rmi {{ project_slug }}:latest {{ project_slug }}:test || true
 
-<% endif -%>
+{% endif -%}
 # Show environment info
 info:
     @echo "Python version:"
     @python --version
     @echo ""
     @echo "Package info:"
-    @pip show << project_slug >> || echo "Package not installed"
+    @pip show {{ project_slug }} || echo "Package not installed"
     @echo ""
     @echo "Environment variables:"
-    @env | grep << package_name | upper >> || echo "No << package_name | upper >>_* variables set"
+    @env | grep {{ package_name | upper }} || echo "No {{ package_name | upper }}_* variables set"

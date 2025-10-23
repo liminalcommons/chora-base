@@ -1,6 +1,6 @@
 # Agent Memory Architecture
 
-This directory contains the stateful memory infrastructure for AI coding agents working with << project_slug >>, implementing cross-session learning and knowledge persistence.
+This directory contains the stateful memory infrastructure for AI coding agents working with {{ project_slug }}, implementing cross-session learning and knowledge persistence.
 
 ## Overview
 
@@ -59,7 +59,7 @@ All events follow the Chora ecosystem event schema (v1.0):
   "status": "success",
   "schema_version": "1.0",
   "event_type": "gateway.tool_call",
-  "source": "<< project_slug >>",
+  "source": "{{ project_slug }}",
   "metadata": {
     "tool_name": "example:tool_name",
     "backend": "example-backend",
@@ -270,7 +270,7 @@ for failure in failures:
         create_knowledge_note(
             id=note_id,
             content=f"Backend {failure['metadata']['backend']} failed: {failure['metadata']['error']}",
-            tags=["failure", "backend", failure['metadata']['backend'>>,
+            tags=["failure", "backend", failure['metadata']['backend'}},
             linked_to=[related_notes]
         )
 ```
@@ -324,7 +324,7 @@ create_knowledge_note(
 ```python
 # Agent preparing to hand off to another project
 handoff_context = {
-    "from_agent": "claude-code-<< project_slug >>",
+    "from_agent": "claude-code-{{ project_slug }}",
     "to_project": "other-project",
     "trace_id": generate_trace_id(),
     "pending_tasks": get_pending_tasks(),
@@ -476,7 +476,7 @@ clusters = kg.find_clusters(min_size=3)
    - Automatic link suggestion
 
 2. **Cross-Project Memory**
-   - Share learnings between << project_slug >> and other projects
+   - Share learnings between {{ project_slug }} and other projects
    - Ecosystem-wide knowledge graph
    - Federated agent profiles
 
@@ -494,4 +494,4 @@ clusters = kg.find_clusters(min_size=3)
 
 **Version:** 1.0.0
 **Last Updated:** 2025-01
-**Compatible with:** << project_slug >> v<< project_version >>+
+**Compatible with:** {{ project_slug }} v{{ project_version }}+

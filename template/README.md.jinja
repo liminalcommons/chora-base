@@ -1,41 +1,41 @@
-# << project_name >>
+# {{ project_name }}
 
-<< project_description >>
+{{ project_description }}
 
 ## Overview
 
-<% if project_type == 'mcp_server' -%>
-**<< project_name >>** is a Model Context Protocol (MCP) server that provides [describe your server's capabilities].
+{% if project_type == 'mcp_server' -%}
+**{{ project_name }}** is a Model Context Protocol (MCP) server that provides [describe your server's capabilities].
 
 This project follows the MCP specification and can be integrated with:
 - Claude Desktop
 - Cursor
 - Other MCP-compatible clients
 
-<% elif project_type == 'library' -%>
-**<< project_name >>** is a Python library that [describe your library's purpose].
+{% elif project_type == 'library' -%}
+**{{ project_name }}** is a Python library that [describe your library's purpose].
 
-<% elif project_type == 'cli_tool' -%>
-**<< project_name >>** is a command-line tool that [describe what your tool does].
+{% elif project_type == 'cli_tool' -%}
+**{{ project_name }}** is a command-line tool that [describe what your tool does].
 
-<% elif project_type == 'web_service' -%>
-**<< project_name >>** is a web service/API that [describe your service].
+{% elif project_type == 'web_service' -%}
+**{{ project_name }}** is a web service/API that [describe your service].
 
-<% endif -%>
+{% endif -%}
 
 ## Features
 
 - **[Feature 1]** - Description
 - **[Feature 2]** - Description
-<% if include_memory_system -%>
+{% if include_memory_system -%}
 - **Agent Memory System** - Cross-session learning with event log, knowledge graph, and trace correlation
-<% endif -%>
-<% if include_cli -%>
+{% endif -%}
+{% if include_cli -%}
 - **CLI Interface** - Command-line tools for [describe CLI purpose]
-<% endif -%>
-<% if include_tests -%>
-- **Comprehensive Testing** - << test_coverage_threshold >>%+ test coverage with pytest
-<% endif -%>
+{% endif -%}
+{% if include_tests -%}
+- **Comprehensive Testing** - {{ test_coverage_threshold }}%+ test coverage with pytest
+{% endif -%}
 
 ## Installation
 
@@ -43,8 +43,8 @@ This project follows the MCP specification and can be integrated with:
 
 ```bash
 # Clone repository
-git clone https://github.com/<< github_username >>/<< project_slug >>.git
-cd << project_slug >>
+git clone https://github.com/{{ github_username }}/{{ project_slug }}.git
+cd {{ project_slug }}
 
 # One-command setup (installs dependencies, hooks, and runs checks)
 ./scripts/setup.sh
@@ -60,10 +60,10 @@ source .venv/bin/activate  # or `.venv\Scripts\activate` on Windows
 # Install with development dependencies
 pip install -e ".[dev]"
 
-<% if include_pre_commit -%>
+{% if include_pre_commit -%}
 # Install pre-commit hooks
 pre-commit install
-<% endif -%>
+{% endif -%}
 ```
 
 ## Configuration
@@ -74,12 +74,12 @@ Create a `.env` file:
 
 ```env
 # Application configuration
-<< package_name | upper >>_LOG_LEVEL=INFO
+{{ package_name | upper }}_LOG_LEVEL=INFO
 
 # Add your configuration here
 ```
 
-<% if project_type == 'mcp_server' -%>
+{% if project_type == 'mcp_server' -%}
 ### Client Configuration
 
 #### Claude Desktop (macOS)
@@ -88,12 +88,12 @@ Create a `.env` file:
 ```json
 {
   "mcpServers": {
-    "<< project_slug >>-dev": {
-      "command": "/path/to/<< project_slug >>/.venv/bin/python",
-      "args": ["-m", "<< package_name >>.server"],
-      "cwd": "/path/to/<< project_slug >>",
+    "{{ project_slug }}-dev": {
+      "command": "/path/to/{{ project_slug }}/.venv/bin/python",
+      "args": ["-m", "{{ package_name }}.server"],
+      "cwd": "/path/to/{{ project_slug }}",
       "env": {
-        "<< package_name | upper >>_DEBUG": "1"
+        "{{ package_name | upper }}_DEBUG": "1"
       }
     }
   }
@@ -104,30 +104,30 @@ Create a `.env` file:
 ```json
 {
   "mcpServers": {
-    "<< project_slug >>": {
-      "command": "<< project_slug >>",
+    "{{ project_slug }}": {
+      "command": "{{ project_slug }}",
       "args": [],
       "env": {}
     }
   }
 }
 ```
-<% endif -%>
+{% endif -%}
 
-<% if project_type == 'cli_tool' or include_cli -%>
+{% if project_type == 'cli_tool' or include_cli -%}
 ## Usage
 
 ```bash
 # Example command
-<< project_slug >> --help
+{{ project_slug }} --help
 
 # [Add your specific usage examples here]
 ```
-<% endif -%>
+{% endif -%}
 
 ## Development
 
-<% if include_justfile -%>
+{% if include_justfile -%}
 ### Quick Reference
 
 **Discover all available commands:**
@@ -180,7 +180,7 @@ just publish-prod           # Publish to PyPI
 **Application:**
 ```bash
 just run            # Start the application
-<< project_slug >>  # Or run directly
+{{ project_slug }}  # Or run directly
 ```
 
 ### Without `just` (Fallback)
@@ -191,44 +191,44 @@ If `just` installation fails, use commands directly:
 |------|---------|
 | Run tests | `pytest` |
 | Build | `./scripts/build-dist.sh` |
-| Lint | `ruff check src/<< package_name >> tests` |
-| Format | `black src/<< package_name >> tests` |
+| Lint | `ruff check src/{{ package_name }} tests` |
+| Format | `black src/{{ package_name }} tests` |
 | Pre-merge | `./scripts/pre-merge.sh` |
-| Type check | `mypy src/<< package_name >>` |
+| Type check | `mypy src/{{ package_name }}` |
 
 See [justfile](justfile) for complete command mappings.
-<% else -%>
+{% else -%}
 ### Common Development Tasks
 
 ```bash
-<% if include_tests -%>
+{% if include_tests -%}
 # Run tests
 pytest
 
 # Run tests with coverage
-pytest --cov=<< package_name >> --cov-report=html --cov-report=term
+pytest --cov={{ package_name }} --cov-report=html --cov-report=term
 
 # Type checking
-mypy src/<< package_name >>
+mypy src/{{ package_name }}
 
-<% endif -%>
-<% if include_pre_commit -%>
+{% endif -%}
+{% if include_pre_commit -%}
 # Linting
-ruff check src/<< package_name >> tests
+ruff check src/{{ package_name }} tests
 
 # Auto-fix linting issues
-ruff check --fix src/<< package_name >> tests
+ruff check --fix src/{{ package_name }} tests
 
 # Code formatting
-black src/<< package_name >> tests
+black src/{{ package_name }} tests
 
 # Check formatting without changes
-black --check src/<< package_name >> tests
+black --check src/{{ package_name }} tests
 
 # Run all pre-commit hooks
 pre-commit run --all-files
 
-<% endif -%>
+{% endif -%}
 # Build distribution packages
 ./scripts/build-dist.sh
 
@@ -242,17 +242,17 @@ pre-commit run --all-files
 rm -rf build/ dist/ *.egg-info/ .pytest_cache/ .mypy_cache/ .ruff_cache/
 
 # Run application
-<< project_slug >>
+{{ project_slug }}
 ```
-<% endif -%>
+{% endif -%}
 
 ## Documentation
 
-<% if include_documentation_standard -%>
+{% if include_documentation_standard -%}
 This project follows the [Diátaxis framework](https://diataxis.fr/) with three documentation directories:
 
 ### For End Users (user-docs/)
-Learn how to **use** << project_name >>:
+Learn how to **use** {{ project_name }}:
 - **[Getting Started Tutorial](user-docs/tutorials/01-getting-started.md)** - Learn the basics
 - **[How-To Guides](user-docs/how-to/)** - Solve specific problems
 - **[API Reference](user-docs/reference/)** - Look up specifications
@@ -260,70 +260,70 @@ Learn how to **use** << project_name >>:
 
 ### For Project Planning (project-docs/)
 Project roadmap and architecture decisions:
-<% if include_roadmap -%>
+{% if include_roadmap -%}
 - **[ROADMAP.md](project-docs/ROADMAP.md)** - Long-term vision and milestones
-<% endif -%>
+{% endif -%}
 - **[Release Notes](project-docs/releases/)** - Version history and changes
 - **[Architecture Decisions](project-docs/decisions/)** - ADRs and design choices
 
 ### For Contributors (dev-docs/)
-Learn how to **build** << project_name >>:
-<% if include_contributing -%>
+Learn how to **build** {{ project_name }}:
+{% if include_contributing -%}
 - **[CONTRIBUTING.md](dev-docs/CONTRIBUTING.md)** - Contribution guidelines
-<% endif -%>
-<% if include_development_docs -%>
+{% endif -%}
+{% if include_development_docs -%}
 - **[DEVELOPMENT.md](dev-docs/DEVELOPMENT.md)** - Developer setup and architecture
-<% endif -%>
-<% if include_troubleshooting -%>
+{% endif -%}
+{% if include_troubleshooting -%}
 - **[TROUBLESHOOTING.md](dev-docs/TROUBLESHOOTING.md)** - Common development issues
-<% endif -%>
-<% if include_vision_docs -%>
+{% endif -%}
+{% if include_vision_docs -%}
 - **[Vision Documents](dev-docs/vision/)** - Strategic design guidance
-<% endif -%>
+{% endif -%}
 
-<% if include_agents_md -%>
+{% if include_agents_md -%}
 ### For AI Coding Agents
 - **[AGENTS.md](AGENTS.md)** - Machine-readable instructions (OpenAI/Google standard)
-<% endif -%>
+{% endif -%}
 
 **Documentation Standard:**
 - **[DOCUMENTATION_STANDARD.md](DOCUMENTATION_STANDARD.md)** - Writing guidelines and templates
 
-<% else -%>
+{% else -%}
 **For Human Contributors:**
 - **[README.md](README.md)** - This file (project overview)
-<% if include_contributing -%>
+{% if include_contributing -%}
 - **[dev-docs/CONTRIBUTING.md](dev-docs/CONTRIBUTING.md)** - Contribution guidelines
-<% endif -%>
-<% if include_development_docs -%>
+{% endif -%}
+{% if include_development_docs -%}
 - **[dev-docs/DEVELOPMENT.md](dev-docs/DEVELOPMENT.md)** - Developer deep dive
-<% endif -%>
-<% if include_troubleshooting -%>
+{% endif -%}
+{% if include_troubleshooting -%}
 - **[dev-docs/TROUBLESHOOTING.md](dev-docs/TROUBLESHOOTING.md)** - Common issues
-<% endif -%>
+{% endif -%}
 
-<% if include_agents_md -%>
+{% if include_agents_md -%}
 **For AI Coding Agents:**
 - **[AGENTS.md](AGENTS.md)** - Machine-readable project instructions
 
-<% endif -%>
-<% endif -%>
+{% endif -%}
+{% endif -%}
 ## Project Principles
 
 This project follows best practices for:
 
 - **Code Quality** - Linting (ruff), formatting (black), type checking (mypy)
-<% if include_tests -%>
-- **Testing** - Comprehensive test suite with << test_coverage_threshold >>%+ coverage
-<% endif -%>
+{% if include_tests -%}
+- **Testing** - Comprehensive test suite with {{ test_coverage_threshold }}%+ coverage
+{% endif -%}
 - **Documentation** - Clear, up-to-date documentation following Diátaxis framework
-<% if include_memory_system -%>
+{% if include_memory_system -%}
 - **Agentic Coding** - Machine-readable instructions, stateful memory for AI agents
-<% endif -%>
+{% endif -%}
 
 ## License
 
-<< license >><% if license == 'MIT' %> License - see [LICENSE](LICENSE)<% elif license == 'Apache-2.0' %> - see [LICENSE](LICENSE)<% elif license == 'GPL-3.0' %> - see [LICENSE](LICENSE)<% elif license == 'BSD-3-Clause' %> - see [LICENSE](LICENSE)<% endif %>
+{{ license }}{% if license == 'MIT' %} License - see [LICENSE](LICENSE){% elif license == 'Apache-2.0' %} - see [LICENSE](LICENSE){% elif license == 'GPL-3.0' %} - see [LICENSE](LICENSE){% elif license == 'BSD-3-Clause' %} - see [LICENSE](LICENSE){% endif %}
 
 ## Related Projects
 

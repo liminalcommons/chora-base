@@ -33,7 +33,7 @@ if [ $# -eq 0 ]; then
     exit 1
 fi
 
-if << ! "$BUMP_TYPE" =~ ^(major|minor|patch)$ >>; then
+if {{ ! "$BUMP_TYPE" =~ ^(major|minor|patch)$ }}; then
     echo -e "${RED}Error: Invalid bump type '$BUMP_TYPE'${NC}"
     echo "Must be one of: major, minor, patch"
     exit 1
@@ -57,7 +57,7 @@ echo -e "${YELLOW}[1/4] Bumping version...${NC}"
 CURRENT_VERSION=$(grep "^version = " pyproject.toml | sed 's/version = "\(.*\)"/\1/')
 
 # Calculate new version (same logic as bump-version.sh)
-IFS='.' read -r MAJOR MINOR PATCH <<< "$CURRENT_VERSION"
+IFS='.' read -r MAJOR MINOR PATCH {{< "$CURRENT_VERSION"
 case "$BUMP_TYPE" in
     major)
         NEW_VERSION="$((MAJOR + 1)).0.0"
@@ -73,7 +73,7 @@ esac
 echo "  Current: $CURRENT_VERSION → New: $NEW_VERSION"
 
 # Update version in pyproject.toml
-if << "$OSTYPE" == "darwin"* >>; then
+if {{ "$OSTYPE" == "darwin"* }}; then
     sed -i.bak "s/^version = \".*\"/version = \"$NEW_VERSION\"/" pyproject.toml
     rm pyproject.toml.bak
 else
@@ -157,7 +157,7 @@ echo -e "${YELLOW}[4/4] Creating release commit...${NC}"
 
 git add pyproject.toml CHANGELOG.md
 
-git commit -m "$(cat <<EOF
+git commit -m "$(cat {{EOF
 Release v${NEW_VERSION}
 
 Bump version to ${NEW_VERSION} and update CHANGELOG.

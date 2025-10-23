@@ -6,21 +6,26 @@ _min_copier_version: "9.0.0"
 _templates_suffix: .jinja
 
 # Jinja2 Environment Configuration
-# Use angle bracket delimiters to avoid conflicts with both:
-# - Python's {} syntax (dictionaries, .format(), f-strings, sets)
-# - Markdown's [] syntax (links, lists, references)
-# - Regex character classes [a-z][0-9]
+# Following industry best practices, we use standard Jinja2 delimiters.
+# All production Copier templates (copier-uv, Full Stack FastAPI, etc.)
+# use {{ }} syntax. The .jinja file suffix prevents delimiter conflicts
+# with Python f-strings, dictionaries, and Markdown syntax in generated output.
+#
+# Research showed that custom delimiters (angle brackets, square brackets)
+# were an untested code path causing mysterious template errors across
+# v2.0.0-v2.0.7. Standard delimiters are proven to work reliably with
+# mixed Python/Markdown/YAML content in 60-80+ file templates.
 _envops:
-  block_start_string: "<%"
-  block_end_string: "%>"
-  variable_start_string: "<<"
-  variable_end_string: ">>"
-  comment_start_string: "<#"
-  comment_end_string: "#>"
+  variable_start_string: "{{"
+  variable_end_string: "}}"
+  block_start_string: "{%"
+  block_end_string: "%}"
+  comment_start_string: "{#"
+  comment_end_string: "#}"
 
   # Whitespace control for clean output
-  trim_blocks: true
   keep_trailing_newline: true
+  trim_blocks: true
   lstrip_blocks: true
 
 # === Project Metadata ===
@@ -30,23 +35,23 @@ project_name:
   help: What is your project name?
   default: my-chora-project
   validator: >-
-    <% if not (project_name | regex_search('^[a-z][a-z0-9\-]+$')) %>
+    {% if not (project_name | regex_search('^[a-z][a-z0-9\-]+$')) %}
     Must start with lowercase letter, followed by letters, digits, or dashes
-    <% endif %>
+    {% endif %}
 
 project_slug:
   type: str
   help: Project slug (for directory names, URLs)
-  default: "<< project_name | lower | replace(' ', '-') | replace('_', '-') >>"
+  default: "{{ project_name | lower | replace(' ', '-') | replace('_', '-') }}"
 
 package_name:
   type: str
   help: Python package name (must be valid Python identifier)
-  default: "<< project_slug | replace('-', '_') >>"
+  default: "{{ project_slug | replace('-', '_') }}"
   validator: >-
-    <% if not (package_name | regex_search('^[a-z][a-z0-9_]+$')) %>
+    {% if not (package_name | regex_search('^[a-z][a-z0-9_]+$')) %}
     Must be valid Python identifier (lowercase letters, digits, underscores)
-    <% endif %>
+    {% endif %}
 
 project_description:
   type: str
@@ -58,9 +63,9 @@ project_version:
   help: Initial version number
   default: "0.1.0"
   validator: >-
-    <% if not (project_version | regex_search('^\d+\.\d+\.\d+$')) %>
+    {% if not (project_version | regex_search('^\d+\.\d+\.\d+$')) %}
     Must be semantic version (e.g., 0.1.0)
-    <% endif %>
+    {% endif %}
 
 # === Author Information ===
 
@@ -74,9 +79,9 @@ author_email:
   help: Author email for project metadata
   default: your.email@example.com
   validator: >-
-    <% if not (author_email | regex_search('^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$')) %>
+    {% if not (author_email | regex_search('^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$')) %}
     Must be valid email address
-    <% endif %>
+    {% endif %}
 
 github_username:
   type: str
@@ -86,11 +91,11 @@ github_username:
 security_email:
   type: str
   help: Email for security vulnerability reports
-  default: "<< author_email >>"
+  default: "{{ author_email }}"
   validator: >-
-    <% if not (security_email | regex_search('^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$')) %>
+    {% if not (security_email | regex_search('^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$')) %}
     Must be valid email address
-    <% endif %>
+    {% endif %}
 
 # === Python Configuration ===
 
@@ -127,7 +132,7 @@ cli_framework:
     - click
     - typer
   default: click
-  when: "<< include_cli >>"
+  when: "{{ include_cli }}"
 
 # === Chora Ecosystem Features ===
 
@@ -145,7 +150,7 @@ include_vision_docs:
   type: bool
   help: Include vision document templates and strategic design guidance?
   default: true
-  when: "<< include_agents_md >>"
+  when: "{{ include_agents_md }}"
 
 include_roadmap:
   type: bool
@@ -157,10 +162,10 @@ initial_version:
   help: Initial project version (semver)
   default: "0.1.0"
   validator: >-
-    <% if not (initial_version | regex_search('^\d+\.\d+\.\d+$')) %>
+    {% if not (initial_version | regex_search('^\d+\.\d+\.\d+$')) %}
     Must be semantic version (e.g., 0.1.0)
-    <% endif %>
-  when: "<< include_roadmap >>"
+    {% endif %}
+  when: "{{ include_roadmap }}"
 
 # === Testing & Quality ===
 
@@ -174,10 +179,10 @@ test_coverage_threshold:
   help: Minimum test coverage percentage
   default: 85
   validator: >-
-    <% if test_coverage_threshold < 0 or test_coverage_threshold > 100 %>
+    {% if test_coverage_threshold < 0 or test_coverage_threshold > 100 %}
     Must be between 0 and 100
-    <% endif %>
-  when: "<< include_tests >>"
+    {% endif %}
+  when: "{{ include_tests }}"
 
 include_pre_commit:
   type: bool
@@ -198,7 +203,7 @@ pypi_auth_method:
     - token
     - trusted_publishing
   default: token
-  when: "<< include_github_actions >>"
+  when: "{{ include_github_actions }}"
 
 # === Documentation ===
 
@@ -226,7 +231,7 @@ documentation_advanced_features:
   type: bool
   help: Enable advanced doc features (metrics, query tool, test extraction enhancements)?
   default: false
-  when: "<< include_documentation_standard >>"
+  when: "{{ include_documentation_standard }}"
 
 # === License ===
 
@@ -260,71 +265,71 @@ docker_strategy:
     - production  # Multi-stage production build + docker-compose
     - ci-only     # Just Dockerfile.test for CI (no production deployment)
   default: production
-  when: "<< include_docker >>"
+  when: "{{ include_docker }}"
 
 # === MCP Namespace Configuration (v1.8.0) ===
 
 mcp_namespace:
   type: str
   help: "MCP namespace for tools/resources (e.g., 'myproject' → myproject:tool_name)"
-  default: "<< project_slug | replace('-', '') >>"
+  default: "{{ project_slug | replace('-', '') }}"
   validator: >-
-    <% if not (mcp_namespace | regex_search('^[a-z][a-z0-9]{2,19}$')) %>
+    {% if not (mcp_namespace | regex_search('^[a-z][a-z0-9]{2,19}$')) %}
     Must be lowercase, 3-20 chars, alphanumeric only (no hyphens/underscores)
-    <% endif %>
-  when: "<< project_type == 'mcp_server' >>"
+    {% endif %}
+  when: "{{ project_type == 'mcp_server' }}"
 
 mcp_enable_namespacing:
   type: bool
   help: "Prefix tools with namespace? Recommended for ecosystem integration (myproject:tool_name)"
   default: true
-  when: "<< project_type == 'mcp_server' >>"
+  when: "{{ project_type == 'mcp_server' }}"
 
 mcp_resource_uri_scheme:
   type: bool
   help: "Generate resource URI helpers? (myproject://type/id)"
   default: true
-  when: "<< project_type == 'mcp_server' >>"
+  when: "{{ project_type == 'mcp_server' }}"
 
 mcp_validate_names:
   type: bool
   help: "Include runtime namespace validation and pre-commit hooks?"
   default: true
-  when: "<< project_type == 'mcp_server' and mcp_enable_namespacing >>"
+  when: "{{ project_type == 'mcp_server' and mcp_enable_namespacing }}"
 
 # === Computed Values (not questions) ===
 
 _templates_suffix: ".jinja"
 
 _exclude:
-  - "<% if not include_vision_docs %>dev-docs/vision/<% endif %>"
-  - "<% if not include_roadmap %>ROADMAP.md.jinja<% endif %>"
-  - "<% if not include_vision_docs %>dev-docs/vision/*<% endif %>"
-  - "<% if not include_documentation_standard %>DOCUMENTATION_STANDARD.md.jinja<% endif %>"
-  - "<% if not include_documentation_standard %>user-docs/<% endif %>"
-  - "<% if not include_documentation_standard %>project-docs/<% endif %>"
-  - "<% if not include_documentation_standard %>scripts/validate_docs.py.jinja<% endif %>"
-  - "<% if not include_documentation_standard %>scripts/generate_docs_map.py.jinja<% endif %>"
-  - "<% if not include_documentation_standard %>scripts/extract_tests.py.jinja<% endif %>"
-  - "<% if not documentation_advanced_features %>scripts/docs_metrics.py.jinja<% endif %>"
-  - "<% if not documentation_advanced_features %>scripts/query_docs.py.jinja<% endif %>"
-  - "<% if project_type != 'mcp_server' %>src/<<package_name>>/mcp/<% endif %>"
-  - "<% if project_type != 'mcp_server' %>NAMESPACES.md.jinja<% endif %>"
-  - "<% if project_type != 'mcp_server' %>scripts/validate_mcp_names.py.jinja<% endif %>"
-  - "<% if project_type != 'mcp_server' %>scripts/migrate_namespace.sh.jinja<% endif %>"
-  - "<% if not mcp_validate_names %>scripts/validate_mcp_names.py.jinja<% endif %>"
-  - "<% if not mcp_validate_names %>scripts/migrate_namespace.sh.jinja<% endif %>"
-  - "<% if not include_docker %>Dockerfile.jinja<% endif %>"
-  - "<% if not include_docker %>Dockerfile.test.jinja<% endif %>"
-  - "<% if not include_docker %>.dockerignore.jinja<% endif %>"
-  - "<% if not include_docker %>docker-compose.yml.jinja<% endif %>"
-  - "<% if not include_docker %>DOCKER_BEST_PRACTICES.md.jinja<% endif %>"
-  - "<% if include_docker and docker_strategy == 'ci-only' %>Dockerfile.jinja<% endif %>"
-  - "<% if include_docker and docker_strategy == 'ci-only' %>docker-compose.yml.jinja<% endif %>"
+  - "{% if not include_vision_docs %}dev-docs/vision/{% endif %}"
+  - "{% if not include_roadmap %}ROADMAP.md.jinja{% endif %}"
+  - "{% if not include_vision_docs %}dev-docs/vision/*{% endif %}"
+  - "{% if not include_documentation_standard %}DOCUMENTATION_STANDARD.md.jinja{% endif %}"
+  - "{% if not include_documentation_standard %}user-docs/{% endif %}"
+  - "{% if not include_documentation_standard %}project-docs/{% endif %}"
+  - "{% if not include_documentation_standard %}scripts/validate_docs.py.jinja{% endif %}"
+  - "{% if not include_documentation_standard %}scripts/generate_docs_map.py.jinja{% endif %}"
+  - "{% if not include_documentation_standard %}scripts/extract_tests.py.jinja{% endif %}"
+  - "{% if not documentation_advanced_features %}scripts/docs_metrics.py.jinja{% endif %}"
+  - "{% if not documentation_advanced_features %}scripts/query_docs.py.jinja{% endif %}"
+  - "{% if project_type != 'mcp_server' %}src/{{package_name}}/mcp/{% endif %}"
+  - "{% if project_type != 'mcp_server' %}NAMESPACES.md.jinja{% endif %}"
+  - "{% if project_type != 'mcp_server' %}scripts/validate_mcp_names.py.jinja{% endif %}"
+  - "{% if project_type != 'mcp_server' %}scripts/migrate_namespace.sh.jinja{% endif %}"
+  - "{% if not mcp_validate_names %}scripts/validate_mcp_names.py.jinja{% endif %}"
+  - "{% if not mcp_validate_names %}scripts/migrate_namespace.sh.jinja{% endif %}"
+  - "{% if not include_docker %}Dockerfile.jinja{% endif %}"
+  - "{% if not include_docker %}Dockerfile.test.jinja{% endif %}"
+  - "{% if not include_docker %}.dockerignore.jinja{% endif %}"
+  - "{% if not include_docker %}docker-compose.yml.jinja{% endif %}"
+  - "{% if not include_docker %}DOCKER_BEST_PRACTICES.md.jinja{% endif %}"
+  - "{% if include_docker and docker_strategy == 'ci-only' %}Dockerfile.jinja{% endif %}"
+  - "{% if include_docker and docker_strategy == 'ci-only' %}docker-compose.yml.jinja{% endif %}"
   # v2.0.0: Nested AGENTS.md files (exclude if feature not enabled)
-  - "<% if not include_tests %>tests/AGENTS.md.jinja<% endif %>"
-  - "<% if not include_memory_system %>.chora/memory/AGENTS.md.jinja<% endif %>"
-  - "<% if not include_docker %>docker/AGENTS.md.jinja<% endif %>"
+  - "{% if not include_tests %}tests/AGENTS.md.jinja{% endif %}"
+  - "{% if not include_memory_system %}.chora/memory/AGENTS.md.jinja{% endif %}"
+  - "{% if not include_docker %}docker/AGENTS.md.jinja{% endif %}"
 
 _skip_if_exists:
   - .env
@@ -333,6 +338,6 @@ _skip_if_exists:
   - .chora/memory/profiles/**
 
 _tasks:
-  - "<% if include_pre_commit %>echo 'Run: pre-commit install'<% endif %>"
-  - "<% if include_justfile %>echo 'Run: just --list to see available commands'<% endif %>"
+  - "{% if include_pre_commit %}echo 'Run: pre-commit install'{% endif %}"
+  - "{% if include_justfile %}echo 'Run: just --list to see available commands'{% endif %}"
   - echo "Setup complete! Run './scripts/setup.sh' to install dependencies"

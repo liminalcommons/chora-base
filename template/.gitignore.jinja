@@ -2,7 +2,7 @@
 temp/
 tmp/
 
-<% if include_memory_system -%>
+{% if include_memory_system -%}
 # Agent memory (ephemeral learning data)
 .chora/memory/events/
 .chora/memory/knowledge/
@@ -10,7 +10,7 @@ tmp/
 .chora/memory/queries/
 !.chora/memory/README.md
 
-<% endif -%>
+{% endif -%}
 # Environment variables and secrets
 .env
 .env.local
@@ -226,11 +226,11 @@ public
 # Local Netlify folder
 .netlify
 
-<% if include_docker -%>
+{% if include_docker -%}
 # Docker
 .dockerignore
 
-<% endif -%>
+{% endif -%}
 # JetBrains IDEs
 .idea/
 

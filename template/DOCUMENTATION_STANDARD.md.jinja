@@ -1,15 +1,15 @@
 ---
-title: << project_name >> Documentation Standard
+title: {{ project_name }} Documentation Standard
 type: process
 status: current
 audience: all
-last_updated: << '%Y-%m-%d' | strftime >>
+last_updated: {{ '%Y-%m-%d' | strftime }}
 version: 1.0.0
 ---
 
-# << project_name >> Documentation Standard
+# {{ project_name }} Documentation Standard
 
-**Purpose:** Define documentation structure, formats, and processes for << project_name >>
+**Purpose:** Define documentation structure, formats, and processes for {{ project_name }}
 **Framework:** Diátaxis (documentation system) + Documentation as Product
 **Status:** Active
 
@@ -32,7 +32,7 @@ version: 1.0.0
 
 ### Philosophy: Documentation as Product
 
-<< project_name >> treats documentation as a first-class product deliverable:
+{{ project_name }} treats documentation as a first-class product deliverable:
 - **Documentation is written BEFORE code** (Documentation Driven Design)
 - **Documentation serves as executable specification** (test extraction)
 - **Documentation stays synchronized** (automated validation)
@@ -52,7 +52,7 @@ version: 1.0.0
 
 ## Diátaxis Framework
 
-<< project_name >> organizes documentation by **user intent**, following the [Diátaxis framework](https://diataxis.fr/):
+{{ project_name }} organizes documentation by **user intent**, following the [Diátaxis framework](https://diataxis.fr/):
 
 ### The Four Document Types
 
@@ -95,10 +95,10 @@ version: 1.0.0
 
 ### Three-Directory Organization
 
-<< project_name >> separates documentation into three distinct directories:
+{{ project_name }} separates documentation into three distinct directories:
 
 ```
-<< project_slug >>/
+{{ project_slug }}/
 ├── user-docs/                # End-user documentation (using the product)
 │   ├── tutorials/            # Learning-oriented
 │   ├── how-to/               # Task-oriented
@@ -179,11 +179,11 @@ maintainer: "Current Owner"               # Who maintains this doc
 **Tutorial:**
 ```yaml
 ---
-title: "Getting Started with << project_name >>"
+title: "Getting Started with {{ project_name }}"
 type: tutorial
 status: current
 audience: beginners
-last_updated: << '%Y-%m-%d' | strftime >>
+last_updated: {{ '%Y-%m-%d' | strftime }}
 estimated_time: "20 minutes"
 prerequisites:
   - Python 3.11+ installed
@@ -200,7 +200,7 @@ title: "How to Configure Custom Backends"
 type: how-to
 status: current
 audience: intermediate
-last_updated: << '%Y-%m-%d' | strftime >>
+last_updated: {{ '%Y-%m-%d' | strftime }}
 tags: [configuration, backends, customization]
 related:
   - ../reference/configuration-schema.md
@@ -215,7 +215,7 @@ title: "API Reference v1.0"
 type: reference
 status: current
 audience: all
-last_updated: << '%Y-%m-%d' | strftime >>
+last_updated: {{ '%Y-%m-%d' | strftime }}
 version: 1.0.0
 test_extraction: true
 tags: [api, reference]
@@ -586,7 +586,7 @@ def example():
 
 ```python
 # ✅ GOOD: Complete, runnable
-from << package_name >>.api import process
+from {{ package_name }}.api import process
 
 def main():
     result = process(input="test")
@@ -622,7 +622,7 @@ assert result["status"]
 
 ### Available Scripts
 
-<% if include_documentation_standard %>
+{% if include_documentation_standard %}
 #### 1. Validate Documentation
 
 **File:** `scripts/validate_docs.py`
@@ -687,9 +687,9 @@ Documentation quality is enforced in CI via `.github/workflows/docs-quality.yml`
 **Enforcement:**
 - ❌ Block merge if validation fails
 - ⚠️ Warning if staleness detected (doesn't block)
-<% endif %>
+{% endif %}
 
-<% if documentation_advanced_features %>
+{% if documentation_advanced_features %}
 ---
 
 ## Advanced Features
@@ -996,7 +996,7 @@ def find_docs_about(topic: str) -> list:
 - Relevance scoring for ranking results
 - Structured frontmatter for metadata extraction
 
-<% endif %>
+{% endif %}
 
 ---
 
@@ -1058,15 +1058,15 @@ mv user-docs/old-doc.md archived/old-doc.md
 
 ### Before Committing Doc Changes
 
-<% if include_documentation_standard %>
+{% if include_documentation_standard %}
 - [ ] Run `python scripts/validate_docs.py`
-<% endif %>
+{% endif %}
 - [ ] Verify code examples are testable
 - [ ] Check internal links work
 - [ ] Update `last_updated` field
-<% if include_documentation_standard %>
+{% if include_documentation_standard %}
 - [ ] Run extracted tests (if `test_extraction: true`)
-<% endif %>
+{% endif %}
 
 ### During PR Review
 
@@ -1134,8 +1134,8 @@ test_extraction: true
 ---
 
 **Version:** 1.0.0
-**Last Updated:** << '%Y-%m-%d' | strftime >>
-**Maintained By:** << project_name >> team
+**Last Updated:** {{ '%Y-%m-%d' | strftime }}
+**Maintained By:** {{ project_name }} team
 **Status:** Active
 
 ---
@@ -1144,9 +1144,9 @@ test_extraction: true
 
 - [README.md](README.md) - Project overview
 - [AGENTS.md](AGENTS.md) - Machine-readable instructions for AI agents
-<% if include_contributing %>
+{% if include_contributing %}
 - [dev-docs/CONTRIBUTING.md](dev-docs/CONTRIBUTING.md) - How to contribute
-<% endif %>
-<% if include_development_docs %>
+{% endif %}
+{% if include_development_docs %}
 - [dev-docs/DEVELOPMENT.md](dev-docs/DEVELOPMENT.md) - Developer deep dive
-<% endif %>
+{% endif %}

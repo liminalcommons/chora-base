@@ -22,7 +22,7 @@ echo ""
 read -p "Continue? (y/N): " -n 1 -r
 echo
 
-if << ! $REPLY =~ ^[Yy]$ >>; then
+if {{ ! $REPLY =~ ^[Yy]$ }}; then
     echo "Aborted."
     exit 0
 fi
@@ -72,18 +72,18 @@ echo ""
 echo "Edit your MCP config to enable stable backend:"
 echo ""
 echo "  1. Open: $CONFIG_FILE"
-echo "  2. Find the '<< project_slug >>-dev' section"
+echo "  2. Find the '{{ project_slug }}-dev' section"
 echo "  3. Comment it out or remove it completely"
-echo "  4. Enable '<< project_slug >>-stable' or '<< project_slug >>' section"
+echo "  4. Enable '{{ project_slug }}-stable' or '{{ project_slug }}' section"
 echo "  5. Save the file"
 echo ""
 echo -e "${YELLOW}Example stable config:${NC}"
 echo ""
-cat <<'EOF'
+cat {{'EOF'
 {
   "mcpServers": {
-    "<< project_slug >>": {
-      "command": "<< project_slug >>",
+    "{{ project_slug }}": {
+      "command": "{{ project_slug }}",
       "args": [],
       "env": {
         "ANTHROPIC_API_KEY": "your_key",
@@ -151,7 +151,7 @@ else
     echo "Stable backend verification failed."
     echo ""
     echo "Possible issues:"
-    echo "  - << project_slug >> package not installed (run: pip install << project_slug >>)"
+    echo "  - {{ project_slug }} package not installed (run: pip install {{ project_slug }})"
     echo "  - API keys not set in environment"
     echo "  - Config still points to dev backend"
     echo ""

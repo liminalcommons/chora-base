@@ -1,4 +1,4 @@
-# Memory System Guide for << project_name >>
+# Memory System Guide for {{ project_name }}
 
 **Purpose**: Comprehensive memory system documentation for cross-session learning and knowledge persistence.
 
@@ -8,16 +8,16 @@
 
 ## Quick Reference
 
-- **Query events**: `<< project_slug >>-memory query --type app.failed --since 24h`
-- **Search knowledge**: `<< project_slug >>-memory knowledge search --tag error-handling`
-- **Create knowledge note**: `echo "content" | << project_slug >>-memory knowledge create "Title" --tag tag1`
-- **Show trace timeline**: `<< project_slug >>-memory trace <trace-id>`
+- **Query events**: `{{ project_slug }}-memory query --type app.failed --since 24h`
+- **Search knowledge**: `{{ project_slug }}-memory knowledge search --tag error-handling`
+- **Create knowledge note**: `echo "content" | {{ project_slug }}-memory knowledge create "Title" --tag tag1`
+- **Show trace timeline**: `{{ project_slug }}-memory trace <trace-id>`
 
 ---
 
 ## Overview
 
-<< project_name >> includes a stateful memory infrastructure for cross-session learning and knowledge persistence, implementing A-MEM (Agentic Memory) principles.
+{{ project_name }} includes a stateful memory infrastructure for cross-session learning and knowledge persistence, implementing A-MEM (Agentic Memory) principles.
 
 **Memory capabilities:**
 - **Event Log** - Append-only operation history with trace correlation
@@ -29,7 +29,7 @@
 
 ## Memory Architecture (3-Tier Model)
 
-<< project_name >> implements a **three-tier memory architecture** optimized for AI agent workflows:
+{{ project_name }} implements a **three-tier memory architecture** optimized for AI agent workflows:
 
 ```
 ┌──────────────────────────────────────────────────────────────┐
@@ -121,7 +121,7 @@ All memory data stored in `.chora/memory/`:
 **Emit events during operations:**
 
 ```python
-from << package_name >>.memory import emit_event, TraceContext
+from {{ package_name }}.memory import emit_event, TraceContext
 
 # Start workflow with trace context
 with TraceContext() as trace_id:
@@ -139,7 +139,7 @@ with TraceContext() as trace_id:
 
 
 ```python
-from << package_name >>.memory import query_events
+from {{ package_name }}.memory import query_events
 
 # Find failures in last 24 hours
 failures = query_events(
@@ -162,7 +162,7 @@ for failure in failures:
 **Create learning notes:**
 
 ```python
-from << package_name >>.memory import KnowledgeGraph
+from {{ package_name }}.memory import KnowledgeGraph
 
 kg = KnowledgeGraph()
 
@@ -188,7 +188,7 @@ notes = kg.search(text="timeout")
 related = kg.get_related("note-id", max_distance=2)
 ```
 
-<% if include_cli -%>
+{% if include_cli -%}
 
 ---
 
@@ -198,49 +198,49 @@ related = kg.get_related("note-id", max_distance=2)
 
 ```bash
 # Find recent failures
-<< project_slug >>-memory query --type "app.failed" --status failure --since "24h"
+{{ project_slug }}-memory query --type "app.failed" --status failure --since "24h"
 
 # Get all events from last 7 days
-<< project_slug >>-memory query --since "7d" --limit 100
+{{ project_slug }}-memory query --since "7d" --limit 100
 
 # Get events as JSON for processing
-<< project_slug >>-memory query --type "app.started" --json
+{{ project_slug }}-memory query --type "app.started" --json
 ```
 
 **Get trace timeline:**
 
 ```bash
 # Show workflow timeline
-<< project_slug >>-memory trace abc123
+{{ project_slug }}-memory trace abc123
 
 # Get trace as JSON
-<< project_slug >>-memory trace abc123 --json
+{{ project_slug }}-memory trace abc123 --json
 ```
 
 **Search and manage knowledge:**
 
 ```bash
 # Find notes about errors
-<< project_slug >>-memory knowledge search --tag error
+{{ project_slug }}-memory knowledge search --tag error
 
 # Create knowledge note
-echo "Fix content" | << project_slug >>-memory knowledge create "Title" --tag tag1 --confidence high
+echo "Fix content" | {{ project_slug }}-memory knowledge create "Title" --tag tag1 --confidence high
 
 # Show note details
-<< project_slug >>-memory knowledge show note-id
+{{ project_slug }}-memory knowledge show note-id
 ```
 
 **View statistics:**
 
 ```bash
 # Stats for last 7 days
-<< project_slug >>-memory stats
+{{ project_slug }}-memory stats
 
 # Stats for last 24 hours with JSON output
-<< project_slug >>-memory stats --since 24h --json
+{{ project_slug }}-memory stats --since 24h --json
 ```
 
-<% endif -%>
+{% endif -%}
 
 ---
 
@@ -254,7 +254,7 @@ This section provides **production-ready query patterns** for AI agents to effec
 
 
 ```python
-from << package_name >>.memory import query_events, KnowledgeGraph
+from {{ package_name }}.memory import query_events, KnowledgeGraph
 
 # Step 1: Extract key terms from current error
 current_error = "ConnectionTimeout: Failed to connect to database after 30s"
@@ -291,7 +291,7 @@ if similar_events:
 
 
 ```python
-from << package_name >>.memory import query_events
+from {{ package_name }}.memory import query_events
 from datetime import datetime, timedelta
 
 # Query last 14 days of operation metrics
@@ -335,7 +335,7 @@ for day, durations in sorted(daily_avg_duration.items()):
 
 
 ```python
-from << package_name >>.memory import KnowledgeGraph
+from {{ package_name }}.memory import KnowledgeGraph
 
 kg = KnowledgeGraph()
 
@@ -372,7 +372,7 @@ for solution in solutions:
 
 
 ```python
-from << package_name >>.memory import KnowledgeGraph
+from {{ package_name }}.memory import KnowledgeGraph
 
 kg = KnowledgeGraph()
 
@@ -410,7 +410,7 @@ print(f"Gathered {len(ranked)} related notes for context")
 
 
 ```python
-from << package_name >>.memory import query_events, KnowledgeGraph
+from {{ package_name }}.memory import query_events, KnowledgeGraph
 
 def hybrid_query(problem_type: str, since_hours: int = 168):
     """Query both event log and knowledge graph for comprehensive view."""
@@ -479,13 +479,13 @@ print(f"{insight['summary']['occurrences']} timeouts, {insight['summary']['docum
 # Problem: Tool failing with "rate limit exceeded"
 
 # Step 1: Query past rate limit failures
-<< project_slug >>-memory query --type "tool.failed" --since 30d | grep "rate limit"
+{{ project_slug }}-memory query --type "tool.failed" --since 30d | grep "rate limit"
 
 # Step 2: Search knowledge base
-<< project_slug >>-memory knowledge search --tag rate-limits --tag troubleshooting
+{{ project_slug }}-memory knowledge search --tag rate-limits --tag troubleshooting
 
 # Step 3: Show specific solution note
-<< project_slug >>-memory knowledge show rate-limit-handling
+{{ project_slug }}-memory knowledge show rate-limit-handling
 
 # Step 4: Apply exponential backoff solution (from knowledge note)
 # ... implement fix ...
@@ -494,11 +494,11 @@ print(f"{insight['summary']['occurrences']} timeouts, {insight['summary']['docum
 echo "Applied exponential backoff from rate-limit-handling note.
 Rate limit errors reduced from 50/day to 2/day (96% improvement).
 Solution: Added retry logic with delays [1s, 2s, 4s, 8s]." | \
-  << project_slug >>-memory knowledge create "Rate Limit Fix - Exponential Backoff Success" \
+  {{ project_slug }}-memory knowledge create "Rate Limit Fix - Exponential Backoff Success" \
     --tag rate-limits --tag performance --tag solved --confidence high
 
 # Step 6: Link to original problem note
-<< project_slug >>-memory knowledge link rate-limit-handling rate-limit-fix-success
+{{ project_slug }}-memory knowledge link rate-limit-handling rate-limit-fix-success
 ```
 
 ---
@@ -515,7 +515,7 @@ echo "## Problem
 Tool X was failing intermittently with 'connection timeout'.
 
 ## Investigation
-- Analyzed events: << project_slug >>-memory query --type tool.x.failed --since 7d
+- Analyzed events: {{ project_slug }}-memory query --type tool.x.failed --since 7d
 - Found pattern: Failures only during peak hours (9am-5pm)
 - Root cause: Connection pool exhaustion (max 10 connections)
 
@@ -531,14 +531,14 @@ Added connection pool monitoring.
 ## Related
 - Connection pool settings: [link to config docs]
 - Load testing guide: [link to testing docs]" | \
-  << project_slug >>-memory knowledge create "Tool X Connection Timeout Fix" \
+  {{ project_slug }}-memory knowledge create "Tool X Connection Timeout Fix" \
     --tag connection-pool --tag timeout --tag performance --confidence high
 
 # 2. Tag for future retrieval
-<< project_slug >>-memory knowledge tag connection-timeout-fix production-issues
+{{ project_slug }}-memory knowledge tag connection-timeout-fix production-issues
 
 # 3. Link to related notes
-<< project_slug >>-memory knowledge link connection-timeout-fix connection-pool-config
+{{ project_slug }}-memory knowledge link connection-timeout-fix connection-pool-config
 ```
 
 **Benefits of creating knowledge:**
@@ -563,19 +563,19 @@ Added connection pool monitoring.
 ┌─────────────────────────────────────────────────────────┐
 │  2. QUERY PAST EVENTS (Event Log)                       │
 │  Search for similar failures in event history           │
-│  << project_slug >>-memory query --type problem.type --since 30d  │
+│  {{ project_slug }}-memory query --type problem.type --since 30d  │
 └─────────────────────────────────────────────────────────┘
                          ↓
 ┌─────────────────────────────────────────────────────────┐
 │  3. SEARCH KNOWLEDGE (Knowledge Graph)                  │
 │  Find documented solutions in knowledge base            │
-│  << project_slug >>-memory knowledge search --tag problem_domain  │
+│  {{ project_slug }}-memory knowledge search --tag problem_domain  │
 └─────────────────────────────────────────────────────────┘
                          ↓
 ┌─────────────────────────────────────────────────────────┐
 │  4. TRAVERSE LINKS (Bidirectional Navigation)           │
 │  Follow related notes for deeper context                │
-│  << project_slug >>-memory knowledge show note-id        │
+│  {{ project_slug }}-memory knowledge show note-id        │
 │  (Shows linked notes in "Related" section)              │
 └─────────────────────────────────────────────────────────┘
                          ↓
@@ -594,7 +594,7 @@ Added connection pool monitoring.
 ┌─────────────────────────────────────────────────────────┐
 │  7. RECORD LEARNING (Memory Evolution)                   │
 │  Create/update knowledge note with outcome              │
-│  << project_slug >>-memory knowledge create "Solution Title"     │
+│  {{ project_slug }}-memory knowledge create "Solution Title"     │
 │  Link to original problem note                          │
 │  Tag for future retrieval                               │
 └─────────────────────────────────────────────────────────┘
@@ -614,15 +614,15 @@ Added connection pool monitoring.
 # Agent notices: API responses taking >5 seconds (slow)
 
 # 2. QUERY PAST EVENTS
-<< project_slug >>-memory query --type "api.slow_response" --since 30d
+{{ project_slug }}-memory query --type "api.slow_response" --since 30d
 # Output: Found 15 events of slow responses in past month
 
 # 3. SEARCH KNOWLEDGE
-<< project_slug >>-memory knowledge search --tag performance --tag api
+{{ project_slug }}-memory knowledge search --tag performance --tag api
 # Output: Found 3 notes: "API Caching Strategy", "Connection Pool Tuning", "Query Optimization"
 
 # 4. TRAVERSE LINKS
-<< project_slug >>-memory knowledge show api-caching-strategy
+{{ project_slug }}-memory knowledge show api-caching-strategy
 # Output shows:
 # ## API Caching Strategy
 # Problem: API responses slow due to repeated database queries
@@ -660,15 +660,15 @@ Updated cache invalidation logic to be more granular.
 - api-caching-strategy (original guide)
 - connection-pool-tuning (complementary optimization)
 - redis-configuration (cache config details)" | \
-  << project_slug >>-memory knowledge create "API Caching - Production Implementation" \
+  {{ project_slug }}-memory knowledge create "API Caching - Production Implementation" \
     --tag performance --tag api --tag caching --tag production --confidence high
 
 # 8. CUMULATIVE IMPROVEMENT
 # Link back to original note
-<< project_slug >>-memory knowledge link api-caching-strategy api-caching-production
+{{ project_slug }}-memory knowledge link api-caching-strategy api-caching-production
 
 # Tag for production issues
-<< project_slug >>-memory knowledge tag api-caching-production solved production-win
+{{ project_slug }}-memory knowledge tag api-caching-production solved production-win
 
 # Future sessions encountering slow API will:
 # 1. Query events → find "api.slow_response"
@@ -698,15 +698,15 @@ See [README.md](README.md) for complete memory architecture documentation.
 
 ```bash
 # Verify CLI installation
-which << project_slug >>-memory
-# Expected: .venv/bin/<< project_slug >>-memory
+which {{ project_slug }}-memory
+# Expected: .venv/bin/{{ project_slug }}-memory
 
 # If missing, reinstall package with CLI
 pip install -e .
 
 # Verify entry point in pyproject.toml
 grep -A 5 "\[project.scripts\]" pyproject.toml
-# Should contain: << project_slug >>-memory = "<< package_name >>.cli.memory:main"
+# Should contain: {{ project_slug }}-memory = "{{ package_name }}.cli.memory:main"
 ```
 
 **Problem: Query returns empty results**
@@ -721,10 +721,10 @@ cat .chora/memory/events/$(date +%Y-%m)/events.jsonl | wc -l
 # If 0, no events emitted yet
 
 # Emit test event to verify system
-python -c "from << package_name >>.memory import emit_event; emit_event('test.verify', status='success')"
+python -c "from {{ package_name }}.memory import emit_event; emit_event('test.verify', status='success')"
 
 # Query again
-<< project_slug >>-memory query --type test.verify
+{{ project_slug }}-memory query --type test.verify
 # Should show test event
 ```
 
@@ -754,7 +754,7 @@ touch .chora/memory/events/2025-01/events.jsonl
 ```bash
 # 1. Verify event emission
 python -c "
-from << package_name >>.memory import emit_event
+from {{ package_name }}.memory import emit_event
 print('Emitting test event...')
 emit_event('debug.test', status='success', metadata={'test': 'value'})
 print('Event emitted successfully')
@@ -768,7 +768,7 @@ ls -lh .chora/memory/events/$(date +%Y-%m)/events.jsonl
 tail -5 .chora/memory/events/$(date +%Y-%m)/events.jsonl
 
 # 4. Query with verbose output
-<< project_slug >>-memory query --type debug.test --json | python -m json.tool
+{{ project_slug }}-memory query --type debug.test --json | python -m json.tool
 ```
 
 **Problem: Trace correlation not working**
@@ -780,14 +780,14 @@ echo $CHORA_TRACE_ID
 
 # Emit event with explicit trace_id
 python -c "
-from << package_name >>.memory import emit_event, TraceContext
+from {{ package_name }}.memory import emit_event, TraceContext
 with TraceContext() as trace_id:
     print(f'Trace ID: {trace_id}')
     emit_event('test.trace', trace_id=trace_id, status='success')
 "
 
 # Query by trace_id
-<< project_slug >>-memory trace <TRACE_ID>
+{{ project_slug }}-memory trace <TRACE_ID>
 # Should show all events with that trace_id
 ```
 
@@ -802,7 +802,7 @@ mkdir -p .chora/memory/archive
 find .chora/memory/events -type d -name "2024-*" -exec mv {} .chora/memory/archive/ \;
 
 # Query stats for retention analysis
-<< project_slug >>-memory stats --since 90d
+{{ project_slug }}-memory stats --since 90d
 # Review event types, identify noise (e.g., excessive debug events)
 ```
 
@@ -830,14 +830,14 @@ cat .chora/memory/knowledge/notes/my-note.md
 
 # 3. Rebuild tag index if corrupted
 python -c "
-from << package_name >>.memory.knowledge_graph import KnowledgeGraph
+from {{ package_name }}.memory.knowledge_graph import KnowledgeGraph
 kg = KnowledgeGraph()
 kg._rebuild_tag_index()  # Internal method - use with caution
 print('Tag index rebuilt')
 "
 
 # 4. Search again
-<< project_slug >>-memory knowledge search --tag my-tag
+{{ project_slug }}-memory knowledge search --tag my-tag
 ```
 
 **Problem: Broken bidirectional links**
@@ -867,7 +867,7 @@ with open('.chora/memory/knowledge/links.json') as f:
 "
 
 # Fix broken links
-<< project_slug >>-memory knowledge link note-a note-b  # Recreate link
+{{ project_slug }}-memory knowledge link note-a note-b  # Recreate link
 ```
 
 **Problem: Tag corruption or duplicates**
@@ -889,7 +889,7 @@ for tag in tags.keys():
 "
 
 # Merge tags if needed
-<< project_slug >>-memory knowledge search --tag old-tag
+{{ project_slug }}-memory knowledge search --tag old-tag
 # Create notes with new standardized tag
 # Manually remove old tag from tag index
 ```
@@ -901,7 +901,7 @@ for tag in tags.keys():
 ```bash
 # Verify TraceContext sets environment variable
 python -c "
-from << package_name >>.memory import TraceContext
+from {{ package_name }}.memory import TraceContext
 import os
 with TraceContext() as trace_id:
     print(f'Inside context: {os.environ.get(\"CHORA_TRACE_ID\")}')
@@ -912,7 +912,7 @@ print(f'Outside context: {os.environ.get(\"CHORA_TRACE_ID\")}')
 
 # Test subprocess propagation
 python -c "
-from << package_name >>.memory import TraceContext
+from {{ package_name }}.memory import TraceContext
 import subprocess, os
 with TraceContext() as trace_id:
     result = subprocess.run(
@@ -931,7 +931,7 @@ with TraceContext() as trace_id:
 ```bash
 # Anti-pattern: Nested TraceContext (avoid this)
 # python -c "
-# from << package_name >>.memory import TraceContext
+# from {{ package_name }}.memory import TraceContext
 # with TraceContext() as trace_1:  # Outer context
 #     with TraceContext() as trace_2:  # Inner context overrides
 #         emit_event('test')  # Uses trace_2, loses trace_1
@@ -939,7 +939,7 @@ with TraceContext() as trace_id:
 
 # Correct pattern: Single TraceContext per workflow
 python -c "
-from << package_name >>.memory import TraceContext, emit_event
+from {{ package_name }}.memory import TraceContext, emit_event
 with TraceContext() as trace_id:
     emit_event('workflow.started', trace_id=trace_id)
     # ... all workflow steps ...
@@ -954,9 +954,9 @@ with TraceContext() as trace_id:
 
 - **[Main AGENTS.md](../../AGENTS.md)** - Project overview, architecture, common tasks
 - **[Testing AGENTS.md](../../tests/AGENTS.md)** - Testing instructions, troubleshooting
-<% if include_docker -%>
+{% if include_docker -%}
 - **[Docker AGENTS.md](../../docker/AGENTS.md)** - Container operations, deployment
-<% endif -%>
+{% endif -%}
 - **[scripts/AGENTS.md](../../scripts/AGENTS.md)** - Automation scripts reference
 
 ---

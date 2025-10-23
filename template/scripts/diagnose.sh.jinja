@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# diagnose.sh - Automated diagnostics for << project_slug >>
+# diagnose.sh - Automated diagnostics for {{ project_slug }}
 #
 # Usage: ./scripts/diagnose.sh [--save-report]
 #
@@ -36,20 +36,20 @@ check_item() {
     echo -n "Checking $name... "
 
     if output=$(eval "$command" 2>&1); then
-        if [ -n "$expected" ] && << ! "$output" =~ $expected >>; then
+        if [ -n "$expected" ] && {{ ! "$output" =~ $expected }}; then
             echo -e "${YELLOW}⚠${NC} Unexpected: $output"
             WARNINGS=$((WARNINGS + 1))
         else
             echo -e "${GREEN}✓${NC}"
         fi
         if [ "$SAVE_REPORT" = true ]; then
-            echo "$name: $output" >> "$REPORT_FILE"
+            echo "$name: $output" }} "$REPORT_FILE"
         fi
     else
         echo -e "${RED}✗${NC} Failed: $output"
         ERRORS=$((ERRORS + 1))
         if [ "$SAVE_REPORT" = true ]; then
-            echo "$name: FAILED - $output" >> "$REPORT_FILE"
+            echo "$name: FAILED - $output" }} "$REPORT_FILE"
         fi
     fi
 }
@@ -60,7 +60,7 @@ echo -e "${YELLOW}[1/8] Python Environment${NC}"
 check_item "Python version" "python --version" "3\.(11|12|13)"
 check_item "Virtual environment" "echo \$VIRTUAL_ENV" ""
 check_item "pip version" "pip --version" ""
-check_item "Package installed" "pip show << project_slug >> | head -1" ""
+check_item "Package installed" "pip show {{ project_slug }} | head -1" ""
 
 echo ""
 
@@ -87,7 +87,7 @@ echo ""
 echo -e "${YELLOW}[4/8] File Structure${NC}"
 
 check_item "pyproject.toml" "[ -f pyproject.toml ] && echo 'Exists' || echo 'Missing'" "Exists"
-check_item "src/ directory" "[ -d src/<< package_name >> ] && echo 'Exists' || echo 'Missing'" "Exists"
+check_item "src/ directory" "[ -d src/{{ package_name }} ] && echo 'Exists' || echo 'Missing'" "Exists"
 check_item "tests/ directory" "[ -d tests ] && echo 'Exists' || echo 'Missing'" "Exists"
 check_item "logs/ directory" "[ -d logs ] && echo 'Exists' || echo 'Missing'" "Exists"
 
@@ -141,22 +141,22 @@ echo ""
 # Section 8: Logs & Recent Errors
 echo -e "${YELLOW}[8/8] Logs & Errors${NC}"
 
-if [ -f logs/<< project_slug >>.log ]; then
-    LOG_SIZE=$(du -h logs/<< project_slug >>.log | cut -f1)
+if [ -f logs/{{ project_slug }}.log ]; then
+    LOG_SIZE=$(du -h logs/{{ project_slug }}.log | cut -f1)
     echo -e "  Log file size: $LOG_SIZE"
 
     # Check for recent errors
-    ERROR_COUNT=$(grep -c "ERROR" logs/<< project_slug >>.log 2>/dev/null || echo "0")
+    ERROR_COUNT=$(grep -c "ERROR" logs/{{ project_slug }}.log 2>/dev/null || echo "0")
     if [ "$ERROR_COUNT" -gt 0 ]; then
         echo -e "  ${YELLOW}⚠${NC} Found $ERROR_COUNT ERROR entries in log"
         echo -e "  ${BLUE}Recent errors:${NC}"
-        grep "ERROR" logs/<< project_slug >>.log | tail -3 | sed 's/^/    /'
+        grep "ERROR" logs/{{ project_slug }}.log | tail -3 | sed 's/^/    /'
         WARNINGS=$((WARNINGS + 1))
     else
         echo -e "  ${GREEN}✓${NC} No ERROR entries in log"
     fi
 else
-    echo -e "  ${YELLOW}⚠${NC} No log file found at logs/<< project_slug >>.log"
+    echo -e "  ${YELLOW}⚠${NC} No log file found at logs/{{ project_slug }}.log"
     WARNINGS=$((WARNINGS + 1))
 fi
 
@@ -193,7 +193,7 @@ if [ "$SAVE_REPORT" = true ]; then
     echo -e "${BLUE}Diagnostic report saved: $REPORT_FILE${NC}"
     echo ""
     echo "Include this file when reporting issues:"
-    echo "  https://github.com/<< github_username >>/<< project_slug >>/issues/new"
+    echo "  https://github.com/{{ github_username }}/{{ project_slug }}/issues/new"
 fi
 
 echo ""

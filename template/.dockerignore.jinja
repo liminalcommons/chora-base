@@ -46,22 +46,22 @@ htmlcov/
 coverage.xml
 *.cover
 .hypothesis/
-<% if include_tests -%>
+{% if include_tests -%}
 # Note: tests/ directory NOT excluded here
 # Strategy from mcp-n8n: Let Dockerfile COPY control inclusion
 # - Production Dockerfile: Doesn't COPY tests/
 # - Dockerfile.test: Explicitly COPY tests/
 # This avoids needing separate .dockerignore files
-<% endif -%>
+{% endif -%}
 
 # === Type Checking and Linting ===
 .mypy_cache/
 .ruff_cache/
 .dmypy.json
 dmypy.json
-<% if include_pre_commit -%>
+{% if include_pre_commit -%}
 .pre-commit-config.yaml
-<% endif -%>
+{% endif -%}
 
 # === IDEs and Editors ===
 .vscode/
@@ -86,33 +86,33 @@ dmypy.json
 # === Logs ===
 logs/
 *.log
-<% if project_type == 'mcp_server' -%>
+{% if project_type == 'mcp_server' -%}
 event_logs/
-<% endif -%>
+{% endif -%}
 
 # === Documentation (not needed in runtime) ===
 docs/
 *.md
 !README.md
-<% if include_documentation_standard -%>
+{% if include_documentation_standard -%}
 user-docs/
 project-docs/
 dev-docs/
 DOCUMENTATION_STANDARD.md
 DOCUMENTATION_METRICS.md
-<% endif -%>
-<% if include_vision_docs -%>
+{% endif -%}
+{% if include_vision_docs -%}
 ROADMAP.md
-<% endif -%>
-<% if include_contributing -%>
+{% endif -%}
+{% if include_contributing -%}
 CONTRIBUTING.md
-<% endif -%>
-<% if include_development_docs -%>
+{% endif -%}
+{% if include_development_docs -%}
 DEVELOPMENT.md
-<% endif -%>
-<% if include_troubleshooting -%>
+{% endif -%}
+{% if include_troubleshooting -%}
 TROUBLESHOOTING.md
-<% endif -%>
+{% endif -%}
 
 # === Docker ===
 docker-compose.yml
@@ -121,15 +121,15 @@ Dockerfile.*
 .dockerignore
 
 # === CI/CD (not needed in image) ===
-<% if include_github_actions -%>
+{% if include_github_actions -%}
 .github/
-<% endif -%>
+{% endif -%}
 
 # === Scripts (not needed in runtime) ===
 scripts/
-<% if include_justfile -%>
+{% if include_justfile -%}
 justfile
-<% endif -%>
+{% endif -%}
 
 # === Dev Tools ===
 .copier-answers.yml
@@ -149,20 +149,20 @@ ENV/
 env/
 .venv-*/
 
-<% if project_type == 'mcp_server' -%>
+{% if project_type == 'mcp_server' -%}
 # === MCP Server Specific ===
 .chora/memory/events/**/*.json
 .chora/memory/knowledge/**/*.md
 config/event_mappings.yaml
 chora-configs/
 
-<% endif -%>
-<% if project_type == 'web_service' -%>
+{% endif -%}
+{% if project_type == 'web_service' -%}
 # === Web Service Specific ===
 static/
 media/
 uploads/
 
-<% endif -%>
+{% endif -%}
 # === Project-Specific ===
 # Add your custom exclusions below:

@@ -52,7 +52,7 @@ echo "  - PYTHONPATH: $PYTHONPATH"
 echo ""
 
 if [ "$USE_WATCHDOG" = true ]; then
-    echo -e "${YELLOW}Watching for changes in: src/<< package_name >>/${NC}"
+    echo -e "${YELLOW}Watching for changes in: src/{{ package_name }}/${NC}"
     echo ""
     echo "Press Ctrl+C to stop"
     echo ""
@@ -61,10 +61,10 @@ if [ "$USE_WATCHDOG" = true ]; then
 
     # Use watchmedo for auto-reload
     watchmedo auto-restart \
-        --directory=src/<< package_name >> \
+        --directory=src/{{ package_name }} \
         --pattern="*.py" \
         --recursive \
-        -- python -m << package_name >>.gateway
+        -- python -m {{ package_name }}.gateway
 else
     echo "Starting server (no auto-reload)..."
     echo ""
@@ -74,5 +74,5 @@ else
     echo ""
 
     # Run without auto-reload
-    python -m << package_name >>.gateway
+    python -m {{ package_name }}.gateway
 fi

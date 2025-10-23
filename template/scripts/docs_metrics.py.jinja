@@ -147,7 +147,7 @@ class DocumentationMetrics:
         broken_links = 0
         for doc_path in self.docs.keys():
             content = doc_path.read_text(encoding="utf-8")
-            links = re.findall(r"\[([^\>>+)\]\(([^\)]+)\)", content)
+            links = re.findall(r"\[([^\}}+)\]\(([^\)]+)\)", content)
 
             for link_text, link_path in links:
                 # Skip external links
