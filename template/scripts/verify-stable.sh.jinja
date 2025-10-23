@@ -17,24 +17,24 @@ ERRORS=0
 WARNINGS=0
 
 # Check 1: Package installed
-echo -e "${YELLOW}[1/4] Checking {{ project_slug }} package...${NC}"
-if pip show {{ project_slug }} > /dev/null 2>&1; then
-    VERSION=$(pip show {{ project_slug }} | grep Version | awk '{print $2}')
-    echo -e "  ${GREEN}✓${NC} {{ project_slug }} installed (version $VERSION)"
+echo -e "${YELLOW}[1/4] Checking [[ project_slug ]] package...${NC}"
+if pip show [[ project_slug ]] > /dev/null 2>&1; then
+    VERSION=$(pip show [[ project_slug ]] | grep Version | awk '{print $2}')
+    echo -e "  ${GREEN}✓${NC} [[ project_slug ]] installed (version $VERSION)"
 else
-    echo -e "  ${RED}✗${NC} {{ project_slug }} not installed"
-    echo "    Run: pip install {{ project_slug }}"
+    echo -e "  ${RED}✗${NC} [[ project_slug ]] not installed"
+    echo "    Run: pip install [[ project_slug ]]"
     ERRORS=$((ERRORS + 1))
 fi
 echo ""
 
 # Check 2: Command available
-echo -e "${YELLOW}[2/4] Checking {{ project_slug }} command...${NC}"
-if command -v {{ project_slug }} > /dev/null 2>&1; then
-    echo -e "  ${GREEN}✓${NC} {{ project_slug }} command available"
+echo -e "${YELLOW}[2/4] Checking [[ project_slug ]] command...${NC}"
+if command -v [[ project_slug ]] > /dev/null 2>&1; then
+    echo -e "  ${GREEN}✓${NC} [[ project_slug ]] command available"
 else
-    echo -e "  ${RED}✗${NC} {{ project_slug }} command not found"
-    echo "    Ensure package is installed: pip install {{ project_slug }}"
+    echo -e "  ${RED}✗${NC} [[ project_slug ]] command not found"
+    echo "    Ensure package is installed: pip install [[ project_slug ]]"
     ERRORS=$((ERRORS + 1))
 fi
 echo ""
@@ -87,7 +87,7 @@ if [ $ERRORS -eq 0 ] && [ $WARNINGS -eq 0 ]; then
     echo "Next steps:"
     echo "  1. Test tool calls in Claude Desktop/Cursor"
     echo "  2. Try: 'List available chora generators'"
-    echo "  3. Check logs: tail -f logs/{{ project_slug }}.log"
+    echo "  3. Check logs: tail -f logs/[[ project_slug ]].log"
     exit 0
 elif [ $ERRORS -eq 0 ]; then
     echo -e "${YELLOW}✓ Basic checks passed (${WARNINGS} warnings)${NC}"
@@ -108,7 +108,7 @@ else
     echo "Found $ERRORS error(s) and $WARNINGS warning(s)."
     echo ""
     echo "Fix errors before using stable backend:"
-    echo "  1. Install {{ project_slug }}: pip install {{ project_slug }}"
+    echo "  1. Install [[ project_slug ]]: pip install [[ project_slug ]]"
     echo "  2. Set API keys in .env or MCP config"
     echo "  3. Run this script again"
     echo ""

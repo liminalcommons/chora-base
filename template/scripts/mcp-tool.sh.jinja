@@ -48,9 +48,9 @@ if [ -f ".venv/bin/activate" ]; then
     source .venv/bin/activate
 fi
 
-# Call {{ project_slug }} via STDIO
+# Call [[ project_slug ]] via STDIO
 # - Echo request to stdin
 # - Run gateway in STDIO mode
 # - Suppress stderr (startup messages)
 # - Extract result using jq
-echo "$REQUEST" | python -m {{ package_name }}.gateway 2>/dev/null | jq -r '.result.content[0].text'
+echo "$REQUEST" | python -m [[ package_name ]].gateway 2>/dev/null | jq -r '.result.content[0].text'

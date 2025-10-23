@@ -36,7 +36,7 @@ class DocumentationMapGenerator:
 
     def run(self) -> None:
         """Generate DOCUMENTATION_MAP.md."""
-        {% raw %}print("Generating DOCUMENTATION_MAP.md for {}...".format(self.root_dir)){% endraw %}
+        print("Generating DOCUMENTATION_MAP.md for {}...".format(self.root_dir))
 
         # Step 1: Find and parse all markdown files
         self._parse_all_docs()
@@ -45,7 +45,7 @@ class DocumentationMapGenerator:
             print("No markdown files found. Skipping DOCUMENTATION_MAP.md generation.")
             return
 
-        {% raw %}print("Found {} markdown files".format(len(self.docs))){% endraw %}
+        print("Found {} markdown files".format(len(self.docs)))
 
         # Step 2: Generate markdown content
         content = self._generate_markdown()
@@ -54,7 +54,7 @@ class DocumentationMapGenerator:
         output_path = self.root_dir / "DOCUMENTATION_MAP.md"
         output_path.write_text(content, encoding="utf-8")
 
-        {% raw %}print("✅ Generated {}".format(output_path)){% endraw %}
+        print("✅ Generated {}".format(output_path))
 
     def _parse_all_docs(self) -> None:
         """Parse frontmatter from all markdown files in doc directories."""
@@ -95,8 +95,8 @@ class DocumentationMapGenerator:
         # Header
         lines.append("# Documentation Map")
         lines.append("")
-        {% raw %}lines.append("**Generated:** {}".format(datetime.now().strftime('%Y-%m-%d %H:%M:%S'))){% endraw %}
-        {% raw %}lines.append("**Total Documents:** {}".format(len(self.docs))){% endraw %}
+        lines.append("**Generated:** {}".format(datetime.now().strftime('%Y-%m-%d %H:%M:%S')))
+        lines.append("**Total Documents:** {}".format(len(self.docs)))
         lines.append("")
         lines.append("This file is auto-generated from frontmatter in documentation files.")
         lines.append("Do not edit manually - run `python scripts/generate_docs_map.py` to regenerate.")
@@ -138,10 +138,10 @@ class DocumentationMapGenerator:
                 "dev-docs": "Developer Documentation",
             }.get(doc_dir, doc_dir)
 
-            {% raw %}lines.append("### {}".format(dir_title)){% endraw %}
+            lines.append("### {}".format(dir_title))
             lines.append("")
-            {% raw %}lines.append("**Location:** `{}/`".format(doc_dir)){% endraw %}
-            {% raw %}lines.append("**Count:** {} documents".format(len(dir_docs))){% endraw %}
+            lines.append("**Location:** `{}/`".format(doc_dir))
+            lines.append("**Count:** {} documents".format(len(dir_docs)))
             lines.append("")
 
             # Table
@@ -155,7 +155,7 @@ class DocumentationMapGenerator:
                 status = fm.get("status", "unknown")
                 last_updated = fm.get("last_updated", "unknown")
 
-                {% raw %}lines.append("| [{}]({}) | {} | {} | {} |".format(title, rel_path, doc_type, status, last_updated)){% endraw %}
+                lines.append("| [{}]({}) | {} | {} | {} |".format(title, rel_path, doc_type, status, last_updated))
 
             lines.append("")
 
@@ -173,9 +173,9 @@ class DocumentationMapGenerator:
 
         for doc_type in sorted(by_type.keys()):
             docs_of_type = by_type[doc_type]
-            {% raw %}lines.append("### {}".format(doc_type.title())){% endraw %}
+            lines.append("### {}".format(doc_type.title()))
             lines.append("")
-            {% raw %}lines.append("**Count:** {} documents".format(len(docs_of_type))){% endraw %}
+            lines.append("**Count:** {} documents".format(len(docs_of_type)))
             lines.append("")
 
             # Table
@@ -189,7 +189,7 @@ class DocumentationMapGenerator:
                 status = fm.get("status", "unknown")
                 last_updated = fm.get("last_updated", "unknown")
 
-                {% raw %}lines.append("| [{}]({}) | {} | {} | {} |".format(title, rel_path, location, status, last_updated)){% endraw %}
+                lines.append("| [{}]({}) | {} | {} | {} |".format(title, rel_path, location, status, last_updated))
 
             lines.append("")
 
@@ -210,9 +210,9 @@ class DocumentationMapGenerator:
             status_emoji = {"current": "✅", "draft": "🚧", "deprecated": "⚠️"}.get(
                 status, "❓"
             )
-            {% raw %}lines.append("### {} {}".format(status_emoji, status.title())){% endraw %}
+            lines.append("### {} {}".format(status_emoji, status.title()))
             lines.append("")
-            {% raw %}lines.append("**Count:** {} documents".format(len(docs_with_status))){% endraw %}
+            lines.append("**Count:** {} documents".format(len(docs_with_status)))
             lines.append("")
 
             # Table
@@ -226,7 +226,7 @@ class DocumentationMapGenerator:
                 location = str(rel_path.parent)
                 last_updated = fm.get("last_updated", "unknown")
 
-                {% raw %}lines.append("| [{}]({}) | {} | {} | {} |".format(title, rel_path, doc_type, location, last_updated)){% endraw %}
+                lines.append("| [{}]({}) | {} | {} | {} |".format(title, rel_path, doc_type, location, last_updated))
 
             lines.append("")
 

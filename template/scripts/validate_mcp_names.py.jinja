@@ -27,9 +27,9 @@ from typing import List, Tuple
 # === Configuration ===
 
 PROJECT_ROOT = Path(__file__).parent.parent
-SRC_DIR = PROJECT_ROOT / "src" / "{{ package_name }}"
-MCP_NAMESPACE = "{{ mcp_namespace }}"
-ENABLE_NAMESPACING = {{ mcp_enable_namespacing | lower }}
+SRC_DIR = PROJECT_ROOT / "src" / "[[ package_name ]]"
+MCP_NAMESPACE = "[[ mcp_namespace ]]"
+ENABLE_NAMESPACING = [[ mcp_enable_namespacing | lower ]]
 
 # === Validation Patterns (from Chora MCP Conventions v1.0) ===
 

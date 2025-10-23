@@ -6,7 +6,7 @@
 #
 # Usage:
 #   ./scripts/migrate_namespace.sh <old_namespace> <new_namespace>
-#   ./scripts/migrate_namespace.sh "" "{{ mcp_namespace }}"  # Add namespacing
+#   ./scripts/migrate_namespace.sh "" "[[ mcp_namespace ]]"  # Add namespacing
 #
 # WARNING: This is a breaking change for clients using your MCP server.
 #          Always increment major version after running this script.
@@ -35,7 +35,7 @@ if [ -z "$NEW_NAMESPACE" ]; then
     echo ""
     echo "Examples:"
     echo "  # Add namespacing (empty old namespace)"
-    echo "  $0 \"\" \"{{ mcp_namespace }}\""
+    echo "  $0 \"\" \"[[ mcp_namespace ]]\""
     echo ""
     echo "  # Change namespace"
     echo "  $0 \"oldname\" \"newname\""
@@ -121,7 +121,7 @@ if [ -z "$OLD_NAMESPACE" ]; then
     echo "⚠️  Adding namespacing requires manual review"
     echo "  Automated replacement not safe (could match non-tool strings)"
     echo "  Please update tool names manually in:"
-    echo "    - src/{{ package_name }}/mcp/server.py"
+    echo "    - src/[[ package_name ]]/mcp/server.py"
     echo "    - Any tool call sites"
 else
     # Changing namespace - safe to automate
@@ -159,14 +159,14 @@ if [ -f "NAMESPACES.md" ]; then
 fi
 
 # Update MCP module configuration
-if [ -f "src/{{ package_name }}/mcp/__init__.py" ]; then
-    echo "  Updating src/{{ package_name }}/mcp/__init__.py"
+if [ -f "src/[[ package_name ]]/mcp/__init__.py" ]; then
+    echo "  Updating src/[[ package_name ]]/mcp/__init__.py"
     if [[ "$OSTYPE" == "darwin"* ]]; then
         sed -i '' "s/NAMESPACE = \"${OLD_NAMESPACE}\"/NAMESPACE = \"${NEW_NAMESPACE}\"/g" \
-            src/{{ package_name }}/mcp/__init__.py
+            src/[[ package_name ]]/mcp/__init__.py
     else
         sed -i "s/NAMESPACE = \"${OLD_NAMESPACE}\"/NAMESPACE = \"${NEW_NAMESPACE}\"/g" \
-            src/{{ package_name }}/mcp/__init__.py
+            src/[[ package_name ]]/mcp/__init__.py
     fi
 fi
 

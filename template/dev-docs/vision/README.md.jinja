@@ -1,12 +1,12 @@
-# Vision Documents - {{ project_name }}
+# Vision Documents - [[ project_name ]]
 
-This directory contains **vision documents** that describe potential future capabilities and evolutionary directions for {{ project_name }}. Vision documents are exploratory, not committed features.
+This directory contains **vision documents** that describe potential future capabilities and evolutionary directions for [[ project_name ]]. Vision documents are exploratory, not committed features.
 
 ---
 
 ## What Are Vision Documents?
 
-Vision documents capture **long-term thinking** about how {{ project_name }} might evolve beyond the current committed roadmap. They serve several purposes:
+Vision documents capture **long-term thinking** about how [[ project_name ]] might evolve beyond the current committed roadmap. They serve several purposes:
 
 1. **Strategic Context for Agents** - Help AI coding agents make architecture decisions that keep future doors open
 2. **Alignment Documentation** - Record the founding vision and strategic direction for the project
@@ -41,16 +41,16 @@ Vision documents help answer questions like:
 **Situation:** You're building an MCP tool that returns simple text responses.
 
 **Without Vision:**
-{% raw %}
+
 ```python
 def get_info(query: str) -> str:
     # Returns plain string
     return f"Result: {query}"
 ```
-{% endraw %}
+
 
 **With Vision (knows Wave 3 adds structured data):**
-{% raw %}
+
 ```python
 def get_info(query: str) -> dict:
     # Returns structured data (extensible for Wave 3)
@@ -59,7 +59,7 @@ def get_info(query: str) -> dict:
         "metadata": {"timestamp": now(), "version": "1.0"}
     }
 ```
-{% endraw %}
+
 
 **Outcome:** Current work delivers value *and* Wave 3 doesn't require breaking changes.
 
@@ -275,11 +275,11 @@ Each archived wave includes:
 **When encountering design decision:**
 1. Query event log for similar past decisions:
    ```bash
-   {{ package_name }}-memory query --type architecture.decision --since 90d
+   [[ package_name ]]-memory query --type architecture.decision --since 90d
    ```
 2. Search knowledge for architectural notes:
    ```bash
-   {{ package_name }}-memory knowledge search --tag architecture --tag vision
+   [[ package_name ]]-memory knowledge search --tag architecture --tag vision
    ```
 3. Apply learning to current decision
 4. Record new decision for future reference
@@ -347,9 +347,9 @@ To create a new vision document:
 - [ROADMAP.md](../../ROADMAP.md) - Committed features and timelines
 - [AGENTS.md](../../AGENTS.md) - Machine-readable agent instructions (Section 3: Strategic Design)
 - [CHANGELOG.md](../../CHANGELOG.md) - Historical record of delivered features
-{% if include_memory_system -%}
+[% if include_memory_system -%]
 - [.chora/memory/](../../.chora/memory/) - Agent memory system for decision tracking
-{% endif -%}
+[% endif -%]
 
 ### How-To Guides
 

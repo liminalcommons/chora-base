@@ -1,4 +1,4 @@
-# Docker Best Practices for {{ project_name }}
+# Docker Best Practices for [[ project_name ]]
 
 This guide covers Docker best practices specific to this project, based on production-proven patterns from the chora-base template.
 
@@ -48,11 +48,11 @@ RUN pip install --no-cache-dir /tmp/*.whl
 
 ### Import-Based Validation
 
-{% if project_type == 'mcp_server' -%}
+[% if project_type == 'mcp_server' -%]
 This project uses **import-based health checks** (not CLI-based):
 
 ```dockerfile
-HEALTHCHECK CMD python -c "import {{ package_name }}; assert {{ package_name }}.__version__"
+HEALTHCHECK CMD python -c "import [[ package_name ]]; assert [[ package_name ]].__version__"
 ```
 
 **Why this matters for MCP servers:**
@@ -66,7 +66,7 @@ HEALTHCHECK CMD python -c "import {{ package_name }}; assert {{ package_name }}.
 - Dependencies are available
 - Version resolution works
 
-{% elif project_type == 'web_service' -%}
+[% elif project_type == 'web_service' -%]
 This project uses **HTTP endpoint health checks**:
 
 ```dockerfile
@@ -78,9 +78,9 @@ HEALTHCHECK CMD curl -f http://localhost:8000/health
 - Return 200 OK when healthy
 - Check critical dependencies (database, cache, etc.)
 
-{% else -%}
-Health checks are optional for {{ project_type }} projects. Add one if running as a long-lived service.
-{% endif -%}
+[% else -%]
+Health checks are optional for [[ project_type ]] projects. Add one if running as a long-lived service.
+[% endif -%]
 
 ## CI/CD Integration
 
@@ -96,7 +96,7 @@ For **6x faster builds**, use Docker layer caching:
   uses: docker/build-push-action@v5
   with:
     file: ./Dockerfile.test
-    tags: {{ project_slug }}:test
+    tags: [[ project_slug ]]:test
     cache-from: type=gha              # Read from cache
     cache-to: type=gha,mode=max       # Write all layers
     load: true
@@ -112,20 +112,20 @@ Get coverage reports from Docker tests:
 
 ```bash
 # Run tests in container
-docker run --rm {{ project_slug }}:test
+docker run --rm [[ project_slug ]]:test
 
 # Extract coverage report
-container_id=$(docker create {{ project_slug }}:test)
+container_id=$(docker create [[ project_slug ]]:test)
 docker cp $container_id:/app/coverage.xml ./
 docker rm $container_id
 ```
 
-{% if include_tests -%}
+[% if include_tests -%]
 **Why not volume mounts?**
 - Works across all CI systems (no permission issues)
 - Atomic operation (file copies or fails cleanly)
 - No sudo required
-{% endif -%}
+[% endif -%]
 
 ## Multi-Architecture Builds
 
@@ -138,7 +138,7 @@ Support Apple Silicon (M1/M2) and AWS Graviton:
 just docker-build-multi latest
 
 # Verify platforms
-docker buildx imagetools inspect {{ project_slug }}:latest
+docker buildx imagetools inspect [[ project_slug ]]:latest
 ```
 
 **Setup buildx (one-time):**
@@ -168,7 +168,7 @@ just docker-compose-up
 
 ### Hot-Reload Configuration
 
-{% if project_type == 'mcp_server' -%}
+[% if project_type == 'mcp_server' -%]
 For configuration hot-reload without rebuilds:
 
 ```yaml
@@ -178,7 +178,7 @@ volumes:
 ```
 
 Edit `configs/` files on your host → changes immediately reflected in container.
-{% endif -%}
+[% endif -%]
 
 ## Security Best Practices
 
@@ -189,9 +189,9 @@ Edit `configs/` files on your host → changes immediately reflected in containe
 USER appuser  # Not root
 ```
 
-✅ **Minimal base image** (`python:{{ python_version }}-slim`)
+✅ **Minimal base image** (`python:[[ python_version ]]-slim`)
 ```dockerfile
-FROM python:{{ python_version }}-slim  # Not full image
+FROM python:[[ python_version ]]-slim  # Not full image
 ```
 
 ✅ **No secrets in image**
@@ -216,7 +216,7 @@ Add to your CI workflow:
 - name: Scan image for vulnerabilities
   uses: aquasecurity/trivy-action@master
   with:
-    image-ref: {{ project_slug }}:latest
+    image-ref: [[ project_slug ]]:latest
     severity: HIGH,CRITICAL
 ```
 
@@ -228,10 +228,10 @@ Push to container registry:
 
 ```bash
 # Tag and push specific version
-just docker-push ghcr.io/{{ github_username }}/{{ project_slug }} 1.0.0
+just docker-push ghcr.io/[[ github_username ]]/[[ project_slug ]] 1.0.0
 
 # Full release workflow (build, verify, tag, push)
-just docker-release 1.0.0 ghcr.io/{{ github_username }}
+just docker-release 1.0.0 ghcr.io/[[ github_username ]]
 ```
 
 ### Environment Configuration
@@ -241,13 +241,13 @@ Use **environment-based configuration** (12-factor app):
 ```yaml
 # docker-compose.yml
 environment:
-  - {{ package_name | upper }}_LOG_LEVEL=${{'{'}}{{ package_name | upper }}_LOG_LEVEL:-INFO}
-  - DATABASE_URL=${{'{'}}DATABASE_URL}
+  - [[ package_name | upper ]]_LOG_LEVEL=$[['{']][[ package_name | upper ]]_LOG_LEVEL:-INFO}
+  - DATABASE_URL=$[['{']]DATABASE_URL}
 ```
 
 **Pattern:** `${VAR:-default}` for sensible defaults
 
-{% if project_type == 'mcp_server' -%}
+[% if project_type == 'mcp_server' -%]
 ### MCP Server Deployment
 
 **STDIO transport (Claude Desktop):**
@@ -264,7 +264,7 @@ ports:
   - "8000:8000"
 ```
 
-{% elif project_type == 'web_service' -%}
+[% elif project_type == 'web_service' -%]
 ### Web Service Deployment
 
 **Reverse proxy (production):**
@@ -276,7 +276,7 @@ nginx:
     - "80:80"
     - "443:443"
   depends_on:
-    {{ project_slug }}:
+    [[ project_slug ]]:
       condition: service_healthy
 ```
 
@@ -285,7 +285,7 @@ nginx:
 ports:
   - "8000:8000"
 ```
-{% endif -%}
+[% endif -%]
 
 ## Troubleshooting
 
@@ -314,7 +314,7 @@ just docker-build
 **Verify manually:**
 ```bash
 # Test health check command
-docker run --rm {{ project_slug }}:latest python -c "import {{ package_name }}; assert {{ package_name }}.__version__"
+docker run --rm [[ project_slug ]]:latest python -c "import [[ package_name ]]; assert [[ package_name ]].__version__"
 ```
 
 **Common causes:**
@@ -348,10 +348,10 @@ volumes:
   # Data (persistent, backup regularly)
   - ./data:/app/data
 
-{% if include_memory_system -%}
+[% if include_memory_system -%]
   # Agent memory (persistent, version controlled)
   - ./.chora/memory:/app/.chora/memory
-{% endif -%}
+[% endif -%]
 ```
 
 ### Cleanup
@@ -402,24 +402,24 @@ ENV PYTHONDONTWRITEBYTECODE=1     # No .pyc files (reduces I/O)
 just docker-logs
 
 # Or directly
-docker-compose logs -f {{ project_slug }}
+docker-compose logs -f [[ project_slug ]]
 ```
 
 ### Health Status
 
 ```bash
 # Check health
-docker inspect --format='{{"{{"}}.State.Health.Status{{"}}"}}' {{ project_slug }}
+docker inspect --format='[["[["]].State.Health.Status[["]]"]]' [[ project_slug ]]
 
 # View health check logs
-docker inspect --format='{{"{{json"}} .State.Health{{"}}"}}' {{ project_slug }} | jq
+docker inspect --format='[["[[json"]] .State.Health[["]]"]]' [[ project_slug ]] | jq
 ```
 
 ### Resource Usage
 
 ```bash
 # Monitor resource usage
-docker stats {{ project_slug }}
+docker stats [[ project_slug ]]
 
 # Set limits in docker-compose.yml
 resources:

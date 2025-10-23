@@ -1,4 +1,4 @@
-{% if include_documentation_standard and include_github_actions -%}
+[% if include_documentation_standard and include_github_actions -%]
 name: Documentation Quality
 
 on:
@@ -31,7 +31,7 @@ jobs:
       - name: Set up Python
         uses: actions/setup-python@v5
         with:
-          python-version: '{{ python_version }}'
+          python-version: '[[ python_version ]]'
 
       - name: Install dependencies
         run: |
@@ -55,7 +55,7 @@ jobs:
           fi
           echo "✅ DOCUMENTATION_MAP.md is up to date"
 
-{% if documentation_advanced_features -%}
+[% if documentation_advanced_features -%]
   generate-metrics:
     name: Generate Documentation Metrics
     runs-on: ubuntu-latest
@@ -68,7 +68,7 @@ jobs:
       - name: Set up Python
         uses: actions/setup-python@v5
         with:
-          python-version: '{{ python_version }}'
+          python-version: '[[ python_version ]]'
 
       - name: Install dependencies
         run: |
@@ -92,9 +92,9 @@ jobs:
             echo "📊 Documentation Metrics Generated:"
             head -n 30 DOCUMENTATION_METRICS.md
           fi
-{%- endif %}
+[%- endif %]
 
-{% if include_tests and include_documentation_standard -%}
+[% if include_tests and include_documentation_standard -%]
   test-docs-examples:
     name: Test Documentation Examples
     runs-on: ubuntu-latest
@@ -106,7 +106,7 @@ jobs:
       - name: Set up Python
         uses: actions/setup-python@v5
         with:
-          python-version: '{{ python_version }}'
+          python-version: '[[ python_version ]]'
 
       - name: Install dependencies
         run: |
@@ -125,5 +125,5 @@ jobs:
           else
             echo "No tests extracted from documentation (no files with test_extraction: true)"
           fi
-{%- endif %}
-{%- endif %}
+[%- endif %]
+[%- endif %]

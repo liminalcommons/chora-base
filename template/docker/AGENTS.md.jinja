@@ -1,4 +1,4 @@
-# Docker Operations for {{ project_name }}
+# Docker Operations for [[ project_name ]]
 
 **Purpose**: Docker containerization guide for deployment and development.
 
@@ -8,25 +8,25 @@
 
 ## Quick Reference
 
-- **Build image**: `{% if include_justfile %}just docker-build{% else %}docker build -t {{ project_slug }}:latest .{% endif %}`
-- **Verify image**: `{% if include_justfile %}just docker-verify{% else %}docker run --rm {{ project_slug }}:latest python -c "import {{ package_name }}"{% endif %}`
-- **Start services**: `{% if include_justfile %}just docker-compose-up{% else %}docker-compose up -d{% endif %}`
-- **View logs**: `{% if include_justfile %}just docker-logs{% else %}docker-compose logs -f{% endif %}`
+- **Build image**: `[% if include_justfile %]just docker-build[% else %]docker build -t [[ project_slug ]]:latest .[% endif %]`
+- **Verify image**: `[% if include_justfile %]just docker-verify[% else %]docker run --rm [[ project_slug ]]:latest python -c "import [[ package_name ]]"[% endif %]`
+- **Start services**: `[% if include_justfile %]just docker-compose-up[% else %]docker-compose up -d[% endif %]`
+- **View logs**: `[% if include_justfile %]just docker-logs[% else %]docker-compose logs -f[% endif %]`
 
 ---
 
 ## Docker Operations
 
-**When enabled** (`include_docker: true`), {{ project_name }} includes production-ready Docker support with ergonomic commands.
+**When enabled** (`include_docker: true`), [[ project_name ]] includes production-ready Docker support with ergonomic commands.
 
 ### Discovery
 
 ```bash
-{% if include_justfile -%}
+[% if include_justfile -%]
 # List all Docker commands
 just --list | grep docker
 
-{% endif -%}# Available commands:
+[% endif -%]# Available commands:
 # - docker-build [TAG]          Build production image
 # - docker-build-multi [TAG]    Build for amd64 + arm64
 # - docker-verify [TAG]          Smoke test image health
@@ -36,16 +36,16 @@ just --list | grep docker
 # - docker-compose-down          Stop all services
 # - docker-logs                  View service logs
 # - docker-clean                 Remove images and containers
-{% if docker_strategy == 'production' -%}
+[% if docker_strategy == 'production' -%]
 # - docker-push REGISTRY TAG     Push to container registry
 # - docker-release VERSION REG   Full release workflow
-{% endif -%}
+[% endif -%]
 ```
 
 ### Common Workflows
 
 ```bash
-{% if include_justfile -%}
+[% if include_justfile -%]
 # Build and verify image
 just docker-build
 just docker-verify
@@ -59,10 +59,10 @@ just docker-compose-down
 
 # Clean up
 just docker-clean
-{% else -%}
+[% else -%]
 # Build and verify image
-docker build -t {{ project_slug }}:latest .
-docker run --rm {{ project_slug }}:latest python -c "import {{ package_name }}; assert {{ package_name }}.__version__"
+docker build -t [[ project_slug ]]:latest .
+docker run --rm [[ project_slug ]]:latest python -c "import [[ package_name ]]; assert [[ package_name ]].__version__"
 
 # Run services
 docker-compose up -d
@@ -70,32 +70,32 @@ docker-compose logs -f
 
 # Stop services
 docker-compose down
-{% endif -%}
+[% endif -%]
 ```
 
 ---
 
 ## Detailed Documentation
 
-**For comprehensive Docker workflows:** See {% if include_docker %}[DOCKER_BEST_PRACTICES.md](../DOCKER_BEST_PRACTICES.md){% else %}project documentation{% endif %}
+**For comprehensive Docker workflows:** See [% if include_docker %][DOCKER_BEST_PRACTICES.md](../DOCKER_BEST_PRACTICES.md)[% else %]project documentation[% endif %]
 
 ---
 
 ## Adopter Responsibilities (Wiring Required)
 
-{% if project_type == 'web_service' -%}
+[% if project_type == 'web_service' -%]
 - [ ] Implement `/health` endpoint in your application
 - [ ] Test health check returns 200 OK when healthy
-{% elif project_type == 'mcp_server' -%}
-- [ ] Ensure `{{ package_name }}.__version__` is defined
+[% elif project_type == 'mcp_server' -%]
+- [ ] Ensure `[[ package_name ]].__version__` is defined
 - [ ] Test import-based health check works
-{% endif -%}
+[% endif -%]
 - [ ] Configure project-specific environment variables in `.env`
 - [ ] Set service dependencies in `docker-compose.yml` (if using multiple services)
-{% if docker_strategy == 'production' -%}
+[% if docker_strategy == 'production' -%]
 - [ ] Configure registry credentials for `docker-push` (if publishing)
 - [ ] Test multi-architecture builds (if deploying to ARM64)
-{% endif -%}
+[% endif -%]
 
 ---
 
@@ -113,9 +113,9 @@ docker-compose down
 
 - **[Main AGENTS.md](../AGENTS.md)** - Project overview, architecture, common tasks
 - **[Testing AGENTS.md](../tests/AGENTS.md)** - Testing instructions
-{% if include_memory_system -%}
+[% if include_memory_system -%]
 - **[Memory System AGENTS.md](../.chora/memory/AGENTS.md)** - Cross-session learning
-{% endif -%}
+[% endif -%]
 - **[scripts/AGENTS.md](../scripts/AGENTS.md)** - Automation scripts reference
 
 ---

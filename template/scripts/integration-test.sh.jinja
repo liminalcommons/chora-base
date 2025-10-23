@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 # integration-test.sh - Sprint 2 Day 3 integration checkpoint
 #
-# This script validates that {{ project_slug }} can parse events emitted by chora-composer.
+# This script validates that [[ project_slug ]] can parse events emitted by chora-composer.
 # Critical for catching integration issues before context switch.
 #
 # Usage: ./scripts/integration-test.sh
@@ -12,7 +12,7 @@ echo "=== Sprint 2 Day 3: Integration Test ==="
 echo ""
 echo "This test validates:"
 echo "  1. chora-composer emits events with trace context"
-echo "  2. {{ project_slug }} can parse event schema"
+echo "  2. [[ project_slug ]] can parse event schema"
 echo "  3. Trace IDs propagate correctly"
 echo ""
 
@@ -124,7 +124,7 @@ echo -e "${GREEN}✓ All checks passed!${NC}"
 echo ""
 echo "Next steps:"
 echo "  1. Tag chora-composer release: v1.1.1"
-echo "  2. Update {{ project_slug }} dependency"
+echo "  2. Update [[ project_slug ]] dependency"
 echo "  3. Commit integration test"
 echo "  4. Ready for Sprint 3"
 echo ""

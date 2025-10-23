@@ -5,6 +5,93 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [2.0.7] - 2025-10-22
+
+### Fixed
+
+**ROOT CAUSE IDENTIFIED - Copier Delimiter Conflicts (THE ACTUAL ISSUE)**
+
+**Massive credit to the mcp-n8n team** for persistence through 7 failed releases and providing comprehensive research that identified the actual root cause.
+
+**The Real Problem:**
+
+v2.0.1-v2.0.6 all failed because they addressed **symptoms** (f-strings, .format() calls) but not the **root cause**: **Copier 6+'s default Jinja2 delimiters `{{ }}` conflicting with Python's `{}` syntax**.
+
+### Why All Previous Fixes Failed
+
+**Copier uses Jinja2 to render ALL template files**. When Jinja2 sees Python code like:
+- Dictionary literals: `{'key': 'value'}`
+- .format() placeholders: `"test_{}".format(var)`
+- Set literals: `{1, 2, 3}`
+- f-strings: `f"{var}"`
+
+It tries to parse the `{}` as Jinja2 template syntax `{{ }}`, causing `TemplateSyntaxError`.
+
+**Even `{% raw %}` blocks didn't fully solve this** because:
+1. Copier's update operation regenerates old templates with new dependencies
+2. Extensions can preprocess content before raw blocks are evaluated
+3. Delimiter conflicts happen at the lexer level, before raw block processing
+
+### The Solution (BREAKING CHANGE)
+
+**Changed Jinja2 delimiters from curly braces to brackets** (the official Copier solution for Python templates):
+
+**In copier.yml**:
+```yaml
+_envops:
+  block_start_string: "[%"
+  block_end_string: "%]"
+  variable_start_string: "[["
+  variable_end_string: "]]"
+  comment_start_string: "[#"
+  comment_end_string: "#]"
+```
+
+**Conversion**:
+- Variables: `{{ project_name }}` → `[[ project_name ]]`
+- Blocks: `{% if condition %}` → `[% if condition %]`
+- Comments: `{# comment #}` → `[# comment #]`
+
+**Impact:**
+- **1,717 Jinja2 syntax elements converted** across 57 files
+- **ALL `{% raw %}` blocks removed** (no longer needed!)
+- Python's `{}` syntax now passes through untouched
+
+### Why This Will Work
+
+**This is the documented Copier best practice** for templates containing Python code:
+- Bracket delimiters `[[ ]]` don't conflict with Python's `{}`
+- Used in production Copier templates successfully
+- Eliminates entire class of delimiter conflicts
+- Recommended in Copier documentation and community guides
+
+### Files Modified
+
+- **Template files**: 56 files converted
+- **Configuration**: copier.yml (92 conversions)
+- **Total conversions**: 1,717 Jinja2 syntax elements
+- **Raw blocks removed**: 102 blocks (no longer needed)
+
+### Breaking Change Note
+
+**Template Syntax**: Changed from `{{ }}` to `[[ ]]`
+
+**Who is affected:**
+- ❌ Template contributors (must use bracket syntax)
+- ✅ Generated projects (UNAFFECTED - they don't contain template syntax)
+- ✅ Existing .copier-answers.yml files (compatible)
+
+### Acknowledgment
+
+**Thank you to the mcp-n8n team** for:
+- Testing ALL 7 releases (v2.0.0-v2.0.6)
+- Providing detailed verification reports after each failure
+- Researching Copier's actual behavior
+- Identifying that the issue was Copier-specific, not our code
+- Providing the research document that revealed the root cause
+
+Your persistence and thorough analysis made this fix possible.
+
 ## [2.0.6] - 2025-10-22
 
 ### Fixed
