@@ -110,13 +110,13 @@ This document registers the MCP namespace and all tools/resources for << project
 ### Tool Naming
 - **Format:** `<< mcp_namespace >>:{tool_name}`
 - **Example:** `<< mcp_namespace >>:create_task`
-- **Pattern:** namespace:[a-z][a-z0-9_]+ (snake_case)
+- **Pattern:** <% raw %>namespace:[a-z][a-z0-9_]+<% endraw %> (snake_case)
 
 ### Resource URIs
 <% if mcp_resource_uri_scheme -%>
 - **Format:** `<< mcp_namespace >>://{resource_type}/{resource_id}` (optional: `?query`)
 - **Example:** `<< mcp_namespace >>://templates/daily-report.md`
-- **Pattern:** namespace://[a-z0-9_/\-\.]+(\?.*)?
+- **Pattern:** <% raw %>namespace://[a-z0-9_/\-\.]+(\?.*)?<% endraw %>
 
 <% else -%>
 - **Format:** Custom URI scheme (no standard enforced)
@@ -164,7 +164,7 @@ To avoid conflicts with other MCP servers, consider:
 ### Tool Naming
 - **Format:** Non-namespaced (e.g., `tool_name`)
 - **Example:** `create_task`
-- **Pattern:** [a-z][a-z0-9_]+ (snake_case)
+- **Pattern:** <% raw %>[a-z][a-z0-9_]+<% endraw %> (snake_case)
 
 ### Resource URIs
 - **Format:** Custom URI scheme
