@@ -209,6 +209,7 @@ def test_cli_end_to_end_workflow(tmp_path):
 
 {% elif project_type == 'web_service' -%}
 **Web Service Super-Test Example:**
+{% raw %}
 ```python
 # tests/super/test_full_workflow.py
 async def test_api_end_to_end_workflow(test_client):
@@ -226,6 +227,7 @@ async def test_api_end_to_end_workflow(test_client):
     assert retrieved.status_code == 200
     assert updated.json()["field"] == updated_data["field"]
 ```
+{% endraw %}
 
 {% endif -%}
 **Benefits of super-tests:**

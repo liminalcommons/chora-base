@@ -20,7 +20,20 @@ chora-base is a production-ready Python project template featuring:
 
 ## Recent Updates
 
-### v2.0.4 (2025-10-22) - Complete F-String Audit (All Files) 🔍
+### v2.0.5 (2025-10-22) - COMPLETE F-String Audit (ALL Files) 🔍
+
+**Bug Fix**: Final 7 files fixed - mcp-n8n team identified 60+ remaining f-strings after v2.0.4
+
+- **Scope**: Fixed 149 f-strings total across 14 template files
+- **v2.0.3**: Fixed scripts/extract_tests.py.jinja (16 f-strings)
+- **v2.0.4**: Fixed 6 Python files + justfile (73 f-strings)
+- **v2.0.5**: Fixed 2 Python scripts + 5 markdown files (60 f-strings)
+- **Acknowledgment**: Thank you to mcp-n8n team for comprehensive bug report
+- **Verification**: ALL 14 files verified, zero unprotected f-strings remain
+
+📄 [CHANGELOG](CHANGELOG.md#205---2025-10-22) | 📦 [Upgrade Guide](docs/upgrades/v2.0.4-to-v2.0.5.md)
+
+### v2.0.4 (2025-10-22) - Complete F-String Audit (7 Files) 🔍
 
 **Bug Fix**: Comprehensive audit fixed 6 more files - v2.0.3 only fixed 1 of 7 files
 

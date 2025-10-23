@@ -252,6 +252,7 @@ When backend startup failures occur, check:
 
 ### 1. Query Recent Failures
 
+{% raw %}
 ```python
 # Agent wants to learn from recent failures
 failures = query_events(
@@ -273,6 +274,7 @@ for failure in failures:
             linked_to=[related_notes]
         )
 ```
+{% endraw %}
 
 ### 2. Trace Workflow Correlation
 

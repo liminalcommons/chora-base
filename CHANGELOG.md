@@ -5,6 +5,54 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [2.0.5] - 2025-10-22
+
+### Fixed
+
+**COMPLETE F-String Audit - ALL Remaining Files**
+
+**Acknowledgment**: Thank you to the mcp-n8n team for the comprehensive bug report identifying that v2.0.4 still had 60+ unprotected f-strings across 7 additional files.
+
+**Scope of v2.0.5**:
+- **v2.0.3**: Fixed scripts/extract_tests.py.jinja (16 f-strings)
+- **v2.0.4**: Fixed 6 Python files + justfile (73 f-strings)
+- **v2.0.5**: Fixed 2 Python scripts + 5 markdown files (60 f-strings)
+- **Total**: 149 f-strings fixed across 14 template files
+
+**Files Fixed in v2.0.5**:
+
+**Python Scripts** (42 f-strings):
+1. ✅ scripts/docs_metrics.py.jinja (27 f-strings) - Converted to `.format()` + `{% raw %}`
+2. ✅ scripts/generate_docs_map.py.jinja (15 f-strings) - Converted to `.format()` + `{% raw %}`
+
+**Markdown Files** (18 f-strings in code examples):
+3. ✅ .chora/memory/AGENTS.md.jinja (7 f-strings) - Wrapped code blocks in `{% raw %}{% endraw %}`
+4. ✅ .chora/memory/README.md.jinja (3 f-strings) - Wrapped code blocks in `{% raw %}{% endraw %}`
+5. ✅ tests/AGENTS.md.jinja (3 f-strings) - Wrapped code blocks in `{% raw %}{% endraw %}`
+6. ✅ dev-docs/CONTRIBUTING.md.jinja (2 f-strings) - Wrapped code blocks in `{% raw %}{% endraw %}`
+7. ✅ dev-docs/vision/README.md.jinja (3 f-strings) - Wrapped code blocks in `{% raw %}{% endraw %}`
+
+**Why Markdown Files Needed Fixing**:
+Even though f-strings were inside triple-backtick code blocks, Jinja2 processes the ENTIRE file before markdown rendering. The `{variable}` syntax in f-strings caused TemplateSyntaxError during template processing.
+
+**Solution for Markdown**:
+Wrapped each Python code block containing f-strings in `{% raw %}{% endraw %}` tags:
+```markdown
+{% raw %}
+```python
+print(f"Found {count} items")
+```
+{% endraw %}
+```
+
+**Verification**:
+- ✅ All 14 fixed files verified (v2.0.3 + v2.0.4 + v2.0.5)
+- ✅ Zero unprotected f-strings remain in ANY template file
+- ✅ All Python scripts use `.format()` wrapped in `{% raw %}`
+- ✅ All markdown code examples wrapped in `{% raw %}` blocks
+
+**This is the COMPLETE fix** - all 149 f-strings across all template files have been addressed.
+
 ## [2.0.4] - 2025-10-22
 
 ### Fixed

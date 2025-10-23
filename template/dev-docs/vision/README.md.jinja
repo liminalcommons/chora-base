@@ -41,13 +41,16 @@ Vision documents help answer questions like:
 **Situation:** You're building an MCP tool that returns simple text responses.
 
 **Without Vision:**
+{% raw %}
 ```python
 def get_info(query: str) -> str:
     # Returns plain string
     return f"Result: {query}"
 ```
+{% endraw %}
 
 **With Vision (knows Wave 3 adds structured data):**
+{% raw %}
 ```python
 def get_info(query: str) -> dict:
     # Returns structured data (extensible for Wave 3)
@@ -56,6 +59,7 @@ def get_info(query: str) -> dict:
         "metadata": {"timestamp": now(), "version": "1.0"}
     }
 ```
+{% endraw %}
 
 **Outcome:** Current work delivers value *and* Wave 3 doesn't require breaking changes.
 

@@ -28,6 +28,7 @@
 | v2.0.1 | v2.0.2 | [v2.0.1-to-v2.0.2.md](v2.0.1-to-v2.0.2.md) | <5 min | ZERO (bug fix) |
 | v2.0.2 | v2.0.3 | [v2.0.2-to-v2.0.3.md](v2.0.2-to-v2.0.3.md) | <2 min | ZERO (complete fix) |
 | v2.0.3 | v2.0.4 | [v2.0.3-to-v2.0.4.md](v2.0.3-to-v2.0.4.md) | <1 min | ZERO (audit fix) |
+| v2.0.4 | v2.0.5 | [v2.0.4-to-v2.0.5.md](v2.0.4-to-v2.0.5.md) | <1 min | ZERO (final audit) |
 
 **Status**:
 - ✅ All version-specific guides complete (100% coverage v1.0.0 → v1.9.0)

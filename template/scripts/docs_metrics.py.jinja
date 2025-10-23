@@ -39,7 +39,7 @@ class DocumentationMetrics:
 
     def run(self) -> None:
         """Generate metrics and create DOCUMENTATION_METRICS.md."""
-        print(f"Analyzing documentation metrics for {self.root_dir}...")
+        {% raw %}print("Analyzing documentation metrics for {}...".format(self.root_dir)){% endraw %}
         print()
 
         # Step 1: Parse all documentation
@@ -73,7 +73,7 @@ class DocumentationMetrics:
                 if frontmatter:
                     self.docs[md_file] = frontmatter
 
-        print(f"Found {len(self.docs)} documentation files")
+        {% raw %}print("Found {} documentation files".format(len(self.docs))){% endraw %}
 
     def _parse_frontmatter(self, md_file: Path) -> Dict | None:
         """Parse YAML frontmatter from markdown file."""
@@ -109,7 +109,7 @@ class DocumentationMetrics:
             if f.name != "__init__.py" and not f.name.startswith("test_")
         ]
 
-        print(f"Found {len(self.code_files)} code files")
+        {% raw %}print("Found {} code files".format(len(self.code_files))){% endraw %}
 
     def _calculate_coverage(self) -> None:
         """Calculate documentation coverage metrics."""
@@ -291,8 +291,8 @@ class DocumentationMetrics:
         # Header
         lines.append("# Documentation Metrics")
         lines.append("")
-        lines.append(f"**Generated:** {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}")
-        lines.append(f"**Total Documents:** {len(self.docs)}")
+        {% raw %}lines.append("**Generated:** {}".format(datetime.now().strftime('%Y-%m-%d %H:%M:%S'))){% endraw %}
+        {% raw %}lines.append("**Total Documents:** {}".format(len(self.docs))){% endraw %}
         lines.append("")
         lines.append("---")
         lines.append("")
@@ -301,8 +301,8 @@ class DocumentationMetrics:
         cov = self.metrics["coverage"]
         lines.append("## Coverage")
         lines.append("")
-        lines.append(f"- **Code Coverage:** {cov['coverage_pct']:.1f}% ({cov['documented_modules']}/{cov['total_modules']} modules documented)")
-        lines.append(f"- **API Documentation:** {cov['api_docs']} reference docs")
+        {% raw %}lines.append("- **Code Coverage:** {:.1f}% ({}/{} modules documented)".format(cov['coverage_pct'], cov['documented_modules'], cov['total_modules'])){% endraw %}
+        {% raw %}lines.append("- **API Documentation:** {} reference docs".format(cov['api_docs'])){% endraw %}
         lines.append("")
 
         # Health section
@@ -311,29 +311,29 @@ class DocumentationMetrics:
         lines.append("## Health Score: {} {}/100".format(health_icon, health["score"]))
         lines.append("")
         lines.append("**Factors:**")
-        lines.append(f"- {'✅' if health['broken_links'] == 0 else '❌'} Broken links: {health['broken_links']}")
-        lines.append(f"- {'✅' if health['stale_docs'] < len(self.docs) * 0.1 else '⚠️ '} Stale docs (>90 days): {health['stale_docs']}")
-        lines.append(f"- {'✅' if health['frontmatter_complete_pct'] > 90 else '⚠️ '} Frontmatter complete: {health['frontmatter_complete_pct']:.1f}%")
+        {% raw %}lines.append("- {} Broken links: {}".format('✅' if health['broken_links'] == 0 else '❌', health['broken_links'])){% endraw %}
+        {% raw %}lines.append("- {} Stale docs (>90 days): {}".format('✅' if health['stale_docs'] < len(self.docs) * 0.1 else '⚠️ ', health['stale_docs'])){% endraw %}
+        {% raw %}lines.append("- {} Frontmatter complete: {:.1f}%".format('✅' if health['frontmatter_complete_pct'] > 90 else '⚠️ ', health['frontmatter_complete_pct'])){% endraw %}
         lines.append("")
 
         # Activity section
         activity = self.metrics["activity"]
         lines.append("## Activity (Last 30/60/90 Days)")
         lines.append("")
-        lines.append(f"- **Last 30 days:** {activity['updated_30d']} docs updated")
-        lines.append(f"- **Last 60 days:** {activity['updated_60d']} docs updated")
-        lines.append(f"- **Last 90 days:** {activity['updated_90d']} docs updated")
+        {% raw %}lines.append("- **Last 30 days:** {} docs updated".format(activity['updated_30d'])){% endraw %}
+        {% raw %}lines.append("- **Last 60 days:** {} docs updated".format(activity['updated_60d'])){% endraw %}
+        {% raw %}lines.append("- **Last 90 days:** {} docs updated".format(activity['updated_90d'])){% endraw %}
         lines.append("")
-        lines.append(f"- **New (draft):** {activity['new_docs']} docs")
-        lines.append(f"- **Deprecated:** {activity['deprecated_docs']} docs")
+        {% raw %}lines.append("- **New (draft):** {} docs".format(activity['new_docs'])){% endraw %}
+        {% raw %}lines.append("- **Deprecated:** {} docs".format(activity['deprecated_docs'])){% endraw %}
         lines.append("")
 
         # Quality section
         quality = self.metrics["quality"]
         lines.append("## Quality")
         lines.append("")
-        lines.append(f"- **Cross-reference density:** {quality['cross_ref_density_pct']:.1f}% (docs with related links)")
-        lines.append(f"- **Test extraction enabled:** {quality['docs_with_tests']} docs")
+        {% raw %}lines.append("- **Cross-reference density:** {:.1f}% (docs with related links)".format(quality['cross_ref_density_pct'])){% endraw %}
+        {% raw %}lines.append("- **Test extraction enabled:** {} docs".format(quality['docs_with_tests'])){% endraw %}
         lines.append("")
 
         # By type breakdown
@@ -344,7 +344,7 @@ class DocumentationMetrics:
         for doc_type in sorted(quality["by_type"].keys()):
             count = quality["by_type"][doc_type]
             pct = (count / len(self.docs) * 100) if self.docs else 0
-            lines.append(f"| {doc_type} | {count} | {pct:.1f}% |")
+            {% raw %}lines.append("| {} | {} | {:.1f}% |".format(doc_type, count, pct)){% endraw %}
         lines.append("")
 
         # Recommendations
@@ -352,19 +352,19 @@ class DocumentationMetrics:
         lines.append("")
 
         if health["broken_links"] > 0:
-            lines.append(f"- ⚠️  Fix {health['broken_links']} broken internal links")
+            {% raw %}lines.append("- ⚠️  Fix {} broken internal links".format(health['broken_links'])){% endraw %}
 
         if health["stale_docs"] > 0:
-            lines.append(f"- ⚠️  Review {health['stale_docs']} stale docs (>90 days old)")
+            {% raw %}lines.append("- ⚠️  Review {} stale docs (>90 days old)".format(health['stale_docs'])){% endraw %}
 
         if health["frontmatter_complete_pct"] < 90:
-            lines.append(f"- ⚠️  Add missing frontmatter fields ({100 - health['frontmatter_complete_pct']:.1f}% incomplete)")
+            {% raw %}lines.append("- ⚠️  Add missing frontmatter fields ({:.1f}% incomplete)".format(100 - health['frontmatter_complete_pct'])){% endraw %}
 
         if cov["coverage_pct"] < 75:
-            lines.append(f"- 📝 Document {cov['total_modules'] - cov['documented_modules']} undocumented modules")
+            {% raw %}lines.append("- 📝 Document {} undocumented modules".format(cov['total_modules'] - cov['documented_modules'])){% endraw %}
 
         if quality["cross_ref_density_pct"] < 50:
-            lines.append(f"- 🔗 Add cross-references to more docs (currently {quality['cross_ref_density_pct']:.1f}%)")
+            {% raw %}lines.append("- 🔗 Add cross-references to more docs (currently {:.1f}%)".format(quality['cross_ref_density_pct'])){% endraw %}
 
         if not lines[-1].startswith("-"):
             lines.append("- ✅ No critical issues detected")
@@ -381,11 +381,11 @@ class DocumentationMetrics:
         content = "\n".join(lines)
         output_file.write_text(content, encoding="utf-8")
 
-        print(f"✅ Generated {output_file}")
+        {% raw %}print("✅ Generated {}".format(output_file)){% endraw %}
         print()
-        print(f"Health Score: {health['score']}/100")
-        print(f"Coverage: {cov['coverage_pct']:.1f}%")
-        print(f"Stale docs: {health['stale_docs']}")
+        {% raw %}print("Health Score: {}/100".format(health['score'])){% endraw %}
+        {% raw %}print("Coverage: {:.1f}%".format(cov['coverage_pct'])){% endraw %}
+        {% raw %}print("Stale docs: {}".format(health['stale_docs'])){% endraw %}
         print()
 
 
