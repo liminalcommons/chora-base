@@ -3,10 +3,13 @@
 This module implements the Model Context Protocol server for MCP client
 configuration orchestration and distribution.
 
-Wave 1 (Foundation v0.1.0):
+Wave 1.0 (Foundation v0.1.0):
 - 4 tools: list_clients, list_profiles, get_config, diff_config
 - 2 resources: capabilities://server, capabilities://clients
-- 0 prompts (deferred to Wave 2)
+
+Wave 1.1 (Server Registry v0.1.1):
+- 2 tools: list_available_servers, describe_server
+- 2 resources: server://registry, server://{server_id}
 """
 
 import json
@@ -16,18 +19,21 @@ from fastmcp import FastMCP
 
 from mcp_orchestrator.diff import compare_configs
 from mcp_orchestrator.registry import get_default_registry
+from mcp_orchestrator.servers import ServerRegistry, get_default_registry as get_server_registry
+from mcp_orchestrator.servers.registry import ServerNotFoundError
 from mcp_orchestrator.storage import ArtifactStore, StorageError
 
 # Initialize MCP server
 mcp = FastMCP("mcp-orchestration")
 
 # Initialize global state (will be set on server startup)
-_registry = get_default_registry()
+_registry = get_default_registry()  # Client registry
+_server_registry = get_server_registry()  # Server registry (Wave 1.1)
 _store = ArtifactStore()  # Uses default ~/.mcp-orchestration path
 
 
 # =============================================================================
-# TOOLS (4)
+# TOOLS (6 - Wave 1.0: 4, Wave 1.1: 2)
 # =============================================================================
 
 
@@ -325,7 +331,219 @@ async def diff_config(
 
 
 # =============================================================================
-# RESOURCES (2)
+# TOOLS - Wave 1.1 (Server Registry)
+# =============================================================================
+
+
+@mcp.tool()
+async def list_available_servers(
+    transport_filter: str | None = None, search_query: str | None = None
+) -> dict[str, Any]:
+    """List all MCP servers in the registry.
+
+    Browse the catalog of available MCP servers that can be added to client
+    configurations. Servers can be filtered by transport type or searched by keywords.
+
+    Args:
+        transport_filter: Optional filter by transport type ('stdio', 'http', 'sse')
+        search_query: Optional search query (searches name, description, tags)
+
+    Returns:
+        Dictionary with:
+        - servers: List of server objects with metadata
+        - count: Total number of servers
+        - transport_counts: Breakdown by transport type
+        - available_transports: List of transport types
+    """
+    # Get servers based on filters
+    if search_query:
+        servers = _server_registry.search(search_query)
+    elif transport_filter:
+        from mcp_orchestrator.servers.models import TransportType
+
+        try:
+            transport = TransportType(transport_filter.lower())
+            servers = _server_registry.list_by_transport(transport)
+        except ValueError:
+            raise ValueError(
+                f"Invalid transport filter: '{transport_filter}'. "
+                f"Valid options: stdio, http, sse"
+            )
+    else:
+        servers = _server_registry.list_all()
+
+    # Build response
+    server_list = []
+    for server in servers:
+        server_list.append(
+            {
+                "server_id": server.server_id,
+                "display_name": server.display_name,
+                "description": server.description,
+                "transport": server.transport.value,
+                "npm_package": server.npm_package,
+                "tags": server.tags,
+                "has_parameters": len(server.parameters) > 0,
+                "requires_env": server.required_env,
+            }
+        )
+
+    return {
+        "servers": server_list,
+        "count": len(server_list),
+        "transport_counts": _server_registry.get_transport_counts(),
+        "available_transports": ["stdio", "http", "sse"],
+    }
+
+
+@mcp.tool()
+async def describe_server(server_id: str) -> dict[str, Any]:
+    """Get detailed information about a specific MCP server.
+
+    Returns complete server definition including transport configuration,
+    parameters, environment variables, and documentation links.
+
+    Args:
+        server_id: Server identifier (e.g., 'filesystem', 'n8n', 'brave-search')
+
+    Returns:
+        Dictionary with:
+        - server_id, display_name, description
+        - transport: Transport type and configuration
+        - parameters: User-configurable parameters
+        - env_vars: Required and optional environment variables
+        - installation: NPM package and install command
+        - documentation_url: Link to server documentation
+        - usage_example: Example configuration snippet
+
+    Raises:
+        ValueError: If server_id not found in registry
+    """
+    try:
+        server = _server_registry.get(server_id)
+    except ServerNotFoundError as e:
+        raise ValueError(str(e)) from e
+
+    # Build transport info
+    transport_info = {"type": server.transport.value}
+
+    if server.transport.value == "stdio":
+        transport_info["command"] = server.stdio_command
+        transport_info["args"] = server.stdio_args
+    else:  # http or sse
+        transport_info["url"] = server.http_url
+        transport_info["auth_type"] = server.http_auth_type
+        transport_info["note"] = (
+            "This server will be automatically wrapped with mcp-remote "
+            "to provide stdio compatibility for clients."
+        )
+
+    # Build parameters info
+    parameters_info = []
+    for param in server.parameters:
+        parameters_info.append(
+            {
+                "name": param.name,
+                "type": param.type,
+                "description": param.description,
+                "required": param.required,
+                "default": param.default,
+                "example": param.example,
+            }
+        )
+
+    # Build installation info
+    installation_info = {}
+    if server.npm_package:
+        installation_info = {
+            "npm_package": server.npm_package,
+            "install_command": f"npm install -g {server.npm_package}",
+            "note": "Can also be used via npx without installation",
+        }
+
+    # Build usage example
+    usage_example = _generate_usage_example(server)
+
+    return {
+        "server_id": server.server_id,
+        "display_name": server.display_name,
+        "description": server.description,
+        "transport": transport_info,
+        "parameters": parameters_info,
+        "env_vars": {
+            "required": server.required_env,
+            "optional": server.optional_env,
+        },
+        "installation": installation_info,
+        "documentation_url": server.documentation_url,
+        "tags": server.tags,
+        "usage_example": usage_example,
+    }
+
+
+def _generate_usage_example(server) -> str:
+    """Generate example configuration snippet for a server.
+
+    Args:
+        server: ServerDefinition
+
+    Returns:
+        JSON string with example mcpServers configuration
+    """
+    import json
+
+    # Build example args with parameter placeholders
+    if server.transport.value == "stdio":
+        args = []
+        for arg in server.stdio_args:
+            # Replace parameter placeholders with example values
+            example_arg = arg
+            for param in server.parameters:
+                placeholder = f"{{{param.name}}}"
+                if placeholder in arg:
+                    example_value = param.example or param.default or f"<{param.name}>"
+                    example_arg = arg.replace(placeholder, str(example_value))
+            args.append(example_arg)
+
+        example = {
+            server.server_id: {
+                "command": server.stdio_command,
+                "args": args,
+            }
+        }
+
+        if server.required_env or server.optional_env:
+            env_vars = {}
+            for env_var in server.required_env:
+                env_vars[env_var] = f"${{{env_var}}}"
+            example[server.server_id]["env"] = env_vars
+
+    else:  # http or sse
+        # Show URL with parameter examples
+        url = server.http_url
+        for param in server.parameters:
+            placeholder = f"{{{param.name}}}"
+            example_value = param.example or param.default or f"<{param.name}>"
+            url = url.replace(placeholder, str(example_value))
+
+        example = {
+            server.server_id: {
+                "command": "npx",
+                "args": ["-y", "@modelcontextprotocol/mcp-remote", "stdio", url],
+            }
+        }
+
+        if server.required_env:
+            env_vars = {}
+            for env_var in server.required_env:
+                env_vars[env_var] = f"${{{env_var}}}"
+            example[server.server_id]["env"] = env_vars
+
+    return json.dumps({"mcpServers": example}, indent=2)
+
+
+# =============================================================================
+# RESOURCES (4 - Wave 1.0: 2, Wave 1.1: 2)
 # =============================================================================
 
 
@@ -341,11 +559,27 @@ async def server_capabilities() -> str:
     """
     capabilities = {
         "name": "mcp-orchestration",
-        "version": "0.1.0",
-        "wave": "Wave 1: Foundation",
+        "version": "0.1.1",
+        "wave": "Wave 1.1: Server Registry",
         "capabilities": {
-            "tools": ["list_clients", "list_profiles", "get_config", "diff_config"],
-            "resources": ["capabilities://server", "capabilities://clients"],
+            "tools": [
+                # Wave 1.0
+                "list_clients",
+                "list_profiles",
+                "get_config",
+                "diff_config",
+                # Wave 1.1
+                "list_available_servers",
+                "describe_server",
+            ],
+            "resources": [
+                # Wave 1.0
+                "capabilities://server",
+                "capabilities://clients",
+                # Wave 1.1
+                "server://registry",
+                "server://{server_id}",
+            ],
             "prompts": [],
         },
         "features": {
@@ -354,6 +588,9 @@ async def server_capabilities() -> str:
             "signature_algorithm": "Ed25519",
             "diff_reports": True,
             "profile_support": True,
+            # Wave 1.1
+            "server_registry": True,
+            "server_discovery": True,
         },
         "endpoints": {
             "verification_key_url": "https://mcp-orchestration.example.com/keys/verification_key.pem"
@@ -399,6 +636,57 @@ async def client_capabilities() -> str:
 
     capabilities = {"clients": client_list}
     return json.dumps(capabilities, indent=2)
+
+
+# =============================================================================
+# RESOURCES - Wave 1.1 (Server Registry)
+# =============================================================================
+
+
+@mcp.resource("server://registry")
+async def server_registry_resource() -> str:
+    """Expose full server registry as JSON.
+
+    Returns complete catalog of all available MCP servers with metadata,
+    useful for clients that want to present a server browser UI.
+
+    Returns:
+        JSON string with server registry data
+    """
+    servers = _server_registry.list_all()
+
+    registry_data = {
+        "servers": [server.model_dump() for server in servers],
+        "count": len(servers),
+        "transport_counts": _server_registry.get_transport_counts(),
+        "version": "0.1.1",
+    }
+
+    return json.dumps(registry_data, indent=2)
+
+
+@mcp.resource("server://{server_id}")
+async def server_definition_resource(server_id: str) -> str:
+    """Expose detailed server definition as JSON.
+
+    Returns complete server definition including transport config, parameters,
+    environment variables, and documentation.
+
+    Args:
+        server_id: Server identifier
+
+    Returns:
+        JSON string with server definition
+
+    Raises:
+        ValueError: If server_id not found
+    """
+    try:
+        server = _server_registry.get(server_id)
+    except ServerNotFoundError as e:
+        raise ValueError(str(e)) from e
+
+    return json.dumps(server.model_dump(), indent=2)
 
 
 # =============================================================================

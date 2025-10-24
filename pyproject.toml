@@ -1,6 +1,6 @@
 [project]
 name = "mcp-orchestration"
-version = "0.1.0"
+version = "0.1.1"
 description = "MCP server for centralized configuration management with cryptographic signatures and content-addressable storage"
 authors = [
     {name = "Victor Piper", email = "victor@liminalcommons.org"}
@@ -52,6 +52,9 @@ release = [
 [project.scripts]
 mcp-orchestration = "mcp_orchestrator.mcp.server:main"
 mcp-orchestration-init = "mcp_orchestrator.cli_init:init_configs"
+mcp-orchestration-list-servers = "mcp_orchestrator.cli_servers:list_servers"
+mcp-orchestration-describe-server = "mcp_orchestrator.cli_servers:describe_server"
+
 [build-system]
 requires = ["hatchling"]
 build-backend = "hatchling.build"
