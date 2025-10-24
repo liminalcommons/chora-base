@@ -18,13 +18,6 @@ classifiers = [
     "Topic :: Software Development :: Libraries :: Python Modules",
     "Topic :: System :: Systems Administration",
 ]
-
-[project.urls]
-Homepage = "https://github.com/liminalcommons/mcp-orchestration"
-Repository = "https://github.com/liminalcommons/mcp-orchestration"
-Issues = "https://github.com/liminalcommons/mcp-orchestration/issues"
-Documentation = "https://github.com/liminalcommons/mcp-orchestration#readme"
-
 dependencies = [
     "fastmcp>=0.3.0",
     "pydantic>=2.0.0",
@@ -34,6 +27,12 @@ dependencies = [
     "cryptography>=41.0.0",
     "chora-compose>=0.1.0",
 ]
+
+[project.urls]
+Homepage = "https://github.com/liminalcommons/mcp-orchestration"
+Repository = "https://github.com/liminalcommons/mcp-orchestration"
+Issues = "https://github.com/liminalcommons/mcp-orchestration/issues"
+Documentation = "https://github.com/liminalcommons/mcp-orchestration#readme"
 
 [project.optional-dependencies]
 dev = [
