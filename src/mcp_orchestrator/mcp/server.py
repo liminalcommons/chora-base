@@ -10,6 +10,10 @@ Wave 1.0 (Foundation v0.1.0):
 Wave 1.1 (Server Registry v0.1.1):
 - 2 tools: list_available_servers, describe_server
 - 2 resources: server://registry, server://{server_id}
+
+Wave 1.2 (Transport Abstraction + Config Generation v0.1.2):
+- 2 tools: add_server_to_config, remove_server_from_config
+- 1 resource: config://{client_id}/{profile_id}/draft
 """
 
 import json
@@ -17,6 +21,7 @@ from typing import Any
 
 from fastmcp import FastMCP
 
+from mcp_orchestrator.building import ConfigBuilder
 from mcp_orchestrator.diff import compare_configs
 from mcp_orchestrator.registry import get_default_registry
 from mcp_orchestrator.servers import ServerRegistry, get_default_registry as get_server_registry
@@ -31,9 +36,12 @@ _registry = get_default_registry()  # Client registry
 _server_registry = get_server_registry()  # Server registry (Wave 1.1)
 _store = ArtifactStore()  # Uses default ~/.mcp-orchestration path
 
+# Wave 1.2: Draft config builders (keyed by "client_id/profile_id")
+_builders: dict[str, ConfigBuilder] = {}
+
 
 # =============================================================================
-# TOOLS (6 - Wave 1.0: 4, Wave 1.1: 2)
+# TOOLS (8 - Wave 1.0: 4, Wave 1.1: 2, Wave 1.2: 2)
 # =============================================================================
 
 
@@ -543,7 +551,153 @@ def _generate_usage_example(server) -> str:
 
 
 # =============================================================================
-# RESOURCES (4 - Wave 1.0: 2, Wave 1.1: 2)
+# TOOLS - Wave 1.2 (Config Building)
+# =============================================================================
+
+
+def _get_builder(client_id: str, profile_id: str) -> ConfigBuilder:
+    """Get or create a ConfigBuilder for client/profile.
+
+    Args:
+        client_id: Client family identifier
+        profile_id: Profile identifier
+
+    Returns:
+        ConfigBuilder instance
+    """
+    key = f"{client_id}/{profile_id}"
+    if key not in _builders:
+        _builders[key] = ConfigBuilder(client_id, profile_id, _server_registry)
+    return _builders[key]
+
+
+@mcp.tool()
+async def add_server_to_config(
+    client_id: str,
+    profile_id: str,
+    server_id: str,
+    params: dict[str, Any] | None = None,
+    env_vars: dict[str, str] | None = None,
+    server_name: str | None = None,
+) -> dict[str, Any]:
+    """Add a server to the draft configuration.
+
+    Adds an MCP server to the draft configuration for a client/profile.
+    Automatically handles stdio vs HTTP/SSE transport (HTTP/SSE servers are
+    wrapped with mcp-remote transparently).
+
+    Args:
+        client_id: Client family identifier (e.g., 'claude-desktop')
+        profile_id: Profile identifier (e.g., 'default', 'dev')
+        server_id: Server identifier from registry (use list_available_servers)
+        params: Parameter values (e.g., {"path": "/Users/me/Documents"})
+        env_vars: Environment variables (e.g., {"GITHUB_TOKEN": "ghp_..."})
+        server_name: Name to use in config (defaults to server_id)
+
+    Returns:
+        Dictionary with:
+        - status: "added"
+        - server_name: Name used in config
+        - draft: Current draft configuration preview
+        - server_count: Number of servers in draft
+
+    Raises:
+        ValueError: If server_id not found or parameters invalid
+
+    Example:
+        >>> result = await add_server_to_config(
+        ...     client_id="claude-desktop",
+        ...     profile_id="default",
+        ...     server_id="filesystem",
+        ...     params={"path": "/Users/me/Documents"}
+        ... )
+        >>> # Draft now contains filesystem server config
+    """
+    try:
+        # Get or create builder
+        builder = _get_builder(client_id, profile_id)
+
+        # Add server (will validate params and env_vars)
+        builder.add_server(
+            server_id=server_id,
+            params=params,
+            env_vars=env_vars,
+            server_name=server_name,
+        )
+
+        # Return status with draft preview
+        return {
+            "status": "added",
+            "server_name": server_name or server_id,
+            "draft": builder.build(),
+            "server_count": builder.count(),
+        }
+
+    except ServerNotFoundError as e:
+        raise ValueError(f"Server not found: {e}")
+    except Exception as e:
+        raise ValueError(f"Failed to add server: {e}")
+
+
+@mcp.tool()
+async def remove_server_from_config(
+    client_id: str, profile_id: str, server_name: str
+) -> dict[str, Any]:
+    """Remove a server from the draft configuration.
+
+    Removes an MCP server from the draft configuration for a client/profile.
+
+    Args:
+        client_id: Client family identifier
+        profile_id: Profile identifier
+        server_name: Name of server in config (use add_server_to_config result)
+
+    Returns:
+        Dictionary with:
+        - status: "removed"
+        - server_name: Name of removed server
+        - draft: Updated draft configuration
+        - server_count: Number of servers remaining in draft
+
+    Raises:
+        ValueError: If server_name not found in draft
+
+    Example:
+        >>> result = await remove_server_from_config(
+        ...     client_id="claude-desktop",
+        ...     profile_id="default",
+        ...     server_name="filesystem"
+        ... )
+        >>> # Server removed from draft
+    """
+    try:
+        # Get builder (raises if doesn't exist)
+        builder = _get_builder(client_id, profile_id)
+
+        # Remove server
+        from mcp_orchestrator.building.builder import ServerNotInConfigError
+
+        try:
+            builder.remove_server(server_name)
+        except ServerNotInConfigError as e:
+            raise ValueError(str(e))
+
+        # Return status with updated draft
+        return {
+            "status": "removed",
+            "server_name": server_name,
+            "draft": builder.build(),
+            "server_count": builder.count(),
+        }
+
+    except ValueError:
+        raise
+    except Exception as e:
+        raise ValueError(f"Failed to remove server: {e}")
+
+
+# =============================================================================
+# RESOURCES (5 - Wave 1.0: 2, Wave 1.1: 2, Wave 1.2: 1)
 # =============================================================================
 
 
@@ -687,6 +841,50 @@ async def server_definition_resource(server_id: str) -> str:
         raise ValueError(str(e)) from e
 
     return json.dumps(server.model_dump(), indent=2)
+
+
+# =============================================================================
+# RESOURCES - Wave 1.2 (Config Building)
+# =============================================================================
+
+
+@mcp.resource("config://{client_id}/{profile_id}/draft")
+async def draft_config_resource(client_id: str, profile_id: str) -> str:
+    """Expose draft configuration as JSON resource.
+
+    Returns the current draft configuration for a client/profile combination.
+    The draft is an unsigned, work-in-progress configuration that can be
+    validated and published.
+
+    Args:
+        client_id: Client family identifier
+        profile_id: Profile identifier
+
+    Returns:
+        JSON string with draft configuration including:
+        - payload: mcpServers structure
+        - server_count: Number of servers in draft
+        - servers: List of server names
+
+    Example URI:
+        config://claude-desktop/default/draft
+
+    Note:
+        If no draft exists yet for this client/profile, returns an empty config.
+    """
+    # Get or create builder (will be empty if new)
+    builder = _get_builder(client_id, profile_id)
+
+    # Return draft info
+    draft_info = {
+        "client_id": client_id,
+        "profile_id": profile_id,
+        "payload": builder.build(),
+        "server_count": builder.count(),
+        "servers": builder.get_servers(),
+    }
+
+    return json.dumps(draft_info, indent=2)
 
 
 # =============================================================================

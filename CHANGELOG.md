@@ -7,6 +7,41 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## 0.1.2 - 2025-10-24
+
+### Added
+- **Transport Abstraction**: Automatic mcp-remote wrapping for HTTP/SSE servers
+  - `ServerRegistry.to_client_config()` method for generating client-ready configs
+  - Stdio servers: Direct passthrough with parameter substitution
+  - HTTP/SSE servers: Transparent mcp-remote wrapper (users never see implementation details)
+  - Parameter substitution in `{placeholder}` format for URLs and command args
+- **Config Builder Module** (`src/mcp_orchestrator/building/`):
+  - `ConfigBuilder` class for managing draft configurations
+  - Methods: `add_server()`, `remove_server()`, `build()`, `to_artifact()`
+  - In-memory draft state management
+  - Automatic transport abstraction when adding servers
+- **MCP Tools** (2 new - Total: 8):
+  - `add_server_to_config`: Add MCP server to draft configuration
+  - `remove_server_from_config`: Remove server from draft configuration
+- **MCP Resources** (1 new - Total: 5):
+  - `config://{client_id}/{profile_id}/draft`: View current draft configuration
+- **CLI Commands** (2 new - Total: 6):
+  - `mcp-orchestration-add-server`: Add server to config via CLI
+  - `mcp-orchestration-remove-server`: Remove server from config via CLI
+
+### Changed
+- Updated MCP server version to 0.1.2
+- Updated capabilities resource to reflect Wave 1.2 features
+
+### Testing
+- Added 35 unit tests (16 transport abstraction + 19 config builder)
+- All 126 tests passing (up from 91)
+- 70%+ coverage maintained
+
+### Spec Coverage
+- ✅ FR-5: Full parameter injection support
+- Foundation for FR-6 (schema validation - Wave 1.3)
+
 ## 0.1.1 - 2025-10-24
 
 ### Added

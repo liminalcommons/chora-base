@@ -203,6 +203,155 @@ class ServerRegistry:
             for server_id, server in self._servers.items()
         }
 
+    def to_client_config(
+        self,
+        server_id: str,
+        params: dict[str, Any] | None = None,
+        env_vars: dict[str, str] | None = None,
+        server_name: str | None = None,
+    ) -> dict[str, Any]:
+        """Generate client configuration for a server.
+
+        This method performs transport abstraction:
+        - stdio servers: Returns direct config with command/args
+        - HTTP/SSE servers: Automatically wraps with mcp-remote
+
+        Args:
+            server_id: Server identifier from registry
+            params: Parameter values for substitution (e.g., {"path": "/data"})
+            env_vars: Environment variables to include
+            server_name: Name to use in config (defaults to server_id)
+
+        Returns:
+            Dictionary with MCP client config structure:
+            {
+                "command": "...",
+                "args": [...],
+                "env": {...}  # Optional
+            }
+
+        Raises:
+            ServerNotFoundError: If server_id not found
+            ValueError: If required parameters are missing
+
+        Example:
+            >>> registry = get_default_registry()
+            >>> # Stdio server
+            >>> config = registry.to_client_config(
+            ...     "filesystem",
+            ...     params={"path": "/Users/me/Documents"}
+            ... )
+            >>> # Returns: {
+            ...     "command": "npx",
+            ...     "args": ["-y", "@modelcontextprotocol/server-filesystem", "/Users/me/Documents"]
+            ... }
+            >>>
+            >>> # HTTP server (auto-wrapped with mcp-remote)
+            >>> config = registry.to_client_config(
+            ...     "n8n",
+            ...     params={"port": "5679"},
+            ...     env_vars={"N8N_API_KEY": "secret"}
+            ... )
+            >>> # Returns: {
+            ...     "command": "npx",
+            ...     "args": ["-y", "@modelcontextprotocol/mcp-remote", "stdio", "http://localhost:5679/mcp/sse"],
+            ...     "env": {"N8N_API_KEY": "secret"}
+            ... }
+        """
+        # Get server definition
+        server = self.get(server_id)  # Raises ServerNotFoundError if not found
+
+        # Initialize params and env_vars if not provided
+        params = params or {}
+        env_vars = env_vars or {}
+
+        # Validate required parameters
+        required_param_names = {p.name for p in server.parameters if p.required}
+        missing_params = required_param_names - set(params.keys())
+        if missing_params:
+            raise ValueError(
+                f"Missing required parameters for server '{server_id}': {sorted(missing_params)}"
+            )
+
+        # Validate required environment variables
+        missing_env = set(server.required_env) - set(env_vars.keys())
+        if missing_env:
+            raise ValueError(
+                f"Missing required environment variables for server '{server_id}': {sorted(missing_env)}"
+            )
+
+        # Build configuration based on transport type
+        if server.transport == TransportType.STDIO:
+            # Direct stdio configuration
+            config = self._build_stdio_config(server, params)
+        elif server.transport in (TransportType.HTTP, TransportType.SSE):
+            # HTTP/SSE wrapped with mcp-remote
+            config = self._build_remote_config(server, params)
+        else:
+            raise ValueError(f"Unsupported transport type: {server.transport}")
+
+        # Add environment variables if provided
+        if env_vars:
+            config["env"] = env_vars
+
+        return config
+
+    def _build_stdio_config(
+        self, server: ServerDefinition, params: dict[str, Any]
+    ) -> dict[str, Any]:
+        """Build configuration for stdio server.
+
+        Args:
+            server: Server definition
+            params: Parameter values for substitution
+
+        Returns:
+            Config dict with command and args
+        """
+        # Substitute parameters in args
+        args = []
+        for arg in server.stdio_args:
+            # Replace {param_name} placeholders
+            substituted_arg = arg
+            for param_name, param_value in params.items():
+                placeholder = f"{{{param_name}}}"
+                substituted_arg = substituted_arg.replace(placeholder, str(param_value))
+            args.append(substituted_arg)
+
+        return {
+            "command": server.stdio_command,
+            "args": args,
+        }
+
+    def _build_remote_config(
+        self, server: ServerDefinition, params: dict[str, Any]
+    ) -> dict[str, Any]:
+        """Build configuration for HTTP/SSE server (wrapped with mcp-remote).
+
+        Args:
+            server: Server definition
+            params: Parameter values for substitution
+
+        Returns:
+            Config dict with mcp-remote wrapper
+        """
+        # Substitute parameters in URL
+        url = server.http_url or ""
+        for param_name, param_value in params.items():
+            placeholder = f"{{{param_name}}}"
+            url = url.replace(placeholder, str(param_value))
+
+        # Wrap with mcp-remote
+        return {
+            "command": "npx",
+            "args": [
+                "-y",
+                "@modelcontextprotocol/mcp-remote",
+                "stdio",
+                url,
+            ],
+        }
+
 
 # Global registry instance (will be initialized with defaults)
 _default_registry: ServerRegistry | None = None
