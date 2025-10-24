@@ -36,6 +36,7 @@ release = [
 [project.scripts]
 mcp-orchestration = "mcp_orchestration.mcp.server:main"
 mcp-orchestration-memory = "mcp_orchestration.cli.main:cli"
+mcp-orchestration-init = "mcp_orchestrator.cli_init:init_configs"
 [build-system]
 requires = ["hatchling"]
 build-backend = "hatchling.build"

@@ -14,12 +14,20 @@ from typing import Any
 
 from fastmcp import FastMCP
 
+from mcp_orchestrator.diff import compare_configs
+from mcp_orchestrator.registry import get_default_registry
+from mcp_orchestrator.storage import ArtifactStore, StorageError
+
 # Initialize MCP server
 mcp = FastMCP(
     "mcp-orchestration",
     version="0.1.0",
     description="MCP client configuration orchestration and distribution",
 )
+
+# Initialize global state (will be set on server startup)
+_registry = get_default_registry()
+_store = ArtifactStore()  # Uses default ~/.mcp-orchestration path
 
 
 # =============================================================================
@@ -41,23 +49,24 @@ async def list_clients() -> dict[str, Any]:
         - clients: List of client objects with id, display_name, platform, etc.
         - count: Total number of clients
     """
-    # TODO: Replace stub with actual client registry lookup
-    clients = [
-        {
-            "client_id": "claude-desktop",
-            "display_name": "Claude Desktop",
-            "platform": "macos",
-            "config_location": "~/Library/Application Support/Claude/claude_desktop_config.json",
-            "available_profiles": ["default", "dev"],
-        },
-        {
-            "client_id": "cursor",
-            "display_name": "Cursor IDE",
-            "platform": "cross-platform",
-            "config_location": "~/.cursor/mcp_config.json",
-            "available_profiles": ["default"],
-        },
-    ]
+    # Get clients from registry
+    registry_clients = _registry.list_clients()
+
+    # Build response with client metadata
+    clients = []
+    for client_def in registry_clients:
+        # Get profile IDs from registry
+        profile_ids = [p.profile_id for p in client_def.default_profiles]
+
+        clients.append(
+            {
+                "client_id": client_def.client_id,
+                "display_name": client_def.display_name,
+                "platform": client_def.platform,
+                "config_location": client_def.config_location,
+                "available_profiles": profile_ids,
+            }
+        )
 
     return {
         "clients": clients,
@@ -86,25 +95,49 @@ async def list_profiles(client_id: str) -> dict[str, Any]:
     Raises:
         ValueError: If client_id not found
     """
-    # TODO: Replace stub with actual profile registry lookup
-    known_clients = {"claude-desktop", "cursor"}
-
-    if client_id not in known_clients:
-        available = list(known_clients)
+    # Validate client exists in registry
+    if not _registry.has_client(client_id):
+        available = _registry.client_ids()
         raise ValueError(
             f"Client '{client_id}' not found. Available: {available}"
         )
 
-    # Stub profiles
-    profiles = [
-        {
-            "profile_id": "default",
-            "display_name": "Default",
-            "description": "Standard configuration for most users",
-            "latest_artifact_id": "a3f2c1b9e8d7f6a5b4c3d2e1f0a9b8c7d6e5f4a3b2c1d0e9f8a7b6c5d4e3f2a1",
-            "updated_at": "2025-10-23T14:30:00Z",
-        },
-    ]
+    # Get profile definitions from registry
+    profile_defs = _registry.get_profiles(client_id)
+
+    # Try to get stored profiles for artifact metadata
+    try:
+        stored_profile_ids = _store.list_profiles(client_id)
+    except StorageError:
+        # Client not in storage yet - use registry only
+        stored_profile_ids = []
+
+    profiles = []
+    for profile_def in profile_defs:
+        profile_data = {
+            "profile_id": profile_def.profile_id,
+            "display_name": profile_def.display_name,
+            "description": profile_def.description,
+        }
+
+        # Add storage metadata if available
+        if profile_def.profile_id in stored_profile_ids:
+            try:
+                metadata = _store.get_profile_metadata(
+                    client_id, profile_def.profile_id
+                )
+                profile_data["latest_artifact_id"] = metadata.latest_artifact_id
+                profile_data["updated_at"] = metadata.updated_at
+            except StorageError:
+                # Profile exists in storage list but metadata unavailable
+                profile_data["latest_artifact_id"] = None
+                profile_data["updated_at"] = None
+        else:
+            # Profile not yet in storage
+            profile_data["latest_artifact_id"] = None
+            profile_data["updated_at"] = None
+
+        profiles.append(profile_data)
 
     return {
         "client_id": client_id,
@@ -146,43 +179,46 @@ async def get_config(
     Raises:
         ValueError: If client_id or profile_id not found, or artifact_id invalid
     """
-    # TODO: Replace stub with actual artifact retrieval + signing
+    # Validate client exists
+    if not _registry.has_client(client_id):
+        available = _registry.client_ids()
+        raise ValueError(
+            f"Client '{client_id}' not found. Available: {available}"
+        )
 
-    # Stub validation
-    known_clients = {"claude-desktop", "cursor"}
-    if client_id not in known_clients:
-        raise ValueError(f"Client '{client_id}' not found")
+    # Retrieve artifact from storage
+    try:
+        if artifact_id:
+            # Get specific artifact by ID
+            artifact = _store.get_by_id(artifact_id)
+        else:
+            # Get latest artifact for client/profile
+            artifact = _store.get(client_id, profile_id)
 
-    # Stub artifact
-    return {
-        "artifact_id": "a3f2c1b9e8d7f6a5b4c3d2e1f0a9b8c7d6e5f4a3b2c1d0e9f8a7b6c5d4e3f2a1",
-        "client_id": client_id,
-        "profile_id": profile_id,
-        "created_at": "2025-10-23T14:30:00Z",
-        "payload": {
-            "mcpServers": {
-                "filesystem": {
-                    "command": "npx",
-                    "args": [
-                        "-y",
-                        "@modelcontextprotocol/server-filesystem",
-                        "/Users/user/projects",
-                    ],
-                },
-                "brave-search": {
-                    "command": "npx",
-                    "args": ["-y", "@modelcontextprotocol/server-brave-search"],
-                    "env": {"BRAVE_API_KEY": "${BRAVE_API_KEY}"},
-                },
-            }
-        },
-        "signature": "VGhpcyBpcyBhIHN0dWIgc2lnbmF0dXJlIGZvciBkZXZlbG9wbWVudA==",
-        "signing_key_id": "orchestration-dev-2025",
-        "metadata": {
-            "generator": "chora-compose",
-            "generator_version": "0.1.0",
-        },
-    }
+        # Convert ConfigArtifact to tool response format
+        return {
+            "artifact_id": artifact.artifact_id,
+            "client_id": artifact.client_id,
+            "profile_id": artifact.profile_id,
+            "created_at": artifact.created_at,
+            "payload": artifact.payload,
+            "signature": artifact.signature,
+            "signing_key_id": artifact.signing_key_id,
+            "metadata": artifact.metadata,
+        }
+
+    except StorageError as e:
+        # Convert storage errors to tool errors
+        if "not found" in str(e).lower():
+            if artifact_id:
+                raise ValueError(f"Artifact '{artifact_id}' not found") from e
+            else:
+                raise ValueError(
+                    f"No configuration found for {client_id}/{profile_id}. "
+                    f"Run 'mcp-orchestration init-configs' to create initial configs."
+                ) from e
+        else:
+            raise ValueError(f"Failed to retrieve configuration: {e}") from e
 
 
 @mcp.tool()
@@ -218,37 +254,77 @@ async def diff_config(
     Raises:
         ValueError: If client_id not found or neither local_artifact_id nor local_payload provided
     """
-    # TODO: Replace stub with actual diff computation
-
-    # Stub validation
+    # Validate inputs
     if not local_artifact_id and not local_payload:
         raise ValueError("Must provide either local_artifact_id or local_payload")
 
-    known_clients = {"claude-desktop", "cursor"}
-    if client_id not in known_clients:
-        raise ValueError(f"Client '{client_id}' not found")
+    if not _registry.has_client(client_id):
+        available = _registry.client_ids()
+        raise ValueError(
+            f"Client '{client_id}' not found. Available: {available}"
+        )
 
-    # Stub: Return up-to-date status
-    remote_artifact_id = "a3f2c1b9e8d7f6a5b4c3d2e1f0a9b8c7d6e5f4a3b2c1d0e9f8a7b6c5d4e3f2a1"
-    local_id = local_artifact_id or remote_artifact_id
+    # Get local payload if only artifact_id provided
+    if local_artifact_id and not local_payload:
+        try:
+            local_artifact = _store.get_by_id(local_artifact_id)
+            local_payload = local_artifact.payload
+        except StorageError:
+            # Artifact not in storage - can't compare
+            raise ValueError(
+                f"Local artifact '{local_artifact_id}' not found in storage. "
+                "Provide local_payload instead."
+            )
+
+    # Compute local artifact ID if not provided
+    if not local_artifact_id and local_payload:
+        local_artifact_id = _store.compute_artifact_id(local_payload)
+
+    # Get remote configuration
+    try:
+        remote_artifact = _store.get(client_id, profile_id)
+    except StorageError as e:
+        raise ValueError(
+            f"No remote configuration found for {client_id}/{profile_id}"
+        ) from e
+
+    # Compare configurations
+    diff_result = compare_configs(local_payload, remote_artifact.payload)
+
+    # Generate human-readable recommendation
+    if diff_result.status == "up-to-date":
+        recommendation = "Your configuration is current. No updates needed."
+    elif diff_result.status == "outdated":
+        recommendation = (
+            f"Update available: {len(diff_result.servers_added)} new server(s), "
+            f"{len(diff_result.servers_modified)} server(s) updated. "
+            "Run 'get_config' to fetch latest."
+        )
+    elif diff_result.status == "diverged":
+        recommendation = (
+            f"Configuration diverged: Your local config has {len(diff_result.servers_removed)} "
+            "server(s) not in remote. Review changes carefully before updating."
+        )
+    else:
+        recommendation = "Unable to determine configuration status."
 
     return {
-        "status": "up-to-date" if local_id == remote_artifact_id else "outdated",
-        "local_artifact_id": local_id,
-        "remote_artifact_id": remote_artifact_id,
+        "status": diff_result.status,
+        "local_artifact_id": local_artifact_id,
+        "remote_artifact_id": remote_artifact.artifact_id,
         "diff": {
-            "servers_added": [],
-            "servers_removed": [],
-            "servers_modified": [],
-            "servers_unchanged": ["filesystem", "brave-search"],
+            "servers_added": diff_result.servers_added,
+            "servers_removed": diff_result.servers_removed,
+            "servers_modified": diff_result.servers_modified,
+            "servers_unchanged": diff_result.servers_unchanged,
         },
         "summary": {
-            "total_changes": 0,
-            "added_count": 0,
-            "removed_count": 0,
-            "modified_count": 0,
+            "total_changes": diff_result.total_changes,
+            "added_count": len(diff_result.servers_added),
+            "removed_count": len(diff_result.servers_removed),
+            "modified_count": len(diff_result.servers_modified),
         },
-        "recommendation": "Your configuration is current. No updates needed.",
+        "recommendation": recommendation,
     }
 
 
@@ -300,45 +376,32 @@ async def client_capabilities() -> str:
     Returns:
         JSON string with client capability matrix
     """
-    # TODO: Replace stub with actual client capability data
-    capabilities = {
-        "clients": [
+    # Build capabilities from registry
+    registry_clients = _registry.list_clients()
+
+    client_list = []
+    for client_def in registry_clients:
+        client_list.append(
             {
-                "client_id": "claude-desktop",
-                "display_name": "Claude Desktop",
-                "version_min": "0.5.0",
-                "version_max": None,
-                "config_format": "json",
+                "client_id": client_def.client_id,
+                "display_name": client_def.display_name,
+                "version_min": client_def.version_min,
+                "version_max": client_def.version_max,
+                "config_format": client_def.config_format,
                 "supports": {
-                    "environment_variables": True,
-                    "command_args": True,
-                    "working_directory": True,
-                    "multiple_servers": True,
+                    "environment_variables": client_def.capabilities.environment_variables,
+                    "command_args": client_def.capabilities.command_args,
+                    "working_directory": client_def.capabilities.working_directory,
+                    "multiple_servers": client_def.capabilities.multiple_servers,
                 },
                 "limitations": {
-                    "max_servers": None,
-                    "max_env_vars_per_server": None,
+                    "max_servers": client_def.limitations.max_servers,
+                    "max_env_vars_per_server": client_def.limitations.max_env_vars_per_server,
                 },
-            },
-            {
-                "client_id": "cursor",
-                "display_name": "Cursor IDE",
-                "version_min": "0.1.0",
-                "version_max": None,
-                "config_format": "json",
-                "supports": {
-                    "environment_variables": True,
-                    "command_args": True,
-                    "working_directory": False,
-                    "multiple_servers": True,
-                },
-                "limitations": {
-                    "max_servers": 20,
-                    "max_env_vars_per_server": 50,
-                },
-            },
-        ]
-    }
+            }
+        )
+
+    capabilities = {"clients": client_list}
     return json.dumps(capabilities, indent=2)
 
 
