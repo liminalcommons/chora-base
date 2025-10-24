@@ -19,11 +19,7 @@ from mcp_orchestrator.registry import get_default_registry
 from mcp_orchestrator.storage import ArtifactStore, StorageError
 
 # Initialize MCP server
-mcp = FastMCP(
-    "mcp-orchestration",
-    version="0.1.0",
-    description="MCP client configuration orchestration and distribution",
-)
+mcp = FastMCP("mcp-orchestration")
 
 # Initialize global state (will be set on server startup)
 _registry = get_default_registry()
