@@ -4,7 +4,7 @@ MCP server orchestration and management tools
 
 ## Overview
 
-**mcp-orchestration** is a Model Context Protocol (MCP) server that provides [describe your server's capabilities].
+**mcp-orchestration** is a Model Context Protocol (MCP) server that provides centralized configuration management and orchestration for MCP client applications. It enables cryptographically signed, content-addressable storage of client configurations with automated diff detection and update recommendations.
 
 This project follows the MCP specification and can be integrated with:
 - Claude Desktop
@@ -13,37 +13,47 @@ This project follows the MCP specification and can be integrated with:
 
 ## Features
 
-- **[Feature 1]** - Description
-- **[Feature 2]** - Description
-- **Agent Memory System** - Cross-session learning with event log, knowledge graph, and trace correlation
-- **CLI Interface** - Command-line tools for [describe CLI purpose]
-- **Comprehensive Testing** - 85%+ test coverage with pytest
+- **Cryptographic Signatures** - Ed25519 signatures for configuration integrity and authenticity
+- **Content-Addressable Storage** - SHA-256 based artifact identification for immutable configs
+- **Multi-Client Registry** - Support for multiple MCP clients (Claude Desktop, Cursor) with profile-based configs
+- **Configuration Diff** - Intelligent comparison with field-level change detection
+- **MCP Tools & Resources** - 4 tools (list_clients, list_profiles, get_config, diff_config) and 2 resources
+- **CLI Initialization** - Quick-start command to generate signed sample configurations
+- **Comprehensive Testing** - 67 passing tests with full integration coverage
 ## Installation
 
-### Quick Setup
+### From PyPI (Recommended)
+
+```bash
+pip install mcp-orchestration
+```
+
+### From Source
 
 ```bash
 # Clone repository
 git clone https://github.com/liminalcommons/mcp-orchestration.git
 cd mcp-orchestration
 
-# One-command setup (installs dependencies, hooks, and runs checks)
-./scripts/setup.sh
-```
-
-### Manual Setup
-
-```bash
-# Create virtual environment
-python -m venv .venv
-source .venv/bin/activate  # or `.venv\Scripts\activate` on Windows
-
 # Install with development dependencies
 pip install -e ".[dev]"
 
-# Install pre-commit hooks
+# Install pre-commit hooks (for contributors)
 pre-commit install
 ```
+
+### Initialize Configuration Storage
+
+After installation, generate signed sample configurations:
+
+```bash
+mcp-orchestration-init
+```
+
+This creates:
+- Ed25519 signing keys at `~/.mcp-orchestration/keys/`
+- Sample configurations for supported clients
+- Content-addressable artifact storage
 
 ## Configuration
 
@@ -62,41 +72,89 @@ MCP_ORCHESTRATION_LOG_LEVEL=INFO
 
 #### Claude Desktop (macOS)
 
-**Development Mode (Editable Install):**
+Add to `~/Library/Application Support/Claude/claude_desktop_config.json`:
+
 ```json
 {
   "mcpServers": {
-    "mcp-orchestration-dev": {
-      "command": "/path/to/mcp-orchestration/.venv/bin/python",
-      "args": ["-m", "mcp_orchestration.server"],
-      "cwd": "/path/to/mcp-orchestration",
+    "mcp-orchestration": {
+      "command": "python3",
+      "args": ["-m", "mcp_orchestrator.mcp.server"],
       "env": {
-        "MCP_ORCHESTRATION_DEBUG": "1"
+        "PYTHONPATH": "/path/to/mcp-orchestration/src"
       }
     }
   }
 }
 ```
 
-**Production Mode (Installed Package):**
+For installed package (after PyPI release):
 ```json
 {
   "mcpServers": {
     "mcp-orchestration": {
-      "command": "mcp-orchestration",
-      "args": [],
-      "env": {}
+      "command": "mcp-orchestration"
+    }
+  }
+}
+```
+
+#### Cursor IDE
+
+Add to Cursor settings JSON:
+
+```json
+{
+  "mcp": {
+    "servers": {
+      "mcp-orchestration": {
+        "command": "python3",
+        "args": ["-m", "mcp_orchestrator.mcp.server"]
+      }
     }
   }
 }
 ```
 ## Usage
 
-```bash
-# Example command
-mcp-orchestration --help
+Once configured in your MCP client (Claude Desktop, Cursor, etc.), the following tools are available:
 
-# [Add your specific usage examples here]
+### MCP Tools
+
+**list_clients** - List all supported MCP client families:
+```
+Returns: client_id, display_name, platform, capabilities, profiles
+```
+
+**list_profiles** - List profiles for a specific client:
+```
+Input: client_id (e.g., "claude-desktop")
+Returns: profile_id, display_name, artifact_id, signature
+```
+
+**get_config** - Retrieve a signed configuration artifact:
+```
+Input: client_id, profile_id (default: "default"), artifact_id (optional)
+Returns: Full signed artifact with payload, signature, metadata
+```
+
+**diff_config** - Compare local config against stored version:
+```
+Input: client_id, profile_id, local_payload
+Returns: Diff status (up-to-date/outdated/diverged), changes, recommendation
+```
+
+### CLI Commands
+
+```bash
+# Initialize configuration storage with sample configs
+mcp-orchestration-init
+
+# Initialize to custom location
+mcp-orchestration-init --storage-path /custom/path
+
+# Regenerate existing configurations
+mcp-orchestration-init --regenerate
 ```
 ## Development
 
