@@ -12,7 +12,7 @@ Wave 1.1 (Server Registry v0.1.1):
 - 2 resources: server://registry, server://{server_id}
 
 Wave 1.2 (Transport Abstraction + Config Generation v0.1.2):
-- 2 tools: add_server_to_config, remove_server_from_config
+- 3 tools: add_server_to_config, remove_server_from_config, publish_config
 - 1 resource: config://{client_id}/{profile_id}/draft
 """
 
@@ -41,7 +41,7 @@ _builders: dict[str, ConfigBuilder] = {}
 
 
 # =============================================================================
-# TOOLS (8 - Wave 1.0: 4, Wave 1.1: 2, Wave 1.2: 2)
+# TOOLS (9 - Wave 1.0: 4, Wave 1.1: 2, Wave 1.2: 3)
 # =============================================================================
 
 
@@ -388,7 +388,7 @@ async def list_available_servers(
                 "server_id": server.server_id,
                 "display_name": server.display_name,
                 "description": server.description,
-                "transport": server.transport.value,
+                "transport": _get_transport_value(server.transport),
                 "npm_package": server.npm_package,
                 "tags": server.tags,
                 "has_parameters": len(server.parameters) > 0,
@@ -433,9 +433,10 @@ async def describe_server(server_id: str) -> dict[str, Any]:
         raise ValueError(str(e)) from e
 
     # Build transport info
-    transport_info = {"type": server.transport.value}
+    transport_value = _get_transport_value(server.transport)
+    transport_info = {"type": transport_value}
 
-    if server.transport.value == "stdio":
+    if transport_value == "stdio":
         transport_info["command"] = server.stdio_command
         transport_info["args"] = server.stdio_args
     else:  # http or sse
@@ -501,7 +502,8 @@ def _generate_usage_example(server) -> str:
     import json
 
     # Build example args with parameter placeholders
-    if server.transport.value == "stdio":
+    transport_value = _get_transport_value(server.transport)
+    if transport_value == "stdio":
         args = []
         for arg in server.stdio_args:
             # Replace parameter placeholders with example values
@@ -553,6 +555,23 @@ def _generate_usage_example(server) -> str:
 # =============================================================================
 # TOOLS - Wave 1.2 (Config Building)
 # =============================================================================
+
+
+def _get_transport_value(transport: Any) -> str:
+    """Safely get transport value (handles both enum and string).
+
+    Pydantic's use_enum_values=True serializes enums to strings, so
+    server.transport might be either TransportType enum or str.
+
+    Args:
+        transport: TransportType enum or string value
+
+    Returns:
+        String value of transport type
+    """
+    from mcp_orchestrator.servers.models import TransportType
+
+    return transport.value if isinstance(transport, TransportType) else transport
 
 
 def _get_builder(client_id: str, profile_id: str) -> ConfigBuilder:
@@ -696,6 +715,94 @@ async def remove_server_from_config(
         raise ValueError(f"Failed to remove server: {e}")
 
 
+@mcp.tool()
+async def publish_config(
+    client_id: str,
+    profile_id: str,
+    changelog: str | None = None,
+) -> dict[str, Any]:
+    """Publish draft configuration as signed artifact.
+
+    Takes the current draft configuration for a client/profile and publishes
+    it as a cryptographically signed, content-addressable artifact.
+
+    This completes the workflow: browse → add → publish
+
+    Args:
+        client_id: Client family identifier
+        profile_id: Profile identifier
+        changelog: Optional changelog describing the changes
+
+    Returns:
+        Dictionary with:
+        - status: "published"
+        - artifact_id: SHA-256 content address
+        - client_id: Client family
+        - profile_id: Profile
+        - server_count: Number of servers in config
+        - changelog: Changelog if provided
+
+    Raises:
+        ValueError: If draft is empty or publishing fails
+
+    Example:
+        >>> result = await publish_config(
+        ...     client_id="claude-desktop",
+        ...     profile_id="default",
+        ...     changelog="Added filesystem and github servers"
+        ... )
+        >>> # Config is now signed and stored
+    """
+    try:
+        # Get builder (must exist with servers)
+        builder = _get_builder(client_id, profile_id)
+
+        if builder.count() == 0:
+            raise ValueError(
+                "Cannot publish empty configuration. "
+                "Add at least one server before publishing."
+            )
+
+        # Get signing key paths
+        from pathlib import Path
+
+        home = Path.home()
+        key_dir = home / ".mcp-orchestration" / "keys"
+        private_key_path = key_dir / "signing.key"
+
+        if not private_key_path.exists():
+            raise ValueError(
+                f"Signing key not found at {private_key_path}. "
+                "Run 'mcp-orchestration-init' to generate keys."
+            )
+
+        # Convert draft to signed artifact
+        artifact = builder.to_artifact(
+            signing_key_id="default",
+            private_key_path=str(private_key_path),
+            changelog=changelog,
+        )
+
+        # Store artifact
+        _store.store(artifact)
+
+        # Return success
+        return {
+            "status": "published",
+            "artifact_id": artifact.artifact_id,
+            "client_id": client_id,
+            "profile_id": profile_id,
+            "server_count": builder.count(),
+            "changelog": changelog,
+            "created_at": artifact.created_at,
+        }
+
+    except ValueError:
+        raise
+    except Exception as e:
+        raise ValueError(f"Failed to publish config: {e}")
+
+
 # =============================================================================
 # RESOURCES (5 - Wave 1.0: 2, Wave 1.1: 2, Wave 1.2: 1)
 # =============================================================================
@@ -713,8 +820,8 @@ async def server_capabilities() -> str:
     """
     capabilities = {
         "name": "mcp-orchestration",
-        "version": "0.1.1",
-        "wave": "Wave 1.1: Server Registry",
+        "version": "0.1.2",
+        "wave": "Wave 1.2: Transport Abstraction + Config Generation",
         "capabilities": {
             "tools": [
                 # Wave 1.0
@@ -725,6 +832,10 @@ async def server_capabilities() -> str:
                 # Wave 1.1
                 "list_available_servers",
                 "describe_server",
+                # Wave 1.2
+                "add_server_to_config",
+                "remove_server_from_config",
+                "publish_config",
             ],
             "resources": [
                 # Wave 1.0
@@ -733,6 +844,8 @@ async def server_capabilities() -> str:
                 # Wave 1.1
                 "server://registry",
                 "server://{server_id}",
+                # Wave 1.2
+                "config://{client_id}/{profile_id}/draft",
             ],
             "prompts": [],
         },
@@ -745,6 +858,11 @@ async def server_capabilities() -> str:
             # Wave 1.1
             "server_registry": True,
             "server_discovery": True,
+            # Wave 1.2
+            "transport_abstraction": True,
+            "config_building": True,
+            "draft_management": True,
+            "mcp_remote_wrapping": True,
         },
         "endpoints": {
             "verification_key_url": "https://mcp-orchestration.example.com/keys/verification_key.pem"
