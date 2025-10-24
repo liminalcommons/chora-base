@@ -19,7 +19,7 @@ jobs:
       - name: Set up Python
         uses: actions/setup-python@v5
         with:
-          python-version: '3.11'
+          python-version: '3.12'
 
       - name: Install build dependencies
         run: |
@@ -65,27 +65,29 @@ jobs:
         timeout-minutes: 2
 
       - name: Run full test suite
-        run: pytest --cov=src/mcp_orchestration --cov-report=term --cov-fail-under=85
+        run: pytest --cov=src/mcp_orchestrator --cov-report=term --cov-fail-under=85
 
   publish-pypi:
     name: Publish to PyPI
     needs: [build, test]
     runs-on: ubuntu-latest
-steps:
+
+    steps:
       - name: Download distribution artifacts
         uses: actions/download-artifact@v4
         with:
           name: python-package-distributions
           path: dist/
 
-- name: Publish to PyPI using token
+      - name: Publish to PyPI using token
         uses: pypa/gh-action-pypi-publish@release/v1
         with:
           password: ${{ secrets.PYPI_TOKEN }}
           print-hash: true
           # To use: Create token at https://pypi.org/manage/account/token/
           # Add as repository secret: PYPI_TOKEN
-github-release:
+
+  github-release:
     name: Create GitHub Release
     needs: [publish-pypi]
     runs-on: ubuntu-latest
@@ -102,7 +104,7 @@ github-release:
 
       - name: Extract tag version
         id: tag
-        run: echo "version=${GITHUB_REF#refs/tags/v}" }} $GITHUB_OUTPUT
+        run: echo "version=${GITHUB_REF#refs/tags/v}" >> $GITHUB_OUTPUT
 
       - name: Extract changelog for this version
         id: changelog
@@ -133,7 +135,7 @@ github-release:
     steps:
       - name: Extract tag version
         id: tag
-        run: echo "version=${GITHUB_REF#refs/tags/v}" }} $GITHUB_OUTPUT
+        run: echo "version=${GITHUB_REF#refs/tags/v}" >> $GITHUB_OUTPUT
 
       - name: Release summary
         run: |
