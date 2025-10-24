@@ -20,9 +20,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - Methods: `add_server()`, `remove_server()`, `build()`, `to_artifact()`
   - In-memory draft state management
   - Automatic transport abstraction when adding servers
-- **MCP Tools** (2 new - Total: 8):
+- **MCP Tools** (3 new - Total: 9):
   - `add_server_to_config`: Add MCP server to draft configuration
   - `remove_server_from_config`: Remove server from draft configuration
+  - `publish_config`: Publish draft as signed artifact (completes workflow)
 - **MCP Resources** (1 new - Total: 5):
   - `config://{client_id}/{profile_id}/draft`: View current draft configuration
 - **CLI Commands** (2 new - Total: 6):
