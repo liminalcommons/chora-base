@@ -316,6 +316,26 @@ mcp_validate_names:
 _templates_suffix: ".jinja"
 
 _exclude:
+  # === Root-Level Template Metadata (always exclude) ===
+  - "/.git"
+  - "/.gitignore"
+  - "/copier.yml"
+  - "/copier.yml.backup"
+  - "/chora-base.code-workspace"
+  - "/RELEASE_*.md"
+  - "/README.md"
+  - "/CHANGELOG.md"
+  - "/AGENTS.md"
+  - "/repo-dump.py"
+  - "/test_template_standard.py"
+  - "/.DS_Store"
+  - "/docs/**"
+  - "/examples/**"
+  - "/inbox/**"
+  - "/scripts/**"
+  - "/test-output/**"
+
+  # === Conditional Template File Excludes ===
   - "{% if not include_vision_docs %}dev-docs/vision/{% endif %}"
   - "{% if not include_roadmap %}ROADMAP.md.jinja{% endif %}"
   - "{% if not include_vision_docs %}dev-docs/vision/*{% endif %}"

@@ -1,0 +1,4 @@
+"""{{ project_name }} - {{ project_description }}"""
+
+__version__ = "{{ project_version }}"
+__author__ = "{{ author_name }}"
