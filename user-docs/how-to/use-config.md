@@ -5,8 +5,8 @@
 **Time:** 15 minutes
 
 **Prerequisites:**
-- Fetched and verified a config artifact ([How to Get Config](02-get-first-config.md))
-- Verified signature ([How to Verify Signatures](04-verify-signatures.md))
+- Fetched and verified a config artifact ([How to Get Config](get-first-config.md))
+- Verified signature ([How to Verify Signatures](verify-signatures.md))
 - Backup of current config
 
 ---

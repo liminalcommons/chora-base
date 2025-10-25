@@ -200,7 +200,7 @@ Restart Claude Desktop after configuration changes.
 
 ## Next Steps
 
-- **[How to Get Your First Config](02-get-first-config.md)** - Fetch a configuration artifact
+- **[How to Get Your First Config](get-first-config.md)** - Fetch a configuration artifact
 - **[How to List Profiles for a Client](02a-list-profiles.md)** - Get detailed profile information
 - **[Understanding Client Capabilities](../explanation/client-capabilities.md)** - Learn what capabilities mean
 

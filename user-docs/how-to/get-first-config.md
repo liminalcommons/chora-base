@@ -6,7 +6,7 @@
 
 **Prerequisites:**
 - mcp-orchestration MCP server configured
-- Completed [How to Discover Clients](01-discover-clients.md)
+- Completed [How to Discover Clients](discover-clients.md)
 
 ---
 
@@ -147,7 +147,7 @@ The config payload has NOT been tampered with.
 It was signed by: mcp-orchestration
 ```
 
-See [How to Verify Signatures](04-verify-signatures.md) for detailed instructions.
+See [How to Verify Signatures](verify-signatures.md) for detailed instructions.
 
 ---
 
@@ -169,7 +169,7 @@ The `payload` field contains the actual MCP client configuration. For Claude Des
 }
 ```
 
-This is what you'll add to `claude_desktop_config.json`. See [How to Use Configs](05-use-config.md) for instructions.
+This is what you'll add to `claude_desktop_config.json`. See [How to Use Configs](use-config.md) for instructions.
 
 ---
 
@@ -344,9 +344,9 @@ artifact_id = hashlib.sha256(payload_str.encode()).hexdigest()
 
 ## Next Steps
 
-- **[How to Check for Config Updates](03-check-updates.md)** - Use `diff_config` to check for new versions
-- **[How to Verify Signatures](04-verify-signatures.md)** - Cryptographically verify config integrity
-- **[How to Use Configs in Your MCP Client](05-use-config.md)** - Apply config to Claude Desktop or Cursor
+- **[How to Check for Config Updates](check-config-updates.md)** - Use `diff_config` to check for new versions
+- **[How to Verify Signatures](verify-signatures.md)** - Cryptographically verify config integrity
+- **[How to Use Configs in Your MCP Client](use-config.md)** - Apply config to Claude Desktop or Cursor
 - **[Understanding Config Provenance](../explanation/config-provenance.md)** - Learn about config generation metadata
 
 ---

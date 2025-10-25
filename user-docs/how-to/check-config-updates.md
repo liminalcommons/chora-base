@@ -5,7 +5,7 @@
 **Time:** 3 minutes
 
 **Prerequisites:**
-- You have fetched a config previously (see [How to Get Your First Config](02-get-first-config.md))
+- You have fetched a config previously (see [How to Get Your First Config](get-first-config.md))
 - You know your current `artifact_id`
 
 ---
@@ -414,8 +414,8 @@ Changelogs follow this format:
 
 ## Next Steps
 
-- **[How to Verify Signatures](04-verify-signatures.md)** - Verify config integrity before applying updates
-- **[How to Use Configs](05-use-config.md)** - Apply updated configs to your MCP client
+- **[How to Verify Signatures](verify-signatures.md)** - Verify config integrity before applying updates
+- **[How to Use Configs](use-config.md)** - Apply updated configs to your MCP client
 - **[Automating Config Updates](06-automate-updates.md)** - Full automation workflow (Wave 2)
 
 ---

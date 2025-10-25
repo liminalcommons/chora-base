@@ -555,7 +555,7 @@ if verify_with_any(config, verifiers):
 
 ## Next Steps
 
-- **[How to Use Configs in Your MCP Client](05-use-config.md)** - Apply verified configs
+- **[How to Use Configs in Your MCP Client](use-config.md)** - Apply verified configs
 - **[Understanding Config Provenance](../explanation/config-provenance.md)** - Learn about config metadata
 - **[Security Architecture](../explanation/security-architecture.md)** - Deep dive into crypto design
 
