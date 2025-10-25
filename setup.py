@@ -254,6 +254,19 @@ def process_blueprints(target_dir: Path, variables: Dict[str, str]):
             placeholder_no_spaces = f"{{{{{var_name}}}}}"
             content = content.replace(placeholder_no_spaces, var_value)
 
+            # Handle | upper filter
+            placeholder_upper_spaces = f"{{{{ {var_name} | upper }}}}"
+            content = content.replace(placeholder_upper_spaces, var_value.upper())
+
+            placeholder_upper_no_spaces = f"{{{{{var_name} | upper}}}}"
+            content = content.replace(placeholder_upper_no_spaces, var_value.upper())
+
+            placeholder_upper_pipe_spaces = f"{{{{ {var_name}| upper }}}}"
+            content = content.replace(placeholder_upper_pipe_spaces, var_value.upper())
+
+            placeholder_upper_no_pipe_spaces = f"{{{{ {var_name}|upper }}}}"
+            content = content.replace(placeholder_upper_no_pipe_spaces, var_value.upper())
+
         # Check for unreplaced placeholders
         if "{{" in content and not content.startswith("#!"):  # Allow shebangs
             remaining = re.findall(r'\{\{(\w+)\}\}', content)
