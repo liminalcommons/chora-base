@@ -100,7 +100,7 @@ telemetry:
   signals:
     - name: chora.value_scenario.mcp.registry.manage.create_doc
       status: in_progress
-      docs: docs/reference/signals/SIG-capability-onboard.md
+      docs: project-docs/telemetry/signals/SIG-capability-onboard.md
 ```
 
 Value scenarios make user outcomes discoverable and verifiable alongside capability metadata.

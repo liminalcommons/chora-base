@@ -18,7 +18,7 @@ class CLI:
         behaviors.add_argument(
             "path",
             nargs="?",
-            default="docs/capabilities/behaviors",
+            default="project-docs/capabilities/behaviors",
             help="Path to behavior specs (feature/json)",
         )
         scenarios = sub.add_parser("scenario-validate", help="validate value scenarios via manifest")

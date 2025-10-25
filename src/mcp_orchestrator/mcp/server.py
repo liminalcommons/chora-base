@@ -14,6 +14,11 @@ Wave 1.1 (Server Registry v0.1.1):
 Wave 1.2 (Transport Abstraction + Config Generation v0.1.2):
 - 3 tools: add_server_to_config, remove_server_from_config, publish_config
 - 1 resource: config://{client_id}/{profile_id}/draft
+
+Wave 1.3 (Claude Desktop Ergonomics v0.1.3):
+- 3 tools: view_draft_config, clear_draft_config, initialize_keys
+- Default parameters for common use cases
+- Improved tool descriptions and cross-references
 """
 
 import json
@@ -41,7 +46,8 @@ _builders: dict[str, ConfigBuilder] = {}
 
 
 # =============================================================================
-# TOOLS (9 - Wave 1.0: 4, Wave 1.1: 2, Wave 1.2: 3)
+# TOOLS (13 - Wave 1.0: 4, Wave 1.1: 2, Wave 1.2: 3, Wave 1.3: 4)
+# Note: Wave 1.3 includes parameter default changes to existing tools
 # =============================================================================
 
 
@@ -592,12 +598,12 @@ def _get_builder(client_id: str, profile_id: str) -> ConfigBuilder:
 
 @mcp.tool()
 async def add_server_to_config(
-    client_id: str,
-    profile_id: str,
     server_id: str,
-    params: dict[str, Any] | None = None,
-    env_vars: dict[str, str] | None = None,
+    params: dict[str, Any] | str | None = None,
+    env_vars: dict[str, str] | str | None = None,
     server_name: str | None = None,
+    client_id: str = "claude-desktop",
+    profile_id: str = "default",
 ) -> dict[str, Any]:
     """Add a server to the draft configuration.
 
@@ -605,13 +611,16 @@ async def add_server_to_config(
     Automatically handles stdio vs HTTP/SSE transport (HTTP/SSE servers are
     wrapped with mcp-remote transparently).
 
+    Note: When calling from Claude Desktop, params and env_vars can be passed
+    as either dict objects or JSON strings - both formats work correctly.
+
     Args:
-        client_id: Client family identifier (e.g., 'claude-desktop')
-        profile_id: Profile identifier (e.g., 'default', 'dev')
         server_id: Server identifier from registry (use list_available_servers)
         params: Parameter values (e.g., {"path": "/Users/me/Documents"})
         env_vars: Environment variables (e.g., {"GITHUB_TOKEN": "ghp_..."})
         server_name: Name to use in config (defaults to server_id)
+        client_id: Client family identifier (defaults to 'claude-desktop')
+        profile_id: Profile identifier (defaults to 'default')
 
     Returns:
         Dictionary with:
@@ -625,16 +634,24 @@ async def add_server_to_config(
 
     Example:
         >>> result = await add_server_to_config(
-        ...     client_id="claude-desktop",
-        ...     profile_id="default",
         ...     server_id="filesystem",
         ...     params={"path": "/Users/me/Documents"}
         ... )
-        >>> # Draft now contains filesystem server config
+        >>> # Draft now contains filesystem server config for claude-desktop/default
     """
     try:
         # Get or create builder
         builder = _get_builder(client_id, profile_id)
+
+        # Parse params if passed as JSON string (Claude Desktop serialization)
+        if isinstance(params, str):
+            import json
+            params = json.loads(params)
+
+        # Parse env_vars if passed as JSON string
+        if isinstance(env_vars, str):
+            import json
+            env_vars = json.loads(env_vars)
 
         # Add server (will validate params and env_vars)
         builder.add_server(
@@ -660,16 +677,18 @@ async def add_server_to_config(
 
 @mcp.tool()
 async def remove_server_from_config(
-    client_id: str, profile_id: str, server_name: str
+    server_name: str,
+    client_id: str = "claude-desktop",
+    profile_id: str = "default",
 ) -> dict[str, Any]:
     """Remove a server from the draft configuration.
 
     Removes an MCP server from the draft configuration for a client/profile.
 
     Args:
-        client_id: Client family identifier
-        profile_id: Profile identifier
         server_name: Name of server in config (use add_server_to_config result)
+        client_id: Client family identifier (defaults to 'claude-desktop')
+        profile_id: Profile identifier (defaults to 'default')
 
     Returns:
         Dictionary with:
@@ -683,11 +702,9 @@ async def remove_server_from_config(
 
     Example:
         >>> result = await remove_server_from_config(
-        ...     client_id="claude-desktop",
-        ...     profile_id="default",
         ...     server_name="filesystem"
         ... )
-        >>> # Server removed from draft
+        >>> # Server removed from draft for claude-desktop/default
     """
     try:
         # Get builder (raises if doesn't exist)
@@ -716,22 +733,113 @@ async def remove_server_from_config(
 
 
 @mcp.tool()
+async def view_draft_config(
+    client_id: str = "claude-desktop",
+    profile_id: str = "default",
+) -> dict[str, Any]:
+    """View the current draft configuration without modifying it.
+
+    Returns the current draft configuration for inspection. This is useful
+    for checking what servers are configured before publishing.
+
+    Args:
+        client_id: Client family identifier (defaults to 'claude-desktop')
+        profile_id: Profile identifier (defaults to 'default')
+
+    Returns:
+        Dictionary with:
+        - draft: Current draft configuration
+        - server_count: Number of servers in draft
+        - servers: List of server names in draft
+
+    Example:
+        >>> result = await view_draft_config()
+        >>> # Returns current draft for claude-desktop/default
+    """
+    try:
+        # Check if draft exists
+        key = f"{client_id}/{profile_id}"
+        if key not in _builders:
+            # Return empty draft
+            return {
+                "draft": {"mcpServers": {}},
+                "server_count": 0,
+                "servers": [],
+            }
+
+        builder = _builders[key]
+        return {
+            "draft": builder.build(),
+            "server_count": builder.count(),
+            "servers": builder.get_servers(),
+        }
+
+    except Exception as e:
+        raise ValueError(f"Failed to view draft: {e}")
+
+
+@mcp.tool()
+async def clear_draft_config(
+    client_id: str = "claude-desktop",
+    profile_id: str = "default",
+) -> dict[str, Any]:
+    """Clear all servers from the draft configuration.
+
+    Removes all servers from the draft, allowing you to start fresh.
+    This does not affect any published configurations.
+
+    Args:
+        client_id: Client family identifier (defaults to 'claude-desktop')
+        profile_id: Profile identifier (defaults to 'default')
+
+    Returns:
+        Dictionary with:
+        - status: "cleared"
+        - previous_count: Number of servers that were removed
+
+    Example:
+        >>> result = await clear_draft_config()
+        >>> # Draft is now empty
+    """
+    try:
+        # Check if draft exists
+        key = f"{client_id}/{profile_id}"
+        if key not in _builders:
+            return {"status": "cleared", "previous_count": 0}
+
+        builder = _builders[key]
+        previous_count = builder.count()
+        builder.clear()
+
+        return {
+            "status": "cleared",
+            "previous_count": previous_count,
+        }
+
+    except Exception as e:
+        raise ValueError(f"Failed to clear draft: {e}")
+
+
+@mcp.tool()
 async def publish_config(
-    client_id: str,
-    profile_id: str,
     changelog: str | None = None,
+    client_id: str = "claude-desktop",
+    profile_id: str = "default",
 ) -> dict[str, Any]:
     """Publish draft configuration as signed artifact.
 
     Takes the current draft configuration for a client/profile and publishes
     it as a cryptographically signed, content-addressable artifact.
 
-    This completes the workflow: browse → add → publish
+    This completes the workflow: browse → add → view → publish
+
+    Note: Requires signing keys to be initialized. If keys don't exist, use
+    the initialize_keys tool first.
 
     Args:
-        client_id: Client family identifier
-        profile_id: Profile identifier
         changelog: Optional changelog describing the changes
+        client_id: Client family identifier (defaults to 'claude-desktop')
+        profile_id: Profile identifier (defaults to 'default')
 
     Returns:
         Dictionary with:
@@ -747,11 +855,9 @@ async def publish_config(
 
     Example:
         >>> result = await publish_config(
-        ...     client_id="claude-desktop",
-        ...     profile_id="default",
         ...     changelog="Added filesystem and github servers"
         ... )
-        >>> # Config is now signed and stored
+        >>> # Config is now signed and stored for claude-desktop/default
     """
     try:
         # Get builder (must exist with servers)
@@ -773,7 +879,7 @@ async def publish_config(
         if not private_key_path.exists():
             raise ValueError(
                 f"Signing key not found at {private_key_path}. "
-                "Run 'mcp-orchestration-init' to generate keys."
+                "Use the initialize_keys tool to generate keys."
             )
 
         # Convert draft to signed artifact
@@ -803,6 +909,68 @@ async def publish_config(
         raise ValueError(f"Failed to publish config: {e}")
 
 
+@mcp.tool()
+async def initialize_keys(regenerate: bool = False) -> dict[str, Any]:
+    """Initialize Ed25519 signing keys for cryptographic artifact signing.
+
+    Generates a new Ed25519 key pair and stores them securely. The private key
+    is saved with restricted permissions (0600). This is required before
+    publishing configurations.
+
+    Args:
+        regenerate: If True, regenerate keys even if they already exist
+
+    Returns:
+        Dictionary with:
+        - status: "initialized" or "already_exists"
+        - key_dir: Directory where keys are stored
+        - public_key_path: Path to public key file
+        - message: Human-readable status message
+
+    Example:
+        >>> result = await initialize_keys()
+        >>> # Keys generated and ready for use
+    """
+    try:
+        from pathlib import Path
+
+        from mcp_orchestrator.crypto import ArtifactSigner
+
+        home = Path.home()
+        key_dir = home / ".mcp-orchestration" / "keys"
+        private_key_path = key_dir / "signing.key"
+        public_key_path = key_dir / "signing.pub"
+
+        # Check if keys already exist
+        if private_key_path.exists() and not regenerate:
+            return {
+                "status": "already_exists",
+                "key_dir": str(key_dir),
+                "public_key_path": str(public_key_path),
+                "message": "Signing keys already exist. Use regenerate=True to recreate them.",
+            }
+
+        # Ensure artifacts directory exists
+        artifacts_dir = home / ".mcp-orchestration" / "artifacts"
+        artifacts_dir.mkdir(parents=True, exist_ok=True)
+
+        # Generate new keys
+        signer = ArtifactSigner.generate()
+        signer.save_private_key(str(private_key_path))
+        signer.save_public_key(str(public_key_path))
+
+        action = "regenerated" if regenerate else "initialized"
+        return {
+            "status": action,
+            "key_dir": str(key_dir),
+            "public_key_path": str(public_key_path),
+            "message": f"Signing keys {action} successfully. You can now publish configurations.",
+        }
+
+    except Exception as e:
+        raise ValueError(f"Failed to initialize keys: {e}")
+
+
 # =============================================================================
 # RESOURCES (5 - Wave 1.0: 2, Wave 1.1: 2, Wave 1.2: 1)
 # =============================================================================
@@ -820,8 +988,8 @@ async def server_capabilities() -> str:
     """
     capabilities = {
         "name": "mcp-orchestration",
-        "version": "0.1.2",
-        "wave": "Wave 1.2: Transport Abstraction + Config Generation",
+        "version": "0.1.3",
+        "wave": "Wave 1.3: Claude Desktop Ergonomics",
         "capabilities": {
             "tools": [
                 # Wave 1.0
@@ -836,6 +1004,10 @@ async def server_capabilities() -> str:
                 "add_server_to_config",
                 "remove_server_from_config",
                 "publish_config",
+                # Wave 1.3
+                "view_draft_config",
+                "clear_draft_config",
+                "initialize_keys",
             ],
             "resources": [
                 # Wave 1.0
@@ -863,6 +1035,10 @@ async def server_capabilities() -> str:
             "config_building": True,
             "draft_management": True,
             "mcp_remote_wrapping": True,
+            # Wave 1.3
+            "default_parameters": True,
+            "autonomous_key_initialization": True,
+            "draft_inspection": True,
         },
         "endpoints": {
             "verification_key_url": "https://mcp-orchestration.example.com/keys/verification_key.pem"

@@ -564,6 +564,35 @@ Technical deep-dive (as needed for understanding).
    - Follow naming conventions
    - Maintain consistent structure
 
+### File Naming Conventions
+
+**How-To Guides:**
+- ✅ Use descriptive, task-based names: `{verb}-{noun}.md`
+- ✅ Examples: `add-server-to-config.md`, `verify-signatures.md`, `get-started.md`
+- ✅ Use hyphens for multi-word names (kebab-case)
+- ❌ NO numbers (how-tos are NOT sequential, users should jump to what they need)
+- ❌ NO prefixes like `howto-` or `guide-` (redundant, already in `how-to/` directory)
+
+**Tutorials:**
+- ✅ Use numbers for sequential learning: `01-{name}.md`, `02-{name}.md`
+- ✅ Examples: `01-first-configuration.md`, `02-advanced-features.md`
+- ✅ Numbers indicate required order (tutorials ARE sequential)
+- ✅ Start from `01-` not `00-` (clearer for beginners)
+
+**Reference:**
+- ✅ Descriptive names matching what they document: `mcp-tools.md`, `api-schema.md`
+- ✅ No numbers (reference docs are looked up, not read sequentially)
+
+**Explanation:**
+- ✅ Descriptive names for concepts: `cryptographic-signing.md`, `draft-workflow.md`
+- ✅ No numbers (explanation docs are independent)
+
+**Rationale:**
+- **How-tos are task-oriented** - Users search for specific solutions, not sequential reading
+- **Tutorials are learning paths** - Numbers indicate progression and required order
+- **Descriptive names improve discoverability** - `add-server-to-config.md` > `07-servers.md`
+- **Consistent pattern across Diataxis types** - Aligns with framework principles
+
 ### Code Blocks
 
 **All code blocks MUST specify language:**

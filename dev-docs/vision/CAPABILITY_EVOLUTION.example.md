@@ -10,37 +10,53 @@ This document describes the potential evolutionary path for mcp-orchestration ac
 
 ```
 Wave 1: Foundation          Wave 2: Integration       Wave 3: Intelligence      Wave 4: Ecosystem
-     (Current)            (Post-v1.0, Exploratory)  (Post-v2.0, Exploratory)  (Post-v3.0, Exploratory)
-        │                         │                         │                         │
-        ├─ Core functionality     ├─ External systems      ├─ AI/ML features        ├─ Platform features
-        ├─ Basic tools            ├─ API integrations      ├─ Smart automation      ├─ Plugin system
-        ├─ Local operation        ├─ Data sync             ├─ Learning systems      ├─ Third-party tools
-        └─ Single-user            └─ Workflow support      └─ Insights & analytics  └─ Community extensions
+   (v0.1.0-v0.1.6)         (Post-Wave 1.6, Exploratory)  (Post-Wave 2, Exploratory)  (Post-Wave 3, Exploratory)
+   ├─ 1.0 ✅ Foundation     ├─ External systems      ├─ AI/ML features        ├─ Platform features
+   ├─ 1.1 ✅ Registry       ├─ API integrations      ├─ Smart automation      ├─ Plugin system
+   ├─ 1.2 📋 Transport      ├─ Data sync             ├─ Learning systems      ├─ Third-party tools
+   ├─ 1.3 📋 Validation     ├─ Workflow support      ├─ Insights & analytics  └─ Community extensions
+   ├─ 1.4 📋 Publishing
+   ├─ 1.5 📋 E2E Workflow
+   └─ 1.6 📋 Audit/History
 ```
 
-**Current Status:** Wave 1 (Foundation) - Delivering core capabilities
+**Current Status:** Wave 1 in progress - Wave 1.0 ✅ RELEASED, Wave 1.1 ✅ COMPLETED (unreleased), Waves 1.2-1.6 📋 PLANNED
 
-**Decision Cadence:** Review quarterly after milestone completion
+**Decision Cadence:** Review after each Wave 1 sub-wave; major review after Wave 1.6 completion
 
 ---
 
-## Wave 1: Foundation (Current)
+## Wave 1: Foundation (v0.1.0 - v0.1.6)
 
 ### Status
 
-**Current:** In Active Development
-**Target:** v1.0.0 (0.1.0)
-**Timeline:** Current sprint/milestone
+**Current:** Wave 1.0 ✅ COMPLETED (v0.1.0), Wave 1.1 ✅ COMPLETED (v0.1.1 unreleased), Waves 1.2-1.6 PLANNED
+**Target:** Complete Wave 1 series through v0.1.6
+**Timeline:** Wave 1.0 released 2025-10-17, Wave 1.1 completed 2025-10-24
 
 ### Capability Theme
 
-Establish core functionality that delivers immediate value:
+Wave 1 delivers core MCP configuration orchestration through **6 incremental sub-waves**, each adding standalone value:
 
-- **MCP Server Infrastructure** - Standard MCP protocol implementation
-- **Essential Tools** - 3-5 high-value tools for common operations
-- **Error Handling** - Robust error reporting and recovery
-- **Basic Configuration** - Environment-based config (`.env`)
-- **Developer Experience** - Setup scripts, testing, documentation
+**Wave 1.0 (v0.1.0)** ✅ COMPLETED - Foundation
+- MCP Server Infrastructure - stdio-based MCP server
+- 4 Core Tools - `list_clients`, `list_profiles`, `get_config`, `diff_config`
+- 2 Resources - `capabilities://server`, `capabilities://clients`
+- Content-addressable artifact storage with Ed25519 signing
+- Client registry (Claude Desktop, Cursor)
+
+**Wave 1.1 (v0.1.1)** ✅ COMPLETED - Server Registry
+- Server catalog with 15 known MCP servers
+- 2 Tools - `list_available_servers`, `describe_server`
+- 2 Resources - `server://registry`, `server://{id}`
+- CLI commands for browsing servers
+
+**Waves 1.2-1.6** 📋 PLANNED (see [project-docs/WAVE_1X_PLAN.md](../../project-docs/WAVE_1X_PLAN.md))
+- Wave 1.2: Transport abstraction + config generation
+- Wave 1.3: Schema validation
+- Wave 1.4: Publishing workflow
+- Wave 1.5: E2E config management
+- Wave 1.6: Audit & history
 ### Motivation
 
 Why Wave 1 matters:
@@ -71,27 +87,31 @@ async def tool_get_info(query: str) -> dict:
 
 How we'll know Wave 1 succeeded:
 
-| Metric | Target | Measurement |
-|--------|--------|-------------|
-| **Adoption** | 10+ users install and use | GitHub stars, download count |
-| **Core Tools Usage** | 80%+ tools used weekly | Event log queries |
-| **Error Rate** | <5% tool call failures | Error tracking |
-| **Setup Time** | <5 minutes first use | User feedback |
-### Decision: Committed
+| Metric | Target | Measurement | Status |
+|--------|--------|-------------|--------|
+| **Adoption** | 10+ users install and use | GitHub stars, download count | 🔄 In progress |
+| **Core Tools Usage** | 80%+ tools used weekly | Event log queries | 🔄 Collecting data |
+| **Error Rate** | <5% tool call failures | Error tracking | ✅ Achieved (70%+ test coverage) |
+| **Setup Time** | <5 minutes first use | User feedback | ✅ Achieved (init-configs command) |
 
-**Status:** ✅ Committed to current roadmap
-**Rationale:** Core functionality required for product to exist
-**Timeline:** Current sprint → v0.1.0 release
+### Decision: Committed & Partially Delivered
+
+**Status:** ✅ Wave 1.0 & 1.1 delivered, Waves 1.2-1.6 committed
+**Rationale:** Core functionality required for product to exist; incremental delivery reduces risk
+**Timeline:**
+- Wave 1.0 (v0.1.0): ✅ Released 2025-10-17
+- Wave 1.1 (v0.1.1): ✅ Completed 2025-10-24 (pending tag/release)
+- Waves 1.2-1.6: 📋 Estimated 17-25 days total (see [WAVE_1X_PLAN.md](../../project-docs/WAVE_1X_PLAN.md))
 
 ---
 
-## Wave 2: Integration (Post-v1.0, Exploratory)
+## Wave 2: Integration (Post-Wave 1.6, Exploratory)
 
 ### Status
 
 **Current:** Exploratory (Not Committed)
-**Target:** TBD (after v1.0 stabilizes)
-**Review Date:** Quarterly review after v1.0.0 ships
+**Target:** TBD (likely v0.2.0 or v1.0.0, after Wave 1.6 completes and stabilizes)
+**Review Date:** Quarterly review after v0.1.6 ships and user feedback collected
 
 ### Capability Theme
 
@@ -153,11 +173,9 @@ Explicit go/no-go criteria for Wave 2:
 
 | Criterion | Target | Current | Status |
 |-----------|--------|---------|--------|
-| **Wave 1 Stable** | v1.0 shipped, <5 critical bugs | TBD | ⏳ Pending v1.0 |
-| **User Demand** | 50+ users requesting integrations | TBD | ⏳ Track after v1.0 |
-| **API Availability** | Partner APIs documented, accessible | TBD | ⏳ Survey ecosyst
-
-em |
+| **Wave 1 Complete** | v0.1.6 shipped, <5 critical bugs | v0.1.1 completed | 🔄 In progress (4 waves remaining) |
+| **User Demand** | 50+ users requesting integrations | TBD | ⏳ Track after Wave 1.6 |
+| **API Availability** | Partner APIs documented, accessible | TBD | ⏳ Survey ecosystem |
 | **Team Capacity** | 3+ months eng time available | TBD | ⏳ Budget planning |
 
 **Decision Framework:**
@@ -181,9 +199,9 @@ ELSE:
 
 What must be true before Wave 2:
 
-1. **Wave 1 Delivered:** Core functionality stable and adopted
+1. **Wave 1.6 Delivered:** All Wave 1 sub-waves (1.0-1.6) completed, stable, and adopted
 2. **Architecture Review:** Confirm Wave 1 architecture supports extensions
-3. **User Research:** Validate which integrations matter most
+3. **User Research:** Validate which integrations matter most (collect feedback during Wave 1.x)
 4. **Partner APIs:** External APIs available and documented (if applicable)
 
 ### Risk Assessment
@@ -196,13 +214,13 @@ What must be true before Wave 2:
 
 ---
 
-## Wave 3: Intelligence (Post-v2.0, Exploratory)
+## Wave 3: Intelligence (Post-Wave 2, Exploratory)
 
 ### Status
 
 **Current:** Exploratory (Not Committed)
-**Target:** TBD (after Wave 2 evaluates)
-**Review Date:** Quarterly review after v2.0.0 ships
+**Target:** TBD (after Wave 2 evaluates and delivers)
+**Review Date:** Quarterly review after Wave 2 ships
 
 ### Capability Theme
 
@@ -244,8 +262,8 @@ class SmartRouter:
 
 | Criterion | Target | Current | Status |
 |-----------|--------|---------|--------|
-| **Wave 2 Delivered** | v2.0 shipped, integrations adopted | TBD | ⏳ Pending Wave 2 |
-| **Training Data** | 10,000+ usage events collected | TBD | ⏳ Collecting in Wave 1-2 |
+| **Wave 2 Delivered** | Wave 2 shipped, integrations adopted | TBD | ⏳ Pending Wave 2 commitment |
+| **Training Data** | 10,000+ usage events collected | 🔄 Starting collection in Wave 1 | ⏳ Need Wave 1-2 data |
 | **User Demand** | 100+ users requesting AI features | TBD | ⏳ Track feedback |
 | **ML Expertise** | Team has ML eng or partner available | TBD | ⏳ Hiring/partnering |
 | **Compute Budget** | GPU resources for training/inference | TBD | ⏳ Cost modeling |
@@ -268,13 +286,13 @@ class SmartRouter:
 
 ---
 
-## Wave 4: Ecosystem (Post-v3.0, Exploratory)
+## Wave 4: Ecosystem (Post-Wave 3, Exploratory)
 
 ### Status
 
 **Current:** Exploratory (Not Committed)
-**Target:** TBD (after Wave 3 evaluates)
-**Review Date:** Quarterly review after v3.0.0 ships
+**Target:** TBD (after Wave 3 evaluates and delivers)
+**Review Date:** Quarterly review after Wave 3 ships
 
 ### Capability Theme
 
@@ -337,10 +355,10 @@ class MyCustomTool(Tool):
 
 | Criterion | Target | Current | Status |
 |-----------|--------|---------|--------|
-| **Wave 3 Delivered** | v3.0 shipped, AI features adopted | TBD | ⏳ Pending Wave 3 |
-| **Community Size** | 500+ active users | TBD | ⏳ Growing user base |
+| **Wave 3 Delivered** | Wave 3 shipped, AI features adopted | TBD | ⏳ Pending Wave 3 commitment |
+| **Community Size** | 500+ active users | <10 (early adopters) | ⏳ Growing user base |
 | **Extension Demand** | 50+ requests for custom tools/plugins | TBD | ⏳ Track GitHub issues |
-| **Platform Maturity** | Stable APIs, <1 breaking change/year | TBD | ⏳ API stability focus |
+| **Platform Maturity** | Stable APIs, <1 breaking change/year | TBD | ⏳ API stability focus (Wave 1 in progress) |
 | **Resources** | 6+ months eng time, community manager | TBD | ⏳ Budget planning |
 
 ### Dependencies
@@ -405,15 +423,32 @@ class MyCustomTool(Tool):
 
 ## Review History
 
+### 2025-10-24 (Wave 1 Progress Update)
+
+**Status Update:**
+- Wave 1.0 (v0.1.0): ✅ DELIVERED (2025-10-17)
+- Wave 1.1 (v0.1.1): ✅ COMPLETED (pending tag/release)
+- Waves 1.2-1.6: 📋 PLANNED (17-25 days estimated)
+
+**Key Changes:**
+- Updated document to reflect Wave 1 sub-wave structure (6 incremental releases)
+- Adjusted Wave 2-4 dependencies to reference Wave 1.6 completion
+- Added current status for metrics and criteria
+- Clarified version numbering (v0.1.x for Wave 1 series)
+
+**Next Review:** After Wave 1.6 ships (target: TBD, ~3-4 weeks from 2025-10-24)
+
 ### 2025-10-19 (Initial Vision)
 
 **Decisions:**
-- Wave 1 (Foundation): COMMITTED to v0.1.0 roadmap
-- Wave 2 (Integration): EXPLORATORY (review after v1.0 ships)
+- Wave 1 (Foundation): COMMITTED to roadmap
+- Wave 2 (Integration): EXPLORATORY (review after Wave 1 complete)
 - Wave 3 (Intelligence): EXPLORATORY (depends on Wave 2 data)
 - Wave 4 (Ecosystem): EXPLORATORY (long-term vision, 2+ years out)
 
-**Next Review:** After v1.0.0 ships (target: [INSERT TARGET DATE])
+**Initial Targets:**
+- Wave 1.0 (v0.1.0): Foundation release
+- Subsequent waves: To be evaluated after Wave 1 stabilizes
 
 ---
 
@@ -465,8 +500,9 @@ class MyCustomTool(Tool):
 - [.chora/memory/](../../.chora/memory/) - Agent memory for decision tracking
 ---
 
-**Last Updated:** 2025-10-19 (update manually during quarterly reviews)
+**Last Updated:** 2025-10-24 (updated after Wave 1.1 completion)
 **Template Version:** chora-base v1.3.0
-**Status:** Living document (review quarterly)
+**Status:** Living document (review after each wave milestone)
+**Current Wave:** Wave 1 (sub-waves 1.0-1.6, currently at 1.1 ✅)
 
 🧭 This vision guides strategic decisions across multiple years of evolution.

@@ -7,7 +7,43 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Changed
+- **Documentation Structure**: Migrated docs/ directory to three-directory structure
+  - Moved ecosystem vision docs to `dev-docs/vision/`
+  - Moved capability specs to `project-docs/capabilities/`
+  - Moved telemetry signals to `project-docs/telemetry/signals/`
+  - Moved developer E2E guide to `dev-docs/how-to/`
+  - Updated all references in code, configs, and documentation
+  - Removed obsolete documentation (superseded by user-docs)
+
+### Added
+- **Comprehensive Diataxis Documentation** (Wave 1.3):
+  - Tutorial: "Your First MCP Configuration" ([user-docs/tutorials/01-first-configuration.md](user-docs/tutorials/01-first-configuration.md))
+  - Reference: Complete MCP Tools API reference ([user-docs/reference/mcp-tools.md](user-docs/reference/mcp-tools.md))
+  - Explanations: Cryptographic Signing and Draft Workflow concepts
+  - How-To Guides: Get Started, Add/Remove Servers, Add Clients, Add to Registry
+- **File Naming Standards**: Codified conventions in DOCUMENTATION_STANDARD.md
+  - How-to guides: Descriptive names (task-oriented, non-sequential)
+  - Tutorials: Numbered (sequential learning path)
+
+## 0.1.3 - 2025-10-24
+
+### Added
+- **Ergonomic Tools for Claude Desktop** (Wave 1.3):
+  - `view_draft_config` - View current draft configuration without modifying it
+  - `clear_draft_config` - Clear all servers from draft to start fresh
+  - `initialize_keys` - Autonomous key generation (no CLI required)
+- **Default Parameters**: All config management tools now default to `client_id="claude-desktop"` and `profile_id="default"` for easier usage
+- **Improved Documentation**: Tool descriptions now include clearer examples and cross-references to related tools
+
+### Changed
+- **Parameter Order**: Reordered parameters in `add_server_to_config`, `remove_server_from_config`, and `publish_config` to put required params first, optional defaults last
+- **Workflow Guidance**: Updated `publish_config` to reference `initialize_keys` tool instead of CLI command
+
 ## 0.1.2 - 2025-10-24
+
+### Fixed
+- **Claude Desktop Compatibility**: Fixed parameter validation in `add_server_to_config` tool to handle JSON string serialization of params and env_vars (Claude Desktop passes these as strings rather than objects)
 
 ### Added
 - **Transport Abstraction**: Automatic mcp-remote wrapping for HTTP/SSE servers

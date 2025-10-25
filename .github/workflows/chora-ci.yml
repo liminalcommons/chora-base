@@ -28,7 +28,7 @@ jobs:
           PYTHONPATH: src
         run: |
           python -m mcp_orchestrator.cli manifest-validate manifests/star.yaml
-          python -m mcp_orchestrator.cli behavior-validate docs/capabilities/behaviors
+          python -m mcp_orchestrator.cli behavior-validate project-docs/capabilities/behaviors
           python -m mcp_orchestrator.cli scenario-validate manifests/star.yaml
 
       - name: Run tests
@@ -60,7 +60,7 @@ jobs:
           zip -j var/bundles/liminal/mcp-orchestration-bundle.zip \
             manifests/star.yaml \
             docs/reference/overview.md \
-            docs/reference/signals/SIG-capability-onboard.md \
+            project-docs/telemetry/signals/SIG-capability-onboard.md \
             var/telemetry/events.jsonl || true
 
       - name: Upload liminal bundle

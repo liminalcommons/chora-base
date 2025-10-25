@@ -17,7 +17,7 @@ def test_telemetry_emitted_for_cli_commands(tmp_path):
         events_file.unlink()
 
     assert main(["manifest-validate", "manifests/star.yaml"]) == 0
-    assert main(["behavior-validate", "docs/capabilities/behaviors"]) == 0
+    assert main(["behavior-validate", "project-docs/capabilities/behaviors"]) == 0
     assert main(["scenario-validate", "manifests/star.yaml"]) == 0
 
     events = read_events(events_file)

@@ -9,13 +9,13 @@ Tracks onboarding of manifests/behaviors to Chora platform standards.
 
 ## Validation Log
 - 2025-10-06: Manifest: `PYTHONPATH=src python -m mcp_orchestrator.cli manifest-validate manifests/star.yaml` → success.
-- 2025-10-06: Behaviors: `PYTHONPATH=src python -m mcp_orchestrator.cli behavior-validate docs/capabilities/behaviors` → success.
+- 2025-10-06: Behaviors: `PYTHONPATH=src python -m mcp_orchestrator.cli behavior-validate project-docs/capabilities/behaviors` → success.
 - 2025-10-06: Scenarios: `PYTHONPATH=src python -m mcp_orchestrator.cli scenario-validate manifests/star.yaml` → success for `mcp.registry.manage.create-doc`.
 - 2025-10-06: Pytest: `PYTHONPATH=src pytest -q` → all tests passed.
 
 ## Notes
 - Manifest enriched with tags, dependencies (tooling/runtime), and telemetry signal `SIG.capability.mcp.registry.onboard`.
-- Behavior definitions added under `docs/capabilities/behaviors/` using Gherkin for `MCP.REGISTRY.MANAGE`.
+- Behavior definitions added under `project-docs/capabilities/behaviors/` using Gherkin for `MCP.REGISTRY.MANAGE`.
 - Value scenario `mcp.registry.manage.create-doc` added with guide and stub test; will connect to full automation in CI.
 
 ## Status
@@ -28,7 +28,7 @@ Tracks onboarding of manifests/behaviors to Chora platform standards.
 - Telemetry events written (see `var/telemetry/events.jsonl`).
 - Overview generated (`docs/reference/overview.md`).
 - Liminal bundle packaged (`var/bundles/liminal/mcp-orchestration-bundle.zip`).
-- Liminal signal created: `docs/reference/signals/SIG-liminal-inbox-prototype.md` (status: prepared).
+- Liminal signal created: `project-docs/telemetry/signals/SIG-liminal-inbox-prototype.md` (status: prepared).
 
 ### Weekly Progress — 2025-10-07
 - Implemented CI overview freshness gate.

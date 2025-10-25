@@ -32,13 +32,13 @@ validation_status:
 capabilities:
   - id: mcp.registry.manage
     behaviors:
-      - ref: docs/capabilities/mcp-registry-manage.md
+      - ref: project-docs/capabilities/mcp-registry-manage.md
         id: MCP.REGISTRY.MANAGE
         status: draft
 telemetry:
   signals:
     - id: SIG.capability.mcp.registry.onboard
-      doc: docs/reference/signals/SIG-capability-onboard.md
+      doc: project-docs/telemetry/signals/SIG-capability-onboard.md
       owner: team-mcp
       status: in_progress
       last_update: 2025-10-05
@@ -49,5 +49,5 @@ value_scenarios:
     guide: docs/how-to/create-doc.md
     tests:
       - tests/value-scenarios/test_create_doc.py
-      - docs/capabilities/behaviors/mcp-registry-manage.feature
+      - project-docs/capabilities/behaviors/mcp-registry-manage.feature
     status: ready
