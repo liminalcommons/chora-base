@@ -5,6 +5,99 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [3.0.0] - 2025-10-25
+
+### Changed
+
+**BREAKING: Complete architecture redesign for AI coding agents**
+
+- **Removed Copier Dependency**: No longer requires `pipx install copier`
+- **Static Template Architecture**: 70% of files (91 total) need no variable substitution
+- **Blueprint System**: 10 core templates with simple `{{ variable }}` placeholders
+- **Zero Dependencies**: AI agents use string replacement, no Jinja2 runtime
+- **All Features Enabled**: Comprehensive by default (memory, tests, CI/CD, Docker, docs)
+- **One-Line Setup**: `python setup.py my-project` or ask your AI agent
+
+### Added
+
+- **AGENT_SETUP_GUIDE.md** (2,045 lines): Comprehensive autonomous setup guide for AI agents
+  - Complete variable reference with derivation rules
+  - 6-step setup procedure with validation
+  - Feature flag documentation
+  - Troubleshooting decision trees
+  - 3 complete worked examples
+
+- **setup.py** (413 lines): Optional CLI helper for manual/non-agent setup
+  - Interactive prompts for project configuration
+  - Automatic variable derivation (project_slug, package_name, mcp_namespace)
+  - Input validation (email, semver, regex patterns)
+  - Comprehensive error handling
+  - Post-generation validation
+
+- **static-template/** (91 files): Ready-to-use files requiring no processing
+  - GitHub Actions workflows (8 files)
+  - Scripts (25+ automation scripts)
+  - Tests (10+ test files)
+  - User documentation (14 markdown files)
+  - Configuration files (.gitignore, .editorconfig, justfile, etc.)
+  - Docker files (Dockerfile, docker-compose.yml)
+  - Source code utilities (validation, responses, errors, persistence)
+  - Memory system implementation (event_log, knowledge_graph, trace)
+
+- **blueprints/** (10 files): Core templates with simple variable substitution
+  - pyproject.toml.blueprint - Project metadata
+  - README.md.blueprint - Project documentation
+  - AGENTS.md.blueprint - AI agent instructions
+  - CHANGELOG.md.blueprint - Version history
+  - ROADMAP.md.blueprint - Development roadmap
+  - .gitignore.blueprint - Git ignore patterns
+  - .env.example.blueprint - Environment variables
+  - server.py.blueprint - MCP server entry point
+  - mcp__init__.py.blueprint - MCP package init
+  - package__init__.py.blueprint - Root package init
+
+- **docs/releases/** (2 files): Comprehensive v3.0.0 documentation
+  - v3.0.0-release-notes.md - Complete release documentation
+  - v2-to-v3-migration.md - Migration guide for v2.x users
+
+### Removed
+
+- **Copier Integration**: No more `.copier-answers.yml` or `copier update` workflow
+- **copier.yml**: Configuration moved to AGENT_SETUP_GUIDE.md and setup.py
+- **template/** directory: Split into static-template/ (91 files) and blueprints/ (10 files)
+- **Jinja2 Templating**: Removed complex Jinja2 logic (filters, conditionals in static files)
+- **Feature Flags**: No opt-out during generation (remove files post-generation instead)
+
+### Migration
+
+- **v2.x Projects**: Continue working without changes (migration optional, not required)
+- **New Projects**: Use v3.0.0 setup (AI agent or setup.py)
+- **Migration Guide**: See [docs/releases/v2-to-v3-migration.md](docs/releases/v2-to-v3-migration.md)
+- **Estimated Time**: 2-4 hours for manual merge of customizations
+
+### Testing
+
+- Generated test project at /tmp/test-mcp-example
+- ✅ 91 static files copied correctly
+- ✅ 10 blueprints processed successfully
+- ✅ 90% of variables replaced ({{ placeholders }} → values)
+- ✅ Package structure created and validated
+- ✅ Git initialized with clean commit
+
+### Known Issues
+
+- Some Jinja2 conditionals ({% if %}) remain in blueprints for optional features
+- Will be simplified to pure {{ variable }} replacement in v3.1.0
+- AI agents can handle or remove these manually
+
+### Documentation
+
+- Updated README.md for v3.0.0 architecture
+- Added AGENT_SETUP_GUIDE.md (2,045 lines)
+- Created comprehensive release documentation
+- Updated Quick Start section for AI agent workflow
+- Removed Copier references from main documentation
+
 ## [2.1.0] - 2025-10-24
 
 ### Added

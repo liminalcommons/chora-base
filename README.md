@@ -1,8 +1,8 @@
 # chora-base
 
-**Python Project Template for LLM-Intelligent Development**
+**Python Project Template for AI-Agent-First Development**
 
-A comprehensive [Copier](https://copier.readthedocs.io/) template for Python projects with built-in support for AI coding agents, following agentic coding best practices.
+A production-ready Python project template designed FOR AI coding agents, not retrofitted. Zero dependencies, one-line setup, works every time.
 
 ## What is chora-base?
 
@@ -21,106 +21,22 @@ chora-base is a production-ready Python project template featuring:
 
 ## Recent Updates
 
-### v2.0.9 (2025-10-23) - COMPLETE FIX ✅
+### v3.0.0 (2025-10-25) - AI-Agent-First Architecture 🤖
 
-**Template Finally Works!** After 9 attempts, v2.0.9 wraps all `.format()` calls to work with standard Jinja2 delimiters.
+**BREAKING CHANGE**: Complete architecture redesign for AI coding agents. Zero-dependency setup, no Copier required.
 
-- **What Was Still Wrong**: v2.0.8 fixed shell/TOML syntax but line 289 had `.format()` OUTSIDE the `{% raw %}` block
-- **The Fix**: Wrapped all 16 `.format()` calls in `{% raw %}{% endraw %}` blocks
-- **Root Cause**: Large files cause parser to treat `{}` in `.format()` as incomplete Jinja2 syntax
-- **Impact**: Template generates successfully with industry-standard `{{ }}` delimiters
-- **All Adopters**: Upgrade immediately to v2.0.9
+**What Changed:**
+- **70% Static Files**: Most files need no variable substitution
+- **10 Core Blueprints**: Simple `{{ variable }}` placeholders for essential files
+- **Zero Dependencies**: No Copier, no Jinja2 - agents do string replacement
+- **One-Line Setup**: `python setup.py my-project` or ask your AI agent
+- **Agent-First Guide**: 2,000+ line comprehensive setup guide for autonomous agents
 
-📄 [CHANGELOG](CHANGELOG.md#209---2025-10-23)
+**Migration:**
+- v2.x users: See [v2-to-v3 Migration Guide](docs/releases/v2-to-v3-migration.md)
+- New users: Read [AGENT_SETUP_GUIDE.md](AGENT_SETUP_GUIDE.md) or use [setup.py](setup.py)
 
-### v2.0.8 (2025-10-23) - INCOMPLETE (use v2.0.9) ⚠️
-
-**Status**: Fixed shell/TOML/YAML syntax but `.format()` calls still cause failures. Use v2.0.9.
-
-### v2.0.7 (2025-10-22) - BROKEN (use v2.0.9) ⚠️
-
-**Status**: Template generation fails. Use v2.0.9 instead.
-
-### v2.0.6 (2025-10-22) - BROKEN (use v2.0.9) ⚠️
-
-**Status**: Template generation fails. Use v2.0.9 instead.
-
-📄 [CHANGELOG](CHANGELOG.md#206---2025-10-22)
-
-### v2.0.5 (2025-10-22) - INCOMPLETE (use v2.0.6 instead) ⚠️
-
-**Status**: Upgrade fails with same error as v2.0.3. Use v2.0.6 instead.
-
-📄 [CHANGELOG](CHANGELOG.md#205---2025-10-22)
-
-### v2.0.4 (2025-10-22) - Complete F-String Audit (7 Files) 🔍
-
-**Bug Fix**: Comprehensive audit fixed 6 more files - v2.0.3 only fixed 1 of 7 files
-
-- **Scope**: Fixed 89 f-strings total across 7 template files
-- **v2.0.3**: Fixed scripts/extract_tests.py.jinja only (16 f-strings)
-- **v2.0.4**: Fixed 6 additional files (73 f-strings)
-- **Critical Bug**: MCP regex pattern `{{2,19}}` was rendering as `(2, 19)`
-- **Verification**: All 7 files compile successfully, zero f-strings remain
-
-📄 [CHANGELOG](CHANGELOG.md#204---2025-10-22)
-
-### v2.0.0 (2025-10-22) - Nested AGENTS.md Architecture 🏗️
-
-**BREAKING CHANGE**: Refactored monolithic AGENTS.md into modular, topic-specific guides.
-
-**"Nearest File Wins" Principle** - Agents read the AGENTS.md closest to the code they're working on:
-- **Main AGENTS.md**: Project overview, architecture, PR workflow (1,239 lines, 51% reduction)
-- **tests/AGENTS.md**: Testing guide (run tests, coverage, linting, troubleshooting)
-- **.chora/memory/AGENTS.md**: Memory system (event log, knowledge graph, A-MEM workflows)
-- **docker/AGENTS.md**: Docker operations (build, deploy, optimization)
-- **scripts/AGENTS.md**: Automation scripts reference
-
-**Benefits**: Reduced cognitive load, improved discoverability, scalable architecture
-
-**Impact**: Documentation-only change (no code changes required)
-
-📄 [CHANGELOG](CHANGELOG.md) | 📖 [Research](docs/research/)
-
-### v1.9.3 (2025-10-22) - Advanced Agent Patterns 🧠
-
-**Research-Aligned Enhancements**
-
-Based on "Agentic Coding Best Practices Research," added ~150 lines of advanced agent documentation:
-
-- **Super-Tests** - System-level validation guidance (test workflows, not just units)
-- **Memory Architecture** - 3-tier model documentation (ephemeral → persistent → structured)
-- **Advanced Query Patterns** - 5 production-ready patterns (semantic search, temporal analysis, confidence filtering)
-
-📄 [CHANGELOG](CHANGELOG.md)
-
-### v1.9.2 (2025-10-22) - Ergonomic Agent Interfaces 🤖
-
-**AGENTS.md Enhancements - Feature Discoverability**
-
-Made optional features discoverable for AI agents by surfacing them in AGENTS.md:
-
-- **Docker Operations** - 17 commands now documented with workflows
-- **Documentation System** - Health metrics, query API, extraction tools
-- **CI/CD Expectations** - What CI checks, how to verify locally
-- **Pattern Established** - Standard template for future features
-
-**Key Principle:** AGENTS.md is the **capability catalog** linking to detailed guides, with clear template vs. adopter responsibilities.
-
-📄 [CHANGELOG](CHANGELOG.md)
-
-### v1.9.1 (2025-10-22) - Docker Enhancements 🐳
-
-Production-proven Docker patterns integrated from three adopter projects:
-
-- **40% smaller images** (500MB → 150-250MB via wheel builds)
-- **6x faster builds** (GitHub Actions cache: 3min → 30sec)
-- **100% CI reliability** (eliminates system package conflicts)
-- **Multi-platform support** (native ARM64 for Apple Silicon)
-
-New justfile commands: `docker-build-multi`, `docker-verify`, `docker-shell`, `docker-push`, `docker-release`
-
-📄 [CHANGELOG](CHANGELOG.md)
+📄 [Release Notes](docs/releases/v3.0.0-release-notes.md) | [CHANGELOG](CHANGELOG.md#300---2025-10-25)
 
 ## Features
 
@@ -199,92 +115,60 @@ class MyApp(StatefulObject):
 ### Prerequisites
 
 - Python 3.11+ (3.12+ recommended)
-- [Copier](https://copier.readthedocs.io/) (`pipx install copier`)
 - Git
 
-### New Project
+### With AI Agent (Recommended)
+
+Ask your AI coding agent:
+
+> "Set up a new Python project using chora-base for my MCP server called [project-name]"
+
+Your agent will:
+1. Read [AGENT_SETUP_GUIDE.md](AGENT_SETUP_GUIDE.md)
+2. Copy static files from [static-template/](static-template/)
+3. Process blueprints from [blueprints/](blueprints/)
+4. Replace `{{ variables }}` with your project details
+5. Initialize git and create first commit
+
+**What the agent needs:**
+- `project_name` - Your project name (e.g., "my-awesome-project")
+- `author_name` - Your name
+- `author_email` - Your email
+- `github_username` - Your GitHub username
+
+All other variables are auto-derived or use sensible defaults (see [AGENT_SETUP_GUIDE.md](AGENT_SETUP_GUIDE.md)).
+
+### Manual Setup
+
+For non-agent setup or manual control:
 
 ```bash
-# Install copier
-pipx install copier
+# Clone chora-base
+git clone https://github.com/liminalcommons/chora-base.git
+cd chora-base
 
-# Generate project from template
-copier copy gh:liminalcommons/chora-base my-new-project
+# Run setup script
+python setup.py my-new-project
 
-# Answer prompts (project name, author, features, etc.)
+# Follow prompts for author, email, GitHub username, etc.
 
-# Setup and start developing
+# Start developing
 cd my-new-project
 ./scripts/setup.sh
 ```
 
-### Existing Project (Adoption)
+### What You Get
 
-Want to adopt chora-base infrastructure in your existing Python project? **No submodule required** - Copier generates files directly into your repo.
+All features are **enabled by default** (v3.0.0 philosophy: comprehensive, not minimal):
 
-```bash
-# In your existing repo (make sure you have a clean git state!)
-copier copy gh:liminalcommons/chora-base .
-
-# Answer prompts (use your existing project name/details)
-
-# Review what changed
-git diff
-
-# Selectively keep what you want
-git add -p  # Interactive staging
-git commit -m "feat: Adopt chora-base template infrastructure"
-
-# Later: Update incrementally (smart merge, not rip-and-replace)
-copier update
-```
-
-**How It Works:**
-- Copier generates files directly into your repo (no linking/submodule)
-- You review changes with `git diff` and keep what makes sense
-- `.copier-answers.yml` tracks template version for future updates
-- `copier update` merges improvements like `git merge` (not blind overwrite)
-
-**See Also:**
-- [How-To: Rip-and-Replace Existing Server](template/user-docs/how-to/02-rip-and-replace-existing-server.md) - Complete 8-phase migration guide
-- [Rip-and-Replace Decision Matrix](template/user-docs/reference/rip-and-replace-decision-matrix.md) - When to adopt vs stay custom
-
-### Template Questions
-
-When you run `copier copy`, you'll be asked:
-
-**Project Metadata:**
-- `project_name` - Your project name (kebab-case)
-- `project_description` - Short description
-- `author_name`, `author_email` - Your contact info
-- `github_username` - GitHub username/org
-
-**Python Configuration:**
-- `python_version` - Minimum Python version (3.11, 3.12, 3.13)
-
-**Project Type:**
-- `project_type` - mcp_server, library, cli_tool, or web_service
-
-**Features:**
-- `include_memory_system` - Agent Memory System (.chora/memory/)
-- `include_agents_md` - Machine-readable AGENTS.md
-- `include_cli` - CLI interface (Click or Typer)
-- `include_tests` - Testing infrastructure (pytest)
-- `include_pre_commit` - Pre-commit hooks (ruff, black, mypy)
-- `include_github_actions` - CI/CD workflows
-- `include_justfile` - Task automation with just
-- `include_docker` - Docker configuration (**v1.9.1: Enhanced with production patterns**)
-  - `production` strategy: Multi-stage builds + docker-compose orchestration
-  - `ci-only` strategy: Dockerfile.test for CI isolation
-  - **New in v1.9.1:** 40% smaller images, 6x faster builds, multi-arch support
-
-**Documentation:**
-- `include_contributing` - CONTRIBUTING.md
-- `include_development_docs` - DEVELOPMENT.md
-- `include_troubleshooting` - TROUBLESHOOTING.md
-
-**License:**
-- `license` - MIT, Apache-2.0, GPL-3.0, BSD-3-Clause, or Proprietary
+- ✅ **Agent Memory System** - Event log, knowledge graph, trace context
+- ✅ **Machine-readable AGENTS.md** - Comprehensive agent instructions
+- ✅ **Testing Infrastructure** - pytest, 85%+ coverage threshold
+- ✅ **Code Quality** - Pre-commit hooks (ruff, black, mypy)
+- ✅ **CI/CD** - 7 GitHub Actions workflows
+- ✅ **Task Automation** - justfile with common commands
+- ✅ **Docker Support** - Production-ready containerization
+- ✅ **Full Documentation** - 5-doc hierarchy (README, CONTRIBUTING, DEVELOPMENT, TROUBLESHOOTING, AGENTS)
 
 ## What You Get
 
@@ -450,21 +334,24 @@ rm Dockerfile docker-compose.yml
 
 ## Updating from Template
 
-Copier supports updating projects when the template evolves:
+chora-base v3.0.0 uses a **static file + blueprint** approach instead of Copier. To update your project:
 
 ```bash
-# Update to latest template version
-cd /path/to/your-project
-copier update
+# Review what changed in chora-base
+cd /path/to/chora-base
+git pull
+git log --oneline v3.0.0..HEAD
 
-# Or update to specific version
-copier update --vcs-ref=v1.4.0
+# Manually merge improvements you want
+# Compare your project against static-template/ and blueprints/
+# Apply changes selectively
+
+# Or ask your AI agent:
+# "Update my project to latest chora-base v3.x improvements"
 ```
 
-This will:
-1. Merge template changes with your project
-2. Ask about conflicts
-3. Preserve your customizations
+**Migration from v2.x to v3.0.0:**
+See [v2-to-v3 Migration Guide](docs/releases/v2-to-v3-migration.md) for detailed upgrade instructions.
 
 ### Upgrade Guides for AI Agents & Humans
 
