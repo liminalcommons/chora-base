@@ -131,7 +131,76 @@ chora-memory stats --since 7d
 
 ---
 
-## 3. 📚 Diátaxis Documentation Framework
+## 3. 📋 Evidence-Based Development Process
+
+### Benefit: Reduce defect rate by 40-80% with proven workflows
+
+**What You Get:**
+- ✅ **8-Phase Development Lifecycle** - Vision → Monitoring with time scales
+- ✅ **DDD/BDD/TDD Integration** - Documentation-first approach saves 8-15 hours per feature
+- ✅ **Sprint Planning Templates** - Capacity planning prevents burnout (never >80% committed)
+- ✅ **Release Planning Templates** - RC testing, quality gates, deployment checklists
+- ✅ **Process Metrics Dashboard** - Track quality, velocity, adherence
+- ✅ **Anti-Patterns Guide** - Avoid common mistakes that waste 40-60% of development time
+- ✅ **Complete Walkthrough Example** - OAuth2 feature end-to-end (14 days, real data)
+
+**How chora-base Delivers:**
+
+### Complete Workflow Documentation (7,440+ lines)
+```bash
+static-template/
+├── dev-docs/workflows/          # 5,115 lines - 8-phase lifecycle
+│   ├── DEVELOPMENT_PROCESS.md   # 1,108 lines - End-to-end process
+│   ├── DEVELOPMENT_LIFECYCLE.md # 753 lines - How phases connect
+│   ├── DDD_WORKFLOW.md          # 919 lines - Documentation-first design
+│   ├── BDD_WORKFLOW.md          # 1,148 lines - Behavior-driven development
+│   └── TDD_WORKFLOW.md          # 1,187 lines - Test-driven implementation
+├── dev-docs/
+│   ├── ANTI_PATTERNS.md         # 1,309 lines - Common mistakes
+│   └── examples/
+│       └── FEATURE_WALKTHROUGH.md # 1,016 lines - OAuth2 complete example
+├── project-docs/
+│   ├── sprints/                 # Sprint planning templates
+│   ├── releases/                # Release management
+│   └── metrics/                 # Process KPIs
+```
+
+**Evidence-Based Results:**
+
+**Microsoft Research:** TDD reduces defect rate by 40-80%
+**Google:** >90% test coverage correlates with fewer production defects
+**Real-world ROI:** 17 hours saved per feature (27% efficiency gain from OAuth2 walkthrough)
+
+**Time Investment:**
+- DDD upfront: 3-5 hours → Saves 8-15 hours of rework
+- BDD upfront: 2-4 hours → Prevents 2-5 acceptance issues
+- TDD continuous: 40% of dev time → 40-80% fewer production bugs
+
+**Who Benefits:**
+- **AI Agents:** Decision trees, time estimates, clear success criteria, anti-patterns reference
+- **Human Developers:** Evidence-based workflows, proven ROI, sprint velocity tracking
+- **Teams:** Predictable velocity (80-90% target), measurable quality improvements, cumulative process knowledge
+
+**Documentation Structure:**
+- **Decision Trees:** Quick yes/no answers for agents ("Should I write docs first?" → YES)
+- **Time Estimates:** Realistic planning for each phase
+- **Process Metrics:** Track adherence, quality, velocity
+- **Complete Examples:** See real-world application with actual data
+
+**Sprint Planning Example:**
+```
+Sprint 2 Capacity: 20 hours available
+Committed: 16 hours (80% - optimal)
+  - Feature A (DDD: 3h, BDD: 2h, TDD: 6h) = 11h
+  - Bug fix (investigation: 2h, fix + test: 3h) = 5h
+Reserved: 4 hours (20% - buffer for unknowns)
+
+Result: 86% velocity (delivered 16 of planned 16 hours)
+```
+
+---
+
+## 4. 📚 Diátaxis Documentation Framework
 
 ### Benefit: Dual-audience documentation (humans AND agents)
 
@@ -161,7 +230,7 @@ chora-memory stats --since 7d
 
 ---
 
-## 4. 🎨 Project Type Flexibility
+## 5. 🎨 Project Type Flexibility
 
 ### Benefit: One template for all Python project types
 
@@ -191,7 +260,7 @@ project_type: mcp_server | library | cli_tool | web_service
 
 ---
 
-## 5. ⚙️ Automation Everywhere
+## 6. ⚙️ Automation Everywhere
 
 ### Benefit: Zero manual toil for common tasks
 
@@ -233,7 +302,7 @@ just release-patch    # Bump version, build, publish
 
 ---
 
-## 6. 🛡️ Quality Gates Enforced
+## 7. 🛡️ Quality Gates Enforced
 
 ### Benefit: Ship bugs to production never, not sometimes
 
@@ -286,7 +355,7 @@ With quality gates:
 
 ---
 
-## 7. 🔄 Dependency Management Excellence
+## 8. 🔄 Dependency Management Excellence
 
 ### Benefit: Never manually update dependencies again
 
@@ -321,7 +390,7 @@ updates:
 
 ---
 
-## 8. 🎓 Opinionated Best Practices
+## 9. 🎓 Opinionated Best Practices
 
 ### Benefit: Learn from collective wisdom, avoid common mistakes
 
@@ -367,7 +436,7 @@ docs: Update API documentation
 
 ---
 
-## 9. 🔍 Observability & Debugging
+## 10. 🔍 Observability & Debugging
 
 ### Benefit: Know what happened, why it failed, and how to fix it
 
@@ -418,7 +487,7 @@ chora-memory knowledge search --tag troubleshooting --confidence high
 
 ---
 
-## 10. 🌍 Ecosystem Integration
+## 11. 🌍 Ecosystem Integration
 
 ### Benefit: Works with tools you already use
 

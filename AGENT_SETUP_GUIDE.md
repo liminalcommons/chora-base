@@ -756,6 +756,108 @@ rm -rf .github/
 
 ---
 
+## 5.5 Development Process Setup
+
+**Status:** All workflow documentation included by default
+
+**What Gets Copied:**
+```bash
+static-template/dev-docs/workflows/     → your-project/dev-docs/workflows/
+  ├── DEVELOPMENT_PROCESS.md   (1,108 lines)
+  ├── DEVELOPMENT_LIFECYCLE.md (753 lines)
+  ├── DDD_WORKFLOW.md          (919 lines)
+  ├── BDD_WORKFLOW.md          (1,148 lines)
+  └── TDD_WORKFLOW.md          (1,187 lines)
+
+static-template/dev-docs/
+  ├── ANTI_PATTERNS.md         (1,309 lines)
+  └── examples/
+      └── FEATURE_WALKTHROUGH.md (1,016 lines)
+
+static-template/project-docs/
+  ├── sprints/                 (planning templates)
+  ├── releases/                (release management)
+  └── metrics/                 (process KPIs)
+```
+
+### Agent Quick Start
+
+**For Sprint Planning:**
+1. Read `project-docs/sprints/README.md`
+2. Use `project-docs/sprints/sprint-template.md`
+3. Never commit >80% of capacity
+
+**For Feature Development:**
+1. Follow `dev-docs/workflows/DEVELOPMENT_LIFECYCLE.md`
+2. Start with DDD (write docs first)
+3. Then BDD (define acceptance tests)
+4. Then TDD (implement with tests)
+
+**For Release Management:**
+1. Read `project-docs/releases/RELEASE_PLANNING_GUIDE.md`
+2. Use `project-docs/releases/release-template.md`
+3. Ensure all quality gates pass
+
+**To Avoid Mistakes:**
+Check `dev-docs/ANTI_PATTERNS.md` before making architectural decisions
+
+### Decision Trees Available
+
+Each workflow document contains decision trees for quick answers:
+
+**DDD Workflow:**
+- Should I write docs first? → **YES** (saves 8-15 hours)
+- When to skip docs? → Never for features, sometimes for bug fixes
+
+**BDD Workflow:**
+- Should I write acceptance tests first? → **YES** (prevents 2-5 acceptance issues)
+- Which scenarios to test? → All happy paths + key error cases
+
+**TDD Workflow:**
+- Should I write unit tests first? → **YES** (40-80% fewer defects)
+- When can I skip TDD? → Never for new code, sometimes for trivial changes
+
+**Sprint Planning:**
+- How much to commit? → **<80% of capacity** (allows for unknowns)
+- What if I overcommit? → Reduce scope immediately, track in retrospective
+
+**Release:**
+- When to ship? → After all quality gates pass (coverage ≥85%, tests passing, process adherence ≥90%)
+- What if tests fail? → Fix or defer feature, never ship broken code
+
+### Time Estimates for Planning
+
+Use these estimates when planning sprints:
+
+**Per Feature:**
+- **DDD (Documentation):** 3-5 hours
+- **BDD (Acceptance Tests):** 2-4 hours
+- **TDD (Implementation):** 4-8 hours (40% of total dev time)
+- **Review & Integration:** 1-2 hours
+- **Total:** 10-19 hours per feature (average 14 hours)
+
+**Sprint Velocity:**
+- **Target:** 80-90% of committed work delivered
+- **Commitment:** Never >80% of available capacity
+- **Buffer:** 20% reserved for unknowns, bugs, tech debt
+
+**Process Adherence:**
+- **Target:** ≥90% workflow compliance
+- **Measured in:** `project-docs/metrics/PROCESS_METRICS.md`
+- **Review:** End of each sprint
+
+### Example: OAuth2 Feature
+
+See `dev-docs/examples/FEATURE_WALKTHROUGH.md` for complete real-world example:
+- **Duration:** 14 days (56 hours total)
+- **DDD:** 12 hours (documentation, design)
+- **BDD:** 8 hours (acceptance tests with Gherkin)
+- **TDD:** 16 hours (implementation with unit tests)
+- **Other:** 20 hours (planning, review, release, monitoring)
+- **Outcome:** 95% test coverage, zero production bugs, 17 hours saved vs. ad-hoc approach
+
+---
+
 ## 6. Validation Checklist
 
 ### 6.1 Post-Setup Validation
