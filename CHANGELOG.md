@@ -56,6 +56,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+_No unreleased changes yet_
+
+---
+
+## [3.2.0] - 2025-10-26
+
+### Added
+
 **Agentic Development Framework** - Complete end-to-end development process based on "Agentic Coding Best Practices Research.pdf"
 
 - **8-Phase Development Lifecycle** (static-template/dev-docs/workflows/)
@@ -112,6 +120,28 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - **Velocity**: Sprint velocity (target: ≥80%), Cycle time (target: <3 days)
 - **Process Adherence**: DDD/BDD/TDD adherence (target: ≥80-90%)
 - **Adoption**: Downloads, upgrade rate, user satisfaction
+
+### How to Use (For Adopters)
+
+**For New Projects:**
+1. Generate project: `python setup.py my-project`
+2. Read [ROADMAP.md](static-template/ROADMAP.md) for planning approach
+3. Follow [dev-docs/workflows/DEVELOPMENT_LIFECYCLE.md](static-template/dev-docs/workflows/DEVELOPMENT_LIFECYCLE.md) for execution
+
+**For Existing Projects (v3.0.0 - v3.1.1):**
+1. Copy workflow docs: `cp -r chora-base/static-template/dev-docs/workflows/ your-project/dev-docs/`
+2. Copy project management: `cp -r chora-base/static-template/project-docs/ your-project/`
+3. Copy examples: `cp -r chora-base/static-template/dev-docs/examples/ your-project/dev-docs/`
+4. Copy anti-patterns: `cp chora-base/static-template/dev-docs/ANTI_PATTERNS.md your-project/dev-docs/`
+5. Update AGENTS.md with workflow references (see blueprints/AGENTS.md.blueprint for example)
+6. Start using DDD → BDD → TDD for new features
+
+**For AI Agents:**
+- Start with decision trees in each workflow document
+- Use time estimates for sprint planning (DDD: 3-5h, BDD: 2-4h, TDD: 40% of dev time)
+- Track metrics in PROCESS_METRICS.md
+- Reference ANTI_PATTERNS.md before architectural decisions
+- Follow FEATURE_WALKTHROUGH.md for complete real-world example
 
 ### Documentation Size
 
