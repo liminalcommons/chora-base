@@ -1,17 +1,21 @@
-"""CLI commands for config building (Wave 1.2).
+"""CLI commands for config building (Wave 1.2) and publishing (Wave 1.4).
 
 This module provides CLI commands for adding and removing servers from
-MCP client configurations.
+MCP client configurations, and for publishing validated configurations.
 """
 
 import json
 import sys
+from pathlib import Path
 from typing import Any
 
 import click
 
 from mcp_orchestrator.building import ConfigBuilder
+from mcp_orchestrator.publishing import PublishingWorkflow, ValidationError
+from mcp_orchestrator.registry import get_default_registry as get_client_registry
 from mcp_orchestrator.servers import get_default_registry
+from mcp_orchestrator.storage import ArtifactStore
 
 
 @click.command("add-server")
@@ -209,6 +213,171 @@ def remove_server(
             click.echo()
             click.echo("Updated draft:")
             click.echo(json.dumps(builder.build(), indent=2))
+
+    except Exception as e:
+        click.echo(f"Error: {e}", err=True)
+        sys.exit(1)
+
+
+@click.command("publish-config")
+@click.option("--client", "-c", required=True, help="Client family (e.g., claude-desktop)")
+@click.option("--profile", "-p", required=True, help="Profile (e.g., default)")
+@click.option(
+    "--file",
+    "-f",
+    type=click.Path(exists=True, dir_okay=False, path_type=Path),
+    required=True,
+    help="Path to JSON configuration file",
+)
+@click.option(
+    "--changelog",
+    "-m",
+    help="Changelog message describing the changes",
+)
+@click.option(
+    "--format",
+    type=click.Choice(["json", "text"]),
+    default="text",
+    help="Output format",
+)
+def publish_config(
+    client: str,
+    profile: str,
+    file: Path,
+    changelog: str | None,
+    format: str,
+) -> None:
+    """Publish a validated configuration from a JSON file.
+
+    This command:
+    1. Loads the configuration from a JSON file
+    2. Validates the configuration for errors
+    3. Signs it with your Ed25519 private key
+    4. Stores it as a content-addressable artifact
+    5. Updates the profile index
+
+    Examples:
+
+    \b
+    # Publish configuration with changelog
+    mcp-orchestration-publish-config \\
+      --client claude-desktop \\
+      --profile default \\
+      --file my-config.json \\
+      --changelog "Added filesystem and github servers"
+
+    \b
+    # Publish configuration (JSON output)
+    mcp-orchestration-publish-config \\
+      --client claude-desktop \\
+      --profile default \\
+      --file my-config.json \\
+      --format json
+    """
+    try:
+        # Load configuration from file
+        with open(file) as f:
+            config_data = json.load(f)
+
+        # Validate file structure
+        if "mcpServers" not in config_data:
+            click.echo(
+                "Error: Configuration file missing 'mcpServers' key",
+                err=True,
+            )
+            sys.exit(1)
+
+        if not config_data["mcpServers"]:
+            click.echo(
+                "Error: Configuration has no servers. Add at least one server.",
+                err=True,
+            )
+            sys.exit(1)
+
+        # Get registries
+        server_registry = get_default_registry()
+        client_registry = get_client_registry()
+
+        # Create builder and populate from file
+        builder = ConfigBuilder(client, profile, server_registry)
+
+        # Add each server from the config file
+        for server_name, server_config in config_data["mcpServers"].items():
+            # Extract command, args, env from server_config
+            command = server_config.get("command")
+            args = server_config.get("args", [])
+            env = server_config.get("env", {})
+
+            # Note: We're adding "raw" servers, not from registry
+            # This allows publishing arbitrary configs from files
+            builder._servers[server_name] = {
+                "command": command,
+                "args": args,
+                "env": env,
+            }
+
+        # Get signing key paths
+        home = Path.home()
+        key_dir = home / ".mcp-orchestration" / "keys"
+        private_key_path = key_dir / "signing.key"
+
+        if not private_key_path.exists():
+            click.echo(
+                f"Error: Signing key not found at {private_key_path}",
+                err=True,
+            )
+            click.echo(
+                "Run 'mcp-orchestration-init-keys' to generate keys first.",
+                err=True,
+            )
+            sys.exit(1)
+
+        # Use PublishingWorkflow to validate → sign → store
+        store = ArtifactStore()
+        workflow = PublishingWorkflow(
+            store=store,
+            client_registry=client_registry,
+        )
+
+        result = workflow.publish(
+            builder=builder,
+            private_key_path=str(private_key_path),
+            signing_key_id="default",
+            changelog=changelog,
+        )
+
+        # Output result
+        if format == "json":
+            click.echo(json.dumps(result, indent=2))
+        else:
+            click.echo("✓ Configuration validated successfully")
+            click.echo("✓ Configuration signed with Ed25519")
+            click.echo(f"✓ Artifact stored: {result['artifact_id'][:16]}...")
+            click.echo("✓ Published successfully!")
+            click.echo()
+            click.echo(f"Artifact ID: {result['artifact_id']}")
+            click.echo(f"Client: {result['client_id']}")
+            click.echo(f"Profile: {result['profile_id']}")
+            click.echo(f"Server count: {result['server_count']}")
+            if changelog:
+                click.echo(f"Changelog: {changelog}")
+
+    except ValidationError as e:
+        # Validation errors
+        errors = e.validation_result.get("errors", [])
+        click.echo("✗ Configuration validation failed", err=True)
+        click.echo()
+        for error in errors:
+            click.echo(f"  [{error['code']}] {error['message']}", err=True)
+        sys.exit(1)
+
+    except FileNotFoundError:
+        click.echo(f"Error: Configuration file not found: {file}", err=True)
+        sys.exit(1)
+
+    except json.JSONDecodeError as e:
+        click.echo(f"Error: Invalid JSON in configuration file: {e}", err=True)
+        sys.exit(1)
 
     except Exception as e:
         click.echo(f"Error: {e}", err=True)

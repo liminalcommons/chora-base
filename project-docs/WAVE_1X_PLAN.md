@@ -740,13 +740,16 @@ mcp-orchestration audit-log \
 | Wave | Version | Goal | Tools | Resources | CLI Cmds | Days | Spec FRs |
 |------|---------|------|-------|-----------|----------|------|----------|
 | 1.0 | v0.1.0 | ✅ Foundation | 4 | 2 | 1 | - | FR-1,2,3,4,9 |
-| 1.1 | v0.1.1 | Server Registry | +2 | +2 | +2 | 3-5 | (foundation) |
-| 1.2 | v0.1.2 | Transport + Gen | +2 | +1 | +2 | 4-6 | FR-5 |
-| 1.3 | v0.1.3 | Validation | +1 | 0 | +1 | 2-3 | FR-6,8 |
-| 1.4 | v0.1.4 | Publishing | +1 | 0 | +1 | 3-4 | FR-11,12* |
-| 1.5 | v0.1.5 | E2E Workflow | +1 | +2 | +1 | 2-3 | (integration) |
-| 1.6 | v0.1.6 | Audit & History | +2 | +1 | +2 | 3-4 | FR-12,13 |
-| **Total** | **1.0-1.6** | | **13** | **8** | **10** | **17-25** | **8/15 FRs** |
+| 1.1 | v0.1.1 | ✅ Server Registry | +2 | +2 | +2 | 1 | (foundation) |
+| 1.2 | v0.1.2 | ✅ Transport + Gen | +3 | +1 | +2 | 1 | FR-5 |
+| 1.3 | v0.1.3 | ✅ Ergonomics | +3 | 0 | 0 | 1 | (UX) |
+| 1.4 | v0.1.4 | ✅ Validation | +1 | 0 | 0 | 1 | FR-6* |
+| 1.5 | v0.1.5 | ⏸️ Publishing (deferred) | - | - | - | - | - |
+| 1.6 | v0.1.6 | ⏸️ E2E Workflow (deferred) | - | - | - | - | - |
+| 1.7 | v0.1.7 | ⏸️ Audit & History (deferred) | - | - | - | - | - |
+| **Total** | **1.0-1.4** | | **14** | **5** | **5** | **4** | **5/15 FRs** |
+
+**Note**: Wave 1.5-1.7 deferred in favor of Wave 2.x (HTTP transport + ecosystem integration)
 
 ---
 
@@ -820,7 +823,7 @@ mcp-orchestration audit-log \
 | 1.1 | v0.1.1 | ✅ Done | 2025-10-24 | 2025-10-24 | Server registry |
 | 1.2 | v0.1.2 | ✅ Done | 2025-10-24 | 2025-10-24 | Transport abstraction + config generation |
 | 1.3 | v0.1.3 | ✅ Done | 2025-10-24 | 2025-10-24 | Claude Desktop ergonomics (not schema validation) |
-| 1.4 | v0.1.4 | 📋 Planned | - | - | Schema validation (moved from 1.3) |
+| 1.4 | v0.1.4 | ✅ Done | 2025-10-24 | 2025-10-24 | Schema validation (validate_config tool only) |
 | 1.5 | v0.1.5 | 📋 Planned | - | - | Publishing workflow (moved from 1.4) |
 | 1.6 | v0.1.6 | 📋 Planned | - | - | E2E workflow (moved from 1.5) |
 | 1.7 | v0.1.7 | 📋 Planned | - | - | Audit & history (moved from 1.6) |

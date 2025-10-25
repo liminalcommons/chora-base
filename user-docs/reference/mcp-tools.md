@@ -1,13 +1,13 @@
 ---
 title: MCP Tools API Reference
-version: v0.1.3
-wave: 1.0-1.3
+version: v0.1.4
+wave: 1.0-1.4
 last_updated: 2025-10-24
 ---
 
 # MCP Tools API Reference
 
-Complete reference for all MCP tools provided by mcp-orchestration server (v0.1.3).
+Complete reference for all MCP tools provided by mcp-orchestration server (v0.1.4).
 
 ## Tool Categories
 
@@ -15,6 +15,7 @@ Complete reference for all MCP tools provided by mcp-orchestration server (v0.1.
 - [Server Registry](#server-registry) (2 tools)
 - [Configuration Building](#configuration-building) (6 tools)
 - [Key Management](#key-management) (1 tool)
+- [Configuration Validation](#configuration-validation) (1 tool)
 
 ---
 
@@ -527,6 +528,132 @@ Initialize Ed25519 signing keys for cryptographic artifact signing.
 
 ---
 
+## Configuration Validation
+
+### validate_config
+
+Validate draft configuration before publishing.
+
+Performs comprehensive validation of the current draft configuration, checking for structural issues, client-specific limitations, and configuration errors.
+
+**Parameters:**
+
+| Name | Type | Required | Default | Description |
+|------|------|----------|---------|-------------|
+| `client_id` | string | No | `"claude-desktop"` | Client family identifier |
+| `profile_id` | string | No | `"default"` | Profile identifier |
+
+**Returns:**
+```typescript
+{
+  valid: boolean              // True if config is valid
+  errors: Array<{
+    code: string              // Error code (e.g., "EMPTY_CONFIG")
+    message: string           // Human-readable error message
+    severity: "error"
+    server?: string           // Server name if applicable
+    limit?: number           // Limit value if applicable
+    actual?: number          // Actual value if applicable
+  }>,
+  warnings: Array<{
+    code: string              // Warning code (e.g., "EMPTY_ENV_VAR")
+    message: string           // Human-readable warning message
+    severity: "warning"
+    server?: string           // Server name if applicable
+  }>,
+  server_count: number        // Number of servers in draft
+  client_id: string
+  profile_id: string
+  validated_at: string        // ISO 8601 timestamp
+}
+```
+
+**Validation Checks:**
+
+1. **Empty Configuration**
+   - Error code: `EMPTY_CONFIG`
+   - At least one server must be present
+
+2. **Server Structure**
+   - Error code: `MISSING_COMMAND` - Server missing required `command` field
+   - Error code: `MISSING_ARGS` - Server missing required `args` field
+   - Error code: `INVALID_ARGS_TYPE` - `args` must be a list
+   - Error code: `INVALID_ENV_TYPE` - `env` must be a dictionary
+
+3. **Environment Variables**
+   - Warning code: `EMPTY_ENV_VAR` - Environment variable has empty or whitespace-only value
+
+4. **Client Limitations**
+   - Error code: `TOO_MANY_SERVERS` - Exceeds client's max server limit
+   - Error code: `TOO_MANY_ENV_VARS` - Exceeds client's max env vars per server
+   - Warning code: `UNKNOWN_CLIENT` - Client not found (can't validate limitations)
+
+5. **General Errors**
+   - Error code: `VALIDATION_ERROR` - Unexpected error during validation
+
+**Example (Valid Config):**
+```json
+{
+  "valid": true,
+  "errors": [],
+  "warnings": [],
+  "server_count": 2,
+  "client_id": "claude-desktop",
+  "profile_id": "default",
+  "validated_at": "2025-10-24T10:30:00Z"
+}
+```
+
+**Example (Invalid Config):**
+```json
+{
+  "valid": false,
+  "errors": [
+    {
+      "code": "TOO_MANY_SERVERS",
+      "message": "Configuration has 6 servers, but claude-desktop supports max 5.",
+      "severity": "error",
+      "limit": 5,
+      "actual": 6
+    }
+  ],
+  "warnings": [
+    {
+      "code": "EMPTY_ENV_VAR",
+      "message": "Server 'github' has empty environment variable 'GITHUB_TOKEN'.",
+      "severity": "warning",
+      "server": "github"
+    }
+  ],
+  "server_count": 6,
+  "client_id": "claude-desktop",
+  "profile_id": "default",
+  "validated_at": "2025-10-24T10:30:00Z"
+}
+```
+
+**Recommended Workflow:**
+```typescript
+// 1. Add servers to draft
+await add_server_to_config(server_id="filesystem", params={...})
+
+// 2. Validate before publishing
+const result = await validate_config()
+
+// 3. Check validation result
+if (result.valid) {
+  // Safe to publish
+  await publish_config(changelog="...")
+} else {
+  // Fix errors first
+  console.error("Validation errors:", result.errors)
+}
+```
+
+**Performance:** p95 < 100ms
+
+---
+
 ## Common Patterns
 
 ### Complete Configuration Workflow
@@ -550,7 +677,14 @@ await add_server_to_config(
 // 5. View draft
 const draft = await view_draft_config()
 
-// 6. Publish signed config
+// 6. Validate configuration (Wave 1.4+)
+const validation = await validate_config()
+if (!validation.valid) {
+  console.error("Validation errors:", validation.errors)
+  return
+}
+
+// 7. Publish signed config
 await publish_config(
   changelog="Added filesystem server"
 )
@@ -586,6 +720,7 @@ if (diff.status === "outdated") {
 - **Wave 1.1 (v0.1.1)**: list_available_servers, describe_server
 - **Wave 1.2 (v0.1.2)**: add_server_to_config, remove_server_from_config, publish_config
 - **Wave 1.3 (v0.1.3)**: view_draft_config, clear_draft_config, initialize_keys + default parameters
+- **Wave 1.4 (v0.1.4)**: validate_config (schema validation)
 
 ---
 

@@ -19,6 +19,10 @@ Wave 1.3 (Claude Desktop Ergonomics v0.1.3):
 - 3 tools: view_draft_config, clear_draft_config, initialize_keys
 - Default parameters for common use cases
 - Improved tool descriptions and cross-references
+
+Wave 1.4 (Schema Validation v0.1.4):
+- 1 tool: validate_config
+- Comprehensive configuration validation before publishing
 """
 
 import json
@@ -28,6 +32,7 @@ from fastmcp import FastMCP
 
 from mcp_orchestrator.building import ConfigBuilder
 from mcp_orchestrator.diff import compare_configs
+from mcp_orchestrator.publishing import PublishingWorkflow, ValidationError
 from mcp_orchestrator.registry import get_default_registry
 from mcp_orchestrator.servers import ServerRegistry, get_default_registry as get_server_registry
 from mcp_orchestrator.servers.registry import ServerNotFoundError
@@ -46,7 +51,7 @@ _builders: dict[str, ConfigBuilder] = {}
 
 
 # =============================================================================
-# TOOLS (13 - Wave 1.0: 4, Wave 1.1: 2, Wave 1.2: 3, Wave 1.3: 4)
+# TOOLS (14 - Wave 1.0: 4, Wave 1.1: 2, Wave 1.2: 3, Wave 1.3: 3, Wave 1.4: 1)
 # Note: Wave 1.3 includes parameter default changes to existing tools
 # =============================================================================
 
@@ -831,7 +836,13 @@ async def publish_config(
     Takes the current draft configuration for a client/profile and publishes
     it as a cryptographically signed, content-addressable artifact.
 
-    This completes the workflow: browse → add → view → publish
+    This completes the workflow: browse → add → view → validate → publish
+
+    The publishing workflow:
+    1. Validates the draft configuration for errors
+    2. Signs the configuration with your Ed25519 private key
+    3. Stores it as a content-addressable artifact (SHA-256)
+    4. Updates the profile index
 
     Note: Requires signing keys to be initialized. If keys don't exist, use
     the initialize_keys tool first.
@@ -849,25 +860,20 @@ async def publish_config(
         - profile_id: Profile
         - server_count: Number of servers in config
         - changelog: Changelog if provided
+        - created_at: ISO 8601 timestamp
 
     Raises:
-        ValueError: If draft is empty or publishing fails
+        ValueError: If draft is empty, validation fails, or publishing fails
 
     Example:
         >>> result = await publish_config(
         ...     changelog="Added filesystem and github servers"
         ... )
-        >>> # Config is now signed and stored for claude-desktop/default
+        >>> # Config is now validated, signed, and stored for claude-desktop/default
     """
     try:
         # Get builder (must exist with servers)
         builder = _get_builder(client_id, profile_id)
-
-        if builder.count() == 0:
-            raise ValueError(
-                "Cannot publish empty configuration. "
-                "Add at least one server before publishing."
-            )
 
         # Get signing key paths
         from pathlib import Path
@@ -882,27 +888,28 @@ async def publish_config(
                 "Use the initialize_keys tool to generate keys."
             )
 
-        # Convert draft to signed artifact
-        artifact = builder.to_artifact(
-            signing_key_id="default",
+        # Use PublishingWorkflow to validate → sign → store
+        workflow = PublishingWorkflow(
+            store=_store,
+            client_registry=_registry,
+        )
+
+        result = workflow.publish(
+            builder=builder,
             private_key_path=str(private_key_path),
+            signing_key_id="default",
             changelog=changelog,
         )
 
-        # Store artifact
-        _store.store(artifact)
+        return result
 
-        # Return success
-        return {
-            "status": "published",
-            "artifact_id": artifact.artifact_id,
-            "client_id": client_id,
-            "profile_id": profile_id,
-            "server_count": builder.count(),
-            "changelog": changelog,
-            "created_at": artifact.created_at,
-        }
-
+    except ValidationError as e:
+        # Validation errors are user errors - provide helpful message
+        errors = e.validation_result.get("errors", [])
+        error_msgs = [f"  - [{err['code']}] {err['message']}" for err in errors]
+        raise ValueError(
+            f"Configuration validation failed:\n" + "\n".join(error_msgs)
+        )
     except ValueError:
         raise
     except Exception as e:
@@ -972,6 +979,207 @@ async def initialize_keys(regenerate: bool = False) -> dict[str, Any]:
 
 
 # =============================================================================
+# TOOLS - Wave 1.4 (Schema Validation)
+# =============================================================================
+
+
+@mcp.tool()
+async def validate_config(
+    client_id: str = "claude-desktop",
+    profile_id: str = "default",
+) -> dict[str, Any]:
+    """Validate draft configuration before publishing.
+
+    Performs comprehensive validation of the current draft configuration,
+    checking for:
+    - Empty configurations (at least one server required)
+    - Server configuration structure (command, args)
+    - Environment variable format
+    - Client-specific limitations (max servers, max env vars)
+
+    This is recommended before publishing to catch issues early.
+
+    Args:
+        client_id: Client family identifier (defaults to 'claude-desktop')
+        profile_id: Profile identifier (defaults to 'default')
+
+    Returns:
+        Dictionary with:
+        - valid: True if config is valid, False otherwise
+        - errors: List of validation errors (empty if valid)
+        - warnings: List of non-critical warnings
+        - server_count: Number of servers in draft
+        - validated_at: ISO 8601 timestamp of validation
+
+    Example:
+        >>> result = await validate_config()
+        >>> if result["valid"]:
+        ...     # Safe to publish
+        ...     await publish_config()
+        >>> else:
+        ...     # Fix errors first
+        ...     print(result["errors"])
+    """
+    from datetime import datetime
+
+    try:
+        # Get builder (may not exist yet)
+        builder = _get_builder(client_id, profile_id)
+
+        errors = []
+        warnings = []
+
+        # Validation 1: Check for empty config
+        if builder.count() == 0:
+            errors.append(
+                {
+                    "code": "EMPTY_CONFIG",
+                    "message": "Configuration is empty. Add at least one server before publishing.",
+                    "severity": "error",
+                }
+            )
+
+        # Validation 2: Check each server configuration
+        payload = builder.build()
+        if "mcpServers" in payload:
+            servers = payload["mcpServers"]
+
+            for server_name, server_config in servers.items():
+                # Check required fields
+                if "command" not in server_config:
+                    errors.append(
+                        {
+                            "code": "MISSING_COMMAND",
+                            "message": f"Server '{server_name}' is missing required 'command' field.",
+                            "severity": "error",
+                            "server": server_name,
+                        }
+                    )
+
+                if "args" not in server_config:
+                    errors.append(
+                        {
+                            "code": "MISSING_ARGS",
+                            "message": f"Server '{server_name}' is missing required 'args' field.",
+                            "severity": "error",
+                            "server": server_name,
+                        }
+                    )
+
+                # Check args is a list
+                if "args" in server_config and not isinstance(server_config["args"], list):
+                    errors.append(
+                        {
+                            "code": "INVALID_ARGS_TYPE",
+                            "message": f"Server '{server_name}' has invalid 'args' type (must be list).",
+                            "severity": "error",
+                            "server": server_name,
+                        }
+                    )
+
+                # Check env vars if present
+                if "env" in server_config:
+                    env_vars = server_config["env"]
+                    if not isinstance(env_vars, dict):
+                        errors.append(
+                            {
+                                "code": "INVALID_ENV_TYPE",
+                                "message": f"Server '{server_name}' has invalid 'env' type (must be dict).",
+                                "severity": "error",
+                                "server": server_name,
+                            }
+                        )
+                    else:
+                        # Check for empty env var values
+                        for env_key, env_value in env_vars.items():
+                            if not env_value or not str(env_value).strip():
+                                warnings.append(
+                                    {
+                                        "code": "EMPTY_ENV_VAR",
+                                        "message": f"Server '{server_name}' has empty environment variable '{env_key}'.",
+                                        "severity": "warning",
+                                        "server": server_name,
+                                    }
+                                )
+
+        # Validation 3: Check client-specific limitations
+        try:
+            client_def = _registry.get_client(client_id)
+
+            # Check max servers
+            max_servers = client_def.limitations.max_servers
+            if max_servers and builder.count() > max_servers:
+                errors.append(
+                    {
+                        "code": "TOO_MANY_SERVERS",
+                        "message": f"Configuration has {builder.count()} servers, but {client_id} supports max {max_servers}.",
+                        "severity": "error",
+                        "limit": max_servers,
+                        "actual": builder.count(),
+                    }
+                )
+
+            # Check max env vars per server
+            max_env_vars = client_def.limitations.max_env_vars_per_server
+            if max_env_vars and "mcpServers" in payload:
+                for server_name, server_config in payload["mcpServers"].items():
+                    if "env" in server_config:
+                        env_count = len(server_config["env"])
+                        if env_count > max_env_vars:
+                            errors.append(
+                                {
+                                    "code": "TOO_MANY_ENV_VARS",
+                                    "message": f"Server '{server_name}' has {env_count} env vars, but {client_id} supports max {max_env_vars}.",
+                                    "severity": "error",
+                                    "server": server_name,
+                                    "limit": max_env_vars,
+                                    "actual": env_count,
+                                }
+                            )
+
+        except Exception:
+            # Client not found - add warning but don't fail validation
+            warnings.append(
+                {
+                    "code": "UNKNOWN_CLIENT",
+                    "message": f"Client '{client_id}' not found in registry. Cannot validate client-specific limitations.",
+                    "severity": "warning",
+                }
+            )
+
+        # Determine if valid
+        valid = len(errors) == 0
+
+        return {
+            "valid": valid,
+            "errors": errors,
+            "warnings": warnings,
+            "server_count": builder.count(),
+            "client_id": client_id,
+            "profile_id": profile_id,
+            "validated_at": datetime.utcnow().isoformat() + "Z",
+        }
+
+    except Exception as e:
+        # Unexpected error during validation
+        return {
+            "valid": False,
+            "errors": [
+                {
+                    "code": "VALIDATION_ERROR",
+                    "message": f"Validation failed with unexpected error: {str(e)}",
+                    "severity": "error",
+                }
+            ],
+            "warnings": [],
+            "server_count": 0,
+            "client_id": client_id,
+            "profile_id": profile_id,
+            "validated_at": datetime.utcnow().isoformat() + "Z",
+        }
+
+
+# =============================================================================
 # RESOURCES (5 - Wave 1.0: 2, Wave 1.1: 2, Wave 1.2: 1)
 # =============================================================================
 
@@ -988,8 +1196,8 @@ async def server_capabilities() -> str:
     """
     capabilities = {
         "name": "mcp-orchestration",
-        "version": "0.1.3",
-        "wave": "Wave 1.3: Claude Desktop Ergonomics",
+        "version": "0.1.4",
+        "wave": "Wave 1.4: Schema Validation",
         "capabilities": {
             "tools": [
                 # Wave 1.0
@@ -1008,6 +1216,8 @@ async def server_capabilities() -> str:
                 "view_draft_config",
                 "clear_draft_config",
                 "initialize_keys",
+                # Wave 1.4
+                "validate_config",
             ],
             "resources": [
                 # Wave 1.0
@@ -1039,6 +1249,9 @@ async def server_capabilities() -> str:
             "default_parameters": True,
             "autonomous_key_initialization": True,
             "draft_inspection": True,
+            # Wave 1.4
+            "schema_validation": True,
+            "pre_publish_validation": True,
         },
         "endpoints": {
             "verification_key_url": "https://mcp-orchestration.example.com/keys/verification_key.pem"

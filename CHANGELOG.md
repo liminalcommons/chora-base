@@ -26,6 +26,112 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - How-to guides: Descriptive names (task-oriented, non-sequential)
   - Tutorials: Numbered (sequential learning path)
 
+## 0.1.4 - 2025-10-25
+
+### Added
+- **Configuration Validation and Publishing Workflow** (Wave 1.4 - Full Scope):
+  - **Publishing Workflow Module** ([src/mcp_orchestrator/publishing/workflow.py](src/mcp_orchestrator/publishing/workflow.py)):
+    - `PublishingWorkflow` - Domain service orchestrating validation → signing → storage
+    - `ValidationError` - Exception class for validation failures with detailed error reporting
+    - Atomic publishing operations with automatic rollback on failure
+    - Metadata enrichment (generator, changelog, server_count)
+
+  - **MCP Tool**: `validate_config` - Comprehensive pre-publish configuration validation
+    - Validates server structure (command, args, env format)
+    - Checks client-specific limitations (max servers, max env vars per server)
+    - Returns detailed errors and warnings with error codes
+    - Performance: p95 < 100ms
+
+  - **CLI Command**: `mcp-orchestration-publish-config` ([cli_building.py:publish_config](src/mcp_orchestrator/cli_building.py))
+    - Publish configuration from JSON file with validation
+    - Automatic cryptographic signing with Ed25519
+    - Content-addressable storage (SHA-256)
+    - Text and JSON output formats
+    - Example: `mcp-orchestration-publish-config --client claude-desktop --profile default --file config.json --changelog "Initial setup"`
+
+### Changed
+- **Enhanced `publish_config` MCP Tool**:
+  - Now uses `PublishingWorkflow` for integrated validation
+  - Automatically validates configuration before signing
+  - Provides detailed validation error messages with error codes
+  - Updated workflow documentation: browse → add → view → **validate** → publish
+
+- **Server Capabilities**: Updated to version 0.1.4
+  - Added `validate_config` to tools list
+  - Added `schema_validation` and `pre_publish_validation` feature flags
+
+### Testing
+- **Unit Tests** (10 tests - [tests/test_publishing_workflow.py](tests/test_publishing_workflow.py)):
+  - Validation integration with publish workflow
+  - Metadata enrichment (changelog, generator, server_count)
+  - Atomic operations with rollback on failure
+  - Cryptographic signing integration
+  - Profile index updates
+
+- **Validation Tests** (12 tests - [tests/test_validate_config.py](tests/test_validate_config.py)):
+  - Empty config validation
+  - Valid config scenarios
+  - Structural validation (missing fields, invalid types)
+  - Warning scenarios (empty env vars)
+  - Client limitation enforcement
+
+- **E2E Value Scenarios** (3 tests - [tests/value-scenarios/test_publish_config.py](tests/value-scenarios/test_publish_config.py)):
+  - Full workflow: initialize → browse → add → validate → publish → verify
+  - Publishing with validation errors
+  - Empty config rejection
+  - All tests validate corresponding how-to guide: [user-docs/how-to/publish-config.md](user-docs/how-to/publish-config.md)
+
+- **Test Coverage**: All 167 tests passing (up from 155), excluding 1 pre-existing telemetry test failure
+
+### Documentation
+- **Development Process** ([project-docs/DEVELOPMENT_LIFECYCLE.md](project-docs/DEVELOPMENT_LIFECYCLE.md)):
+  - Comprehensive 8-phase development lifecycle documentation
+  - Vision-Driven Development with BDD/TDD/DDD practices
+  - Value Scenarios as E2E tests (living documentation)
+  - Templates and examples for each phase
+
+- **Capability Specification** ([project-docs/capabilities/config-publishing.md](project-docs/capabilities/config-publishing.md)):
+  - Domain model: PublishingWorkflow, ConfigArtifact, ValidationResult
+  - Behaviors, value scenarios, integrations
+  - Success criteria and wave alignment
+
+- **BDD Specification** ([project-docs/capabilities/behaviors/mcp-config-publish.feature](project-docs/capabilities/behaviors/mcp-config-publish.feature)):
+  - 12 Gherkin scenarios covering publish workflows
+  - Happy paths, error cases, CLI/MCP integration
+
+- **How-To Guide** ([user-docs/how-to/publish-config.md](user-docs/how-to/publish-config.md)):
+  - Complete publishing workflow guide (6,500 words)
+  - Step-by-step instructions with code examples
+  - Troubleshooting section with common errors
+  - Metadata and workflow internals explained
+
+- **API Reference**: Updated [user-docs/reference/mcp-tools.md](user-docs/reference/mcp-tools.md) with:
+  - `validate_config` tool documentation
+  - Enhanced `publish_config` documentation showing validation integration
+  - Complete workflow examples
+
+### Architecture
+- **Domain-Driven Design**:
+  - **Service**: `PublishingWorkflow` - Coordinates validation, signing, storage
+  - **Entity**: `ConfigArtifact` - Immutable signed configuration
+  - **Value Objects**: `ValidationResult`, `PublishResult`
+  - **Repository**: `ArtifactStore` - Content-addressable storage
+
+- **Behavior-Driven Development**:
+  - All features specified in Gherkin before implementation
+  - 12 BDD scenarios with Given/When/Then structure
+  - @behavior tags for traceability
+
+- **Test-Driven Development**:
+  - All unit tests written before implementation (RED → GREEN → REFACTOR)
+  - E2E tests validate how-to guides (living documentation)
+  - 100% BDD scenario coverage
+
+### Spec Coverage
+- ✅ **FR-6**: Validate before release (integrated validation in publish workflow)
+- ✅ **FR-11**: Include change metadata (changelog in artifact.metadata)
+- ⚠️ **FR-12** (partial): Record release entries (no approval workflow yet)
+
 ## 0.1.3 - 2025-10-24
 
 ### Added
