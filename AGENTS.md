@@ -6,32 +6,44 @@ This file provides machine-readable instructions for AI coding agents working wi
 
 ## Project Overview
 
-**mcp-orchestration** is a Model Context Protocol (MCP) server that provides [describe your server's capabilities].
+**mcp-orchestration** is a Model Context Protocol (MCP) server that provides centralized configuration management and orchestration for MCP client applications. It enables cryptographically signed, content-addressable storage of client configurations with automated diff detection and update recommendations.
 
-**Core Architecture:** [Describe your architecture pattern]
-- [Key architecture point 1]
-- [Key architecture point 2]
-- [Key architecture point 3]
+**Core Architecture:** Layered architecture with cryptographic verification
+- **Storage Layer:** Content-addressable storage (SHA-256 hashing, immutable artifacts)
+- **Crypto Layer:** Ed25519 signatures for artifact integrity and authenticity
+- **Registry Layer:** Multi-client support (Claude Desktop, Cursor) with profile-based configs
+- **MCP Server:** 4 tools + 2 resources exposing orchestration via Model Context Protocol
+- **Diff Engine:** Field-level change detection with semantic classification (breaking/compatible/cosmetic)
 
 **Key Components:**
-- **Main Module** (`[main_module].py`) - [Description]
-- **[Component 2]** (`[module].py`) - [Description]
-- **[Component 3]** (`[module].py`) - [Description]
+- **Storage** (`src/mcp_orchestrator/storage/`) - Content-addressable artifact storage with SHA-256 hashing
+- **Crypto** (`src/mcp_orchestrator/crypto/`) - Ed25519 signing and verification for artifact integrity
+- **Registry** (`src/mcp_orchestrator/registry/`) - Client families, profiles, and server catalog management
+- **Config Builder** (`src/mcp_orchestrator/building/`) - Draft configuration management, add/remove servers (Wave 1.2+)
+- **Diff Engine** (`src/mcp_orchestrator/diff/`) - Configuration comparison with semantic change classification
+- **MCP Server** (`src/mcp_orchestrator/mcp/`) - Model Context Protocol server (4 tools, 2 resources)
+- **Server Catalog** (`src/mcp_orchestrator/servers/`) - MCP server registry (Wave 1.1 feature)
+- **CLI** (`src/mcp_orchestrator/cli.py`, `cli_init.py`) - Command-line interface and initialization
 
 ### Strategic Context
 
-**Current Priority:** [Describe current sprint/milestone focus]
-- See [ROADMAP.md](ROADMAP.md) for committed work
-- Focus: [List 2-3 key deliverables]
+**Current Priority:** Wave 1.1 - MCP Server Registry
+- See [ROADMAP.md](ROADMAP.md) and [project-docs/WAVE_1X_PLAN.md](project-docs/WAVE_1X_PLAN.md) for committed work
+- Focus: Server catalog, discovery, browsing (enable users to add MCP servers to configs)
+- Wave 1.0 (v0.1.0) delivered: Read-only config orchestration with 4 tools, Ed25519 signing
 
-**Long-Term Vision:** [Describe evolutionary direction]
-- See [dev-docs/vision/](dev-docs/vision/) for future capabilities
-- Waves: [List 2-4 high-level capability themes]
+**Long-Term Vision:** Wave-based capability evolution
+- See [dev-docs/vision/](dev-docs/vision/) for future capabilities and strategic design guidance
+- **Wave 1:** Foundation (current) - Config retrieval, validation, signing, diff
+- **Wave 2:** Governance (exploratory) - Policy engine, approval workflows, audit logging
+- **Wave 3:** Intelligence (exploratory) - Smart validation, analytics, anomaly detection
+- **Wave 4:** Ecosystem (exploratory) - Multi-tenant SaaS, marketplace, federation
 
-**Design Principle:** Deliver current commitments while keeping future doors open.
-- Don't build future features now
-- Do design extension points and document decisions
-- Do refactor when it serves both present and future
+**Design Principle:** Build for today, design for tomorrow.
+- Don't build future features now (no Wave 2 policy engine in Wave 1)
+- Do design extension points (artifact metadata supports future policy fields)
+- Do refactor when it serves both present and future (low cost, high strategic value)
+- Consult [dev-docs/vision/AGENTS.md](dev-docs/vision/AGENTS.md) for strategic design framework
 
 ---
 
@@ -41,22 +53,53 @@ This file provides machine-readable instructions for AI coding agents working wi
 
 **Discovery principle**: Agents should read the AGENTS.md file nearest to the code they're working on.
 
-### Available Guides
+### Available Guides (15 Total)
 
-- **[AGENTS.md](AGENTS.md)** (this file) - Project overview, architecture, PR workflow, common tasks
-- **[tests/AGENTS.md](tests/AGENTS.md)** - Testing guide (run tests, coverage, linting, troubleshooting)
-- **[.chora/memory/AGENTS.md](.chora/memory/AGENTS.md)** - Memory system (event log, knowledge graph, A-MEM workflows)
-- **[scripts/AGENTS.md](scripts/AGENTS.md)** - Automation scripts reference
+**Project Planning & Strategy:**
+- **[project-docs/AGENTS.md](project-docs/AGENTS.md)** - Roadmap, ADRs, wave planning, release management
+- **[dev-docs/vision/AGENTS.md](dev-docs/vision/AGENTS.md)** - Vision documents, strategic design framework
+- **[dev-docs/AGENTS.md](dev-docs/AGENTS.md)** - Contributing workflows, DDD/BDD/TDD, PR guidelines
+
+**Core Modules (Source Code):**
+- **[src/mcp_orchestrator/AGENTS.md](src/mcp_orchestrator/AGENTS.md)** - Core orchestrator architecture, submodule interaction
+- **[src/mcp_orchestrator/crypto/AGENTS.md](src/mcp_orchestrator/crypto/AGENTS.md)** - Ed25519 signing, verification, key management
+- **[src/mcp_orchestrator/storage/AGENTS.md](src/mcp_orchestrator/storage/AGENTS.md)** - Content-addressable storage, immutability
+- **[src/mcp_orchestrator/registry/AGENTS.md](src/mcp_orchestrator/registry/AGENTS.md)** - Client families, profiles, metadata
+- **[src/mcp_orchestrator/building/AGENTS.md](src/mcp_orchestrator/building/AGENTS.md)** - Config builder, draft workflow, add/remove servers
+- **[src/mcp_orchestrator/diff/AGENTS.md](src/mcp_orchestrator/diff/AGENTS.md)** - Diff algorithm, semantic classification
+- **[src/mcp_orchestrator/mcp/AGENTS.md](src/mcp_orchestrator/mcp/AGENTS.md)** - MCP server, tools, resources, protocol
+- **[src/mcp_orchestrator/servers/AGENTS.md](src/mcp_orchestrator/servers/AGENTS.md)** - Server catalog (Wave 1.1 focus)
+
+**Testing, Operations & Automation:**
+- **[tests/AGENTS.md](tests/AGENTS.md)** - Testing guide (unit, integration, super-tests, coverage)
+- **[docker/AGENTS.md](docker/AGENTS.md)** - Docker operations (build, verify, compose, multi-arch)
+- **[scripts/AGENTS.md](scripts/AGENTS.md)** - Automation scripts, justfile tasks
+- **[.chora/memory/AGENTS.md](.chora/memory/AGENTS.md)** - Memory system (event log, knowledge graph, A-MEM)
 
 **When to use which guide:**
 
 | Working on... | Read... |
 |---------------|---------|
-| Writing/running tests | [tests/AGENTS.md](tests/AGENTS.md) |
-| Cross-session learning, memory queries | [.chora/memory/AGENTS.md](.chora/memory/AGENTS.md) |
-| Docker builds, container deployment | [docker/AGENTS.md](docker/AGENTS.md) |
+| **Planning & Strategy** | |
+| Roadmap, release planning, ADRs | [project-docs/AGENTS.md](project-docs/AGENTS.md) |
+| Vision documents, strategic design decisions | [dev-docs/vision/AGENTS.md](dev-docs/vision/AGENTS.md) |
+| Contributing, PR workflow, code review | [dev-docs/AGENTS.md](dev-docs/AGENTS.md) |
+| **Source Code Modules** | |
+| Core orchestrator, module interaction | [src/mcp_orchestrator/AGENTS.md](src/mcp_orchestrator/AGENTS.md) |
+| Cryptographic operations, signing, keys | [src/mcp_orchestrator/crypto/AGENTS.md](src/mcp_orchestrator/crypto/AGENTS.md) |
+| Storage layer, artifacts, content-addressable | [src/mcp_orchestrator/storage/AGENTS.md](src/mcp_orchestrator/storage/AGENTS.md) |
+| Client registry, profiles, metadata | [src/mcp_orchestrator/registry/AGENTS.md](src/mcp_orchestrator/registry/AGENTS.md) |
+| Config builder, draft workflow, add/remove servers | [src/mcp_orchestrator/building/AGENTS.md](src/mcp_orchestrator/building/AGENTS.md) |
+| Configuration diff, change detection | [src/mcp_orchestrator/diff/AGENTS.md](src/mcp_orchestrator/diff/AGENTS.md) |
+| MCP server, tools, protocol implementation | [src/mcp_orchestrator/mcp/AGENTS.md](src/mcp_orchestrator/mcp/AGENTS.md) |
+| MCP server catalog (Wave 1.1) | [src/mcp_orchestrator/servers/AGENTS.md](src/mcp_orchestrator/servers/AGENTS.md) |
+| **Testing & Operations** | |
+| Writing/running tests, coverage, linting | [tests/AGENTS.md](tests/AGENTS.md) |
+| Docker builds, containers, multi-arch | [docker/AGENTS.md](docker/AGENTS.md) |
 | Automation scripts, justfile tasks | [scripts/AGENTS.md](scripts/AGENTS.md) |
-| Architecture, PRs, project structure | [AGENTS.md](AGENTS.md) (this file) |
+| Cross-session learning, memory, A-MEM | [.chora/memory/AGENTS.md](.chora/memory/AGENTS.md) |
+| **General** | |
+| Architecture, PRs, common tasks | [AGENTS.md](AGENTS.md) (this file) |
 
 ---
 
@@ -293,17 +336,75 @@ just pre-merge
 
 ## Architecture Overview
 
-[Describe your project's architecture here. Include diagrams, key design patterns, and architectural decisions.]
+mcp-orchestration implements a **layered architecture** with cryptographic verification at its core.
+
+### System Architecture
+
+```
+┌─────────────────────────────────────────────────────────────┐
+│                     MCP Clients                              │
+│         (Claude Desktop, Cursor, other MCP clients)          │
+└──────────────────────────┬──────────────────────────────────┘
+                           │ MCP Protocol (stdio)
+                           │
+┌──────────────────────────▼──────────────────────────────────┐
+│                  MCP Server Layer                            │
+│   4 Tools: list_clients, list_profiles, get_config, diff    │
+│   2 Resources: capabilities://server, capabilities://clients│
+└──────────────────────────┬──────────────────────────────────┘
+                           │
+           ┌───────────────┼───────────────┐
+           │               │               │
+           ▼               ▼               ▼
+    ┌──────────┐    ┌──────────┐   ┌──────────┐
+    │ Registry │    │   Diff   │   │  Crypto  │
+    │  Layer   │    │  Engine  │   │  Layer   │
+    └────┬─────┘    └────┬─────┘   └────┬─────┘
+         │               │              │
+         │      ┌────────┴──────┐      │
+         │      │               │      │
+         └──────▼───────────────▼──────┘
+         ┌───────────────────────────┐
+         │     Storage Layer         │
+         │  (Content-Addressable)    │
+         │  SHA-256 → Immutable      │
+         └───────────────────────────┘
+                     │
+                     ▼
+         ~/.mcp-orchestration/
+         ├── storage/artifacts/  (CAS)
+         ├── keys/              (Ed25519)
+         └── config.json
+```
 
 ### Key Design Patterns
 
-- **[Pattern 1]:** [Description]
-- **[Pattern 2]:** [Description]
-- **[Pattern 3]:** [Description]
+- **Content-Addressable Storage (CAS):** Artifacts identified by SHA-256(content), ensuring immutability and automatic deduplication. Pattern used by Git, Docker, IPFS.
+- **Cryptographic Verification:** Ed25519 signatures provide artifact integrity and authenticity. Detached signatures allow verification without payload modification.
+- **Profile-Based Configuration:** Multiple configuration profiles per client (default, development, production) enable environment-specific configs without duplication.
+- **Layered Architecture:** Clear separation of concerns: Storage → Crypto → Registry → MCP. Each layer has single responsibility.
+- **Diff Engine with Semantic Classification:** Field-level comparison categorizes changes as breaking/compatible/cosmetic for intelligent update recommendations.
+- **Wave-Based Evolution:** Capability delivery in incremental waves (Foundation → Governance → Intelligence → Ecosystem) prevents scope creep while maintaining strategic vision.
 
 ### Configuration Management
 
-[Describe how configuration works in your project, including environment variables, config files, etc.]
+**Environment Variables:**
+- `MCP_ORCHESTRATION_LOG_LEVEL` - Logging level (DEBUG, INFO, WARNING, ERROR, CRITICAL)
+- `MCP_ORCHESTRATION_DEBUG` - Debug mode (0 or 1)
+- `MCP_ORCHESTRATION_STORAGE_PATH` - Custom storage path (default: ~/.mcp-orchestration/)
+- `MCP_ORCHESTRATION_KEY_PATH` - Custom key path (default: ~/.mcp-orchestration/keys/)
+
+**Configuration Files:**
+- `~/.mcp-orchestration/config.json` - User configuration (storage paths, defaults)
+- `~/.mcp-orchestration/keys/signing.key` - Ed25519 private key (0600 permissions)
+- `~/.mcp-orchestration/keys/signing.pub` - Ed25519 public key
+- `.env` - Project-level environment variables (for development)
+
+**Client Configurations:**
+- Claude Desktop: `~/Library/Application Support/Claude/claude_desktop_config.json` (macOS)
+- Cursor: `~/.cursor/mcp.json`
+
+See [dev-docs/vision/MCP_CONFIG_ORCHESTRATION.md](dev-docs/vision/MCP_CONFIG_ORCHESTRATION.md) for detailed architecture documentation.
 
 ---
 
@@ -315,15 +416,84 @@ MCP server orchestration and management tools
 
 **CRITICAL:** mcp-orchestration is designed for **LLM-intelligent MCP clients** (Claude Desktop, Cursor, Roo Code).
 
-- ✅ **FOR LLM agents** - Claude Desktop, Cursor, custom MCP clients
+- ✅ **FOR LLM agents** - Claude Desktop, Cursor, custom MCP clients (primary audience)
 - ✅ **FOR programmatic use** - Python API, automation workflows
-- ❌ **NOT for human CLI users** - No interactive wizards or watch modes
+- ✅ **FOR CLI operations** - Initialization, config management, server browsing
+- ❌ **NOT for interactive CLI** - No watch modes, interactive prompts, TUI dashboards
 
-**Implication:** All features prioritize agent ergonomics over human UX.
+**Implication:** All features prioritize agent ergonomics and programmatic access over human UX.
 
-### [Additional Constraints]
+### MCP Protocol Compliance
 
-[Document your project-specific constraints and design decisions here.]
+**Constraint:** Must comply with Model Context Protocol specification 2024-11-05
+- **Protocol:** stdio transport (stdin/stdout communication)
+- **Tools:** Input/output schemas must match MCP tool specification
+- **Resources:** URI scheme format (e.g., `capabilities://server`)
+- **Error Handling:** Structured error responses with error codes
+- **Testing:** Integration tests validate MCP protocol compliance
+
+**Implication:** Cannot use HTTP transport or custom protocol extensions without MCP spec update.
+
+### Cryptographic Requirements
+
+**Constraint:** Ed25519 only for digital signatures (no RSA, ECDSA, or DSA)
+- **Algorithm:** Ed25519 (RFC 8032) - 128-bit security level
+- **Key Size:** 32-byte private keys, 32-byte public keys, 64-byte signatures
+- **Performance:** ~100K signatures/sec, ~40K verifications/sec
+- **Security:** No timing attacks, no parameter complexity
+- **Key Storage:** Private keys must have 0600 permissions (Unix)
+
+**Rationale:** Ed25519 chosen for speed, security, and simplicity. No support for other algorithms reduces attack surface.
+
+**Implication:** Users cannot bring their own RSA/ECDSA keys; must use generated Ed25519 keys.
+
+### Storage Immutability
+
+**Constraint:** Artifacts are immutable (content-addressable storage)
+- **Artifact ID:** SHA-256(payload) - content is identity
+- **Modification:** Cannot modify artifacts; must create new artifact with new ID
+- **Deduplication:** Automatic (same content = same artifact_id)
+- **Rollback:** Old artifacts retained for history, diff, rollback
+
+**Rationale:** Immutability enables caching, verification, and distributed systems without version conflicts.
+
+**Implication:** Config updates require creating new artifacts, not modifying existing ones.
+
+### Multi-Client Support
+
+**Constraint:** Must support multiple MCP client families (extensible registry)
+- **Supported (Wave 1.0):** Claude Desktop (macOS, Windows), Cursor (cross-platform)
+- **Extensibility:** Registry designed for adding new clients without code changes
+- **Profile-based:** Each client supports multiple profiles (default, dev, prod, custom)
+- **Schema Validation:** Each client has schema for config validation
+
+**Implication:** Adding new clients requires registry metadata, not code changes.
+
+### Storage Path Conventions
+
+**Constraint:** Default storage at `~/.mcp-orchestration/` (configurable via env)
+- **Artifacts:** `~/.mcp-orchestration/storage/artifacts/` (2-level sharding: aa/bb/aabbccddee...)
+- **Keys:** `~/.mcp-orchestration/keys/` (signing.key, signing.pub)
+- **Config:** `~/.mcp-orchestration/config.json`
+- **Custom Path:** Set `MCP_ORCHESTRATION_STORAGE_PATH` to override
+
+**Rationale:** User home directory avoids permission issues, follows XDG Base Directory spirit.
+
+**Implication:** Multi-user systems require per-user storage; no shared system-wide storage.
+
+### Wave-Based Delivery
+
+**Constraint:** Features delivered in waves; no Wave 2 features in Wave 1
+- **Wave 1:** Foundation (config retrieval, validation, signing, diff) - CURRENT
+- **Wave 2:** Governance (policy engine, approvals, audit) - EXPLORATORY
+- **Wave 3:** Intelligence (analytics, anomaly detection) - EXPLORATORY
+- **Wave 4:** Ecosystem (marketplace, federation) - EXPLORATORY
+
+**Rationale:** Incremental delivery validates assumptions, gathers feedback, prevents scope creep.
+
+**Implication:** Do not implement policy engine (Wave 2) in Wave 1 codebase. Design extension points instead.
+
+See [dev-docs/vision/AGENTS.md](dev-docs/vision/AGENTS.md) for strategic design framework on balancing current work with future vision.
 
 ---
 
