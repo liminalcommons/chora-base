@@ -4,6 +4,32 @@
 
 **Parent**: See [../AGENTS.md](../AGENTS.md) for project overview and other topics.
 
+**For Claude users**: See [CLAUDE.md](CLAUDE.md) for Claude-specific test generation patterns.
+
+---
+
+## Development Workflow Integration
+
+This testing guide supports the **Test-Driven Development (TDD)** workflow.
+
+**TDD Process** ([dev-docs/workflows/TDD_WORKFLOW.md](../dev-docs/workflows/TDD_WORKFLOW.md)):
+1. **RED**: Write failing test first
+2. **GREEN**: Implement minimal code to pass
+3. **REFACTOR**: Improve code while keeping tests green
+
+**Benefits:**
+- 40-80% fewer defects (Microsoft Research)
+- Better code design (testability enforces modularity)
+- Living documentation (tests show intended behavior)
+- Confident refactoring (tests catch regressions)
+
+**Quick Decision Tree:**
+- **Write unit tests first?** → **YES** (TDD reduces defects 40-80%)
+- **Minimum coverage?** → **{{ test_coverage_threshold }}%** (configured in pyproject.toml)
+- **Test naming?** → `test_[function]_[scenario]_[expected]`
+
+See [../dev-docs/workflows/TDD_WORKFLOW.md](../dev-docs/workflows/TDD_WORKFLOW.md) for complete guide.
+
 ---
 
 ## Quick Reference

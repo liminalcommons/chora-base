@@ -4,6 +4,30 @@
 
 **Parent**: See [../../AGENTS.md](../../AGENTS.md) for project overview and other topics.
 
+**For Claude users**: See [CLAUDE.md](CLAUDE.md) for Claude-specific memory patterns and context management.
+
+---
+
+## Development Workflow Integration
+
+The memory system supports cross-session learning across the 8-phase development lifecycle.
+
+**Integration Points:**
+- **Planning Phase**: Query past sprint metrics to inform capacity planning
+- **Design Phase**: Search knowledge graph for architectural patterns
+- **Development Phase**: Reference past solutions for similar problems
+- **Testing Phase**: Query test failure patterns to prevent regressions
+- **Review Phase**: Track decision rationale in knowledge notes
+- **Monitoring Phase**: Event log captures production issues for root cause analysis
+
+**Quick Decision Tree:**
+- **Encountered a bug?** → Query event log for similar failures
+- **Solved a problem?** → Create knowledge note for future reference
+- **Starting new feature?** → Search knowledge graph for related patterns
+- **Sprint planning?** → Analyze past velocity and defect trends
+
+See [../../dev-docs/workflows/DEVELOPMENT_LIFECYCLE.md](../../dev-docs/workflows/DEVELOPMENT_LIFECYCLE.md) for complete workflow integration.
+
 ---
 
 ## Quick Reference

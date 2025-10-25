@@ -4,6 +4,8 @@
 
 **Parent**: See [../AGENTS.md](../AGENTS.md) for project overview and other topics.
 
+**For Claude users**: See [CLAUDE.md](CLAUDE.md) for Claude-specific Docker assistance patterns.
+
 ---
 
 ## Quick Reference

@@ -35,6 +35,51 @@ This file provides machine-readable instructions for AI coding agents working wi
 
 ---
 
+## Development Process
+
+This project follows the **chora-base 8-phase evidence-based development lifecycle**.
+
+### 8-Phase Lifecycle
+
+1. **Vision & Strategy** → [ROADMAP.md](ROADMAP.md)
+2. **Planning** → [Sprint Planning](project-docs/sprints/README.md)
+3. **Requirements & Design** → [DDD Workflow](dev-docs/workflows/DDD_WORKFLOW.md) (saves 8-15 hours per feature)
+4. **Development** → [BDD](dev-docs/workflows/BDD_WORKFLOW.md) + [TDD](dev-docs/workflows/TDD_WORKFLOW.md) (40-80% fewer defects)
+5. **Testing & Quality** → Built into all workflows
+6. **Review & Integration** → [Pull Request workflow](#pull-request-workflow)
+7. **Release & Deployment** → [Release Planning](project-docs/releases/RELEASE_PLANNING_GUIDE.md)
+8. **Monitoring & Feedback** → [Process Metrics](project-docs/metrics/PROCESS_METRICS.md)
+
+### Quick Reference for AI Agents
+
+**Decision Trees:**
+- **Write docs first?** → **YES** ([DDD Workflow](dev-docs/workflows/DDD_WORKFLOW.md) saves 8-15 hours)
+- **Write acceptance tests first?** → **YES** ([BDD Workflow](dev-docs/workflows/BDD_WORKFLOW.md) prevents 2-5 issues)
+- **Write unit tests first?** → **YES** ([TDD Workflow](dev-docs/workflows/TDD_WORKFLOW.md) reduces defects 40-80%)
+- **Sprint commitment?** → **<80% capacity** ([Sprint Planning](project-docs/sprints/README.md) for predictable velocity)
+
+**Complete Process Guide:**
+- [DEVELOPMENT_PROCESS.md](dev-docs/workflows/DEVELOPMENT_PROCESS.md) - End-to-end workflow
+- [DEVELOPMENT_LIFECYCLE.md](dev-docs/workflows/DEVELOPMENT_LIFECYCLE.md) - How phases connect
+- [FEATURE_WALKTHROUGH.md](dev-docs/examples/FEATURE_WALKTHROUGH.md) - Real OAuth2 example (14 days, 27% efficiency gain)
+
+**Evidence-Based Results:**
+- 40-80% defect reduction (Microsoft Research on TDD)
+- 8-15 hours saved per feature (DDD prevents rework)
+- 2-5 acceptance issues prevented per feature (BDD catches misalignment)
+- 80-90% sprint velocity (predictable delivery with <80% commitment)
+
+### Claude-Specific Optimizations
+
+**For Claude Code users:** See [CLAUDE.md](CLAUDE.md) for Claude-specific patterns including:
+- 200k context window management
+- Artifact-first development
+- Progressive context loading
+- Checkpoint patterns
+- ROI metrics tracking
+
+---
+
 ## Documentation Structure (Nearest File Wins)
 
 **{{ project_name }} uses nested AGENTS.md files** for focused, topic-specific guidance.
@@ -43,21 +88,29 @@ This file provides machine-readable instructions for AI coding agents working wi
 
 ### Available Guides
 
+**Generic AI Agent Guidance (AGENTS.md):**
 - **[AGENTS.md](AGENTS.md)** (this file) - Project overview, architecture, PR workflow, common tasks
 - **[tests/AGENTS.md](tests/AGENTS.md)** - Testing guide (run tests, coverage, linting, troubleshooting)
 - **[.chora/memory/AGENTS.md](.chora/memory/AGENTS.md)** - Memory system (event log, knowledge graph, A-MEM workflows)
 - **[docker/AGENTS.md](docker/AGENTS.md)** - Docker operations (build, deploy, troubleshooting)
 - **[scripts/AGENTS.md](scripts/AGENTS.md)** - Automation scripts reference
 
+**Claude-Specific Guidance (CLAUDE.md):**
+- **[CLAUDE.md](CLAUDE.md)** - Claude-specific optimizations (200k context, artifacts, checkpoints)
+- **[tests/CLAUDE.md](tests/CLAUDE.md)** - Claude test generation patterns
+- **[.chora/memory/CLAUDE.md](.chora/memory/CLAUDE.md)** - Claude memory integration patterns
+- **[docker/CLAUDE.md](docker/CLAUDE.md)** - Claude Docker patterns
+- **[scripts/CLAUDE.md](scripts/CLAUDE.md)** - Claude automation patterns
+
 **When to use which guide:**
 
 | Working on... | Read... |
 |---------------|---------|
-| Writing/running tests | [tests/AGENTS.md](tests/AGENTS.md) |
-| Cross-session learning, memory queries | [.chora/memory/AGENTS.md](.chora/memory/AGENTS.md) |
-| Docker builds, container deployment | [docker/AGENTS.md](docker/AGENTS.md) |
-| Automation scripts, justfile tasks | [scripts/AGENTS.md](scripts/AGENTS.md) |
-| Architecture, PRs, project structure | [AGENTS.md](AGENTS.md) (this file) |
+| Writing/running tests | [tests/AGENTS.md](tests/AGENTS.md) + [tests/CLAUDE.md](tests/CLAUDE.md) (if using Claude) |
+| Cross-session learning, memory queries | [.chora/memory/AGENTS.md](.chora/memory/AGENTS.md) + [.chora/memory/CLAUDE.md](.chora/memory/CLAUDE.md) (if using Claude) |
+| Docker builds, container deployment | [docker/AGENTS.md](docker/AGENTS.md) + [docker/CLAUDE.md](docker/CLAUDE.md) (if using Claude) |
+| Automation scripts, justfile tasks | [scripts/AGENTS.md](scripts/AGENTS.md) + [scripts/CLAUDE.md](scripts/CLAUDE.md) (if using Claude) |
+| Architecture, PRs, project structure | [AGENTS.md](AGENTS.md) (this file) + [CLAUDE.md](CLAUDE.md) (if using Claude) |
 
 ---
 
