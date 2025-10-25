@@ -1,6 +1,6 @@
 [project]
 name = "mcp-orchestration"
-version = "0.1.2"
+version = "0.1.3"
 description = "MCP server for centralized configuration management with cryptographic signatures and content-addressable storage"
 authors = [
     {name = "Victor Piper", email = "victor@liminalcommons.org"}
