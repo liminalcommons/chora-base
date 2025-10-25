@@ -7,6 +7,34 @@ This document outlines **committed features and timelines** for {{ project_name 
 
 ---
 
+## How We Execute This Roadmap
+
+### Sprint Planning
+
+**Process:** [project-docs/sprints/README.md](project-docs/sprints/README.md)
+
+- **Cadence:** 1-2 week sprints with capacity planning
+- **Commitment:** Never >80% of available capacity
+- **Tracking:** Velocity and burndown charts
+
+### Development Process
+
+**Details:** [dev-docs/workflows/DEVELOPMENT_PROCESS.md](dev-docs/workflows/DEVELOPMENT_PROCESS.md)
+
+- **DDD:** Write docs first → saves 8-15 hours of rework
+- **BDD:** Define acceptance criteria with Gherkin → prevents 2-5 acceptance issues
+- **TDD:** Test-driven implementation → 40-80% fewer defects (Microsoft Research)
+
+### Quality Gates
+
+**Metrics:** [project-docs/metrics/PROCESS_METRICS.md](project-docs/metrics/PROCESS_METRICS.md)
+
+- **Test Coverage:** ≥{{ test_coverage_threshold }}%
+- **Process Adherence:** ≥90% workflow compliance
+- **Defect Rate:** <3 per release
+
+---
+
 ## Current Focus
 
 ### v{{ project_version }} (Current)
