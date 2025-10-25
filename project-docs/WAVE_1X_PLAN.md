@@ -2,7 +2,7 @@
 
 **Status**: Living document
 **Last Updated**: 2025-10-24
-**Current Wave**: 1.1 (Server Registry)
+**Current Wave**: 1.3 (Claude Desktop Ergonomics - COMPLETE)
 
 ---
 
@@ -320,103 +320,109 @@ mcp-orchestration remove-server <server_name> \
 
 ---
 
-## Wave 1.3 (v0.1.3) — Schema Validation
+## Wave 1.3 (v0.1.3) — Claude Desktop Ergonomics
+
+**Status**: ✅ COMPLETE (2025-10-24)
+**Goal**: Improve user experience for Claude Desktop interactions
+**Actual Timeline**: 1 day
+
+**Note**: Originally planned as "Schema Validation", but pivoted to ergonomic improvements based on user testing feedback. Schema validation moved to Wave 1.4.
+
+### Scope
+
+#### Ergonomic MCP Tools (3 new)
+
+**Tools added to improve Claude Desktop UX:**
+
+1. **`view_draft_config`** - View draft without modifying it
+   ```python
+   @mcp.tool()
+   async def view_draft_config(
+       client_id: str = "claude-desktop",
+       profile_id: str = "default"
+   ) -> dict[str, Any]:
+       """View current draft configuration.
+
+       Returns draft, server_count, and server list.
+       """
+   ```
+
+2. **`clear_draft_config`** - Clear all servers from draft
+   ```python
+   @mcp.tool()
+   async def clear_draft_config(
+       client_id: str = "claude-desktop",
+       profile_id: str = "default"
+   ) -> dict[str, Any]:
+       """Clear draft to start over.
+
+       Returns status and previous_count.
+       """
+   ```
+
+3. **`initialize_keys`** - Generate signing keys autonomously
+   ```python
+   @mcp.tool()
+   async def initialize_keys(
+       regenerate: bool = False
+   ) -> dict[str, Any]:
+       """Initialize Ed25519 signing keys.
+
+       No CLI required - Claude can set up crypto keys.
+       """
+   ```
+
+#### Default Parameters
+
+**Updated Wave 1.2 tools with sensible defaults:**
+
+- `add_server_to_config` - Now defaults to `client_id="claude-desktop"`, `profile_id="default"`
+- `remove_server_from_config` - Now defaults to `client_id="claude-desktop"`, `profile_id="default"`
+- `publish_config` - Now defaults to `client_id="claude-desktop"`, `profile_id="default"`
+
+**Benefit**: Reduces boilerplate by 50%+ in typical usage.
+
+#### Bug Fixes
+
+- **JSON String Parameter Handling**: Fixed `add_server_to_config` to accept params/env_vars as either dict or JSON string (Claude Desktop serialization compatibility)
+
+#### Documentation Improvements
+
+- Tool descriptions now explain JSON string handling
+- Cross-references between related tools
+- Workflow guidance in tool help text
+
+### Deliverables
+- [x] 3 new MCP tools (view, clear, initialize_keys)
+- [x] Default parameters for 3 existing tools
+- [x] JSON string parsing fix
+- [x] Unit tests (13 new tests in `tests/test_mcp_ergonomic_tools.py`)
+- [x] E2E guide: `docs/how-to/manage-draft-workflow.md`
+- [x] User guide: `user-docs/how-to/06-manage-configs-with-claude.md`
+- [x] CHANGELOG.md updated
+- [x] Design doc: `docs/wave-1-3-ergonomics.md`
+
+### Spec Coverage
+- Improves UX for FR-5 (parameter injection)
+- Enables autonomous key generation (no external CLI)
+- Reduces cognitive load for users
+
+### Success Criteria
+- [x] Claude completes workflow without parameter errors
+- [x] Claude uses `view_draft_config` to check state
+- [x] Claude can clear draft to recover from mistakes
+- [x] Claude initializes keys autonomously
+- [x] All 143 tests passing (130 original + 13 new)
+
+---
+
+## Wave 1.4 (v0.1.4) — Schema Validation
 
 **Status**: Planned
 **Goal**: Validate draft configs before publishing
 **Estimated Timeline**: 2-3 days
 
-### Scope
-
-#### Validation Module
-
-**New Module**: `src/mcp_orchestrator/validation/`
-
-```python
-class SchemaValidator:
-    """Validate MCP client configurations against schema."""
-
-    def validate_mcpservers(
-        self,
-        payload: dict,
-        client_id: str
-    ) -> ValidationReport:
-        """Validate mcpServers structure.
-
-        Checks:
-        - mcpServers is dict
-        - Each server has required fields (command, args)
-        - env vars are dict[str, str]
-        - No obvious issues
-        """
-
-class ValidationReport(BaseModel):
-    """Validation result."""
-    valid: bool
-    errors: list[str]
-    warnings: list[str]
-    suggestions: list[str]
-```
-
-#### JSON Schemas
-
-Create schemas for 3 clients:
-- `schemas/claude-desktop.schema.json`
-- `schemas/cursor.schema.json`
-- `schemas/cline.schema.json`
-
-#### MCP Tools (1 new)
-
-```python
-@mcp.tool()
-async def validate_draft(
-    client_id: str,
-    profile_id: str,
-    payload: dict[str, Any]
-) -> dict[str, Any]:
-    """Validate a draft configuration before publishing.
-
-    Returns:
-        ValidationReport with errors, warnings, suggestions
-    """
-```
-
-#### CLI Commands (1 new)
-
-```bash
-# Validate draft config file
-mcp-orchestration validate-draft \
-  --client <client> \
-  --profile <profile> \
-  --file <draft.json>
-```
-
-### Deliverables
-- [ ] Schema validator module
-- [ ] JSON schemas for 3 clients
-- [ ] 1 MCP tool
-- [ ] 1 CLI command
-- [ ] Unit tests for validation logic
-- [ ] E2E guide: `docs/how-to/validate-config-draft.md`
-
-### Spec Coverage
-- ✅ FR-6: Validate payload against client schema
-- ✅ FR-8: Machine-readable validation report
-
-### Success Criteria
-- ✅ Validation catches missing required fields
-- ✅ Validation catches type errors (args not array, etc.)
-- ✅ Warnings for unknown fields
-- ✅ Helpful error messages
-- ✅ Suggestions for fixes
-
----
-
-## Wave 1.4 (v0.1.4) — Publishing Workflow
-
-**Status**: Planned
-**Goal**: Enable users to create and sign config artifacts
-**Estimated Timeline**: 3-4 days
+**Note**: Originally planned as Wave 1.3, moved here after prioritizing ergonomics.
 
 ### Scope
 
@@ -811,12 +817,13 @@ mcp-orchestration audit-log \
 | Wave | Version | Status | Started | Completed | Notes |
 |------|---------|--------|---------|-----------|-------|
 | 1.0 | v0.1.0 | ✅ Done | 2025-10-17 | 2025-10-17 | Foundation release |
-| 1.1 | v0.1.1 | 📋 Planned | - | - | Server registry |
-| 1.2 | v0.1.2 | 📋 Planned | - | - | Transport abstraction |
-| 1.3 | v0.1.3 | 📋 Planned | - | - | Schema validation |
-| 1.4 | v0.1.4 | 📋 Planned | - | - | Publishing workflow |
-| 1.5 | v0.1.5 | 📋 Planned | - | - | E2E workflow |
-| 1.6 | v0.1.6 | 📋 Planned | - | - | Audit & history |
+| 1.1 | v0.1.1 | ✅ Done | 2025-10-24 | 2025-10-24 | Server registry |
+| 1.2 | v0.1.2 | ✅ Done | 2025-10-24 | 2025-10-24 | Transport abstraction + config generation |
+| 1.3 | v0.1.3 | ✅ Done | 2025-10-24 | 2025-10-24 | Claude Desktop ergonomics (not schema validation) |
+| 1.4 | v0.1.4 | 📋 Planned | - | - | Schema validation (moved from 1.3) |
+| 1.5 | v0.1.5 | 📋 Planned | - | - | Publishing workflow (moved from 1.4) |
+| 1.6 | v0.1.6 | 📋 Planned | - | - | E2E workflow (moved from 1.5) |
+| 1.7 | v0.1.7 | 📋 Planned | - | - | Audit & history (moved from 1.6) |
 
 **Legend**:
 - ✅ Done
@@ -827,18 +834,104 @@ mcp-orchestration audit-log \
 
 ---
 
-## Next Steps
+## Wave 2.x Coordination (Ecosystem Integration)
 
-1. ✅ Create `project-docs/WAVE_1X_PLAN.md` (this document)
-2. Update `ROADMAP.md` to reference this wave plan
-3. Start Wave 1.1 (Server Registry) implementation
-4. Follow wave sequence in order (no skipping!)
-5. Update this document as waves progress
+**Status:** Planning (Q1 2026 target)
+**Coordination Partner:** mcp-gateway team (formerly mcp-n8n)
+**Integration Pattern:** Pattern N3b - n8n as Multi-Server MCP Client
 
-**Current Wave**: 1.1 (Server Registry)
-**Recommendation**: Begin Wave 1.1 implementation
+### Overview
+
+Wave 2.x represents mcp-orchestration's transition to **multi-transport architecture** to enable ecosystem integration with mcp-gateway and n8n workflows.
+
+**See detailed plan:** [WAVE_2X_COORDINATION_PLAN.md](./WAVE_2X_COORDINATION_PLAN.md)
+
+### Timeline
+
+| Period | Milestone | Status |
+|--------|-----------|--------|
+| **Week 6 (Early Q1 2026)** | Review Universal Loadability spec from mcp-gateway v1.2.0 | 🟡 Pending |
+| **Weeks 7-12 (Jan-Feb 2026)** | Wave 2.0: HTTP/SSE transport implementation | 🔴 Planning |
+| **Q1 2026 (Late Jan-Feb)** | Wave 2.1: API enhancements (`validate_config` integration) | 🔴 Planning |
+| **Q1-Q2 2026 (Feb-Mar)** | Wave 2.2: Ecosystem integration testing | 🔴 Planning |
+| **Q2 2026** | Pattern N3b launch with mcp-gateway | 🔴 Planning |
+
+### Key Dependencies
+
+**From Wave 1.x:**
+- ✅ Wave 1.4: `validate_config` tool (needed for Wave 2.1)
+  - Status: Planned for v0.1.4 (partial Wave 1.4 implementation)
+  - Scope: Validation tool only, skip deploy/audit features
+
+**From mcp-gateway:**
+- ⏳ v1.2.0 (Weeks 5-6): Universal Loadability Format specification
+- ⏳ v1.3.0 (Weeks 7-9): HTTP Streamable transport
+- ⏳ v2.1.0 (Q2 2026): Pattern N3b implementation
+
+### Wave 2.x Deliverables
+
+**Wave 2.0 (v0.2.0) - HTTP Transport Foundation**
+- HTTP/SSE transport implementation (FastAPI)
+- Transport abstraction layer
+- Bearer token + API key authentication
+- Endpoint alignment with mcp-gateway
+- Migration guide (stdio → HTTP)
+
+**Wave 2.1 (v0.2.1) - API Enhancements**
+- `validate_config` tool integration
+- Universal Loadability Format adoption
+- Enhanced error messages with error codes
+- Structured error responses
+
+**Wave 2.2 (v0.2.2) - Ecosystem Integration**
+- Integration testing with mcp-gateway
+- Example n8n workflows (3+)
+- Performance optimization (caching, connection pooling)
+- Joint documentation
+
+### Coordination Activities
+
+**Active:**
+- 📋 GitHub Discussions (location TBD - awaiting mcp-gateway response)
+- 📋 Quarterly sync calls (optional)
+- 📋 Async-first collaboration via GitHub
+
+**Deliverables:**
+- ✅ Integration response sent to mcp-gateway team
+- ✅ MCP_GATEWAY_COORDINATION.md tracker created
+- ✅ WAVE_2X_COORDINATION_PLAN.md detailed plan created
+- 🟡 Awaiting mcp-gateway confirmation
+
+### Strategic Decision: Wave 1.x Scope Reduction
+
+**Completed Waves:**
+- ✅ Wave 1.0 (v0.1.0) - Foundation
+- ✅ Wave 1.1 (v0.1.1) - Server registry
+- ✅ Wave 1.2 (v0.1.2) - Transport abstraction + config generation
+- ✅ Wave 1.3 (v0.1.3) - Claude Desktop ergonomics
+
+**Planned:**
+- 📋 Wave 1.4 (v0.1.4) - **Partial implementation** (`validate_config` tool only)
+
+**Deferred to Wave 3.x+:**
+- ⏸️ Wave 1.5 (End-to-End Deploy) - Manual deployment sufficient for now
+- ⏸️ Wave 1.6 (Audit & History) - Defer based on user demand
+
+**Rationale:** Focus on ecosystem strategic opportunity (Pattern N3b) over nice-to-have features. Wave 1.4's `validate_config` tool is needed for Wave 2.1, so we'll implement it, but skip Wave 1.5/1.6 deployment and audit features in favor of Wave 2.x HTTP transport work.
 
 ---
 
-**Document Version**: 1.0
+## Next Steps
+
+1. ✅ Create `project-docs/WAVE_1X_PLAN.md` (this document)
+2. ✅ Implement Waves 1.1-1.3 (COMPLETE)
+3. 📋 Implement Wave 1.4 partial (`validate_config` only) - v0.1.4
+4. 🔴 Strategic pause (Nov-Dec 2025) - Polish, design Wave 2.x
+5. 🔴 Implement Wave 2.x (Jan-Mar 2026) - HTTP transport + ecosystem integration
+6. 🔴 Pattern N3b launch (Q2 2026) - Coordinate with mcp-gateway
+
+---
+
+**Document Version**: 2.0
+**Last Updated**: 2025-10-24
 **Template**: Based on chora-base incremental delivery patterns
