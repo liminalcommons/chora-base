@@ -5,6 +5,56 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [3.1.0] - 2025-10-25
+
+### Changed
+
+**Blueprint Simplification (Partial)** - Removed 37 Jinja2 conditionals from 3 core blueprints
+
+- **pyproject.toml.blueprint** (13 → 0 conditionals)
+  - All dependencies included by default
+  - Comments guide feature removal
+  - Added `python_version_nodots` variable
+  - 100% variable replacement success
+
+- **server.py.blueprint** (11 → 0 conditionals)
+  - Full MCP server with namespacing enabled
+  - All validation and imports included
+  - No feature flags, clean implementation
+  - 100% variable replacement success
+
+- **ROADMAP.md.blueprint** (13 → 0 conditionals)
+  - Comprehensive roadmap with all sections
+  - MCP server focus, vision docs included
+  - Single complete template
+  - 100% variable replacement success
+
+### Added
+
+- **New Variables in setup.py:**
+  - `python_version_nodots`: Derived from `python_version` (e.g., "312" for Python 3.12)
+  - `test_coverage_threshold`: Default "85" (85% coverage requirement)
+
+- **docs/releases/v3.1.0-release-notes.md** - Complete release documentation
+
+### Progress
+
+- **Eliminated:** 37 of 157 conditionals (24%)
+- **Remaining:** 118 conditionals in README.md (27) and AGENTS.md (91)
+- **Simplified Blueprints:** 3 of 10 (30%)
+
+### Deferred to v3.1.1 or v3.2.0
+
+- README.md.blueprint simplification (27 conditionals)
+- AGENTS.md.blueprint simplification (91 conditionals)
+
+### Notes
+
+- No breaking changes from v3.0.0
+- Partial implementation of full v3.1.0 plan
+- Focused on highest-impact blueprints
+- v3.1.1 will complete remaining blueprint simplifications
+
 ## [3.0.0] - 2025-10-25
 
 ### Changed
