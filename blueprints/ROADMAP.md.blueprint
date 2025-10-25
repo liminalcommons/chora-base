@@ -3,13 +3,13 @@
 This document outlines **committed features and timelines** for {{ project_name }}.
 
 **Status:** Living document (updated with each release)
-**Current Version:** {{ initial_version }}
+**Current Version:** {{ project_version }}
 
 ---
 
 ## Current Focus
 
-### v{{ initial_version }} (Current)
+### v{{ project_version }} (Current)
 
 **Target:** [INSERT TARGET DATE]
 **Status:** In Development
@@ -18,7 +18,6 @@ This document outlines **committed features and timelines** for {{ project_name 
 
 **Features:**
 
-{% if project_type == 'mcp_server' -%}
 - [ ] **Core MCP Server** - Standard protocol implementation
 - [ ] **Essential Tools** - 3-5 high-value tools
   - [ ] Tool 1: [Description]
@@ -27,28 +26,6 @@ This document outlines **committed features and timelines** for {{ project_name 
 - [ ] **Error Handling** - Robust error reporting
 - [ ] **Documentation** - README, AGENTS.md, examples
 - [ ] **Testing** - Unit tests with ≥{{ test_coverage_threshold }}% coverage
-{% elif project_type == 'library' -%}
-- [ ] **Core API** - Essential functions/classes
-- [ ] **Type Safety** - Full type hints and validation
-- [ ] **Documentation** - API reference, examples, tutorials
-- [ ] **Testing** - Unit tests with ≥{{ test_coverage_threshold }}% coverage
-- [ ] **Packaging** - PyPI distribution
-{% elif project_type == 'cli_tool' -%}
-- [ ] **Core Commands** - 3-5 essential commands
-  - [ ] Command 1: [Description]
-  - [ ] Command 2: [Description]
-  - [ ] Command 3: [Description]
-- [ ] **User Experience** - Help text, progress indicators
-- [ ] **Configuration** - Config file support
-- [ ] **Documentation** - Usage guide, examples
-- [ ] **Testing** - Unit tests with ≥{{ test_coverage_threshold }}% coverage
-{% elif project_type == 'web_service' -%}
-- [ ] **Core Endpoints** - Essential API routes
-- [ ] **Data Models** - Core entities with validation
-- [ ] **Documentation** - OpenAPI/Swagger specs
-- [ ] **Testing** - API tests with ≥{{ test_coverage_threshold }}% coverage
-- [ ] **Deployment** - Production-ready setup
-{% endif -%}
 
 **Success Criteria:**
 - All features delivered and tested
@@ -72,11 +49,10 @@ This document outlines **committed features and timelines** for {{ project_name 
 - Feature B: [Description]
 - Feature C: [Description]
 
-**Note:** Features will be confirmed based on v{{ initial_version }} feedback and user demand.
+**Note:** Features will be confirmed based on v{{ project_version }} feedback and user demand.
 
 ---
 
-{% if include_vision_docs -%}
 ## Future Vision: Capability Evolution
 
 **See:** [dev-docs/vision/](dev-docs/vision/) for long-term capability vision.
@@ -85,51 +61,31 @@ This document outlines **committed features and timelines** for {{ project_name 
 founding vision and anticipated needs. These are **NOT committed features** - they
 represent possible future development after current roadmap stabilizes.
 
-**Current Priority:** v{{ initial_version }} remains the focus. Future capabilities will be
-evaluated after v{{ initial_version }} based on user needs and adoption.
+**Current Priority:** v{{ project_version }} remains the focus. Future capabilities will be
+evaluated after v{{ project_version }} based on user needs and adoption.
 
 ### Vision Highlights
 
-The evolution explores potential capability waves beyond v{{ initial_version }}:
+The evolution explores potential capability waves beyond v{{ project_version }}:
 
 **Wave 1: Foundation** (Current)
-- Status: In development (v{{ initial_version }})
+- Status: In development (v{{ project_version }})
 - Focus: Core functionality, essential features
 - Delivery: [Target date]
 
-**Wave 2: [Next Capability Theme]** (Post-v{{ initial_version }} Vision)
+**Wave 2: [Next Capability Theme]** (Post-v{{ project_version }} Vision)
 - Status: Exploratory (not committed)
 - Focus: [Brief description of next wave]
-- Decision: After v{{ initial_version }} stabilizes, based on:
+- Decision: After v{{ project_version }} stabilizes, based on:
   - User demand signals (issues, feedback, adoption)
   - Technical validation (architecture supports extensions)
   - Team capacity (resources available for next phase)
 
-{% if project_type == 'mcp_server' -%}
 **Example Wave 2 Themes (Exploratory):**
 - Tool chaining and composition
 - External API integrations
 - Data persistence and caching
 - Advanced configuration
-{% elif project_type == 'library' -%}
-**Example Wave 2 Themes (Exploratory):**
-- Plugin system for extensions
-- Multiple data source adapters
-- Serialization in multiple formats
-- Framework integration helpers
-{% elif project_type == 'cli_tool' -%}
-**Example Wave 2 Themes (Exploratory):**
-- Pipeline support (stdin/stdout chaining)
-- Plugin system for custom commands
-- Config profiles (dev, staging, prod)
-- Integration adapters
-{% elif project_type == 'web_service' -%}
-**Example Wave 2 Themes (Exploratory):**
-- Webhook system for events
-- OAuth integration
-- Data export in multiple formats
-- Integration dashboard
-{% endif -%}
 
 **See [dev-docs/vision/CAPABILITY_EVOLUTION.md](dev-docs/vision/CAPABILITY_EVOLUTION.md) for:**
 - Detailed wave descriptions
@@ -141,12 +97,11 @@ The evolution explores potential capability waves beyond v{{ initial_version }}:
 **Key Principle:** Build for today, design for tomorrow. Vision guides architectural
 decisions *today* without committing to timelines *tomorrow*.
 
-{% endif -%}
 ---
 
 ## Release History
 
-### v{{ initial_version }} (Initial Release)
+### v{{ project_version }} (Initial Release)
 
 **Released:** [INSERT RELEASE DATE]
 **Status:** Current
@@ -168,9 +123,7 @@ See [CHANGELOG.md](CHANGELOG.md) for detailed release notes.
 | Type | Description | Location | Changes |
 |------|-------------|----------|---------|
 | **Committed** | Features with timelines | This document (ROADMAP.md) | Stable, changes = scope change |
-{% if include_vision_docs -%}
 | **Exploratory** | Potential future directions | [dev-docs/vision/](dev-docs/vision/) | Fluid, updated quarterly |
-{% endif -%}
 
 ### Roadmap Updates
 
@@ -179,9 +132,7 @@ See [CHANGELOG.md](CHANGELOG.md) for detailed release notes.
 1. Delivered features move to Release History
 2. Next version features move to Current Focus
 3. Planned features shift to Near-Term Roadmap
-{% if include_vision_docs -%}
 4. Exploratory features stay in vision documents until committed
-{% endif -%}
 
 ### Feedback & Requests
 
@@ -204,14 +155,12 @@ Want to influence the roadmap?
 2. **File issues** - Describe your needs clearly
 3. **Contribute code** - PRs for features you need
 4. **Join discussions** - Share your use cases
-{% if include_vision_docs -%}
 5. **Review vision docs** - Comment on exploratory waves in [dev-docs/vision/](dev-docs/vision/)
-{% endif -%}
 
 ---
 
 **Last Updated:** [INSERT DATE]
-**Version:** v{{ initial_version }}
+**Version:** v{{ project_version }}
 **Status:** Living document
 
-🗺️ This roadmap reflects committed work. {% if include_vision_docs %}See [dev-docs/vision/](dev-docs/vision/) for long-term possibilities.{% endif %}
+🗺️ This roadmap reflects committed work. See [dev-docs/vision/](dev-docs/vision/) for long-term possibilities.

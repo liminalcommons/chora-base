@@ -170,6 +170,10 @@ def gather_variables() -> Dict[str, str]:
     # License
     variables['license'] = input("License [MIT]: ").strip() or "MIT"
 
+    # Derive additional variables
+    variables['python_version_nodots'] = variables['python_version'].replace('.', '')
+    variables['test_coverage_threshold'] = "85"  # Default 85% coverage
+
     print()
     return variables
 

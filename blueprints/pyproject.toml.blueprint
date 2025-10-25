@@ -9,34 +9,22 @@ readme = "README.md"
 license = {text = "{{ license }}"}
 requires-python = ">={{ python_version }}"
 dependencies = [
-{% if project_type == 'mcp_server' -%}
     "fastmcp>=0.3.0",
     "pydantic>=2.0.0",
     "pydantic-settings>=2.0.0",
     "python-dotenv>=1.0.0",
-{% endif -%}
-{% if include_cli -%}
-{% if cli_framework == 'click' -%}
-    "click>=8.0.0",
-{% elif cli_framework == 'typer' -%}
-    "typer>=0.9.0",
-{% endif -%}
-{% endif -%}
+    "click>=8.0.0",  # CLI framework - remove if not using CLI
 ]
 
 [project.optional-dependencies]
 dev = [
-{% if include_tests -%}
     "pytest==8.3.0",
     "pytest-asyncio==0.24.0",
     "pytest-cov==6.0.0",
-{% endif -%}
-{% if include_pre_commit -%}
     "mypy==1.11.0",
     "ruff==0.7.0",
     "black==24.10.0",
     "pre-commit==4.0.1",
-{% endif -%}
 ]
 release = [
     "build==1.0.3",
@@ -44,14 +32,8 @@ release = [
 ]
 
 [project.scripts]
-{% if project_type == 'mcp_server' -%}
 {{ project_slug }} = "{{ package_name }}.mcp.server:main"
-{% elif project_type == 'cli_tool' or include_cli -%}
-{{ project_slug }} = "{{ package_name }}.cli.main:cli"
-{% endif -%}
-{% if include_memory_system and include_cli -%}
 {{ project_slug }}-memory = "{{ package_name }}.cli.main:cli"
-{% endif -%}
 
 [build-system]
 requires = ["hatchling"]
@@ -60,7 +42,6 @@ build-backend = "hatchling.build"
 [tool.hatch.build.targets.wheel]
 packages = ["src/{{ package_name }}"]
 
-{% if include_tests -%}
 [tool.pytest.ini_options]
 asyncio_mode = "auto"
 testpaths = ["tests"]
@@ -68,8 +49,6 @@ python_files = ["test_*.py"]
 python_classes = ["Test*"]
 python_functions = ["test_*"]
 
-{% endif -%}
-{% if include_pre_commit -%}
 [tool.mypy]
 python_version = "{{ python_version }}"
 strict = true
@@ -91,25 +70,21 @@ ignore_missing_imports = true
 module = ["pydantic", "pydantic.*", "pydantic_settings"]
 ignore_missing_imports = true
 
-{% if include_cli -%}
 [[tool.mypy.overrides]]
-module = ["{{ cli_framework }}", "{{ cli_framework }}.*"]
+module = ["click", "click.*"]
 ignore_missing_imports = true
 
-{% endif -%}
 [tool.ruff]
 line-length = 88
-target-version = "py{{ python_version | replace('.', '') }}"
+target-version = "py{{ python_version_nodots }}"
 
 [tool.ruff.lint]
 select = ["E", "F", "I", "N", "W", "UP"]
 
 [tool.black]
 line-length = 88
-target-version = ["py{{ python_version | replace('.', '') }}"]
+target-version = ["py{{ python_version_nodots }}"]
 
-{% endif -%}
-{% if include_tests -%}
 [tool.coverage.run]
 source = ["src/{{ package_name }}"]
 omit = [
@@ -133,7 +108,6 @@ exclude_lines = [
     "if TYPE_CHECKING:",
 ]
 
-{% endif -%}
 [tool.{{ package_name }}.logging]
 format = "json"              # json or text
 level = "INFO"               # DEBUG, INFO, WARNING, ERROR, CRITICAL
