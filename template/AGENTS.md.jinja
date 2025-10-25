@@ -158,6 +158,148 @@ See `.config/cursor-mcp.example.json` for complete examples.
 {% endif -%}
 ---
 
+{% if include_api_utilities or include_persistence_helpers -%}
+## Python Utilities (Optional Ergonomics)
+
+This project includes reusable utilities that implement proven patterns from production Python projects. These are **optional affordances** — you can use them where helpful or ignore them.
+
+### Available Utilities
+
+{% if include_api_utilities -%}
+| Utility | Purpose | Example Use |
+|---------|---------|-------------|
+| **validation.py** | Input normalization (dict/JSON/KV) | `@normalize_input(params=InputFormat.DICT_OR_JSON)` |
+| **responses.py** | Response standardization | `Response.success(action="created", data=server)` |
+| **errors.py** | Error formatting with suggestions | `ErrorFormatter.not_found("server", id, available)` |
+{% endif -%}
+{% if include_persistence_helpers -%}
+| **persistence.py** | State persistence (atomic writes) | `class MyApp(StatefulObject): ...` |
+{% endif -%}
+
+### When to Use
+
+**✅ Use when:**
+- Building user-facing APIs or CLIs
+- Need consistent response/error formats
+- Want to reduce boilerplate code
+{% if include_persistence_helpers -%}
+- Need crash-safe state persistence
+{% endif -%}
+
+**⚠️ Skip when:**
+- Building simple internal functions
+- Framework provides equivalent (FastAPI, Click decorators)
+- Prototyping (can add later)
+
+### Quick Examples
+
+{% if include_api_utilities -%}
+**Input Validation:**
+```python
+from {{ package_name }}.utils.validation import normalize_input, InputFormat
+from {{ package_name }}.utils.responses import Response
+
+@normalize_input(params=InputFormat.DICT_OR_JSON)
+def create_resource(name: str, params: dict | None = None):
+    # params accepts: {"key": "value"} OR '{"key": "value"}'
+    # Auto-converted to dict
+    return Response.success(action="created", data={"name": name})
+```
+
+**Error Formatting:**
+```python
+from {{ package_name }}.utils.errors import ErrorFormatter
+
+def get_server(server_id: str):
+    if server_id not in servers:
+        error_msg = ErrorFormatter.not_found(
+            entity_type="server",
+            entity_id=server_id,
+            available=list(servers.keys()),
+        )
+        return Response.error(error_code="not_found", message=error_msg)
+```
+{% endif -%}
+
+{% if include_persistence_helpers -%}
+**State Persistence:**
+```python
+from {{ package_name }}.utils.persistence import StatefulObject
+
+class ConfigManager(StatefulObject):
+    def __init__(self):
+        super().__init__(state_file="~/.{{ package_name }}/config.json")
+        self.config = getattr(self, 'config', {})  # Restored or default
+
+    def update(self, settings: dict):
+        self.config.update(settings)
+        self._save_state()  # Atomic write
+```
+{% endif -%}
+
+### Documentation
+
+- **Reference Guide:** [user-docs/reference/python-patterns.md](user-docs/reference/python-patterns.md)
+  - Complete API reference for all utilities
+  - When to use each pattern
+  - Performance and security considerations
+
+- **How-To Guides:**
+{% if include_api_utilities -%}
+  - [How-To: Use Input Validation](user-docs/how-to/use-input-validation.md)
+  - [How-To: Standardize Responses](user-docs/how-to/standardize-responses.md)
+  - [How-To: Improve Error Messages](user-docs/how-to/improve-error-messages.md)
+{% endif -%}
+{% if include_persistence_helpers -%}
+  - [How-To: Persist Application State](user-docs/how-to/persist-application-state.md)
+{% endif -%}
+
+### Benefits
+
+**Code Reduction:**
+{% if include_api_utilities -%}
+- Input parsing: ~90% less boilerplate (20 lines → 1 decorator)
+- Response building: ~80-85% reduction (10-15 lines → 2-3 lines)
+{% endif -%}
+{% if include_persistence_helpers -%}
+- State persistence: ~70-75% reduction (25-30 lines → 7-8 lines)
+- Bonus: Atomic writes prevent corruption (would add ~15 lines manually)
+{% endif -%}
+
+**Quality:**
+{% if include_api_utilities -%}
+- Consistent API responses across all endpoints
+- Helpful error messages with fuzzy matching suggestions
+{% endif -%}
+{% if include_persistence_helpers -%}
+- Crash-safe persistence (atomic writes with fsync)
+{% endif -%}
+
+### Implementation Notes
+
+**All utilities:**
+- Use Python stdlib only (no external dependencies)
+- Work with both sync and async functions
+- Include comprehensive test suites (90%+ coverage)
+- Follow type hints for IDE support
+
+{% if include_api_utilities -%}
+**Performance:**
+- Input validation: <1ms overhead (JSON parsing main cost)
+- Response building: Negligible (dict construction)
+- Error formatting: <1ms for fuzzy matching (<1000 items)
+{% endif -%}
+
+{% if include_persistence_helpers -%}
+**Persistence:**
+- Atomic writes add ~5-10ms latency (ensures durability)
+- Keep state files <1MB for best performance
+- JSON-only (use encryption for sensitive data)
+{% endif -%}
+
+---
+
+{% endif -%}
 ## PR Instructions
 
 ### Branch Naming

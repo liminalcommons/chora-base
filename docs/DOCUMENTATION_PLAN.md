@@ -1,43 +1,55 @@
 # chora-base Documentation Plan
 
+> **Note (2025-10-24):** This plan describes the documentation structure for **generated projects**. The actual documentation now lives in:
+> - **template/user-docs/** - Diátaxis docs for template users (how-to, reference, explanation, tutorials)
+> - **template/project-docs/** - Project planning docs (releases, upgrade philosophy)
+> - **template/dev-docs/** - Developer guides (contributing, vision)
+> - **docs/** - Template development only (benefits, research, this plan)
+
 ## Diátaxis Framework for LLM-Intelligent Development
 
 This documentation serves **two first-class audiences**:
 1. **Human Developers** - Learning, understanding, decision-making
 2. **AI Agents (LLMs)** - Task execution, reference lookup, machine-readable instructions
 
-Based on [Agentic Coding Best Practices Research](../docs/research/Agentic%20Coding%20Best%20Practices%20Research.pdf):
+Based on [Agentic Coding Best Practices Research](research/Agentic%20Coding%20Best%20Practices%20Research.pdf):
 - AGENTS.md as de facto standard for machine-readable instructions
 - A-MEM (Agentic Memory) principles for stateful learning
 - Diátaxis framework for comprehensive documentation
 
 ---
 
-## Documentation Structure
+## Documentation Structure (in Generated Projects)
 
 ```
-docs/
-├── DOCUMENTATION_PLAN.md          # This file
-├── tutorials/                      # Learning-oriented (humans)
-│   ├── 01-first-mcp-server.md
-│   └── 02-rip-and-replace-migration.md
-├── how-to/                         # Task-oriented (humans + agents)
-│   ├── 01-generate-new-mcp-server.md         ✅ CREATED
-│   ├── 02-rip-and-replace-existing-server.md
-│   ├── 03-customize-agents-md.md
-│   ├── 04-add-memory-to-tools.md
-│   └── 05-update-from-template.md
-├── reference/                      # Information-oriented (humans + agents)
-│   ├── template-configuration.md
-│   ├── rip-and-replace-decision-matrix.md
-│   ├── generated-file-structure.md
-│   ├── event-schema-v1.md
-│   └── cli-commands.md
-└── explanation/                    # Understanding-oriented (humans)
-    ├── why-rip-and-replace.md
-    ├── memory-system-architecture.md
-    ├── diataxis-philosophy.md
-    └── major-version-bump-rationale.md
+<generated-project>/
+├── user-docs/                      # End-user documentation (Diátaxis)
+│   ├── tutorials/                  # Learning-oriented (humans)
+│   ├── how-to/                     # Task-oriented (humans + agents)
+│   ├── reference/                  # Information-oriented (humans + agents)
+│   └── explanation/                # Understanding-oriented (humans)
+├── project-docs/                   # Project planning
+│   ├── releases/                   # Release notes, upgrade guides
+│   ├── decisions/                  # Architecture decision records
+│   └── sprints/                    # Sprint planning
+├── dev-docs/                       # Developer documentation
+│   ├── CONTRIBUTING.md
+│   └── vision/                     # Vision documents
+└── AGENTS.md                       # Machine-readable instructions
+```
+
+## Template Source Structure
+
+```
+chora-base/
+├── docs/                           # Template development docs
+│   ├── BENEFITS.md                 # Value proposition
+│   ├── DOCUMENTATION_PLAN.md       # This file
+│   └── research/                   # Design research
+├── template/                       # Template source
+│   ├── user-docs/                  # → Generated user-docs/
+│   ├── project-docs/               # → Generated project-docs/
+│   └── dev-docs/                   # → Generated dev-docs/
 ```
 
 ---

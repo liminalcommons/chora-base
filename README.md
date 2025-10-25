@@ -9,6 +9,7 @@ A comprehensive [Copier](https://copier.readthedocs.io/) template for Python pro
 chora-base is a production-ready Python project template featuring:
 
 - **🤖 AI Agent Support** - Machine-readable AGENTS.md, stateful memory system
+- **🎯 Python Utilities** - Optional ergonomic patterns (40-50% code reduction, production-ready)
 - **📝 Comprehensive Documentation** - README, CONTRIBUTING, DEVELOPMENT, TROUBLESHOOTING
 - **✅ Quality Gates** - Pre-commit hooks, 85%+ test coverage, type checking, linting
 - **🔄 CI/CD Ready** - GitHub Actions workflows (test, lint, release, security)
@@ -44,13 +45,13 @@ chora-base is a production-ready Python project template featuring:
 
 **Status**: Template generation fails. Use v2.0.9 instead.
 
-📄 [CHANGELOG](CHANGELOG.md#206---2025-10-22) | 📦 [Upgrade Guide](docs/upgrades/v2.0.5-to-v2.0.6.md)
+📄 [CHANGELOG](CHANGELOG.md#206---2025-10-22)
 
 ### v2.0.5 (2025-10-22) - INCOMPLETE (use v2.0.6 instead) ⚠️
 
 **Status**: Upgrade fails with same error as v2.0.3. Use v2.0.6 instead.
 
-📄 [CHANGELOG](CHANGELOG.md#205---2025-10-22) | 📦 [Upgrade Guide](docs/upgrades/v2.0.4-to-v2.0.5.md)
+📄 [CHANGELOG](CHANGELOG.md#205---2025-10-22)
 
 ### v2.0.4 (2025-10-22) - Complete F-String Audit (7 Files) 🔍
 
@@ -79,7 +80,7 @@ chora-base is a production-ready Python project template featuring:
 
 **Impact**: Documentation-only change (no code changes required)
 
-📄 [CHANGELOG](CHANGELOG.md) | 📦 [Upgrade Guide](docs/upgrades/v1.9.3-to-v2.0.0.md) | 📖 [Research](docs/research/)
+📄 [CHANGELOG](CHANGELOG.md) | 📖 [Research](docs/research/)
 
 ### v1.9.3 (2025-10-22) - Advanced Agent Patterns 🧠
 
@@ -91,7 +92,7 @@ Based on "Agentic Coding Best Practices Research," added ~150 lines of advanced 
 - **Memory Architecture** - 3-tier model documentation (ephemeral → persistent → structured)
 - **Advanced Query Patterns** - 5 production-ready patterns (semantic search, temporal analysis, confidence filtering)
 
-📄 [CHANGELOG](CHANGELOG.md) | 📦 [Upgrade Guide](docs/upgrades/v1.9.2-to-v1.9.3.md)
+📄 [CHANGELOG](CHANGELOG.md)
 
 ### v1.9.2 (2025-10-22) - Ergonomic Agent Interfaces 🤖
 
@@ -106,7 +107,7 @@ Made optional features discoverable for AI agents by surfacing them in AGENTS.md
 
 **Key Principle:** AGENTS.md is the **capability catalog** linking to detailed guides, with clear template vs. adopter responsibilities.
 
-📄 [CHANGELOG](CHANGELOG.md) | 📦 [Upgrade Guide](docs/upgrades/v1.9.1-to-v1.9.2.md)
+📄 [CHANGELOG](CHANGELOG.md)
 
 ### v1.9.1 (2025-10-22) - Docker Enhancements 🐳
 
@@ -119,7 +120,7 @@ Production-proven Docker patterns integrated from three adopter projects:
 
 New justfile commands: `docker-build-multi`, `docker-verify`, `docker-shell`, `docker-push`, `docker-release`
 
-📄 [CHANGELOG](CHANGELOG.md) | 📦 [Upgrade Guide](docs/upgrades/v1.9.0-to-v1.9.1.md)
+📄 [CHANGELOG](CHANGELOG.md)
 
 ## Features
 
@@ -132,6 +133,45 @@ New justfile commands: `docker-build-multi`, `docker-verify`, `docker-shell`, `d
 - ✅ **Code Quality** - ruff (linting), black (formatting), mypy (type checking)
 - ✅ **Git Hooks** - Pre-commit hooks for quality enforcement
 - ✅ **Docker** - Production containerization with multi-stage builds (optional)
+
+### Python Utilities (Optional Ergonomics)
+
+**NEW in v2.1.0** - Production-ready patterns extracted from real-world adopter learnings:
+
+- 🎯 **Input Validation** - Normalize dict/JSON/KV parameters with `@normalize_input()` decorator (~90% less boilerplate)
+- 📦 **Response Builders** - Standardized success/error/partial responses with `Response` class (~80-85% reduction)
+- 💬 **Error Formatting** - User-friendly messages with fuzzy matching suggestions via `ErrorFormatter`
+- 💾 **State Persistence** - Crash-safe JSON storage with `StatefulObject` mixin (~70-75% reduction)
+
+**Benefits:**
+- 40-50% code reduction when using all patterns
+- Consistent APIs/CLIs out-of-the-box
+- Better UX (error suggestions, structured responses)
+- Production-ready reliability (atomic writes, type safety)
+
+**Examples:**
+```python
+# Input normalization (works for REST, CLI, MCP, libraries)
+@normalize_input(params=InputFormat.DICT_OR_JSON)
+def create_resource(params: dict | None):
+    # Accepts both dict and JSON string
+
+# Standardized responses
+return Response.success(action="created", data=resource)
+return Response.error(error_code="not_found", message=ErrorFormatter.not_found(...))
+
+# Crash-safe state persistence
+class MyApp(StatefulObject):
+    def __init__(self):
+        super().__init__(state_file="~/.myapp/state.json")
+```
+
+**Documentation:**
+- 📖 [Python Patterns Reference](template/user-docs/reference/python-patterns.md.jinja) - Complete API docs
+- 📚 [How-To Guides](template/user-docs/how-to/) - Task-oriented usage examples
+- 🔬 [Adopter Learnings](docs/research/adopter-learnings-mcp-orchestration.md) - Extraction process
+
+**Source:** Generalized from [mcp-orchestration](https://github.com/chrishayuk/mcp-orchestration) v0.1.3 learnings (tested across MCP, REST, CLI, library projects)
 
 ### AI Agent Features (Optional)
 
@@ -206,8 +246,8 @@ copier update
 - `copier update` merges improvements like `git merge` (not blind overwrite)
 
 **See Also:**
-- [How-To: Rip-and-Replace Existing Server](docs/how-to/02-rip-and-replace-existing-server.md) - Complete 8-phase migration guide
-- [Rip-and-Replace Decision Matrix](docs/reference/rip-and-replace-decision-matrix.md) - When to adopt vs stay custom
+- [How-To: Rip-and-Replace Existing Server](template/user-docs/how-to/02-rip-and-replace-existing-server.md) - Complete 8-phase migration guide
+- [Rip-and-Replace Decision Matrix](template/user-docs/reference/rip-and-replace-decision-matrix.md) - When to adopt vs stay custom
 
 ### Template Questions
 
@@ -328,16 +368,16 @@ docs/
 
 ### For Human Developers
 
-- **New to chora-base?** Start with [Tutorial: Your First MCP Server](docs/tutorials/01-first-mcp-server.md) (coming soon)
-- **Migrating existing project?** See [How-To: Rip-and-Replace](docs/how-to/02-rip-and-replace-existing-server.md)
-- **Need quick reference?** Check [Template Configuration](docs/reference/template-configuration.md)
-- **Want to understand concepts?** Read [Explanations](docs/explanation/)
+- **New to chora-base?** Start with the [Benefits Guide](docs/BENEFITS.md)
+- **Migrating existing project?** See [How-To: Rip-and-Replace](template/user-docs/how-to/02-rip-and-replace-existing-server.md)
+- **Need quick reference?** Check [Template Configuration](template/user-docs/reference/template-configuration.md)
+- **Want to understand concepts?** Explore [template/user-docs/explanation/](template/user-docs/explanation/)
 
 ### For AI Agents
 
-- **Quick start:** [How-To: Generate New MCP Server](docs/how-to/01-generate-new-mcp-server.md)
-- **Complete reference:** [Template Configuration](docs/reference/template-configuration.md)
-- **Decision support:** [Rip-and-Replace Decision Matrix](docs/reference/rip-and-replace-decision-matrix.md)
+- **Quick start:** [How-To: Generate New MCP Server](template/user-docs/how-to/01-generate-new-mcp-server.md)
+- **Complete reference:** [Template Configuration](template/user-docs/reference/template-configuration.md)
+- **Decision support:** [Rip-and-Replace Decision Matrix](template/user-docs/reference/rip-and-replace-decision-matrix.md)
 - **Machine-readable instructions:** AGENTS.md (generated for each project)
 
 ---
@@ -431,11 +471,11 @@ This will:
 chora-base provides comprehensive upgrade documentation with AI-optimized decision trees:
 
 **Upgrade Philosophy**:
-- [Upgrade Philosophy & Decision Framework](docs/upgrades/PHILOSOPHY.md) - Understand chora-base's upgrade promise, displacement policy, and customization preservation strategies
+- [Upgrade Philosophy & Decision Framework](template/project-docs/releases/upgrade-philosophy.md) - Understand chora-base's upgrade promise, displacement policy, and customization preservation strategies
 
-**Version-Specific Guides**:
-- [v1.3 → v1.4](docs/upgrades/v1.3-to-v1.4.md) - PyPI setup + `just` as primary interface
-- [More upgrade guides...](docs/upgrades/) - Step-by-step migration instructions
+**Upgrade Guide Template**:
+- [Upgrade Guide Template](template/project-docs/releases/upgrade-guide-template.md) - Template for creating upgrade guides in your projects
+- See [CHANGELOG.md](CHANGELOG.md) for chora-base template version history
 
 **For AI Agents**:
 Each upgrade guide includes:

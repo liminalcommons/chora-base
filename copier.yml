@@ -233,6 +233,20 @@ documentation_advanced_features:
   default: false
   when: "{{ include_documentation_standard }}"
 
+# === Python Ergonomics (Optional Utilities) ===
+
+include_api_utilities:
+  type: bool
+  help: Include API utilities (input validation, response builders, error formatting)?
+  default: true
+  when: "{{ project_type in ['mcp_server', 'library'] }}"
+
+include_persistence_helpers:
+  type: bool
+  help: Include state persistence helpers for stateful applications?
+  default: false
+  when: "{{ project_type != 'library' }}"
+
 # === License ===
 
 license:

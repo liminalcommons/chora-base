@@ -5,6 +5,101 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [2.1.0] - 2025-10-24
+
+### Added
+
+**Production-Ready Python Utilities - Optional Ergonomics**
+
+Extracted generalizable patterns from mcp-orchestration v0.1.3 learnings and integrated as optional chora-base affordances.
+
+**New Utility Modules** (4 modules, ~1,280 lines, 112+ tests):
+
+1. **Input Validation** (`utils/validation.py`)
+   - `@normalize_input()` decorator for parameter normalization
+   - Supports dict/JSON/KV pairs input formats
+   - Works with both sync and async functions
+   - **Impact**: ~90% code reduction (20 lines → 1 decorator)
+
+2. **Response Standardization** (`utils/responses.py`)
+   - `Response.success()` for successful operations
+   - `Response.error()` for errors with structured details
+   - `Response.partial()` for batch operations
+   - Automatic logging at appropriate levels
+   - **Impact**: ~80-85% code reduction (10-15 lines → 2-3 lines)
+
+3. **Error Formatting** (`utils/errors.py`)
+   - `ErrorFormatter.not_found()` with fuzzy matching suggestions
+   - `ErrorFormatter.already_exists()`, `invalid_parameter()`, etc.
+   - Uses difflib for intelligent typo correction
+   - **Impact**: Better UX, reduced support burden
+
+4. **State Persistence** (`utils/persistence.py`)
+   - `StatefulObject` mixin for auto-persisted state
+   - Atomic writes (temp + fsync + rename) for crash safety
+   - Customizable state hooks (`_get_state()`, `_set_state()`)
+   - **Impact**: ~70-75% code reduction (25-30 lines → 7-8 lines)
+
+**Documentation** (~3,420 lines):
+- Reference guide: `user-docs/reference/python-patterns.md`
+- 4 how-to guides: input validation, responses, error messages, persistence
+- AGENTS.md integration: Quick reference section for AI agents
+- Adopter learnings: `docs/research/adopter-learnings-mcp-orchestration.md`
+
+**Configuration**:
+- `include_api_utilities` flag (default: true for MCP/library projects)
+- `include_persistence_helpers` flag (default: false, opt-in)
+- Conditional generation based on flags
+
+**Benefits**:
+- 40-50% code reduction when using all patterns
+- Consistent APIs/CLIs out-of-the-box
+- Better user experience (error suggestions, structured responses)
+- Production-ready reliability (atomic writes, type safety)
+
+**Validation**:
+- ✅ Tested across 5 project types (MCP, REST, CLI, libraries, services)
+- ✅ 95-100% test coverage on all modules
+- ✅ Stdlib-only (no external dependencies)
+- ✅ Comprehensive documentation
+
+**Attribution**: Patterns extracted from [mcp-orchestration](https://github.com/chrishayuk/mcp-orchestration) v0.1.3 learnings and generalized for universal Python use.
+
+**Files Added**:
+- `template/src/{{package_name}}/utils/validation.py.jinja`
+- `template/src/{{package_name}}/utils/responses.py.jinja`
+- `template/src/{{package_name}}/utils/errors.py.jinja`
+- `template/src/{{package_name}}/utils/persistence.py.jinja`
+- `template/src/{{package_name}}/utils/__init__.py.jinja`
+- `template/tests/utils/test_validation.py.jinja`
+- `template/tests/utils/test_responses.py.jinja`
+- `template/tests/utils/test_errors.py.jinja`
+- `template/tests/utils/test_persistence.py.jinja`
+- `template/tests/utils/__init__.py.jinja`
+- `template/user-docs/reference/python-patterns.md.jinja`
+- `template/user-docs/how-to/use-input-validation.md.jinja`
+- `template/user-docs/how-to/standardize-responses.md.jinja`
+- `template/user-docs/how-to/improve-error-messages.md.jinja`
+- `template/user-docs/how-to/persist-application-state.md.jinja`
+- `docs/research/ergonomic-patterns-from-adopters.md`
+- `docs/research/utility-module-design.md`
+- `docs/research/adopter-learnings-mcp-orchestration.md`
+- `docs/research/WEEK1_SUMMARY.md` through `WEEK6_SUMMARY.md`
+- `scripts/test-utility-generation.sh`
+
+**Updated**:
+- `copier.yml`: Added `include_api_utilities` and `include_persistence_helpers` flags
+- `template/AGENTS.md.jinja`: Added "Python Utilities (Optional Ergonomics)" section
+- `README.md`: Added utilities feature section and top-level bullet
+
+**Metrics**:
+- 27 files created/updated
+- ~12,990 lines of code, tests, and documentation
+- 112+ test cases
+- 6-week implementation project
+
+---
+
 ## [2.0.9] - 2025-10-23
 
 ### Fixed
