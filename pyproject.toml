@@ -60,8 +60,8 @@ mcp-orchestration-add-server = "mcp_orchestrator.cli_building:add_server"
 mcp-orchestration-remove-server = "mcp_orchestrator.cli_building:remove_server"
 mcp-orchestration-publish-config = "mcp_orchestrator.cli_building:publish_config"
 mcp-orchestration-deploy-config = "mcp_orchestrator.cli_building:deploy_config"
-mcp-orchestration-serve-http = "mcp_orchestrator.cli.serve_http:serve_http_cli"
-mcp-orchestration-generate-token = "mcp_orchestrator.cli.token:main"
+mcp-orchestration-serve-http = "mcp_orchestrator.http_cli.serve_http:serve_http_cli"
+mcp-orchestration-generate-token = "mcp_orchestrator.http_cli.token:main"
 
 [build-system]
 requires = ["hatchling"]

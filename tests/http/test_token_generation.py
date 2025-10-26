@@ -27,7 +27,7 @@ import pytest
 
 # Import will fail initially (TDD) - implementation doesn't exist yet
 try:
-    from mcp_orchestrator.cli.token import generate_token_cli
+    from mcp_orchestrator.http_cli.token import generate_token_cli
     from mcp_orchestrator.http.auth import AuthenticationService
 except ImportError:
     pytest.skip("Token generation CLI not implemented yet", allow_module_level=True)

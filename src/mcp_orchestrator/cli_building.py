@@ -1,7 +1,8 @@
-"""CLI commands for config building (Wave 1.2) and publishing (Wave 1.4).
+"""CLI commands for config building (Wave 1.2), publishing (Wave 1.4), and deployment (Wave 1.5).
 
 This module provides CLI commands for adding and removing servers from
-MCP client configurations, and for publishing validated configurations.
+MCP client configurations, publishing validated configurations, and deploying
+configurations to client locations.
 """
 
 import json
@@ -12,6 +13,8 @@ from typing import Any
 import click
 
 from mcp_orchestrator.building import ConfigBuilder
+from mcp_orchestrator.deployment import DeploymentWorkflow, DeploymentError
+from mcp_orchestrator.deployment.log import DeploymentLog
 from mcp_orchestrator.publishing import PublishingWorkflow, ValidationError
 from mcp_orchestrator.registry import get_default_registry as get_client_registry
 from mcp_orchestrator.servers import get_default_registry
@@ -377,6 +380,159 @@ def publish_config(
 
     except json.JSONDecodeError as e:
         click.echo(f"Error: Invalid JSON in configuration file: {e}", err=True)
+        sys.exit(1)
+
+    except Exception as e:
+        click.echo(f"Error: {e}", err=True)
+        sys.exit(1)
+
+
+@click.command("deploy-config")
+@click.option("--client", "-c", required=True, help="Client family (e.g., claude-desktop)")
+@click.option("--profile", "-p", required=True, help="Profile (e.g., default)")
+@click.option(
+    "--artifact-id",
+    "-a",
+    help="Specific artifact ID to deploy (defaults to latest)",
+)
+@click.option(
+    "--format",
+    type=click.Choice(["json", "text"]),
+    default="text",
+    help="Output format",
+)
+def deploy_config(
+    client: str,
+    profile: str,
+    artifact_id: str | None,
+    format: str,
+) -> None:
+    """Deploy a published configuration to the client's config location.
+
+    This command:
+    1. Resolves the artifact to deploy (latest or specific version)
+    2. Verifies the artifact's Ed25519 signature
+    3. Writes the configuration to the client's config file
+    4. Records the deployment in the deployment log
+
+    The config is written to the client-specific location:
+    - Claude Desktop (macOS): ~/Library/Application Support/Claude/claude_desktop_config.json
+    - Cursor: ~/.cursor/mcp_config.json
+
+    Examples:
+
+    \b
+    # Deploy latest configuration
+    mcp-orchestration-deploy-config \\
+      --client claude-desktop \\
+      --profile default
+
+    \b
+    # Deploy specific version (rollback)
+    mcp-orchestration-deploy-config \\
+      --client claude-desktop \\
+      --profile default \\
+      --artifact-id abc123...
+
+    \b
+    # Deploy with JSON output
+    mcp-orchestration-deploy-config \\
+      --client claude-desktop \\
+      --profile default \\
+      --format json
+    """
+    try:
+        # Get deployment dependencies
+        home = Path.home()
+        base_dir = home / ".mcp-orchestration"
+
+        store = ArtifactStore()
+        client_registry = get_client_registry()
+        deployment_log = DeploymentLog(
+            deployments_dir=str(base_dir / "deployments")
+        )
+
+        # Get public key for signature verification
+        public_key_path = base_dir / "keys" / "signing.pub"
+        if not public_key_path.exists():
+            click.echo(
+                f"Error: Public key not found at {public_key_path}",
+                err=True,
+            )
+            click.echo(
+                "Run 'mcp-orchestration-init-keys' to generate keys first.",
+                err=True,
+            )
+            sys.exit(1)
+
+        # Create deployment workflow
+        workflow = DeploymentWorkflow(
+            store=store,
+            client_registry=client_registry,
+            deployment_log=deployment_log,
+            public_key_path=str(public_key_path),
+        )
+
+        # Deploy configuration
+        result = workflow.deploy(
+            client_id=client,
+            profile_id=profile,
+            artifact_id=artifact_id,
+        )
+
+        # Output result
+        if format == "json":
+            click.echo(json.dumps(result.model_dump(), indent=2))
+        else:
+            click.echo("✓ Configuration deployed successfully!")
+            click.echo()
+            click.echo(f"Artifact ID: {result.artifact_id}")
+            click.echo(f"Config path: {result.config_path}")
+            click.echo(f"Deployed at: {result.deployed_at}")
+            click.echo()
+            click.echo("⚠️  Restart the client application for changes to take effect:")
+            if client == "claude-desktop":
+                click.echo("  killall Claude && open -a 'Claude'")
+            elif client == "cursor":
+                click.echo("  Reload window in Cursor (Cmd+Shift+P → 'Developer: Reload Window')")
+
+    except DeploymentError as e:
+        # Deployment-specific errors
+        error_code = e.details.get("code", "UNKNOWN")
+        click.echo(f"✗ Deployment failed: [{error_code}]", err=True)
+        click.echo(f"  {e.message}", err=True)
+
+        # Provide helpful guidance based on error code
+        if error_code == "CLIENT_NOT_FOUND":
+            click.echo()
+            click.echo("Available clients:", err=True)
+            try:
+                for c in client_registry.list_clients():
+                    click.echo(f"  - {c.client_id}", err=True)
+            except Exception:
+                pass
+
+        elif error_code == "ARTIFACT_NOT_FOUND":
+            click.echo()
+            click.echo("No published artifact found. Publish a configuration first:", err=True)
+            click.echo(f"  mcp-orchestration-publish-config --client {client} --profile {profile} --file config.json", err=True)
+
+        elif error_code == "SIGNATURE_INVALID":
+            click.echo()
+            click.echo("The artifact's signature is invalid. This may indicate:", err=True)
+            click.echo("  - Corrupted storage", err=True)
+            click.echo("  - Tampering", err=True)
+            click.echo("  - Wrong public key", err=True)
+            click.echo()
+            click.echo("Try re-publishing the configuration.", err=True)
+
+        elif error_code == "WRITE_FAILED":
+            click.echo()
+            click.echo("Failed to write config file. Check:", err=True)
+            click.echo("  - File permissions", err=True)
+            click.echo("  - Parent directory exists", err=True)
+            click.echo(f"  - Disk space available", err=True)
+
         sys.exit(1)
 
     except Exception as e:

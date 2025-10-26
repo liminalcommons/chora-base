@@ -3,70 +3,70 @@
 This document outlines **committed features and timelines** for mcp-orchestration.
 
 **Status:** Living document (updated with each release)
-**Current Version:** 0.1.0
+**Current Version:** 0.1.5 (Wave 1.x complete)
+**Next Milestone:** 0.2.0 (Wave 2.0 - HTTP Transport)
 
 ---
 
 ## Current Focus
 
-### v0.1.1 (Wave 1.1 - Server Registry) — IN PROGRESS
+### v0.2.0 (Wave 2.0 - HTTP/SSE Transport Foundation) — IN PROGRESS
 
-**Target:** TBD
-**Status:** Planning
+**Target:** Feb 2026 (6-8 weeks)
+**Status:** Planning → Implementation (Started 2025-10-25)
 
-**Goal:** Enable users to discover and register available MCP servers
+**Goal:** Multi-transport architecture (stdio + HTTP/SSE) with authentication for ecosystem integration
 
 **Features:**
 
-- [ ] **Server Registry Module** - Catalog of known MCP servers
-- [ ] **Server Definitions** - 10-15 default servers (stdio + HTTP/SSE)
-- [ ] **MCP Tools** - `list_available_servers`, `describe_server`
-- [ ] **MCP Resources** - `server://registry`, `server://{id}`
-- [ ] **CLI Commands** - `list-servers`, `describe-server`
-- [ ] **Documentation** - E2E guide for browsing server registry
+- [ ] **HTTP Transport Server** - FastAPI-based HTTP server exposing all MCP tools
+- [ ] **Authentication** - Bearer token + API key support
+- [ ] **10 HTTP Endpoints** - All MCP tools available via REST API
+- [ ] **CLI Commands** - `serve-http`, `generate-token`
+- [ ] **Migration Guide** - stdio → HTTP migration path
+- [ ] **API Documentation** - Complete HTTP API reference
+- [ ] **Docker Support** - Containerized deployment (optional)
+- [ ] **Backward Compatibility** - stdio transport still supported
 
 **Success Criteria:**
-- Users can browse available MCP servers via CLI and MCP tools
-- Registry includes both stdio and HTTP/SSE servers
-- Coverage ≥70% for new code
-- E2E guide complete
+- All 10 MCP tools available via HTTP endpoints
+- Bearer token authentication enforced
+- p95 < 300ms for HTTP requests (NFR-3)
+- stdio backward compatible (no breaking changes)
+- Coverage ≥85% for new HTTP code
+- 3 E2E value scenarios pass
 
-**See**: [project-docs/WAVE_1X_PLAN.md](project-docs/WAVE_1X_PLAN.md) for complete wave breakdown
+**See**: [project-docs/WAVE_2X_PLAN.md](project-docs/WAVE_2X_PLAN.md) for complete wave breakdown
 
 ---
 
-## Near-Term Roadmap (Wave 1.x Series)
+## Near-Term Roadmap (Wave 2.x Series)
 
 ### Upcoming Waves
 
 The roadmap follows an incremental wave-based delivery model. Each wave builds on the previous:
 
-**Wave 1.2 (v0.1.2)** - Transport Abstraction + Config Generation
-- Generate client configs from server registry
-- Automatic mcp-remote wrapping for HTTP/SSE servers
-- `add_server_to_config`, `remove_server_from_config` tools
+**Wave 2.1 (v0.2.1)** - API Enhancements (Late Feb - Early Mar 2026)
+- Universal Loadability Format adoption (mcp-gateway alignment)
+- Enhanced error responses with error codes
+- Remote validation API improvements
+- Structured error messages
 
-**Wave 1.3 (v0.1.3)** - Schema Validation
-- Validate draft configs before publishing
-- `validate_draft` tool with detailed error reporting
-- Client-specific JSON schemas
+**Wave 2.2 (v0.2.2)** - Ecosystem Integration (Mar 2026)
+- Integration testing with mcp-gateway
+- Example n8n workflows (3+)
+- Pattern N3b implementation
+- Performance optimization (caching, connection pooling)
+- Metrics & monitoring integration
 
-**Wave 1.4 (v0.1.4)** - Publishing Workflow
-- Create and sign config artifacts
-- `publish_config` tool
-- Changelog support
+**Wave 3.x** - Governance & Intelligence (Q2+ 2026 - Exploratory)
+- Policy engine for configuration governance
+- Approval workflows
+- Multi-signer support
+- Configuration analytics
+- Multi-tenant architecture
 
-**Wave 1.5 (v0.1.5)** - E2E Config Management
-- Complete workflow: discover → build → validate → publish → deploy
-- `deploy_config` tool
-- End-to-end user tutorials
-
-**Wave 1.6 (v0.1.6)** - Audit & History
-- Config change tracking
-- `get_config_history`, `get_audit_log` tools
-- Immutable audit trail
-
-**See**: [project-docs/WAVE_1X_PLAN.md](project-docs/WAVE_1X_PLAN.md) for detailed planning
+**See**: [project-docs/WAVE_2X_PLAN.md](project-docs/WAVE_2X_PLAN.md) for detailed Wave 2.x planning
 
 ---
 
@@ -117,10 +117,77 @@ decisions *today* without committing to timelines *tomorrow*.
 
 ## Release History
 
+### v0.1.5 (Wave 1.5 - Deployment) ✅
+
+**Released:** 2025-10-25
+**Status:** Current
+
+**Features:**
+- **Deployment Workflow**: Automated config deployment to client locations
+- **MCP Tool**: `deploy_config` - Deploy latest or specific artifact
+- **MCP Resources**: `config://latest`, `config://deployed` (drift detection)
+- **CLI Command**: `mcp-orchestration-deploy-config`
+- **Deployment Log**: Track deployment history
+- **Testing**: 185 tests passing (99.5%)
+
+**Spec Coverage**: UC-1 (Bootstrap), UC-2 (Routine Update)
+
+---
+
+### v0.1.4 (Wave 1.4 - Validation + Publishing) ✅
+
+**Released:** 2025-10-24
+
+**Features:**
+- **Publishing Workflow**: Validated configuration publishing
+- **MCP Tool**: `validate_config`, enhanced `publish_config`
+- **CLI Command**: `mcp-orchestration-publish-config`
+- **Testing**: 167 tests passing
+
+**Spec Coverage**: FR-6 (Validation), FR-11 (Change metadata)
+
+---
+
+### v0.1.3 (Wave 1.3 - Ergonomics) ✅
+
+**Released:** 2025-10-24
+
+**Features:**
+- **Ergonomic Tools**: `view_draft_config`, `clear_draft_config`, `initialize_keys`
+- **Default Parameters**: Reduced boilerplate by 50%+
+- **Testing**: 143 tests passing
+
+---
+
+### v0.1.2 (Wave 1.2 - Config Generation) ✅
+
+**Released:** 2025-10-24
+
+**Features:**
+- **Transport Abstraction**: Auto mcp-remote wrapping for HTTP/SSE
+- **Config Builder**: Draft configuration management
+- **MCP Tools**: `add_server_to_config`, `remove_server_from_config`, `publish_config`
+- **Testing**: 126 tests passing
+
+**Spec Coverage**: FR-5 (Parameter injection)
+
+---
+
+### v0.1.1 (Wave 1.1 - Server Registry) ✅
+
+**Released:** 2025-10-24
+
+**Features:**
+- **Server Registry**: Catalog of 15 MCP servers
+- **MCP Tools**: `list_available_servers`, `describe_server`
+- **MCP Resources**: `server://registry`, `server://{id}`
+- **Testing**: 91 tests passing
+
+---
+
 ### v0.1.0 (Wave 1.0 - Foundation) ✅
 
 **Released:** 2025-10-17
-**Status:** Current
 
 **Features:**
 - **MCP Server**: stdio-based server exposing tools/resources
@@ -132,6 +199,8 @@ decisions *today* without committing to timelines *tomorrow*.
 - **Testing**: 70%+ coverage
 
 **Spec Coverage**: FR-1, FR-2, FR-3, FR-4, FR-9
+
+---
 
 See [CHANGELOG.md](CHANGELOG.md) for detailed release notes.
 
@@ -177,10 +246,11 @@ Want to influence the roadmap?
 5. **Review vision docs** - Comment on exploratory waves in [dev-docs/vision/](dev-docs/vision/)
 ---
 
-**Last Updated:** 2025-10-24
-**Version:** v0.1.0 → v0.1.1 (in progress)
+**Last Updated:** 2025-10-25
+**Version:** v0.1.5 → v0.2.0 (in progress)
 **Status:** Living document
 
 🗺️ This roadmap reflects committed work. See:
-- [project-docs/WAVE_1X_PLAN.md](project-docs/WAVE_1X_PLAN.md) for detailed wave planning
+- [project-docs/WAVE_2X_PLAN.md](project-docs/WAVE_2X_PLAN.md) for detailed Wave 2.x planning
+- [project-docs/WAVE_1X_PLAN.md](project-docs/WAVE_1X_PLAN.md) for Wave 1.x history
 - [dev-docs/vision/](dev-docs/vision/) for long-term possibilities
