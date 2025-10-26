@@ -60,6 +60,169 @@ _No unreleased changes yet_
 
 ---
 
+## [3.3.0] - 2025-10-25
+
+### Added
+
+**Claude-Specific Development Framework** - Comprehensive optimization layer for Claude with 200k context window strategies, checkpoint patterns, and ROI tracking
+
+- **CLAUDE.md Blueprint** (blueprints/CLAUDE.md.blueprint)
+  - 566 lines of Claude-specific development guidance
+  - Quick Start section with reading order
+  - Claude Capabilities Matrix
+  - Context Window Management (progressive loading: Phase 1/2/3)
+  - Workflow integration (DDD → BDD → TDD with Claude advantages)
+  - Artifact-first development guidelines
+  - Multi-tool orchestration patterns
+  - Testing, code review, and memory integration
+  - Quick reference card with do's/don'ts
+
+- **Claude Pattern Library** (claude/ directory - 1,765 lines total)
+  - [README.md](claude/README.md) (164 lines) - Pattern library index and quick reference
+  - [CONTEXT_MANAGEMENT.md](claude/CONTEXT_MANAGEMENT.md) (298 lines) - Progressive loading strategies for 200k tokens
+  - [CHECKPOINT_PATTERNS.md](claude/CHECKPOINT_PATTERNS.md) (386 lines) - Session state preservation and recovery
+  - [METRICS_TRACKING.md](claude/METRICS_TRACKING.md) (379 lines) - ROI measurement framework
+  - [FRAMEWORK_TEMPLATES.md](claude/FRAMEWORK_TEMPLATES.md) (538 lines) - Proven request templates
+
+- **Domain-Specific CLAUDE.md Files** (1,353 lines total)
+  - [CLAUDE.md](static-template/CLAUDE.md) (177 lines) - Example template for project root
+  - [tests/CLAUDE.md](static-template/tests/CLAUDE.md) (321 lines) - Test generation patterns
+  - [.chora/memory/CLAUDE.md](static-template/.chora/memory/CLAUDE.md) (301 lines) - Memory integration patterns
+  - [docker/CLAUDE.md](static-template/docker/CLAUDE.md) (262 lines) - Docker assistance and optimization
+  - [scripts/CLAUDE.md](static-template/scripts/CLAUDE.md) (292 lines) - Script automation patterns
+
+- **ROI Calculator Utility** (static-template/src/__package_name__/utils/)
+  - [claude_metrics.py](static-template/src/__package_name__/utils/claude_metrics.py) (459 lines)
+  - ClaudeMetric dataclass for session tracking
+  - ClaudeROICalculator class for analytics and reporting
+  - Time/cost savings calculation
+  - Quality metrics (iterations, bug rate, coverage, first-pass success)
+  - Task breakdown by type
+  - Executive summary generation with recommendations
+  - CSV and JSON export/import
+
+- **CLAUDE_SETUP_GUIDE.md** (1,151 lines)
+  - Comprehensive Claude-specific setup guide (peer to AGENT_SETUP_GUIDE.md)
+  - Quick Start (20-40s setup vs 30-60s for generic agents)
+  - Claude-specific setup (Code, Desktop, API configurations)
+  - Context window optimization (progressive loading strategies)
+  - Checkpoint system setup (creation, restoration, best practices)
+  - Metrics tracking setup (ClaudeROICalculator usage)
+  - Integration with AGENTS.md (complementary patterns)
+  - Troubleshooting (context loss, performance, workflow integration)
+  - Complete examples (new project, resume from checkpoint, metrics tracking)
+
+### Changed
+
+**Enhanced Shared Blueprints** with Claude cross-references
+
+- **blueprints/AGENTS.md.blueprint**
+  - Added "Development Process" section with 8-phase lifecycle reference
+  - Added "Claude-Specific Optimizations" section linking to CLAUDE.md
+  - Cross-references to v3.2.0 workflows (DDD/BDD/TDD)
+
+- **static-template/tests/AGENTS.md**
+  - Added "Development Workflow Integration" section
+  - TDD workflow cross-reference with benefits (40-80% fewer defects)
+  - Links to CLAUDE.md for Claude-specific test patterns
+
+- **static-template/.chora/memory/AGENTS.md**
+  - Added workflow integration references
+  - Cross-reference to memory/CLAUDE.md
+
+- **static-template/docker/AGENTS.md**
+  - Added CLAUDE.md cross-reference for Docker assistance
+
+- **static-template/scripts/AGENTS.md**
+  - Added CLAUDE.md cross-reference for script automation
+
+- **static-template/src/__package_name__/utils/__init__.py**
+  - Export ClaudeMetric and ClaudeROICalculator
+  - Updated package docstring to include claude_metrics
+
+**Updated Root Documentation**
+
+- **README.md**
+  - Added v3.3.0 announcement in "Recent Updates" (top position)
+  - Added "CLAUDE.md" and "ROI Tracking" to AI Agent Features section
+  - Cross-referenced CLAUDE_SETUP_GUIDE.md and /claude/ pattern library
+
+- **docs/BENEFITS.md**
+  - Added Section 4: "Claude-Specific Optimizations (v3.3.0)"
+  - Progressive context loading examples
+  - Checkpoint pattern examples with time savings
+  - ROI metrics tracking code examples
+  - Evidence-based results (10-50x productivity gains)
+  - Renumbered subsequent sections (4→5 through 11→12)
+
+- **AGENT_SETUP_GUIDE.md**
+  - Added Section 11: "For Claude Users"
+  - Cross-referenced CLAUDE_SETUP_GUIDE.md
+  - Documented Claude advantages (20-40s setup, 2min recovery vs 15-20min)
+  - Provided recommended reading order
+  - Updated Table of Contents
+
+### Evidence-Based Results
+
+**Research Findings** (from docs/research/CLAUDE_Complete.md):
+- **Time savings:** 40-60% for routine tasks, up to 10-50x for research/documentation
+- **Quality:** 70-85% first-pass success rate
+- **Iterations:** 2-3 average (simple: 1, complex: 4-5)
+- **Acceleration:** 2-4x for most tasks (documentation: 5-10x)
+- **Setup time:** 20-40 seconds (vs 30-60s for generic agents)
+- **Session recovery:** 2 minutes with checkpoint (vs 15-20 minutes without)
+
+### Benefits
+
+**For Claude Code Users:**
+- 200k context window optimization strategies
+- Multi-tool orchestration patterns
+- Artifact-first development guidance
+- Faster setup and session recovery
+
+**For Claude Desktop Users:**
+- MCP server development with checkpoints
+- Context management for long-running sessions
+- Pattern library for common MCP tasks
+
+**For Claude API Users:**
+- Token optimization and cost tracking
+- ROI measurement framework
+- Progressive context loading strategies
+
+**For Teams:**
+- Quantifiable ROI for stakeholder reporting
+- Time/cost savings metrics
+- Quality metrics (bug rate, coverage, iterations)
+
+### Architecture
+
+**Complementary Peers Pattern:**
+- AGENTS.md = Generic AI agent guidance
+- CLAUDE.md = Claude-specific optimizations
+- Both reference shared v3.2.0 workflows (DDD/BDD/TDD)
+- DRY principle via cross-references (not duplication)
+
+**File Counts:**
+- 1 new blueprint (CLAUDE.md.blueprint)
+- 5 blueprints enhanced (AGENTS.md + 4 nested AGENTS.md files)
+- 5 new pattern library files (/claude/)
+- 5 new domain-specific CLAUDE.md files
+- 1 new Python utility (claude_metrics.py)
+- 1 new setup guide (CLAUDE_SETUP_GUIDE.md)
+- 3 updated root documentation files
+
+**Total New Content:** 4,894 lines of Claude-specific documentation and code
+
+### Notes
+
+- No breaking changes from v3.2.0
+- All features backward compatible
+- Claude optimizations are additive (generic AGENTS.md still works)
+- Upgrade path: Existing projects can add CLAUDE.md files incrementally
+
+---
+
 ## [3.2.0] - 2025-10-26
 
 ### Added

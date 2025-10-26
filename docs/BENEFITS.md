@@ -1,7 +1,7 @@
 # chora-base Benefits & How They're Delivered
 
-**Last Updated:** 2025-10-18
-**Version:** 1.2.0
+**Last Updated:** 2025-10-25
+**Version:** 3.3.0
 
 ---
 
