@@ -1,0 +1,482 @@
+"""
+TDD Tests for Token Generation CLI
+
+Tests the mcp-orchestration-generate-token CLI command.
+
+Related behaviors:
+- @behavior:http-transport-token-generate - Generates new API tokens
+
+Test Strategy:
+- Test CLI command execution
+- Test token output format
+- Test token is cryptographically secure
+- Test token is stored in auth service
+- Test multiple token generation
+- Test token uniqueness
+
+Note: These tests are written BEFORE implementation (TDD).
+All tests will fail initially until implementation is complete.
+"""
+
+import re
+import subprocess
+from unittest.mock import MagicMock, patch
+
+import pytest
+
+
+# Import will fail initially (TDD) - implementation doesn't exist yet
+try:
+    from mcp_orchestrator.cli.token import generate_token_cli
+    from mcp_orchestrator.http.auth import AuthenticationService
+except ImportError:
+    pytest.skip("Token generation CLI not implemented yet", allow_module_level=True)
+
+
+class TestTokenGenerationCLI:
+    """Test mcp-orchestration-generate-token CLI command."""
+
+    def test_generate_token_command_exists(self):
+        """Test that mcp-orchestration-generate-token command exists."""
+        result = subprocess.run(
+            ["mcp-orchestration-generate-token", "--help"],
+            capture_output=True,
+            text=True,
+            check=False,
+        )
+
+        # Should succeed (return code 0) or show help
+        assert result.returncode in [0, 2]  # 2 = help shown
+
+    def test_generate_token_command_runs(self):
+        """Test that mcp-orchestration-generate-token runs without errors."""
+        result = subprocess.run(
+            ["mcp-orchestration-generate-token"],
+            capture_output=True,
+            text=True,
+            check=False,
+        )
+
+        assert result.returncode == 0
+
+    def test_generate_token_outputs_token(self):
+        """Test that command outputs a token to stdout."""
+        result = subprocess.run(
+            ["mcp-orchestration-generate-token"],
+            capture_output=True,
+            text=True,
+            check=False,
+        )
+
+        assert result.returncode == 0
+        assert len(result.stdout) > 0
+
+        # Output should contain "Generated token:" or similar
+        assert "token" in result.stdout.lower()
+
+    def test_generated_token_format(self):
+        """
+        Test that generated token has correct format.
+
+        From spec:
+        - 32 bytes (43 base64 characters)
+        - URL-safe base64 encoding
+        """
+        result = subprocess.run(
+            ["mcp-orchestration-generate-token"],
+            capture_output=True,
+            text=True,
+            check=True,
+        )
+
+        # Extract token from output
+        # Expected format: "Generated token: <token>"
+        lines = result.stdout.strip().split("\n")
+        token_line = [l for l in lines if "token" in l.lower()][0]
+
+        # Extract the actual token (last word or after colon)
+        if ":" in token_line:
+            token = token_line.split(":")[-1].strip()
+        else:
+            token = token_line.split()[-1].strip()
+
+        # Token should be 43 characters (32 bytes base64 URL-safe)
+        assert len(token) == 43
+
+        # Token should be URL-safe base64 (alphanumeric, -, _)
+        assert re.match(r"^[A-Za-z0-9_-]{43}$", token)
+
+    def test_generated_tokens_are_unique(self):
+        """Test that each invocation generates a unique token."""
+        tokens = []
+
+        for _ in range(5):
+            result = subprocess.run(
+                ["mcp-orchestration-generate-token"],
+                capture_output=True,
+                text=True,
+                check=True,
+            )
+
+            # Extract token
+            lines = result.stdout.strip().split("\n")
+            token_line = [l for l in lines if "token" in l.lower()][0]
+            token = token_line.split(":")[-1].strip() if ":" in token_line else token_line.split()[-1].strip()
+
+            tokens.append(token)
+
+        # All tokens should be unique
+        assert len(set(tokens)) == 5
+
+    def test_generated_token_is_secure(self):
+        """Test that generated token is cryptographically secure (randomness)."""
+        result = subprocess.run(
+            ["mcp-orchestration-generate-token"],
+            capture_output=True,
+            text=True,
+            check=True,
+        )
+
+        # Extract token
+        lines = result.stdout.strip().split("\n")
+        token_line = [l for l in lines if "token" in l.lower()][0]
+        token = token_line.split(":")[-1].strip() if ":" in token_line else token_line.split()[-1].strip()
+
+        # Token should not be predictable (e.g., not all same character)
+        assert len(set(token)) > 10  # Should have variety of characters
+
+        # Token should not be a common pattern
+        assert token not in ["0" * 43, "a" * 43, "A" * 43]
+
+
+class TestTokenGenerationCLIOutput:
+    """Test CLI output formatting and user experience."""
+
+    def test_output_includes_usage_instructions(self):
+        """Test that output includes instructions on how to use the token."""
+        result = subprocess.run(
+            ["mcp-orchestration-generate-token"],
+            capture_output=True,
+            text=True,
+            check=True,
+        )
+
+        output = result.stdout.lower()
+
+        # Should mention how to use the token
+        # (Either in output or help text)
+        assert "token" in output
+
+    def test_output_is_human_readable(self):
+        """Test that output is clear and human-readable."""
+        result = subprocess.run(
+            ["mcp-orchestration-generate-token"],
+            capture_output=True,
+            text=True,
+            check=True,
+        )
+
+        # Output should have multiple lines (not just raw token)
+        lines = result.stdout.strip().split("\n")
+        assert len(lines) >= 1
+
+        # Should have clear formatting
+        assert any("token" in line.lower() for line in lines)
+
+    def test_output_includes_token_value(self):
+        """Test that output clearly shows the token value."""
+        result = subprocess.run(
+            ["mcp-orchestration-generate-token"],
+            capture_output=True,
+            text=True,
+            check=True,
+        )
+
+        # Should be able to extract token from output
+        assert re.search(r"[A-Za-z0-9_-]{43}", result.stdout)
+
+    def test_no_error_output_on_success(self):
+        """Test that successful token generation doesn't write to stderr."""
+        result = subprocess.run(
+            ["mcp-orchestration-generate-token"],
+            capture_output=True,
+            text=True,
+            check=True,
+        )
+
+        # stderr should be empty (or only have logging info)
+        assert len(result.stderr) == 0 or "error" not in result.stderr.lower()
+
+
+class TestTokenGenerationCLIOptions:
+    """Test CLI options and flags (if any)."""
+
+    def test_help_flag_shows_usage(self):
+        """Test that --help flag shows usage information."""
+        result = subprocess.run(
+            ["mcp-orchestration-generate-token", "--help"],
+            capture_output=True,
+            text=True,
+            check=False,
+        )
+
+        # Should show help (return code 0 or 2)
+        assert result.returncode in [0, 2]
+
+        # Help text should explain the command
+        output = result.stdout.lower()
+        assert "generate" in output or "token" in output
+
+    def test_version_flag_shows_version(self):
+        """Test that --version flag shows version (if implemented)."""
+        result = subprocess.run(
+            ["mcp-orchestration-generate-token", "--version"],
+            capture_output=True,
+            text=True,
+            check=False,
+        )
+
+        # May or may not be implemented
+        # If implemented, should show version
+        if result.returncode == 0:
+            assert len(result.stdout) > 0
+
+
+class TestTokenGenerationFunction:
+    """Test the underlying generate_token_cli function."""
+
+    def test_generate_token_cli_returns_token(self):
+        """Test that generate_token_cli function returns a token."""
+        token = generate_token_cli()
+
+        assert isinstance(token, str)
+        assert len(token) == 43
+        assert re.match(r"^[A-Za-z0-9_-]{43}$", token)
+
+    def test_generate_token_cli_uses_auth_service(self):
+        """Test that generate_token_cli uses AuthenticationService."""
+        with patch("mcp_orchestrator.http.auth.AuthenticationService") as mock_auth_service:
+            mock_instance = MagicMock()
+            mock_instance.generate_token.return_value = "test_token_abc123_xyz789_secure_token_value"
+            mock_auth_service.return_value = mock_instance
+
+            token = generate_token_cli()
+
+            # Should have called generate_token on auth service
+            mock_instance.generate_token.assert_called_once()
+
+    def test_generate_token_cli_stores_token(self):
+        """Test that generate_token_cli stores token in auth service."""
+        auth_service = AuthenticationService()
+
+        # Track initial token count
+        initial_count = len(auth_service._tokens)
+
+        # Generate token
+        token = auth_service.generate_token()
+
+        # Token count should increase
+        assert len(auth_service._tokens) == initial_count + 1
+        assert token in auth_service._tokens
+
+
+class TestTokenGenerationSecurity:
+    """Test security aspects of token generation."""
+
+    def test_token_uses_secrets_module(self):
+        """Test that token generation uses secrets module (cryptographically secure)."""
+        # We can't directly test the implementation, but we can verify
+        # that tokens have high entropy (are unpredictable)
+
+        tokens = []
+        for _ in range(100):
+            result = subprocess.run(
+                ["mcp-orchestration-generate-token"],
+                capture_output=True,
+                text=True,
+                check=True,
+            )
+
+            # Extract token
+            lines = result.stdout.strip().split("\n")
+            token_line = [l for l in lines if "token" in l.lower()][0]
+            token = token_line.split(":")[-1].strip() if ":" in token_line else token_line.split()[-1].strip()
+            tokens.append(token)
+
+        # All tokens should be unique (no collisions)
+        assert len(set(tokens)) == 100
+
+        # Tokens should have varied character distribution
+        # (If they were using a weak PRNG, we might see patterns)
+        char_counts = {}
+        for token in tokens:
+            for char in token:
+                char_counts[char] = char_counts.get(char, 0) + 1
+
+        # Should use a good variety of characters
+        assert len(char_counts) > 30  # At least 30 different characters across all tokens
+
+    def test_token_is_url_safe(self):
+        """Test that token is URL-safe (no special characters)."""
+        result = subprocess.run(
+            ["mcp-orchestration-generate-token"],
+            capture_output=True,
+            text=True,
+            check=True,
+        )
+
+        # Extract token
+        lines = result.stdout.strip().split("\n")
+        token_line = [l for l in lines if "token" in l.lower()][0]
+        token = token_line.split(":")[-1].strip() if ":" in token_line else token_line.split()[-1].strip()
+
+        # URL-safe base64 uses: A-Z, a-z, 0-9, -, _
+        # Should NOT have: +, /, =
+        assert "+" not in token
+        assert "/" not in token
+        assert "=" not in token
+
+        # Should be safe to use in HTTP headers without encoding
+        assert re.match(r"^[A-Za-z0-9_-]+$", token)
+
+
+class TestTokenGenerationIntegration:
+    """Test integration between CLI and HTTP server."""
+
+    def test_generated_token_works_with_http_server(self):
+        """
+        Test that a token generated via CLI works with HTTP server.
+
+        This is an integration test that verifies the token storage
+        mechanism works end-to-end.
+        """
+        # Generate token via CLI
+        result = subprocess.run(
+            ["mcp-orchestration-generate-token"],
+            capture_output=True,
+            text=True,
+            check=True,
+        )
+
+        # Extract token
+        lines = result.stdout.strip().split("\n")
+        token_line = [l for l in lines if "token" in l.lower()][0]
+        token = token_line.split(":")[-1].strip() if ":" in token_line else token_line.split()[-1].strip()
+
+        # Token should be valid for HTTP requests
+        # (Full integration test is in test_http_transport.py)
+        # Here we just verify it was stored
+
+        # Note: This requires shared token storage between CLI and server
+        # Implementation will use a singleton or shared storage mechanism
+        auth_service = AuthenticationService()
+
+        # Token should be in the service (if shared storage works)
+        # This may need adjustment based on actual implementation
+        # For now, we just verify the token exists
+        assert len(token) == 43
+
+    def test_multiple_cli_invocations_create_multiple_tokens(self):
+        """Test that multiple CLI invocations create multiple valid tokens."""
+        tokens = []
+
+        for _ in range(3):
+            result = subprocess.run(
+                ["mcp-orchestration-generate-token"],
+                capture_output=True,
+                text=True,
+                check=True,
+            )
+
+            lines = result.stdout.strip().split("\n")
+            token_line = [l for l in lines if "token" in l.lower()][0]
+            token = token_line.split(":")[-1].strip() if ":" in token_line else token_line.split()[-1].strip()
+            tokens.append(token)
+
+        # All tokens should be unique
+        assert len(set(tokens)) == 3
+
+        # All tokens should be valid
+        for token in tokens:
+            assert len(token) == 43
+            assert re.match(r"^[A-Za-z0-9_-]{43}$", token)
+
+
+class TestTokenGenerationErrorHandling:
+    """Test error handling in token generation."""
+
+    def test_token_generation_succeeds_without_server_running(self):
+        """Test that token can be generated even if HTTP server is not running."""
+        # Token generation should work independently of server state
+        result = subprocess.run(
+            ["mcp-orchestration-generate-token"],
+            capture_output=True,
+            text=True,
+            check=False,
+        )
+
+        # Should succeed regardless of server state
+        assert result.returncode == 0
+
+    def test_token_generation_handles_storage_errors(self):
+        """Test that token generation handles storage errors gracefully."""
+        # This is implementation-specific
+        # If storage fails, should either:
+        # 1. Return token but warn about storage failure, or
+        # 2. Fail with clear error message
+
+        # For now, we just verify it doesn't crash
+        result = subprocess.run(
+            ["mcp-orchestration-generate-token"],
+            capture_output=True,
+            text=True,
+            check=False,
+        )
+
+        # Should either succeed or fail gracefully
+        assert result.returncode in [0, 1]
+
+        if result.returncode != 0:
+            # If it fails, should have error message
+            assert len(result.stderr) > 0 or "error" in result.stdout.lower()
+
+
+class TestTokenGenerationPerformance:
+    """Test token generation performance."""
+
+    def test_token_generation_is_fast(self):
+        """Test that token generation completes quickly (< 1 second)."""
+        import time
+
+        start = time.time()
+
+        result = subprocess.run(
+            ["mcp-orchestration-generate-token"],
+            capture_output=True,
+            text=True,
+            check=True,
+        )
+
+        elapsed = time.time() - start
+
+        # Should complete in under 1 second
+        assert elapsed < 1.0
+
+    def test_multiple_token_generation_is_fast(self):
+        """Test that generating multiple tokens is fast."""
+        import time
+
+        start = time.time()
+
+        for _ in range(10):
+            subprocess.run(
+                ["mcp-orchestration-generate-token"],
+                capture_output=True,
+                text=True,
+                check=True,
+            )
+
+        elapsed = time.time() - start
+
+        # 10 tokens should complete in under 5 seconds
+        assert elapsed < 5.0

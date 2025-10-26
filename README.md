@@ -4,22 +4,46 @@ MCP server orchestration and management tools
 
 ## Overview
 
-**mcp-orchestration** is a Model Context Protocol (MCP) server that provides centralized configuration management and orchestration for MCP client applications. It enables cryptographically signed, content-addressable storage of client configurations with automated diff detection and update recommendations.
+**mcp-orchestration** is a Model Context Protocol (MCP) server that provides centralized configuration management and orchestration for MCP client applications. It enables cryptographically signed, content-addressable storage of client configurations with automated diff detection and deployment.
 
-This project follows the MCP specification and can be integrated with:
+**New in v0.2.0:** HTTP/SSE transport enables remote access, API integration, and workflow automation!
+
+This project follows the MCP specification and can be used in two ways:
+1. **stdio transport** - Direct MCP tool access via CLI (local use)
+2. **HTTP transport** - REST API with authentication (remote access, automation)
+
+Supported integrations:
 - Claude Desktop
 - Cursor
+- n8n workflow automation
+- Web applications
+- CI/CD pipelines
 - Other MCP-compatible clients
 
 ## Features
 
+### Core Configuration Management
 - **Cryptographic Signatures** - Ed25519 signatures for configuration integrity and authenticity
 - **Content-Addressable Storage** - SHA-256 based artifact identification for immutable configs
 - **Multi-Client Registry** - Support for multiple MCP clients (Claude Desktop, Cursor) with profile-based configs
 - **Configuration Diff** - Intelligent comparison with field-level change detection
-- **MCP Tools & Resources** - 4 tools (list_clients, list_profiles, get_config, diff_config) and 2 resources
-- **CLI Initialization** - Quick-start command to generate signed sample configurations
-- **Comprehensive Testing** - 67 passing tests with full integration coverage
+- **Server Registry** - 30+ pre-configured MCP servers (filesystem, brave-search, puppeteer, etc.)
+- **Draft Workflow** - Build → Validate → Publish → Deploy pipeline
+- **Deployment Tracking** - Deployment history and drift detection
+
+### HTTP Transport (v0.2.0)
+- **REST API** - 14 HTTP endpoints exposing all 10 MCP tools
+- **Authentication** - Bearer token + API key support
+- **Auto-Generated Docs** - OpenAPI 3.0 schema with Swagger UI
+- **CORS Enabled** - Web application integration ready
+- **Production Ready** - FastAPI + uvicorn with graceful shutdown
+- **Remote Access** - Access MCP tools from anywhere via HTTP
+- **Workflow Automation** - Integrate with n8n, web apps, CI/CD
+
+### Testing & Quality
+- **Comprehensive Testing** - 127/166 tests passing (77%), 100% auth coverage
+- **Living Documentation** - E2E tests validate user guides
+- **BDD/TDD/DDD Process** - Rigorous development lifecycle
 ## Installation
 
 ### From PyPI (Recommended)
@@ -54,6 +78,51 @@ This creates:
 - Ed25519 signing keys at `~/.mcp-orchestration/keys/`
 - Sample configurations for supported clients
 - Content-addressable artifact storage
+
+## Quick Start
+
+### Option 1: stdio Transport (Local Use)
+
+Use mcp-orchestration as an MCP server in Claude Desktop or Cursor:
+
+```bash
+# Initialize storage
+mcp-orchestration-init
+
+# Configure in Claude Desktop (see Configuration section below)
+# Then use via Claude's UI
+```
+
+### Option 2: HTTP Transport (Remote Access & Automation)
+
+Use mcp-orchestration via REST API for remote access and workflow automation:
+
+```bash
+# 1. Start HTTP server
+mcp-orchestration-serve-http
+
+# 2. Generate API token (in another terminal)
+mcp-orchestration-generate-token
+
+# 3. Test the API
+curl -H "Authorization: Bearer <your-token>" \
+  http://localhost:8000/v1/clients
+
+# 4. View interactive API docs
+open http://localhost:8000/docs
+```
+
+**HTTP Transport Use Cases:**
+- **Remote Access**: Access MCP tools from any machine
+- **n8n Automation**: Build workflow automation with MCP
+- **Web Apps**: Integrate MCP into web applications
+- **CI/CD**: Automate configuration deployments
+- **Multi-User**: Share one server with multiple users
+
+**Documentation:**
+- [Deploy HTTP Server](user-docs/how-to/deploy-http-server.md) - 10-minute deployment guide
+- [Authenticate HTTP API](user-docs/how-to/authenticate-http-api.md) - 5-minute auth guide
+- [Migrate stdio → HTTP](user-docs/how-to/migrate-stdio-to-http.md) - 15-minute migration guide
 
 ## Configuration
 

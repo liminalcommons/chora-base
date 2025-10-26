@@ -1,7 +1,7 @@
 [project]
 name = "mcp-orchestration"
-version = "0.1.5"
-description = "MCP server for centralized configuration management with cryptographic signatures and content-addressable storage"
+version = "0.2.0"
+description = "MCP server for centralized configuration management with HTTP/stdio transports, cryptographic signatures, and content-addressable storage"
 authors = [
     {name = "Victor Piper", email = "victor@liminalcommons.org"}
 ]
@@ -26,6 +26,8 @@ dependencies = [
     "click>=8.0.0",
     "cryptography>=41.0.0",
     "chora-compose>=0.1.0",
+    "fastapi>=0.104.0",
+    "uvicorn>=0.24.0",
 ]
 
 [project.urls]
@@ -58,6 +60,8 @@ mcp-orchestration-add-server = "mcp_orchestrator.cli_building:add_server"
 mcp-orchestration-remove-server = "mcp_orchestrator.cli_building:remove_server"
 mcp-orchestration-publish-config = "mcp_orchestrator.cli_building:publish_config"
 mcp-orchestration-deploy-config = "mcp_orchestrator.cli_building:deploy_config"
+mcp-orchestration-serve-http = "mcp_orchestrator.cli.serve_http:serve_http_cli"
+mcp-orchestration-generate-token = "mcp_orchestrator.cli.token:main"
 
 [build-system]
 requires = ["hatchling"]
@@ -100,6 +104,10 @@ ignore_missing_imports = true
 
 [[tool.mypy.overrides]]
 module = ["chora_compose", "chora_compose.*"]
+ignore_missing_imports = true
+
+[[tool.mypy.overrides]]
+module = ["fastapi", "fastapi.*", "uvicorn", "uvicorn.*"]
 ignore_missing_imports = true
 
 [tool.ruff]
