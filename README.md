@@ -21,6 +21,45 @@ chora-base is a production-ready Python project template featuring:
 
 ## Recent Updates
 
+### v3.3.0 (2025-10-25) - Claude-Specific Development Framework 🧠
+
+**NEW:** Comprehensive Claude optimization layer with 200k context window strategies, checkpoint patterns, and ROI tracking.
+
+**What's Included:**
+- **CLAUDE.md Blueprint** - Claude-specific development guide (peer to AGENTS.md)
+- **Pattern Library** (`/claude/`) - 4 comprehensive guides (1,765 lines total)
+  - Context Management (progressive loading strategies)
+  - Checkpoint Patterns (session state preservation)
+  - Metrics Tracking (ROI measurement framework)
+  - Framework Templates (proven request patterns)
+- **Domain-Specific Guides** - 5 nested CLAUDE.md files (1,353 lines)
+  - Tests, Memory, Docker, Scripts, Root template
+- **ROI Calculator Utility** - Python metrics tracking (`utils/claude_metrics.py`)
+- **CLAUDE_SETUP_GUIDE.md** - Comprehensive Claude setup guide (1,151 lines)
+
+**Claude Advantages:**
+- **20-40 second setup** (vs 30-60s for generic agents)
+- **2-minute session recovery** (from checkpoints, saves 13-18 minutes)
+- **Progressive context loading** (optimize 200k token window)
+- **Multi-tool orchestration** (parallel operations)
+- **Quantifiable ROI** (time saved, cost savings, quality metrics)
+
+**Quick Start for Claude:**
+```bash
+# Generate project with Claude optimizations
+python setup.py my-project
+
+# Read Claude-specific guides
+cat CLAUDE_SETUP_GUIDE.md              # Setup guide
+cat CLAUDE.md                          # Project-specific patterns
+cat claude/CONTEXT_MANAGEMENT.md      # Context optimization
+cat claude/CHECKPOINT_PATTERNS.md     # State preservation
+```
+
+📄 [CLAUDE_SETUP_GUIDE.md](CLAUDE_SETUP_GUIDE.md) | [Pattern Library](claude/) | [CHANGELOG](CHANGELOG.md#330---2025-10-25)
+
+---
+
 ### v3.2.0 (2025-10-26) - Agentic Development Framework 📋
 
 **NEW:** Complete evidence-based development process with 7,440+ lines of workflow documentation.
@@ -127,6 +166,12 @@ class MyApp(StatefulObject):
 ### AI Agent Features (Optional)
 
 - 🤖 **AGENTS.md** - Machine-readable instructions (OpenAI/Google/Sourcegraph standard)
+- 🧠 **CLAUDE.md** (NEW v3.3.0) - Claude-specific optimizations
+  - 200k context window management strategies
+  - Checkpoint patterns for session continuity
+  - Progressive context loading (Phase 1/2/3)
+  - Artifact-first development guidance
+  - Multi-tool orchestration patterns
 - 🎯 **Vision & Strategic Design** - Long-term capability evolution framework
   - Exploratory vision documents (non-committed future directions)
   - Strategic design guidance for AI agents
@@ -136,6 +181,11 @@ class MyApp(StatefulObject):
   - Event correlation via `CHORA_TRACE_ID`
   - Zettelkasten-inspired knowledge notes
   - Per-agent profiles and learned patterns
+- 📊 **ROI Tracking** (NEW v3.3.0) - Measure AI effectiveness
+  - ClaudeROICalculator Python utility
+  - Time/cost savings calculation
+  - Quality metrics (bug rate, coverage, iterations)
+  - Executive summary generation
 - 🔧 **CLI Tools** - Query events, manage knowledge, track learning
 
 ### Project Types Supported

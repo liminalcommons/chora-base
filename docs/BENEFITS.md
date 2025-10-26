@@ -200,7 +200,147 @@ Result: 86% velocity (delivered 16 of planned 16 hours)
 
 ---
 
-## 4. 📚 Diátaxis Documentation Framework
+## 4. 🧠 Claude-Specific Optimizations (v3.3.0)
+
+### Benefit: 10-50x productivity gains with Claude's 200k context window
+
+**What You Get:**
+- ✅ **CLAUDE.md Blueprint** - Claude-specific development guide (peer to AGENTS.md)
+- ✅ **Pattern Library** (`/claude/`) - 1,765 lines of Claude optimization patterns
+- ✅ **Domain-Specific Guides** - 5 nested CLAUDE.md files (tests, memory, docker, scripts)
+- ✅ **ROI Calculator Utility** - Python metrics tracking for quantifiable results
+- ✅ **CLAUDE_SETUP_GUIDE.md** - Comprehensive setup guide (1,151 lines)
+
+**How chora-base Delivers:**
+
+### Progressive Context Loading (200k Token Optimization)
+```markdown
+# Phase 1: Essential Context (0-10k tokens)
+- Current task definition
+- AGENTS.md + CLAUDE.md relevant sections
+- Active file contents (1-3 files)
+- Recent conversation summary
+
+# Phase 2: Extended Context (10-50k tokens)
+- Related module code
+- Test suites
+- API documentation
+- Pattern library sections
+
+# Phase 3: Full Context (50-200k tokens)
+- Complete codebase
+- All documentation
+- Full conversation history
+- Entire pattern library
+
+# Result: Stay in Phase 1-2 for 90% of tasks
+```
+
+### Checkpoint Patterns (Session Continuity)
+```markdown
+# .chora/memory/CLAUDE_CHECKPOINT.md
+
+**Session ID:** 2025-10-25-github-integration
+**Current State:** 50% complete on list_issues tool
+
+**What was accomplished:**
+✅ create_issue tool implemented (working)
+🔄 list_issues tool in progress
+
+**Key decisions:**
+- Using Pydantic models (not manual dicts)
+- Pagination: GitHub default (30 per page)
+
+**Recovery Instructions:**
+1. Read this checkpoint
+2. Load server.py (focus on list_issues stub)
+3. Continue implementation
+
+**Time to resume:** 2 minutes (vs 15-20 min from scratch)
+```
+
+### ROI Metrics Tracking
+```python
+from my_project.utils.claude_metrics import ClaudeMetric, ClaudeROICalculator
+
+calculator = ClaudeROICalculator(developer_hourly_rate=100)
+
+metric = ClaudeMetric(
+    session_id="feature-implementation",
+    task_type="feature_implementation",
+    lines_generated=250,
+    time_saved_minutes=120,        # 2 hours saved
+    iterations_required=2,
+    bugs_introduced=0,
+    documentation_quality_score=8.5,
+    test_coverage=0.92            # 92%
+)
+
+calculator.add_metric(metric)
+print(calculator.generate_report())
+
+# Output:
+# Time & Cost Savings:
+#   Hours saved: 2.0
+#   Cost savings: $200.00
+#   Acceleration factor: 3.0x
+#
+# Quality Metrics:
+#   Bug rate: 0.0%
+#   Doc quality: 8.5/10
+#   Test coverage: 92.0%
+```
+
+**Evidence-Based Results:**
+
+**Research Findings (CLAUDE_Complete.md):**
+- **Time savings:** 40-60% for routine tasks, up to 10-50x for research/documentation
+- **Quality:** 70-85% first-pass success rate
+- **Iterations:** 2-3 average (simple: 1, complex: 4-5)
+- **Acceleration:** 2-4x for most tasks (documentation: 5-10x)
+
+**Time Investment:**
+- Initial setup: 20-40 seconds (vs 30-60s for generic agents)
+- Session recovery: 2 minutes with checkpoint (vs 15-20 min without)
+- Context optimization: 13-18 minutes saved per session
+
+**Who Benefits:**
+- **Claude Code users:** VS Code extension with full optimization
+- **Claude Desktop users:** MCP server development with checkpoints
+- **Claude API users:** Token optimization and cost tracking
+- **Teams:** Quantifiable ROI for stakeholder reporting
+
+**Pattern Library Structure:**
+```bash
+claude/
+├── README.md                # Pattern index (164 lines)
+├── CONTEXT_MANAGEMENT.md    # Progressive loading (298 lines)
+├── CHECKPOINT_PATTERNS.md   # State preservation (386 lines)
+├── METRICS_TRACKING.md      # ROI measurement (379 lines)
+└── FRAMEWORK_TEMPLATES.md   # Request patterns (538 lines)
+```
+
+**Domain-Specific Guides:**
+- `tests/CLAUDE.md` - Test generation patterns (321 lines)
+- `.chora/memory/CLAUDE.md` - Memory integration (301 lines)
+- `docker/CLAUDE.md` - Docker optimization (262 lines)
+- `scripts/CLAUDE.md` - Script automation (292 lines)
+- `CLAUDE.md` - Project root template (177 lines)
+
+**Comparison:**
+
+| Without Claude Optimizations | With chora-base v3.3.0 |
+|------------------------------|------------------------|
+| Generic AI agent patterns only | Claude-specific 200k context strategies |
+| No session continuity | Checkpoint-based recovery (2 min) |
+| Unknown ROI | Quantifiable metrics (time, cost, quality) |
+| Re-read files constantly | Progressive loading (Phase 1/2/3) |
+| Start from scratch each session | Resume with full context in 2 minutes |
+| No context optimization | Token budget management built-in |
+
+---
+
+## 5. 📚 Diátaxis Documentation Framework
 
 ### Benefit: Dual-audience documentation (humans AND agents)
 
@@ -230,7 +370,7 @@ Result: 86% velocity (delivered 16 of planned 16 hours)
 
 ---
 
-## 5. 🎨 Project Type Flexibility
+## 6. 🎨 Project Type Flexibility
 
 ### Benefit: One template for all Python project types
 
@@ -260,7 +400,7 @@ project_type: mcp_server | library | cli_tool | web_service
 
 ---
 
-## 6. ⚙️ Automation Everywhere
+## 7. ⚙️ Automation Everywhere
 
 ### Benefit: Zero manual toil for common tasks
 
@@ -302,7 +442,7 @@ just release-patch    # Bump version, build, publish
 
 ---
 
-## 7. 🛡️ Quality Gates Enforced
+## 8. 🛡️ Quality Gates Enforced
 
 ### Benefit: Ship bugs to production never, not sometimes
 
@@ -355,7 +495,7 @@ With quality gates:
 
 ---
 
-## 8. 🔄 Dependency Management Excellence
+## 9. 🔄 Dependency Management Excellence
 
 ### Benefit: Never manually update dependencies again
 
@@ -390,7 +530,7 @@ updates:
 
 ---
 
-## 9. 🎓 Opinionated Best Practices
+## 10. 🎓 Opinionated Best Practices
 
 ### Benefit: Learn from collective wisdom, avoid common mistakes
 
@@ -436,7 +576,7 @@ docs: Update API documentation
 
 ---
 
-## 10. 🔍 Observability & Debugging
+## 11. 🔍 Observability & Debugging
 
 ### Benefit: Know what happened, why it failed, and how to fix it
 
@@ -487,7 +627,7 @@ chora-memory knowledge search --tag troubleshooting --confidence high
 
 ---
 
-## 11. 🌍 Ecosystem Integration
+## 12. 🌍 Ecosystem Integration
 
 ### Benefit: Works with tools you already use
 
