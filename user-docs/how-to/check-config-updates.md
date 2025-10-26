@@ -1,11 +1,19 @@
 # How to Check for Configuration Updates
 
-**Goal:** Determine if your local config is outdated
+> **⚠️ LEGACY GUIDE (Pre-Wave 1.5):**
+> Configuration drift detection is now built into the [`deploy_config`](deploy-config.md) workflow.
+> This guide documents **manual drift checking** for advanced users or custom workflows.
+>
+> **Most users should use:** [Detect Configuration Drift](complete-workflow.md#use-case-e-detect-configuration-drift) - modern approach.
+
+**Goal:** Manually determine if your deployed config differs from latest published
 
 **Time:** 3 minutes
 
+**Status:** Legacy - Wave 1.5 provides drift detection resources
+
 **Prerequisites:**
-- You have fetched a config previously (see [How to Get Your First Config](get-first-config.md))
+- You have deployed a config previously
 - You know your current `artifact_id`
 
 ---

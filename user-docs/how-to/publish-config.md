@@ -5,16 +5,18 @@ prerequisites:
   - Signing keys initialized
   - Draft configuration created
 related:
+  - complete-workflow.md
   - validate-config.md
   - add-server-to-config.md
-  - update-config.md
 ---
 
 # How to Publish a Configuration
 
-**Goal:** Publish a validated, cryptographically signed configuration for your MCP client.
+> **💡 Looking for the complete workflow?** See [Complete Workflow Guide](complete-workflow.md) for end-to-end instructions including setup, validation, publishing, and deployment.
 
-**Audience:** Developers managing MCP configurations
+**Goal:** Deep dive into validation, signing, and publishing workflow for MCP configurations.
+
+**Audience:** Developers who need detailed validation error reference and publishing internals.
 
 **Prerequisites:**
 - Signing keys initialized (see [initialize_keys tool](../reference/mcp-tools.md#initialize_keys))
@@ -25,216 +27,49 @@ related:
 
 ## Overview
 
-Publishing a configuration:
-1. Validates the draft configuration for errors
-2. Signs the configuration with your Ed25519 private key
-3. Stores it as a content-addressable artifact (SHA-256)
-4. Updates the profile index to point to the new configuration
+Publishing transforms a draft configuration into a cryptographically signed artifact:
+
+1. **Validation** - Checks configuration for structural errors and client limitations
+2. **Signing** - Ed25519 signature over canonical JSON payload
+3. **Storage** - Content-addressable artifact (SHA-256) with metadata
+4. **Indexing** - Profile index updated to point to new artifact
 
 After publishing, the configuration can be retrieved and verified by MCP clients.
 
 ---
 
-## Method 1: Publish via MCP Tool (Recommended)
+## Publishing Methods
 
-### Step 1: View Current Draft
+### Method 1: MCP Tool (Recommended)
 
-First, check what's in your draft configuration:
-
-```python
-result = await view_draft_config()
-print(f"Draft has {result['server_count']} servers")
-print(f"Servers: {', '.join(result['servers'])}")
-```
-
-**Expected output:**
-```json
-{
-  "draft": {
-    "mcpServers": {
-      "filesystem": {
-        "command": "npx",
-        "args": ["-y", "@modelcontextprotocol/server-filesystem", "/Users/me/Documents"]
-      },
-      "github": {
-        "command": "npx",
-        "args": ["-y", "@modelcontextprotocol/server-github"],
-        "env": {
-          "GITHUB_TOKEN": "ghp_..."
-        }
-      }
-    }
-  },
-  "server_count": 2,
-  "servers": ["filesystem", "github"]
-}
-```
-
-### Step 2: Validate Configuration
-
-**Always validate before publishing** to catch errors early:
+Best for conversational workflow with Claude:
 
 ```python
+# Validate
 validation = await validate_config()
-
 if not validation["valid"]:
-    print("⚠️  Configuration has errors:")
-    for error in validation["errors"]:
-        print(f"  - [{error['code']}] {error['message']}")
-    # Fix errors and try again
-else:
-    print("✓ Configuration is valid")
-```
+    print(f"Errors: {validation['errors']}")
+    # Fix errors, then retry
 
-**Expected output (valid config):**
-```json
-{
-  "valid": true,
-  "errors": [],
-  "warnings": [],
-  "server_count": 2,
-  "validated_at": "2025-10-24T10:30:00Z"
-}
-```
-
-**Example output (invalid config):**
-```json
-{
-  "valid": false,
-  "errors": [
-    {
-      "code": "EMPTY_ENV_VAR",
-      "message": "Server 'github' has empty environment variable 'GITHUB_TOKEN'.",
-      "severity": "error",
-      "server": "github"
-    }
-  ],
-  "server_count": 2
-}
-```
-
-### Step 3: Fix Any Validation Errors
-
-If validation fails, fix the errors:
-
-```python
-# Example: Fix missing environment variable
-await add_server_to_config(
-    server_id="github",
-    env_vars={"GITHUB_TOKEN": "ghp_actual_token_here"}
-)
-
-# Validate again
-validation = await validate_config()
-assert validation["valid"] == true
-```
-
-### Step 4: Publish Configuration
-
-Once validation passes, publish with a descriptive changelog:
-
-```python
+# Publish
 result = await publish_config(
-    changelog="Added filesystem and github servers for development"
+    changelog="Added filesystem and github servers"
 )
-
-print(f"✓ Published successfully!")
-print(f"  Artifact ID: {result['artifact_id']}")
-print(f"  Server count: {result['server_count']}")
-print(f"  Created: {result['created_at']}")
+print(f"Published: {result['artifact_id']}")
 ```
 
-**Expected output:**
-```json
-{
-  "status": "published",
-  "artifact_id": "8e91a062f1c4a8ef2b5c3d9f7e6a4b1c8d2e9f0a3b5c7d1e4f6a2b8c9d0e1f2a",
-  "client_id": "claude-desktop",
-  "profile_id": "default",
-  "server_count": 2,
-  "changelog": "Added filesystem and github servers for development",
-  "created_at": "2025-10-24T10:35:00Z"
-}
-```
+### Method 2: CLI (From Files)
 
-### Step 5: Verify Publication
-
-Retrieve the published configuration to verify:
-
-```python
-config = await get_config(
-    client_id="claude-desktop",
-    profile_id="default"
-)
-
-print(f"✓ Retrieved config {config['artifact_id'][:8]}...")
-print(f"  Servers: {list(config['payload']['mcpServers'].keys())}")
-print(f"  Signature valid: {config['signature_valid']}")
-```
-
----
-
-## Method 2: Publish via CLI
-
-### Step 1: Prepare Configuration File
-
-Create a JSON file with your configuration:
+Best for scripting and CI/CD:
 
 ```bash
-cat > my-config.json <<EOF
-{
-  "mcpServers": {
-    "filesystem": {
-      "command": "npx",
-      "args": ["-y", "@modelcontextprotocol/server-filesystem", "/Users/me/Documents"]
-    },
-    "github": {
-      "command": "npx",
-      "args": ["-y", "@modelcontextprotocol/server-github"],
-      "env": {
-        "GITHUB_TOKEN": "ghp_..."
-      }
-    }
-  }
-}
-EOF
-```
-
-### Step 2: Validate Configuration File
-
-```bash
-# Validate using the MCP tool (CLI validation coming in future wave)
-python -c "
-import asyncio
-import json
-from mcp_orchestrator.building import ConfigBuilder
-from mcp_orchestrator.servers import get_default_registry
-
-# Load config from file
-with open('my-config.json') as f:
-    config = json.load(f)
-
-# Validate (simplified check)
-if 'mcpServers' not in config:
-    print('ERROR: Missing mcpServers key')
-    exit(1)
-
-if not config['mcpServers']:
-    print('ERROR: No servers in configuration')
-    exit(1)
-
-print('✓ Configuration structure valid')
-"
-```
-
-### Step 3: Publish via CLI
-
-```bash
+# Validate (automatic on publish)
+# Publish from JSON file
 mcp-orchestration publish-config \
   --client claude-desktop \
   --profile default \
   --file my-config.json \
-  --changelog "Initial configuration for development environment"
+  --changelog "Initial configuration"
 ```
 
 **Expected output:**
@@ -244,121 +79,91 @@ mcp-orchestration publish-config \
 ✓ Artifact stored: 8e91a062f1c4a8ef...
 ✓ Published successfully!
 
-Artifact ID: 8e91a062f1c4a8ef2b5c3d9f7e6a4b1c8d2e9f0a3b5c7d1e4f6a2b8c9d0e1f2a
-Client: claude-desktop
-Profile: default
+Artifact ID: 8e91a062f1c4a8ef2b5c3d9f7e6a4b1c...
 Server count: 2
-Changelog: Initial configuration for development environment
 ```
 
 ---
 
-## Complete Workflow Example
+## Validation Deep Dive
 
-Here's a complete end-to-end workflow:
+### Validation Checks
 
+Publishing validates configurations against three categories:
+
+#### 1. Structural Validation
+- **EMPTY_CONFIG** - No servers present
+- **MISSING_COMMAND** - Server lacks `command` field
+- **MISSING_ARGS** - Server lacks `args` field
+- **INVALID_ARGS_TYPE** - Args is not a list
+- **INVALID_ENV_TYPE** - Env is not a dictionary
+
+#### 2. Data Validation
+- **EMPTY_ENV_VAR** (warning) - Environment variable is empty or whitespace-only
+
+#### 3. Client Limitations
+- **TOO_MANY_SERVERS** - Exceeds client's max server limit
+- **TOO_MANY_ENV_VARS** - Server exceeds client's max env vars per server
+- **UNKNOWN_CLIENT** (warning) - Client not found in registry
+
+### Validation Error Reference
+
+#### EMPTY_CONFIG
+```json
+{
+  "code": "EMPTY_CONFIG",
+  "message": "Configuration is empty. Add at least one server before publishing.",
+  "severity": "error"
+}
+```
+
+**Solution:** Add at least one server to draft.
+
+---
+
+#### MISSING_COMMAND / MISSING_ARGS
+```json
+{
+  "code": "MISSING_COMMAND",
+  "message": "Server 'github' is missing required 'command' field.",
+  "severity": "error",
+  "server": "github"
+}
+```
+
+**Solution:** Server configuration is corrupted. Remove and re-add:
 ```python
-# 1. Initialize keys (first time only)
-keys = await initialize_keys()
-print(f"✓ Keys initialized at {keys['key_dir']}")
-
-# 2. Browse available servers
-servers = await list_available_servers()
-print(f"Found {servers['count']} available servers")
-
-# 3. Add servers to draft
-await add_server_to_config(
-    server_id="filesystem",
-    params={"path": "/Users/me/Documents"}
-)
-
-await add_server_to_config(
-    server_id="github",
-    env_vars={"GITHUB_TOKEN": "ghp_..."}
-)
-
-# 4. View draft
-draft = await view_draft_config()
-print(f"Draft has {draft['server_count']} servers")
-
-# 5. Validate configuration
-validation = await validate_config()
-if not validation["valid"]:
-    print("Errors found:", validation["errors"])
-    # Fix errors and validate again
-    raise ValueError("Configuration has validation errors")
-
-print("✓ Configuration is valid")
-
-# 6. Publish configuration
-result = await publish_config(
-    changelog="Added filesystem and github servers"
-)
-
-print(f"✓ Published successfully!")
-print(f"  Artifact ID: {result['artifact_id'][:16]}...")
-print(f"  Server count: {result['server_count']}")
+await remove_server_from_config(server_name="github")
+await add_server_to_config(server_id="github", env_vars={...})
 ```
 
 ---
 
-## Troubleshooting
-
-### Error: "Signing key not found"
-
-**Problem:** You haven't initialized signing keys yet.
-
-**Solution:**
-```python
-await initialize_keys()
+#### INVALID_ARGS_TYPE / INVALID_ENV_TYPE
+```json
+{
+  "code": "INVALID_ARGS_TYPE",
+  "message": "Server 'filesystem' has invalid 'args' type (must be list).",
+  "severity": "error",
+  "server": "filesystem"
+}
 ```
 
-Or via CLI:
-```bash
-mcp-orchestration-init-keys
+**Solution:** Fix data type. Args must be list, env must be dict.
+
+---
+
+#### EMPTY_ENV_VAR (Warning)
+```json
+{
+  "code": "EMPTY_ENV_VAR",
+  "message": "Server 'github' has empty environment variable 'GITHUB_TOKEN'.",
+  "severity": "warning",
+  "server": "github"
+}
 ```
 
-### Error: "Cannot publish empty configuration"
-
-**Problem:** No servers in draft configuration.
-
-**Solution:** Add at least one server before publishing:
-```python
-await add_server_to_config(
-    server_id="filesystem",
-    params={"path": "/tmp"}
-)
-```
-
-### Error: "Validation failed: MISSING_COMMAND"
-
-**Problem:** Server configuration is corrupted or incomplete.
-
-**Solution:** Remove and re-add the server:
-```python
-await remove_server_from_config(server_name="problematic-server")
-await add_server_to_config(server_id="filesystem", params={...})
-```
-
-### Error: "Validation failed: TOO_MANY_SERVERS"
-
-**Problem:** Configuration exceeds client's maximum server limit.
-
-**Solution:** Remove some servers or use a different client:
-```python
-# Check client limitations
-clients = await list_clients()
-print(clients["clients"][0]["limitations"])
-
-# Remove excess servers
-await remove_server_from_config(server_name="extra-server")
-```
-
-### Warning: "EMPTY_ENV_VAR"
-
-**Problem:** Environment variable is empty or whitespace-only.
-
-**Solution:** This is a warning, not an error. The configuration is still valid, but you should provide a value:
+**Solution:** This is a warning, not an error. Configuration can still publish, but provide value:
 ```python
 await add_server_to_config(
     server_id="github",
@@ -368,58 +173,230 @@ await add_server_to_config(
 
 ---
 
-## What Happens During Publishing?
-
-1. **Validation:** The draft configuration is validated for:
-   - At least one server present
-   - All required fields present (command, args)
-   - Valid data types
-   - Client-specific limitations (max servers, max env vars)
-
-2. **Signing:** The configuration payload is:
-   - Serialized to canonical JSON
-   - Signed with Ed25519 private key
-   - Signature is base64-encoded
-
-3. **Storage:** The signed artifact is:
-   - Given a content-addressable ID (SHA-256 of payload)
-   - Stored immutably at `~/.mcp-orchestration/artifacts/{artifact_id}.json`
-   - Metadata enriched with generator, changelog, server_count
-
-4. **Indexing:** The profile index is updated:
-   - Points to the new artifact ID
-   - Records update timestamp
-   - Enables retrieval via `get_config`
-
----
-
-## Metadata Included in Published Configs
-
-Every published configuration includes metadata:
-
+#### TOO_MANY_SERVERS
 ```json
 {
-  "metadata": {
-    "generator": "ConfigBuilder",
-    "changelog": "Your changelog message here",
-    "server_count": 2
-  }
+  "code": "TOO_MANY_SERVERS",
+  "message": "Configuration has 25 servers, but claude-desktop supports max 20.",
+  "severity": "error",
+  "limit": 20,
+  "actual": 25
 }
 ```
 
-This metadata helps you:
-- Track what tool generated the config
-- Understand what changed in this version
-- Know how many servers are configured
+**Solution:** Remove servers or use different client:
+```python
+# Check limitations
+clients = await list_clients()
+print(clients["clients"][0]["limitations"])
+
+# Remove excess servers
+await remove_server_from_config(server_name="extra-server")
+```
+
+---
+
+#### TOO_MANY_ENV_VARS
+```json
+{
+  "code": "TOO_MANY_ENV_VARS",
+  "message": "Server 'database' has 15 env vars, but claude-desktop supports max 10.",
+  "severity": "error",
+  "server": "database",
+  "limit": 10,
+  "actual": 15
+}
+```
+
+**Solution:** Reduce environment variables for that server.
+
+---
+
+## Publishing Internals
+
+### Signing Process
+
+1. **Canonical JSON** - Configuration payload serialized to deterministic JSON (sorted keys, no whitespace)
+2. **Ed25519 Signature** - Private key signs the canonical payload
+3. **Base64 Encoding** - Signature encoded for JSON storage
+
+```python
+# Simplified signing flow
+canonical_json = json.dumps(payload, sort_keys=True, separators=(',', ':'))
+signature_bytes = signing_key.sign(canonical_json.encode('utf-8'))
+signature_b64 = base64.b64encode(signature_bytes).decode('ascii')
+```
+
+### Artifact Structure
+
+Published artifacts are stored at `~/.mcp-orchestration/artifacts/{artifact_id}.json`:
+
+```json
+{
+  "artifact_id": "8e91a062f1c4a8ef2b5c3d9f7e6a4b1c8d2e9f0a3b5c7d1e4f6a2b8c9d0e1f2a",
+  "metadata": {
+    "generator": "PublishingWorkflow",
+    "changelog": "Added filesystem and github servers",
+    "server_count": 2
+  },
+  "payload": {
+    "mcpServers": {
+      "filesystem": { "command": "npx", "args": [...] },
+      "github": { "command": "npx", "args": [...], "env": {...} }
+    }
+  },
+  "signature": {
+    "algorithm": "ed25519",
+    "key_id": "default",
+    "value": "base64_encoded_signature_here"
+  },
+  "created_at": "2025-10-24T10:35:00Z"
+}
+```
+
+### Content Addressing
+
+Artifact ID is SHA-256 hash of canonical payload:
+
+```python
+artifact_id = hashlib.sha256(canonical_json.encode('utf-8')).hexdigest()
+```
+
+This ensures:
+- **Immutability** - Same content always produces same ID
+- **Deduplication** - Identical configs share same artifact
+- **Integrity** - ID changes if payload is modified
+
+### Metadata Enrichment
+
+Every published config includes metadata for tracking:
+
+- **generator** - Tool that created artifact (`PublishingWorkflow`)
+- **changelog** - User-provided description of changes
+- **server_count** - Number of servers in configuration
+- **created_at** - ISO 8601 timestamp
+
+---
+
+## Advanced Publishing Scenarios
+
+### Publishing from Existing Files
+
+If you have an existing Claude Desktop config, publish it directly:
+
+```bash
+# Prepare your config file
+cat ~/Library/Application\ Support/Claude/claude_desktop_config.json > my-config.json
+
+# Publish it
+mcp-orchestration publish-config \
+  --client claude-desktop \
+  --profile default \
+  --file my-config.json \
+  --changelog "Imported existing configuration"
+```
+
+### Programmatic Publishing
+
+For automation and CI/CD:
+
+```python
+from mcp_orchestrator.building import ConfigBuilder
+from mcp_orchestrator.publishing import PublishingWorkflow
+from mcp_orchestrator.storage import ArtifactStore
+from mcp_orchestrator.registry import ClientRegistry
+
+# Initialize dependencies
+store = ArtifactStore()
+client_registry = ClientRegistry()
+workflow = PublishingWorkflow(store, client_registry)
+
+# Build configuration
+builder = ConfigBuilder(client_id="claude-desktop", profile_id="default")
+builder.add_server("filesystem", command="npx", args=["-y", "@modelcontextprotocol/server-filesystem", "/tmp"])
+
+# Publish
+result = workflow.publish(
+    builder=builder,
+    private_key_path="~/.mcp-orchestration/keys/signing.key",
+    signing_key_id="default",
+    changelog="Automated deployment from CI/CD"
+)
+
+print(f"Published artifact: {result['artifact_id']}")
+```
+
+---
+
+## Troubleshooting
+
+### Publishing Failures
+
+**Error: "Signing key not found"**
+
+Solution:
+```bash
+mcp-orchestration-init-keys
+```
+
+**Error: "Cannot publish empty configuration"**
+
+Solution: Add at least one server before publishing.
+
+**Error: "Validation failed"**
+
+Solution: Run `validate_config` to see specific error codes, fix errors, then retry.
+
+### Post-Publishing Issues
+
+**Config published but not available**
+
+Cause: Profile index not updated.
+
+Solution: Re-publish the configuration.
+
+**Signature verification failed**
+
+Cause: Artifact corrupted or keys changed.
+
+Solution: Re-publish with current signing keys.
+
+**Artifact ID mismatch**
+
+Cause: Draft modified after validation.
+
+Solution: This is expected. Validation runs on snapshot; changes after validation require re-validation.
+
+---
+
+## Verification After Publishing
+
+Always verify published configurations:
+
+```python
+# Retrieve published config
+config = await get_config(
+    client_id="claude-desktop",
+    profile_id="default"
+)
+
+# Check signature
+assert config["signature_valid"] == True
+
+# Verify content
+print(f"Artifact ID: {config['artifact_id']}")
+print(f"Servers: {list(config['payload']['mcpServers'].keys())}")
+print(f"Server count: {config['metadata']['server_count']}")
+```
 
 ---
 
 ## Next Steps
 
-- [Update an existing configuration](update-config.md)
+- [Deploy configuration to clients](use-config.md)
+- [Update existing configuration](update-config.md)
 - [Verify configuration signatures](verify-signatures.md)
 - [Check for configuration updates](check-config-updates.md)
-- [Deploy configuration to clients](use-config.md)
 
 ---
 

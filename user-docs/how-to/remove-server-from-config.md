@@ -1,128 +1,69 @@
 ---
 title: Remove an MCP Server from Configuration
 audience: end-users
-difficulty: beginner
-time: 2 minutes
+difficulty: intermediate
+time: 2-5 minutes
 wave: 1.2-1.3
-version: v0.1.3
+version: v0.1.5
 ---
 
 # Remove an MCP Server from Configuration
 
-**Goal:** Remove an MCP server from your draft configuration.
+> **💡 First time?** See [Complete Workflow Guide](complete-workflow.md) Part 2A.5 for basic removal workflow. This guide is a **deep dive on removal operations and draft state management**.
 
-**Time:** 2 minutes
+**Goal:** Understand how to remove servers from draft configuration, clear entire drafts, and manage draft state during removal operations.
 
 **Prerequisites:**
-- [Get Started](get-started.md) - mcp-orchestration configured
+- [Get Started](get-started.md) - mcp-orchestration installed
 - At least one server in your draft
 
 ---
 
-## Quick Reference
+## Understanding Server Removal
 
-Ask Claude:
+**Key concepts:**
 
-> Remove [server-name] from config
+**Draft-only operation:** Removal affects only the in-memory draft, not published configurations.
 
-**Examples:**
-- "Remove filesystem from config"
-- "Remove github from config"
-- "Remove my-custom-server from config"
+**Server name vs Server ID:** Remove by the name used in your config (which may differ from the registry server_id if you used a custom name).
 
----
-
-## Step-by-Step
-
-### Step 1: Check What's in Your Draft
-
-> Show me the current draft configuration
-
-Look for the server names. Example response:
-
-```
-Your draft has 3 servers:
-1. filesystem
-2. github
-3. memory
-```
-
-### Step 2: Remove the Server
-
-Use the exact server name from step 1:
-
-> Remove filesystem from config
-
-**Response:**
-
-```
-✓ Removed filesystem from configuration
-
-Current draft now has 2 servers:
-- github
-- memory
-```
-
-### Step 3: Verify Removal
-
-> Show me the draft
-
-The server should no longer appear in the list.
+**Reversible:** Add servers back before publishing if you remove incorrectly.
 
 ---
 
-## Common Scenarios
+## Removal Methods
 
-### Scenario 1: Wrong Parameters
+### Via Claude (Recommended)
 
-You added a server with incorrect parameters:
-
+**Single server removal:**
 ```
-# You added:
-filesystem with path /wrong/path
-
-# Fix it:
 > Remove filesystem from config
-> Add filesystem server with path /correct/path
+> Remove github from config
+> Remove my-custom-server from config
 ```
 
-### Scenario 2: No Longer Needed
-
-You don't need a server anymore:
-
-```
-> Remove brave-search from config
-```
-
-### Scenario 3: Replace with Different Server
-
-Switching from PostgreSQL to SQLite:
-
-```
-> Remove postgres from config
-> Add sqlite server with path /path/to/db.sqlite
-```
-
-### Scenario 4: Start Completely Over
-
-Remove everything and start fresh:
-
+**Clear entire draft:**
 ```
 > Clear the draft configuration
 ```
 
-This removes ALL servers at once. See [Pattern 2](#pattern-2-clear-everything) below.
+### Via CLI
+
+```bash
+# View current draft first
+mcp-orchestration view-draft
+
+# For programmatic removal, see Reference: MCP Tools API
+```
 
 ---
 
-## Important Notes
-
-### Server Names vs Server IDs
+## Server Name Resolution
 
 **Server Name** = What it's called in your config (what you remove)
 **Server ID** = The registry identifier (what you add)
 
-**Usually they're the same:**
+**Standard case (names match):**
 ```
 Server ID: "filesystem"
 Server Name: "filesystem"
@@ -130,46 +71,41 @@ Server Name: "filesystem"
 > Remove filesystem from config  ✅
 ```
 
-**But they can differ if you used a custom name:**
+**Custom name case:**
 ```
 Server ID: "filesystem"
 Server Name: "my-docs" (custom name you specified)
 
-> Remove my-docs from config  ✅
-> Remove filesystem from config  ❌ (won't find it)
+> Remove my-docs from config      ✅
+> Remove filesystem from config   ❌ (won't find it)
 ```
 
-### Removal Only Affects Draft
+**How to check:** `> Show me the current draft`
 
-**Before publishing:**
-- `remove_server_from_config` removes from draft
-- Draft changes are reversible (add it back)
-
-**After publishing:**
-- Published configs are immutable
-- To "remove" from published config: remove from draft, then publish again
-- Old version still exists (versioned)
+Use the exact name from the draft server list.
 
 ---
 
-## Common Patterns
+## Common Removal Patterns
 
-### Pattern 1: Remove and Re-Add
+### Pattern 1: Fix Incorrect Parameters
 
-**Use case:** Fix parameters
+**Use case:** Server added with wrong configuration
 
 ```bash
-# Wrong path
+# Wrong path was used
 > Remove filesystem from config
 
-# Correct path
-> Add filesystem server with path /Users/me/Documents
+# Add with correct path
+> Add filesystem server for /Users/me/Documents
 
 # Verify
 > Show me the draft
 ```
 
-### Pattern 2: Clear Everything
+---
+
+### Pattern 2: Clear and Rebuild
 
 **Use case:** Start completely fresh
 
@@ -177,118 +113,153 @@ Server Name: "my-docs" (custom name you specified)
 # Nuclear option - removes ALL servers
 > Clear the draft configuration
 
-# Verify
+# Verify empty draft
 > Show me the draft
-# Should show: "Your draft is currently empty (0 servers)"
+# Expected: "Your draft is currently empty (0 servers)"
 
-# Start building new config
+# Rebuild from scratch
 > Add memory server
-> Add filesystem server with path /Users/me/Projects
+> Add filesystem server for /Users/me/Projects
 ```
+
+---
 
 ### Pattern 3: Selective Removal
 
 **Use case:** Keep some servers, remove others
 
 ```bash
-# Current draft has: filesystem, github, memory, slack
+# Current: filesystem, github, memory, slack
+# Goal: Keep filesystem and memory only
 
-# Only keep filesystem and memory
 > Remove github from config
 > Remove slack from config
 
-# Verify
+# Verify final state
 > Show me the draft
-# Should show: filesystem, memory
+# Expected: filesystem, memory
 ```
+
+---
+
+### Pattern 4: Replace Server
+
+**Use case:** Switch server types
+
+```bash
+# Switch from PostgreSQL to SQLite
+> Remove postgres from config
+> Add sqlite server with path /path/to/db.sqlite
+```
+
+---
+
+## Draft State After Removal
+
+**What happens:**
+
+1. **Validation:** Check if server name exists in draft
+2. **Removal:** Server removed from in-memory draft
+3. **Response:** Updated draft returned with new server count
+
+**State tracking:**
+
+```
+Before removal:
+- server_count: 3
+- servers: [filesystem, github, memory]
+
+After "Remove github from config":
+- server_count: 2
+- servers: [filesystem, memory]
+```
+
+**Important:** The change is NOT permanent until you publish.
+
+---
+
+## Removing from Published Configurations
+
+**Key insight:** Published configs are immutable artifacts. You cannot "edit" them.
+
+**To remove a server from published config:**
+
+1. **Remove from draft:**
+   ```
+   > Remove [server-name] from config
+   ```
+
+2. **Publish new version:**
+   ```
+   > Publish config with changelog "Removed [server-name]"
+   ```
+
+3. **Result:**
+   - New version created without the server
+   - Old version still exists (versioned, can roll back)
 
 ---
 
 ## Troubleshooting
 
-### "Server not found in draft"
+### Error: "Server not found in draft"
 
-**Symptom:** Error saying server doesn't exist in configuration
+**Cause:** Server name doesn't exist in current draft
 
-**Solutions:**
+**Solution 1 - Check exact name:**
+```
+> Show me the draft
+```
+Use the exact name from the server list.
 
-1. **Check the exact server name**
+**Solution 2 - Check for custom names:**
 
-   > Show me the draft
+If you added with custom name, use that name:
+```
+# You added as:
+> Add filesystem server with name "work-files" and path /work
 
-   Use the exact name from the list
+# Remove using custom name:
+> Remove work-files from config
+```
 
-2. **Check if using custom name**
-
-   If you added with custom name, use that name:
-
-   ```
-   # You added as:
-   > Add filesystem server with name "work-files"
-
-   # Remove using custom name:
-   > Remove work-files from config
-   ```
-
-3. **Draft might be empty**
-
-   > Show me the draft
-
-   If empty (server_count: 0), nothing to remove
-
-### Removed wrong server
-
-**Symptom:** Accidentally removed the wrong one
-
-**Solutions:**
-
-1. **Add it back immediately**
-
-   > Add [server-name] server with [original parameters]
-
-   The draft isn't published yet, so you can undo
-
-2. **If you forgot the parameters**
-
-   > Describe the [server-id] server
-
-   Check the parameters required, then re-add
-
-### Can't remove after publishing
-
-**Symptom:** Want to remove server from published config
-
-**Solution:**
-
-Publishing creates immutable artifacts. To "remove" a server:
-
-1. **Remove from draft**
-
-   > Remove [server-name] from config
-
-2. **Publish new version**
-
-   > Publish config with changelog "Removed [server-name]"
-
-3. **Old version still exists**
-
-   Previous versions with the server are preserved (can roll back if needed)
+**Solution 3 - Verify draft not empty:**
+```
+> Show me the draft
+```
+If `server_count: 0`, nothing to remove.
 
 ---
 
-## What Happens When You Remove?
+### Removed Wrong Server
 
-1. **Validation** - Check if server name exists in draft
-2. **Removal** - Server removed from in-memory draft
-3. **Response** - Updated draft returned with new server count
+**Cause:** Accidentally removed incorrect server
 
-**The change is NOT permanent until you publish.**
+**Solution 1 - Add back immediately:**
+```
+> Add [server-name] server with [original parameters]
+```
+Draft isn't published, so changes are reversible.
+
+**Solution 2 - Check server details if parameters forgotten:**
+```
+> Describe the [server-id] server
+```
+Review required parameters, then re-add.
+
+---
+
+### Cannot Remove After Publishing
+
+**Symptom:** Want to remove server from published config
+
+**Solution:** Publishing creates immutable artifacts. See [Removing from Published Configurations](#removing-from-published-configurations) above.
 
 ---
 
 ## Batch Operations
 
-Currently, you can only remove one server at a time via Claude:
+**Current limitation:** One server at a time via Claude:
 
 ```bash
 > Remove filesystem from config
@@ -296,42 +267,73 @@ Currently, you can only remove one server at a time via Claude:
 > Remove memory from config
 ```
 
-**Faster alternative** - Clear entire draft:
+**Faster alternative - Clear entire draft:**
 
 ```bash
 > Clear the draft configuration
 ```
 
-Then rebuild with only the servers you want.
+Then rebuild with only the servers you want. This is more efficient for removing 3+ servers.
+
+---
+
+## Technical Details
+
+### How remove_server_from_config Works
+
+1. **Validate:** Check server_name exists in draft.servers
+2. **Remove:** Delete server entry from draft
+3. **Update count:** Decrement draft.server_count
+4. **Return:** Updated draft state
+
+### Draft State Management
+
+**In-memory:** Draft cleared on MCP server restart
+
+**No persistence:** Add and publish immediately to avoid losing work
+
+**Idempotent:** Removing non-existent server returns error (doesn't silently succeed)
+
+---
+
+## Common Server Removal Scenarios
+
+**Development cleanup:**
+- Remove test servers before production publish
+- Clear draft after experimentation
+
+**Configuration refinement:**
+- Remove servers with wrong parameters
+- Replace servers with alternatives
+
+**Security:**
+- Remove servers with exposed credentials
+- Clear draft containing sensitive data
+
+**Profile management:**
+- Remove servers specific to one environment
+- Build clean profile-specific configs
 
 ---
 
 ## Next Steps
 
-After removing servers:
-
-1. **Verify the draft**
-
-   > Show me the current draft
-
-2. **Add replacement servers** (if needed)
-
-   See [Add an MCP Server](add-server-to-config.md)
-
-3. **Publish the updated configuration**
-
-   See [Publish a Configuration](publish-config.md)
+1. **Verify draft state:** `> Show me the current draft`
+2. **Add replacement servers (if needed):** See [Add Server to Config](add-server-to-config.md)
+3. **Publish updated configuration:** See [Publish a Configuration](publish-config.md)
+4. **Deploy changes:** See [Complete Workflow Guide](complete-workflow.md) Part 3
 
 ---
 
 ## See Also
 
-- [Add an MCP Server to Config](add-server-to-config.md) - Add servers
+- [Complete Workflow Guide](complete-workflow.md) - End-to-end workflow
+- [Add Server to Config](add-server-to-config.md) - Add servers (pair to this guide)
 - [View Draft Configuration](view-draft-config.md) - Inspect current draft
 - [Clear Draft Configuration](clear-draft-config.md) - Remove all servers at once
-- [Publish a Configuration](publish-config.md) - Save your changes
-- [Reference: remove_server_from_config](../reference/mcp-tools.md#remove_server_from_config) - API details
+- [Publish a Configuration](publish-config.md) - Make changes permanent
+- [Reference: MCP Tools API](../reference/mcp-tools.md#remove_server_from_config) - Programmatic usage
 
 ---
 
-**Remember:** Removal only affects the draft. You can always add servers back before publishing!
+**Key insight:** The draft is your workspace. Removal operations are reversible until you publish. Use this freedom to experiment and refine your configuration.

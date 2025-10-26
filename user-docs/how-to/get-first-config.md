@@ -1,8 +1,16 @@
 # How to Get Your First MCP Configuration
 
+> **⚠️ LEGACY GUIDE (Pre-Wave 1.5):**
+> Configuration building and publishing are now integrated in the modern workflow.
+> This guide documents **retrieving pre-built configs** for advanced users or custom workflows.
+>
+> **Most users should use:** [Complete Workflow](complete-workflow.md) - build, publish, and deploy your own configs.
+
 **Goal:** Retrieve a validated, signed configuration for Claude Desktop
 
 **Time:** 5 minutes
+
+**Status:** Legacy - Wave 1.5 focuses on building your own configs
 
 **Prerequisites:**
 - mcp-orchestration MCP server configured

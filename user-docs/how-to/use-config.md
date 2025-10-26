@@ -1,8 +1,16 @@
 # How to Use Distributed Configs in Your MCP Client
 
-**Goal:** Apply fetched config to Claude Desktop or Cursor
+> **⚠️ LEGACY GUIDE (Pre-Wave 1.5):**
+> Configuration deployment is now **automated** with [`deploy_config`](deploy-config.md).
+> This guide documents **manual config application** for advanced users or custom workflows.
+>
+> **Most users should use:** [Deploy Config](deploy-config.md) - automatic deployment with verification.
+
+**Goal:** Manually apply fetched config to Claude Desktop or Cursor
 
 **Time:** 15 minutes
+
+**Status:** Legacy - Wave 1.5 automates deployment
 
 **Prerequisites:**
 - Fetched and verified a config artifact ([How to Get Config](get-first-config.md))

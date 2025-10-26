@@ -2,14 +2,14 @@
 title: Your First MCP Configuration
 audience: beginners
 difficulty: beginner
-time: 15 minutes
-wave: 1.3
-version: v0.1.3
+time: 20 minutes
+wave: 1.0-1.5
+version: v0.1.5
 ---
 
 # Your First MCP Configuration
 
-Welcome! In this tutorial, you'll create and publish your first MCP server configuration. By the end, you'll have a working configuration that gives Claude access to your files.
+Welcome! In this tutorial, you'll create, publish, and deploy your first MCP server configuration. By the end, Claude Desktop will be able to access your files through the filesystem server you configured.
 
 ## What You'll Accomplish
 
@@ -18,9 +18,10 @@ You'll see with your own eyes:
 - Your signing keys being created
 - A filesystem server being added to your configuration
 - Your configuration being signed and saved
-- A unique artifact ID proving your success
+- Your configuration being deployed to Claude Desktop
+- Claude successfully accessing your files through the filesystem server
 
-**Time:** 15 minutes
+**Time:** 20 minutes (includes deployment and testing)
 
 ## Before You Begin
 
@@ -163,6 +164,82 @@ Your configuration is now saved and cryptographically signed.
 
 **Success!** That long artifact ID is proof that you did it. It's unique to your configuration.
 
+**Important:** You've published your configuration, but haven't deployed it yet. Let's do that now!
+
+---
+
+## Step 9: Deploy Your Configuration
+
+Publishing saved your configuration in mcp-orchestration's storage. Now let's deploy it to Claude Desktop so you can actually use it.
+
+Say to Claude:
+
+> Deploy this configuration to Claude Desktop
+
+**What to expect:** Claude will respond with:
+
+```
+✓ Configuration deployed successfully!
+
+Deployed artifact: 8e91a062ff85...
+Config path: /Users/yourname/Library/Application Support/Claude/claude_desktop_config.json
+Deployed at: 2025-10-25T14:30:00Z
+
+⚠️  Restart Claude Desktop for changes to take effect
+```
+
+---
+
+## Step 10: Restart Claude Desktop
+
+Your configuration is deployed, but Claude Desktop needs to restart to load it.
+
+**On macOS:**
+1. Quit Claude Desktop completely (⌘Q)
+2. Open Claude Desktop again
+
+Or run in terminal:
+```bash
+killall Claude && open -a 'Claude'
+```
+
+**On Windows:**
+1. Close Claude Desktop completely
+2. Open it from Start menu
+
+**On Linux:**
+```bash
+pkill -f claude
+claude-desktop &
+```
+
+---
+
+## Step 11: Test Your Filesystem Server
+
+Now the moment of truth - can Claude access your files?
+
+Ask Claude:
+
+> List the files in my Documents folder
+
+**What to expect:** Claude should show you actual files from your Documents folder!
+
+```
+Here are the files in your Documents folder:
+
+- report.pdf
+- notes.txt
+- project/
+- photos/
+...
+```
+
+**If this works, congratulations!** 🎉 You've completed the full workflow:
+- Install → Configure → Initialize → Build → Publish → Deploy → Test
+
+---
+
 ## What You Just Learned
 
 Through doing, you learned:
@@ -174,22 +251,28 @@ Through doing, you learned:
 5. **How to add** a server to your configuration
 6. **How to view** your draft before saving
 7. **How to publish** a signed configuration
+8. **How to deploy** configuration to Claude Desktop
+9. **How to restart** and verify the deployment
+10. **How to test** that servers are working
 
 ## What You Built
 
 You now have:
 - ✅ Signing keys at `~/.mcp-orchestration/keys/`
 - ✅ A published configuration stored as a cryptographically signed artifact
+- ✅ A deployed configuration in Claude Desktop
+- ✅ A working filesystem server that Claude can use
 - ✅ A unique artifact ID you can reference later
-- ✅ Knowledge of the basic workflow
+- ✅ Knowledge of the complete workflow
 
 ## Next Steps
 
-Now that you know the basics, you can:
+Now that you know the complete workflow, you can:
 
-1. **Add more servers** - Try adding the memory server or GitHub integration (see [How-to Guide: Add Servers](../how-to/manage-configs-with-claude.md))
-2. **Understand signing** - Learn why cryptographic signatures matter (see [Explanation: Cryptographic Signing](../explanation/cryptographic-signing.md))
-3. **Explore available servers** - Browse all 15+ servers in the registry (see [How-to Guide: Browse Servers](../how-to/browse-servers.md))
+1. **Add more servers** - Try adding memory, GitHub, or brave-search (see [Manage Configs with Claude](../how-to/manage-configs-with-claude.md))
+2. **Learn the complete workflow** - Explore all use cases including rollback and drift detection (see [Complete Workflow](../how-to/complete-workflow.md))
+3. **Understand signing** - Learn why cryptographic signatures matter (see [Explanation: Cryptographic Signing](../explanation/cryptographic-signing.md))
+4. **Explore CLI alternatives** - Use command-line tools for automation (see [Complete Workflow](../how-to/complete-workflow.md))
 
 ## Troubleshooting
 
@@ -225,6 +308,28 @@ Now that you know the basics, you can:
 **What happened:** Claude might interpret "Documents" differently.
 
 **What to do:** Be specific: "Add filesystem server for /Users/yourname/Documents" (use your actual username)
+
+### Claude can't list my files after deployment
+
+**Possible causes:**
+1. Didn't restart Claude Desktop after deployment
+2. Filesystem server not in deployed config
+3. Wrong folder path
+
+**What to do:**
+1. Verify you restarted: `killall Claude && open -a 'Claude'`
+2. Ask Claude: "What servers do I have available?" - should include filesystem
+3. Check deployed config includes correct path
+
+### Deployment succeeds but config unchanged
+
+**What happened:** Claude Desktop is reading a cached version.
+
+**What to do:**
+1. Quit Claude Desktop completely (check Activity Monitor - no Claude processes)
+2. Wait 5 seconds
+3. Open Claude Desktop again
+4. Test: "What servers do I have?"
 
 ## You Did It!
 

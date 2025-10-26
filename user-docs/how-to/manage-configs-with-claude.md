@@ -2,8 +2,9 @@
 title: Manage MCP Configurations with Claude Desktop
 audience: end-users
 difficulty: beginner
-time: 10 minutes
-wave: 1.3
+time: 15 minutes
+wave: 1.3-1.5
+version: v0.1.5
 ---
 
 # Manage MCP Configurations with Claude Desktop
@@ -231,6 +232,113 @@ Here's a complete example of managing your configuration:
 
 **Claude:** ✓ Configuration published! Artifact ID: 7941a154...
 
+**You:** Deploy this configuration to Claude Desktop
+
+**Claude:** ✓ Configuration deployed! Restart Claude Desktop to use the new servers.
+
+*Restart Claude Desktop (⌘Q then reopen)*
+
+**You:** What servers do I have?
+
+**Claude:** [Lists: mcp-orchestration, filesystem, memory, and your other servers]
+
+✅ **Success!** Your servers are now available in Claude Desktop.
+
+## Step 7: Deploy Your Configuration
+
+Once you've published your configuration, deploy it to Claude Desktop to actually use the servers.
+
+**What to say to Claude:**
+
+> "Deploy my latest configuration to Claude Desktop"
+
+or simply:
+
+> "Deploy to Claude"
+
+**What Claude will do:**
+
+1. Retrieve your latest published configuration
+2. Verify its cryptographic signature
+3. Write it to Claude Desktop's config file
+4. Record the deployment
+
+You'll see a response like:
+
+```
+✓ Configuration deployed successfully!
+
+Deployed artifact: abc123...
+Config location: ~/Library/Application Support/Claude/claude_desktop_config.json
+Deployed at: 2025-10-25T14:30:00Z
+
+⚠️  Restart Claude Desktop for changes to take effect:
+  killall Claude && open -a 'Claude'
+```
+
+**Important:** You must restart Claude Desktop after deployment!
+
+### Restart Claude Desktop
+
+**macOS:**
+```bash
+killall Claude && open -a 'Claude'
+```
+
+**Or manually:**
+1. Quit Claude Desktop completely (⌘Q, not just close window)
+2. Open Claude Desktop again
+
+**Windows/Linux:**
+- Close Claude completely
+- Reopen from Start menu / application launcher
+
+### Verify Deployment
+
+After restart, check that your servers are available:
+
+**What to say:**
+
+> "What MCP servers do I have available?"
+
+**What to expect:**
+
+Claude should list all your servers:
+- mcp-orchestration
+- filesystem
+- memory
+- (any others you added)
+
+### Test Your Servers
+
+Try using your newly deployed servers:
+
+**Test filesystem:**
+> "List files in my Documents folder"
+
+**Test memory:**
+> "Remember that my favorite programming language is Python"
+> *(later)* "What's my favorite programming language?"
+
+If these work, your deployment succeeded! 🎉
+
+## Update Existing Configuration
+
+Already have a deployed config and want to add more servers? Easy!
+
+**What to say:**
+
+> "Add the github server to my configuration"
+> *(Claude will ask for your GitHub token)*
+
+> "Show me what changed"
+
+> "Publish with note: Added GitHub integration"
+
+> "Deploy to Claude Desktop"
+
+Then restart Claude Desktop. Your new server is added!
+
 ## Tips for Success
 
 ### Tip 1: Check Before Publishing
@@ -284,7 +392,12 @@ You can always:
 
 ### Q: Can Claude access my files after I add the filesystem server?
 
-**A:** Not automatically. The configuration you're building needs to be deployed to Claude Desktop (a future feature). Right now you're just creating the configuration file.
+**A:** Not until you deploy! After adding the filesystem server, you must:
+1. Publish the configuration
+2. Deploy it to Claude Desktop
+3. Restart Claude Desktop
+
+Then Claude can access the specified folder.
 
 ## Troubleshooting
 
@@ -315,10 +428,10 @@ If it's truly empty, try adding the server again or restart Claude Desktop.
 
 After mastering configuration management, you can:
 
-1. **Deploy configurations** - Apply your published configs to Claude Desktop (Wave 1.5)
-2. **View history** - See all your past configurations (Wave 1.6)
-3. **Compare configurations** - Diff current vs published versions
-4. **Share configurations** - Export for other team members
+1. **Rollback to previous versions** - Deploy older artifact IDs (see [Complete Workflow](complete-workflow.md#use-case-d-rollback-to-previous-version))
+2. **Detect configuration drift** - Compare deployed vs latest (see [Complete Workflow](complete-workflow.md#use-case-e-detect-configuration-drift))
+3. **View history** - See all your past configurations (Wave 1.6 - coming soon)
+4. **Share configurations** - Export artifact IDs for team members
 
 ## Summary
 
@@ -329,8 +442,12 @@ You've learned how to:
 - ✅ View your draft at any time
 - ✅ Clear and start over if needed
 - ✅ Publish signed configurations
+- ✅ Deploy configurations to Claude Desktop
+- ✅ Update existing configurations
 
 All through natural conversation with Claude - no command-line required!
+
+**Complete workflow:** Initialize → Discover → Add → View → Publish → Deploy → Verify ✅
 
 ## Need Help?
 
@@ -341,4 +458,4 @@ If you run into issues:
 
 ---
 
-*This guide covers Wave 1.3 features. More capabilities coming in future waves!*
+*This guide covers Wave 1.3-1.5 features (build, publish, deploy). For complete workflow including CLI alternatives, see [Complete Workflow](complete-workflow.md).*

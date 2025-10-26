@@ -1,10 +1,18 @@
 # How to Verify Configuration Signatures
 
-**Goal:** Cryptographically verify config hasn't been tampered with
+> **⚠️ LEGACY GUIDE (Pre-Wave 1.5):**
+> Signature verification is now **automatic** in the [`deploy_config`](deploy-config.md) workflow.
+> This guide documents **manual verification** for advanced users or custom workflows.
+>
+> **Most users should use:** [Deploy Config](deploy-config.md) - automatic verification included.
+
+**Goal:** Manually cryptographically verify config hasn't been tampered with
 
 **Time:** 10 minutes
 
 **Security Level:** ⭐⭐⭐ High - Prevents config tampering attacks
+
+**Status:** Legacy - Wave 1.5 automates this process
 
 **Prerequisites:**
 - Public verification key (`keys/verification_key.pem`)

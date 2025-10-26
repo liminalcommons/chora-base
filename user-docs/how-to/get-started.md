@@ -4,7 +4,7 @@ audience: end-users
 difficulty: beginner
 time: 10 minutes
 wave: 1.0-1.3
-version: v0.1.3
+version: v0.1.5
 ---
 
 # Get Started with mcp-orchestration
@@ -12,6 +12,8 @@ version: v0.1.3
 **Goal:** Install mcp-orchestration, configure it in Claude Desktop, and initialize signing keys.
 
 **Time:** 10 minutes
+
+> **💡 Looking for the complete workflow?** See [Complete Workflow Guide](complete-workflow.md) for end-to-end instructions from install through deployment, including building and deploying your first configuration.
 
 ---
 

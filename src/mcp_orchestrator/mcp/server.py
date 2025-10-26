@@ -31,6 +31,8 @@ from typing import Any
 from fastmcp import FastMCP
 
 from mcp_orchestrator.building import ConfigBuilder
+from mcp_orchestrator.deployment import DeploymentWorkflow, DeploymentError
+from mcp_orchestrator.deployment.log import DeploymentLog
 from mcp_orchestrator.diff import compare_configs
 from mcp_orchestrator.publishing import PublishingWorkflow, ValidationError
 from mcp_orchestrator.registry import get_default_registry
@@ -48,6 +50,9 @@ _store = ArtifactStore()  # Uses default ~/.mcp-orchestration path
 
 # Wave 1.2: Draft config builders (keyed by "client_id/profile_id")
 _builders: dict[str, ConfigBuilder] = {}
+
+# Wave 1.5: Deployment support
+_deployment_log = DeploymentLog(deployments_dir=str(_store.base_path / "deployments"))
 
 
 # =============================================================================
@@ -871,9 +876,20 @@ async def publish_config(
         ... )
         >>> # Config is now validated, signed, and stored for claude-desktop/default
     """
+    import logging
+
+    logger = logging.getLogger(__name__)
+
     try:
+        # Log start of publish operation
+        logger.info(
+            f"Starting publish_config for {client_id}/{profile_id} "
+            f"(changelog: {changelog[:50] if changelog else 'None'})"
+        )
+
         # Get builder (must exist with servers)
         builder = _get_builder(client_id, profile_id)
+        logger.info(f"Got builder with {builder.count()} servers")
 
         # Get signing key paths
         from pathlib import Path
@@ -883,10 +899,13 @@ async def publish_config(
         private_key_path = key_dir / "signing.key"
 
         if not private_key_path.exists():
+            logger.error(f"Signing key not found at {private_key_path}")
             raise ValueError(
                 f"Signing key not found at {private_key_path}. "
                 "Use the initialize_keys tool to generate keys."
             )
+
+        logger.info(f"Found signing key at {private_key_path}")
 
         # Use PublishingWorkflow to validate → sign → store
         workflow = PublishingWorkflow(
@@ -894,26 +913,61 @@ async def publish_config(
             client_registry=_registry,
         )
 
-        result = workflow.publish(
-            builder=builder,
-            private_key_path=str(private_key_path),
-            signing_key_id="default",
-            changelog=changelog,
-        )
+        logger.info("Created PublishingWorkflow, calling publish()...")
 
-        return result
+        # Call publish and log result
+        try:
+            result = workflow.publish(
+                builder=builder,
+                private_key_path=str(private_key_path),
+                signing_key_id="default",
+                changelog=changelog,
+            )
+            logger.info(f"Publish succeeded with artifact_id: {result.get('artifact_id', 'UNKNOWN')[:16]}...")
+
+        except Exception as publish_error:
+            logger.error(f"workflow.publish() raised exception: {type(publish_error).__name__}: {publish_error}")
+            raise
+
+        # Ensure result is JSON-serializable
+        # Convert any datetime objects or other non-serializable types
+        serializable_result = {
+            "status": str(result.get("status", "published")),
+            "artifact_id": str(result.get("artifact_id", "")),
+            "client_id": str(result.get("client_id", client_id)),
+            "profile_id": str(result.get("profile_id", profile_id)),
+            "server_count": int(result.get("server_count", 0)),
+            "created_at": str(result.get("created_at", "")),
+        }
+
+        if changelog:
+            serializable_result["changelog"] = str(changelog)
+
+        logger.info(f"Returning serializable result: {serializable_result}")
+        return serializable_result
 
     except ValidationError as e:
         # Validation errors are user errors - provide helpful message
+        logger.error(f"Validation failed: {e}")
         errors = e.validation_result.get("errors", [])
         error_msgs = [f"  - [{err['code']}] {err['message']}" for err in errors]
         raise ValueError(
             f"Configuration validation failed:\n" + "\n".join(error_msgs)
         )
-    except ValueError:
+
+    except ValueError as e:
+        logger.error(f"ValueError in publish_config: {e}")
         raise
+
+    except StorageError as e:
+        # Storage-specific errors
+        logger.error(f"Storage error during publish: {e}")
+        raise ValueError(f"Failed to store configuration artifact: {e}")
+
     except Exception as e:
-        raise ValueError(f"Failed to publish config: {e}")
+        # Catch-all for unexpected errors
+        logger.error(f"Unexpected error in publish_config: {type(e).__name__}: {e}", exc_info=True)
+        raise ValueError(f"Failed to publish config: {type(e).__name__}: {e}")
 
 
 @mcp.tool()
@@ -1179,8 +1233,81 @@ async def validate_config(
         }
 
 
+@mcp.tool()
+async def deploy_config(
+    client_id: str = "claude-desktop",
+    profile_id: str = "default",
+    artifact_id: str | None = None
+) -> dict[str, Any]:
+    """Deploy configuration to client.
+
+    Automatically deploys a published configuration to the client's config location.
+    This completes the full workflow: discover → add → validate → publish → deploy.
+
+    The deployment workflow:
+    1. Validates client exists in registry
+    2. Fetches artifact (latest if not specified)
+    3. Verifies cryptographic signature
+    4. Writes config to client location
+    5. Records deployment event
+
+    Note: After deployment, restart the client application for changes to take effect.
+
+    Args:
+        client_id: Client family identifier (defaults to 'claude-desktop')
+        profile_id: Profile identifier (defaults to 'default')
+        artifact_id: Optional specific artifact to deploy (defaults to latest)
+
+    Returns:
+        Dictionary with:
+        - status: "deployed"
+        - config_path: Path where config was written
+        - artifact_id: Deployed artifact ID
+        - deployed_at: ISO 8601 timestamp
+
+    Raises:
+        ValueError: If client not found, artifact not found, or deployment fails
+
+    Example:
+        >>> # Deploy latest published config
+        >>> result = await deploy_config()
+        >>> print(f"Deployed to: {result['config_path']}")
+        >>> # Restart client for changes to take effect
+
+        >>> # Deploy specific version (rollback)
+        >>> result = await deploy_config(artifact_id="abc123...")
+    """
+    try:
+        # Create deployment workflow
+        workflow = DeploymentWorkflow(
+            store=_store,
+            client_registry=_registry,
+            deployment_log=_deployment_log
+        )
+
+        # Deploy configuration
+        result = workflow.deploy(
+            client_id=client_id,
+            profile_id=profile_id,
+            artifact_id=artifact_id
+        )
+
+        return result.model_dump()
+
+    except DeploymentError as e:
+        # Deployment-specific errors - provide helpful message
+        error_code = e.details.get("code", "DEPLOYMENT_ERROR")
+        raise ValueError(f"[{error_code}] {str(e)}")
+
+    except ValueError:
+        raise
+
+    except Exception as e:
+        raise ValueError(f"Failed to deploy config: {e}")
+
+
 # =============================================================================
-# RESOURCES (5 - Wave 1.0: 2, Wave 1.1: 2, Wave 1.2: 1)
+# RESOURCES (7 - Wave 1.0: 2, Wave 1.1: 2, Wave 1.2: 1, Wave 1.5: 2)
 # =============================================================================
 
 
@@ -1196,8 +1323,8 @@ async def server_capabilities() -> str:
     """
     capabilities = {
         "name": "mcp-orchestration",
-        "version": "0.1.4",
-        "wave": "Wave 1.4: Schema Validation",
+        "version": "0.1.5",
+        "wave": "Wave 1.5: Configuration Deployment",
         "capabilities": {
             "tools": [
                 # Wave 1.0
@@ -1218,6 +1345,8 @@ async def server_capabilities() -> str:
                 "initialize_keys",
                 # Wave 1.4
                 "validate_config",
+                # Wave 1.5
+                "deploy_config",
             ],
             "resources": [
                 # Wave 1.0
@@ -1228,6 +1357,9 @@ async def server_capabilities() -> str:
                 "server://{server_id}",
                 # Wave 1.2
                 "config://{client_id}/{profile_id}/draft",
+                # Wave 1.5
+                "config://{client_id}/{profile_id}/latest",
+                "config://{client_id}/{profile_id}/deployed",
             ],
             "prompts": [],
         },
@@ -1252,6 +1384,12 @@ async def server_capabilities() -> str:
             # Wave 1.4
             "schema_validation": True,
             "pre_publish_validation": True,
+            # Wave 1.5
+            "automated_deployment": True,
+            "deployment_logging": True,
+            "configuration_drift_detection": True,
+            "version_pinning": True,
+            "atomic_deployment": True,
         },
         "endpoints": {
             "verification_key_url": "https://mcp-orchestration.example.com/keys/verification_key.pem"
@@ -1392,6 +1530,139 @@ async def draft_config_resource(client_id: str, profile_id: str) -> str:
     }
 
     return json.dumps(draft_info, indent=2)
+
+
+# =============================================================================
+# RESOURCES - Wave 1.5 (Config Deployment)
+# =============================================================================
+
+
+@mcp.resource("config://{client_id}/{profile_id}/latest")
+async def latest_config_resource(client_id: str, profile_id: str) -> str:
+    """Expose latest published artifact as JSON resource.
+
+    Returns the latest published configuration artifact for a client/profile.
+    This is the most recent version that has been signed and published,
+    regardless of whether it has been deployed yet.
+
+    Args:
+        client_id: Client family identifier
+        profile_id: Profile identifier
+
+    Returns:
+        JSON string with artifact information including:
+        - artifact_id: Content-addressed SHA-256 ID
+        - client_id: Client this artifact is for
+        - profile_id: Profile within client
+        - payload: mcpServers configuration
+        - metadata: Changelog and other metadata
+        - signed_at: When artifact was published
+
+    Example URI:
+        config://claude-desktop/default/latest
+
+    Raises:
+        ValueError: If no published artifact exists for this client/profile
+
+    Use Case:
+        Query this resource to detect configuration drift:
+        - Compare latest (this resource) vs deployed (deployed resource)
+        - If IDs differ, configuration drift detected
+        - Run deploy_config() to update deployed config
+    """
+    try:
+        artifact = _store.get(client_id, profile_id)
+    except Exception as e:
+        raise ValueError(
+            f"No published artifact found for {client_id}/{profile_id}. "
+            f"Publish a configuration first using publish_config(). "
+            f"Error: {e}"
+        )
+
+    # Return artifact info
+    artifact_info = {
+        "artifact_id": artifact.artifact_id,
+        "client_id": artifact.client_id,
+        "profile_id": artifact.profile_id,
+        "payload": artifact.payload,
+        "metadata": artifact.metadata,
+        "signed_at": artifact.metadata.get("signed_at"),
+        "server_count": len(artifact.payload.get("mcpServers", {})),
+        "servers": list(artifact.payload.get("mcpServers", {}).keys()),
+    }
+
+    return json.dumps(artifact_info, indent=2)
+
+
+@mcp.resource("config://{client_id}/{profile_id}/deployed")
+async def deployed_config_resource(client_id: str, profile_id: str) -> str:
+    """Expose currently deployed artifact as JSON resource.
+
+    Returns the configuration artifact that is currently deployed to the
+    client's config location on disk. This may differ from the latest
+    published artifact if deployment hasn't been run yet.
+
+    Args:
+        client_id: Client family identifier
+        profile_id: Profile identifier
+
+    Returns:
+        JSON string with deployment information including:
+        - artifact_id: ID of deployed artifact
+        - config_path: Where config was deployed
+        - deployed_at: When deployment occurred
+        - changelog: Changelog from deployed artifact
+        - drift_detected: Whether deployed differs from latest
+
+    Example URI:
+        config://claude-desktop/default/deployed
+
+    Raises:
+        ValueError: If no deployment exists for this client/profile
+
+    Use Case:
+        Query this resource to:
+        - Check what version is currently deployed
+        - Detect configuration drift vs latest
+        - View deployment history
+    """
+    deployed_artifact_id = _deployment_log.get_deployed_artifact(client_id, profile_id)
+
+    if deployed_artifact_id is None:
+        raise ValueError(
+            f"No deployment found for {client_id}/{profile_id}. "
+            f"Deploy a configuration first using deploy_config()."
+        )
+
+    # Get deployment details
+    history = _deployment_log.get_deployment_history(client_id, profile_id, limit=1)
+    if not history:
+        raise ValueError(f"Deployment log entry not found for {client_id}/{profile_id}")
+
+    deployment = history[0]
+
+    # Check for drift (deployed vs latest)
+    drift_detected = False
+    latest_artifact_id = None
+    try:
+        latest_artifact = _store.get(client_id, profile_id)
+        latest_artifact_id = latest_artifact.artifact_id
+        drift_detected = (deployed_artifact_id != latest_artifact_id)
+    except Exception:
+        # No latest artifact - can't detect drift
+        pass
+
+    # Return deployment info
+    deployment_info = {
+        "artifact_id": deployed_artifact_id,
+        "config_path": deployment.config_path,
+        "deployed_at": deployment.deployed_at,
+        "changelog": deployment.changelog,
+        "drift_detected": drift_detected,
+        "latest_artifact_id": latest_artifact_id,
+    }
+
+    return json.dumps(deployment_info, indent=2)
 
 
 # =============================================================================
