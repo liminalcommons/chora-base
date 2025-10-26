@@ -356,13 +356,21 @@ print(report)
   - [CHECKPOINT_PATTERNS.md](claude/CHECKPOINT_PATTERNS.md) - Session recovery
   - [METRICS_TRACKING.md](claude/METRICS_TRACKING.md) - ROI tracking
   - [FRAMEWORK_TEMPLATES.md](claude/FRAMEWORK_TEMPLATES.md) - Request templates
-- [dev-docs/workflows/](dev-docs/workflows/) - DDD, BDD, TDD workflows (if available)
 
 ### Nested CLAUDE.md Files
-- [tests/CLAUDE.md](tests/CLAUDE.md) - Test-specific patterns for mcp-orchestration
-- [.chora/memory/CLAUDE.md](.chora/memory/CLAUDE.md) - Memory integration for session tracking
+
+**Development:**
+- [dev-docs/CLAUDE.md](dev-docs/CLAUDE.md) - Contributing and development patterns
+  - [dev-docs/vision/CLAUDE.md](dev-docs/vision/CLAUDE.md) - Strategic vision planning
+  - [dev-docs/research/CLAUDE.md](dev-docs/research/CLAUDE.md) - Research and investigation
+
+**Testing & Deployment:**
+- [tests/CLAUDE.md](tests/CLAUDE.md) - Test generation patterns for MCP tools
 - [docker/CLAUDE.md](docker/CLAUDE.md) - Docker assistance for MCP server deployment
 - [scripts/CLAUDE.md](scripts/CLAUDE.md) - Automation patterns for build/release
+
+**Memory & Tracking:**
+- [.chora/memory/CLAUDE.md](.chora/memory/CLAUDE.md) - Memory integration for wave tracking
 
 ---
 
