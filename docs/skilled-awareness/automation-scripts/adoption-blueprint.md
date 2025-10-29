@@ -1061,7 +1061,52 @@ read -t 30 -p "Continue? (y/N) " -n 1 -r
 
 ---
 
-## 7. Success Metrics
+## 7. Update Project AGENTS.md (Post-Install Awareness Enablement)
+
+**Why This Step Matters**:
+AGENTS.md serves as the **discoverability layer** for installed SAPs. Without this update, agents cannot find the Automation Scripts capability, making it invisible to AI assistants like Claude. This step ensures:
+- Agents can discover justfile commands and automation scripts
+- Quick reference for development workflows
+- Links to script documentation
+
+**Quality Requirements** (validated by SAP audit):
+- Agent-executable instructions (specify tool, file, location, content)
+- Concrete content template (not placeholders)
+- Validation command to verify update
+- See: [SAP_AWARENESS_INTEGRATION_CHECKLIST.md](../../dev-docs/workflows/SAP_AWARENESS_INTEGRATION_CHECKLIST.md)
+
+**For agents** (use Edit tool):
+1. Open: `AGENTS.md`
+2. Find appropriate section (e.g., "Project Structure" or "Capabilities")
+3. Add:
+
+```markdown
+### Automation Scripts
+
+25+ automation scripts with justfile interface for development workflows.
+
+**Documentation**: [docs/skilled-awareness/automation-scripts/](docs/skilled-awareness/automation-scripts/)
+
+**Quick Start**:
+- Read: [adoption-blueprint.md](docs/skilled-awareness/automation-scripts/adoption-blueprint.md)
+- Guide: [awareness-guide.md](docs/skilled-awareness/automation-scripts/awareness-guide.md)
+
+**Core Commands**:
+- `just test`: Run test suite
+- `just smoke`: Quick validation
+- `just lint`: Check code style
+- `just pre-merge`: All quality gates
+- `just --list`: Show all commands
+```
+
+**Validation**:
+```bash
+grep "Automation Scripts" AGENTS.md && echo "✅ AGENTS.md updated"
+```
+
+---
+
+## 8. Success Metrics
 
 ### Adoption Metrics
 
@@ -1089,7 +1134,7 @@ read -t 30 -p "Continue? (y/N) " -n 1 -r
 
 ---
 
-## 8. Related Documents
+## 9. Related Documents
 
 **Scripts**:
 - [All scripts](/static-template/scripts/) - 25 automation scripts

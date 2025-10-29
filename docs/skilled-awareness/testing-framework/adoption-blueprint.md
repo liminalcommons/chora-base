@@ -451,7 +451,51 @@ RuntimeWarning: coroutine 'test_func' was never awaited
 
 ---
 
-## 10. Next Steps
+## 10. Update Project AGENTS.md (Post-Install Awareness Enablement)
+
+**Why This Step Matters**:
+AGENTS.md serves as the **discoverability layer** for installed SAPs. Without this update, agents cannot find the Testing Framework capability, making it invisible to AI assistants like Claude. This step ensures:
+- Agents can discover comprehensive testing capabilities
+- Quick reference for pytest operations
+- Links to detailed testing documentation
+
+**Quality Requirements** (validated by SAP audit):
+- Agent-executable instructions (specify tool, file, location, content)
+- Concrete content template (not placeholders)
+- Validation command to verify update
+- See: [SAP_AWARENESS_INTEGRATION_CHECKLIST.md](../../dev-docs/workflows/SAP_AWARENESS_INTEGRATION_CHECKLIST.md)
+
+**For agents** (use Edit tool):
+1. Open: `AGENTS.md`
+2. Find appropriate section (e.g., "Project Structure" or "Capabilities")
+3. Add:
+
+```markdown
+### Testing Framework
+
+Comprehensive pytest-based testing with coverage measurement and async support.
+
+**Documentation**: [docs/skilled-awareness/testing-framework/](docs/skilled-awareness/testing-framework/)
+
+**Quick Start**:
+- Read: [adoption-blueprint.md](docs/skilled-awareness/testing-framework/adoption-blueprint.md)
+- Guide: [awareness-guide.md](docs/skilled-awareness/testing-framework/awareness-guide.md)
+
+**Key Patterns**:
+- Run tests: `pytest` or `just test`
+- Coverage check: `pytest --cov=src --cov-report=term-missing`
+- Pre-merge validation: `just pre-merge`
+- Target coverage: ≥85%
+```
+
+**Validation**:
+```bash
+grep "Testing Framework" AGENTS.md && echo "✅ AGENTS.md updated"
+```
+
+---
+
+## 11. Next Steps
 
 ### After Writing Tests
 
@@ -475,7 +519,7 @@ RuntimeWarning: coroutine 'test_func' was never awaited
 
 ---
 
-## 11. Related Documents
+## 12. Related Documents
 
 **SAP-004 Artifacts**:
 - [capability-charter.md](capability-charter.md) - This SAP's charter

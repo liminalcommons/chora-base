@@ -190,6 +190,54 @@ just pre-merge
 
 ---
 
+## Post-Install Awareness Enablement
+
+### Update Project AGENTS.md
+
+**Why This Step Matters**:
+AGENTS.md serves as the **discoverability layer** for installed SAPs. Without this update, agents cannot find the chora-base Meta capability, making it invisible to AI assistants like Claude. This step ensures:
+- Agents can discover the chora-base architecture and patterns
+- Quick reference for chora-base usage
+- Links to complete protocol documentation
+
+**Quality Requirements** (validated by SAP audit):
+- Agent-executable instructions (specify tool, file, location, content)
+- Concrete content template (not placeholders)
+- Validation command to verify update
+- See: [SAP_AWARENESS_INTEGRATION_CHECKLIST.md](../../dev-docs/workflows/SAP_AWARENESS_INTEGRATION_CHECKLIST.md)
+
+**For agents** (use Edit tool):
+1. Open: `AGENTS.md`
+2. Find appropriate section (e.g., "Project Structure" or "Capabilities")
+3. Add:
+
+```markdown
+### chora-base (Meta Package)
+
+Complete meta-specification for chora-base: Python foundation for AI-native tooling with SAP framework, testing infrastructure, and CI/CD patterns.
+
+**Documentation**: [docs/skilled-awareness/chora-base/](docs/skilled-awareness/chora-base/)
+
+**Quick Start**:
+- Charter: [capability-charter.md](docs/skilled-awareness/chora-base/capability-charter.md)
+- Blueprint: [adoption-blueprint.md](docs/skilled-awareness/chora-base/adoption-blueprint.md)
+- Guide: [awareness-guide.md](docs/skilled-awareness/chora-base/awareness-guide.md)
+
+**Core Capabilities**:
+- SAP Framework (Skilled Awareness Packages)
+- 4-domain documentation architecture
+- Testing framework (pytest, coverage ≥85%)
+- CI/CD workflows (GitHub Actions)
+- Quality gates (ruff, mypy, type checking)
+```
+
+**Validation**:
+```bash
+grep "chora-base (Meta Package)" AGENTS.md && echo "✅ AGENTS.md updated"
+```
+
+---
+
 ## 6. Validation
 
 ### Post-Generation Checklist

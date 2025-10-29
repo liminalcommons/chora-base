@@ -301,6 +301,50 @@ chown -R 1000:1000 ./logs ./data ./.chora/memory
 
 ---
 
+## Update Project AGENTS.md (Post-Install Awareness Enablement)
+
+**Why This Step Matters**:
+AGENTS.md serves as the **discoverability layer** for installed SAPs. Without this update, agents cannot find the Docker Operations capability, making it invisible to AI assistants like Claude. This step ensures:
+- Agents can discover Docker configuration and workflows
+- Quick reference for container operations
+- Links to Docker documentation
+
+**Quality Requirements** (validated by SAP audit):
+- Agent-executable instructions (specify tool, file, location, content)
+- Concrete content template (not placeholders)
+- Validation command to verify update
+- See: [SAP_AWARENESS_INTEGRATION_CHECKLIST.md](../../dev-docs/workflows/SAP_AWARENESS_INTEGRATION_CHECKLIST.md)
+
+**For agents** (use Edit tool):
+1. Open: `AGENTS.md`
+2. Find appropriate section (e.g., "Project Structure" or "Capabilities")
+3. Add:
+
+```markdown
+### Docker Operations
+
+Multi-stage Dockerfile and docker-compose orchestration for development and production.
+
+**Documentation**: [docs/skilled-awareness/docker-operations/](docs/skilled-awareness/docker-operations/)
+
+**Quick Start**:
+- Read: [adoption-blueprint.md](docs/skilled-awareness/docker-operations/adoption-blueprint.md)
+- Guide: [awareness-guide.md](docs/skilled-awareness/docker-operations/awareness-guide.md)
+
+**Key Commands**:
+- Build image: `docker build -t myproject:latest .`
+- Start services: `docker-compose up -d`
+- View logs: `docker-compose logs -f`
+- Target image size: ≤250MB
+```
+
+**Validation**:
+```bash
+grep "Docker Operations" AGENTS.md && echo "✅ AGENTS.md updated"
+```
+
+---
+
 ## Related Documents
 
 - [capability-charter.md](capability-charter.md) - Problem statement

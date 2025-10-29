@@ -96,7 +96,51 @@ run: pytest --cov=src --cov-fail-under=90  # Change from 85 to 90
 
 ---
 
-## 7. Related Documents
+## 7. Update Project AGENTS.md (Post-Install Awareness Enablement)
+
+**Why This Step Matters**:
+AGENTS.md serves as the **discoverability layer** for installed SAPs. Without this update, agents cannot find the CI/CD Workflows capability, making it invisible to AI assistants like Claude. This step ensures:
+- Agents can discover GitHub Actions workflows
+- Quick reference for CI/CD operations
+- Links to workflow documentation
+
+**Quality Requirements** (validated by SAP audit):
+- Agent-executable instructions (specify tool, file, location, content)
+- Concrete content template (not placeholders)
+- Validation command to verify update
+- See: [SAP_AWARENESS_INTEGRATION_CHECKLIST.md](../../dev-docs/workflows/SAP_AWARENESS_INTEGRATION_CHECKLIST.md)
+
+**For agents** (use Edit tool):
+1. Open: `AGENTS.md`
+2. Find appropriate section (e.g., "Project Structure" or "Capabilities")
+3. Add:
+
+```markdown
+### CI/CD Workflows
+
+Automated GitHub Actions workflows for testing, linting, security scanning, and deployment.
+
+**Documentation**: [docs/skilled-awareness/ci-cd-workflows/](docs/skilled-awareness/ci-cd-workflows/)
+
+**Quick Start**:
+- Read: [adoption-blueprint.md](docs/skilled-awareness/ci-cd-workflows/adoption-blueprint.md)
+- Guide: [awareness-guide.md](docs/skilled-awareness/ci-cd-workflows/awareness-guide.md)
+
+**Key Workflows**:
+- test.yml: Runs tests + coverage check (required)
+- lint.yml: Code quality checks (required)
+- codeql.yml: Security scanning (required)
+- docs-quality.yml: Documentation validation (optional)
+```
+
+**Validation**:
+```bash
+grep "CI/CD Workflows" AGENTS.md && echo "✅ AGENTS.md updated"
+```
+
+---
+
+## 8. Related Documents
 
 - [protocol-spec.md](protocol-spec.md) - Technical contract
 - [testing-framework/](../testing-framework/) - SAP-004

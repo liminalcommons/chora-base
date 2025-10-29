@@ -163,7 +163,50 @@ pytest --cov=src
 
 ---
 
-## 7. Related Documents
+## 7. Update Project AGENTS.md (Post-Install Awareness Enablement)
+
+**Why This Step Matters**:
+AGENTS.md serves as the **discoverability layer** for installed SAPs. Without this update, agents cannot find the Agent Awareness capability, making it invisible to AI assistants like Claude. This step ensures:
+- Agents can discover AGENTS.md and CLAUDE.md structure
+- Quick reference for awareness patterns
+- Links to awareness documentation
+
+**Quality Requirements** (validated by SAP audit):
+- Agent-executable instructions (specify tool, file, location, content)
+- Concrete content template (not placeholders)
+- Validation command to verify update
+- See: [SAP_AWARENESS_INTEGRATION_CHECKLIST.md](../../dev-docs/workflows/SAP_AWARENESS_INTEGRATION_CHECKLIST.md)
+
+**For agents** (use Edit tool):
+1. Open: `AGENTS.md`
+2. Find appropriate section (e.g., "Project Structure" or "Capabilities")
+3. Add:
+
+```markdown
+### Agent Awareness
+
+AGENTS.md and CLAUDE.md files providing AI-optimized project navigation.
+
+**Documentation**: [docs/skilled-awareness/agent-awareness/](docs/skilled-awareness/agent-awareness/)
+
+**Quick Start**:
+- Read: [adoption-blueprint.md](docs/skilled-awareness/agent-awareness/adoption-blueprint.md)
+- Guide: [awareness-guide.md](docs/skilled-awareness/agent-awareness/awareness-guide.md)
+
+**Key Files**:
+- Root AGENTS.md: Project overview and capabilities
+- Root CLAUDE.md: Context window management
+- Nested AGENTS.md: Domain-specific guidance
+```
+
+**Validation**:
+```bash
+grep "Agent Awareness" AGENTS.md && echo "✅ AGENTS.md updated"
+```
+
+---
+
+## 8. Related Documents
 
 - [protocol-spec.md](protocol-spec.md) - Technical contract
 - [AGENTS.md.blueprint](/blueprints/AGENTS.md.blueprint) - Template

@@ -644,7 +644,50 @@ cp docs/reference/skilled-awareness/development-lifecycle/templates/PROCESS_METR
 
 ---
 
-## 9. Related Documents
+## 9. Update Project AGENTS.md (Post-Install Awareness Enablement)
+
+**Why This Step Matters**:
+AGENTS.md serves as the **discoverability layer** for installed SAPs. Without this update, agents cannot find the Development Lifecycle capability, making it invisible to AI assistants like Claude. This step ensures:
+- Agents can discover 8-phase development lifecycle
+- Quick reference for DDD→BDD→TDD workflow
+- Links to lifecycle documentation
+
+**Quality Requirements** (validated by SAP audit):
+- Agent-executable instructions (specify tool, file, location, content)
+- Concrete content template (not placeholders)
+- Validation command to verify update
+- See: [SAP_AWARENESS_INTEGRATION_CHECKLIST.md](../../dev-docs/workflows/SAP_AWARENESS_INTEGRATION_CHECKLIST.md)
+
+**For agents** (use Edit tool):
+1. Open: `AGENTS.md`
+2. Find appropriate section (e.g., "Project Structure" or "Capabilities")
+3. Add:
+
+```markdown
+### Development Lifecycle
+
+8-phase development lifecycle with integrated DDD→BDD→TDD workflow.
+
+**Documentation**: [docs/skilled-awareness/development-lifecycle/](docs/skilled-awareness/development-lifecycle/)
+
+**Quick Start**:
+- Read: [adoption-blueprint.md](docs/skilled-awareness/development-lifecycle/adoption-blueprint.md)
+- Guide: [awareness-guide.md](docs/skilled-awareness/development-lifecycle/awareness-guide.md)
+
+**Key Phases**:
+- Documentation-Driven Design (DDD): Write docs first
+- Behavior-Driven Development (BDD): Gherkin scenarios
+- Test-Driven Development (TDD): RED-GREEN-REFACTOR
+```
+
+**Validation**:
+```bash
+grep "Development Lifecycle" AGENTS.md && echo "✅ AGENTS.md updated"
+```
+
+---
+
+## 10. Related Documents
 
 **Workflow Docs**:
 - [DEVELOPMENT_PROCESS.md](/static-template/dev-docs/workflows/DEVELOPMENT_PROCESS.md) - 8-phase lifecycle overview

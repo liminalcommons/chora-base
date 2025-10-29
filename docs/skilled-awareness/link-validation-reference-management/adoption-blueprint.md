@@ -1020,6 +1020,50 @@ lychee docs/
 
 ---
 
+## Update Project AGENTS.md (Post-Install Awareness Enablement)
+
+**Why This Step Matters**:
+AGENTS.md serves as the **discoverability layer** for installed SAPs. Without this update, agents cannot find the Link Validation & Reference Management capability, making it invisible to AI assistants like Claude. This step ensures:
+- Agents can discover link validation script
+- Quick reference for validation operations
+- Links to validation documentation
+
+**Quality Requirements** (validated by SAP audit):
+- Agent-executable instructions (specify tool, file, location, content)
+- Concrete content template (not placeholders)
+- Validation command to verify update
+- See: [SAP_AWARENESS_INTEGRATION_CHECKLIST.md](../../dev-docs/workflows/SAP_AWARENESS_INTEGRATION_CHECKLIST.md)
+
+**For agents** (use Edit tool):
+1. Open: `AGENTS.md`
+2. Find appropriate section (e.g., "Project Structure" or "Capabilities")
+3. Add:
+
+```markdown
+### Link Validation & Reference Management
+
+Automated markdown link validation for internal and external references.
+
+**Documentation**: [docs/skilled-awareness/link-validation-reference-management/](docs/skilled-awareness/link-validation-reference-management/)
+
+**Quick Start**:
+- Read: [adoption-blueprint.md](docs/skilled-awareness/link-validation-reference-management/adoption-blueprint.md)
+- Guide: [awareness-guide.md](docs/skilled-awareness/link-validation-reference-management/awareness-guide.md)
+
+**Key Commands**:
+- Validate all: `./scripts/validate-links.sh .`
+- Single file: `./scripts/validate-links.sh README.md`
+- Changed files: `./scripts/validate-links.sh --mode changed`
+- Skip external: `./scripts/validate-links.sh --no-external .`
+```
+
+**Validation**:
+```bash
+grep "Link Validation" AGENTS.md && echo "✅ AGENTS.md updated"
+```
+
+---
+
 ## Next Steps
 
 **After completing adoption**:

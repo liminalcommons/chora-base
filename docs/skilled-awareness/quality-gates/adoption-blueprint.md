@@ -121,7 +121,50 @@ files = ["src/my_package/core"]  # Start small
 
 ---
 
-## 7. Related Documents
+## 7. Update Project AGENTS.md (Post-Install Awareness Enablement)
+
+**Why This Step Matters**:
+AGENTS.md serves as the **discoverability layer** for installed SAPs. Without this update, agents cannot find the Quality Gates capability, making it invisible to AI assistants like Claude. This step ensures:
+- Agents can discover pre-commit hooks and quality checks
+- Quick reference for quality gate operations
+- Links to configuration documentation
+
+**Quality Requirements** (validated by SAP audit):
+- Agent-executable instructions (specify tool, file, location, content)
+- Concrete content template (not placeholders)
+- Validation command to verify update
+- See: [SAP_AWARENESS_INTEGRATION_CHECKLIST.md](../../dev-docs/workflows/SAP_AWARENESS_INTEGRATION_CHECKLIST.md)
+
+**For agents** (use Edit tool):
+1. Open: `AGENTS.md`
+2. Find appropriate section (e.g., "Project Structure" or "Capabilities")
+3. Add:
+
+```markdown
+### Quality Gates
+
+Pre-commit hooks enforcing code quality with ruff, mypy, and automated formatting.
+
+**Documentation**: [docs/skilled-awareness/quality-gates/](docs/skilled-awareness/quality-gates/)
+
+**Quick Start**:
+- Read: [adoption-blueprint.md](docs/skilled-awareness/quality-gates/adoption-blueprint.md)
+- Guide: [awareness-guide.md](docs/skilled-awareness/quality-gates/awareness-guide.md)
+
+**Key Commands**:
+- Install hooks: `pre-commit install`
+- Run all hooks: `pre-commit run --all-files`
+- Auto-fix issues: `ruff check . --fix`
+```
+
+**Validation**:
+```bash
+grep "Quality Gates" AGENTS.md && echo "✅ AGENTS.md updated"
+```
+
+---
+
+## 8. Related Documents
 
 - [protocol-spec.md](protocol-spec.md) - Technical contract
 - [ci-cd-workflows/](../ci-cd-workflows/) - SAP-005

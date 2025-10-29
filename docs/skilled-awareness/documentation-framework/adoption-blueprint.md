@@ -176,7 +176,51 @@ python scripts/validate_docs.py --check-links
 
 ---
 
-## 9. Related Documents
+## 9. Update Project AGENTS.md (Post-Install Awareness Enablement)
+
+**Why This Step Matters**:
+AGENTS.md serves as the **discoverability layer** for installed SAPs. Without this update, agents cannot find the Documentation Framework capability, making it invisible to AI assistants like Claude. This step ensures:
+- Agents can discover Diataxis documentation structure
+- Quick reference for documentation types
+- Links to documentation standards
+
+**Quality Requirements** (validated by SAP audit):
+- Agent-executable instructions (specify tool, file, location, content)
+- Concrete content template (not placeholders)
+- Validation command to verify update
+- See: [SAP_AWARENESS_INTEGRATION_CHECKLIST.md](../../dev-docs/workflows/SAP_AWARENESS_INTEGRATION_CHECKLIST.md)
+
+**For agents** (use Edit tool):
+1. Open: `AGENTS.md`
+2. Find appropriate section (e.g., "Project Structure" or "Capabilities")
+3. Add:
+
+```markdown
+### Documentation Framework
+
+Diataxis-based documentation with frontmatter validation and test extraction.
+
+**Documentation**: [docs/skilled-awareness/documentation-framework/](docs/skilled-awareness/documentation-framework/)
+
+**Quick Start**:
+- Read: [adoption-blueprint.md](docs/skilled-awareness/documentation-framework/adoption-blueprint.md)
+- Guide: [awareness-guide.md](docs/skilled-awareness/documentation-framework/awareness-guide.md)
+
+**Document Types**:
+- Tutorial: Learning-oriented (step-by-step guides)
+- How-To: Task-oriented (problem solutions)
+- Reference: Information-oriented (specifications)
+- Explanation: Understanding-oriented (concepts)
+```
+
+**Validation**:
+```bash
+grep "Documentation Framework" AGENTS.md && echo "✅ AGENTS.md updated"
+```
+
+---
+
+## 10. Related Documents
 
 - [protocol-spec.md](protocol-spec.md) - Technical contract
 - [DOCUMENTATION_STANDARD.md](/static-template/DOCUMENTATION_STANDARD.md)

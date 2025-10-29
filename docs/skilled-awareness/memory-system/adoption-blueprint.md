@@ -652,7 +652,50 @@ def migrate_profile_v1_to_v2(profile):
 
 ---
 
-## 10. Related Documents
+## 10. Update Project AGENTS.md (Post-Install Awareness Enablement)
+
+**Why This Step Matters**:
+AGENTS.md serves as the **discoverability layer** for installed SAPs. Without this update, agents cannot find the Memory System capability, making it invisible to AI assistants like Claude. This step ensures:
+- Agents can discover A-MEM event logging and knowledge accumulation
+- Quick reference for memory operations
+- Links to memory system documentation
+
+**Quality Requirements** (validated by SAP audit):
+- Agent-executable instructions (specify tool, file, location, content)
+- Concrete content template (not placeholders)
+- Validation command to verify update
+- See: [SAP_AWARENESS_INTEGRATION_CHECKLIST.md](../../dev-docs/workflows/SAP_AWARENESS_INTEGRATION_CHECKLIST.md)
+
+**For agents** (use Edit tool):
+1. Open: `AGENTS.md`
+2. Find appropriate section (e.g., "Project Structure" or "Capabilities")
+3. Add:
+
+```markdown
+### Memory System (A-MEM)
+
+Cross-session memory with event logs, knowledge graphs, and agent profiles.
+
+**Documentation**: [docs/skilled-awareness/memory-system/](docs/skilled-awareness/memory-system/)
+
+**Quick Start**:
+- Read: [adoption-blueprint.md](docs/skilled-awareness/memory-system/adoption-blueprint.md)
+- Guide: [awareness-guide.md](docs/skilled-awareness/memory-system/awareness-guide.md)
+
+**Key Features**:
+- Event logs: .chora/memory/events/ (JSONL format)
+- Knowledge notes: .chora/memory/knowledge/notes/
+- Agent profiles: .chora/memory/profiles/
+```
+
+**Validation**:
+```bash
+grep "Memory System" AGENTS.md && echo "✅ AGENTS.md updated"
+```
+
+---
+
+## 11. Related Documents
 
 **Memory Infrastructure**:
 - [.chora/memory/README.md](/static-template/.chora/memory/README.md) - A-MEM architecture
