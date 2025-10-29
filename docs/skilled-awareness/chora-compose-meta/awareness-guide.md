@@ -511,19 +511,32 @@ docker compose --profile monitoring --profile debug up -d
 
 ### Cross-Domain Cross-References
 
-**Development Documentation**:
-- Not applicable (chora-compose is primarily operational)
+**Development Documentation** (`docs/dev-docs/`):
+- Not directly applicable (chora-compose is operational tool, not chora-base development)
+- See chora-compose repository for contribution workflows
 
-**User Documentation**:
-- [SAP-017: How to Integrate chora-compose](../chora-compose-integration/) - Tactical integration guide
+**User Documentation** (`docs/user-docs/`):
+- [How to Integrate chora-compose](../../user-docs/how-to/integrate-chora-compose.md) - User-facing integration guide
+- [Why Use MCP Servers](../../user-docs/explanation/why-mcp-servers.md) - Context for MCP + Docker Compose patterns
+- [MCP Protocol Reference](../../user-docs/reference/mcp-protocol-spec.md) - MCP protocol details
+- [FastMCP API Reference](../../user-docs/reference/fastmcp-api-reference.md) - FastMCP-specific patterns
 
-**Project Documentation**:
-- Wave 3 Track 2 Summary (will be created in Phase 3) - SAP-017/018 creation context
+**Project Documentation** (`docs/project-docs/`):
+- [Wave 3 Track 2 Summary](../../project-docs/wave-3-track-2-summary.md) - SAP-017/018 creation context
+- [Wave 3 Summary](../../project-docs/wave-3-summary.md) - Overall Wave 3 achievements
+- [Wave 3 Execution Plan](../../project-docs/wave-3-execution-plan.md) - Planning for SAP-017/018
+- [v4.0 Vision](../../project-docs/CHORA-BASE-4.0-VISION.md) - Universal foundation vision (ecosystem integration pattern)
 
-**SAP Documentation**:
+**Standards** (`docs/standards/`):
+- [Chora MCP Conventions v1.0](../../standards/CHORA_MCP_CONVENTIONS_v1.0.md) - MCP naming and structure standards
+
+**SAP Documentation** (`docs/skilled-awareness/`):
+- [SAP-017: chora-compose Integration](../chora-compose-integration/) - Tactical integration guide
 - [SAP-003: Project Bootstrap](../project-bootstrap/) - chora-base project structure
-- [SAP-014: MCP Server Development](../mcp-server-development/) - MCP server patterns
-- [SAP-004: Testing Framework](../testing-framework/) - Testing in Docker
+- [SAP-014: MCP Server Development](../mcp-server-development/) - MCP server patterns with Docker
+- [SAP-004: Testing Framework](../testing-framework/) - Testing in containerized environments
+- [SAP-011: Docker Operations](../docker-operations/) - Docker best practices
+- [SAP-007: Documentation Framework](../documentation-framework/) - Documentation standards
 
 ### External References
 

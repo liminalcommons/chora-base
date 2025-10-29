@@ -225,6 +225,9 @@ This workflow provides a systematic approach to auditing Skilled Awareness Packa
    - [ ] Validation criteria clear?
    - [ ] Tool dependencies listed?
    - [ ] Project-specific adaptation guidance?
+   - [ ] **Post-install awareness enablement documented?**
+   - [ ] **AGENTS.md/CLAUDE.md update steps included?**
+   - [ ] **Validation commands for awareness updates included?**
 
 5. **Ledger Checklist**:
    - [ ] At least 1 adoption recorded (chora-base itself)?
@@ -232,6 +235,126 @@ This workflow provides a systematic approach to auditing Skilled Awareness Packa
    - [ ] Version history tracked?
 
 **Deliverable**: Completeness checklist (pass/fail per artifact)
+
+---
+
+### Step 4.5: Awareness Hierarchy Integration Check (15 minutes)
+
+**Objective**: Ensure SAP adoption blueprint includes AGENTS.md/CLAUDE.md hierarchy updates for discoverability
+
+**Why This Matters**:
+- AGENTS.md/CLAUDE.md serve as **discoverability layer** for installed SAPs
+- Without updates, agents cannot find newly installed capabilities
+- Inconsistent across SAPs if not systematically validated
+
+**Tasks**:
+
+1. **Check for Post-Install Section**:
+   ```bash
+   grep -i "post-install\|awareness enablement" docs/skilled-awareness/[sap]/adoption-blueprint.md
+   ```
+   - [ ] Section exists?
+   - [ ] Section is complete (not just placeholder)?
+
+2. **Review AGENTS.md Update Instructions**:
+
+   **Required elements**:
+   - [ ] Explicit step to update root `AGENTS.md`?
+   - [ ] Content template provided (what to add)?
+   - [ ] Clear location guidance (which section to update)?
+   - [ ] Validation command included (e.g., `grep "SAP-XXX" AGENTS.md`)?
+
+   **Quality criteria**:
+   - [ ] Instructions are **agent-executable** (use Edit tool)?
+   - [ ] Template content is **concrete** (not just "add reference")?
+   - [ ] Examples show **actual SAP references** (not `<sap-name>`)?
+
+3. **Check for Domain-Specific AGENTS.md** (if applicable):
+
+   Some SAPs need domain-specific AGENTS.md files (e.g., tests/, scripts/, docker/):
+
+   - [ ] Does SAP create/modify files in specific domain (tests/, scripts/, etc.)?
+   - [ ] If yes, are instructions to create domain-specific AGENTS.md included?
+   - [ ] Are customization guidelines provided?
+
+4. **Check for CLAUDE.md References** (if applicable):
+
+   Not all projects have CLAUDE.md, but if mentioned:
+
+   - [ ] CLAUDE.md update mentioned or conditional ("if exists")?
+   - [ ] Context loading guidance provided?
+
+5. **Validation Command Quality Check**:
+
+   Good validation example (from SAP-000):
+   ```bash
+   grep "SAP-000\|SAP Framework" AGENTS.md && echo "✅ AGENTS.md updated"
+   ```
+
+   - [ ] Validation command exists?
+   - [ ] Command checks for actual content (not just file existence)?
+   - [ ] Success message clear?
+
+**Gap Categorization**:
+
+| Finding | Priority | Action |
+|---------|----------|--------|
+| No post-install section at all | **Critical** | Create in Step 5 |
+| Post-install exists but no AGENTS.md step | **Critical** | Add AGENTS.md instructions |
+| AGENTS.md step but no validation | **High** | Add validation command |
+| Instructions unclear/hypothetical | **High** | Improve with concrete examples |
+| Domain-specific AGENTS.md needed but missing | **Medium** | Add domain-specific instructions |
+| CLAUDE.md not mentioned | **Low** | Note for Phase 5 |
+
+**Reference Examples**:
+
+**Good Pattern** (SAP-000):
+```markdown
+### Step 6: Update Project AGENTS.md
+
+Add SAP Framework section to your project's `AGENTS.md`:
+
+**For agents** (use Edit tool):
+1. Open: `AGENTS.md`
+2. Find appropriate section (e.g., "Project Structure" or "Capabilities")
+3. Add:
+
+```markdown
+### Skilled Awareness Packages (SAPs)
+[concrete content template]
+```
+
+**Validation**:
+```bash
+grep "Skilled Awareness Packages" AGENTS.md && echo "✅ AGENTS.md updated"
+```
+```
+
+**Good Pattern** (SAP-001):
+```markdown
+## 6. Post-Install Tasks
+
+- **Awareness Enablement:**
+  - Update root `CLAUDE.md` and `AGENTS.md` to reference inbox awareness guide.
+```
+
+**Bad Pattern** (Avoid):
+```markdown
+## Post-Install
+- Update AGENTS.md with this SAP
+```
+(No template, no validation, no clear instructions)
+
+**Deliverable**:
+- Awareness integration assessment (pass/partial/fail)
+- Gaps documented by priority
+- Reference to checklist: [SAP_AWARENESS_INTEGRATION_CHECKLIST.md](SAP_AWARENESS_INTEGRATION_CHECKLIST.md) (if exists)
+
+**Anti-Pattern to Avoid**:
+❌ **Don't skip this check assuming template was followed**
+- Template exists but not all SAP creators follow it
+- Critical for discoverability
+- Quick check (15 min) prevents major usability gap
 
 ---
 
@@ -440,6 +563,7 @@ Update the Wave 2 tracking matrix with:
 - [ ] Awareness-guide references 2+ domains explicitly
 - [ ] Examples are concrete (not hypothetical)
 - [ ] All 5 artifacts have actionable content
+- [ ] **Adoption blueprint includes post-install awareness enablement with validation commands**
 
 ---
 
@@ -510,6 +634,10 @@ For efficiency when auditing multiple SAPs:
 ❌ **Don't assume hypothetical examples are sufficient**
 - **Why**: Less valuable than concrete, tested examples
 - **Instead**: Replace with real examples from chora-base or known projects
+
+❌ **Don't skip awareness hierarchy integration check**
+- **Why**: Blocks discoverability of installed SAPs, critical usability issue
+- **Instead**: Always validate post-install AGENTS.md/CLAUDE.md update steps (Step 4.5)
 
 ### In Gap Reports
 
@@ -664,6 +792,38 @@ This workflow is used in:
 | System files | ✅ Yes | scripts/qux.sh, src/module.py |
 
 **Coverage Score**: 3/4 domains (75%)
+
+---
+
+## Awareness Hierarchy Integration
+
+**Post-Install Section**: ✅ Present / ⚠️ Partial / ❌ Missing
+
+**AGENTS.md Update Instructions**:
+- Root AGENTS.md update step: ✅ Yes / ❌ No
+- Content template provided: ✅ Yes / ❌ No
+- Validation command included: ✅ Yes / ❌ No
+- Instructions agent-executable: ✅ Yes / ⚠️ Needs improvement / ❌ No
+
+**Domain-Specific AGENTS.md** (if applicable):
+- Domain-specific files needed: ✅ Yes / ❌ No
+- Instructions included: ✅ Yes / ❌ No / N/A
+
+**CLAUDE.md References** (if applicable):
+- Mentioned or conditional: ✅ Yes / ❌ No / N/A
+
+**Quality Assessment**:
+- Overall: ✅ PASS / ⚠️ PARTIAL / ❌ FAIL
+- Priority gaps: [List any critical/high gaps]
+
+**Example Finding**:
+```
+✅ PASS - SAP-000 includes complete AGENTS.md update in Step 6 with:
+  - Clear agent-executable instructions (use Edit tool)
+  - Concrete content template
+  - Validation command (grep check)
+  - Reference to SAP Framework section
+```
 
 ---
 

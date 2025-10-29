@@ -169,9 +169,62 @@
 - **Rollback Plan:** {{ how to revert if validation fails }}
 
 ## 6. Post-Install Tasks
-- **Awareness Enablement:** {{ add references to AGENTS/CLAUDE }}
-- **Status Ledger Update:** {{ log adoption state }}
-- **Feedback Loop:** {{ how to report issues or improvements }}
+
+### Awareness Enablement
+
+**Update Root AGENTS.md**:
+
+**For agents** (use Edit tool):
+1. Open: `AGENTS.md`
+2. Find appropriate section (e.g., "Capabilities", "Project Structure", or "SAPs")
+3. Add:
+
+```markdown
+### SAP-{{ id }}: {{ capability_name }}
+
+**Quick Start**: {{ essential commands or patterns }}
+**Detailed Guide**: {{ link to awareness-guide or domain-specific AGENTS.md }}
+**Related SAPs**: {{ dependencies or related capabilities }}
+```
+
+**Validation**:
+```bash
+grep "SAP-{{ id }}\|{{ capability_name }}" AGENTS.md && echo "✅ AGENTS.md updated"
+```
+
+**Update Domain-Specific AGENTS.md** (if applicable):
+{{ If SAP creates/modifies files in specific domain (tests/, scripts/, docker/), include: }}
+- Copy: `static-template/{{ domain }}/AGENTS.md` → `{{ domain }}/AGENTS.md`
+- Customize with {{ capability-specific patterns }}
+
+**Update CLAUDE.md** (if applicable):
+{{ If SAP involves Claude-specific patterns or context optimization: }}
+- Add cross-reference to new capability
+- Update context loading guidance for {{ capability_name }}
+
+---
+
+### Status Ledger Update
+
+Update the SAP ledger to record your adoption:
+
+**For agents** (use Edit tool):
+1. Open: `docs/skilled-awareness/{{ sap-directory }}/ledger.md`
+2. Find "Adopter Registry" table
+3. Add row:
+
+```markdown
+| {{ project-name }} | {{ version }} | Active | {{ date }} | Initial adoption |
+```
+
+---
+
+### Feedback Loop
+
+{{ How to report issues, request enhancements, or share learnings }}
+- Create issue in {{ repository }}
+- Tag with `SAP-{{ id }}` label
+- {{ Additional feedback channels }}
 `````
 
 ---

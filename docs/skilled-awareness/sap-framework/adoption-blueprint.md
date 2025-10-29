@@ -207,6 +207,18 @@ test -f docs/skilled-awareness/INDEX.md && echo "✅ Index created"
 
 ### Step 6: Update Project AGENTS.md
 
+**Why This Step Matters**:
+AGENTS.md serves as the **discoverability layer** for installed SAPs. Without this update, agents cannot find the SAP Framework capability, making it invisible to AI assistants like Claude. This step ensures:
+- Agents can discover installed SAPs by reading root AGENTS.md
+- Quick reference for common SAP operations
+- Links to detailed documentation
+
+**Quality Requirements** (validated by SAP audit):
+- Agent-executable instructions (specify tool, file, location, content)
+- Concrete content template (not placeholders)
+- Validation command to verify update
+- See: [SAP_AWARENESS_INTEGRATION_CHECKLIST.md](../../../dev-docs/workflows/SAP_AWARENESS_INTEGRATION_CHECKLIST.md)
+
 Add SAP Framework section to your project's `AGENTS.md`:
 
 **For agents** (use Edit tool):
