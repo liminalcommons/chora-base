@@ -326,6 +326,47 @@ docker compose exec db psql -U dev -d myapp_dev -c "SELECT 1;"
 docker compose exec redis redis-cli ping  # Should return PONG
 ```
 
+### Step 6: Update Project AGENTS.md (Post-Install Awareness Enablement)
+
+**Why This Step Matters**:
+AGENTS.md serves as the **discoverability layer** for installed SAPs. Without this update, agents cannot find the chora-compose Integration capability, making it invisible to AI assistants like Claude. This step ensures:
+- Agents can discover installed SAPs by reading root AGENTS.md
+- Quick reference for chora-compose integration operations
+- Links to detailed documentation
+
+**Quality Requirements** (validated by SAP audit):
+- Agent-executable instructions (specify tool, file, location, content)
+- Concrete content template (not placeholders)
+- Validation command to verify update
+- See: [SAP_AWARENESS_INTEGRATION_CHECKLIST.md](../../dev-docs/workflows/SAP_AWARENESS_INTEGRATION_CHECKLIST.md)
+
+**For agents** (use Edit tool):
+1. Open: `AGENTS.md`
+2. Find appropriate section (e.g., "Project Structure" or "Capabilities")
+3. Add:
+
+```markdown
+### chora-compose Integration
+
+Docker-based integration capability enabling chora-compose MCP server and content generation workflows.
+
+**Documentation**: [docs/skilled-awareness/chora-compose-integration/](docs/skilled-awareness/chora-compose-integration/)
+
+**Quick Start**:
+- Read: [adoption-blueprint.md](docs/skilled-awareness/chora-compose-integration/adoption-blueprint.md)
+- Guide: [awareness-guide.md](docs/skilled-awareness/chora-compose-integration/awareness-guide.md)
+
+**Installation Methods**:
+- pip: `pip install chora-compose`
+- MCP: Configure Claude Desktop with chora-compose server
+- CLI: `chora-compose generate --template <template>`
+```
+
+**Validation**:
+```bash
+grep "chora-compose Integration" AGENTS.md && echo "✅ AGENTS.md updated"
+```
+
 ---
 
 ## Configuration Patterns

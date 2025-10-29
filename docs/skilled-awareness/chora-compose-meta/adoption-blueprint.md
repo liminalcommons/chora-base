@@ -161,6 +161,53 @@ Do you need production parity in development?
 
 ---
 
+## Post-Install Awareness Enablement
+
+### Update Project AGENTS.md
+
+**Why This Step Matters**:
+AGENTS.md serves as the **discoverability layer** for installed SAPs. Without this update, agents cannot find the chora-compose Meta capability, making it invisible to AI assistants like Claude. This step ensures:
+- Agents can discover the complete chora-compose architecture specification
+- Quick reference for chora-compose system understanding
+- Links to detailed protocol documentation
+
+**Quality Requirements** (validated by SAP audit):
+- Agent-executable instructions (specify tool, file, location, content)
+- Concrete content template (not placeholders)
+- Validation command to verify update
+- See: [SAP_AWARENESS_INTEGRATION_CHECKLIST.md](../../dev-docs/workflows/SAP_AWARENESS_INTEGRATION_CHECKLIST.md)
+
+**For agents** (use Edit tool):
+1. Open: `AGENTS.md`
+2. Find appropriate section (e.g., "Project Structure" or "Capabilities")
+3. Add:
+
+```markdown
+### chora-compose Meta (Architecture Specification)
+
+Complete architectural reference for chora-compose: MCP-native content generation platform with 17 tools, 5 resource families, and 4 access modalities.
+
+**Documentation**: [docs/skilled-awareness/chora-compose-meta/](docs/skilled-awareness/chora-compose-meta/)
+
+**Quick Start**:
+- Protocol: [protocol-spec.md](docs/skilled-awareness/chora-compose-meta/protocol-spec.md)
+- Architecture: [architecture-overview.md](docs/skilled-awareness/chora-compose-meta/architecture-overview.md)
+- Design: [design-philosophy.md](docs/skilled-awareness/chora-compose-meta/design-philosophy.md)
+
+**Key Components**:
+- 17 MCP tools (generation, config, templates, observability, development, infrastructure)
+- 5 resource URI families (templates, content, config, metrics, traces)
+- 4 access modalities (pip, SAP, MCP, API)
+- Configuration-driven, MCP-native, Observable architecture
+```
+
+**Validation**:
+```bash
+grep "chora-compose Meta" AGENTS.md && echo "✅ AGENTS.md updated"
+```
+
+---
+
 ## Migration Paths
 
 ### From Bare Metal / Local Installation

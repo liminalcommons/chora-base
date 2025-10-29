@@ -271,6 +271,49 @@ pytest
 ./scripts/dev-server.sh
 ```
 
+### Step 6: Update Project AGENTS.md (Post-Install Awareness Enablement)
+
+**Why This Step Matters**:
+AGENTS.md serves as the **discoverability layer** for installed SAPs. Without this update, agents cannot find the Project Bootstrap capability, making it invisible to AI assistants like Claude. This step ensures:
+- Agents can discover project scaffolding and initialization tools
+- Quick reference for creating new chora-base projects
+- Links to bootstrap templates and patterns
+
+**Quality Requirements** (validated by SAP audit):
+- Agent-executable instructions (specify tool, file, location, content)
+- Concrete content template (not placeholders)
+- Validation command to verify update
+- See: [SAP_AWARENESS_INTEGRATION_CHECKLIST.md](../../dev-docs/workflows/SAP_AWARENESS_INTEGRATION_CHECKLIST.md)
+
+**For agents** (use Edit tool):
+1. Open: `AGENTS.md`
+2. Find appropriate section (e.g., "Project Structure" or "Capabilities")
+3. Add:
+
+```markdown
+### Project Bootstrap
+
+Copier-based project scaffolding for creating new chora-base repositories with complete infrastructure, testing, and CI/CD setup.
+
+**Documentation**: [docs/skilled-awareness/project-bootstrap/](docs/skilled-awareness/project-bootstrap/)
+
+**Quick Start**:
+- Read: [adoption-blueprint.md](docs/skilled-awareness/project-bootstrap/adoption-blueprint.md)
+- Guide: [awareness-guide.md](docs/skilled-awareness/project-bootstrap/awareness-guide.md)
+
+**Features**:
+- Complete project structure generation
+- Pre-configured testing framework (pytest, coverage)
+- CI/CD workflows (GitHub Actions)
+- Docker support with compose configurations
+- Quality gates (ruff, mypy, coverage ≥85%)
+```
+
+**Validation**:
+```bash
+grep "Project Bootstrap" AGENTS.md && echo "✅ AGENTS.md updated"
+```
+
 ---
 
 ## 4. Validation Checklist

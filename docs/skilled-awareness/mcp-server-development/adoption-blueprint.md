@@ -495,6 +495,49 @@ target-version = "py39"
 }
 ```
 
+### Step 9: Update Project AGENTS.md (Post-Install Awareness Enablement)
+
+**Why This Step Matters**:
+AGENTS.md serves as the **discoverability layer** for installed SAPs. Without this update, agents cannot find the MCP Server Development capability, making it invisible to AI assistants like Claude. This step ensures:
+- Agents can discover MCP server development patterns and tools
+- Quick reference for MCP-related operations
+- Links to detailed FastMCP documentation
+
+**Quality Requirements** (validated by SAP audit):
+- Agent-executable instructions (specify tool, file, location, content)
+- Concrete content template (not placeholders)
+- Validation command to verify update
+- See: [SAP_AWARENESS_INTEGRATION_CHECKLIST.md](../../dev-docs/workflows/SAP_AWARENESS_INTEGRATION_CHECKLIST.md)
+
+**For agents** (use Edit tool):
+1. Open: `AGENTS.md`
+2. Find appropriate section (e.g., "Project Structure" or "Capabilities")
+3. Add:
+
+```markdown
+### MCP Server Development
+
+FastMCP-based Model Context Protocol server development patterns, tools, and best practices.
+
+**Documentation**: [docs/skilled-awareness/mcp-server-development/](docs/skilled-awareness/mcp-server-development/)
+
+**Quick Start**:
+- Read: [adoption-blueprint.md](docs/skilled-awareness/mcp-server-development/adoption-blueprint.md)
+- Guide: [awareness-guide.md](docs/skilled-awareness/mcp-server-development/awareness-guide.md)
+- Setup: [setup-mcp-ecosystem.md](docs/skilled-awareness/mcp-server-development/setup-mcp-ecosystem.md)
+
+**Key Patterns**:
+- FastMCP server implementation
+- Tool and resource definitions
+- Testing with MCP Inspector
+- Claude Desktop integration
+```
+
+**Validation**:
+```bash
+grep "MCP Server Development" AGENTS.md && echo "✅ AGENTS.md updated"
+```
+
 ---
 
 ## Validation Checklist
