@@ -1,0 +1,142 @@
+{
+  "type": "coordination",
+  "request_id": "coord-001",
+  "title": "Create SAP-017 & SAP-018 for chora-compose ecosystem integration",
+  "created": "2025-10-28",
+  "from_repo": "strategic-planning-conversation",
+  "to_repo": "chora-base-wave-2-execution",
+  "priority": "P1",
+  "urgency": "medium",
+  "context": {
+    "background": "Chora-compose is emerging as critical ecosystem capability. Need SAPs to enable ecosystem repos to discover, adopt, and skillfully use chora-compose for content generation.",
+    "strategic_alignment": "Aligns with v4.0 Vision Wave 2 (SAP Content Audit & Enhancement) and demonstrates inbox protocol for cross-conversation coordination",
+    "related_work": [
+      "Wave 2 Phase 2: SAP Content Audit in progress",
+      "v4.0 Vision: Multi-repo coordination patterns",
+      "Inbox protocol: Cross-repo capability coordination",
+      "Research: 113 chora-compose docs analyzed for complete architectural understanding"
+    ],
+    "innovation": "First example of inbox protocol used for cross-Claude-conversation coordination (demonstrates meta-pattern)"
+  },
+  "deliverables": [
+    {
+      "item": "SAP-017: chora-compose-integration",
+      "description": "5 artifacts enabling repos to adopt chora-compose (integration guide)",
+      "location": "docs/skilled-awareness/chora-compose-integration/",
+      "artifacts": [
+        "capability-charter.md",
+        "protocol-spec.md",
+        "awareness-guide.md",
+        "adoption-blueprint.md",
+        "ledger.md"
+      ],
+      "estimated_effort": "8-12 hours",
+      "key_content": [
+        "How to install chora-compose (pip, MCP, CLI)",
+        "Role-based usage patterns (MCP server dev, app dev, platform engineer)",
+        "Decision guide: When to use chora-compose",
+        "Integration with chora-base workflows",
+        "Current capabilities (v1.2.0) + future roadmap"
+      ]
+    },
+    {
+      "item": "SAP-018: chora-compose-meta",
+      "description": "Complete protocol spec for chora-compose (mirrors SAP-002 chora-base-meta pattern)",
+      "location": "docs/skilled-awareness/chora-compose-meta/",
+      "artifacts": [
+        "capability-charter.md",
+        "protocol-spec.md",
+        "awareness-guide.md",
+        "adoption-blueprint.md",
+        "ledger.md"
+      ],
+      "estimated_effort": "12-16 hours",
+      "key_content": [
+        "Complete architecture (config-driven, MCP-native, observable)",
+        "17 MCP tools + 5 resource URI families",
+        "4 access modalities (pip, SAP, MCP, API)",
+        "Future capability broker vision (marked as roadmap)",
+        "Position in AI tooling ecosystem"
+      ]
+    },
+    {
+      "item": "Update INDEX.md",
+      "description": "Add SAP-017 and SAP-018 entries to skilled-awareness index",
+      "location": "docs/skilled-awareness/INDEX.md",
+      "estimated_effort": "30 minutes"
+    },
+    {
+      "item": "Cross-reference updates",
+      "description": "Update SAP-001 (Inbox) with chora-compose coordination examples if applicable",
+      "estimated_effort": "1 hour",
+      "optional": true
+    },
+    {
+      "item": "Link validation",
+      "description": "Run SAP-016 link validation on new SAPs",
+      "validation": "scripts/validate-links.sh docs/skilled-awareness/chora-compose-*",
+      "estimated_effort": "30 minutes"
+    }
+  ],
+  "acceptance_criteria": [
+    "SAP-017 has all 5 artifacts (charter, protocol, awareness-guide, adoption-blueprint, ledger)",
+    "SAP-018 has all 5 artifacts",
+    "Both SAPs reference actual chora-compose documentation in docs/reference/ecosystem/chora-compose/user-docs",
+    "Both SAPs follow 4-domain architecture pattern (reference dev-docs, project-docs, user-docs as applicable)",
+    "SAP-017 awareness-guide provides clear decision framework for when to use chora-compose",
+    "SAP-018 protocol-spec documents all 17 MCP tools + 5 resource families",
+    "Future capability broker features clearly marked as roadmap (not current state)",
+    "INDEX.md updated with SAP-017 and SAP-018 entries",
+    "Link validation passes (SAP-016) - no broken references",
+    "Demonstrates inbox protocol for cross-conversation coordination (meta-goal)",
+    "Both SAPs reference installation methods (pip install chora-compose, MCP config, CLI usage)"
+  ],
+  "dependencies": {
+    "blocks": [],
+    "blocked_by": [],
+    "required_saps": [
+      "SAP-000: SAP Framework (for SAP structure)",
+      "SAP-002: chora-base-meta (pattern to follow for SAP-018)",
+      "SAP-016: Link Validation (for validation)"
+    ],
+    "references": [
+      "SAP-001: Inbox Protocol (demonstrates cross-conversation coordination)",
+      "docs/reference/ecosystem/chora-compose/user-docs (source material)",
+      "docs/project-docs/CHORA-BASE-4.0-VISION.md (strategic context)"
+    ]
+  },
+  "timeline": {
+    "proposed_start": "2025-10-29",
+    "estimated_duration": "2-3 days",
+    "target_completion": "2025-10-31",
+    "review_cycle": "Wave 2 Sprint Planning (current sprint - can integrate immediately)",
+    "flexibility": "Can be completed in parallel with other Wave 2 SAP audits"
+  },
+  "resource_requirements": {
+    "agent_context": "Load coord-001-chora-compose-sap-CONTEXT.md for complete background",
+    "reference_docs": [
+      "docs/reference/ecosystem/chora-compose/user-docs (113 files)",
+      "docs/skilled-awareness/chora-base (SAP-002 pattern)",
+      "docs/skilled-awareness/sap-framework (SAP-000 templates)"
+    ],
+    "tools": [
+      "scripts/validate-links.sh (SAP-016)",
+      "docs/skilled-awareness/document-templates.md (SAP artifact templates)"
+    ]
+  },
+  "trace_id": "chora-compose-sap-creation-2025-10-28",
+  "metadata": {
+    "created_by": "Claude Code (Strategic Planning Conversation)",
+    "conversation_context": "Cross-tab inbox coordination demonstration",
+    "dogfooding_level": "Meta (using inbox to coordinate SAP creation about inbox-compatible capability)",
+    "innovation": "First cross-conversation coordination via inbox protocol",
+    "strategic_value": "Enables ecosystem repos to skillfully adopt chora-compose, demonstrates multi-modal capability access pattern"
+  },
+  "notes": [
+    "See coord-001-chora-compose-sap-CONTEXT.md for complete discussion background",
+    "See coord-001-chora-compose-sap-RATIONALE.md for why inbox protocol was chosen",
+    "SAP-017 and SAP-018 content templates are ready in CONTEXT.md (just need to be created as files)",
+    "This demonstrates inbox as 'capability transmission medium' - the vision discussed in strategic planning",
+    "SAP IDs updated: Originally proposed as SAP-014/015, renumbered to SAP-017/018 to avoid conflict with v4.0 roadmap (SAP-014=MCP Server Development, SAP-015=Django Development)"
+  ]
+}

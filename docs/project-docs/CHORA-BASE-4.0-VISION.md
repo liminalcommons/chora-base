@@ -33,15 +33,17 @@ Chora-Base v4.0 represents a fundamental transformation from "MCP server templat
 - ❌ Template generation locks projects to creation-time version
 - ❌ No upgrade path from chora-base improvements
 - ❌ Mixed documentation structure (inconsistent root vs. static-template)
-- ❌ MCP-specific focus limits applicability
+- ❌ MCP-specific assumptions in base (should be optional capability)
 - ❌ Two conflicting patterns: blueprints vs. SAP adoption
+- ❌ Valuable MCP expertise not packaged for reuse
 
 ### Technical Debt
-- blueprints/ and setup.py automation (to be removed)
+- blueprints/ and setup.py automation (to be removed, content → SAP-014)
 - Inconsistent docs/ structure
-- MCP-specific assumptions in root documentation
+- MCP-specific assumptions in root documentation (to be extracted → SAP-014)
 - Missing: chora-base user documentation
-- 202→0 uncovered files journey created cleanup opportunities
+- Missing: Technology-specific SAPs (MCP, Django, FastAPI, etc.)
+- 2020 uncovered files journey created cleanup opportunities
 
 ---
 
@@ -53,7 +55,7 @@ Chora-Base v4.0 represents a fundamental transformation from "MCP server templat
 **TO**: Living foundation that projects extend
 
 **FROM**: MCP server specific
-**TO**: Language/framework agnostic with optional SAPs for specific technologies
+**TO**: Language/framework agnostic with optional technology SAPs (SAP-014: MCP, future: Django, FastAPI, etc.)
 
 **FROM**: Generate once, diverge forever
 **TO**: Clone, customize content, merge structural updates
@@ -554,26 +556,30 @@ As SAPs are audited and enhanced, track in `v4-cleanup-manifest.md`:
 
 ---
 
-## Wave 3: Eliminate MCP-Specific Assumptions (v3.6.0)
+## Wave 3: Extract MCP Capabilities into SAP-014 (v3.6.0)
 
-**Goal**: Make chora-base language/framework agnostic by extracting MCP-specific content into SAP-014
+**Goal**: Make chora-base language/framework agnostic while preserving MCP server development capabilities as an optional, installable SAP-014 package
 
-### Current MCP-Specific Content
+### Current MCP-Specific Content to Package
 
-**Root files with MCP assumptions**:
+Rather than **removing** MCP capabilities, Wave 3 **packages** them as SAP-014, making MCP server development an optional capability that projects can adopt via `python scripts/install-sap.py SAP-014`.
+
+**Root files with MCP assumptions** (to generalize):
 - `AGENTS.md` - References MCP server, FastMCP
 - `CLAUDE.md` - MCP client configuration examples
 - `README.md` - "MCP server template"
 
-**blueprints/ (ALL MCP-specific)**:
+**blueprints/ (ALL MCP-specific)** (to move into SAP-014):
 - `README.md.blueprint` - MCP server description
 - `pyproject.toml.blueprint` - FastMCP dependency
 - `server.py.blueprint` - MCP server implementation
 - `mcp__init__.py.blueprint` - MCP-specific init
 
-**static-template/ MCP content**:
+**static-template/ MCP content** (to move into SAP-014 templates):
 - `src/__package_name__/mcp/` - MCP server code
 - Various MCP references throughout
+
+**Key Insight**: This content represents valuable MCP knowledge. By packaging as SAP-014, we **preserve** this expertise while making the base language-agnostic.
 
 ### Tasks
 
@@ -596,31 +602,40 @@ Create audit document: `docs/project-docs/mcp-specificity-audit.md`
 | MCP tool/resource patterns | Pure MCP | → SAP-014 |
 ```
 
-#### 3.2: Create SAP-014: MCP Server Development
+#### 3.2: Create SAP-014: MCP Server Development (Central Task)
+
+**Philosophical Shift**: SAP-014 is not just a "cleanup" - it's the **first technology-specific SAP** and a template for future framework SAPs (Django, FastAPI, React, etc.).
 
 **New SAP structure**:
 ```
 docs/skilled-awareness/mcp-server-development/
-├── capability-charter.md
-├── protocol-spec.md
-├── awareness-guide.md
-├── adoption-blueprint.md
-└── ledger.md
+├── capability-charter.md      ← Business value: Why MCP servers?
+├── protocol-spec.md           ← Technical contracts: FastMCP, tools, resources
+├── awareness-guide.md         ← AI agent guidance: How to build MCP servers
+├── adoption-blueprint.md      ← Installation: How to add MCP to any project
+└── ledger.md                  ← Adoption tracking
 ```
 
-**Content to move INTO SAP-014**:
-- MCP protocol explanation
-- FastMCP vs. other implementations
-- MCP tool/resource/prompt patterns
-- Client configuration (Claude Desktop, Cursor)
-- MCP-specific testing patterns
-- MCP server deployment
+**Content to **preserve** in SAP-014**:
+- **Protocol Knowledge**: MCP specification, FastMCP vs. alternatives
+- **Patterns**: Tool/resource/prompt implementation patterns
+- **Configuration**: Claude Desktop, Cursor, other MCP clients
+- **Testing**: MCP-specific test patterns (mocking tools/resources)
+- **Deployment**: MCP server deployment strategies
+- **Examples**: Complete MCP server implementations from blueprints/
 
-**SAP-014 also references**:
-- New: `dev-docs/workflows/mcp-development-workflow.md`
-- New: `user-docs/how-to/implement-mcp-server.md`
-- New: `user-docs/reference/mcp-protocol-spec.md`
-- Templates in: `static-template/mcp-templates/` (NEW directory)
+**SAP-014 4-Domain Integration**:
+- **dev-docs/workflows/**: `mcp-development-workflow.md` (how to build MCP servers)
+- **user-docs/how-to/**: `implement-mcp-server.md`, `configure-mcp-client.md`
+- **user-docs/reference/**: `mcp-protocol-spec.md`, `fastmcp-api-reference.md`
+- **user-docs/explanation/**: `why-mcp-servers.md` (architecture, use cases)
+- **System files**: `static-template/mcp-templates/` (templates for installation)
+
+**What Makes SAP-014 Special**:
+1. **First technology-specific SAP** - demonstrates capability portability
+2. **Preserves expertise** - all MCP knowledge retained and enhanced
+3. **Template for future SAPs** - shows how to package framework capabilities
+4. **Validates v4.0 model** - proves "universal base + optional SAPs" works
 
 #### 3.3: Generalize Root Documentation
 
@@ -735,20 +750,24 @@ git commit -m "Initial commit from chora-base v4.0.0"
 
 **Checklist**:
 - [ ] MCP specificity audit complete
-- [ ] SAP-014 created with all MCP content
+- [ ] SAP-014 created with all MCP content **preserved**
+- [ ] SAP-014 installable via `install-sap.py SAP-014`
 - [ ] Root docs generalized
 - [ ] static-template/ reorganized (or documented)
 - [ ] blueprints/ and setup.py deleted
 - [ ] New how-to guides created
-- [ ] Can create both MCP and non-MCP projects
+- [ ] Can create projects with/without MCP (via SAP installation choice)
 
 ### Success Criteria
 
 ✅ Root AGENTS.md/README.md are language-agnostic
-✅ MCP-specific content consolidated in SAP-014
-✅ blueprints/ and setup.py removed
+✅ MCP capabilities **fully preserved and enhanced** in SAP-014
+✅ SAP-014 installable into any chora-base project
+✅ blueprints/ and setup.py removed (content moved to SAP-014)
 ✅ Clear "clone & customize" workflow documented
-✅ Chora-base can be used for non-MCP, non-Python projects (with appropriate SAP selection)
+✅ Can create MCP servers by installing SAP-014
+✅ Can create non-MCP projects by not installing SAP-014
+✅ SAP-014 serves as template for future technology-specific SAPs
 
 ### Cleanup Tracking
 
@@ -764,9 +783,10 @@ Wave 3 creates significant cleanup items - track in `v4-cleanup-manifest.md`:
 - Original blueprint templates (for historical reference before deleting)
 - setup.py (for reference if needed)
 
-**Files to Move**:
+**Files to Move** (packaging, not deleting):
 - MCP-specific content → `docs/skilled-awareness/mcp-server-development/` (SAP-014)
-- MCP templates → `static-template/mcp-templates/` or similar
+- MCP templates from blueprints/ → SAP-014 templates directory
+- MCP implementation code → SAP-014 system files for installation
 
 **References to Update**:
 - Root docs (README, AGENTS, CLAUDE) - remove MCP assumptions
@@ -777,9 +797,47 @@ Wave 3 creates significant cleanup items - track in `v4-cleanup-manifest.md`:
 - Consider: Should we preserve blueprint history before deletion?
 - Decision: Tag current state as v3.x-final-with-blueprints
 
+### Parallel Track: chora-compose Ecosystem Integration (SAP-017, SAP-018)
+
+**Added**: 2025-10-28 (via inbox coordination protocol)
+
+While executing Wave 3 MCP extraction, we can also create chora-compose SAPs in parallel:
+
+**SAP-017: chora-compose-integration**
+- How to adopt chora-compose in your repo
+- Installation methods (pip, MCP, CLI)
+- Role-based usage patterns
+- Decision guide: when to use chora-compose
+- **Effort**: ~8-12 hours
+
+**SAP-018: chora-compose-meta**
+- Complete protocol specification (mirrors SAP-002 pattern)
+- All 17 MCP tools + 5 resource families
+- 4 access modalities (pip, SAP, MCP, API)
+- Position in AI tooling ecosystem
+- **Effort**: ~12-16 hours
+
+**Strategic Value**:
+- Demonstrates ecosystem SAPs (how one chora tool documents another)
+- First cross-repo capability coordination via inbox protocol (coord-001)
+- Shows 4 access modalities pattern
+- Enables ecosystem repos to discover and adopt chora-compose
+
+**SAP ID Allocation**:
+- SAP-014: MCP Server Development (this Wave)
+- SAP-015: Django Development (future, v4.2.0)
+- SAP-016: Link Validation (exists, Wave 2)
+- **SAP-017**: chora-compose-integration (this Wave)
+- **SAP-018**: chora-compose-meta (this Wave)
+- SAP-019+: React, Rust, etc. (future)
+
 ### Timeline
-**Duration**: 2-3 weeks
-**Effort**: ~60-80 hours
+**Duration**: 3-4 weeks (extended from 2-3 weeks)
+**Effort**: ~80-108 hours total
+- MCP extraction (SAP-014): ~60-80 hours
+- chora-compose SAPs (SAP-017, 018): ~20-28 hours
+
+**Parallelization**: Both tracks can be executed simultaneously
 
 ---
 
@@ -1875,12 +1933,18 @@ Create `docs/project-docs/releases/v4.0.0-release-report.md`:
 - ✅ Knowledge compounding (SAPs as organizational memory)
 - ✅ Reduced onboarding time (familiar structure everywhere)
 
+**For Technology Ecosystems**:
+- ✅ **SAP-014: MCP Server Development** - First technology-specific SAP
+- ✅ MCP expertise preserved and packaged for reuse
+- ✅ Template for future framework SAPs (Django, FastAPI, React)
+- ✅ Proves SAP portability model works for specialized technologies
+
 ### Breaking Changes from v3.x
 
 #### Removed
 1. **blueprints/** directory (11 template files)
    - **Reason**: Incompatible with clone & merge model
-   - **Migration**: Content moved to SAP-014 (MCP) or removed
+   - **Migration**: MCP content **preserved** in SAP-014, install via `install-sap.py SAP-014`
 
 2. **setup.py** automated generation script
    - **Reason**: Projects now created by cloning, not generating
@@ -1892,7 +1956,7 @@ Create `docs/project-docs/releases/v4.0.0-release-report.md`:
 
 4. **MCP-specific root documentation**
    - **Reason**: Base should be framework-agnostic
-   - **Migration**: MCP content moved to SAP-014
+   - **Migration**: MCP content **packaged and enhanced** in SAP-014, available as optional capability
 
 #### Moved
 1. **docs/** restructured
@@ -1992,7 +2056,7 @@ However:
 |------|---------|----------|--------|--------------|
 | Wave 1 | v3.4.0 | 1-2 weeks | 40-60h | 4-domain docs structure |
 | Wave 2 | v3.5.0 | 2-3 weeks | 80-120h | SAP content audit & enhancement |
-| Wave 3 | v3.6.0 | 2-3 weeks | 60-80h | Remove MCP-specific, create SAP-014 |
+| Wave 3 | v3.6.0 | 3-4 weeks | 80-108h | MCP extraction (SAP-014) + chora-compose SAPs (SAP-017/018) |
 | Wave 4 | v3.7.0 | 2-3 weeks | 60-80h | Clone & merge model |
 | Wave 5 | v3.8.0 | 2-3 weeks | 60-80h | SAP installation tooling |
 | Wave 6 | v3.9.0 | 3-4 weeks | 100+h | Multi-repo (OPTIONAL - defer to v4.1?) |
@@ -2082,8 +2146,12 @@ However:
 - SAP versioning & upgrades
 
 ### v4.2.0 (Q3 2026)
+- **Framework-specific SAPs** (following SAP-014 template):
+  - SAP-015: Django Development (inspired by SAP-014 structure)
+  - SAP-019: FastAPI Development
+  - SAP-020: React/Next.js Development
+  - SAP-021: Rust Web Services
 - Language-specific SAP packs (Python, JavaScript, Rust, etc.)
-- Framework-specific SAPs (Django, FastAPI, React, etc.)
 - IDE integrations (VSCode extension for SAP navigation)
 - AI agent optimizations (prompt engineering for Claude, GPT-4)
 
@@ -2107,9 +2175,16 @@ Chora-Base v4.0 represents a fundamental rethinking of project foundations. By m
 
 1. **Consistency** - All projects share structure
 2. **Upgradability** - Structural improvements merge cleanly
-3. **Portability** - SAPs work across projects
+3. **Portability** - SAPs work across projects (proven by SAP-014)
 4. **Clarity** - LLMs understand the model
 5. **Extensibility** - Easy to add new capabilities
+6. **Preservation** - Expertise packaged, not discarded (SAP-014 preserves all MCP knowledge)
+
+**SAP-014's Strategic Importance**:
+- **First technology-specific SAP** - validates the optional capability model
+- **Preserves MCP expertise** - rather than removing it, we enhance and package it
+- **Templates future SAPs** - shows how to package Django, FastAPI, React, etc.
+- **Proves v4.0's value** - demonstrates "universal base + optional capabilities" works
 
 The 8-wave roadmap is ambitious but achievable. With Wave 6 deferred to v4.1, a March 2026 release is realistic. By tracking cleanup throughout Waves 1-7, Wave 8 becomes a simple execution step rather than a discovery phase.
 
@@ -2117,10 +2192,17 @@ The 8-wave roadmap is ambitious but achievable. With Wave 6 deferred to v4.1, a 
 
 ---
 
-**Document Version**: 2.0 (Draft)
+**Document Version**: 2.1 (Draft)
 **Last Updated**: 2025-10-28
 **Author**: Claude (with user guidance)
 **Status**: Ready to begin Wave 1
+**Changes from v2.0**:
+- **Wave 3 Reframed**: "Eliminate MCP" → "Extract MCP into SAP-014"
+- **SAP-014 Positioned**: First technology-specific SAP, preserves MCP expertise
+- **Strategic Shift**: From removal to packaging (preservation over deletion)
+- **Future Vision**: SAP-014 as template for Django, FastAPI, React SAPs
+- **Success Criteria Updated**: Emphasizes capability preservation and portability
+
 **Changes from v1.0**:
 - Removed Wave 0 (upfront cleanup)
 - Added cleanup tracking to each Wave 1-7
