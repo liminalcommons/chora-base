@@ -1,21 +1,21 @@
 # MCP Templates
 
-**Status**: Placeholder (Wave 3 Track 1 Phase 5)
+**Status**: Active (Phase 5 Complete - 2025-10-29)
 **Last Updated**: 2025-10-29
 
 ---
 
 ## Overview
 
-This directory will contain MCP server templates extracted from `blueprints/` during Wave 3 Track 1 Phase 5.
+This directory contains MCP server templates for use with SAP-014 (MCP Server Development). These templates were extracted from `blueprints/` during Wave 3 Track 1 Phase 5.
 
-**Timeline**: Phase 5 (scheduled after Phase 3 and Phase 4)
+**Timeline**: Phase 5 completed on 2025-10-29
 
 ---
 
-## Planned Templates
+## Available Templates
 
-The following blueprint files will be moved here in Phase 5:
+The following template files are now available:
 
 1. **server.py.template** - FastMCP server entry point
 2. **mcp__init__.py.template** - MCP namespace module (Chora MCP Conventions v1.0)
@@ -36,15 +36,15 @@ The following blueprint files will be moved here in Phase 5:
 ✅ **Phase 1** (Complete): MCP specificity audit
 ✅ **Phase 2** (Complete): SAP-014 artifact creation (5 files, ~4,400 lines)
 ✅ **Phase 3** (Complete): 4-domain supporting documentation (8 files, ~3,000 lines)
-⏳ **Phase 4** (Pending): Generalize root documentation
-⏳ **Phase 5** (Pending): Move blueprints/ to this directory
+✅ **Phase 4** (Complete): Generalize root documentation
+✅ **Phase 5** (Complete): Move blueprints/ to this directory (11 templates, ~2,700 lines)
 ⏳ **Phase 6** (Pending): Validation & cleanup
 
 ---
 
-## Usage (After Phase 5)
+## Usage
 
-Once templates are moved here, SAP-014 adoption will use these files:
+SAP-014 adoption uses these templates to create new MCP servers:
 
 ```bash
 # Example: Create new MCP server using SAP-014
@@ -52,6 +52,20 @@ cp -r static-template/mcp-templates my-mcp-server/
 cd my-mcp-server
 # Customize templates with your namespace and tools
 ```
+
+## Template Variables
+
+All templates use these variables (replace during adoption):
+
+| Variable | Example | Description |
+|----------|---------|-------------|
+| `{{ project_name }}` | my-mcp-server | Project name (kebab-case) |
+| `{{ package_name }}` | my_mcp_server | Python package (snake_case) |
+| `{{ author_name }}` | Jane Doe | Your full name |
+| `{{ author_email }}` | jane@example.com | Your email |
+| `{{ github_username }}` | janedoe | GitHub username |
+| `{{ namespace }}` | myapp | MCP namespace (3-20 chars, lowercase) |
+| `{{ project_short_description }}` | My MCP Server | One-line description |
 
 ---
 

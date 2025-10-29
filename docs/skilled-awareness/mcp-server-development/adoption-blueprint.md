@@ -759,6 +759,10 @@ Once you've successfully adopted SAP-014, record your adoption in [ledger.md](le
 - [awareness-guide.md](awareness-guide.md) - Usage patterns, pitfalls
 - [ledger.md](ledger.md) - Adoption tracking
 
+**Templates** (Wave 3 Phase 5):
+- [MCP Templates](../../../static-template/mcp-templates/) - Ready-to-use templates for MCP servers
+- See [mcp-templates/README.md](../../../static-template/mcp-templates/README.md) for template variables and usage
+
 **External Resources**:
 - [FastMCP Documentation](https://github.com/jlowin/fastmcp) - FastMCP SDK reference
 - [MCP Specification](https://modelcontextprotocol.io/specification) - Protocol spec

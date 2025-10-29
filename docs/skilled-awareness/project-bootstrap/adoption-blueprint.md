@@ -55,7 +55,7 @@ cd chora-base
 
 **Validation**:
 ```bash
-ls setup.py blueprints/ static-template/ && echo "✅ chora-base ready"
+ls static-template/ && echo "Note: setup.py and blueprints/ removed in Wave 3 Phase 5" && echo "✅ chora-base ready"
 ```
 
 ### Step 2: Prepare Project Information
@@ -92,7 +92,7 @@ Derived:
 
 **For Humans** (interactive):
 ```bash
-python setup.py my-new-project
+# Historical Note: setup.py removed in Wave 3 Phase 5
 # Follow interactive prompts
 ```
 
@@ -114,7 +114,7 @@ variables = {
 }
 
 # Run setup.py with variables (interactive prompts use these defaults)
-python setup.py my-new-project
+# Historical Note: setup.py removed in Wave 3 Phase 5
 ```
 
 **Output** (expected):

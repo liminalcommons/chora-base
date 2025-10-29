@@ -318,7 +318,7 @@ Production MCP Server
 ### v1.0.0 (2025-10-29) - Initial Release
 
 **Created**: Wave 3 of chora-base v4.0 transformation
-**Content**: Extracted and enhanced from chora-base blueprints/ (v3.5.0 and earlier)
+**Content**: Extracted and enhanced from chora-base static-template/, SAP-014 templates (v3.5.0 and earlier)
 
 **What's Included**:
 - All 9 blueprint files preserved and enhanced

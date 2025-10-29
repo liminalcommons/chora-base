@@ -47,16 +47,16 @@ chora-base is a production-ready Python project template featuring:
 **Quick Start for Claude:**
 ```bash
 # Generate project with Claude optimizations
-python setup.py my-project
+# See SAP-014 for MCP server setup: docs/skilled-awareness/mcp-server-development/
 
 # Read Claude-specific guides
-cat CLAUDE_SETUP_GUIDE.md              # Setup guide
+
 cat CLAUDE.md                          # Project-specific patterns
 cat claude/CONTEXT_MANAGEMENT.md      # Context optimization
 cat claude/CHECKPOINT_PATTERNS.md     # State preservation
 ```
 
-📄 [CLAUDE_SETUP_GUIDE.md](CLAUDE_SETUP_GUIDE.md) | [Pattern Library](claude/) | [CHANGELOG](CHANGELOG.md#330---2025-10-25)
+📄  | [Pattern Library](claude/) | [CHANGELOG](CHANGELOG.md#330---2025-10-25)
 
 ---
 
@@ -82,7 +82,7 @@ cat claude/CHECKPOINT_PATTERNS.md     # State preservation
 **Quick Start:**
 ```bash
 # Generate project with workflows
-python setup.py my-project
+# See SAP-014 for MCP server setup: docs/skilled-awareness/mcp-server-development/
 
 # Explore workflow documentation
 cd my-project
@@ -103,12 +103,12 @@ cat dev-docs/examples/FEATURE_WALKTHROUGH.md   # Real-world example
 - **70% Static Files**: Most files need no variable substitution
 - **10 Core Blueprints**: Simple `{{ variable }}` placeholders for essential files
 - **Zero Dependencies**: No Copier, no Jinja2 - agents do string replacement
-- **One-Line Setup**: `python setup.py my-project` or ask your AI agent
+- **One-Line Setup**: `# See SAP-014 for MCP server setup: docs/skilled-awareness/mcp-server-development/` or ask your AI agent
 - **Agent-First Guide**: 2,000+ line comprehensive setup guide for autonomous agents
 
 **Migration:**
 - v2.x users: See [v2-to-v3 Migration Guide](docs/project-docs/releases/v2-to-v3-migration.md)
-- New users: Read [AGENT_SETUP_GUIDE.md](AGENT_SETUP_GUIDE.md) or use [setup.py](setup.py)
+- New users: Read [AGENTS.md](AGENTS.md) or ask your AI agent for guidance
 
 📄 [Release Notes](docs/project-docs/releases/v3.0.0-release-notes.md) | [CHANGELOG](CHANGELOG.md#300---2025-10-25)
 
@@ -218,7 +218,7 @@ Ask your AI coding agent:
 Your agent will:
 1. Read [AGENT_SETUP_GUIDE.md](AGENT_SETUP_GUIDE.md)
 2. Copy static files from [static-template/](static-template/)
-3. Process blueprints from [blueprints/](blueprints/)
+3. Copy and customize templates from [static-template/](static-template/)
 4. Replace `{{ variables }}` with your project details
 5. Initialize git and create first commit
 
@@ -240,7 +240,7 @@ git clone https://github.com/liminalcommons/chora-base.git
 cd chora-base
 
 # Run setup script
-python setup.py my-new-project
+# Use AI agent to generate from templates my-new-project
 
 # Follow prompts for author, email, GitHub username, etc.
 
@@ -435,7 +435,7 @@ git pull
 git log --oneline v3.0.0..HEAD
 
 # Manually merge improvements you want
-# Compare your project against static-template/ and blueprints/
+# Compare your project against [static-template/](static-template/)
 # Apply changes selectively
 
 # Or ask your AI agent:

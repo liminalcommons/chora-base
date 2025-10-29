@@ -12,7 +12,7 @@
 
 **Repository Type**: Template repository (generates other projects)
 **Primary Users**: Human developers and AI agents generating/maintaining Python projects
-**Key Technology Stack**: Blueprint bundles (`blueprints/`), static scaffolding (`static-template/`), and Skilled Awareness Packages (SAP) for capability governance
+**Key Technology Stack**: Static scaffolding (`static-template/`), and Skilled Awareness Packages (SAP) for capability governance
 
 ### Key Concepts
 
@@ -159,7 +159,7 @@ chora-base/
 │   ├── scripts/                 # Automation scripts
 │   ├── .github/workflows/       # CI/CD workflows
 │   └── ...                      # Other project files
-├── blueprints/                  # Blueprint bundles for bootstrapping adopters
+
 │   ├── README.md.blueprint
 │   ├── CLAUDE.md.blueprint
 │   ├── AGENTS.md.blueprint
@@ -295,7 +295,7 @@ chora-base/
 1. **Pre-Release Validation**
    ```bash
    # Generate project from blueprints (interactive; answer prompts as needed)
-   python setup.py /tmp/test-release
+   # Use AI agent to generate projects from static-template/ and SAP templates
    cd /tmp/test-release && ./scripts/setup.sh && pytest
 
    # Test update path (use example project + SAP adoption blueprint)
@@ -379,16 +379,16 @@ chora-base/
 
 ```bash
 # Minimal configuration (accept defaults)
-python setup.py /tmp/test-minimal
+# Use AI agent to generate projects from static-template/ and SAP templates
 
 # Full-featured configuration
-python setup.py /tmp/test-full
+# Use AI agent to generate projects from static-template/ and SAP templates
 # Enable all optional features when prompted
 
 # Specific project types (run setup script and choose appropriate options)
-python setup.py /tmp/test-project
-python setup.py /tmp/test-lib
-python setup.py /tmp/test-cli
+# Use AI agent to generate projects from static-template/ and SAP templates
+# Use AI agent to generate projects from static-template/ and SAP templates
+# Use AI agent to generate projects from static-template/ and SAP templates
 ```
 
 ### Generated Project Validation
@@ -431,7 +431,7 @@ Test feature combinations that users commonly choose:
 **Goal**: Add a new opt-in feature to the template
 
 **Steps**:
-1. Update relevant blueprint(s) in `blueprints/` to include optional feature toggles.
+1. Update relevant templates in technology-specific SAPs (e.g., static-template/mcp-templates/ for MCP) to include optional feature toggles.
 2. Add conditional logic or installation hooks in `static-template/` and supporting scripts.
 3. Refresh SAP documents (especially protocol + adoption blueprint) to describe the new capability.
 4. Update `template/AGENTS.md.jinja` if feature affects AI agent workflows.
@@ -574,7 +574,7 @@ Test feature combinations that users commonly choose:
 ### Blueprint Engine
 
 **Tooling**: `setup.py` interactive generator (can be wrapped by automation scripts)
-**Key Files**: `blueprints/`, `static-template/`, `docs/skilled-awareness/`
+**Key Files**: `static-template/`, technology-specific SAP templates, `docs/skilled-awareness/`
 
 ### Generated Projects
 
