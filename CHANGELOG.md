@@ -5,6 +5,24 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [3.8.0] - 2025-10-29
+
+### Added
+- **Wave 3 Summary** - Comprehensive documentation of all Wave 3 achievements (~1,450 lines)
+- **Wave 3 Track 3 Sprint Plan** - Documentation polish and closure plan
+
+### Changed
+- **Wave 3 Status** - Marked as complete (Track 1 + Track 2 + Track 3)
+
+### Documentation
+- **Wave 3 Complete**: Transformed chora-base from MCP template to universal Python foundation
+- **Total Wave 3 Impact**: +13,060 net lines, 3 SAPs created (SAP-014, SAP-017, SAP-018)
+- **SAP Coverage**: 100% maintained (18/18 SAPs)
+
+### Notes
+- Link validation across repository discovered ~629 broken links (primarily in older SAPs)
+- Comprehensive link fix deferred to Wave 4 Track 1 (dedicated cleanup sprint)
+
 ## [3.7.0] - 2025-10-29
 
 ### Added
