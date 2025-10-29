@@ -1,0 +1,69 @@
+{
+  "type": "coordination",
+  "request_id": "coord-001",
+  "title": "SAP Awareness Integration Audit - All 18 SAPs (100% PASS Target)",
+  "created": "2025-10-29",
+  "from_repo": "chora-base",
+  "to_repo": "chora-base",
+  "priority": "P1",
+  "urgency": "next_sprint",
+  "blocks": [
+    "Wave 2 quality gates completion",
+    "SAP ecosystem usability",
+    "Agent discoverability of installed SAPs"
+  ],
+  "requested_by": "Victor",
+  "requested_delivery": "Sprint (next)",
+  "context": {
+    "waypoint": "W2",
+    "background": "New awareness integration system created (Step 4.5, SAP_AWARENESS_INTEGRATION_CHECKLIST.md, helper script check-sap-awareness-integration.sh). Current state: SAP-000 passes (15/15), SAP-001 partial (needs enhancement), SAP-004 fails (missing post-install). Need to audit all 18 SAPs and remediate gaps to achieve 100% PASS rate for discoverability. This ensures agents can find installed SAPs by reading AGENTS.md hierarchy.",
+    "related_work": [
+      "docs/dev-docs/workflows/SAP_AUDIT_WORKFLOW.md Step 4.5 (awareness integration check)",
+      "docs/dev-docs/workflows/SAP_AWARENESS_INTEGRATION_CHECKLIST.md (detailed validation)",
+      "scripts/check-sap-awareness-integration.sh (quick triage tool)",
+      "docs/skilled-awareness/document-templates.md (updated post-install section)"
+    ]
+  },
+  "deliverables": [
+    "Triage report: All 18 SAPs scored with awareness integration checklist (0-15 points scale)",
+    "Gap remediation: All SAPs enhanced to PASS status (13-15 points minimum)",
+    "Helper script validation: All 18 SAPs pass check-sap-awareness-integration.sh (exit code 0)",
+    "Audit summary report: docs/project-docs/audits/wave-2-sap-awareness-integration-audit.md",
+    "Updated SAP INDEX: Awareness integration scores added to docs/skilled-awareness/INDEX.md"
+  ],
+  "acceptance_criteria": [
+    "All 18 SAPs (SAP-000 through SAP-018, excluding SAP-015) audited using Step 4.5 + checklist",
+    "All 18 SAPs score 13-15/15 points (100% PASS rate)",
+    "All SAPs have explicit post-install AGENTS.md update steps with validation commands",
+    "All SAPs have agent-executable instructions (specify tool, file, location, content)",
+    "All SAPs have concrete content templates (no placeholders like <sap-name>)",
+    "Helper script exits 0 for all 18 SAPs (or documented exceptions with rationale)",
+    "Summary audit report published with before/after metrics and recommendations"
+  ],
+  "dependencies": [
+    "Step 4.5 awareness integration check (completed 2025-10-29)",
+    "SAP_AWARENESS_INTEGRATION_CHECKLIST.md (completed 2025-10-29)",
+    "Helper script check-sap-awareness-integration.sh (completed 2025-10-29)",
+    "Updated document templates with explicit post-install guidance (completed 2025-10-29)"
+  ],
+  "estimated_effort": "25-35 hours total (18 SAPs × 15 min audit + 15-16 SAPs × 1.5 hours enhancement + 3 hours triage + 3 hours reporting)",
+  "breakdown": {
+    "task_1_triage": "1-2 hours (run helper script on all 18, create triage matrix)",
+    "task_2_infrastructure": "5-7 hours (4 SAPs: project-bootstrap, ci-cd, quality-gates, docker-ops)",
+    "task_3_workflow": "4-6 hours (3 SAPs: documentation, automation-scripts, development-lifecycle)",
+    "task_4_advanced": "5-7 hours (5 SAPs: chora-base-meta, testing, agent-awareness, memory, metrics)",
+    "task_5_wave3": "5-7 hours (4 SAPs: mcp-server-dev, link-validation, chora-compose × 2)",
+    "task_6_summary": "3-4 hours (final validation, summary report, INDEX update)"
+  },
+  "trace_id": "wave-2-sap-awareness-audit",
+  "related": {
+    "proposals": [],
+    "rfcs": [],
+    "issues": [],
+    "documentation": [
+      "docs/dev-docs/workflows/SAP_AUDIT_WORKFLOW.md",
+      "docs/dev-docs/workflows/SAP_AWARENESS_INTEGRATION_CHECKLIST.md",
+      "docs/skilled-awareness/document-templates.md"
+    ]
+  }
+}
