@@ -811,9 +811,10 @@ def set_task_assignee(task_id: int, assignee: str) -> dict:
 - [Git Workflows](../../dev-docs/workflows/git-workflows.md) - Version control for MCP servers
 
 **User Documentation** (`docs/user-docs/`):
-- [How to Implement MCP Server](../../user-docs/how-to/implement-mcp-server.md) - User-facing implementation guide 
-- [How to Configure Claude Desktop](../../user-docs/how-to/configure-mcp-client.md) - MCP client configuration 
-- [MCP Protocol Reference](../../user-docs/reference/mcp-protocol-spec.md) - Technical reference 
+- [How to Implement MCP Server](../../user-docs/how-to/implement-mcp-server.md) - User-facing implementation guide
+- [How to Configure Claude Desktop](../../user-docs/how-to/configure-mcp-client.md) - MCP client configuration
+- [How to Set Up MCP Ecosystem](setup-mcp-ecosystem.md) - Complete MCP gateway + orchestration setup in 10 minutes
+- [MCP Protocol Reference](../../user-docs/reference/mcp-protocol-spec.md) - Technical reference
 - [Why Use MCP Servers](../../user-docs/explanation/why-mcp-servers.md) - Conceptual explanation 
 
 **Project Documentation** (`docs/project-docs/`):

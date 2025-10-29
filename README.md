@@ -161,7 +161,7 @@ class MyApp(StatefulObject):
 - 📚 [How-To Guides](template/user-docs/how-to/) - Task-oriented usage examples
 - 🔬 [Adopter Learnings](docs/dev-docs/research/adopter-learnings-mcp-orchestration.md) - Extraction process
 
-**Source:** Generalized from [mcp-orchestration](https://github.com/chrishayuk/mcp-orchestration) v0.1.3 learnings (tested across MCP, REST, CLI, library projects)
+**Source:** Generalized from production Python projects including [mcp-orchestration](https://github.com/chrishayuk/mcp-orchestration) v0.1.3 learnings (tested across multiple project types: Python libraries, CLI tools, API servers, MCP servers)
 
 ### AI Agent Features (Optional)
 
@@ -190,10 +190,17 @@ class MyApp(StatefulObject):
 
 ### Project Types Supported
 
-- **MCP Server** - Model Context Protocol servers (e.g., Claude Desktop, Cursor)
 - **Library/Package** - Python libraries for PyPI distribution
 - **CLI Tool** - Command-line applications
 - **Web Service/API** - FastAPI or similar web services
+- **MCP Server** - Model Context Protocol servers (with SAP-014)
+
+### Technology-Specific Capabilities
+
+chora-base provides universal Python project infrastructure. For technology-specific capabilities:
+
+- **MCP Server Development**: See [SAP-014 (MCP Server Development)](docs/skilled-awareness/mcp-server-development/) - Comprehensive MCP server development guide with FastMCP patterns, testing strategies, and deployment workflows
+- **Future frameworks**: Django, FastAPI, React (planned SAPs)
 
 ## Quick Start
 
@@ -206,7 +213,7 @@ class MyApp(StatefulObject):
 
 Ask your AI coding agent:
 
-> "Set up a new Python project using chora-base for my MCP server called [project-name]"
+> "Set up a new Python project using chora-base called [project-name]"
 
 Your agent will:
 1. Read [AGENT_SETUP_GUIDE.md](AGENT_SETUP_GUIDE.md)
@@ -286,9 +293,9 @@ my-awesome-project/
 ├── src/                         # Source code
 │   └── my_awesome_project/
 │       ├── __init__.py
-│       ├── server.py            # (MCP server) or
+│       ├── main.py              # (application entry point) or
 │       ├── cli/                 # (CLI tool) or
-│       └── memory/              # (Memory system)
+│       └── memory/              # (Memory system, optional)
 ├── tests/                       # Test suite
 │   ├── test_*.py
 │   └── conftest.py
@@ -319,18 +326,18 @@ chora-base uses the [Diátaxis framework](https://diataxis.fr/) to serve two fir
 docs/
 ├── DOCUMENTATION_PLAN.md     # Complete documentation strategy
 ├── tutorials/                # Learning-oriented (for humans)
-│   ├── 01-first-mcp-server.md
-│   └── 02-rip-and-replace-migration.md
+│   ├── 01-first-python-project.md
+│   └── 02-migrating-existing-project.md
 ├── how-to/                   # Task-oriented (humans + agents)
-│   ├── 01-generate-new-mcp-server.md
-│   ├── 02-rip-and-replace-existing-server.md
+│   ├── 01-setup-new-project.md
+│   ├── 02-configure-testing.md
 │   └── ...
 ├── reference/                # Information-oriented (humans + agents)
 │   ├── template-configuration.md
-│   ├── rip-and-replace-decision-matrix.md
+│   ├── migration-decision-matrix.md
 │   └── ...
 └── explanation/              # Understanding-oriented (for humans)
-    ├── why-rip-and-replace.md
+    ├── benefits-of-chora-base.md
     ├── memory-system-architecture.md
     └── ...
 ```
@@ -338,15 +345,15 @@ docs/
 ### For Human Developers
 
 - **New to chora-base?** Start with the [Benefits Guide](docs/user-docs/explanation/benefits-of-chora-base.md)
-- **Migrating existing project?** See [How-To: Rip-and-Replace](template/user-docs/how-to/02-rip-and-replace-existing-server.md)
+- **Building an MCP server?** See [SAP-014 (MCP Server Development)](docs/skilled-awareness/mcp-server-development/)
 - **Need quick reference?** Check [Template Configuration](template/user-docs/reference/template-configuration.md)
 - **Want to understand concepts?** Explore [template/user-docs/explanation/](template/user-docs/explanation/)
 
 ### For AI Agents
 
-- **Quick start:** [How-To: Generate New MCP Server](template/user-docs/how-to/01-generate-new-mcp-server.md)
+- **Quick start:** [AGENT_SETUP_GUIDE.md](AGENT_SETUP_GUIDE.md)
 - **Complete reference:** [Template Configuration](template/user-docs/reference/template-configuration.md)
-- **Decision support:** [Rip-and-Replace Decision Matrix](template/user-docs/reference/rip-and-replace-decision-matrix.md)
+- **MCP server development:** [SAP-014 Awareness Guide](docs/skilled-awareness/mcp-server-development/awareness-guide.md)
 - **Machine-readable instructions:** AGENTS.md (generated for each project)
 
 ---
@@ -473,7 +480,7 @@ Every generated project includes `UPGRADING.md` with:
 
 See `examples/` directory for sample projects:
 
-- **minimal-mcp** - Minimal MCP server (no memory, basic structure)
+- **minimal-project** - Minimal Python project (no optional features, basic structure)
 - **full-featured** - All features enabled (memory, CLI, tests, docs)
 - **python-library** - Library/package template
 
@@ -528,7 +535,7 @@ When `include_agents_md=true`, you get machine-readable documentation following 
 - Implementing quality gates
 - Adding AI agent support (AGENTS.md, memory system)
 
-**Solution:** chora-base provides all of this out-of-the-box, validated in production through mcp-n8n (Phase 0-4.6).
+**Solution:** chora-base provides all of this out-of-the-box, validated in production across multiple project types.
 
 ### Design Principles
 
@@ -555,15 +562,14 @@ When `include_agents_md=true`, you get machine-readable documentation following 
 
 ## Origin Story
 
-chora-base was extracted from [mcp-n8n](https://github.com/liminalcommons/mcp-n8n) after completing Phase 4.5 (LLM-Intelligent Developer Experience) and Phase 4.6 (Agent Self-Service Tools).
+chora-base was extracted from production Python projects including [mcp-n8n](https://github.com/liminalcommons/mcp-n8n) (an exemplar MCP Gateway & Aggregator project).
 
-**Key Milestones:**
-- **Phase 0** - Gateway architecture validation, integration smoke tests
-- **Phase 4.5** - AGENTS.md (1,189 lines), memory infrastructure, 14 tests
-- **Phase 4.6** - CLI tools (chora-memory), agent profiles
-- **Extraction** - Template-ization for chora-base (v1.0.0)
+**Evolution:**
+- Validated across multiple project types (MCP servers, CLI tools, libraries, API services)
+- Generalized from real-world patterns and best practices
+- Continuously refined through adopter feedback and production usage
 
-See [docs/PHASE_4.5_SUMMARY.md](https://github.com/liminalcommons/mcp-n8n/blob/main/docs/PHASE_4.5_SUMMARY.md) in mcp-n8n for details.
+**See**: [mcp-n8n](https://github.com/liminalcommons/mcp-n8n) for an example of chora-base in production use.
 
 ## Contributing
 
@@ -592,4 +598,4 @@ MIT License - see [LICENSE](LICENSE)
 
 ---
 
-🤖 Generated from mcp-n8n Phase 4.5/4.6 - LLM-Intelligent Developer Experience
+🤖 Universal Python Project Template for AI-Agent-First Development

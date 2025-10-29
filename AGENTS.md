@@ -183,8 +183,8 @@ chora-base/
 │   │   ├── v1.9.2-to-v1.9.3.md  # Version-specific guides (naming: vX.Y-to-vX.Z.md)
 │   │   └── ...
 │   ├── how-to/                  # Task-oriented guides
-│   │   ├── 01-generate-new-mcp-server.md
-│   │   ├── 02-rip-and-replace-existing-server.md
+│   │   ├── 01-setup-new-project.md
+│   │   ├── 02-configure-testing.md
 │   │   └── ...
 │   ├── explanation/             # Conceptual explanations
 │   ├── research/                # Research documents
@@ -231,7 +231,7 @@ chora-base/
 ### How-To Guides
 
 **Location**: `docs/how-to/`
-**Naming Pattern**: `NN-kebab-case-title.md` (e.g., `01-generate-new-mcp-server.md`)
+**Naming Pattern**: `NN-kebab-case-title.md` (e.g., `01-setup-new-project.md`)
 **Audience**: Humans + AI agents (task-oriented)
 
 ### Reference Documentation
@@ -256,7 +256,7 @@ chora-base/
 1. **Research Phase**
    - Document research findings in `docs/research/`
    - Identify industry best practices
-   - Review adopter feedback from real projects (mcp-n8n, chora-compose)
+   - Review adopter feedback from real projects (mcp-n8n, chora-compose, and others across MCP, REST, CLI, library domains)
 
 2. **Design Phase**
    - Update `CHANGELOG.md` under `## [Unreleased]`
@@ -386,7 +386,7 @@ python setup.py /tmp/test-full
 # Enable all optional features when prompted
 
 # Specific project types (run setup script and choose appropriate options)
-python setup.py /tmp/test-mcp
+python setup.py /tmp/test-project
 python setup.py /tmp/test-lib
 python setup.py /tmp/test-cli
 ```
@@ -416,10 +416,11 @@ git checkout -b test-update
 
 Test feature combinations that users commonly choose:
 
-1. **Minimal MCP Server**: No memory, no docs, no Docker
-2. **Full-Featured MCP Server**: All features enabled
-3. **Library**: No CLI, yes docs, yes tests
-4. **CLI Tool**: Yes CLI, yes tests, no memory
+1. **Minimal Python Project**: Basic structure, no optional features
+2. **Full-Featured Python Project**: All optional features enabled
+3. **Library Project**: No CLI, yes docs, yes tests
+4. **CLI Tool Project**: Yes CLI, yes tests
+5. **MCP Server** (with SAP-014): MCP-specific features, optional memory/Docker
 
 ---
 
