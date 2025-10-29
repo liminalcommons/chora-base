@@ -1,13 +1,28 @@
 # Awareness Guide: Project Bootstrap
 
 **SAP ID**: SAP-003
-**Version**: 1.0.0
+**Version**: 1.0.1
 **Target Audience**: AI agents (Claude Code, Cursor, etc.)
 **Last Updated**: 2025-10-28
 
 ---
 
 ## 1. Quick Reference
+
+### When to Use This SAP
+
+**Use the Project Bootstrap SAP when**:
+- Generating a new Python project from chora-base template
+- Understanding the project generation workflow (setup.py + blueprints)
+- Customizing project generation with optional flags (--no-docker, --no-memory, --no-claude)
+- Validating a generated project structure
+- Adopting chora-base patterns in existing projects
+
+**Don't use for**:
+- Non-Python projects (chora-base is Python-specific)
+- Minimal/simple projects (chora-base is comprehensive, production-ready)
+- Projects that don't need AI agent support or structured workflows
+- Manual project setup without generation (use static-template/ directly instead)
 
 ### Common Agent Tasks
 
@@ -344,7 +359,160 @@ Agent validates:
 
 ---
 
-## 5. Best Practices
+## 5. Common Pitfalls
+
+### Pitfall 1: Not Reading Capability Charter Before Generating
+
+**Scenario**: Agent generates project without understanding what project-bootstrap provides.
+
+**Example**:
+```bash
+# Agent immediately runs:
+python setup.py my-project
+
+# Without reading SAP-003 Charter to understand:
+# - What gets generated (100+ files)
+# - What capabilities are included (testing, CI/CD, memory, docker)
+# - What optional flags exist (--no-docker, --no-memory)
+```
+
+**Fix**: Always read Charter first to understand scope:
+```bash
+# Read: docs/skilled-awareness/project-bootstrap/capability-charter.md
+# Then generate with informed choices:
+python setup.py my-project --no-docker  # Skip docker if not needed
+```
+
+**Why it matters**: Generating unnecessary components (docker, memory) adds complexity. Understanding optional flags saves cleanup time. Charter reading takes 3-5 minutes, cleanup takes 30-60 minutes.
+
+### Pitfall 2: Skipping Validation After Generation
+
+**Scenario**: Agent generates project, reports success, but doesn't validate structure.
+
+**Example**:
+```bash
+python setup.py my-project
+# Output: "✅ Project generation complete!"
+
+# Agent reports success to user WITHOUT running:
+cd my-project
+pytest --collect-only  # Tests loadable?
+grep -r "{{"          # Placeholders replaced?
+ls src/my_package/    # Package directory exists?
+```
+
+**Fix**: Always run 5-step validation (Protocol Section 6.1):
+```bash
+# Step 1: Critical files exist
+ls pyproject.toml README.md src/my_package/__init__.py
+
+# Step 2: No unreplaced placeholders
+grep -r "{{" . --exclude-dir=.git
+
+# Step 3: Tests loadable
+pytest --collect-only
+
+# Step 4: Git initialized
+git log --oneline
+
+# Step 5: Python files compile
+python -m py_compile src/my_package/__init__.py
+```
+
+**Why it matters**: Silent failures waste user time. Unreplaced placeholders break imports. Validation takes 10-15 seconds, debugging later takes 10-30 minutes.
+
+### Pitfall 3: Overwriting Project Without --force Flag Understanding
+
+**Scenario**: Agent tries to regenerate project in existing directory.
+
+**Example**:
+```bash
+# First generation
+python setup.py my-project
+# Success!
+
+# Later, user asks to "regenerate with new settings"
+python setup.py my-project  # ERROR: Directory exists!
+
+# setup.py checks target_dir.exists() and blocks overwrite
+# Agent doesn't understand why generation failed
+```
+
+**Fix**: Understand --force flag and use cautiously:
+```bash
+# Check if directory exists first
+if [ -d "my-project" ]; then
+    # Ask user confirmation before --force
+    echo "Project exists. Overwrite? This will DELETE all changes."
+    # If confirmed:
+    python setup.py my-project --force  # Removes existing directory
+fi
+```
+
+**Why it matters**: --force DELETES the entire directory, losing user changes. Protocol Section 2.2.1 documents this behavior. Always confirm with user before destructive operations.
+
+### Pitfall 4: Not Checking for Unreplaced Placeholders in Non-Critical Files
+
+**Scenario**: Validation passes for critical files, but placeholders remain in documentation.
+
+**Example**:
+```bash
+# Agent runs validation
+ls pyproject.toml  # ✅ Exists
+pytest --collect-only  # ✅ Tests loadable
+
+# But doesn't check docs:
+cat docs/development.md
+# Shows: "See {{ project_slug }} repository"
+# Placeholder not replaced! User sees broken docs.
+```
+
+**Fix**: Check ALL files for placeholders, not just critical ones:
+```bash
+# Comprehensive check (excludes .git)
+grep -r "{{" . --exclude-dir=.git
+
+# If found, investigate which blueprint mapping is missing
+# setup.py:231-242 should map all blueprints:
+blueprint_mappings = {
+    'docs/development.md.blueprint': 'docs/development.md',  # Must exist
+}
+```
+
+**Why it matters**: Documentation with {{ placeholders }} looks broken to users. Protocol Section 3.3 lists all 12 blueprint mappings. Checking all files takes 1-2 seconds, fixing docs later takes 5-10 minutes.
+
+### Pitfall 5: Forgetting setup.py vs static-template/ Distinction
+
+**Scenario**: Agent modifies static-template/ when they should modify blueprints/.
+
+**Example**:
+```python
+# Agent wants to change pyproject.toml for generated projects
+# WRONG: Edits static-template/pyproject.toml
+static-template/pyproject.toml:
+    name = "my-package"  # Hardcoded!
+
+# Generated projects all get "my-package", not {{ project_slug }}
+```
+
+**Fix**: Understand two-tier system (Protocol Section 3):
+```bash
+# static-template/: Static files (copied as-is)
+# blueprints/: Variable templates ({{ }} replaced)
+
+# For variable content, use blueprints:
+blueprints/pyproject.toml.blueprint:
+    name = "{{ project_slug }}"  # Will be replaced
+
+# For static content, use static-template:
+static-template/tests/conftest.py  # No variables, copy as-is
+```
+
+**Why it matters**: Modifying static-template/ for variable content breaks all future generations. Understanding the distinction prevents this. Protocol Section 3.2 documents blueprint processing, Section 3.4 documents static template copying.
+
+---
+
+## 6. Best Practices
 
 ### DO
 
@@ -455,31 +623,85 @@ python -m py_compile src/my_package/__init__.py
 
 ---
 
-## 8. Related Resources
+## 8. Related Content
 
-**SAP-003 Artifacts**:
-- [capability-charter.md](capability-charter.md) - This SAP's charter
-- [protocol-spec.md](protocol-spec.md) - Technical contract
-- [adoption-blueprint.md](adoption-blueprint.md) - How to generate projects
-- [ledger.md](ledger.md) - Adopter tracking
+### Within This SAP (skilled-awareness/project-bootstrap/)
 
-**Generation Components**:
+- [capability-charter.md](capability-charter.md) - Problem statement, scope, outcomes for SAP-003
+- [protocol-spec.md](protocol-spec.md) - Complete technical contract (generation flow, validation)
+- [adoption-blueprint.md](adoption-blueprint.md) - Step-by-step guide for generating projects
+- [ledger.md](ledger.md) - Adopter tracking, version history, generation metrics
+- **This document** (awareness-guide.md) - Agent workflows and optimizations
+
+### Developer Process (dev-docs/)
+
+**Workflows**:
+- [dev-docs/workflows/TDD_WORKFLOW.md](/dev-docs/workflows/TDD_WORKFLOW.md) - Test-driven development in generated projects
+- [dev-docs/workflows/BDD_WORKFLOW.md](/dev-docs/workflows/BDD_WORKFLOW.md) - Behavior-driven development approach
+
+**Tools**:
+- [dev-docs/tools/ruff.md](/dev-docs/tools/ruff.md) - Linting (generated projects use ruff)
+- [dev-docs/tools/mypy.md](/dev-docs/tools/mypy.md) - Type checking (generated projects use mypy)
+
+**Development Guidelines**:
+- [dev-docs/development/code-style.md](/dev-docs/development/code-style.md) - Coding standards for generated projects
+
+### Project Lifecycle (project-docs/)
+
+**Generation & Setup**:
+- [project-docs/guides/project-generation.md](/project-docs/guides/project-generation.md) - Comprehensive project generation guide
+- [project-docs/guides/environment-setup.md](/project-docs/guides/environment-setup.md) - Setting up development environment
+
+**Implementation Components**:
 - [setup.py](/setup.py) - Generation orchestrator (443 lines)
-- [blueprints/](/blueprints/) - Variable templates (12 files)
+- [blueprints/](/blueprints/) - Variable templates (12 .blueprint files)
 - [static-template/](/static-template/) - Project scaffold (100+ files)
 
-**Related SAPs**:
-- [chora-base/protocol-spec.md](../chora-base/protocol-spec.md) - Meta-SAP Section 3.2.1
-- [testing-framework/](../testing-framework/) - SAP-004 (generated test structure)
-- [ci-cd-workflows/](../ci-cd-workflows/) - SAP-005 (generated workflows)
-- [quality-gates/](../quality-gates/) - SAP-006 (generated quality configs)
+**Audits & Releases**:
+- [project-docs/audits/](/project-docs/audits/) - SAP audits including SAP-003 validation
+- [project-docs/sprints/](/project-docs/sprints/) - Sprint planning for SAP updates
+- [project-docs/releases/](/project-docs/releases/) - Version release documentation
 
-**Core Docs**:
-- [README.md](/README.md) - Project overview
-- [AGENTS.md](/AGENTS.md) - Agent guidance
-- [CHANGELOG.md](/CHANGELOG.md) - Version history
+### User Guides (user-docs/)
+
+**Getting Started**:
+- [user-docs/guides/quickstart.md](/user-docs/guides/quickstart.md) - Quick start with project generation
+- [user-docs/guides/installation.md](/user-docs/guides/installation.md) - Installing chora-base
+
+**Tutorials**:
+- [user-docs/tutorials/first-mcp-server.md](/user-docs/tutorials/first-mcp-server.md) - Build your first MCP server (uses SAP-003 generation)
+- [user-docs/tutorials/customizing-template.md](/user-docs/tutorials/customizing-template.md) - Customize generated projects
+
+**Reference**:
+- [user-docs/reference/cli-reference.md](/user-docs/reference/cli-reference.md) - setup.py CLI reference
+- [user-docs/reference/project-structure.md](/user-docs/reference/project-structure.md) - Generated project structure explained
+
+### Other SAPs (skilled-awareness/)
+
+**Core Framework**:
+- [sap-framework/](../sap-framework/) - SAP-000 (defines SAP structure)
+- [chora-base/protocol-spec.md](../chora-base/protocol-spec.md) - SAP-002 Meta-SAP Section 3.2.1 (documents SAP-003)
+
+**Generated Capabilities**:
+- [testing-framework/](../testing-framework/) - SAP-004 (generated test structure, pytest config)
+- [ci-cd-workflows/](../ci-cd-workflows/) - SAP-005 (generated GitHub Actions workflows)
+- [quality-gates/](../quality-gates/) - SAP-006 (generated pre-commit hooks, quality checks)
+- [memory-system/](../memory-system/) - SAP-009 (optional memory capability)
+- [docker-operations/](../docker-operations/) - SAP-010 (optional Docker support)
+
+**Supporting Capabilities**:
+- [automation-scripts/](../automation-scripts/) - SAP-008 (scripts for project tasks)
+- [agent-awareness/](../agent-awareness/) - SAP-011 (AI agent guidance in generated projects)
+- [metrics-tracking/](../metrics-tracking/) - SAP-013 (usage metrics in generated projects)
+
+**Core Documentation**:
+- [README.md](/README.md) - chora-base overview
+- [AGENTS.md](/AGENTS.md) - Agent guidance for using chora-base
+- [CHANGELOG.md](/CHANGELOG.md) - Version history including SAP-003 updates
+- [SKILLED_AWARENESS_PACKAGE_PROTOCOL.md](/SKILLED_AWARENESS_PACKAGE_PROTOCOL.md) - Root SAP protocol
 
 ---
 
 **Version History**:
+- **1.0.1** (2025-10-28): Added "Common Pitfalls" section with Wave 2 learnings (5 scenarios: Charter reading, validation, --force flag, placeholder checking, setup.py vs static-template), enhanced "Related Content" with 4-domain coverage (dev-docs/, project-docs/, user-docs/, skilled-awareness/)
 - **1.0.0** (2025-10-28): Initial awareness guide for project-bootstrap
