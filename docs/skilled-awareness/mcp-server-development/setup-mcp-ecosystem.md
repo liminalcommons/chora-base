@@ -11,7 +11,7 @@ validates:
   - feature: Initial MCP Ecosystem Bootstrap
   - components: [mcp-gateway, mcp-orchestration]
 prerequisites_for: 
-  - how-to-deploy-new-mcp-server.md (Waypoint W1)
+  - Deployment guide (coming soon)
 related:
   - docs/explanation/ecosystem-architecture.md
   - docs/how-to/deploy-new-mcp-server.md
@@ -520,13 +520,13 @@ Now that your ecosystem is set up, you can:
    ```
 
 2. **Follow Waypoint W1:**
-   See [How to Deploy a New MCP Server in 5 Minutes](how-to-deploy-new-mcp-server.md)
+   See How to Deploy a New MCP Server (documentation coming soon)
 
 3. **Enable automatic updates:**
-   See [How to Enable Automatic MCP Server Updates](how-to-enable-automatic-updates.md)
+   See How to Enable Automatic Updates (documentation coming soon)
 
 4. **Configure health monitoring:**
-   See [How to Configure Health Monitoring](how-to-configure-health-monitoring.md)
+   See How to Configure Health Monitoring (documentation coming soon)
 
 5. **Explore available servers:**
    ```bash
@@ -561,10 +561,10 @@ docker ps -a | grep -q mcp-ecosystem || echo "Ecosystem removed"
 
 ## See Also
 
-- [Ecosystem Architecture](../explanation/ecosystem-architecture.md)
-- [mcp-gateway Documentation](../mcp-gateway/README.md)
-- [mcp-orchestration Documentation](../mcp-orchestration/README.md)
-- [Waypoint W1: Deploy New Servers](how-to-deploy-new-mcp-server.md)
+- [Ecosystem Architecture](../../user-docs/explanation/why-mcp-servers.md)
+- [mcp-gateway Documentation](https://github.com/liminalcommons/mcp-n8n)
+- [mcp-orchestration Documentation](https://github.com/chrishayuk/mcp-orchestration)
+- Waypoint W1: Deploy New Servers (documentation coming soon)
 
 ## Success Metrics
 

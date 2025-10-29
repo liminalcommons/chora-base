@@ -807,8 +807,6 @@ def set_task_assignee(task_id: int, assignee: str) -> dict:
 
 **Development Documentation** (`docs/dev-docs/`):
 - [MCP Development Workflow](../../dev-docs/workflows/mcp-development-workflow.md) - Step-by-step MCP development process 
-- [Testing Framework](../../dev-docs/workflows/TDD_WORKFLOW.md) - TDD patterns for MCP tools
-- [Git Workflows](../../dev-docs/workflows/git-workflows.md) - Version control for MCP servers
 
 **User Documentation** (`docs/user-docs/`):
 - [How to Implement MCP Server](../../user-docs/how-to/implement-mcp-server.md) - User-facing implementation guide
@@ -838,7 +836,7 @@ def set_task_assignee(task_id: int, assignee: str) -> dict:
 
 **Root Documentation** (`/`):
 - [AGENTS.md](/AGENTS.md) - Agent guidance (to be generalized in Phase 4)
-- [CLAUDE.md](/CLAUDE.md) - Claude-specific patterns (to be generalized in Phase 4)
+- [CLAUDE.md](../../../README.md) - Claude-specific patterns (to be generalized in Phase 4)
 - [README.md](/README.md) - Project overview (to be updated in Phase 4)
 
 ### External References

@@ -5,6 +5,31 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [3.6.0] - 2025-10-29
+
+### Added
+- **SAP-014: MCP Server Development** - First technology-specific SAP (6 artifacts, 8 supporting docs, 11 templates, ~10,958 lines)
+- **Chora MCP Conventions v1.0** - Formalized namespace, tool naming, and resource URI patterns
+- **MCP Templates** - Ready-to-use templates in static-template/mcp-templates/
+- **Technology-Specific SAP Pattern** - Model for future Django, FastAPI, React SAPs
+
+### Changed
+- **Root Documentation** - Generalized README.md and AGENTS.md (removed MCP assumptions)
+- **Project Positioning** - "MCP server template" → "Universal Python project template"
+- **Bootstrap Workflow** - Monolithic setup.py → Template-based generation via SAPs
+
+### Removed
+- **blueprints/** directory (~2,700 lines) - Migrated to static-template/mcp-templates/
+- **setup.py** (~443 lines) - Replaced with template-based workflow
+- **AGENT_SETUP_GUIDE.md** (~1,500 lines) - MCP-specific content moved to SAP-014
+- **Total**: ~4,643 lines of obsolete bootstrap code
+
+### Fixed
+- 10 broken links in SAP-014 documentation
+
+**Total Impact**: +6,315 net lines, transformed chora-base into universal foundation with MCP as optional capability
+
+
 ## [3.1.1] - 2025-10-25
 
 ### Changed

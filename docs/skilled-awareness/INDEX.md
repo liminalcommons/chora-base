@@ -9,9 +9,9 @@
 
 ## Overview
 
-This index tracks all **15 capabilities** identified for SAP packaging across 4 roadmap phases + Wave 2.
+This index tracks all **16 capabilities** identified for SAP packaging across 4 roadmap phases + Wave 2 + Wave 3.
 
-**Current Coverage**: 15/15 SAPs (100%) - ALL PHASES COMPLETE! 🎉
+**Current Coverage**: 16/16 SAPs (100%) - ALL PHASES COMPLETE! 🎉
 
 **Target Coverage**:
 - Phase 1: 3/14 (21%) ✅ Complete
@@ -40,6 +40,7 @@ This index tracks all **15 capabilities** identified for SAP packaging across 4 
 | SAP-011 | docker-operations | 1.0.0 | Draft | Phase 3 | [docker-operations/](docker-operations/) | SAP-000 |
 | SAP-012 | development-lifecycle | 1.0.0 | Draft | Phase 3 | [development-lifecycle/](development-lifecycle/) | SAP-000 |
 | SAP-013 | metrics-tracking | 1.0.0 | Draft | Phase 4 | [metrics-tracking/](metrics-tracking/) | SAP-000 |
+| SAP-014 | mcp-server-development | 1.0.0 | Active | Wave 3 | [mcp-server-development/](mcp-server-development/) | SAP-000, SAP-003, SAP-004, SAP-012 |
 | SAP-016 | link-validation-reference-management | 1.0.0 | Active | Wave 2 | [link-validation-reference-management/](link-validation-reference-management/) | None (foundational) |
 
 ---
@@ -103,6 +104,16 @@ This index tracks all **15 capabilities** identified for SAP packaging across 4 
 **Wave 2 Target**: 15 SAPs total (100% enhanced coverage, +1 from Phase 4) ✅ COMPLETE!
 
 **Quality Assurance**: Link validation for documentation integrity, enables SAP audit workflow.
+
+### Wave 3: Technology-Specific Capabilities (2025-10)
+
+| SAP ID | Capability | Priority | Dependencies | Status |
+|--------|------------|----------|--------------|--------|
+| SAP-014 | mcp-server-development | P1 | SAP-000, SAP-003, SAP-004, SAP-012 | ✅ Active (6 artifacts + 8 supporting docs + 11 templates) |
+
+**Wave 3 Target**: First technology-specific SAP demonstrating extensibility pattern ✅ COMPLETE!
+
+**Key Innovation**: Establishes pattern for technology-specific SAPs. MCP server development extracted from core into optional capability, making chora-base truly universal. Future tech SAPs: Django (SAP-017), FastAPI (SAP-018), React (SAP-019).
 
 ---
 
