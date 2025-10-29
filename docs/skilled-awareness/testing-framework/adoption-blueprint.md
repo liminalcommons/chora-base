@@ -471,7 +471,7 @@ RuntimeWarning: coroutine 'test_func' was never awaited
 
 1. Read [SAP-005 (ci-cd-workflows)](../ci-cd-workflows/) - CI/CD integration
 2. Read [SAP-006 (quality-gates)](../quality-gates/) - Pre-commit hooks
-3. Read [static-template/dev-docs/workflows/TDD_WORKFLOW.md](../../../../static-template/dev-docs/workflows/TDD_WORKFLOW.md) - TDD workflow
+3. Read [static-template/dev-docs/workflows/TDD_WORKFLOW.md](/static-template/dev-docs/workflows/TDD_WORKFLOW.md) - TDD workflow
 
 ---
 
@@ -484,9 +484,9 @@ RuntimeWarning: coroutine 'test_func' was never awaited
 - [ledger.md](ledger.md) - Coverage tracking
 
 **Testing Components**:
-- [pyproject.toml](../../../../blueprints/pyproject.toml.blueprint) - pytest configuration
-- [static-template/tests/](../../../../static-template/tests/) - Example tests
-- [.github/workflows/test.yml](../../../../static-template/.github/workflows/test.yml) - Test workflow
+- [pyproject.toml](/blueprints/pyproject.toml.blueprint) - pytest configuration
+- [static-template/tests/](/static-template/tests/) - Example tests
+- [.github/workflows/test.yml](/static-template/.github/workflows/test.yml) - Test workflow
 
 **Related SAPs**:
 - [project-bootstrap/](../project-bootstrap/) - SAP-003 (generates test structure)

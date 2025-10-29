@@ -789,15 +789,15 @@ Bash: just pre-merge
 ## 8. Related Documents
 
 **Workflow Docs**:
-- [DEVELOPMENT_PROCESS.md](../../../../static-template/dev-docs/workflows/DEVELOPMENT_PROCESS.md)
-- [DEVELOPMENT_LIFECYCLE.md](../../../../static-template/dev-docs/workflows/DEVELOPMENT_LIFECYCLE.md)
-- [DDD_WORKFLOW.md](../../../../static-template/dev-docs/workflows/DDD_WORKFLOW.md)
-- [BDD_WORKFLOW.md](../../../../static-template/dev-docs/workflows/BDD_WORKFLOW.md)
-- [TDD_WORKFLOW.md](../../../../static-template/dev-docs/workflows/TDD_WORKFLOW.md)
+- [DEVELOPMENT_PROCESS.md](/static-template/dev-docs/workflows/DEVELOPMENT_PROCESS.md)
+- [DEVELOPMENT_LIFECYCLE.md](/static-template/dev-docs/workflows/DEVELOPMENT_LIFECYCLE.md)
+- [DDD_WORKFLOW.md](/static-template/dev-docs/workflows/DDD_WORKFLOW.md)
+- [BDD_WORKFLOW.md](/static-template/dev-docs/workflows/BDD_WORKFLOW.md)
+- [TDD_WORKFLOW.md](/static-template/dev-docs/workflows/TDD_WORKFLOW.md)
 
 **Templates**:
-- [sprint-template.md](../../../../static-template/project-docs/sprints/sprint-template.md)
-- [release-template.md](../../../../static-template/project-docs/releases/release-template.md)
+- [sprint-template.md](/static-template/project-docs/sprints/sprint-template.md)
+- [release-template.md](/static-template/project-docs/releases/release-template.md)
 
 **Protocol**:
 - [protocol-spec.md](protocol-spec.md) - Full lifecycle contracts

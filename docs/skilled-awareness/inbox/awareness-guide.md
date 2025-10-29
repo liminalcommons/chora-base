@@ -1,17 +1,34 @@
 # Cross-Repository Inbox Awareness Guide
 
-**Audience:** Claude Code, Codex, and human operators responsible for inbox triage and execution  
-**Last Updated:** 2025-10-27  
-**Prerequisites:**  
-- Load `docs/reference/skilled-awareness/inbox/protocol-spec.md` (understand lifecycle and artefacts).  
-- Review `inbox/` directory structure in the target repository.  
+**Audience:** Claude Code, Codex, and human operators responsible for inbox triage and execution
+**Version:** 1.0.1
+**Last Updated:** 2025-10-28
+**Prerequisites:**
+- Load [protocol-spec.md](protocol-spec.md) (understand lifecycle and artefacts).
+- Review `inbox/` directory structure in the target repository.
 - Ensure shell access with basic commands (`ls`, `cat`, `mv`, `mkdir`, `jq`, `yq` if available).
 
 ---
 
 ## 1. Quick Orientation
-- **Capability Summary:** The inbox coordinates strategic proposals, cross-repo dependencies, and approved tasks by keeping state in Git. Operators move items through intake → review → activation → completion while logging events.
-- **When to Use:** Whenever the user requests to check or act on `inbox/`, triage cross-repo requests, or start work on active tasks.  
+
+### When to Use This SAP
+
+**Use the Inbox Coordination SAP when**:
+- Coordinating work across multiple repositories in the ecosystem
+- Processing strategic proposals, coordination requests, or implementation tasks
+- Tracking cross-repo dependencies and state transitions
+- Establishing Git-native coordination without external tools (no SaaS dependency)
+- Triaging incoming work items with clear lifecycle management
+
+**Don't use for**:
+- Single-repository task management (use `project-docs/sprints/` instead)
+- Real-time chat coordination (inbox is async, file-based)
+- External SaaS integrations (inbox is Git-native only)
+- Ad-hoc notes or scratch work (inbox requires structured intake schemas)
+
+### Capability Summary
+The inbox coordinates strategic proposals, cross-repo dependencies, and approved tasks by keeping state in Git. Operators move items through intake → review → activation → completion while logging events.  
 - **Key Paths:**  
   - `inbox/ecosystem/` — Strategic proposals, RFCs, ADRs.  
   - `inbox/incoming/coordination/` — Pending coordination requests (JSON).  
@@ -95,7 +112,126 @@
 
 ---
 
-## 5. Troubleshooting
+## 5. Common Pitfalls
+
+### Pitfall 1: Moving Tasks Without Emitting Events
+**Scenario**: Agent moves task from `incoming/` to `active/` but forgets to emit event to `coordination/events.jsonl`
+
+**Example**:
+```bash
+# Wrong: Just moving file
+mv inbox/incoming/tasks/task-123.json inbox/active/task-123-feature/
+
+# Missing: Event emission
+```
+
+**Fix**: Always emit event after state transitions:
+```bash
+# Move task
+mv inbox/incoming/tasks/task-123.json inbox/active/task-123-feature/
+
+# Emit event
+echo '{"timestamp":"2025-10-28T10:00:00Z","event":"task_started","trace_id":"task-123","repo":"chora-base"}' >> inbox/coordination/events.jsonl
+```
+
+**Why it matters**: Event log provides audit trail; missing events break traceability and status tracking
+
+### Pitfall 2: Schema Validation Skipped
+**Scenario**: Agent accepts coordination request without validating JSON schema
+
+**Example**:
+```json
+{
+  "type": "coordination_request",
+  "from_repo": "chora-compose"
+  // Missing required fields: priority, description, trace_id
+}
+```
+
+**Fix**: Always validate schema before activation:
+```bash
+# Validate with jq
+cat inbox/incoming/coordination/coord-456.json | jq empty
+# If valid, proceed; if error, notify user
+
+# Better: validate against schema
+cat inbox/incoming/coordination/coord-456.json | jq -e 'has("trace_id") and has("priority") and has("description")'
+```
+
+**Why it matters**: Invalid requests cause downstream confusion; schema ensures complete information
+
+### Pitfall 3: Capability Mismatch Not Checked
+**Scenario**: Agent activates task that repo cannot handle (capability not listed in `CAPABILITIES/<repo>.yaml`)
+
+**Example**:
+```yaml
+# In coordination/CAPABILITIES/chora-base.yaml
+provides:
+  - python-packaging
+  - documentation
+
+# Request asks for: rust-compilation (not provided!)
+```
+
+**Fix**: Always check capability match before activation:
+```bash
+# Check if repo provides capability
+yq '.provides[] | select(. == "rust-compilation")' inbox/coordination/CAPABILITIES/chora-base.yaml
+# If no match, recommend routing to different repo
+```
+
+**Why it matters**: Activating mismatched tasks leads to failed execution and wasted effort
+
+### Pitfall 4: Mixing Strategic and Implementation Workflows
+**Scenario**: Agent tries to execute strategic proposal as if it's an implementation task
+
+**Example**:
+```
+Agent: "I'll start coding the architecture proposal from ecosystem/proposals/"
+Problem: Strategic proposals need review/approval before becoming tasks
+```
+
+**Fix**: Follow correct workflow for each intake type:
+```
+Strategic proposal (ecosystem/proposals/) → Quarterly review → If approved, create coordination request
+Coordination request (incoming/coordination/) → Sprint review → If approved, create implementation task
+Implementation task (incoming/tasks/) → Activation → DDD → BDD → TDD → Completion
+```
+
+**Why it matters**: Skipping review stages leads to misaligned work; proposals need governance approval first
+
+### Pitfall 5: Completing Task Without Summary
+**Scenario**: Agent moves task to `completed/` but doesn't create completion summary
+
+**Example**:
+```bash
+# Wrong: Just moving directory
+mv inbox/active/task-123-feature/ inbox/completed/
+# Missing: SUMMARY.md with outcomes, verification notes
+```
+
+**Fix**: Always create completion summary:
+```bash
+# Create summary first
+cat > inbox/active/task-123-feature/SUMMARY.md <<EOF
+# Task Completion Summary
+
+**Task ID**: task-123
+**Completed**: 2025-10-28
+**Outcome**: Feature implemented and tested
+**Verification**: All tests pass, coverage 87%
+**Follow-up**: None
+EOF
+
+# Then move to completed
+mv inbox/active/task-123-feature/ inbox/completed/
+```
+
+**Why it matters**: Summaries provide retrospective value; without them, completed work is undocumented
+
+---
+
+## 6. Troubleshooting
 - **Issue:** Schema validation failure.  
   - **Action:** Run `jq`/`yq` to inspect structure; compare against schema; flag missing fields.  
 - **Issue:** Capability mismatch.  
@@ -107,7 +243,69 @@
 
 ---
 
-## 6. Continuous Learning Hooks
-- **Feedback Capture:** Add notes to task completion summary or update Ledger feedback section.  
-- **Staying Updated:** Watch `docs/reference/skilled-awareness/inbox/` for version bumps; maintainers should broadcast via inbox strategic updates or CHANGELOG entries.  
-- **Agent Training:** When guide updates, rerun dry run to ensure patterns remain executable.
+## 7. Related Content
+
+### Within This SAP (skilled-awareness/inbox/)
+- [capability-charter.md](capability-charter.md) - Business case for cross-repo inbox coordination
+- [protocol-spec.md](protocol-spec.md) - Complete technical specification for inbox lifecycle
+- [adoption-blueprint.md](adoption-blueprint.md) - Step-by-step installation guide for new repositories
+- [ledger.md](ledger.md) - Adoption tracking and feedback log
+- [dry-run-checklist.md](dry-run-checklist.md) - Validation checklist for pilot adoption
+- [broadcast-workflow.md](broadcast-workflow.md) - Weekly ecosystem status broadcast process
+
+### Developer Process (dev-docs/)
+**Workflows**:
+- [/static-template/dev-docs/workflows/DEVELOPMENT_LIFECYCLE.md](/static-template/dev-docs/workflows/DEVELOPMENT_LIFECYCLE.md) - DDD → BDD → TDD lifecycle (referenced in task execution)
+
+**Integration**:
+- Inbox tasks follow DDD → BDD → TDD phases after activation
+- `change-request.md` created during DDD phase for each active task
+
+### Project Lifecycle (project-docs/)
+**Planning**:
+- `/docs/project-docs/sprints/` - Sprint planning (coordination requests reviewed at sprint cadence)
+- `/docs/project-docs/releases/` - Release coordination (strategic proposals inform roadmap)
+
+**Audits**:
+- `/docs/project-docs/audits/wave-2-sap-001-audit.md` - This SAP's audit report (to be created)
+
+**Coordination** (future):
+- Ecosystem-wide status dashboards (planned integration with inbox broadcasts)
+
+### User Guides (user-docs/)
+**Existing**:
+- [/docs/user-docs/explanation/architecture-clarification.md](/docs/user-docs/explanation/architecture-clarification.md) - Architecture overview
+- [/docs/user-docs/explanation/benefits-of-chora-base.md](/docs/user-docs/explanation/benefits-of-chora-base.md) - Benefits including coordination patterns
+
+**Planned** (to be created in Wave 2 Phase 5):
+- How-To: Triage an inbox coordination request
+- How-To: Write a strategic proposal for ecosystem review
+- Tutorial: End-to-end cross-repo coordination workflow
+- Reference: Inbox JSON schemas and event types
+
+### Other SAPs (skilled-awareness/)
+**Framework**:
+- [/docs/skilled-awareness/sap-framework/](/docs/skilled-awareness/sap-framework/) - SAP-000, defines SAP structure (inbox follows SAP framework)
+- [/SKILLED_AWARENESS_PACKAGE_PROTOCOL.md](/SKILLED_AWARENESS_PACKAGE_PROTOCOL.md) - Root SAP protocol
+
+**Related Capabilities**:
+- [/docs/skilled-awareness/development-lifecycle/](/docs/skilled-awareness/development-lifecycle/) - SAP-012, DDD → BDD → TDD workflow (inbox tasks use this)
+- [/docs/skilled-awareness/memory-system/](/docs/skilled-awareness/memory-system/) - SAP-010, event logging patterns (inbox event log compatible)
+- [/docs/skilled-awareness/chora-base/](/docs/skilled-awareness/chora-base/) - SAP-002, meta-SAP references inbox as coordination capability
+
+**Governance** (external repos):
+- `chora-meta` repository - Ecosystem governance (strategic proposals escalate here)
+- `chora-governance` repository - Coordination standards and patterns
+
+---
+
+## 8. Continuous Learning Hooks
+- **Feedback Capture:** Add notes to task completion summary or update [ledger.md](ledger.md) feedback section
+- **Staying Updated:** Watch [inbox/](.) for version bumps; maintainers broadcast via inbox strategic updates or CHANGELOG entries
+- **Agent Training:** When guide updates, rerun [dry-run-checklist.md](dry-run-checklist.md) to ensure patterns remain executable
+
+---
+
+**Version History**:
+- **1.0.1** (2025-10-28): Added "When to Use" section, "Common Pitfalls" with cross-repo coordination scenarios, enhanced "Related Content" with 4-domain coverage
+- **1.0.0** (2025-10-27): Initial awareness guide for cross-repository inbox coordination

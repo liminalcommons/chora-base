@@ -392,10 +392,10 @@ related: ["path/to/updated-doc.md"]
 - [ledger.md](ledger.md)
 
 **Documentation Components**:
-- [DOCUMENTATION_STANDARD.md](../../../../static-template/DOCUMENTATION_STANDARD.md) (~700 lines)
-- [scripts/validate_docs.py](../../../../static-template/scripts/validate_docs.py)
-- [scripts/extract_tests.py](../../../../static-template/scripts/extract_tests.py)
-- [scripts/docs_metrics.py](../../../../static-template/scripts/docs_metrics.py)
+- [DOCUMENTATION_STANDARD.md](/static-template/DOCUMENTATION_STANDARD.md) (~700 lines)
+- [scripts/validate_docs.py](/static-template/scripts/validate_docs.py)
+- [scripts/extract_tests.py](/static-template/scripts/extract_tests.py)
+- [scripts/docs_metrics.py](/static-template/scripts/docs_metrics.py)
 
 **Related SAPs**:
 - [sap-framework/](../sap-framework/) - SAP-000

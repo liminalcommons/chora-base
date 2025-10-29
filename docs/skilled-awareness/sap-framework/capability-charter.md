@@ -97,9 +97,9 @@ A **standardized capability packaging system** that provides:
 **SAP Framework Deliverables**:
 - Root protocol: `SKILLED_AWARENESS_PACKAGE_PROTOCOL.md`
 - Framework SAP artifacts (this charter, protocol spec, etc.)
-- SAP Index (`docs/reference/skilled-awareness/INDEX.md`)
-- Document templates (`docs/reference/skilled-awareness/document-templates.md`)
-- Roadmap (`docs/reference/skilled-awareness/chora-base-sap-roadmap.md`)
+- SAP Index (`docs/skilled-awareness/INDEX.md`)
+- Document templates (`docs/skilled-awareness/document-templates.md`)
+- Roadmap (`docs/skilled-awareness/chora-base-sap-roadmap.md`)
 
 **Target Capabilities** (14 total):
 1. inbox-coordination (✅ Phase 1 pilot)
@@ -355,7 +355,7 @@ A **standardized capability packaging system** that provides:
 ## 10. Related Documents
 
 **Framework Documents**:
-- [SKILLED_AWARENESS_PACKAGE_PROTOCOL.md](../../../../SKILLED_AWARENESS_PACKAGE_PROTOCOL.md) - Root protocol
+- [SKILLED_AWARENESS_PACKAGE_PROTOCOL.md](/SKILLED_AWARENESS_PACKAGE_PROTOCOL.md) - Root protocol
 - [document-templates.md](../document-templates.md) - SAP artifact templates
 - [chora-base-sap-roadmap.md](../chora-base-sap-roadmap.md) - Phased adoption plan
 - [INDEX.md](../INDEX.md) - SAP registry
@@ -364,8 +364,8 @@ A **standardized capability packaging system** that provides:
 - [inbox SAP](../inbox/) - Complete pilot SAP
 
 **Development Process**:
-- [DEVELOPMENT_LIFECYCLE.md](../../../../static-template/dev-docs/workflows/DEVELOPMENT_LIFECYCLE.md) - DDD → BDD → TDD
-- [writing-executable-howtos.md](../../writing-executable-howtos.md) - Executable documentation
+- [DEVELOPMENT_LIFECYCLE.md](/static-template/dev-docs/workflows/DEVELOPMENT_LIFECYCLE.md) - DDD → BDD → TDD
+- [writing-executable-howtos.md](/docs/user-docs/how-to/write-executable-documentation.md) - Executable documentation
 
 ---
 

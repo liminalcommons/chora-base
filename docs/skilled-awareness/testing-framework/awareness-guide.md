@@ -411,9 +411,9 @@ pytest --durations=10
 - [ledger.md](ledger.md) - Coverage tracking
 
 **Testing Components**:
-- [pyproject.toml](../../../../blueprints/pyproject.toml.blueprint) - pytest config (lines 45-50)
-- [static-template/tests/](../../../../static-template/tests/) - Example tests
-- [.github/workflows/test.yml](../../../../static-template/.github/workflows/test.yml) - CI workflow
+- [pyproject.toml](/blueprints/pyproject.toml.blueprint) - pytest config (lines 45-50)
+- [static-template/tests/](/static-template/tests/) - Example tests
+- [.github/workflows/test.yml](/static-template/.github/workflows/test.yml) - CI workflow
 
 **Related SAPs**:
 - [project-bootstrap/](../project-bootstrap/) - SAP-003 (generates test structure)

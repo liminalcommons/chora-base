@@ -928,13 +928,13 @@ Each SAP follows semantic versioning independently.
 ## 12. Related Documents
 
 **Core chora-base Docs**:
-- [README.md](../../../../README.md) - Project overview
-- [AGENTS.md](../../../../AGENTS.md) - Agent guidance
-- [CHANGELOG.md](../../../../CHANGELOG.md) - Version history
-- [CLAUDE_SETUP_GUIDE.md](../../../../CLAUDE_SETUP_GUIDE.md) - Claude setup
+- [README.md](/README.md) - Project overview
+- [AGENTS.md](/AGENTS.md) - Agent guidance
+- [CHANGELOG.md](/CHANGELOG.md) - Version history
+- [CLAUDE_SETUP_GUIDE.md](/CLAUDE_SETUP_GUIDE.md) - Claude setup
 
 **SAP Framework**:
-- [SKILLED_AWARENESS_PACKAGE_PROTOCOL.md](../../../../SKILLED_AWARENESS_PACKAGE_PROTOCOL.md) - Root protocol
+- [SKILLED_AWARENESS_PACKAGE_PROTOCOL.md](/SKILLED_AWARENESS_PACKAGE_PROTOCOL.md) - Root protocol
 - [sap-framework/](../sap-framework/) - SAP-000
 - [INDEX.md](../INDEX.md) - SAP registry
 - [chora-base-sap-roadmap.md](../chora-base-sap-roadmap.md) - Roadmap

@@ -164,7 +164,7 @@ _None yet_ - SAP is new
 
 **Deprecation Date**: 2025-10-25 (v3.0.0 release)
 **End of Support**: 2026-01-01
-**Migration**: See [docs/upgrades/v2-to-v3-migration.md](../../../../docs/upgrades/v2-to-v3-migration.md)
+**Migration**: Upgrade guide planned for `/docs/upgrades/v2-to-v3-migration.md` (to be created)
 
 **Reason**: v3.0.0 introduces breaking change (no Copier dependency, blueprint-based generation)
 
@@ -259,7 +259,7 @@ _None yet_ - SAP is new
 
 **Affected Adopters**: All v2.x adopters (chora-compose, mcp-n8n)
 
-**Migration Path**: [docs/upgrades/v2-to-v3-migration.md](../../../../docs/upgrades/v2-to-v3-migration.md)
+**Migration Path**: Upgrade guide planned for `/docs/upgrades/v2-to-v3-migration.md` (to be created)
 
 ---
 
@@ -307,14 +307,14 @@ _None yet_ - SAP is new
 - [adoption-blueprint.md](adoption-blueprint.md) - How to adopt chora-base
 
 **SAP Framework**:
-- [SKILLED_AWARENESS_PACKAGE_PROTOCOL.md](../../../../SKILLED_AWARENESS_PACKAGE_PROTOCOL.md)
+- [SKILLED_AWARENESS_PACKAGE_PROTOCOL.md](/SKILLED_AWARENESS_PACKAGE_PROTOCOL.md)
 - [INDEX.md](../INDEX.md) - All SAPs
 - [chora-base-sap-roadmap.md](../chora-base-sap-roadmap.md) - Phased plan
 
 **chora-base Core**:
-- [README.md](../../../../README.md)
-- [CHANGELOG.md](../../../../CHANGELOG.md)
-- [docs/upgrades/](../../../../docs/upgrades/) - Upgrade guides
+- [README.md](/README.md)
+- [CHANGELOG.md](/CHANGELOG.md)
+- Upgrade guides (to be created in `/docs/upgrades/`)
 
 ---
 

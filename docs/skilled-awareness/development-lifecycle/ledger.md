@@ -249,17 +249,17 @@ _(Update after 3-6 months of adoption)_
 - [adoption-blueprint.md](adoption-blueprint.md) - How to adopt
 
 **Workflow Docs**:
-- [DEVELOPMENT_PROCESS.md](../../../../static-template/dev-docs/workflows/DEVELOPMENT_PROCESS.md) - 8-phase lifecycle overview (1,108 lines)
-- [DEVELOPMENT_LIFECYCLE.md](../../../../static-template/dev-docs/workflows/DEVELOPMENT_LIFECYCLE.md) - DDD→BDD→TDD integration (753 lines)
-- [DDD_WORKFLOW.md](../../../../static-template/dev-docs/workflows/DDD_WORKFLOW.md) - Documentation Driven Design (919 lines)
-- [BDD_WORKFLOW.md](../../../../static-template/dev-docs/workflows/BDD_WORKFLOW.md) - Behavior Driven Development (1,148 lines)
-- [TDD_WORKFLOW.md](../../../../static-template/dev-docs/workflows/TDD_WORKFLOW.md) - Test Driven Development (1,187 lines)
-- [ANTI_PATTERNS.md](../../../../static-template/dev-docs/ANTI_PATTERNS.md) - Common mistakes (1,309 lines)
+- [DEVELOPMENT_PROCESS.md](/static-template/dev-docs/workflows/DEVELOPMENT_PROCESS.md) - 8-phase lifecycle overview (1,108 lines)
+- [DEVELOPMENT_LIFECYCLE.md](/static-template/dev-docs/workflows/DEVELOPMENT_LIFECYCLE.md) - DDD→BDD→TDD integration (753 lines)
+- [DDD_WORKFLOW.md](/static-template/dev-docs/workflows/DDD_WORKFLOW.md) - Documentation Driven Design (919 lines)
+- [BDD_WORKFLOW.md](/static-template/dev-docs/workflows/BDD_WORKFLOW.md) - Behavior Driven Development (1,148 lines)
+- [TDD_WORKFLOW.md](/static-template/dev-docs/workflows/TDD_WORKFLOW.md) - Test Driven Development (1,187 lines)
+- [ANTI_PATTERNS.md](/static-template/dev-docs/ANTI_PATTERNS.md) - Common mistakes (1,309 lines)
 
 **Templates**:
-- [sprint-template.md](../../../../static-template/project-docs/sprints/sprint-template.md) - Sprint planning template
-- [release-template.md](../../../../static-template/project-docs/releases/release-template.md) - Release planning template
-- [PROCESS_METRICS.md](../../../../static-template/project-docs/metrics/PROCESS_METRICS.md) - Metrics dashboard
+- [sprint-template.md](/static-template/project-docs/sprints/sprint-template.md) - Sprint planning template
+- [release-template.md](/static-template/project-docs/releases/release-template.md) - Release planning template
+- [PROCESS_METRICS.md](/static-template/project-docs/metrics/PROCESS_METRICS.md) - Metrics dashboard
 
 **Related SAPs**:
 - [SAP-000: sap-framework](../sap-framework/) - Meta SAP framework

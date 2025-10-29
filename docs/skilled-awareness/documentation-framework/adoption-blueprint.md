@@ -179,7 +179,7 @@ python scripts/validate_docs.py --check-links
 ## 9. Related Documents
 
 - [protocol-spec.md](protocol-spec.md) - Technical contract
-- [DOCUMENTATION_STANDARD.md](../../../../static-template/DOCUMENTATION_STANDARD.md)
+- [DOCUMENTATION_STANDARD.md](/static-template/DOCUMENTATION_STANDARD.md)
 - [ci-cd-workflows/](../ci-cd-workflows/) - SAP-005 (docs-quality.yml)
 
 ---

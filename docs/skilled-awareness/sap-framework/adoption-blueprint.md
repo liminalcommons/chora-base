@@ -106,8 +106,8 @@ test -f SKILLED_AWARENESS_PACKAGE_PROTOCOL.md && echo "✅ Protocol copied"
 Copy the sap-framework SAP directory:
 
 **For agents**:
-1. Read all files in: `/path/to/chora-base/docs/reference/skilled-awareness/sap-framework/`
-2. Write to: `docs/reference/skilled-awareness/sap-framework/`
+1. Read all files in: `/path/to/chora-base/docs/skilled-awareness/sap-framework/`
+2. Write to: `docs/skilled-awareness/sap-framework/`
 
 Files to copy:
 - `capability-charter.md`
@@ -118,13 +118,13 @@ Files to copy:
 
 **For humans**:
 ```bash
-cp -r /path/to/chora-base/docs/reference/skilled-awareness/sap-framework \
-      docs/reference/skilled-awareness/
+cp -r /path/to/chora-base/docs/skilled-awareness/sap-framework \
+      docs/skilled-awareness/
 ```
 
 **Validation**:
 ```bash
-ls docs/reference/skilled-awareness/sap-framework/{capability-charter,protocol-spec,awareness-guide,adoption-blueprint,ledger}.md && echo "✅ Framework SAP copied"
+ls docs/skilled-awareness/sap-framework/{capability-charter,protocol-spec,awareness-guide,adoption-blueprint,ledger}.md && echo "✅ Framework SAP copied"
 ```
 
 ### Step 4: Copy Document Templates
@@ -132,18 +132,18 @@ ls docs/reference/skilled-awareness/sap-framework/{capability-charter,protocol-s
 Copy SAP templates:
 
 **For agents**:
-1. Read: `/path/to/chora-base/docs/reference/skilled-awareness/document-templates.md`
-2. Write to: `docs/reference/skilled-awareness/document-templates.md`
+1. Read: `/path/to/chora-base/docs/skilled-awareness/document-templates.md`
+2. Write to: `docs/skilled-awareness/document-templates.md`
 
 **For humans**:
 ```bash
-cp /path/to/chora-base/docs/reference/skilled-awareness/document-templates.md \
-   docs/reference/skilled-awareness/
+cp /path/to/chora-base/docs/skilled-awareness/document-templates.md \
+   docs/skilled-awareness/
 ```
 
 **Validation**:
 ```bash
-test -f docs/reference/skilled-awareness/document-templates.md && echo "✅ Templates copied"
+test -f docs/skilled-awareness/document-templates.md && echo "✅ Templates copied"
 ```
 
 ### Step 5: Create SAP Index
@@ -151,7 +151,7 @@ test -f docs/reference/skilled-awareness/document-templates.md && echo "✅ Temp
 Create the SAP Index file:
 
 **For agents**:
-1. Write to: `docs/reference/skilled-awareness/INDEX.md`
+1. Write to: `docs/skilled-awareness/INDEX.md`
 2. Content (initial):
 
 ```markdown
@@ -167,7 +167,7 @@ Create the SAP Index file:
 
 | SAP ID | Capability | Version | Status | Location |
 |--------|------------|---------|--------|----------|
-| SAP-000 | sap-framework | 1.0.0 | Active | docs/reference/skilled-awareness/sap-framework/ |
+| SAP-000 | sap-framework | 1.0.0 | Active | docs/skilled-awareness/sap-framework/ |
 
 ---
 
@@ -196,13 +196,13 @@ Create the SAP Index file:
 ---
 
 **See Also**:
-- [SKILLED_AWARENESS_PACKAGE_PROTOCOL.md](../../SKILLED_AWARENESS_PACKAGE_PROTOCOL.md)
-- [document-templates.md](document-templates.md)
+- [SKILLED_AWARENESS_PACKAGE_PROTOCOL.md](/SKILLED_AWARENESS_PACKAGE_PROTOCOL.md)
+- [document-templates.md](../document-templates.md)
 ```
 
 **Validation**:
 ```bash
-test -f docs/reference/skilled-awareness/INDEX.md && echo "✅ Index created"
+test -f docs/skilled-awareness/INDEX.md && echo "✅ Index created"
 ```
 
 ### Step 6: Update Project AGENTS.md
@@ -219,16 +219,16 @@ Add SAP Framework section to your project's `AGENTS.md`:
 
 This project uses the SAP Framework for capability packaging and governance.
 
-**SAP Index**: [docs/reference/skilled-awareness/INDEX.md](docs/reference/skilled-awareness/INDEX.md)
+**SAP Index**: [docs/skilled-awareness/INDEX.md](/docs/skilled-awareness/INDEX.md)
 
-**Root Protocol**: [SKILLED_AWARENESS_PACKAGE_PROTOCOL.md](SKILLED_AWARENESS_PACKAGE_PROTOCOL.md)
+**Root Protocol**: [SKILLED_AWARENESS_PACKAGE_PROTOCOL.md](/SKILLED_AWARENESS_PACKAGE_PROTOCOL.md)
 
 **Creating SAPs**:
-- Use templates: [docs/reference/skilled-awareness/document-templates.md](docs/reference/skilled-awareness/document-templates.md)
-- Follow framework: [docs/reference/skilled-awareness/sap-framework/](docs/reference/skilled-awareness/sap-framework/)
+- Use templates: [docs/skilled-awareness/document-templates.md](/docs/skilled-awareness/document-templates.md)
+- Follow framework: [docs/skilled-awareness/sap-framework/](/docs/skilled-awareness/sap-framework/)
 
 **Installing SAPs**:
-- Read adoption blueprint: `docs/reference/skilled-awareness/<sap>/adoption-blueprint.md`
+- Read adoption blueprint: `docs/skilled-awareness/<sap>/adoption-blueprint.md`
 - Execute steps sequentially
 - Update ledger when complete
 ```
@@ -261,7 +261,7 @@ grep "SAP Framework" README.md && echo "✅ README updated"
 Update the sap-framework ledger to record your adoption:
 
 **For agents** (use Edit tool):
-1. Open: `docs/reference/skilled-awareness/sap-framework/ledger.md`
+1. Open: `docs/skilled-awareness/sap-framework/ledger.md`
 2. Find "Adopter Registry" table
 3. Add row:
 
@@ -273,7 +273,7 @@ Update the sap-framework ledger to record your adoption:
 
 **Validation**:
 ```bash
-grep "<your-project-name>" docs/reference/skilled-awareness/sap-framework/ledger.md && echo "✅ Ledger updated"
+grep "<your-project-name>" docs/skilled-awareness/sap-framework/ledger.md && echo "✅ Ledger updated"
 ```
 
 ### Step 9: Commit Changes
@@ -281,7 +281,7 @@ grep "<your-project-name>" docs/reference/skilled-awareness/sap-framework/ledger
 Commit the SAP Framework installation:
 
 ```bash
-git add docs/reference/skilled-awareness/ SKILLED_AWARENESS_PACKAGE_PROTOCOL.md AGENTS.md README.md
+git add docs/skilled-awareness/ SKILLED_AWARENESS_PACKAGE_PROTOCOL.md AGENTS.md README.md
 git commit -m "feat: Install SAP Framework v1.0.0
 
 - Add root SAP protocol
@@ -314,19 +314,19 @@ ls docs/reference/skilled-awareness && echo "✅ Directory exists"
 test -f SKILLED_AWARENESS_PACKAGE_PROTOCOL.md && echo "✅ Protocol exists"
 
 # Check framework SAP (5 artifacts)
-ls docs/reference/skilled-awareness/sap-framework/{capability-charter,protocol-spec,awareness-guide,adoption-blueprint,ledger}.md && echo "✅ Framework SAP complete"
+ls docs/skilled-awareness/sap-framework/{capability-charter,protocol-spec,awareness-guide,adoption-blueprint,ledger}.md && echo "✅ Framework SAP complete"
 
 # Check templates
-test -f docs/reference/skilled-awareness/document-templates.md && echo "✅ Templates exist"
+test -f docs/skilled-awareness/document-templates.md && echo "✅ Templates exist"
 
 # Check index
-test -f docs/reference/skilled-awareness/INDEX.md && echo "✅ Index exists"
+test -f docs/skilled-awareness/INDEX.md && echo "✅ Index exists"
 
 # Check AGENTS.md updated
 grep "Skilled Awareness Packages" AGENTS.md && echo "✅ AGENTS.md updated"
 
 # Check ledger updated
-grep "<your-project-name>" docs/reference/skilled-awareness/sap-framework/ledger.md && echo "✅ Ledger updated"
+grep "<your-project-name>" docs/skilled-awareness/sap-framework/ledger.md && echo "✅ Ledger updated"
 ```
 
 **Expected Output**: All checks show ✅
@@ -341,13 +341,13 @@ Should show SAP protocol header.
 
 **Test 2: View SAP Index**
 ```bash
-cat docs/reference/skilled-awareness/INDEX.md
+cat docs/skilled-awareness/INDEX.md
 ```
 Should show SAP-000 (sap-framework) in Active SAPs table.
 
 **Test 3: Check Framework SAP**
 ```bash
-head -10 docs/reference/skilled-awareness/sap-framework/capability-charter.md
+head -10 docs/skilled-awareness/sap-framework/capability-charter.md
 ```
 Should show charter frontmatter with `sap_id: SAP-000`.
 
@@ -358,7 +358,7 @@ Should show charter frontmatter with `sap_id: SAP-000`.
 ### Required Configuration
 
 **SAP Index Customization**:
-1. Open: `docs/reference/skilled-awareness/INDEX.md`
+1. Open: `docs/skilled-awareness/INDEX.md`
 2. Update "Planned SAPs" table with your capabilities
 3. Set priorities (P0, P1, P2) and phases
 
@@ -375,7 +375,7 @@ Should show charter frontmatter with `sap_id: SAP-000`.
 ### Optional Configuration
 
 **Create SAP Roadmap** (recommended):
-1. Create: `docs/reference/skilled-awareness/<project>-sap-roadmap.md`
+1. Create: `docs/skilled-awareness/<project>-sap-roadmap.md`
 2. Use template: [chora-base-sap-roadmap.md](../chora-base-sap-roadmap.md)
 3. Define phases, deliverables, success metrics
 
@@ -486,7 +486,7 @@ After installing SAP Framework:
 ### 9.2 Adopt Existing SAPs
 
 **Browse Available SAPs**:
-- Check chora-base: [docs/reference/skilled-awareness/](../)
+- Check chora-base: [docs/skilled-awareness/](../)
 - Review SAP Index: [INDEX.md](../INDEX.md)
 
 **Install SAP**:
@@ -515,7 +515,7 @@ After installing SAP Framework:
 ### Getting Help
 
 **Documentation**:
-- Read: [SKILLED_AWARENESS_PACKAGE_PROTOCOL.md](../../../../SKILLED_AWARENESS_PACKAGE_PROTOCOL.md)
+- Read: [SKILLED_AWARENESS_PACKAGE_PROTOCOL.md](/SKILLED_AWARENESS_PACKAGE_PROTOCOL.md)
 - Study: [inbox SAP](../inbox/) (reference implementation)
 - Review: [awareness-guide.md](awareness-guide.md)
 
@@ -543,7 +543,7 @@ After installing SAP Framework:
 - [INDEX.md](../INDEX.md) - SAP registry
 
 **Root Protocol**:
-- [SKILLED_AWARENESS_PACKAGE_PROTOCOL.md](../../../../SKILLED_AWARENESS_PACKAGE_PROTOCOL.md)
+- [SKILLED_AWARENESS_PACKAGE_PROTOCOL.md](/SKILLED_AWARENESS_PACKAGE_PROTOCOL.md)
 
 ---
 

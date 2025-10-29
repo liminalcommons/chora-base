@@ -282,9 +282,9 @@ _Not yet collected_
 - [adoption-blueprint.md](adoption-blueprint.md) - How to use testing
 
 **Testing Components**:
-- [pyproject.toml](../../../../blueprints/pyproject.toml.blueprint) - pytest configuration (lines 45-50)
-- [static-template/tests/](../../../../static-template/tests/) - Example tests
-- [.github/workflows/test.yml](../../../../static-template/.github/workflows/test.yml) - Test workflow
+- [pyproject.toml](/blueprints/pyproject.toml.blueprint) - pytest configuration (lines 45-50)
+- [static-template/tests/](/static-template/tests/) - Example tests
+- [.github/workflows/test.yml](/static-template/.github/workflows/test.yml) - Test workflow
 
 **Related SAPs**:
 - [project-bootstrap/](../project-bootstrap/) - SAP-003 (generates test structure)

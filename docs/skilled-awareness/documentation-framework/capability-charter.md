@@ -76,8 +76,8 @@ A **comprehensive SAP describing Diataxis framework, frontmatter schema, executa
 
 ## 8. Related Documents
 
-- [DOCUMENTATION_STANDARD.md](../../../../static-template/DOCUMENTATION_STANDARD.md)
-- [scripts/extract_tests.py](../../../../static-template/scripts/extract_tests.py)
+- [DOCUMENTATION_STANDARD.md](/static-template/DOCUMENTATION_STANDARD.md)
+- [scripts/extract_tests.py](/static-template/scripts/extract_tests.py)
 
 ---
 

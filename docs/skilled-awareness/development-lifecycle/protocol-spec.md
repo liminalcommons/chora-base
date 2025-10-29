@@ -782,17 +782,17 @@ What are you building?
 ## 10. Related Documents
 
 **Workflow Documentation**:
-- [DEVELOPMENT_PROCESS.md](../../../../static-template/dev-docs/workflows/DEVELOPMENT_PROCESS.md) - 8-phase lifecycle overview
-- [DEVELOPMENT_LIFECYCLE.md](../../../../static-template/dev-docs/workflows/DEVELOPMENT_LIFECYCLE.md) - DDD→BDD→TDD integration
-- [DDD_WORKFLOW.md](../../../../static-template/dev-docs/workflows/DDD_WORKFLOW.md) - Documentation Driven Design
-- [BDD_WORKFLOW.md](../../../../static-template/dev-docs/workflows/BDD_WORKFLOW.md) - Behavior Driven Development
-- [TDD_WORKFLOW.md](../../../../static-template/dev-docs/workflows/TDD_WORKFLOW.md) - Test Driven Development
-- [ANTI_PATTERNS.md](../../../../static-template/dev-docs/ANTI_PATTERNS.md) - Common mistakes
+- [DEVELOPMENT_PROCESS.md](/static-template/dev-docs/workflows/DEVELOPMENT_PROCESS.md) - 8-phase lifecycle overview
+- [DEVELOPMENT_LIFECYCLE.md](/static-template/dev-docs/workflows/DEVELOPMENT_LIFECYCLE.md) - DDD→BDD→TDD integration
+- [DDD_WORKFLOW.md](/static-template/dev-docs/workflows/DDD_WORKFLOW.md) - Documentation Driven Design
+- [BDD_WORKFLOW.md](/static-template/dev-docs/workflows/BDD_WORKFLOW.md) - Behavior Driven Development
+- [TDD_WORKFLOW.md](/static-template/dev-docs/workflows/TDD_WORKFLOW.md) - Test Driven Development
+- [ANTI_PATTERNS.md](/static-template/dev-docs/ANTI_PATTERNS.md) - Common mistakes
 
 **Templates**:
-- [sprint-template.md](../../../../static-template/project-docs/sprints/sprint-template.md) - Sprint planning template
-- [release-template.md](../../../../static-template/project-docs/releases/release-template.md) - Release planning template
-- [PROCESS_METRICS.md](../../../../static-template/project-docs/metrics/PROCESS_METRICS.md) - Process metrics dashboard
+- [sprint-template.md](/static-template/project-docs/sprints/sprint-template.md) - Sprint planning template
+- [release-template.md](/static-template/project-docs/releases/release-template.md) - Release planning template
+- [PROCESS_METRICS.md](/static-template/project-docs/metrics/PROCESS_METRICS.md) - Process metrics dashboard
 
 **Related SAPs**:
 - [SAP-004: testing-framework](../testing-framework/) - pytest, coverage, fixtures

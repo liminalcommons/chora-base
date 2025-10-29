@@ -566,9 +566,9 @@ tests/
 - [ledger.md](ledger.md) - Coverage tracking
 
 **Testing Components**:
-- [pyproject.toml](../../../../blueprints/pyproject.toml.blueprint) - Lines 45-50
-- [static-template/tests/](../../../../static-template/tests/) - Test examples
-- [.github/workflows/test.yml](../../../../static-template/.github/workflows/test.yml) - Test workflow
+- [pyproject.toml](/blueprints/pyproject.toml.blueprint) - Lines 45-50
+- [static-template/tests/](/static-template/tests/) - Test examples
+- [.github/workflows/test.yml](/static-template/.github/workflows/test.yml) - Test workflow
 
 **Related SAPs**:
 - [project-bootstrap/](../project-bootstrap/) - SAP-003 (generates test structure)

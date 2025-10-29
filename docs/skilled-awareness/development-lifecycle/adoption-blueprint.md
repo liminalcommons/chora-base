@@ -647,9 +647,9 @@ cp docs/reference/skilled-awareness/development-lifecycle/templates/PROCESS_METR
 ## 9. Related Documents
 
 **Workflow Docs**:
-- [DEVELOPMENT_PROCESS.md](../../../../static-template/dev-docs/workflows/DEVELOPMENT_PROCESS.md) - 8-phase lifecycle overview
-- [DEVELOPMENT_LIFECYCLE.md](../../../../static-template/dev-docs/workflows/DEVELOPMENT_LIFECYCLE.md) - DDD→BDD→TDD integration
-- [ANTI_PATTERNS.md](../../../../static-template/dev-docs/ANTI_PATTERNS.md) - Common mistakes
+- [DEVELOPMENT_PROCESS.md](/static-template/dev-docs/workflows/DEVELOPMENT_PROCESS.md) - 8-phase lifecycle overview
+- [DEVELOPMENT_LIFECYCLE.md](/static-template/dev-docs/workflows/DEVELOPMENT_LIFECYCLE.md) - DDD→BDD→TDD integration
+- [ANTI_PATTERNS.md](/static-template/dev-docs/ANTI_PATTERNS.md) - Common mistakes
 
 **Templates** (in chora-base `static-template/`):
 - `project-docs/sprints/sprint-template.md`

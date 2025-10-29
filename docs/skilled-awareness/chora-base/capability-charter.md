@@ -362,24 +362,24 @@ A **comprehensive SAP describing chora-base itself** using the SAP framework (do
 ## 10. Related Documents
 
 **SAP Framework**:
-- [SKILLED_AWARENESS_PACKAGE_PROTOCOL.md](../../../../SKILLED_AWARENESS_PACKAGE_PROTOCOL.md) - Root protocol
+- [SKILLED_AWARENESS_PACKAGE_PROTOCOL.md](/SKILLED_AWARENESS_PACKAGE_PROTOCOL.md) - Root protocol
 - [sap-framework/](../sap-framework/) - SAP-000 (framework SAP)
 - [INDEX.md](../INDEX.md) - SAP registry (all 14 capabilities)
 - [document-templates.md](../document-templates.md) - SAP templates
 
 **chora-base Core Docs**:
-- [README.md](../../../../README.md) - Project overview
-- [AGENTS.md](../../../../AGENTS.md) - Agent guidance
-- [CHANGELOG.md](../../../../CHANGELOG.md) - Version history
-- [CLAUDE_SETUP_GUIDE.md](../../../../CLAUDE_SETUP_GUIDE.md) - Claude-specific setup
+- [README.md](/README.md) - Project overview
+- [AGENTS.md](/AGENTS.md) - Agent guidance
+- [CHANGELOG.md](/CHANGELOG.md) - Version history
+- [CLAUDE_SETUP_GUIDE.md](/CLAUDE_SETUP_GUIDE.md) - Claude-specific setup
 
 **Capability Documentation**:
 - [inbox/](../inbox/) - SAP-001 (pilot implementation)
 - [chora-base-sap-roadmap.md](../chora-base-sap-roadmap.md) - Phased adoption plan
 
 **Development Process**:
-- [static-template/dev-docs/workflows/DEVELOPMENT_LIFECYCLE.md](../../../../static-template/dev-docs/workflows/DEVELOPMENT_LIFECYCLE.md) - DDD → BDD → TDD
-- [docs/BENEFITS.md](../../../../docs/BENEFITS.md) - ROI analysis
+- [static-template/dev-docs/workflows/DEVELOPMENT_LIFECYCLE.md](/static-template/dev-docs/workflows/DEVELOPMENT_LIFECYCLE.md) - DDD → BDD → TDD
+- [docs/user-docs/explanation/benefits-of-chora-base.md](/docs/user-docs/explanation/benefits-of-chora-base.md) - ROI analysis and benefits
 
 ---
 

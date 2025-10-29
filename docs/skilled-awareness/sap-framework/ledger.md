@@ -217,7 +217,7 @@ _None yet_ - SAP is active
 - [adoption-blueprint.md](adoption-blueprint.md) - Installation steps
 
 **Root Protocol**:
-- [SKILLED_AWARENESS_PACKAGE_PROTOCOL.md](../../../../SKILLED_AWARENESS_PACKAGE_PROTOCOL.md)
+- [SKILLED_AWARENESS_PACKAGE_PROTOCOL.md](/SKILLED_AWARENESS_PACKAGE_PROTOCOL.md)
 
 **Templates & Index**:
 - [document-templates.md](../document-templates.md) - SAP templates

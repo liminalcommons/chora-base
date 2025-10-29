@@ -296,8 +296,8 @@ pre-commit run --all-files
 ### Getting Help
 
 **Documentation**:
-- [README.md](../../../../README.md) - chora-base overview
-- [AGENTS.md](../../../../AGENTS.md) - Agent guidance
+- [README.md](/README.md) - chora-base overview
+- [AGENTS.md](/AGENTS.md) - Agent guidance
 - [protocol-spec.md](protocol-spec.md) - All capabilities
 - [INDEX.md](../INDEX.md) - SAP status
 
@@ -320,13 +320,13 @@ pre-commit run --all-files
 - [ledger.md](ledger.md) - Adopter tracking
 
 **chora-base Core**:
-- [README.md](../../../../README.md) - Overview
-- [AGENTS.md](../../../../AGENTS.md) - Agent guidance
-- [CHANGELOG.md](../../../../CHANGELOG.md) - Version history
-- [CLAUDE_SETUP_GUIDE.md](../../../../CLAUDE_SETUP_GUIDE.md) - Claude setup
+- [README.md](/README.md) - Overview
+- [AGENTS.md](/AGENTS.md) - Agent guidance
+- [CHANGELOG.md](/CHANGELOG.md) - Version history
+- [CLAUDE_SETUP_GUIDE.md](/CLAUDE_SETUP_GUIDE.md) - Claude setup
 
 **SAP Framework**:
-- [SKILLED_AWARENESS_PACKAGE_PROTOCOL.md](../../../../SKILLED_AWARENESS_PACKAGE_PROTOCOL.md)
+- [SKILLED_AWARENESS_PACKAGE_PROTOCOL.md](/SKILLED_AWARENESS_PACKAGE_PROTOCOL.md)
 - [INDEX.md](../INDEX.md) - All SAPs
 
 ---

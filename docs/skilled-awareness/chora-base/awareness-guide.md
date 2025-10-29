@@ -1,13 +1,28 @@
 # Awareness Guide: chora-base Template Repository
 
 **SAP ID**: SAP-002
-**Version**: 1.0.0
+**Version**: 1.0.1
 **Target Audience**: AI agents (Claude Code, Cursor, etc.)
-**Last Updated**: 2025-10-27
+**Last Updated**: 2025-10-28
 
 ---
 
 ## 1. Quick Reference
+
+### When to Use This SAP
+
+**Use the chora-base Meta-SAP when**:
+- Starting a new Python project and want production-ready scaffolding
+- Understanding all capabilities chora-base provides (single source of truth)
+- Checking status of specific SAP (testing, CI/CD, docs, etc.)
+- Learning how chora-base applies SAP framework to itself (meta-dogfooding example)
+- Coordinating across chora-base ecosystem (chora-meta, chora-governance)
+
+**Don't use for**:
+- Non-Python projects (chora-base is Python-specific)
+- Minimal templates (chora-base is comprehensive, not minimal)
+- Projects that don't need AI agent support
+- Quick prototypes (chora-base optimized for production)
 
 ### Common Agent Tasks
 
@@ -30,7 +45,7 @@ python setup.py my-project --author "Name" --email "email@example.com"
 
 **Find capabilities**:
 ```bash
-cat docs/reference/skilled-awareness/INDEX.md
+cat docs/skilled-awareness/INDEX.md
 ```
 
 **Generate project**:
@@ -50,16 +65,16 @@ cd <project> && pytest --collect-only
 ### Essential Context (5-10k tokens)
 
 **For understanding chora-base**:
-1. [README.md](../../../../README.md) (2k tokens) - Overview
+1. [README.md](/README.md) (2k tokens) - Overview
 2. [protocol-spec.md](protocol-spec.md) (12k tokens) - All capabilities
 3. [INDEX.md](../INDEX.md) (5k tokens) - Capability status
 
 **For generating projects**:
-1. [AGENTS.md](../../../../AGENTS.md) (3k tokens) - Agent guidance
+1. [AGENTS.md](/AGENTS.md) (3k tokens) - Agent guidance
 2. Generation workflow (in Protocol Spec, Section 6.1)
 
 **For creating SAPs**:
-1. [SKILLED_AWARENESS_PACKAGE_PROTOCOL.md](../../../../SKILLED_AWARENESS_PACKAGE_PROTOCOL.md) (5k tokens)
+1. [SKILLED_AWARENESS_PACKAGE_PROTOCOL.md](/SKILLED_AWARENESS_PACKAGE_PROTOCOL.md) (5k tokens)
 2. [document-templates.md](../document-templates.md) (4k tokens)
 3. [sap-framework/](../sap-framework/) (reference, 15k tokens)
 
@@ -110,7 +125,7 @@ Result: pytest, coverage ≥85%, conftest.py patterns
 **Steps**:
 1. Identify capability (add to INDEX.md as Planned)
 2. Read framework: [sap-framework/](../sap-framework/)
-3. Create directory: `mkdir docs/reference/skilled-awareness/<capability>/`
+3. Create directory: `mkdir docs/skilled-awareness/<capability>/`
 4. Create 5 artifacts using templates
 5. Update INDEX.md (status: Draft)
 6. Update chora-base-meta Protocol Spec (add capability overview)
@@ -189,7 +204,7 @@ Agent:
 ```
 SAP Created: SAP-003 (project-bootstrap)
 Agent:
-  1. Create SAP: docs/reference/skilled-awareness/project-bootstrap/
+  1. Create SAP: docs/skilled-awareness/project-bootstrap/
   2. Update INDEX.md: Status Planned → Draft
   3. Update chora-base-meta Protocol: Add link to SAP-003
   4. Commit: "feat(SAP-003): Create project-bootstrap SAP"
@@ -209,7 +224,104 @@ Agent:
 
 ---
 
-## 6. Best Practices
+## 6. Common Pitfalls
+
+### Pitfall 1: Generating Without Understanding Capabilities
+**Scenario**: Agent generates project without reading protocol-spec first, misses key features
+
+**Example** (from Wave 2 audit experience):
+```
+Agent: "I'll generate a project quickly"
+Result: Generated without --no-docker flag, included Docker files user didn't need
+Problem: Didn't know optional features exist (--no-docker, --no-memory, --no-claude)
+```
+
+**Fix**: Always read protocol-spec.md Section 4.1 (Project Generation Interface) first:
+```markdown
+Read: protocol-spec.md → Section 4.1 → Optional flags
+Generate: python setup.py my-project --no-docker --no-memory
+```
+
+**Why it matters**: Unnecessary files clutter project, confuse adopters
+
+### Pitfall 2: Meta-SAP Divergence from Implementation
+**Scenario**: Protocol spec describes capability that doesn't exist in actual static-template/
+
+**Example**:
+```
+Protocol says: "SAP-014 (advanced-metrics) provides X, Y, Z"
+Reality: SAP-014 doesn't exist yet (status: Planned in INDEX.md)
+Problem: Agent tries to use non-existent capability
+```
+
+**Fix**: Always cross-reference INDEX.md for status:
+```markdown
+Read protocol-spec → See SAP-014 mentioned
+Check INDEX.md → Status: Planned (Phase 5)
+Result: Don't rely on it yet, wait for Active status
+```
+
+**Why it matters**: Prevents errors, sets correct expectations
+
+### Pitfall 3: Skipping SAP Updates After Capability Changes
+**Scenario**: New capability added to static-template/ but meta-SAP protocol not updated
+
+**Example** (from SAP development):
+```
+Developer adds: static-template/scripts/new-tool.sh
+Forgets to: Update chora-base-meta protocol-spec Section 3 (capabilities)
+Result: Tool exists but undiscovered, violates "single source of truth"
+```
+
+**Fix**: Always update meta-SAP when changing capabilities:
+```markdown
+1. Add feature to static-template/
+2. Update chora-base-meta protocol-spec.md
+3. Update INDEX.md if new SAP
+4. Update ledger.md version history
+5. Commit: "feat(capability): Add X, update meta-SAP"
+```
+
+**Why it matters**: Meta-SAP must remain single source of truth
+
+### Pitfall 4: Wrong Path References After Wave 1 Migration
+**Scenario**: Using old `docs/reference/skilled-awareness/` path instead of new `docs/skilled-awareness/`
+
+**Example** (discovered in Wave 2 SAP-002 audit):
+```
+OLD (broken): Link path docs/reference/skilled-awareness/INDEX.md
+PROBLEM: Wave 1 restructured to docs/skilled-awareness/INDEX.md
+```
+
+**Fix**: Always use absolute paths from repo root:
+```markdown
+CORRECT: [INDEX.md](/docs/skilled-awareness/INDEX.md)
+WRONG: Link path ../../../../docs/reference/skilled-awareness/INDEX.md
+```
+
+**Why it matters**: Broken links damage user experience, discovered during Wave 2 SAP-002 audit (34 broken links fixed)
+
+### Pitfall 5: Generating Into Existing Directory Without --force
+**Scenario**: Re-generating project without --force flag, setup.py fails
+
+**Example**:
+```bash
+python setup.py my-project
+# Oops, need to change options
+python setup.py my-project --no-docker
+# ERROR: Directory my-project already exists
+```
+
+**Fix**: Use --force to overwrite:
+```bash
+python setup.py my-project --no-docker --force
+```
+
+**Why it matters**: Common during iteration, --force makes generation idempotent
+
+---
+
+## 7. Best Practices
 
 ### DO
 
@@ -261,29 +373,63 @@ Sequential:
 
 ---
 
-## 8. Related Resources
+## 9. Related Content
 
-**chora-base-meta SAP**:
-- [capability-charter.md](capability-charter.md) - This SAP's charter
-- [protocol-spec.md](protocol-spec.md) - All 14 capabilities
-- [adoption-blueprint.md](adoption-blueprint.md) - How to adopt chora-base
-- [ledger.md](ledger.md) - Adopter tracking
+### Within This SAP (skilled-awareness/chora-base/)
+- [capability-charter.md](capability-charter.md) - Business value and scope of chora-base meta-SAP
+- [protocol-spec.md](protocol-spec.md) - Complete technical specification (all 14 capabilities!)
+- [adoption-blueprint.md](adoption-blueprint.md) - Step-by-step project generation guide
+- [ledger.md](ledger.md) - Adopter tracking and version history
 
-**SAP Framework**:
-- [SKILLED_AWARENESS_PACKAGE_PROTOCOL.md](../../../../SKILLED_AWARENESS_PACKAGE_PROTOCOL.md)
-- [sap-framework/](../sap-framework/)
-- [INDEX.md](../INDEX.md)
+### Developer Process (dev-docs/)
+**Workflows**:
+- [/static-template/dev-docs/workflows/DEVELOPMENT_LIFECYCLE.md](/static-template/dev-docs/workflows/DEVELOPMENT_LIFECYCLE.md) - DDD → BDD → TDD workflow (8-phase lifecycle)
 
-**Core Docs**:
-- [README.md](../../../../README.md)
-- [AGENTS.md](../../../../AGENTS.md)
-- [CHANGELOG.md](../../../../CHANGELOG.md)
+**Setup**:
+- [/static-template/scripts/setup.sh](/static-template/scripts/setup.sh) - Environment setup automation
+- [/static-template/justfile](/static-template/justfile) - Unified command interface (30+ tasks)
 
-**Claude Patterns**:
-- [claude/CONTEXT_MANAGEMENT.md](../../../../claude/CONTEXT_MANAGEMENT.md)
-- [claude/CHECKPOINT_PATTERNS.md](../../../../claude/CHECKPOINT_PATTERNS.md)
+### Project Lifecycle (project-docs/)
+**Audits**:
+- `/docs/project-docs/audits/wave-2-sap-002-audit.md` - This SAP's audit report (to be created after completion)
+
+**Planning** (to be referenced when created):
+- Wave 2 Sprint Plan - SAP audit activities (includes SAP-002)
+- Project roadmap - Documentation improvements in Wave 1 and Wave 2
+
+### User Guides (user-docs/)
+**Existing**:
+- [/docs/user-docs/explanation/architecture-clarification.md](/docs/user-docs/explanation/architecture-clarification.md) - Architecture overview including 4-domain structure
+- [/docs/user-docs/explanation/benefits-of-chora-base.md](/docs/user-docs/explanation/benefits-of-chora-base.md) - ROI analysis, time savings, business value
+
+**Planned** (to be created in Wave 2 Phase 5):
+- Tutorial: Generate your first chora-base project end-to-end
+- How-To: Choose the right optional features (--no-docker, --no-memory, --no-claude)
+- Reference: Complete setup.py CLI reference
+
+### Other SAPs (skilled-awareness/)
+**Framework**:
+- [/docs/skilled-awareness/sap-framework/](/docs/skilled-awareness/sap-framework/) - SAP-000, defines how SAPs work (used to create this meta-SAP!)
+- [/SKILLED_AWARENESS_PACKAGE_PROTOCOL.md](/SKILLED_AWARENESS_PACKAGE_PROTOCOL.md) - Root SAP protocol
+- [/docs/skilled-awareness/INDEX.md](/docs/skilled-awareness/INDEX.md) - All 14 SAPs with status
+
+**Related Capabilities**:
+- [/docs/skilled-awareness/inbox/](/docs/skilled-awareness/inbox/) - SAP-001, cross-repo coordination
+- [/docs/skilled-awareness/documentation-framework/](/docs/skilled-awareness/documentation-framework/) - SAP-007, Diataxis structure
+- [/docs/skilled-awareness/testing-framework/](/docs/skilled-awareness/testing-framework/) - SAP-004, pytest and coverage
+
+**Core Documentation**:
+- [/README.md](/README.md) - Project overview and quick start
+- [/AGENTS.md](/AGENTS.md) - Generic agent guidance (all agents)
+- [/CLAUDE_SETUP_GUIDE.md](/CLAUDE_SETUP_GUIDE.md) - Claude-specific setup and patterns
+- [/CHANGELOG.md](/CHANGELOG.md) - Version history (currently v3.3.0)
+
+**Claude-Specific Patterns**:
+- [/claude/CONTEXT_MANAGEMENT.md](/claude/CONTEXT_MANAGEMENT.md) - Token optimization strategies
+- [/claude/CHECKPOINT_PATTERNS.md](/claude/CHECKPOINT_PATTERNS.md) - Save-and-resume patterns
 
 ---
 
 **Version History**:
+- **1.0.1** (2025-10-28): Added "When to Use" section, "Common Pitfalls" with Wave 2 learnings, enhanced "Related Content" with 4-domain coverage
 - **1.0.0** (2025-10-27): Initial awareness guide for chora-base meta-SAP

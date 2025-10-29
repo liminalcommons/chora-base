@@ -31,7 +31,7 @@ Every SAP MUST include 5 artifacts:
 
 **Location Convention**:
 ```
-docs/reference/skilled-awareness/<capability-name>/
+docs/skilled-awareness/<capability-name>/
 ├── capability-charter.md
 ├── protocol-spec.md
 ├── awareness-guide.md
@@ -260,7 +260,7 @@ SAPs follow semantic versioning: `MAJOR.MINOR.PATCH`
 
 **Upgrade Blueprint Naming**:
 ```
-docs/reference/skilled-awareness/<capability>/upgrades/
+docs/skilled-awareness/<capability>/upgrades/
 ├── v1.0-to-v1.1.md   # Minor upgrade
 ├── v1.1-to-v2.0.md   # Major upgrade
 └── v2.0-to-v2.1.md   # Minor upgrade
@@ -291,10 +291,10 @@ sap_metadata:
   dependencies:
     - sap_id: string          # Required SAP
       version: string         # Min version
-  location: path              # docs/reference/skilled-awareness/<name>/
+  location: path              # docs/skilled-awareness/<name>/
 ```
 
-**JSON Schema**: See `docs/reference/skilled-awareness/schemas/sap-metadata.json` (future)
+**JSON Schema**: See `docs/skilled-awareness/schemas/sap-metadata.json` (future)
 
 ### 4.2 Adopter Record Model
 
@@ -309,7 +309,7 @@ adopter_record:
   notes: string               # Optional notes
 ```
 
-**JSON Schema**: See `docs/reference/skilled-awareness/schemas/adopter-record.json` (future)
+**JSON Schema**: See `docs/skilled-awareness/schemas/adopter-record.json` (future)
 
 ### 4.3 Blueprint Step Model
 
@@ -621,7 +621,7 @@ Individual SAPs follow semantic versioning:
 
 ### 10.1 Complete SAP: inbox-coordination
 
-**Location**: [docs/reference/skilled-awareness/inbox/](../inbox/)
+**Location**: [docs/skilled-awareness/inbox/](../inbox/)
 
 **Artifacts**:
 - ✅ [capability-charter.md](../inbox/capability-charter.md)
@@ -668,7 +668,7 @@ ls inbox/coordination/CAPABILITIES && echo "✅ Registry created"
 ## 11. Related Documents
 
 **Root Protocol**:
-- [SKILLED_AWARENESS_PACKAGE_PROTOCOL.md](../../../../SKILLED_AWARENESS_PACKAGE_PROTOCOL.md)
+- [SKILLED_AWARENESS_PACKAGE_PROTOCOL.md](/SKILLED_AWARENESS_PACKAGE_PROTOCOL.md)
 
 **Framework SAP**:
 - [capability-charter.md](capability-charter.md) - This SAP's charter

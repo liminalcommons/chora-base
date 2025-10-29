@@ -334,20 +334,20 @@ This SAP documents:
 ## 10. Related Documents
 
 **SAP Framework**:
-- [SKILLED_AWARENESS_PACKAGE_PROTOCOL.md](../../../../SKILLED_AWARENESS_PACKAGE_PROTOCOL.md) - Root protocol
+- [SKILLED_AWARENESS_PACKAGE_PROTOCOL.md](/SKILLED_AWARENESS_PACKAGE_PROTOCOL.md) - Root protocol
 - [sap-framework/](../sap-framework/) - SAP-000 (framework SAP)
 - [INDEX.md](../INDEX.md) - SAP registry
 - [document-templates.md](../document-templates.md) - SAP templates
 
 **chora-base Core**:
-- [README.md](../../../../README.md) - Project overview
-- [AGENTS.md](../../../../AGENTS.md) - Agent guidance
+- [README.md](/README.md) - Project overview
+- [AGENTS.md](/AGENTS.md) - Agent guidance
 - [chora-base/protocol-spec.md](../chora-base/protocol-spec.md) - Meta-SAP (Section 3.2.2)
 
 **Testing Components**:
-- [pyproject.toml](../../../../blueprints/pyproject.toml.blueprint) - pytest configuration (lines 45-50)
-- [static-template/tests/](../../../../static-template/tests/) - Test examples
-- [.github/workflows/test.yml](../../../../static-template/.github/workflows/test.yml) - Test workflow
+- [pyproject.toml](/blueprints/pyproject.toml.blueprint) - pytest configuration (lines 45-50)
+- [static-template/tests/](/static-template/tests/) - Test examples
+- [.github/workflows/test.yml](/static-template/.github/workflows/test.yml) - Test workflow
 
 **Related SAPs**:
 - [project-bootstrap/](../project-bootstrap/) - SAP-003 (generates test structure)
@@ -355,8 +355,8 @@ This SAP documents:
 - [quality-gates/](../quality-gates/) - SAP-006 (enforces coverage)
 
 **Development Process**:
-- [static-template/dev-docs/workflows/TDD_WORKFLOW.md](../../../../static-template/dev-docs/workflows/TDD_WORKFLOW.md) - TDD workflow
-- [static-template/dev-docs/workflows/BDD_WORKFLOW.md](../../../../static-template/dev-docs/workflows/BDD_WORKFLOW.md) - BDD workflow
+- [static-template/dev-docs/workflows/TDD_WORKFLOW.md](/static-template/dev-docs/workflows/TDD_WORKFLOW.md) - TDD workflow
+- [static-template/dev-docs/workflows/BDD_WORKFLOW.md](/static-template/dev-docs/workflows/BDD_WORKFLOW.md) - BDD workflow
 
 ---
 
