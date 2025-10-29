@@ -24,26 +24,35 @@ This index tracks all **18 capabilities** identified for SAP packaging across 4 
 
 ## Active SAPs
 
-| SAP ID | Capability | Version | Status | Phase | Location | Dependencies |
-|--------|------------|---------|--------|-------|----------|--------------|
-| SAP-000 | sap-framework | 1.0.0 | Draft | Phase 1 | [sap-framework/](sap-framework/) | None (foundational) |
-| SAP-001 | inbox-coordination | 1.0.0 | Pilot | Phase 1 | [inbox/](inbox/) | None |
-| SAP-002 | chora-base-meta | 1.0.0 | Draft | Phase 1 | [chora-base/](chora-base/) | SAP-000 |
-| SAP-003 | project-bootstrap | 1.0.0 | Draft | Phase 2 | [project-bootstrap/](project-bootstrap/) | SAP-000 |
-| SAP-004 | testing-framework | 1.0.0 | Draft | Phase 2 | [testing-framework/](testing-framework/) | SAP-000, SAP-003 |
-| SAP-005 | ci-cd-workflows | 1.0.0 | Draft | Phase 2 | [ci-cd-workflows/](ci-cd-workflows/) | SAP-000, SAP-004 |
-| SAP-006 | quality-gates | 1.0.0 | Draft | Phase 2 | [quality-gates/](quality-gates/) | SAP-000, SAP-004 |
-| SAP-007 | documentation-framework | 1.0.0 | Draft | Phase 3 | [documentation-framework/](documentation-framework/) | SAP-000 |
-| SAP-008 | automation-scripts | 1.0.0 | Draft | Phase 3 | [automation-scripts/](automation-scripts/) | SAP-000, SAP-012 |
-| SAP-009 | agent-awareness | 1.0.0 | Draft | Phase 3 | [agent-awareness/](agent-awareness/) | SAP-000, SAP-007 |
-| SAP-010 | memory-system | 1.0.0 | Draft | Phase 3 | [memory-system/](memory-system/) | SAP-000 |
-| SAP-011 | docker-operations | 1.0.0 | Draft | Phase 3 | [docker-operations/](docker-operations/) | SAP-000 |
-| SAP-012 | development-lifecycle | 1.0.0 | Draft | Phase 3 | [development-lifecycle/](development-lifecycle/) | SAP-000 |
-| SAP-013 | metrics-tracking | 1.0.0 | Draft | Phase 4 | [metrics-tracking/](metrics-tracking/) | SAP-000 |
-| SAP-014 | mcp-server-development | 1.0.0 | Active | Wave 3 | [mcp-server-development/](mcp-server-development/) | SAP-000, SAP-003, SAP-004, SAP-012 |
-| SAP-016 | link-validation-reference-management | 1.0.0 | Active | Wave 2 | [link-validation-reference-management/](link-validation-reference-management/) | None (foundational) |
-| SAP-017 | chora-compose-integration | 1.0.0 | Active | Wave 3 | [chora-compose-integration/](chora-compose-integration/) | SAP-003 |
-| SAP-018 | chora-compose-meta | 1.0.0 | Active | Wave 3 | [chora-compose-meta/](chora-compose-meta/) | SAP-017 |
+**Awareness Integration Status**: ✅ 18/18 PASS (100%) - Wave 2 Audit Complete (2025-10-29)
+
+| SAP ID | Capability | Version | Status | Phase | Awareness | Location | Dependencies |
+|--------|------------|---------|--------|-------|-----------|----------|--------------|
+| SAP-000 | sap-framework | 1.0.0 | Draft | Phase 1 | ✅ 4/4 | [sap-framework/](sap-framework/) | None (foundational) |
+| SAP-001 | inbox-coordination | 1.0.0 | Pilot | Phase 1 | ⚠️  2/4 | [inbox/](inbox/) | None |
+| SAP-002 | chora-base-meta | 1.0.0 | Draft | Phase 1 | ✅ 4/4 | [chora-base/](chora-base/) | SAP-000 |
+| SAP-003 | project-bootstrap | 1.0.0 | Draft | Phase 2 | ✅ 4/4 | [project-bootstrap/](project-bootstrap/) | SAP-000 |
+| SAP-004 | testing-framework | 1.0.0 | Draft | Phase 2 | ✅ 4/4 | [testing-framework/](testing-framework/) | SAP-000, SAP-003 |
+| SAP-005 | ci-cd-workflows | 1.0.0 | Draft | Phase 2 | ✅ 4/4 | [ci-cd-workflows/](ci-cd-workflows/) | SAP-000, SAP-004 |
+| SAP-006 | quality-gates | 1.0.0 | Draft | Phase 2 | ✅ 4/4 | [quality-gates/](quality-gates/) | SAP-000, SAP-004 |
+| SAP-007 | documentation-framework | 1.0.0 | Draft | Phase 3 | ✅ 4/4 | [documentation-framework/](documentation-framework/) | SAP-000 |
+| SAP-008 | automation-scripts | 1.0.0 | Draft | Phase 3 | ✅ 4/4 | [automation-scripts/](automation-scripts/) | SAP-000, SAP-012 |
+| SAP-009 | agent-awareness | 1.0.0 | Draft | Phase 3 | ✅ 4/4 | [agent-awareness/](agent-awareness/) | SAP-000, SAP-007 |
+| SAP-010 | memory-system | 1.0.0 | Draft | Phase 3 | ✅ 4/4 | [memory-system/](memory-system/) | SAP-000 |
+| SAP-011 | docker-operations | 1.0.0 | Draft | Phase 3 | ✅ 4/4 | [docker-operations/](docker-operations/) | SAP-000 |
+| SAP-012 | development-lifecycle | 1.0.0 | Draft | Phase 3 | ✅ 4/4 | [development-lifecycle/](development-lifecycle/) | SAP-000 |
+| SAP-013 | metrics-tracking | 1.0.0 | Draft | Phase 4 | ✅ 4/4 | [metrics-tracking/](metrics-tracking/) | SAP-000 |
+| SAP-014 | mcp-server-development | 1.0.0 | Active | Wave 3 | ✅ 4/4 | [mcp-server-development/](mcp-server-development/) | SAP-000, SAP-003, SAP-004, SAP-012 |
+| SAP-016 | link-validation-reference-management | 1.0.0 | Active | Wave 2 | ✅ 4/4 | [link-validation-reference-management/](link-validation-reference-management/) | None (foundational) |
+| SAP-017 | chora-compose-integration | 1.0.0 | Active | Wave 3 | ✅ 4/4 | [chora-compose-integration/](chora-compose-integration/) | SAP-003 |
+| SAP-018 | chora-compose-meta | 1.0.0 | Active | Wave 3 | ✅ 4/4 | [chora-compose-meta/](chora-compose-meta/) | SAP-017 |
+
+**Awareness Score Legend**:
+- ✅ 4/4: All checks pass (post-install section, AGENTS.md mention, validation cmd, agent instructions)
+- ⚠️  2-3/4: Passing with warnings
+- ❌ 0-1/4: Failing
+
+**Audit Report**: [docs/project-docs/audits/wave-2-sap-awareness-integration-audit.md](../project-docs/audits/wave-2-sap-awareness-integration-audit.md)
 
 ---
 
