@@ -302,17 +302,17 @@ pytest --cov=src --cov-fail-under=85
 ### Developer Process (dev-docs/)
 
 **Workflows**:
-- [dev-docs/workflows/TDD_WORKFLOW.md](/dev-docs/workflows/TDD_WORKFLOW.md) - Test-driven development (quality gates enforce tests)
-- [dev-docs/workflows/code-review.md](/dev-docs/workflows/code-review.md) - Code review process (quality gates pre-check)
+- [dev-docs/workflows/TDD_WORKFLOW.md](../../dev-docs/workflows/TDD_WORKFLOW.md) - Test-driven development (quality gates enforce tests)
+- [dev-docs/workflows/code-review.md](../../dev-docs/workflows/code-review.md) - Code review process (quality gates pre-check)
 
 **Tools**:
-- [dev-docs/tools/ruff.md](/dev-docs/tools/ruff.md) - Linting tool (pre-commit hook)
-- [dev-docs/tools/mypy.md](/dev-docs/tools/mypy.md) - Type checking (pre-commit hook)
-- [dev-docs/tools/pre-commit.md](/dev-docs/tools/pre-commit.md) - Pre-commit framework
+- [dev-docs/tools/ruff.md](../../dev-docs/tools/ruff.md) - Linting tool (pre-commit hook)
+- [dev-docs/tools/mypy.md](../../dev-docs/tools/mypy.md) - Type checking (pre-commit hook)
+- [dev-docs/tools/pre-commit.md](../../dev-docs/tools/pre-commit.md) - Pre-commit framework
 
 **Development Guidelines**:
-- [dev-docs/development/code-style.md](/dev-docs/development/code-style.md) - Code style (enforced by ruff)
-- [dev-docs/development/type-annotations.md](/dev-docs/development/type-annotations.md) - Type annotation standards (enforced by mypy)
+- [dev-docs/development/code-style.md](../../dev-docs/development/code-style.md) - Code style (enforced by ruff)
+- [dev-docs/development/type-annotations.md](../../dev-docs/development/type-annotations.md) - Type annotation standards (enforced by mypy)
 
 ### Project Lifecycle (project-docs/)
 
@@ -321,25 +321,25 @@ pytest --cov=src --cov-fail-under=85
 - [static-template/pyproject.toml](/static-template/pyproject.toml) - Ruff and mypy configuration ([tool.ruff], [tool.mypy])
 
 **Guides**:
-- [project-docs/guides/quality-standards.md](/project-docs/guides/quality-standards.md) - Quality standards overview
-- [project-docs/guides/fixing-quality-violations.md](/project-docs/guides/fixing-quality-violations.md) - Common violations and fixes
+- [project-docs/guides/quality-standards.md](../../project-docs/guides/quality-standards.md) - Quality standards overview
+- [project-docs/guides/fixing-quality-violations.md](../../project-docs/guides/fixing-quality-violations.md) - Common violations and fixes
 
 **Audits & Releases**:
-- [project-docs/audits/](/project-docs/audits/) - SAP audits including SAP-006 validation
-- [project-docs/releases/](/project-docs/releases/) - Version release documentation
+- [project-docs/audits/](../../project-docs/audits/) - SAP audits including SAP-006 validation
+- [project-docs/releases/](../../project-docs/releases/) - Version release documentation
 
 ### User Guides (user-docs/)
 
 **Getting Started**:
-- [user-docs/guides/code-quality.md](/user-docs/guides/code-quality.md) - Understanding code quality
+- [user-docs/guides/code-quality.md](../../user-docs/guides/code-quality.md) - Understanding code quality
 
 **Tutorials**:
-- [user-docs/tutorials/fixing-ruff-violations.md](/user-docs/tutorials/fixing-ruff-violations.md) - Fix common ruff violations
-- [user-docs/tutorials/adding-type-annotations.md](/user-docs/tutorials/adding-type-annotations.md) - Add mypy type annotations
+- [user-docs/tutorials/fixing-ruff-violations.md](../../user-docs/tutorials/fixing-ruff-violations.md) - Fix common ruff violations
+- [user-docs/tutorials/adding-type-annotations.md](../../user-docs/tutorials/adding-type-annotations.md) - Add mypy type annotations
 
 **Reference**:
-- [user-docs/reference/ruff-rules.md](/user-docs/reference/ruff-rules.md) - Ruff rules reference
-- [user-docs/reference/mypy-config.md](/user-docs/reference/mypy-config.md) - Mypy configuration reference
+- [user-docs/reference/ruff-rules.md](../../user-docs/reference/ruff-rules.md) - Ruff rules reference
+- [user-docs/reference/mypy-config.md](../../user-docs/reference/mypy-config.md) - Mypy configuration reference
 
 ### Other SAPs (skilled-awareness/)
 

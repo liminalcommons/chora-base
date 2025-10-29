@@ -636,21 +636,21 @@ python -m py_compile src/my_package/__init__.py
 ### Developer Process (dev-docs/)
 
 **Workflows**:
-- [dev-docs/workflows/TDD_WORKFLOW.md](/dev-docs/workflows/TDD_WORKFLOW.md) - Test-driven development in generated projects
-- [dev-docs/workflows/BDD_WORKFLOW.md](/dev-docs/workflows/BDD_WORKFLOW.md) - Behavior-driven development approach
+- [dev-docs/workflows/TDD_WORKFLOW.md](../../dev-docs/workflows/TDD_WORKFLOW.md) - Test-driven development in generated projects
+- [dev-docs/workflows/BDD_WORKFLOW.md](../../dev-docs/workflows/BDD_WORKFLOW.md) - Behavior-driven development approach
 
 **Tools**:
-- [dev-docs/tools/ruff.md](/dev-docs/tools/ruff.md) - Linting (generated projects use ruff)
-- [dev-docs/tools/mypy.md](/dev-docs/tools/mypy.md) - Type checking (generated projects use mypy)
+- [dev-docs/tools/ruff.md](../../dev-docs/tools/ruff.md) - Linting (generated projects use ruff)
+- [dev-docs/tools/mypy.md](../../dev-docs/tools/mypy.md) - Type checking (generated projects use mypy)
 
 **Development Guidelines**:
-- [dev-docs/development/code-style.md](/dev-docs/development/code-style.md) - Coding standards for generated projects
+- [dev-docs/development/code-style.md](../../dev-docs/development/code-style.md) - Coding standards for generated projects
 
 ### Project Lifecycle (project-docs/)
 
 **Generation & Setup**:
-- [project-docs/guides/project-generation.md](/project-docs/guides/project-generation.md) - Comprehensive project generation guide
-- [project-docs/guides/environment-setup.md](/project-docs/guides/environment-setup.md) - Setting up development environment
+- [project-docs/guides/project-generation.md](../../project-docs/guides/project-generation.md) - Comprehensive project generation guide
+- [project-docs/guides/environment-setup.md](../../project-docs/guides/environment-setup.md) - Setting up development environment
 
 **Implementation Components**:
 - [setup.py](/setup.py) - Generation orchestrator (443 lines)
@@ -658,23 +658,23 @@ python -m py_compile src/my_package/__init__.py
 - [static-template/](/static-template/) - Project scaffold (100+ files)
 
 **Audits & Releases**:
-- [project-docs/audits/](/project-docs/audits/) - SAP audits including SAP-003 validation
-- [project-docs/sprints/](/project-docs/sprints/) - Sprint planning for SAP updates
-- [project-docs/releases/](/project-docs/releases/) - Version release documentation
+- [project-docs/audits/](../../project-docs/audits/) - SAP audits including SAP-003 validation
+- [project-docs/sprints/](../../project-docs/sprints/) - Sprint planning for SAP updates
+- [project-docs/releases/](../../project-docs/releases/) - Version release documentation
 
 ### User Guides (user-docs/)
 
 **Getting Started**:
-- [user-docs/guides/quickstart.md](/user-docs/guides/quickstart.md) - Quick start with project generation
-- [user-docs/guides/installation.md](/user-docs/guides/installation.md) - Installing chora-base
+- [user-docs/guides/quickstart.md](../../user-docs/guides/quickstart.md) - Quick start with project generation
+- [user-docs/guides/installation.md](../../user-docs/guides/installation.md) - Installing chora-base
 
 **Tutorials**:
-- [user-docs/tutorials/first-mcp-server.md](/user-docs/tutorials/first-mcp-server.md) - Build your first MCP server (uses SAP-003 generation)
-- [user-docs/tutorials/customizing-template.md](/user-docs/tutorials/customizing-template.md) - Customize generated projects
+- [user-docs/tutorials/first-mcp-server.md](../../user-docs/tutorials/first-mcp-server.md) - Build your first MCP server (uses SAP-003 generation)
+- [user-docs/tutorials/customizing-template.md](../../user-docs/tutorials/customizing-template.md) - Customize generated projects
 
 **Reference**:
-- [user-docs/reference/cli-reference.md](/user-docs/reference/cli-reference.md) - setup.py CLI reference
-- [user-docs/reference/project-structure.md](/user-docs/reference/project-structure.md) - Generated project structure explained
+- [user-docs/reference/cli-reference.md](../../user-docs/reference/cli-reference.md) - setup.py CLI reference
+- [user-docs/reference/project-structure.md](../../user-docs/reference/project-structure.md) - Generated project structure explained
 
 ### Other SAPs (skilled-awareness/)
 

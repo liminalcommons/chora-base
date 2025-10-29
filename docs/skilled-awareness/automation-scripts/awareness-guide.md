@@ -864,16 +864,16 @@ just publish-prod   # ⚠️ PUBLISHES to PyPI (irreversible)
 ### Developer Process (dev-docs/)
 
 **Workflows**:
-- [dev-docs/workflows/TDD_WORKFLOW.md](/dev-docs/workflows/TDD_WORKFLOW.md) - Test-driven development (`just test` integration)
-- [dev-docs/workflows/release-workflow.md](/dev-docs/workflows/release-workflow.md) - Release process using `just bump-*`, `just publish-*`
+- [dev-docs/workflows/TDD_WORKFLOW.md](../../dev-docs/workflows/TDD_WORKFLOW.md) - Test-driven development (`just test` integration)
+- [dev-docs/workflows/release-workflow.md](../../dev-docs/workflows/release-workflow.md) - Release process using `just bump-*`, `just publish-*`
 
 **Tools**:
-- [dev-docs/tools/pytest.md](/dev-docs/tools/pytest.md) - Testing tool (`just test`, `just smoke`)
-- [dev-docs/tools/ruff.md](/dev-docs/tools/ruff.md) - Linting (`just lint`, `just lint-fix`)
-- [dev-docs/tools/mypy.md](/dev-docs/tools/mypy.md) - Type checking (`just type-check`)
+- [dev-docs/tools/pytest.md](../../dev-docs/tools/pytest.md) - Testing tool (`just test`, `just smoke`)
+- [dev-docs/tools/ruff.md](../../dev-docs/tools/ruff.md) - Linting (`just lint`, `just lint-fix`)
+- [dev-docs/tools/mypy.md](../../dev-docs/tools/mypy.md) - Type checking (`just type-check`)
 
 **Development Guidelines**:
-- [dev-docs/development/scripting-standards.md](/dev-docs/development/scripting-standards.md) - Standards for writing automation scripts
+- [dev-docs/development/scripting-standards.md](../../dev-docs/development/scripting-standards.md) - Standards for writing automation scripts
 
 ### Project Lifecycle (project-docs/)
 
@@ -883,25 +883,25 @@ just publish-prod   # ⚠️ PUBLISHES to PyPI (irreversible)
 - [static-template/pyproject.toml](/static-template/pyproject.toml) - Project configuration
 
 **Guides**:
-- [project-docs/guides/automation-setup.md](/project-docs/guides/automation-setup.md) - Setting up justfile in projects
-- [project-docs/guides/release-process.md](/project-docs/guides/release-process.md) - Complete release process using scripts
+- [project-docs/guides/automation-setup.md](../../project-docs/guides/automation-setup.md) - Setting up justfile in projects
+- [project-docs/guides/release-process.md](../../project-docs/guides/release-process.md) - Complete release process using scripts
 
 **Audits & Releases**:
-- [project-docs/audits/](/project-docs/audits/) - SAP audits including SAP-008 validation
-- [project-docs/releases/](/project-docs/releases/) - Version release documentation
+- [project-docs/audits/](../../project-docs/audits/) - SAP audits including SAP-008 validation
+- [project-docs/releases/](../../project-docs/releases/) - Version release documentation
 
 ### User Guides (user-docs/)
 
 **Getting Started**:
-- [user-docs/guides/using-justfile.md](/user-docs/guides/using-justfile.md) - Introduction to justfile
+- [user-docs/guides/using-justfile.md](../../user-docs/guides/using-justfile.md) - Introduction to justfile
 
 **Tutorials**:
-- [user-docs/tutorials/first-release.md](/user-docs/tutorials/first-release.md) - Release your first version (uses `just bump-*`, `just publish-*`)
-- [user-docs/tutorials/debugging-scripts.md](/user-docs/tutorials/debugging-scripts.md) - Debug automation script failures
+- [user-docs/tutorials/first-release.md](../../user-docs/tutorials/first-release.md) - Release your first version (uses `just bump-*`, `just publish-*`)
+- [user-docs/tutorials/debugging-scripts.md](../../user-docs/tutorials/debugging-scripts.md) - Debug automation script failures
 
 **Reference**:
-- [user-docs/reference/justfile-reference.md](/user-docs/reference/justfile-reference.md) - Complete justfile command reference
-- [user-docs/reference/script-reference.md](/user-docs/reference/script-reference.md) - Individual script documentation
+- [user-docs/reference/justfile-reference.md](../../user-docs/reference/justfile-reference.md) - Complete justfile command reference
+- [user-docs/reference/script-reference.md](../../user-docs/reference/script-reference.md) - Individual script documentation
 
 ### Other SAPs (skilled-awareness/)
 

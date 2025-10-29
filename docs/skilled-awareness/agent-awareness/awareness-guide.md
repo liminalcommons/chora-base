@@ -320,15 +320,15 @@ Some patterns here...
 ### Developer Process (dev-docs/)
 
 **Workflows**:
-- [dev-docs/workflows/agent-assisted-development.md](/dev-docs/workflows/agent-assisted-development.md) - Workflows for working with AI agents
-- [dev-docs/workflows/context-management.md](/dev-docs/workflows/context-management.md) - Managing context in long sessions
+- [dev-docs/workflows/agent-assisted-development.md](../../dev-docs/workflows/agent-assisted-development.md) - Workflows for working with AI agents
+- [dev-docs/workflows/context-management.md](../../dev-docs/workflows/context-management.md) - Managing context in long sessions
 
 **Tools**:
-- [dev-docs/tools/claude-code.md](/dev-docs/tools/claude-code.md) - Claude Code specific patterns
-- [dev-docs/tools/cursor.md](/dev-docs/tools/cursor.md) - Cursor IDE patterns
+- [dev-docs/tools/claude-code.md](../../dev-docs/tools/claude-code.md) - Claude Code specific patterns
+- [dev-docs/tools/cursor.md](../../dev-docs/tools/cursor.md) - Cursor IDE patterns
 
 **Development Guidelines**:
-- [dev-docs/development/awareness-file-standards.md](/dev-docs/development/awareness-file-standards.md) - Standards for writing AGENTS.md and CLAUDE.md
+- [dev-docs/development/awareness-file-standards.md](../../dev-docs/development/awareness-file-standards.md) - Standards for writing AGENTS.md and CLAUDE.md
 
 ### Project Lifecycle (project-docs/)
 
@@ -339,25 +339,25 @@ Some patterns here...
 - [static-template/CLAUDE.md](/static-template/CLAUDE.md) - Root Claude-specific file in generated projects
 
 **Guides**:
-- [project-docs/guides/creating-awareness-files.md](/project-docs/guides/creating-awareness-files.md) - Guide for writing awareness files
-- [project-docs/guides/token-optimization.md](/project-docs/guides/token-optimization.md) - Optimizing token usage with progressive loading
+- [project-docs/guides/creating-awareness-files.md](../../project-docs/guides/creating-awareness-files.md) - Guide for writing awareness files
+- [project-docs/guides/token-optimization.md](../../project-docs/guides/token-optimization.md) - Optimizing token usage with progressive loading
 
 **Audits & Releases**:
-- [project-docs/audits/](/project-docs/audits/) - SAP audits including SAP-011 validation
-- [project-docs/releases/](/project-docs/releases/) - Version release documentation
+- [project-docs/audits/](../../project-docs/audits/) - SAP audits including SAP-011 validation
+- [project-docs/releases/](../../project-docs/releases/) - Version release documentation
 
 ### User Guides (user-docs/)
 
 **Getting Started**:
-- [user-docs/guides/working-with-agents.md](/user-docs/guides/working-with-agents.md) - Introduction to agent awareness files
+- [user-docs/guides/working-with-agents.md](../../user-docs/guides/working-with-agents.md) - Introduction to agent awareness files
 
 **Tutorials**:
-- [user-docs/tutorials/creating-custom-agents-file.md](/user-docs/tutorials/creating-custom-agents-file.md) - Create custom AGENTS.md for your domain
-- [user-docs/tutorials/optimizing-claude-sessions.md](/user-docs/tutorials/optimizing-claude-sessions.md) - Optimize Claude with progressive loading
+- [user-docs/tutorials/creating-custom-agents-file.md](../../user-docs/tutorials/creating-custom-agents-file.md) - Create custom AGENTS.md for your domain
+- [user-docs/tutorials/optimizing-claude-sessions.md](../../user-docs/tutorials/optimizing-claude-sessions.md) - Optimize Claude with progressive loading
 
 **Reference**:
-- [user-docs/reference/agents-file-structure.md](/user-docs/reference/agents-file-structure.md) - AGENTS.md structure reference
-- [user-docs/reference/claude-file-structure.md](/user-docs/reference/claude-file-structure.md) - CLAUDE.md structure reference
+- [user-docs/reference/agents-file-structure.md](../../user-docs/reference/agents-file-structure.md) - AGENTS.md structure reference
+- [user-docs/reference/claude-file-structure.md](../../user-docs/reference/claude-file-structure.md) - CLAUDE.md structure reference
 
 ### Other SAPs (skilled-awareness/)
 

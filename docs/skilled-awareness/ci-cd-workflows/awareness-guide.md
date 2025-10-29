@@ -270,16 +270,16 @@ Installing dependencies from scratch...
 ### Developer Process (dev-docs/)
 
 **Workflows**:
-- [dev-docs/workflows/TDD_WORKFLOW.md](/dev-docs/workflows/TDD_WORKFLOW.md) - Test-driven development (integrates with test.yml)
-- [dev-docs/workflows/BDD_WORKFLOW.md](/dev-docs/workflows/BDD_WORKFLOW.md) - Behavior-driven development
+- [dev-docs/workflows/TDD_WORKFLOW.md](../../dev-docs/workflows/TDD_WORKFLOW.md) - Test-driven development (integrates with test.yml)
+- [dev-docs/workflows/BDD_WORKFLOW.md](../../dev-docs/workflows/BDD_WORKFLOW.md) - Behavior-driven development
 
 **Tools**:
-- [dev-docs/tools/ruff.md](/dev-docs/tools/ruff.md) - Linting tool (used in lint.yml)
-- [dev-docs/tools/mypy.md](/dev-docs/tools/mypy.md) - Type checking (used in lint.yml)
-- [dev-docs/tools/pytest.md](/dev-docs/tools/pytest.md) - Testing tool (used in test.yml)
+- [dev-docs/tools/ruff.md](../../dev-docs/tools/ruff.md) - Linting tool (used in lint.yml)
+- [dev-docs/tools/mypy.md](../../dev-docs/tools/mypy.md) - Type checking (used in lint.yml)
+- [dev-docs/tools/pytest.md](../../dev-docs/tools/pytest.md) - Testing tool (used in test.yml)
 
 **CI/CD Guidelines**:
-- [dev-docs/guides/ci-cd-best-practices.md](/dev-docs/guides/ci-cd-best-practices.md) - CI/CD best practices
+- [dev-docs/guides/ci-cd-best-practices.md](../../dev-docs/guides/ci-cd-best-practices.md) - CI/CD best practices
 
 ### Project Lifecycle (project-docs/)
 
@@ -288,24 +288,24 @@ Installing dependencies from scratch...
 - [static-template/.github/dependabot.yml](/static-template/.github/dependabot.yml) - Dependency updates
 
 **Guides**:
-- [project-docs/guides/ci-cd-setup.md](/project-docs/guides/ci-cd-setup.md) - Setting up CI/CD in projects
-- [project-docs/guides/troubleshooting-ci.md](/project-docs/guides/troubleshooting-ci.md) - Debugging CI/CD failures
+- [project-docs/guides/ci-cd-setup.md](../../project-docs/guides/ci-cd-setup.md) - Setting up CI/CD in projects
+- [project-docs/guides/troubleshooting-ci.md](../../project-docs/guides/troubleshooting-ci.md) - Debugging CI/CD failures
 
 **Audits & Releases**:
-- [project-docs/audits/](/project-docs/audits/) - SAP audits including SAP-005 validation
-- [project-docs/releases/](/project-docs/releases/) - Version release documentation
+- [project-docs/audits/](../../project-docs/audits/) - SAP audits including SAP-005 validation
+- [project-docs/releases/](../../project-docs/releases/) - Version release documentation
 
 ### User Guides (user-docs/)
 
 **Getting Started**:
-- [user-docs/guides/github-actions.md](/user-docs/guides/github-actions.md) - Understanding GitHub Actions
+- [user-docs/guides/github-actions.md](../../user-docs/guides/github-actions.md) - Understanding GitHub Actions
 
 **Tutorials**:
-- [user-docs/tutorials/debugging-ci-failures.md](/user-docs/tutorials/debugging-ci-failures.md) - Debug CI failures
-- [user-docs/tutorials/customizing-workflows.md](/user-docs/tutorials/customizing-workflows.md) - Customize workflows
+- [user-docs/tutorials/debugging-ci-failures.md](../../user-docs/tutorials/debugging-ci-failures.md) - Debug CI failures
+- [user-docs/tutorials/customizing-workflows.md](../../user-docs/tutorials/customizing-workflows.md) - Customize workflows
 
 **Reference**:
-- [user-docs/reference/workflow-reference.md](/user-docs/reference/workflow-reference.md) - Workflow reference documentation
+- [user-docs/reference/workflow-reference.md](../../user-docs/reference/workflow-reference.md) - Workflow reference documentation
 
 ### Other SAPs (skilled-awareness/)
 

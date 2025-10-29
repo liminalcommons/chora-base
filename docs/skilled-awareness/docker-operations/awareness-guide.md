@@ -808,17 +808,17 @@ volumes:
 ### Developer Process (dev-docs/)
 
 **Workflows**:
-- [dev-docs/workflows/docker-development.md](/dev-docs/workflows/docker-development.md) - Developing with Docker
-- [dev-docs/workflows/multi-arch-builds.md](/dev-docs/workflows/multi-arch-builds.md) - Multi-architecture build process
+- [dev-docs/workflows/docker-development.md](../../dev-docs/workflows/docker-development.md) - Developing with Docker
+- [dev-docs/workflows/multi-arch-builds.md](../../dev-docs/workflows/multi-arch-builds.md) - Multi-architecture build process
 
 **Tools**:
-- [dev-docs/tools/docker.md](/dev-docs/tools/docker.md) - Docker CLI reference
-- [dev-docs/tools/docker-compose.md](/dev-docs/tools/docker-compose.md) - docker-compose usage
-- [dev-docs/tools/buildx.md](/dev-docs/tools/buildx.md) - Docker buildx for multi-platform
+- [dev-docs/tools/docker.md](../../dev-docs/tools/docker.md) - Docker CLI reference
+- [dev-docs/tools/docker-compose.md](../../dev-docs/tools/docker-compose.md) - docker-compose usage
+- [dev-docs/tools/buildx.md](../../dev-docs/tools/buildx.md) - Docker buildx for multi-platform
 
 **Development Guidelines**:
-- [dev-docs/development/dockerfile-standards.md](/dev-docs/development/dockerfile-standards.md) - Dockerfile best practices
-- [dev-docs/development/container-security.md](/dev-docs/development/container-security.md) - Container security guidelines
+- [dev-docs/development/dockerfile-standards.md](../../dev-docs/development/dockerfile-standards.md) - Dockerfile best practices
+- [dev-docs/development/container-security.md](../../dev-docs/development/container-security.md) - Container security guidelines
 
 ### Project Lifecycle (project-docs/)
 
@@ -830,26 +830,26 @@ volumes:
 - [static-template/DOCKER_BEST_PRACTICES.md](/static-template/DOCKER_BEST_PRACTICES.md) - Docker best practices guide
 
 **Guides**:
-- [project-docs/guides/docker-setup.md](/project-docs/guides/docker-setup.md) - Setting up Docker in projects
-- [project-docs/guides/container-deployment.md](/project-docs/guides/container-deployment.md) - Deploying containers
+- [project-docs/guides/docker-setup.md](../../project-docs/guides/docker-setup.md) - Setting up Docker in projects
+- [project-docs/guides/container-deployment.md](../../project-docs/guides/container-deployment.md) - Deploying containers
 
 **Audits & Releases**:
-- [project-docs/audits/](/project-docs/audits/) - SAP audits including SAP-010 validation
-- [project-docs/releases/](/project-docs/releases/) - Version release documentation
+- [project-docs/audits/](../../project-docs/audits/) - SAP audits including SAP-010 validation
+- [project-docs/releases/](../../project-docs/releases/) - Version release documentation
 
 ### User Guides (user-docs/)
 
 **Getting Started**:
-- [user-docs/guides/docker-basics.md](/user-docs/guides/docker-basics.md) - Docker basics for chora-base
+- [user-docs/guides/docker-basics.md](../../user-docs/guides/docker-basics.md) - Docker basics for chora-base
 
 **Tutorials**:
-- [user-docs/tutorials/building-docker-images.md](/user-docs/tutorials/building-docker-images.md) - Build Docker images
-- [user-docs/tutorials/docker-compose-local.md](/user-docs/tutorials/docker-compose-local.md) - Local development with docker-compose
-- [user-docs/tutorials/optimizing-images.md](/user-docs/tutorials/optimizing-images.md) - Optimize Docker image size
+- [user-docs/tutorials/building-docker-images.md](../../user-docs/tutorials/building-docker-images.md) - Build Docker images
+- [user-docs/tutorials/docker-compose-local.md](../../user-docs/tutorials/docker-compose-local.md) - Local development with docker-compose
+- [user-docs/tutorials/optimizing-images.md](../../user-docs/tutorials/optimizing-images.md) - Optimize Docker image size
 
 **Reference**:
-- [user-docs/reference/dockerfile-reference.md](/user-docs/reference/dockerfile-reference.md) - Dockerfile reference
-- [user-docs/reference/docker-compose-reference.md](/user-docs/reference/docker-compose-reference.md) - docker-compose.yml reference
+- [user-docs/reference/dockerfile-reference.md](../../user-docs/reference/dockerfile-reference.md) - Dockerfile reference
+- [user-docs/reference/docker-compose-reference.md](../../user-docs/reference/docker-compose-reference.md) - docker-compose.yml reference
 
 ### Other SAPs (skilled-awareness/)
 

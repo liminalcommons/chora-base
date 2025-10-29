@@ -324,15 +324,15 @@ python scripts/generate_roi_report.py  # Should work with new path
 ### Developer Process (dev-docs/)
 
 **Workflows**:
-- [dev-docs/workflows/sprint-retrospective.md](/dev-docs/workflows/sprint-retrospective.md) - Sprint metrics review process
-- [dev-docs/workflows/release-retrospective.md](/dev-docs/workflows/release-retrospective.md) - Post-release metrics analysis
+- [dev-docs/workflows/sprint-retrospective.md](../../dev-docs/workflows/sprint-retrospective.md) - Sprint metrics review process
+- [dev-docs/workflows/release-retrospective.md](../../dev-docs/workflows/release-retrospective.md) - Post-release metrics analysis
 
 **Tools**:
-- [dev-docs/tools/claude-roi-calculator.md](/dev-docs/tools/claude-roi-calculator.md) - ClaudeROICalculator usage guide
-- [dev-docs/tools/metrics-dashboard.md](/dev-docs/tools/metrics-dashboard.md) - Metrics visualization tools
+- [dev-docs/tools/claude-roi-calculator.md](../../dev-docs/tools/claude-roi-calculator.md) - ClaudeROICalculator usage guide
+- [dev-docs/tools/metrics-dashboard.md](../../dev-docs/tools/metrics-dashboard.md) - Metrics visualization tools
 
 **Development Guidelines**:
-- [dev-docs/development/metrics-standards.md](/dev-docs/development/metrics-standards.md) - Standards for collecting metrics
+- [dev-docs/development/metrics-standards.md](../../dev-docs/development/metrics-standards.md) - Standards for collecting metrics
 
 ### Project Lifecycle (project-docs/)
 
@@ -342,28 +342,28 @@ python scripts/generate_roi_report.py  # Should work with new path
 - [static-template/src/utils/claude_metrics.py](/static-template/src/utils/claude_metrics.py) - ClaudeMetric and ClaudeROICalculator classes
 
 **Guides**:
-- [project-docs/guides/metrics-collection.md](/project-docs/guides/metrics-collection.md) - Guide for collecting metrics
-- [project-docs/guides/roi-analysis.md](/project-docs/guides/roi-analysis.md) - Analyzing Claude ROI data
+- [project-docs/guides/metrics-collection.md](../../project-docs/guides/metrics-collection.md) - Guide for collecting metrics
+- [project-docs/guides/roi-analysis.md](../../project-docs/guides/roi-analysis.md) - Analyzing Claude ROI data
 
 **Sprint & Release Tracking**:
-- [project-docs/sprints/](/project-docs/sprints/) - Sprint metrics (velocity, defect rate, coverage)
-- [project-docs/releases/](/project-docs/releases/) - Release metrics (downloads, adoption, feedback)
+- [project-docs/sprints/](../../project-docs/sprints/) - Sprint metrics (velocity, defect rate, coverage)
+- [project-docs/releases/](../../project-docs/releases/) - Release metrics (downloads, adoption, feedback)
 
 **Audits**:
-- [project-docs/audits/](/project-docs/audits/) - SAP audits including SAP-013 validation
+- [project-docs/audits/](../../project-docs/audits/) - SAP audits including SAP-013 validation
 
 ### User Guides (user-docs/)
 
 **Getting Started**:
-- [user-docs/guides/understanding-metrics.md](/user-docs/guides/understanding-metrics.md) - Introduction to metrics tracking
+- [user-docs/guides/understanding-metrics.md](../../user-docs/guides/understanding-metrics.md) - Introduction to metrics tracking
 
 **Tutorials**:
-- [user-docs/tutorials/tracking-claude-sessions.md](/user-docs/tutorials/tracking-claude-sessions.md) - Track Claude effectiveness
-- [user-docs/tutorials/calculating-roi.md](/user-docs/tutorials/calculating-roi.md) - Calculate AI development ROI
+- [user-docs/tutorials/tracking-claude-sessions.md](../../user-docs/tutorials/tracking-claude-sessions.md) - Track Claude effectiveness
+- [user-docs/tutorials/calculating-roi.md](../../user-docs/tutorials/calculating-roi.md) - Calculate AI development ROI
 
 **Reference**:
-- [user-docs/reference/metrics-reference.md](/user-docs/reference/metrics-reference.md) - Complete metrics reference
-- [user-docs/reference/process-targets.md](/user-docs/reference/process-targets.md) - Process metric targets
+- [user-docs/reference/metrics-reference.md](../../user-docs/reference/metrics-reference.md) - Complete metrics reference
+- [user-docs/reference/process-targets.md](../../user-docs/reference/process-targets.md) - Process metric targets
 
 ### Other SAPs (skilled-awareness/)
 

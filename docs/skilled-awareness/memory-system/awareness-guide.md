@@ -829,16 +829,16 @@ related_traces: [abc123, def456, ghi789]  # Added new trace
 ### Developer Process (dev-docs/)
 
 **Workflows**:
-- [dev-docs/workflows/debugging-workflow.md](/dev-docs/workflows/debugging-workflow.md) - Debugging with event traces
-- [dev-docs/workflows/knowledge-management.md](/dev-docs/workflows/knowledge-management.md) - Creating and updating knowledge notes
+- [dev-docs/workflows/debugging-workflow.md](../../dev-docs/workflows/debugging-workflow.md) - Debugging with event traces
+- [dev-docs/workflows/knowledge-management.md](../../dev-docs/workflows/knowledge-management.md) - Creating and updating knowledge notes
 
 **Tools**:
-- [dev-docs/tools/event-log-query.md](/dev-docs/tools/event-log-query.md) - Querying event logs
-- [dev-docs/tools/knowledge-search.md](/dev-docs/tools/knowledge-search.md) - Searching knowledge graph
+- [dev-docs/tools/event-log-query.md](../../dev-docs/tools/event-log-query.md) - Querying event logs
+- [dev-docs/tools/knowledge-search.md](../../dev-docs/tools/knowledge-search.md) - Searching knowledge graph
 
 **Development Guidelines**:
-- [dev-docs/development/event-emission.md](/dev-docs/development/event-emission.md) - Standards for emitting events
-- [dev-docs/development/knowledge-curation.md](/dev-docs/development/knowledge-curation.md) - Best practices for knowledge notes
+- [dev-docs/development/event-emission.md](../../dev-docs/development/event-emission.md) - Standards for emitting events
+- [dev-docs/development/knowledge-curation.md](../../dev-docs/development/knowledge-curation.md) - Best practices for knowledge notes
 
 ### Project Lifecycle (project-docs/)
 
@@ -848,25 +848,25 @@ related_traces: [abc123, def456, ghi789]  # Added new trace
 - [static-template/.chora/memory/knowledge/](/static-template/.chora/memory/knowledge/) - Knowledge graph structure
 
 **Guides**:
-- [project-docs/guides/memory-system-setup.md](/project-docs/guides/memory-system-setup.md) - Setting up A-MEM in projects
-- [project-docs/guides/event-log-analysis.md](/project-docs/guides/event-log-analysis.md) - Analyzing event logs
+- [project-docs/guides/memory-system-setup.md](../../project-docs/guides/memory-system-setup.md) - Setting up A-MEM in projects
+- [project-docs/guides/event-log-analysis.md](../../project-docs/guides/event-log-analysis.md) - Analyzing event logs
 
 **Audits & Releases**:
-- [project-docs/audits/](/project-docs/audits/) - SAP audits including SAP-009 validation
-- [project-docs/releases/](/project-docs/releases/) - Version release documentation
+- [project-docs/audits/](../../project-docs/audits/) - SAP audits including SAP-009 validation
+- [project-docs/releases/](../../project-docs/releases/) - Version release documentation
 
 ### User Guides (user-docs/)
 
 **Getting Started**:
-- [user-docs/guides/cross-session-memory.md](/user-docs/guides/cross-session-memory.md) - Understanding A-MEM
+- [user-docs/guides/cross-session-memory.md](../../user-docs/guides/cross-session-memory.md) - Understanding A-MEM
 
 **Tutorials**:
-- [user-docs/tutorials/creating-knowledge-notes.md](/user-docs/tutorials/creating-knowledge-notes.md) - Create knowledge notes
-- [user-docs/tutorials/tracing-workflows.md](/user-docs/tutorials/tracing-workflows.md) - Debug with event traces
+- [user-docs/tutorials/creating-knowledge-notes.md](../../user-docs/tutorials/creating-knowledge-notes.md) - Create knowledge notes
+- [user-docs/tutorials/tracing-workflows.md](../../user-docs/tutorials/tracing-workflows.md) - Debug with event traces
 
 **Reference**:
-- [user-docs/reference/event-schema.md](/user-docs/reference/event-schema.md) - Event schema reference
-- [user-docs/reference/knowledge-note-template.md](/user-docs/reference/knowledge-note-template.md) - Knowledge note template
+- [user-docs/reference/event-schema.md](../../user-docs/reference/event-schema.md) - Event schema reference
+- [user-docs/reference/knowledge-note-template.md](../../user-docs/reference/knowledge-note-template.md) - Knowledge note template
 
 ### Other SAPs (skilled-awareness/)
 
