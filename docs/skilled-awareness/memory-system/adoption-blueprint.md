@@ -655,7 +655,7 @@ def migrate_profile_v1_to_v2(profile):
 ## 10. Related Documents
 
 **Memory Infrastructure**:
-- [.chora/memory/README.md](../../../../static-template/.chora/memory/README.md) - A-MEM architecture
+- [.chora/memory/README.md](/static-template/.chora/memory/README.md) - A-MEM architecture
 - [protocol-spec.md](protocol-spec.md) - Memory system contracts
 
 **Related SAPs**:

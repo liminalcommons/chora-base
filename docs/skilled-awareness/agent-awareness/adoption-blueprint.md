@@ -65,9 +65,9 @@ cp chora-base/blueprints/CLAUDE.md.blueprint CLAUDE.md
 Follows chora-base 8-phase lifecycle...
 
 ## Documentation Structure
-- [AGENTS.md](AGENTS.md) - This file
-- [tests/AGENTS.md](tests/AGENTS.md) - Testing
-- [scripts/AGENTS.md](scripts/AGENTS.md) - Scripts
+- [AGENTS.md](/AGENTS.md) - This file
+- [tests/AGENTS.md](/AGENTS.md) - Testing
+- [scripts/AGENTS.md](/AGENTS.md) - Scripts
 
 ## Key Concepts
 **Concept 1**: Explanation
@@ -126,7 +126,7 @@ Every 5-10 interactions:
 # Testing Guide
 
 **For agents working on tests.**
-See [root AGENTS.md](../AGENTS.md) for project overview.
+See [root AGENTS.md](/AGENTS.md) for project overview.
 
 ## Run Tests
 ```bash
@@ -166,8 +166,8 @@ pytest --cov=src
 ## 7. Related Documents
 
 - [protocol-spec.md](protocol-spec.md) - Technical contract
-- [AGENTS.md.blueprint](../../../../blueprints/AGENTS.md.blueprint) - Template
-- [CLAUDE.md.blueprint](../../../../blueprints/CLAUDE.md.blueprint) - Template
+- [AGENTS.md.blueprint](/blueprints/AGENTS.md.blueprint) - Template
+- [CLAUDE.md.blueprint](/blueprints/CLAUDE.md.blueprint) - Template
 
 ---
 

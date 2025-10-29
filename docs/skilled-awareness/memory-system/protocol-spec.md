@@ -746,9 +746,9 @@ def migrate_profile_v1_to_v2(profile_v1):
 ## 11. Related Documents
 
 **Memory Infrastructure**:
-- [.chora/memory/README.md](../../../../static-template/.chora/memory/README.md) - A-MEM architecture documentation
-- [.chora/memory/AGENTS.md](../../../../static-template/.chora/memory/AGENTS.md) - Generic agent guidance
-- [.chora/memory/CLAUDE.md](../../../../static-template/.chora/memory/CLAUDE.md) - Claude-specific guidance
+- [.chora/memory/README.md](/static-template/.chora/memory/README.md) - A-MEM architecture documentation
+- [.chora/memory/AGENTS.md](/static-template/.chora/memory/AGENTS.md) - Generic agent guidance
+- [.chora/memory/CLAUDE.md](/static-template/.chora/memory/CLAUDE.md) - Claude-specific guidance
 
 **Related SAPs**:
 - [SAP-000: sap-framework](../sap-framework/) - Meta SAP framework

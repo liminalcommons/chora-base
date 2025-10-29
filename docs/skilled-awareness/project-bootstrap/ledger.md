@@ -344,9 +344,9 @@ _Not yet collected_
 - [adoption-blueprint.md](adoption-blueprint.md) - How to generate projects
 
 **Generation Components**:
-- [setup.py](../../../../setup.py) - Generation orchestrator (443 lines)
-- [blueprints/](../../../../blueprints/) - Variable templates (11 files)
-- [static-template/](../../../../static-template/) - Project scaffold (100+ files)
+- [setup.py](/setup.py) - Generation orchestrator (443 lines)
+- [blueprints/](/blueprints/) - Variable templates (11 files)
+- [static-template/](/static-template/) - Project scaffold (100+ files)
 
 **Related SAPs**:
 - [chora-base/protocol-spec.md](../chora-base/protocol-spec.md) - Meta-SAP Section 3.2.1
@@ -354,8 +354,8 @@ _Not yet collected_
 - [INDEX.md](../INDEX.md) - SAP registry
 
 **Upgrade Documentation**:
-- [docs/upgrades/](../../../../docs/upgrades/) - Upgrade blueprints (future)
-- [CHANGELOG.md](../../../../CHANGELOG.md) - Version history
+- Upgrade blueprints (planned for `/docs/upgrades/`)
+- [CHANGELOG.md](/CHANGELOG.md) - Version history
 
 ---
 

@@ -350,8 +350,8 @@ git commit --no-verify -m "message"
 - [ledger.md](ledger.md)
 
 **Configuration Files**:
-- [.pre-commit-config.yaml](../../../../static-template/.pre-commit-config.yaml)
-- [pyproject.toml](../../../../blueprints/pyproject.toml.blueprint) (lines 45-86)
+- [.pre-commit-config.yaml](/static-template/.pre-commit-config.yaml)
+- [pyproject.toml](/blueprints/pyproject.toml.blueprint) (lines 45-86)
 
 **Related SAPs**:
 - [testing-framework/](../testing-framework/) - SAP-004

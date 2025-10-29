@@ -733,7 +733,7 @@ pytest                 # Run tests
 ## 12. Related Documents
 
 **SAP Framework**:
-- [SKILLED_AWARENESS_PACKAGE_PROTOCOL.md](../../../../SKILLED_AWARENESS_PACKAGE_PROTOCOL.md) - Root protocol
+- [SKILLED_AWARENESS_PACKAGE_PROTOCOL.md](/SKILLED_AWARENESS_PACKAGE_PROTOCOL.md) - Root protocol
 - [sap-framework/protocol-spec.md](../sap-framework/protocol-spec.md) - SAP structure
 - [INDEX.md](../INDEX.md) - SAP registry
 
@@ -744,9 +744,9 @@ pytest                 # Run tests
 - [ledger.md](ledger.md) - Adopter tracking
 
 **Generation Components**:
-- [setup.py](../../../../setup.py) - Generation orchestrator (443 lines)
-- [blueprints/](../../../../blueprints/) - Variable templates (12 files)
-- [static-template/](../../../../static-template/) - Project scaffold (100+ files)
+- [setup.py](/setup.py) - Generation orchestrator (443 lines)
+- [blueprints/](/blueprints/) - Variable templates (12 files)
+- [static-template/](/static-template/) - Project scaffold (100+ files)
 
 **Related SAPs**:
 - [chora-base/protocol-spec.md](../chora-base/protocol-spec.md) - Meta-SAP Section 3.2.1

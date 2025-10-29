@@ -64,8 +64,8 @@
 ## 5. Related Documents
 
 - [protocol-spec.md](protocol-spec.md) - Technical contract
-- [AGENTS.md.blueprint](../../../../blueprints/AGENTS.md.blueprint)
-- [CLAUDE.md.blueprint](../../../../blueprints/CLAUDE.md.blueprint)
+- [AGENTS.md.blueprint](/blueprints/AGENTS.md.blueprint)
+- [CLAUDE.md.blueprint](/blueprints/CLAUDE.md.blueprint)
 
 ---
 

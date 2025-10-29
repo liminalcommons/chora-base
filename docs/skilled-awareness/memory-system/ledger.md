@@ -394,7 +394,7 @@ type: ledger
 ## 12. Related Documents
 
 **Memory Infrastructure**:
-- [.chora/memory/README.md](../../../../static-template/.chora/memory/README.md) - A-MEM architecture
+- [.chora/memory/README.md](/static-template/.chora/memory/README.md) - A-MEM architecture
 - [protocol-spec.md](protocol-spec.md) - Memory system contracts
 - [awareness-guide.md](awareness-guide.md) - Agent workflows
 - [adoption-blueprint.md](adoption-blueprint.md) - Adoption guide

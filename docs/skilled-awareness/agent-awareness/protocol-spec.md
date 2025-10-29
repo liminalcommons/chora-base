@@ -53,9 +53,9 @@ The agent-awareness capability provides **structured guidance files for AI agent
 This project follows the 8-phase chora-base lifecycle...
 
 ## Documentation Structure (Nearest File Wins)
-- [AGENTS.md](AGENTS.md) - Project overview (this file)
-- [tests/AGENTS.md](tests/AGENTS.md) - Testing guide
-- [scripts/AGENTS.md](scripts/AGENTS.md) - Script reference
+- [AGENTS.md](/AGENTS.md) - Project overview (this file)
+- [tests/AGENTS.md](/AGENTS.md) - Testing guide
+- [scripts/AGENTS.md](/AGENTS.md) - Script reference
 
 ## Key Concepts
 **MCP Protocol**: [Explanation]
@@ -83,7 +83,7 @@ This project follows the 8-phase chora-base lifecycle...
 # CLAUDE.md - Claude-Specific Development Guide
 
 ## Quick Start for Claude
-1. Read [AGENTS.md](AGENTS.md) first
+1. Read [AGENTS.md](/AGENTS.md) first
 2. Read CLAUDE.md (this file) for optimizations
 
 ## Context Window Management (200k Tokens)
@@ -266,13 +266,13 @@ Load for complex refactoring:
 - [ledger.md](ledger.md)
 
 **Templates**:
-- [blueprints/AGENTS.md.blueprint](../../../../blueprints/AGENTS.md.blueprint) (~900 lines)
-- [blueprints/CLAUDE.md.blueprint](../../../../blueprints/CLAUDE.md.blueprint) (~450 lines)
+- [blueprints/AGENTS.md.blueprint](/blueprints/AGENTS.md.blueprint) (~900 lines)
+- [blueprints/CLAUDE.md.blueprint](/blueprints/CLAUDE.md.blueprint) (~450 lines)
 
 **Examples**:
-- [static-template/tests/AGENTS.md](../../../../static-template/tests/AGENTS.md)
-- [static-template/scripts/AGENTS.md](../../../../static-template/scripts/AGENTS.md)
-- [static-template/docker/AGENTS.md](../../../../static-template/docker/AGENTS.md)
+- [static-template/tests/AGENTS.md](/static-template/tests/AGENTS.md)
+- [static-template/scripts/AGENTS.md](/static-template/scripts/AGENTS.md)
+- [static-template/docker/AGENTS.md](/static-template/docker/AGENTS.md)
 
 **Related SAPs**:
 - [sap-framework/](../sap-framework/) - SAP-000

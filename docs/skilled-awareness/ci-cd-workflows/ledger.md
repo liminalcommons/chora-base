@@ -49,7 +49,7 @@
 ## 5. Related Documents
 
 - [protocol-spec.md](protocol-spec.md) - Technical contract
-- [.github/workflows/](../../../../static-template/.github/workflows/) - Workflow files
+- [.github/workflows/](/static-template/.github/workflows/) - Workflow files
 
 ---
 

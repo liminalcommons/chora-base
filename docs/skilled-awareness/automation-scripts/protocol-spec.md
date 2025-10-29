@@ -772,7 +772,7 @@ another_command  # Only runs if some_command succeeded
 - 5 Python scripts (.py files)
 
 **Justfile**:
-- [justfile](../../../../static-template/justfile) - Unified task interface
+- [justfile](/static-template/justfile) - Unified task interface
 
 **Related SAPs**:
 - [SAP-004: testing-framework](../testing-framework/) - Scripts run pytest

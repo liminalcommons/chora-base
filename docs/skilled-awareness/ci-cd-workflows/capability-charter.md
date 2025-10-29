@@ -181,8 +181,8 @@ This SAP documents:
 
 ## 8. Related Documents
 
-- [SKILLED_AWARENESS_PACKAGE_PROTOCOL.md](../../../../SKILLED_AWARENESS_PACKAGE_PROTOCOL.md)
-- [static-template/.github/workflows/](../../../../static-template/.github/workflows/)
+- [SKILLED_AWARENESS_PACKAGE_PROTOCOL.md](/SKILLED_AWARENESS_PACKAGE_PROTOCOL.md)
+- [static-template/.github/workflows/](/static-template/.github/workflows/)
 - [testing-framework/](../testing-framework/) - SAP-004
 - [quality-gates/](../quality-gates/) - SAP-006
 

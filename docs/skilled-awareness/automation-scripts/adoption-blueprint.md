@@ -1092,8 +1092,8 @@ read -t 30 -p "Continue? (y/N) " -n 1 -r
 ## 8. Related Documents
 
 **Scripts**:
-- [All scripts](../../../../static-template/scripts/) - 25 automation scripts
-- [justfile](../../../../static-template/justfile) - Unified task interface
+- [All scripts](/static-template/scripts/) - 25 automation scripts
+- [justfile](/static-template/justfile) - Unified task interface
 
 **Protocol**:
 - [protocol-spec.md](protocol-spec.md) - Script contracts and validation standards

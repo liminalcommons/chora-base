@@ -77,9 +77,9 @@ A **comprehensive SAP describing AGENTS.md/CLAUDE.md structure, nesting patterns
 
 ## 8. Related Documents
 
-- [blueprints/AGENTS.md.blueprint](../../../../blueprints/AGENTS.md.blueprint)
-- [blueprints/CLAUDE.md.blueprint](../../../../blueprints/CLAUDE.md.blueprint)
-- [static-template/tests/AGENTS.md](../../../../static-template/tests/AGENTS.md)
+- [blueprints/AGENTS.md.blueprint](/blueprints/AGENTS.md.blueprint)
+- [blueprints/CLAUDE.md.blueprint](/blueprints/CLAUDE.md.blueprint)
+- [static-template/tests/AGENTS.md](/static-template/tests/AGENTS.md)
 
 ---
 

@@ -82,7 +82,7 @@ mypy src
 
 - [protocol-spec.md](protocol-spec.md) - Technical contract
 - [adoption-blueprint.md](adoption-blueprint.md) - Usage guide
-- [.github/workflows/](../../../../static-template/.github/workflows/) - Workflow files
+- [.github/workflows/](/static-template/.github/workflows/) - Workflow files
 
 ---
 

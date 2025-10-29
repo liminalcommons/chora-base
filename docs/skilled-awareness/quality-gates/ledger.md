@@ -53,7 +53,7 @@
 ## 5. Related Documents
 
 - [protocol-spec.md](protocol-spec.md) - Technical contract
-- [.pre-commit-config.yaml](../../../../static-template/.pre-commit-config.yaml)
+- [.pre-commit-config.yaml](/static-template/.pre-commit-config.yaml)
 
 ---
 

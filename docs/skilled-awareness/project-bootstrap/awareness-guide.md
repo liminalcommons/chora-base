@@ -25,8 +25,8 @@ pytest                 # Run tests
 
 **Understand generation system**:
 1. Read: [protocol-spec.md](protocol-spec.md) - Complete technical contract
-2. Study: [setup.py](../../../../setup.py) - Generation logic (443 lines)
-3. Check: [blueprints/](../../../../blueprints/) - Variable templates (12 files)
+2. Study: [setup.py](/setup.py) - Generation logic (443 lines)
+3. Check: [blueprints/](/blueprints/) - Variable templates (12 files)
 
 ### Quick Commands
 
@@ -55,7 +55,7 @@ ls -la static-template/                # List top-level
 
 **For generating projects**:
 1. [protocol-spec.md](protocol-spec.md) (6k tokens) - Generation flow, contracts
-2. [setup.py](../../../../setup.py) (1.5k tokens) - Implementation (functions only, skip prompts)
+2. [setup.py](/setup.py) (1.5k tokens) - Implementation (functions only, skip prompts)
 3. Blueprint variables (Section 3.1 in Protocol) - Variable list
 
 **For troubleshooting generation**:
@@ -65,7 +65,7 @@ ls -la static-template/                # List top-level
 
 **For extending generation**:
 1. [protocol-spec.md](protocol-spec.md) Section 8.1 (1k tokens) - Maintainability
-2. [setup.py](../../../../setup.py) full read (1.5k tokens) - Implementation details
+2. [setup.py](/setup.py) full read (1.5k tokens) - Implementation details
 3. Example blueprint (blueprints/pyproject.toml.blueprint) - Blueprint syntax
 
 ### What to Skip
@@ -464,9 +464,9 @@ python -m py_compile src/my_package/__init__.py
 - [ledger.md](ledger.md) - Adopter tracking
 
 **Generation Components**:
-- [setup.py](../../../../setup.py) - Generation orchestrator (443 lines)
-- [blueprints/](../../../../blueprints/) - Variable templates (12 files)
-- [static-template/](../../../../static-template/) - Project scaffold (100+ files)
+- [setup.py](/setup.py) - Generation orchestrator (443 lines)
+- [blueprints/](/blueprints/) - Variable templates (12 files)
+- [static-template/](/static-template/) - Project scaffold (100+ files)
 
 **Related SAPs**:
 - [chora-base/protocol-spec.md](../chora-base/protocol-spec.md) - Meta-SAP Section 3.2.1
@@ -475,9 +475,9 @@ python -m py_compile src/my_package/__init__.py
 - [quality-gates/](../quality-gates/) - SAP-006 (generated quality configs)
 
 **Core Docs**:
-- [README.md](../../../../README.md) - Project overview
-- [AGENTS.md](../../../../AGENTS.md) - Agent guidance
-- [CHANGELOG.md](../../../../CHANGELOG.md) - Version history
+- [README.md](/README.md) - Project overview
+- [AGENTS.md](/AGENTS.md) - Agent guidance
+- [CHANGELOG.md](/CHANGELOG.md) - Version history
 
 ---
 

@@ -652,7 +652,7 @@ python setup.py test-quick
 4. Configure CI/CD (.github/workflows/)
 
 **Learn More**:
-1. Read [AGENTS.md](../../../../AGENTS.md) - Agent guidance for development
+1. Read [AGENTS.md](/AGENTS.md) - Agent guidance for development
 2. Read [SAP-004 (testing-framework)](../testing-framework/) - Testing patterns
 3. Read [SAP-005 (ci-cd-workflows)](../ci-cd-workflows/) - CI/CD setup
 4. Read [SAP-006 (quality-gates)](../quality-gates/) - Quality standards
@@ -668,9 +668,9 @@ python setup.py test-quick
 - [ledger.md](ledger.md) - Adopter tracking
 
 **Generation Components**:
-- [setup.py](../../../../setup.py) - Generation orchestrator (443 lines)
-- [blueprints/](../../../../blueprints/) - Variable templates (12 files)
-- [static-template/](../../../../static-template/) - Project scaffold (100+ files)
+- [setup.py](/setup.py) - Generation orchestrator (443 lines)
+- [blueprints/](/blueprints/) - Variable templates (12 files)
+- [static-template/](/static-template/) - Project scaffold (100+ files)
 
 **Related SAPs**:
 - [chora-base/protocol-spec.md](../chora-base/protocol-spec.md) - Meta-SAP Section 3.2.1
@@ -679,9 +679,9 @@ python setup.py test-quick
 - [quality-gates/](../quality-gates/) - SAP-006 (depends on testing)
 
 **Core Docs**:
-- [README.md](../../../../README.md) - Project overview
-- [AGENTS.md](../../../../AGENTS.md) - Agent guidance
-- [CHANGELOG.md](../../../../CHANGELOG.md) - Version history
+- [README.md](/README.md) - Project overview
+- [AGENTS.md](/AGENTS.md) - Agent guidance
+- [CHANGELOG.md](/CHANGELOG.md) - Version history
 
 ---
 

@@ -457,7 +457,7 @@ _(Update after 3-6 months of adoption)_
 **Scripts** (in `static-template/scripts/`):
 - 25 shell scripts (.sh files)
 - 5 Python scripts (.py files)
-- [justfile](../../../../static-template/justfile) - Unified task interface
+- [justfile](/static-template/justfile) - Unified task interface
 
 **Related SAPs**:
 - [SAP-000: sap-framework](../sap-framework/) - Meta SAP framework

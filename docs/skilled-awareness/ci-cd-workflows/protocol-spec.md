@@ -436,10 +436,10 @@ Cache not found for input keys: ubuntu-latest-pip-<hash>
 - [ledger.md](ledger.md)
 
 **Workflow Files**:
-- [.github/workflows/test.yml](../../../../static-template/.github/workflows/test.yml)
-- [.github/workflows/lint.yml](../../../../static-template/.github/workflows/lint.yml)
-- [.github/workflows/codeql.yml](../../../../static-template/.github/workflows/codeql.yml)
-- [All workflows](../../../../static-template/.github/workflows/)
+- [.github/workflows/test.yml](/static-template/.github/workflows/test.yml)
+- [.github/workflows/lint.yml](/static-template/.github/workflows/lint.yml)
+- [.github/workflows/codeql.yml](/static-template/.github/workflows/codeql.yml)
+- [All workflows](/static-template/.github/workflows/)
 
 **Related SAPs**:
 - [testing-framework/](../testing-framework/) - SAP-004

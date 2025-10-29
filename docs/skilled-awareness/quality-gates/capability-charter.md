@@ -145,9 +145,9 @@ This SAP documents:
 
 ## 8. Related Documents
 
-- [SKILLED_AWARENESS_PACKAGE_PROTOCOL.md](../../../../SKILLED_AWARENESS_PACKAGE_PROTOCOL.md)
-- [.pre-commit-config.yaml](../../../../static-template/.pre-commit-config.yaml)
-- [pyproject.toml](../../../../blueprints/pyproject.toml.blueprint) - Lines 45-86
+- [SKILLED_AWARENESS_PACKAGE_PROTOCOL.md](/SKILLED_AWARENESS_PACKAGE_PROTOCOL.md)
+- [.pre-commit-config.yaml](/static-template/.pre-commit-config.yaml)
+- [pyproject.toml](/blueprints/pyproject.toml.blueprint) - Lines 45-86
 - [testing-framework/](../testing-framework/) - SAP-004
 - [ci-cd-workflows/](../ci-cd-workflows/) - SAP-005
 

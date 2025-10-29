@@ -647,10 +647,10 @@ Available recipes:
 ## 10. Related Documents
 
 **Scripts**:
-- [All scripts](../../../../static-template/scripts/) - 25 automation scripts
+- [All scripts](/static-template/scripts/) - 25 automation scripts
 
 **Justfile**:
-- [justfile](../../../../static-template/justfile) - Unified task interface
+- [justfile](/static-template/justfile) - Unified task interface
 
 **Protocol**:
 - [protocol-spec.md](protocol-spec.md) - Script contracts and validation standards

@@ -567,7 +567,7 @@ status: deprecated  # Changed from "validated"
 ## 10. Related Documents
 
 **Memory Infrastructure**:
-- [.chora/memory/README.md](../../../../static-template/.chora/memory/README.md) - A-MEM architecture
+- [.chora/memory/README.md](/static-template/.chora/memory/README.md) - A-MEM architecture
 - [protocol-spec.md](protocol-spec.md) - Full memory system contracts
 
 **Related SAPs**:

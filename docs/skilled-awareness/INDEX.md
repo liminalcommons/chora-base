@@ -9,15 +9,16 @@
 
 ## Overview
 
-This index tracks all **14 capabilities** identified for SAP packaging across 4 roadmap phases.
+This index tracks all **15 capabilities** identified for SAP packaging across 4 roadmap phases + Wave 2.
 
-**Current Coverage**: 14/14 SAPs (100%) - ALL PHASES COMPLETE! 🎉
+**Current Coverage**: 15/15 SAPs (100%) - ALL PHASES COMPLETE! 🎉
 
 **Target Coverage**:
 - Phase 1: 3/14 (21%) ✅ Complete
 - Phase 2: 7/14 (50%) ✅ Complete
-- Phase 3: 13/14 (93%) - ✅ Complete
-- Phase 4: 14/14 (100%) - ✅ Complete (SAP-013 metrics-tracking done!)
+- Phase 3: 13/14 (93%) ✅ Complete
+- Phase 4: 14/14 (100%) ✅ Complete (SAP-013 metrics-tracking done!)
+- Wave 2: 15/15 (100%) ✅ Complete (SAP-016 link-validation added!)
 
 ---
 
@@ -39,6 +40,7 @@ This index tracks all **14 capabilities** identified for SAP packaging across 4 
 | SAP-011 | docker-operations | 1.0.0 | Draft | Phase 3 | [docker-operations/](docker-operations/) | SAP-000 |
 | SAP-012 | development-lifecycle | 1.0.0 | Draft | Phase 3 | [development-lifecycle/](development-lifecycle/) | SAP-000 |
 | SAP-013 | metrics-tracking | 1.0.0 | Draft | Phase 4 | [metrics-tracking/](metrics-tracking/) | SAP-000 |
+| SAP-016 | link-validation-reference-management | 1.0.0 | Active | Wave 2 | [link-validation-reference-management/](link-validation-reference-management/) | None (foundational) |
 
 ---
 
@@ -92,6 +94,16 @@ This index tracks all **14 capabilities** identified for SAP packaging across 4 
 
 **Optimization**: Measurement and improvement capabilities.
 
+### Wave 2: Quality Assurance & SAP Audit (2025-10 → 2025-11)
+
+| SAP ID | Capability | Priority | Dependencies | Status |
+|--------|------------|----------|--------------|--------|
+| SAP-016 | link-validation-reference-management | P0 | None (foundational) | ✅ Active (all 5 artifacts + script complete) |
+
+**Wave 2 Target**: 15 SAPs total (100% enhanced coverage, +1 from Phase 4) ✅ COMPLETE!
+
+**Quality Assurance**: Link validation for documentation integrity, enables SAP audit workflow.
+
 ---
 
 ## SAP Dependency Graph
@@ -114,6 +126,10 @@ SAP-000 (sap-framework) [FOUNDATIONAL]
    ├─→ SAP-011 (docker-operations)
    ├─→ SAP-012 (development-lifecycle)
    └─→ SAP-013 (metrics-tracking)
+
+SAP-016 (link-validation) [FOUNDATIONAL - WAVE 2]
+   ↓
+   └─→ Enhances: SAP-000, SAP-007 (documentation quality)
 ```
 
 **Key Dependencies**:
@@ -232,6 +248,16 @@ SAP-000 (sap-framework) [FOUNDATIONAL]
 - **Scope**: Planning, Implementation
 - **Key Features**: Claude ROI calculation, quality/velocity/adherence tracking, research-backed targets, $109k/year savings estimate
 
+### Quality Assurance (1 capability - Wave 2)
+
+#### SAP-016: link-validation-reference-management
+- **Purpose**: Automated markdown link validation (internal + external), prevents broken documentation references
+- **Includes**: scripts/validate-links.sh, capability-charter, protocol-spec, awareness-guide, adoption-blueprint, ledger
+- **Status**: ✅ Active (all 5 artifacts + script complete, Wave 2 Phase 1)
+- **Scope**: Implementation
+- **Key Features**: Internal link validation (100%), external link health checks, CI/CD integration, SAP audit workflow (Step 3), 4-domain architecture validation
+- **Wave 2 Context**: Created as highest-priority foundation for auditing all 15 SAPs, ensures cross-domain reference integrity
+
 ---
 
 ## Status Legend
@@ -288,13 +314,14 @@ SAP-000 (sap-framework) [FOUNDATIONAL]
 | Phase 2 | 4 | 4 | 0 | 0 | +29% ✅ Complete |
 | Phase 3 | 6 | 6 | 0 | 0 | +43% ✅ Complete (All 6 Phase 3 SAPs) |
 | Phase 4 | 1 | 1 | 0 | 0 | +7% ✅ Complete (SAP-013) |
-| **Total** | **14** | **14** | **0** | **0** | **100% 🎉 COMPLETE!** |
+| Wave 2 | 1 | 1 | 0 | 0 | +0% ✅ Complete (SAP-016) |
+| **Total** | **15** | **15** | **0** | **0** | **100% 🎉 COMPLETE!** |
 
 ### By Priority
 
 | Priority | Total | Completed | In Progress | Planned |
 |----------|-------|-----------|-------------|---------|
-| P0 | 7 | 7 | 0 | 0 |
+| P0 | 8 | 8 | 0 | 0 |
 | P1 | 6 | 6 | 0 | 0 |
 | P2 | 1 | 1 | 0 | 0 |
 
@@ -353,6 +380,7 @@ SAP-000 (sap-framework) [FOUNDATIONAL]
 
 | Date | Change | Author |
 |------|--------|--------|
+| 2025-10-28 | Wave 2: SAP-016 (link-validation-reference-management) complete - Foundational QA capability | Claude Code |
 | 2025-10-28 | 🎉 100% COMPLETE! SAP-013 (metrics-tracking) completes Phase 4 - ALL 14 SAPs DONE! | Claude Code |
 | 2025-10-28 | Phase 3 Complete: SAP-011 (docker-operations) completes Phase 3 (93% coverage, 13/14 SAPs) | Claude Code |
 | 2025-10-28 | Phase 3 Batch 3: SAP-010 (memory-system/A-MEM) complete (86% coverage, 12/14 SAPs) | Claude Code |

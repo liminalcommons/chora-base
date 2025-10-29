@@ -336,21 +336,21 @@ This SAP documents:
 ## 10. Related Documents
 
 **SAP Framework**:
-- [SKILLED_AWARENESS_PACKAGE_PROTOCOL.md](../../../../SKILLED_AWARENESS_PACKAGE_PROTOCOL.md) - Root protocol
+- [SKILLED_AWARENESS_PACKAGE_PROTOCOL.md](/SKILLED_AWARENESS_PACKAGE_PROTOCOL.md) - Root protocol
 - [sap-framework/](../sap-framework/) - SAP-000 (framework SAP)
 - [INDEX.md](../INDEX.md) - SAP registry
 - [document-templates.md](../document-templates.md) - SAP templates
 
 **chora-base Core**:
-- [README.md](../../../../README.md) - Project overview
-- [AGENTS.md](../../../../AGENTS.md) - Agent guidance
-- [CHANGELOG.md](../../../../CHANGELOG.md) - Version history
+- [README.md](/README.md) - Project overview
+- [AGENTS.md](/AGENTS.md) - Agent guidance
+- [CHANGELOG.md](/CHANGELOG.md) - Version history
 - [chora-base/protocol-spec.md](../chora-base/protocol-spec.md) - Meta-SAP (Section 3.2.1)
 
 **Generation Components**:
-- [setup.py](../../../../setup.py) - Generation orchestration (443 lines)
-- [blueprints/](../../../../blueprints/) - Variable substitution templates (12 files)
-- [static-template/](../../../../static-template/) - Project scaffold (100+ files)
+- [setup.py](/setup.py) - Generation orchestration (443 lines)
+- [blueprints/](/blueprints/) - Variable substitution templates (12 files)
+- [static-template/](/static-template/) - Project scaffold (100+ files)
 
 **Related SAPs** (dependencies):
 - [testing-framework/](../testing-framework/) - SAP-004 (generated test structure)
