@@ -813,7 +813,7 @@ GID=1000  # Run `id -g` to get your GID
 **Related SAPs**:
 - [SAP-003: Project Bootstrap](../project-bootstrap/) - chora-base project structure
 - [SAP-014: MCP Server Development](../mcp-server-development/) - MCP server patterns
-- SAP-018: chora-compose Meta (coming in Phase 2) - Comprehensive chora-compose documentation
+- [SAP-018: chora-compose Meta](../chora-compose-meta/) - Comprehensive chora-compose documentation
 
 **User Documentation**:
 - [How to Integrate chora-compose](../../user-docs/how-to/integrate-chora-compose.md) - Quick start guide

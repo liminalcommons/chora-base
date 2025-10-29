@@ -652,12 +652,12 @@ volumes:
 - [How to Integrate chora-compose](../../user-docs/how-to/integrate-chora-compose.md) - Quick start guide
 
 **Project Documentation** (`docs/project-docs/`):
-- Wave 3 Track 2 Summary (will be created in Phase 3) - SAP-017 creation context
+- [Wave 3 Track 2 Summary](../../project-docs/wave-3-track-2-summary.md) - SAP-017 creation context
 
 **SAP Documentation** (`docs/skilled-awareness/`):
 - [SAP-003: Project Bootstrap](../project-bootstrap/) - chora-base project structure
 - [SAP-014: MCP Server Development](../mcp-server-development/) - MCP server patterns
-- SAP-018: chora-compose Meta (coming in Phase 2) - Comprehensive chora-compose documentation
+- [SAP-018: chora-compose Meta](../chora-compose-meta/) - Comprehensive chora-compose documentation
 
 ### External References
 

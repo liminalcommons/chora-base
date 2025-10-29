@@ -2,16 +2,16 @@
 
 **Purpose**: Central registry of all capabilities packaged as SAPs in chora-base.
 
-**Last Updated**: 2025-10-28
+**Last Updated**: 2025-10-29
 **Framework Version**: 1.0.0
 
 ---
 
 ## Overview
 
-This index tracks all **16 capabilities** identified for SAP packaging across 4 roadmap phases + Wave 2 + Wave 3.
+This index tracks all **18 capabilities** identified for SAP packaging across 4 roadmap phases + Wave 2 + Wave 3.
 
-**Current Coverage**: 16/16 SAPs (100%) - ALL PHASES COMPLETE! 🎉
+**Current Coverage**: 18/18 SAPs (100%) - ALL PHASES COMPLETE! 🎉
 
 **Target Coverage**:
 - Phase 1: 3/14 (21%) ✅ Complete
@@ -42,6 +42,8 @@ This index tracks all **16 capabilities** identified for SAP packaging across 4 
 | SAP-013 | metrics-tracking | 1.0.0 | Draft | Phase 4 | [metrics-tracking/](metrics-tracking/) | SAP-000 |
 | SAP-014 | mcp-server-development | 1.0.0 | Active | Wave 3 | [mcp-server-development/](mcp-server-development/) | SAP-000, SAP-003, SAP-004, SAP-012 |
 | SAP-016 | link-validation-reference-management | 1.0.0 | Active | Wave 2 | [link-validation-reference-management/](link-validation-reference-management/) | None (foundational) |
+| SAP-017 | chora-compose-integration | 1.0.0 | Active | Wave 3 | [chora-compose-integration/](chora-compose-integration/) | SAP-003 |
+| SAP-018 | chora-compose-meta | 1.0.0 | Active | Wave 3 | [chora-compose-meta/](chora-compose-meta/) | SAP-017 |
 
 ---
 

@@ -5,6 +5,22 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [3.7.0] - 2025-10-29
+
+### Added
+- **SAP-017: chora-compose Integration** - Lightweight integration guide for Docker Compose with chora-base (~2,684 lines)
+- **SAP-018: chora-compose Meta** - Comprehensive meta-documentation for chora-compose architecture and patterns (~4,061 lines)
+- **Ecosystem Integration SAP Pattern** - Model for documenting external tool integrations (chora-compose, future ecosystem tools)
+- **External Linking Pattern** - Established pattern for linking to external repositories (github.com/liminalcommons/chora-compose)
+- **12+ Integration Patterns** - Cataloged patterns for chora-base, MCP servers, CI/CD, multi-project, production
+- **Sprint Plan Template** - Standardized template for future phase/track-sized work
+
+### Changed
+- **INDEX.md** - Updated from 16 to 18 SAPs (100% coverage maintained)
+- **SAP Structure** - Introduced two-SAP pattern: tactical (SAP-017) + strategic (SAP-018) for ecosystem tools
+
+**Total Impact**: +6,745 lines, first ecosystem integration documentation, external linking pattern established
+
 ## [3.6.0] - 2025-10-29
 
 ### Added
