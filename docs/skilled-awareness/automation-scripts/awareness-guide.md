@@ -9,12 +9,28 @@ audience: ai-agents
 # Awareness Guide: Automation Scripts
 
 **SAP ID**: SAP-008
+**Version**: 1.0.1
 **For**: AI Coding Agents
 **Purpose**: Workflows for using automation scripts via justfile
 
 ---
 
 ## 1. Quick Reference
+
+### When to Use This SAP
+
+**Use the Automation Scripts SAP when**:
+- Running pre-merge checks before creating PR (`just pre-merge`)
+- Releasing versions to PyPI (`just bump-patch`, `just publish-prod`)
+- Running tests and quality gates locally (`just test`, `just lint`)
+- Setting up or diagnosing development environment (`just diagnose`, `just install`)
+- Validating documentation (`just docs-validate`, `just docs-metrics`)
+
+**Don't use for**:
+- One-off bash commands - use Bash tool directly for simple operations
+- Non-justfile projects - this SAP is justfile-specific
+- Learning justfile syntax - use justfile official docs instead
+- CI/CD automation - GitHub Actions workflows call scripts directly, not via `just`
 
 ### Primary Interface
 
@@ -644,24 +660,273 @@ Available recipes:
 
 ---
 
-## 10. Related Documents
+## 10. Common Pitfalls
 
-**Scripts**:
-- [All scripts](/static-template/scripts/) - 25 automation scripts
+### Pitfall 1: Direct Script Invocation Instead of Justfile
 
-**Justfile**:
-- [justfile](/static-template/justfile) - Unified task interface
+**Scenario**: Agent calls scripts directly instead of using `just` interface.
 
-**Protocol**:
-- [protocol-spec.md](protocol-spec.md) - Script contracts and validation standards
+**Example**:
+```bash
+# Agent runs script directly:
+./scripts/pre-merge.sh
 
-**Related SAPs**:
-- [SAP-004: testing-framework](../testing-framework/) - Scripts run pytest
-- [SAP-006: quality-gates](../quality-gates/) - Scripts enforce quality
-- [SAP-007: documentation-framework](../documentation-framework/) - Documentation scripts
-- [SAP-012: development-lifecycle](../development-lifecycle/) - Scripts support lifecycle
+# Error: Permission denied (scripts not executable)
+# OR: Wrong working directory (scripts expect root)
+```
+
+**Fix**: Always use `just` commands:
+```bash
+# Correct approach:
+just pre-merge
+
+# Why just is better:
+# - Handles working directory automatically
+# - Provides tab completion
+# - Shows available tasks (just --list)
+# - Validates prerequisites before running
+```
+
+**Why it matters**: Direct script invocation breaks when paths change. Justfile is the stable interface (Protocol Section 2.1). Scripts may move locations, but `just` commands remain constant. Using `just` takes 0 extra seconds, debugging path issues takes 5-10 minutes.
+
+### Pitfall 2: Running Destructive Scripts Without Reading Prompts
+
+**Scenario**: Agent runs `just venv-clean` or `just rollback`, ignores confirmation prompt, loses data.
+
+**Example**:
+```bash
+# Agent runs destructive command:
+just venv-clean
+
+# Script prompts:
+# "Delete venv/ and recreate? This will remove all installed packages. (y/N)"
+
+# Agent sends "y" without informing user
+# Result: User's venv deleted, custom packages lost!
+```
+
+**Fix**: Always warn user before confirming destructive operations:
+```bash
+# Before running destructive command:
+# 1. Inform user what will happen:
+print("This will DELETE venv/ and recreate it. Custom packages will be lost.")
+
+# 2. Ask user for confirmation:
+print("Running: just venv-clean")
+print("Script will prompt for confirmation. Proceed? (y/N)")
+
+# 3. Only proceed if user confirms
+```
+
+**Why it matters**: Protocol Section 5 classifies scripts by safety. Destructive scripts (`venv-clean`, `rollback`, `publish-prod`) require human confirmation. One ignored prompt can delete hours of work. Always respect confirmation prompts.
+
+### Pitfall 3: Skipping Pre-Merge Checks Before Creating PR
+
+**Scenario**: Agent creates PR without running `just pre-merge`, CI fails, blocks development.
+
+**Example**:
+```bash
+# Agent workflow (WRONG):
+git add .
+git commit -m "feat: add feature"
+git push origin feature-branch
+# Create PR via gh pr create
+
+# Result: CI fails!
+# - Ruff violations: 12 errors
+# - Coverage: 78% (required 85%)
+# - Tests failing: 3 failures
+
+# Now PR blocks main, must fix urgently
+```
+
+**Fix**: Always run pre-merge checks BEFORE pushing:
+```bash
+# Correct workflow:
+git add .
+
+# BEFORE committing, run pre-merge:
+just pre-merge
+
+# If fails:
+# - Fix issues
+# - Re-run just pre-merge
+# - Repeat until passes
+
+# THEN commit and push:
+git commit -m "feat: add feature"
+git push origin feature-branch
+gh pr create
+```
+
+**Why it matters**: Pre-merge checks prevent CI failures. CI failure blocks all PRs, wasting team time. Running `just pre-merge` locally takes 2 minutes, fixing broken CI takes 10-30 minutes. Protocol Section 3.5 mandates pre-merge before PR.
+
+### Pitfall 4: Bumping Version Manually Instead of Using just bump-*
+
+**Scenario**: Agent edits `pyproject.toml` version manually, misses `src/__init__.py`, release fails.
+
+**Example**:
+```python
+# Agent manually edits pyproject.toml:
+# pyproject.toml
+[project]
+version = "1.2.1"  # Changed from 1.2.0
+
+# But forgets src/mypackage/__init__.py:
+__version__ = "1.2.0"  # STILL OLD VERSION!
+
+# Build package:
+just build
+
+# Publish:
+just publish-prod
+
+# Result: Package metadata says 1.2.1, but __version__ returns "1.2.0"
+# Users confused, health checks fail
+```
+
+**Fix**: Use `just bump-*` scripts that update ALL version locations:
+```bash
+# Correct approach:
+just bump-patch  # or bump-minor, bump-major
+
+# Output shows all files updated:
+# Updated:
+#   - pyproject.toml (1.2.0 → 1.2.1)
+#   - src/mypackage/__init__.py (1.2.0 → 1.2.1)
+#   - docs/conf.py (1.2.0 → 1.2.1)
+
+# Now ALL versions consistent
+```
+
+**Why it matters**: Version inconsistency breaks deployments. Health checks read `__version__`, package metadata reads `pyproject.toml`. Mismatch causes failures. Protocol Section 4.1 documents version bump script guarantees all files updated.
+
+### Pitfall 5: Not Understanding Script Safety Classifications
+
+**Scenario**: Agent treats all scripts as safe, runs destructive script casually, loses data.
+
+**Example**:
+```bash
+# Agent sees failing test, thinks venv is corrupted
+# Runs without thinking:
+just venv-clean
+
+# Prompt appears:
+# "Delete venv/? (y/N)"
+
+# Agent auto-confirms "y"
+# Result: venv deleted, including:
+# - Custom packages user installed manually
+# - Debug tools (ipdb, etc.)
+# - Takes 5-10 minutes to recreate
+```
+
+**Fix**: Check script classification BEFORE running (Protocol Section 5):
+```bash
+# Script Safety Classifications:
+
+# Read-Only (Safe anytime):
+just check-env      # ✅ No changes
+just smoke          # ✅ No changes
+just diagnose       # ✅ No changes
+
+# Idempotent (Safe to re-run):
+just install        # ✅ Skips if deps installed
+just test           # ✅ No destructive changes
+just pre-merge      # ✅ Read-only checks
+
+# Destructive (Require confirmation):
+just venv-clean     # ⚠️ DELETES venv/
+just rollback       # ⚠️ STASHES uncommitted changes
+just publish-prod   # ⚠️ PUBLISHES to PyPI (irreversible)
+
+# Before running ⚠️ script:
+# 1. Understand what it destroys
+# 2. Warn user
+# 3. Get explicit confirmation
+# 4. Respect script's confirmation prompt
+```
+
+**Why it matters**: Destructive scripts cause data loss. `venv-clean` deletes venv/, `rollback` stashes changes, `publish-prod` publishes to PyPI (can't unpublish). Understanding classification prevents accidents. Reading classification takes 10 seconds, recovering from data loss takes 10-60 minutes.
+
+---
+
+## 11. Related Content
+
+### Within This SAP (skilled-awareness/automation-scripts/)
+
+- [capability-charter.md](capability-charter.md) - Problem statement, scope, outcomes for SAP-008
+- [protocol-spec.md](protocol-spec.md) - Complete technical contract (script specs, safety classifications)
+- [adoption-blueprint.md](adoption-blueprint.md) - Step-by-step guide for using justfile
+- [ledger.md](ledger.md) - Automation script adoption tracking, version history
+- **This document** (awareness-guide.md) - Agent workflows and script usage patterns
+
+### Developer Process (dev-docs/)
+
+**Workflows**:
+- [dev-docs/workflows/TDD_WORKFLOW.md](/dev-docs/workflows/TDD_WORKFLOW.md) - Test-driven development (`just test` integration)
+- [dev-docs/workflows/release-workflow.md](/dev-docs/workflows/release-workflow.md) - Release process using `just bump-*`, `just publish-*`
+
+**Tools**:
+- [dev-docs/tools/pytest.md](/dev-docs/tools/pytest.md) - Testing tool (`just test`, `just smoke`)
+- [dev-docs/tools/ruff.md](/dev-docs/tools/ruff.md) - Linting (`just lint`, `just lint-fix`)
+- [dev-docs/tools/mypy.md](/dev-docs/tools/mypy.md) - Type checking (`just type-check`)
+
+**Development Guidelines**:
+- [dev-docs/development/scripting-standards.md](/dev-docs/development/scripting-standards.md) - Standards for writing automation scripts
+
+### Project Lifecycle (project-docs/)
+
+**Implementation Components**:
+- [static-template/justfile](/static-template/justfile) - Unified task interface (all `just` commands)
+- [static-template/scripts/](/static-template/scripts/) - 25 automation scripts
+- [static-template/pyproject.toml](/static-template/pyproject.toml) - Project configuration
+
+**Guides**:
+- [project-docs/guides/automation-setup.md](/project-docs/guides/automation-setup.md) - Setting up justfile in projects
+- [project-docs/guides/release-process.md](/project-docs/guides/release-process.md) - Complete release process using scripts
+
+**Audits & Releases**:
+- [project-docs/audits/](/project-docs/audits/) - SAP audits including SAP-008 validation
+- [project-docs/releases/](/project-docs/releases/) - Version release documentation
+
+### User Guides (user-docs/)
+
+**Getting Started**:
+- [user-docs/guides/using-justfile.md](/user-docs/guides/using-justfile.md) - Introduction to justfile
+
+**Tutorials**:
+- [user-docs/tutorials/first-release.md](/user-docs/tutorials/first-release.md) - Release your first version (uses `just bump-*`, `just publish-*`)
+- [user-docs/tutorials/debugging-scripts.md](/user-docs/tutorials/debugging-scripts.md) - Debug automation script failures
+
+**Reference**:
+- [user-docs/reference/justfile-reference.md](/user-docs/reference/justfile-reference.md) - Complete justfile command reference
+- [user-docs/reference/script-reference.md](/user-docs/reference/script-reference.md) - Individual script documentation
+
+### Other SAPs (skilled-awareness/)
+
+**Core Framework**:
+- [sap-framework/](../sap-framework/) - SAP-000 (defines SAP structure)
+- [chora-base/protocol-spec.md](../chora-base/protocol-spec.md) - SAP-002 Meta-SAP Section 3.2.6 (documents SAP-008)
+
+**Dependent Capabilities**:
+- [testing-framework/](../testing-framework/) - SAP-004 (`just test` runs tests per SAP-004 standards)
+- [quality-gates/](../quality-gates/) - SAP-006 (`just lint`, `just type-check` enforce SAP-006 gates)
+- [ci-cd-workflows/](../ci-cd-workflows/) - SAP-005 (GitHub Actions call scripts directly)
+- [project-bootstrap/](../project-bootstrap/) - SAP-003 (generates justfile and scripts)
+
+**Supporting Capabilities**:
+- [documentation-framework/](../documentation-framework/) - SAP-007 (`just docs-validate` validates docs per SAP-007)
+- [metrics-tracking/](../metrics-tracking/) - SAP-013 (scripts track metrics)
+
+**Core Documentation**:
+- [README.md](/README.md) - chora-base overview
+- [AGENTS.md](/AGENTS.md) - Agent guidance for using chora-base
+- [CHANGELOG.md](/CHANGELOG.md) - Version history including SAP-008 updates
+- [SKILLED_AWARENESS_PACKAGE_PROTOCOL.md](/SKILLED_AWARENESS_PACKAGE_PROTOCOL.md) - Root SAP protocol
 
 ---
 
 **Version History**:
+- **1.0.1** (2025-10-28): Added "When to Use" section, "Common Pitfalls" with Wave 2 learnings (5 scenarios: direct script invocation, destructive prompts, skipping pre-merge, manual version bumps, safety classifications), enhanced "Related Content" with 4-domain coverage (dev-docs/, project-docs/, user-docs/, skilled-awareness/)
 - **1.0.0** (2025-10-28): Initial awareness guide for automation-scripts SAP

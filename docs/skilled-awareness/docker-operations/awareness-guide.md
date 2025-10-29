@@ -8,9 +8,9 @@ type: awareness-guide
 
 # Awareness Guide: Docker Operations
 
-**SAP ID**: SAP-011
+**SAP ID**: SAP-010
 **Capability Name**: docker-operations
-**Version**: 1.0.0
+**Version**: 1.0.1
 **Last Updated**: 2025-10-28
 **Audience**: AI agents (Claude Code, Aider, Cursor)
 
@@ -18,17 +18,20 @@ type: awareness-guide
 
 ## 1. Overview
 
-This guide provides **agent workflows** for Docker operations in chora-base projects.
+### When to Use This SAP
 
-**When to use Docker**:
-- ✅ Production deployment (MCP servers, web services)
-- ✅ CI/CD testing (isolated environment, avoid system conflicts)
-- ✅ Multi-architecture builds (Apple Silicon + x86)
-- ✅ Local integration testing (with docker-compose)
+**Use the Docker Operations SAP when**:
+- Production deployment of MCP servers or web services (Docker provides isolation)
+- CI/CD testing in isolated environment (avoid system conflicts, reproducible builds)
+- Multi-architecture builds for Apple Silicon (ARM64) and x86 (AMD64)
+- Local integration testing with docker-compose (orchestrate multiple services)
+- Optimizing Docker images (reduce size, improve build performance)
 
-**When NOT to use Docker**:
-- ❌ Local development (use venv instead - faster iteration)
-- ❌ Quick prototyping (overhead not justified)
+**Don't use for**:
+- Local development - use venv instead for faster iteration (no Docker rebuild overhead)
+- Quick prototyping - Docker overhead not justified for throwaway code
+- Simple scripts - containerization adds complexity without benefit
+- Projects without deployment needs - Docker is for deployment, not development
 
 ---
 
@@ -511,7 +514,256 @@ docker logs <container>
 
 ---
 
-## 6. Integration with Other SAPs
+## 6. Common Pitfalls
+
+### Pitfall 1: Building Without .dockerignore
+
+**Scenario**: Agent builds Docker image without creating `.dockerignore`, sends huge build context (includes .git/, venv/, docs/).
+
+**Example**:
+```bash
+# Agent runs docker build:
+docker build -t myproject:latest .
+
+# Output shows:
+# Sending build context to Docker daemon: 850MB...
+
+# Build takes 5 minutes!
+# Image size: 950MB
+
+# Why so slow/large? Build context includes:
+# - .git/ (300MB)
+# - venv/ (200MB)
+# - docs/ (150MB)
+# - node_modules/ (200MB)
+```
+
+**Fix**: Create .dockerignore BEFORE building:
+```bash
+# Create .dockerignore:
+cat > .dockerignore <<EOF
+.git/
+venv/
+__pycache__/
+*.pyc
+.pytest_cache/
+docs/
+*.md
+!README.md
+node_modules/
+.DS_Store
+.vscode/
+.idea/
+EOF
+
+# Now rebuild:
+docker build -t myproject:latest .
+# Sending build context: 15MB (57x smaller!)
+# Build time: 30 seconds (10x faster!)
+```
+
+**Why it matters**: Build context affects build speed and image size. Protocol Section 9.2 mandates .dockerignore. Without it, builds take 5-10 minutes instead of 30-60 seconds. Large context also increases image size unnecessarily.
+
+### Pitfall 2: Not Using Multi-Stage Builds
+
+**Scenario**: Agent uses single-stage Dockerfile, includes build tools in production image, creates 500MB+ images.
+
+**Example**:
+```dockerfile
+# Single-stage Dockerfile (WRONG):
+FROM python:3.12
+WORKDIR /app
+
+# Install build tools (100MB)
+RUN apt-get update && apt-get install -y gcc build-essential
+
+# Copy all code
+COPY . .
+
+# Install dependencies
+RUN pip install -e .
+
+# Run app
+CMD ["python", "-m", "mypackage"]
+
+# Result: Image size 520MB (includes gcc, build-essential)
+```
+
+**Fix**: Use multi-stage build (builder + runtime):
+```dockerfile
+# Multi-stage Dockerfile (CORRECT):
+
+# Stage 1: Builder (includes build tools)
+FROM python:3.12 as builder
+WORKDIR /app
+COPY pyproject.toml .
+RUN pip wheel --no-cache-dir --wheel-dir /app/wheels .
+
+# Stage 2: Runtime (only runtime dependencies)
+FROM python:3.12-slim
+WORKDIR /app
+COPY --from=builder /app/wheels /wheels
+RUN pip install --no-cache-dir /wheels/*
+COPY src/ /app/src/
+CMD ["python", "-m", "mypackage"]
+
+# Result: Image size 180MB (65% smaller!)
+```
+
+**Why it matters**: Multi-stage builds separate build tools from runtime. Protocol Section 11.1 mandates multi-stage for production. Single-stage images are 2-3x larger, slower to pull, larger attack surface.
+
+### Pitfall 3: Running as Root User
+
+**Scenario**: Agent creates Dockerfile without non-root user, container runs as root (UID 0), security issue.
+
+**Example**:
+```dockerfile
+# Dockerfile without non-root user (WRONG):
+FROM python:3.12-slim
+WORKDIR /app
+COPY . .
+RUN pip install -e .
+CMD ["python", "-m", "mypackage"]
+
+# Container runs as root:
+$ docker exec mycontainer whoami
+# root
+
+# Security issues:
+# - If container compromised, attacker has root
+# - File permissions issues on volume mounts
+```
+
+**Fix**: Create and use non-root user (UID 1000):
+```dockerfile
+# Dockerfile with non-root user (CORRECT):
+FROM python:3.12-slim
+
+# Create non-root user
+RUN useradd --create-home --uid 1000 appuser
+
+WORKDIR /app
+COPY . .
+RUN pip install -e .
+
+# Change ownership
+RUN chown -R appuser:appuser /app
+
+# Switch to non-root user
+USER appuser
+
+CMD ["python", "-m", "mypackage"]
+
+# Container runs as appuser (UID 1000):
+$ docker exec mycontainer whoami
+# appuser
+```
+
+**Why it matters**: Running as root violates security best practices. Protocol Section 11.3 mandates non-root user (UID 1000). Root containers have full system access if compromised. Volume permissions also fail (root writes, user can't read).
+
+### Pitfall 4: Not Testing Locally Before CI
+
+**Scenario**: Agent pushes Dockerfile changes to GitHub, CI fails, wastes 5-10 minutes waiting for CI feedback.
+
+**Example**:
+```bash
+# Agent modifies Dockerfile:
+# - Changes Python version 3.11 → 3.12
+# - Updates dependencies
+
+# Agent commits and pushes:
+git add Dockerfile
+git commit -m "update: upgrade Python to 3.12"
+git push origin feature-branch
+
+# Wait 5 minutes for CI...
+# CI fails: "Module 'xyz' not compatible with Python 3.12"
+
+# Now must:
+# - Fix Dockerfile
+# - Push again
+# - Wait another 5 minutes for CI
+
+# Total wasted time: 10-15 minutes
+```
+
+**Fix**: Test Docker build LOCALLY before pushing:
+```bash
+# Before committing Dockerfile changes:
+
+# 1. Build locally:
+docker build -t test:latest .
+# Shows errors immediately (30 seconds)
+
+# 2. Test image:
+docker run --rm test:latest python --version
+# Verify: Python 3.12.0
+
+# 3. Run tests in Docker:
+docker build -t test:test -f Dockerfile.test .
+docker run --rm test:test
+# Tests pass locally
+
+# 4. NOW commit and push:
+git add Dockerfile
+git commit -m "update: upgrade Python to 3.12"
+git push origin feature-branch
+
+# CI will pass (already tested locally)
+```
+
+**Why it matters**: Local Docker testing provides instant feedback. Protocol Section 2.2 workflow includes local testing. Waiting for CI wastes 5-10 minutes per iteration. Local testing takes 30-60 seconds.
+
+### Pitfall 5: Forgetting Volume Permissions (UID Mismatch)
+
+**Scenario**: Agent uses docker-compose with volume mounts, container can't write to volumes because of UID mismatch.
+
+**Example**:
+```yaml
+# docker-compose.yml
+services:
+  app:
+    image: myproject:latest
+    volumes:
+      - ./logs:/app/logs  # Host directory
+
+# Agent runs:
+docker-compose up -d
+
+# Container tries to write log:
+# Error: Permission denied writing to /app/logs/app.log
+
+# Why?
+# - Host directory owned by user (UID 501 on macOS)
+# - Container runs as appuser (UID 1000)
+# - UID 501 ≠ UID 1000 → Permission denied!
+```
+
+**Fix**: Set correct permissions on host volumes BEFORE starting:
+```bash
+# Before docker-compose up:
+
+# 1. Create directories:
+mkdir -p logs data .chora/memory
+
+# 2. Set ownership to UID 1000 (container user):
+sudo chown -R 1000:1000 logs/ data/ .chora/memory/
+
+# 3. Verify:
+ls -lan logs/
+# drwxr-xr-x  2 1000 1000  64 Oct 28 12:00 logs/
+
+# 4. NOW start containers:
+docker-compose up -d
+
+# Container can now write to volumes (UID match)
+```
+
+**Why it matters**: UID mismatch breaks volume writes. Protocol Section 11.3 specifies UID 1000 for consistency. Permission errors block development, require sudo to fix. Setting permissions correctly takes 1 minute, debugging permission errors takes 10-30 minutes.
+
+---
+
+## 7. Integration with Other SAPs
 
 ### SAP-003 (project-bootstrap)
 
@@ -543,22 +795,85 @@ volumes:
 
 ---
 
-## 7. Related Documents
+## 8. Related Content
 
-**This SAP (docker-operations)**:
-- [capability-charter.md](capability-charter.md) - Problem statement, ROI
-- [protocol-spec.md](protocol-spec.md) - Technical contracts
-- [adoption-blueprint.md](adoption-blueprint.md) - Installation guide
-- [ledger.md](ledger.md) - Adoption tracking
+### Within This SAP (skilled-awareness/docker-operations/)
 
-**Docker Artifacts**:
-- [Dockerfile](../../../static-template/Dockerfile)
-- [Dockerfile.test](../../../static-template/Dockerfile.test)
-- [docker-compose.yml](../../../static-template/docker-compose.yml)
-- [.dockerignore](../../../static-template/.dockerignore)
-- [DOCKER_BEST_PRACTICES.md](../../../static-template/DOCKER_BEST_PRACTICES.md)
+- [capability-charter.md](capability-charter.md) - Problem statement, scope, outcomes for SAP-010
+- [protocol-spec.md](protocol-spec.md) - Complete technical contract (Dockerfile specs, docker-compose config)
+- [adoption-blueprint.md](adoption-blueprint.md) - Step-by-step guide for Docker setup
+- [ledger.md](ledger.md) - Docker adoption tracking, version history
+- **This document** (awareness-guide.md) - Agent workflows for Docker operations
+
+### Developer Process (dev-docs/)
+
+**Workflows**:
+- [dev-docs/workflows/docker-development.md](/dev-docs/workflows/docker-development.md) - Developing with Docker
+- [dev-docs/workflows/multi-arch-builds.md](/dev-docs/workflows/multi-arch-builds.md) - Multi-architecture build process
+
+**Tools**:
+- [dev-docs/tools/docker.md](/dev-docs/tools/docker.md) - Docker CLI reference
+- [dev-docs/tools/docker-compose.md](/dev-docs/tools/docker-compose.md) - docker-compose usage
+- [dev-docs/tools/buildx.md](/dev-docs/tools/buildx.md) - Docker buildx for multi-platform
+
+**Development Guidelines**:
+- [dev-docs/development/dockerfile-standards.md](/dev-docs/development/dockerfile-standards.md) - Dockerfile best practices
+- [dev-docs/development/container-security.md](/dev-docs/development/container-security.md) - Container security guidelines
+
+### Project Lifecycle (project-docs/)
+
+**Implementation Components**:
+- [static-template/Dockerfile](/static-template/Dockerfile) - Production Dockerfile (multi-stage)
+- [static-template/Dockerfile.test](/static-template/Dockerfile.test) - Test Dockerfile
+- [static-template/docker-compose.yml](/static-template/docker-compose.yml) - docker-compose configuration
+- [static-template/.dockerignore](/static-template/.dockerignore) - Docker build context exclusions
+- [static-template/DOCKER_BEST_PRACTICES.md](/static-template/DOCKER_BEST_PRACTICES.md) - Docker best practices guide
+
+**Guides**:
+- [project-docs/guides/docker-setup.md](/project-docs/guides/docker-setup.md) - Setting up Docker in projects
+- [project-docs/guides/container-deployment.md](/project-docs/guides/container-deployment.md) - Deploying containers
+
+**Audits & Releases**:
+- [project-docs/audits/](/project-docs/audits/) - SAP audits including SAP-010 validation
+- [project-docs/releases/](/project-docs/releases/) - Version release documentation
+
+### User Guides (user-docs/)
+
+**Getting Started**:
+- [user-docs/guides/docker-basics.md](/user-docs/guides/docker-basics.md) - Docker basics for chora-base
+
+**Tutorials**:
+- [user-docs/tutorials/building-docker-images.md](/user-docs/tutorials/building-docker-images.md) - Build Docker images
+- [user-docs/tutorials/docker-compose-local.md](/user-docs/tutorials/docker-compose-local.md) - Local development with docker-compose
+- [user-docs/tutorials/optimizing-images.md](/user-docs/tutorials/optimizing-images.md) - Optimize Docker image size
+
+**Reference**:
+- [user-docs/reference/dockerfile-reference.md](/user-docs/reference/dockerfile-reference.md) - Dockerfile reference
+- [user-docs/reference/docker-compose-reference.md](/user-docs/reference/docker-compose-reference.md) - docker-compose.yml reference
+
+### Other SAPs (skilled-awareness/)
+
+**Core Framework**:
+- [sap-framework/](../sap-framework/) - SAP-000 (defines SAP structure)
+- [chora-base/protocol-spec.md](../chora-base/protocol-spec.md) - SAP-002 Meta-SAP Section 3.2.8 (documents SAP-010)
+
+**Dependent Capabilities**:
+- [project-bootstrap/](../project-bootstrap/) - SAP-003 (generates Docker files)
+- [ci-cd-workflows/](../ci-cd-workflows/) - SAP-005 (CI builds Docker images)
+- [automation-scripts/](../automation-scripts/) - SAP-008 (`just docker-build`, `just docker-test`)
+
+**Supporting Capabilities**:
+- [memory-system/](../memory-system/) - SAP-009 (volume mounts for .chora/memory/)
+- [quality-gates/](../quality-gates/) - SAP-006 (Dockerfile linting)
+
+**Core Documentation**:
+- [README.md](/README.md) - chora-base overview
+- [AGENTS.md](/AGENTS.md) - Agent guidance for using chora-base
+- [CHANGELOG.md](/CHANGELOG.md) - Version history including SAP-010 updates
+- [SKILLED_AWARENESS_PACKAGE_PROTOCOL.md](/SKILLED_AWARENESS_PACKAGE_PROTOCOL.md) - Root SAP protocol
 
 ---
 
 **Version History**:
+- **1.0.1** (2025-10-28): Reformatted "When to Use" section, added "Common Pitfalls" with Wave 2 learnings (5 scenarios: .dockerignore, multi-stage builds, root user, local testing, volume permissions), enhanced "Related Content" with 4-domain coverage (dev-docs/, project-docs/, user-docs/, skilled-awareness/)
 - **1.0.0** (2025-10-28): Initial awareness guide for docker-operations SAP
