@@ -2,7 +2,7 @@
 
 ## Quick Lookup
 
-All configuration options for `copier copy gh:liminalcommons/chora-base`
+Configuration prompts surfaced by `python setup.py /path/to/project`
 
 ---
 
@@ -73,7 +73,7 @@ All configuration options for `copier copy gh:liminalcommons/chora-base`
 ### Minimal MCP Server
 
 ```bash
-copier copy gh:liminalcommons/chora-base my-project
+python setup.py my-project
 ```
 
 **Answers:**
@@ -95,7 +95,7 @@ include_justfile: false       # Minimal
 ### Full-Featured MCP Server (Recommended)
 
 ```bash
-copier copy gh:liminalcommons/chora-base my-project
+python setup.py my-project
 ```
 
 **Answers:**
@@ -121,7 +121,7 @@ include_justfile: true
 ### Python Library
 
 ```bash
-copier copy gh:liminalcommons/chora-base my-library
+python setup.py my-library
 ```
 
 **Answers:**

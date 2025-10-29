@@ -1,0 +1,77 @@
+{
+  "type": "coordination",
+  "request_id": "coord-001",
+  "title": "Create Health Endpoint Template for MCP Servers",
+  "created": "2025-11-11",
+  "from_repo": "ecosystem-manifest",
+  "to_repo": "chora-base",
+  "priority": "P0",
+  "urgency": "blocks_sprint",
+  "blocks": [
+    "coord-002 (ecosystem-manifest health spec)",
+    "coord-003 (mcp-orchestration monitoring)",
+    "Waypoint W3 validation"
+  ],
+  "requested_by": "Ecosystem Team",
+  "requested_delivery": "Week 10 (2025-11-25)",
+  "context": {
+    "waypoint": "W3",
+    "related_rfc": "0001-health-monitoring-rfc.md",
+    "related_adr": "0001-health-check-format-adr.md",
+    "background": "RFC 0001 and ADR 0001 define health monitoring architecture. chora-base needs to provide a reusable health endpoint template that all MCP servers can include. This is the foundation for W3 - without it, no servers can expose health checks."
+  },
+  "deliverables": [
+    "Health endpoint template in static-template/templates/mcp-server/src/health.py",
+    "Health check JSON schema in static-template/templates/mcp-server/schemas/health-check-v1.0.json",
+    "Documentation in HEALTH_ENDPOINT.md (how-to guide for implementers)",
+    "Example usage in template README",
+    "Tests in static-template/templates/mcp-server/tests/test_health.py"
+  ],
+  "acceptance_criteria": [
+    "Template implements ADR 0001 health check schema exactly",
+    "Health endpoint returns valid JSON matching schema",
+    "Unit tests achieve >90% coverage",
+    "Documentation includes FastMCP integration example",
+    "Template generates valid health responses for ok/degraded/down states",
+    "Version bumped to v3.5.0 (new capability)"
+  ],
+  "dependencies": [
+    "ADR 0001 must be finalized (status: accepted)"
+  ],
+  "estimated_effort": "4-8 hours",
+  "trace_id": "ecosystem-w3-health-monitoring",
+  "decision": {
+    "date": "2025-11-12",
+    "outcome": "this_sprint",
+    "sprint": "Sprint 4 (Week 7-8)",
+    "decision_makers": [
+      "Victor Piper"
+    ],
+    "rationale": "P0 blocker for W3. chora-base has capacity and this aligns with template evolution roadmap. Clear requirements from ADR 0001 make this ready to implement."
+  },
+  "fulfillment": {
+    "completed_date": "2025-11-18",
+    "task_id": "task-001",
+    "pr_links": [
+      "https://github.com/liminalcommons/chora-base/pull/42"
+    ],
+    "delivered_artifacts": [
+      "static-template/templates/mcp-server/src/health.py (148 lines)",
+      "static-template/templates/mcp-server/schemas/health-check-v1.0.json",
+      "static-template/templates/mcp-server/docs/HEALTH_ENDPOINT.md",
+      "static-template/templates/mcp-server/tests/test_health.py (95% coverage)"
+    ],
+    "notification_sent": true
+  },
+  "related": {
+    "proposals": [
+      "prop-001-health-monitoring.md"
+    ],
+    "rfcs": [
+      "0001-health-monitoring-rfc.md"
+    ],
+    "adrs": [
+      "0001-health-check-format-adr.md"
+    ]
+  }
+}

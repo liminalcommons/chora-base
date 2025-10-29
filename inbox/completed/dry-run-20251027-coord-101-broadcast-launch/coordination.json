@@ -1,0 +1,32 @@
+{
+  "type": "coordination",
+  "request_id": "coord-101",
+  "title": "Coordinate inbox SAP broadcast launch",
+  "created": "2025-10-27",
+  "from_repo": "ecosystem-manifest",
+  "to_repo": "chora-base",
+  "priority": "P1",
+  "urgency": "next_sprint",
+  "blocks": [
+    "ecosystem-manifest Sprint 10 planning"
+  ],
+  "requested_by": "Ecosystem Coordination Guild",
+  "requested_delivery": "2025-11-03",
+  "context": {
+    "waypoint": "W3",
+    "background": "Need consistent messaging before broader inbox rollout."
+  },
+  "deliverables": [
+    "Draft weekly broadcast template aligned with inbox SAP",
+    "Update ECOSYSTEM_STATUS.yaml with upcoming broadcast details"
+  ],
+  "acceptance_criteria": [
+    "Broadcast template reviewed by Victor",
+    "Ledger references weekly status cadence"
+  ],
+  "dependencies": [
+    "Inbox SAP document set ready"
+  ],
+  "estimated_effort": "4-6 hours",
+  "trace_id": "sap-inbox-dryrun-20251027"
+}

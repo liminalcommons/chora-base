@@ -82,7 +82,7 @@ uri = make_resource_uri("templates", "daily-report.md")
 ### Rule 1: Use Your Project Slug (Default)
 
 ```yaml
-# copier.yml answers
+# setup.py prompts
 project_slug: my-awesome-server
 mcp_namespace: myawesomeserver  # Auto-derived (hyphens removed)
 ```
@@ -438,7 +438,7 @@ git diff
 grep "your_namespace" docs/standards/CHORA_MCP_CONVENTIONS_v1.0.md
 
 # If collision found, choose new namespace
-copier update --vcs-ref=v1.8.0  # Re-run with new namespace
+# Update namespace references (pyproject.toml, src/{{ package_name }}/mcp/tools.py, etc.)
 
 # Update and document
 vim NAMESPACES.md  # Document new namespace

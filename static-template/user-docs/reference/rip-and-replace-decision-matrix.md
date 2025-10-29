@@ -65,7 +65,7 @@ When to use rip-and-replace vs cherry-pick adoption strategy
 
 **Scenario:** Starting new MCP server
 - ❌ Has: Nothing (greenfield)
-- **Decision:** `copier copy gh:liminalcommons/chora-base`
+- **Decision:** `python setup.py /path/to/new-project`
 
 **Why:**
 - Fastest path to production-ready structure
@@ -106,7 +106,7 @@ When to use rip-and-replace vs cherry-pick adoption strategy
 
 1. Backup (10 min) - Low complexity
 2. Extract Assets (15 min) - Low complexity
-3. Generate Template (15 min) - Low complexity
+3. Run Blueprint Generator (15 min) - Low complexity (`python setup.py`)
 4. Migrate Code (20 min) - Medium complexity
 5. Merge Hybrid Files (30 min) - **High complexity** (pyproject.toml, README.md)
 6. Adapt Features (20 min) - Medium complexity

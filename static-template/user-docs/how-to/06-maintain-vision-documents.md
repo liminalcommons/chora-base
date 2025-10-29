@@ -109,9 +109,7 @@ If you only need 2-3 waves:
 ```bash
 # Generate a test project to verify vision renders correctly
 cd /tmp/
-copier copy path/to/your-project/template/ test-vision-check \
-  --data include_vision_docs=true \
-  --defaults
+python /path/to/chora-base/setup.py test-vision-check
 
 # Check rendered vision
 cat test-vision-check/dev-docs/vision/CAPABILITY_EVOLUTION.md | head -100

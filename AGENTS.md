@@ -8,18 +8,143 @@
 
 ## Project Overview
 
-**chora-base** is a Copier-based Python project template designed for LLM-intelligent development. It generates production-ready Python projects with built-in support for AI coding agents, comprehensive documentation, and quality gates.
+**chora-base** is a blueprint-driven Python project template designed for LLM-intelligent development. It generates production-ready Python projects with built-in support for AI coding agents, comprehensive documentation, and quality gates without relying on Copier.
 
 **Repository Type**: Template repository (generates other projects)
 **Primary Users**: Human developers and AI agents generating/maintaining Python projects
-**Key Technology**: [Copier](https://copier.readthedocs.io/) (Jinja2-based project generator)
+**Key Technology Stack**: Blueprint bundles (`blueprints/`), static scaffolding (`static-template/`), and Skilled Awareness Packages (SAP) for capability governance
 
 ### Key Concepts
 
 - **Template vs Generated Project**: chora-base is the template; generated projects are adopters
-- **Jinja2 Templating**: Files ending in `.jinja` become templated files in generated projects
-- **Conditional Features**: Features controlled via `copier.yml` questions (e.g., `include_docker`, `include_memory_system`)
-- **Upgrade Path**: Generated projects update via `copier update` (smart merge, not overwrite)
+- **Blueprint Generation**: `.blueprint` files define how adopters bootstrap projects via scripted or agent-led workflows
+- **Static Assets**: `static-template/` contains ready-to-copy files used by blueprints
+- **Skilled Awareness Packages (SAPs)**: Each major capability ships with charter, protocol, awareness guide, adoption blueprint, and ledger entry to guide humans and AI agents
+- **Upgrade Path**: Adopters follow SAP adoption blueprints and ledger/broadcast updates to stay aligned with the template
+
+---
+
+## Skilled Awareness Packages (SAPs)
+
+### Overview
+
+chora-base packages all major capabilities as **Skilled Awareness Packages (SAPs)** — complete, installable bundles with clear contracts and agent-executable blueprints.
+
+**Why SAPs Matter**:
+- Clear contracts (explicit guarantees, no assumptions)
+- Predictable upgrades (sequential adoption, migration blueprints)
+- Machine-readable (AI agents can parse and execute)
+- Governance (versioning, change management, tracking)
+
+### SAP Structure
+
+Every SAP includes:
+
+1. **5 Core Artifacts**:
+   - Capability Charter (problem, scope, outcomes)
+   - Protocol Specification (technical contract)
+   - Awareness Guide (agent execution patterns)
+   - Adoption Blueprint (installation steps)
+   - Traceability Ledger (adopter tracking)
+
+2. **Infrastructure** (schemas, templates, configs, directories)
+
+3. **Testing Layer** (optional validation)
+
+### Key Documents
+
+**Root Protocol**: [SKILLED_AWARENESS_PACKAGE_PROTOCOL.md](SKILLED_AWARENESS_PACKAGE_PROTOCOL.md)
+- Defines what SAPs are and how they work
+- Installation pattern (blueprint-based, not scripts)
+- Integration with DDD → BDD → TDD
+- Scope levels (Vision & Strategy, Planning, Implementation)
+
+**SAP Index**: [docs/skilled-awareness/INDEX.md](docs/skilled-awareness/INDEX.md)
+- Registry of all 14 capabilities
+- Current coverage: 2/14 (14%)
+- Target coverage: 100% by Phase 4 (2026-05)
+- Dependencies, priorities, effort estimates
+
+**Framework SAP**: [docs/skilled-awareness/sap-framework/](docs/skilled-awareness/sap-framework/)
+- Meta-SAP defining the SAP pattern itself
+- Complete reference implementation
+- Templates and guidelines
+
+**Reference Implementation**: [docs/skilled-awareness/inbox/](docs/skilled-awareness/inbox/)
+- Pilot SAP for cross-repo coordination
+- Complete example with infrastructure and testing
+
+### Creating SAPs
+
+**When to Create SAP**:
+- New major capability (e.g., testing-framework, docker-operations)
+- Capability needs structured governance
+- Multiple adopters will use capability
+- Clear upgrade path needed
+
+**Process**:
+1. Read: [docs/skilled-awareness/document-templates.md](docs/skilled-awareness/document-templates.md)
+2. Create directory: `docs/skilled-awareness/<capability-name>/`
+3. Create 5 artifacts using templates
+4. Add infrastructure (schemas, templates, etc.)
+5. Update SAP Index: [docs/skilled-awareness/INDEX.md](docs/skilled-awareness/INDEX.md)
+6. Follow DDD → BDD → TDD:
+   - DDD: Create Charter + Protocol
+   - BDD: Define acceptance criteria
+   - TDD: Implement infrastructure + Awareness + Blueprint
+
+**Time Estimate**: 8-20 hours per SAP (varies by complexity)
+
+### Installing SAPs
+
+**Process**:
+1. Find SAP in INDEX.md
+2. Navigate to SAP directory (e.g., `docs/skilled-awareness/inbox/`)
+3. Read `adoption-blueprint.md`
+4. Execute installation steps sequentially
+5. Run validation commands
+6. Update `ledger.md` (add adopter record)
+
+**Example**:
+```bash
+# Find SAP
+cat docs/skilled-awareness/INDEX.md
+
+# Read blueprint
+cat docs/skilled-awareness/inbox/adoption-blueprint.md
+
+# Execute steps (agent-executable markdown instructions)
+# ... follow blueprint step-by-step ...
+
+# Validate
+ls inbox/coordination/CAPABILITIES && echo "✅ Installed"
+```
+
+### SAP Roadmap
+
+**Phase 1** (2025-10 → 2025-11): Framework Hardening
+- ✅ SAP-000 (sap-framework)
+- ✅ SAP-001 (inbox-coordination, pilot)
+- 🔄 SAP-002 (chora-base-meta)
+
+**Phase 2** (2025-11 → 2026-01): Core Capabilities
+- SAP-003 (project-bootstrap)
+- SAP-004 (testing-framework)
+- SAP-005 (ci-cd-workflows)
+- SAP-006 (quality-gates)
+
+**Phase 3** (2026-01 → 2026-03): Extended Capabilities
+- SAP-007 (documentation-framework)
+- SAP-008 (automation-scripts)
+- SAP-009 (agent-awareness)
+- SAP-010 (memory-system / A-MEM)
+- SAP-011 (docker-operations)
+- SAP-012 (development-lifecycle)
+
+**Phase 4** (2026-03 → 2026-05): Optimization
+- SAP-013 (metrics-tracking)
+
+**See**: [docs/skilled-awareness/chora-base-sap-roadmap.md](docs/skilled-awareness/chora-base-sap-roadmap.md)
 
 ---
 
@@ -27,16 +152,30 @@
 
 ```
 chora-base/
-├── template/                    # Template files (copied to generated projects)
-│   ├── src/                     # Python source templates
-│   ├── tests/                   # Test templates
-│   ├── scripts/                 # Automation script templates
-│   ├── .github/workflows/       # CI/CD workflow templates
-│   ├── AGENTS.md.jinja          # Main template for generated AGENTS.md (2,540 lines)
-│   ├── README.md.jinja          # README template
-│   ├── pyproject.toml.jinja     # Python project config template
+├── SKILLED_AWARENESS_PACKAGE_PROTOCOL.md  # Root SAP protocol
+├── static-template/             # Static scaffolding copied into generated projects
+│   ├── src/                     # Python source baseline
+│   ├── tests/                   # Test baseline
+│   ├── scripts/                 # Automation scripts
+│   ├── .github/workflows/       # CI/CD workflows
 │   └── ...                      # Other project files
+├── blueprints/                  # Blueprint bundles for bootstrapping adopters
+│   ├── README.md.blueprint
+│   ├── CLAUDE.md.blueprint
+│   ├── AGENTS.md.blueprint
+│   └── ...
 ├── docs/                        # Template documentation
+│   ├── reference/
+│   │   ├── skilled-awareness/   # SAP Framework & all SAPs
+│   │   │   ├── INDEX.md         # SAP registry (all 14 capabilities)
+│   │   │   ├── document-templates.md  # Templates for creating SAPs
+│   │   │   ├── chora-base-sap-roadmap.md  # Phased adoption plan
+│   │   │   ├── sap-framework/   # SAP-000: Framework SAP (meta-capability)
+│   │   │   ├── inbox/           # SAP-001: Inbox coordination (pilot)
+│   │   │   ├── chora-base/      # SAP-002: chora-base meta-SAP (planned)
+│   │   │   └── ...              # Future SAPs (project-bootstrap, testing, etc.)
+│   │   ├── template-configuration.md
+│   │   └── ...
 │   ├── upgrades/                # Version upgrade guides
 │   │   ├── README.md            # Upgrade guide index
 │   │   ├── PHILOSOPHY.md        # Upgrade philosophy
@@ -47,19 +186,21 @@ chora-base/
 │   │   ├── 01-generate-new-mcp-server.md
 │   │   ├── 02-rip-and-replace-existing-server.md
 │   │   └── ...
-│   ├── reference/               # Reference documentation
-│   │   ├── template-configuration.md
-│   │   └── ...
 │   ├── explanation/             # Conceptual explanations
 │   ├── research/                # Research documents
 │   │   └── Agentic Coding Best Practices Research.pdf
 │   ├── BENEFITS.md              # ROI analysis
 │   └── DOCUMENTATION_PLAN.md    # Documentation strategy
+├── inbox/                       # Inbox coordination capability (SAP-001)
+│   ├── INBOX_PROTOCOL.md        # Protocol
+│   ├── CLAUDE.md                # Awareness
+│   ├── schemas/                 # JSON schemas
+│   ├── coordination/            # Coordination directory
+│   └── examples/                # Complete examples (e.g., health-monitoring-w3)
 ├── examples/                    # Example generated projects
 │   ├── full-featured-with-vision/
 │   ├── full-featured-with-docs/
 │   └── ...
-├── copier.yml                   # Template configuration (questions, conditionals)
 ├── CHANGELOG.md                 # Version history
 ├── README.md                    # Project overview
 └── AGENTS.md                    # This file
@@ -120,25 +261,26 @@ chora-base/
 2. **Design Phase**
    - Update `CHANGELOG.md` under `## [Unreleased]`
    - Consider opt-in vs opt-out (new features usually opt-in)
-   - Add question to `copier.yml` if user-facing
-   - Update `docs/reference/template-configuration.md` if adding configuration
+   - Determine whether capability needs its own Skilled Awareness Package (SAP)
+   - Update relevant blueprints and static assets to include the feature
 
 3. **Implementation Phase**
-   - Create `.jinja` files in `template/`
-   - Add conditional logic in `copier.yml` `_exclude` section if optional
-   - Test with `copier copy . /tmp/test-project` (local testing)
-   - Generate example in `examples/` if demonstrating complex feature
+   - Update `static-template/` and `blueprints/` assets
+   - Add automation or install scripts if feature is optional
+   - Run blueprint generation scripts (or agent-assisted flow) to validate outputs
+   - Generate/update examples in `examples/` if demonstrating complex feature
 
 4. **Documentation Phase**
    - Update `README.md` if user-facing feature
    - Add to `template/AGENTS.md.jinja` if relevant to AI agents
    - Document in appropriate `docs/` subdirectory
    - Update `docs/BENEFITS.md` if adding measurable value
+   - Create/refresh SAP documents (charter, protocol, awareness guide, adoption blueprint, ledger entry)
 
 5. **Validation Phase**
-   - Generate fresh project: `copier copy . /tmp/test-validation`
+   - Generate fresh project using blueprint workflow (see setup guides)
    - Run generated project's tests: `cd /tmp/test-validation && ./scripts/setup.sh && pytest`
-   - Test upgrade path: Use existing example, run `copier update`
+   - Test upgrade path: follow SAP adoption blueprint scenarios (e.g., apply updates to example repos)
    - Verify conditional combinations (Docker on/off, memory on/off, etc.)
 
 ### Releasing New Version
@@ -152,13 +294,14 @@ chora-base/
 
 1. **Pre-Release Validation**
    ```bash
-   # Test template generation
-   copier copy . /tmp/test-release
+   # Generate project from blueprints (interactive; answer prompts as needed)
+   python setup.py /tmp/test-release
    cd /tmp/test-release && ./scripts/setup.sh && pytest
 
-   # Test update path (use example project)
+   # Test update path (use example project + SAP adoption blueprint)
    cd examples/full-featured-with-vision
-   copier update
+   # Follow relevant SAP adoption blueprint to apply latest changes
+   ./scripts/setup.sh && pytest
    ```
 
 2. **Create Upgrade Guide**
@@ -235,17 +378,17 @@ chora-base/
 ### Template Generation Tests
 
 ```bash
-# Test minimal configuration
-copier copy --defaults . /tmp/test-minimal
+# Minimal configuration (accept defaults)
+python setup.py /tmp/test-minimal
 
-# Test full-featured configuration
-copier copy . /tmp/test-full
-# Answer all prompts with "yes" for optional features
+# Full-featured configuration
+python setup.py /tmp/test-full
+# Enable all optional features when prompted
 
-# Test specific project types
-copier copy . /tmp/test-mcp --data project_type=mcp_server
-copier copy . /tmp/test-lib --data project_type=library
-copier copy . /tmp/test-cli --data project_type=cli_tool
+# Specific project types (run setup script and choose appropriate options)
+python setup.py /tmp/test-mcp
+python setup.py /tmp/test-lib
+python setup.py /tmp/test-cli
 ```
 
 ### Generated Project Validation
@@ -262,12 +405,11 @@ just test  # if justfile included
 ### Update Path Testing
 
 ```bash
-# Test template updates merge correctly
+# Test template updates merge correctly (use SAP adoption blueprint)
 cd examples/full-featured-with-vision
 git checkout -b test-update
-copier update --vcs-ref main
-# Resolve any conflicts
-git diff  # Verify changes are reasonable
+# Apply latest blueprint changes manually or via automation scripts
+# Resolve any conflicts and verify diff is reasonable
 ```
 
 ### Conditional Feature Testing
@@ -288,29 +430,13 @@ Test feature combinations that users commonly choose:
 **Goal**: Add a new opt-in feature to the template
 
 **Steps**:
-1. Add question to `copier.yml`:
-   ```yaml
-   include_new_feature:
-     type: bool
-     help: Include new feature description?
-     default: false
-   ```
-
-2. Add conditional exclusion:
-   ```yaml
-   _exclude:
-     - "{% if not include_new_feature %}path/to/feature/files{% endif %}"
-   ```
-
-3. Create feature files in `template/` (use `.jinja` extension if templating needed)
-
-4. Update `template/AGENTS.md.jinja` if feature affects AI agent workflows
-
-5. Document in `README.md` under "Features" section
-
-6. Add to `CHANGELOG.md` under `## [Unreleased]`
-
-7. Test generation with feature on/off
+1. Update relevant blueprint(s) in `blueprints/` to include optional feature toggles.
+2. Add conditional logic or installation hooks in `static-template/` and supporting scripts.
+3. Refresh SAP documents (especially protocol + adoption blueprint) to describe the new capability.
+4. Update `template/AGENTS.md.jinja` if feature affects AI agent workflows.
+5. Document in `README.md` under "Features" section.
+6. Add to `CHANGELOG.md` under `## [Unreleased]`.
+7. Test blueprint generation with feature enabled/disabled via `python setup.py`.
 
 ### Task 2: Fix Bug in Template
 
@@ -319,7 +445,7 @@ Test feature combinations that users commonly choose:
 **Steps**:
 1. Reproduce in generated project:
    ```bash
-   copier copy . /tmp/bug-test
+   python setup.py /tmp/bug-test
    cd /tmp/bug-test
    # Reproduce issue
    ```
@@ -328,7 +454,7 @@ Test feature combinations that users commonly choose:
 
 3. Test fix:
    ```bash
-   copier copy . /tmp/bug-fix-test
+   python setup.py /tmp/bug-fix-test
    cd /tmp/bug-fix-test
    # Verify fix works
    ```
@@ -344,7 +470,7 @@ Test feature combinations that users commonly choose:
 **See**: "Releasing New Version" workflow above
 
 **Checklist**:
-- [ ] All tests pass (`copier copy . /tmp/test && cd /tmp/test && pytest`)
+- [ ] All tests pass (`python setup.py /tmp/test && cd /tmp/test && pytest`)
 - [ ] CHANGELOG.md updated (Unreleased → [X.Y.Z])
 - [ ] README.md updated (Recent Updates section)
 - [ ] Upgrade guide created (`docs/upgrades/vX.Y-to-vX.Z.md`)
@@ -379,8 +505,8 @@ Test feature combinations that users commonly choose:
 
 ### Why Jinja2 Templating?
 
-**Rationale**: Copier's native template engine, widely understood, supports conditionals
-**Trade-off**: Can become verbose for complex logic (mitigated by `copier.yml` `_exclude`)
+**Rationale**: Blueprints use Jinja2 placeholders for flexible customization and remain compatible with existing project content
+**Trade-off**: Complex conditionals require disciplined structure; mitigate with helper scripts and clear template snippets
 
 ### Why Opt-In for Advanced Features?
 
@@ -410,23 +536,23 @@ Test feature combinations that users commonly choose:
 **Prevention**: Follow "File Organization Conventions" section above
 **Detection**: Review `git status` before commit, check against conventions
 
-### Pitfall 2: Forgetting .jinja Extension
+### Pitfall 2: Forgetting Template Metadata
 
-**Problem**: Creating template files without `.jinja` extension
-**Prevention**: All files in `template/` that use Jinja2 syntax MUST end in `.jinja`
-**Detection**: Copier will warn if `{{` or `{%` found in non-.jinja files
+**Problem**: Creating blueprint files without required metadata or helper comments
+**Prevention**: Follow blueprint conventions (header comments, clear placeholder instructions)
+**Detection**: Run blueprint lint scripts or manual review before committing
 
 ### Pitfall 3: Breaking Conditional Logic
 
-**Problem**: Adding `{% if ... %}` without updating `_exclude` in `copier.yml`
-**Prevention**: Test with feature on AND off
-**Detection**: Generate project with `include_feature=false`, verify files excluded
+**Problem**: Adding `{% if ... %}` without updating supporting install scripts or awareness docs
+**Prevention**: Test with feature on AND off via `python setup.py`; update SAP adoption blueprint accordingly
+**Detection**: Generate project with feature disabled, verify files excluded and docs consistent
 
 ### Pitfall 4: Stale Examples
 
 **Problem**: Example projects lag behind template changes
 **Prevention**: Document in commit message: "Note: examples/ not updated (drift expected)"
-**Detection**: Run `copier update` in examples/ periodically
+**Detection**: Periodically regenerate examples using `python setup.py` and compare to current blueprint outputs
 
 ### Pitfall 5: Incomplete Upgrade Guides
 
@@ -444,16 +570,16 @@ Test feature combinations that users commonly choose:
 
 ## Integration Points
 
-### Copier
+### Blueprint Engine
 
-**Version**: 9.0.0+ required (`_min_copier_version` in `copier.yml`)
-**Key Files**: `copier.yml`, `template/`, `.copier-answers.yml` (in generated projects)
+**Tooling**: `setup.py` interactive generator (can be wrapped by automation scripts)
+**Key Files**: `blueprints/`, `static-template/`, `docs/skilled-awareness/`
 
 ### Generated Projects
 
-**Update Mechanism**: `copier update` (run from generated project directory)
-**Configuration**: `.copier-answers.yml` (tracks answers, template version)
-**Merge Strategy**: Smart merge (not overwrite) - Copier asks about conflicts
+**Update Mechanism**: Follow capability-specific SAP adoption blueprints and ledger guidance
+**Configuration**: Project metadata stored in generated files (`pyproject.toml`, `AGENTS.md`, etc.); no `.copier-answers.yml`
+**Merge Strategy**: Manual or scripted merge guided by SAP protocols (e.g., apply blueprint diffs, run tests, update docs)
 
 ### GitHub Actions
 

@@ -1,0 +1,91 @@
+{
+  "type": "implementation-task",
+  "task_id": "task-003",
+  "title": "Implement Health Monitoring Service with Auto-Recovery",
+  "created": "2025-11-25",
+  "sprint": "Sprint 5",
+  "priority": "P1",
+  "category": "feature",
+  "repo": "mcp-orchestration",
+  "assigned_to": "Claude Code",
+  "estimated_effort": "16-24 hours (2-3 weeks)",
+  "deliverables": [
+    "Health monitoring service (health_monitor.py)",
+    "Recovery manager (recovery_manager.py)",
+    "Configuration template (health_config.yaml)",
+    "Operational guide (HEALTH_MONITORING.md)",
+    "Unit tests (test_health_monitor.py, >85% coverage)",
+    "Integration tests (test_recovery.py)"
+  ],
+  "acceptance_criteria": [
+    "Polls all registered servers every 30 seconds",
+    "Detects failures (3 consecutive failures)",
+    "Auto-recovery with exponential backoff",
+    "Emits health check events with trace_id",
+    "Emits recovery events",
+    "Configuration matches RFC 0001",
+    "Integration tests verify recovery",
+    "Manual intervention flag after 5 failures"
+  ],
+  "workflow": {
+    "status": "completed",
+    "phases": {
+      "ddd": {
+        "started": "2025-11-25T09:00:00Z",
+        "completed": "2025-11-25T13:00:00Z",
+        "duration_hours": 4.0,
+        "artifact": "inbox/active/task-003-monitoring-service/change-request.md"
+      },
+      "bdd": {
+        "started": "2025-11-25T13:00:00Z",
+        "completed": "2025-11-25T15:30:00Z",
+        "duration_hours": 2.5,
+        "artifact": "inbox/active/task-003-monitoring-service/features/health_monitoring.feature"
+      },
+      "tdd": {
+        "started": "2025-11-25T15:30:00Z",
+        "completed": "2025-12-05T17:00:00Z",
+        "duration_hours": 17.5,
+        "artifacts": [
+          "src/services/health_monitor.py (450 lines)",
+          "src/services/recovery_manager.py (320 lines)",
+          "src/config/health_config.yaml",
+          "tests/test_health_monitor.py",
+          "tests/integration/test_recovery.py"
+        ]
+      },
+      "review": {
+        "started": "2025-12-05T17:00:00Z",
+        "completed": "2025-12-06T10:00:00Z",
+        "duration_hours": 2.0,
+        "pr_link": "https://github.com/liminalcommons/mcp-orchestration/pull/18"
+      }
+    }
+  },
+  "test_results": {
+    "coverage_percent": 88.4,
+    "tests_passed": 47,
+    "tests_failed": 0,
+    "tests_skipped": 2,
+    "integration_tests_passed": 5
+  },
+  "related_coordination": "coord-003",
+  "trace_id": "ecosystem-w3-health-monitoring",
+  "dependencies": [
+    "task-002 (health spec defines response format)",
+    "ecosystem-manifest v1.1.0 (provides spec and schema)"
+  ],
+  "blocks": [
+    "task-004 (gateway needs monitoring service API)",
+    "coord-004 completion",
+    "Waypoint W3 validation"
+  ],
+  "completion": {
+    "completed_date": "2025-12-06",
+    "pr_merged": "https://github.com/liminalcommons/mcp-orchestration/pull/18",
+    "release": "v2.0.0",
+    "release_date": "2025-12-06",
+    "release_notes": "Major release: Added health monitoring service with auto-recovery. Implements RFC 0001 health monitoring architecture."
+  },
+  "notes": "Integration tests revealed edge case with Docker restart during container shutdown. Fixed with graceful shutdown detection (exit code 0 = no recovery needed)."
+}

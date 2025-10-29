@@ -1,0 +1,126 @@
+# Capabilities: ecosystem-manifest (TEMPLATE)
+#
+# Purpose: Example capabilities file for ecosystem-manifest repo
+# Instructions: Copy this to actual ecosystem-manifest repo and customize
+# Note: This is a TEMPLATE showing what ecosystem-manifest would declare
+
+repo: ecosystem-manifest
+version: 1.0.0
+updated: 2025-10-27
+
+description: |
+  Single source of truth for Liminal Commons MCP ecosystem.
+  Maintains registry of approved MCP servers, quality standards,
+  and manifest schema.
+
+# What this repo provides
+provides:
+  - id: server_registry
+    name: "MCP Server Registry"
+    description: "Curated list of approved MCP servers in ecosystem"
+    location: "ecosystem-manifest.yaml"
+    version: "1.0.0"
+    consumers:
+      - mcp-orchestration
+      - mcp-gateway
+
+  - id: health_specifications
+    name: "Health Check Specifications"
+    description: "Standard for MCP server health endpoints"
+    location: "specs/health-check-spec.md"
+    version: "1.1.0"  # Planned
+    status: planned
+    consumers:
+      - mcp-orchestration
+      - all MCP servers
+      - chora-base
+
+  - id: quality_standards
+    name: "Quality Standards"
+    description: "Quality gates for ecosystem inclusion"
+    location: "QUALITY_STANDARDS.md"
+    version: "1.0.0"
+    consumers:
+      - all MCP servers
+      - chora-base
+
+  - id: manifest_schema
+    name: "Manifest Schema"
+    description: "JSON/YAML schema for ecosystem manifest"
+    location: "schemas/manifest-v1.0.json"
+    version: "1.0.0"
+    consumers:
+      - mcp-orchestration
+
+# What this repo consumes
+consumes:
+  - repo: chora-base
+    capability: mcp_server_template
+    reason: "Reference for quality standards"
+    version: ">=3.3.0"
+
+  - repo: chora-base
+    capability: health_endpoint_template
+    reason: "Define health check standard based on template"
+    version: ">=3.5.0"
+
+# Intake capabilities
+capabilities:
+  can_receive:
+    - type: strategic
+      category: [ecosystem_expansion, standard_change, registry_policy]
+      review_frequency: quarterly
+
+    - type: coordination
+      category: [add_server, update_health_spec, modify_quality_gate, schema_change]
+      review_frequency: sprint_planning
+
+    - type: task
+      category: [update_manifest, add_server_entry, update_standards, schema_update]
+      review_frequency: continuous
+
+  can_provide:
+    - capability: server_approval
+      for: [new MCP servers seeking ecosystem inclusion]
+      sla: "reviewed within 2 weeks"
+
+    - capability: standard_definition
+      for: [health checks, quality gates, manifest schema]
+      sla: "1-2 sprints for new standard"
+
+# Dependencies
+dependencies:
+  required:
+    - name: YAML
+      version: "1.2"
+
+  ecosystem:
+    - repo: chora-base
+      version: ">=3.3.0"
+      optional: false
+      reason: "Standards reference chora-base templates"
+
+# Inbox Protocol
+inbox_protocol_version: "1.0"
+
+inbox_settings:
+  coordination_requests:
+    enabled: true
+    sla: "reviewed within 2 weeks"
+    accepts_from: ["mcp-orchestration", "mcp-gateway", "chora-base"]
+    priority_handling:
+      P0: "this_sprint"
+      P1: "next_sprint"
+      P2: "backlog"
+
+# Contact
+maintainers:
+  - name: Ecosystem Team
+    role: "Maintainers"
+
+contact:
+  - type: github_issue
+    url: https://github.com/liminalcommons/ecosystem-manifest/issues
+
+  - type: slack
+    channel: "#ecosystem-dev"

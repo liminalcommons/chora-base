@@ -1,0 +1,228 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://github.com/liminalcommons/chora-base/inbox/schemas/coordination-request.schema.json",
+  "title": "Coordination Request",
+  "description": "Schema for Type 2 intake: Cross-repo coordination requests reviewed in sprint planning",
+  "type": "object",
+  "required": [
+    "type",
+    "request_id",
+    "title",
+    "created",
+    "from_repo",
+    "to_repo",
+    "priority",
+    "urgency",
+    "requested_by",
+    "deliverables",
+    "acceptance_criteria"
+  ],
+  "properties": {
+    "type": {
+      "type": "string",
+      "const": "coordination",
+      "description": "Type discriminator - always 'coordination'"
+    },
+    "request_id": {
+      "type": "string",
+      "pattern": "^coord-[0-9]{3,}$",
+      "description": "Unique coordination request ID (e.g., coord-001)",
+      "examples": ["coord-001", "coord-042"]
+    },
+    "title": {
+      "type": "string",
+      "minLength": 10,
+      "maxLength": 200,
+      "description": "Brief, descriptive title"
+    },
+    "created": {
+      "type": "string",
+      "format": "date",
+      "description": "Creation date (YYYY-MM-DD)"
+    },
+    "from_repo": {
+      "type": "string",
+      "description": "Repository making the request",
+      "examples": ["mcp-orchestration", "mcp-gateway"]
+    },
+    "to_repo": {
+      "type": "string",
+      "description": "Target repository to fulfill request",
+      "examples": ["ecosystem-manifest", "chora-base"]
+    },
+    "priority": {
+      "type": "string",
+      "enum": ["P0", "P1", "P2"],
+      "description": "Priority level (P0=critical, P1=high, P2=medium)"
+    },
+    "urgency": {
+      "type": "string",
+      "enum": ["blocks_sprint", "next_sprint", "backlog"],
+      "description": "How urgent is this?"
+    },
+    "blocks": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "What this blocks (sprints, waypoints, other work)",
+      "examples": [["mcp-orchestration Sprint 3", "Waypoint W3 validation"]]
+    },
+    "requested_by": {
+      "type": "string",
+      "description": "Person or team making request"
+    },
+    "requested_delivery": {
+      "type": "string",
+      "description": "When needed (Week N, Sprint N, date, etc.)",
+      "examples": ["Week 11", "Sprint 3", "2025-11-01"]
+    },
+    "context": {
+      "type": "object",
+      "description": "Background information",
+      "properties": {
+        "waypoint": {
+          "type": "string",
+          "description": "Related waypoint (if any)",
+          "examples": ["W3", "W2"]
+        },
+        "related_rfc": {
+          "type": "string",
+          "description": "Related RFC document"
+        },
+        "related_adr": {
+          "type": "string",
+          "description": "Related ADR document"
+        },
+        "background": {
+          "type": "string",
+          "description": "Why this request exists"
+        }
+      }
+    },
+    "deliverables": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "minItems": 1,
+      "description": "What needs to be delivered",
+      "examples": [["ecosystem-manifest.yaml v1.1 with health_check schema", "QUALITY_STANDARDS.md updated"]]
+    },
+    "acceptance_criteria": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "minItems": 1,
+      "description": "How to verify completion",
+      "examples": [["Health check spec defines required fields", "Spec validated against JSON Schema"]]
+    },
+    "dependencies": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "Prerequisites that must be met",
+      "examples": [["RFC 0001 must be accepted", "chora-base v3.5.0 must be released"]]
+    },
+    "estimated_effort": {
+      "type": "string",
+      "description": "Rough effort estimate",
+      "examples": ["4-8 hours", "2-3 days", "1 week"]
+    },
+    "trace_id": {
+      "type": "string",
+      "description": "Trace context ID for event correlation (CHORA_TRACE_ID)",
+      "examples": ["ecosystem-w3-001", "cross-repo-health-monitoring"]
+    },
+    "decision": {
+      "type": "object",
+      "description": "Triage decision (added during sprint planning)",
+      "properties": {
+        "date": {
+          "type": "string",
+          "format": "date",
+          "description": "When decision was made"
+        },
+        "outcome": {
+          "type": "string",
+          "enum": ["this_sprint", "next_sprint", "backlog", "rejected"],
+          "description": "Triage outcome"
+        },
+        "sprint": {
+          "type": "string",
+          "description": "Which sprint (if accepted)"
+        },
+        "decision_makers": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "Who made the decision"
+        },
+        "rationale": {
+          "type": "string",
+          "description": "Why this decision was made"
+        }
+      }
+    },
+    "fulfillment": {
+      "type": "object",
+      "description": "Fulfillment metadata (added when completed)",
+      "properties": {
+        "completed_date": {
+          "type": "string",
+          "format": "date",
+          "description": "When request was fulfilled"
+        },
+        "task_id": {
+          "type": "string",
+          "description": "Task ID that fulfilled this request"
+        },
+        "pr_links": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "Links to PRs that delivered this"
+        },
+        "delivered_artifacts": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "Actual artifacts delivered"
+        },
+        "notification_sent": {
+          "type": "boolean",
+          "description": "Was requesting repo notified?"
+        }
+      }
+    },
+    "related": {
+      "type": "object",
+      "description": "Related documents and links",
+      "properties": {
+        "proposals": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "rfcs": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "issues": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      }
+    }
+  }
+}

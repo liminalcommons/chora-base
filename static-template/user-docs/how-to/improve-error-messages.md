@@ -3,7 +3,7 @@ title: "How-To: Improve Error Messages"
 type: how-to
 audience: developers
 status: active
-last_updated: {{ _copier_conf.now }}
+last_updated: {{ generation_date }}
 version: 1.0.0
 related: [../reference/python-patterns.md, ./standardize-responses.md]
 tags: [errors, user-experience, fuzzy-matching, validation]
@@ -747,6 +747,6 @@ for lower, original in original_case.items():
 
 ---
 
-**Last Updated:** {{ _copier_conf.now }}
+**Last Updated:** {{ generation_date }}
 **Version:** 1.0.0
 **Maintained by:** {{ author_name }}

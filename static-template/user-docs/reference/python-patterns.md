@@ -3,7 +3,7 @@ title: "Reference: Python Patterns"
 type: reference
 audience: developers
 status: active
-last_updated: {{ _copier_conf.now }}
+last_updated: {{ generation_date }}
 version: 1.0.0
 tags: [patterns, reference, best-practices, utilities]
 ---
@@ -853,7 +853,7 @@ def _get_state(self) -> dict:
 
 ## Version History
 
-### v1.0.0 ({{ _copier_conf.now }})
+### v1.0.0 ({{ generation_date }})
 
 **Added:**
 {% if include_api_utilities -%}
@@ -898,6 +898,6 @@ def _get_state(self) -> dict:
 
 ---
 
-**Last Updated:** {{ _copier_conf.now }}
+**Last Updated:** {{ generation_date }}
 **Version:** 1.0.0
 **Maintained by:** {{ author_name }}

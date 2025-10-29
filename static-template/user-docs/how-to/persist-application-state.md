@@ -3,7 +3,7 @@ title: "How-To: Persist Application State"
 type: how-to
 audience: developers
 status: active
-last_updated: {{ _copier_conf.now }}
+last_updated: {{ generation_date }}
 version: 1.0.0
 related: [../reference/python-patterns.md]
 tags: [persistence, state, storage, json]
@@ -756,6 +756,6 @@ if state_file.exists():
 
 ---
 
-**Last Updated:** {{ _copier_conf.now }}
+**Last Updated:** {{ generation_date }}
 **Version:** 1.0.0
 **Maintained by:** {{ author_name }}

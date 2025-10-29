@@ -17,7 +17,7 @@ chora-base is a production-ready Python project template featuring:
 - **🧠 Memory Infrastructure** - Event log, knowledge graph, trace context for cross-session learning
 - **🛠️ Developer Experience** - Setup scripts, justfile tasks, automated tooling
 
-**📖 [Read the full benefits guide](docs/BENEFITS.md)** - Learn how chora-base saves 52+ hours per project and delivers ROI through automation, AI-native workflows, and production-ready infrastructure.
+**📖 [Read the full benefits guide](docs/user-docs/explanation/benefits-of-chora-base.md)** - Learn how chora-base saves 52+ hours per project and delivers ROI through automation, AI-native workflows, and production-ready infrastructure.
 
 ## Recent Updates
 
@@ -107,10 +107,10 @@ cat dev-docs/examples/FEATURE_WALKTHROUGH.md   # Real-world example
 - **Agent-First Guide**: 2,000+ line comprehensive setup guide for autonomous agents
 
 **Migration:**
-- v2.x users: See [v2-to-v3 Migration Guide](docs/releases/v2-to-v3-migration.md)
+- v2.x users: See [v2-to-v3 Migration Guide](docs/project-docs/releases/v2-to-v3-migration.md)
 - New users: Read [AGENT_SETUP_GUIDE.md](AGENT_SETUP_GUIDE.md) or use [setup.py](setup.py)
 
-📄 [Release Notes](docs/releases/v3.0.0-release-notes.md) | [CHANGELOG](CHANGELOG.md#300---2025-10-25)
+📄 [Release Notes](docs/project-docs/releases/v3.0.0-release-notes.md) | [CHANGELOG](CHANGELOG.md#300---2025-10-25)
 
 ## Features
 
@@ -159,7 +159,7 @@ class MyApp(StatefulObject):
 **Documentation:**
 - 📖 [Python Patterns Reference](template/user-docs/reference/python-patterns.md.jinja) - Complete API docs
 - 📚 [How-To Guides](template/user-docs/how-to/) - Task-oriented usage examples
-- 🔬 [Adopter Learnings](docs/research/adopter-learnings-mcp-orchestration.md) - Extraction process
+- 🔬 [Adopter Learnings](docs/dev-docs/research/adopter-learnings-mcp-orchestration.md) - Extraction process
 
 **Source:** Generalized from [mcp-orchestration](https://github.com/chrishayuk/mcp-orchestration) v0.1.3 learnings (tested across MCP, REST, CLI, library projects)
 
@@ -337,7 +337,7 @@ docs/
 
 ### For Human Developers
 
-- **New to chora-base?** Start with the [Benefits Guide](docs/BENEFITS.md)
+- **New to chora-base?** Start with the [Benefits Guide](docs/user-docs/explanation/benefits-of-chora-base.md)
 - **Migrating existing project?** See [How-To: Rip-and-Replace](template/user-docs/how-to/02-rip-and-replace-existing-server.md)
 - **Need quick reference?** Check [Template Configuration](template/user-docs/reference/template-configuration.md)
 - **Want to understand concepts?** Explore [template/user-docs/explanation/](template/user-docs/explanation/)
@@ -436,17 +436,17 @@ git log --oneline v3.0.0..HEAD
 ```
 
 **Migration from v2.x to v3.0.0:**
-See [v2-to-v3 Migration Guide](docs/releases/v2-to-v3-migration.md) for detailed upgrade instructions.
+See [v2-to-v3 Migration Guide](docs/project-docs/releases/v2-to-v3-migration.md) for detailed upgrade instructions.
 
 ### Upgrade Guides for AI Agents & Humans
 
 chora-base provides comprehensive upgrade documentation with AI-optimized decision trees:
 
 **Upgrade Philosophy**:
-- [Upgrade Philosophy & Decision Framework](template/project-docs/releases/upgrade-philosophy.md) - Understand chora-base's upgrade promise, displacement policy, and customization preservation strategies
+- [Upgrade Philosophy & Decision Framework](template/project-docs/project-docs/releases/upgrade-philosophy.md) - Understand chora-base's upgrade promise, displacement policy, and customization preservation strategies
 
 **Upgrade Guide Template**:
-- [Upgrade Guide Template](template/project-docs/releases/upgrade-guide-template.md) - Template for creating upgrade guides in your projects
+- [Upgrade Guide Template](template/project-docs/project-docs/releases/upgrade-guide-template.md) - Template for creating upgrade guides in your projects
 - See [CHANGELOG.md](CHANGELOG.md) for chora-base template version history
 
 **For AI Agents**:

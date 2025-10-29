@@ -1,0 +1,270 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://github.com/liminalcommons/chora-base/inbox/schemas/implementation-task.schema.json",
+  "title": "Implementation Task",
+  "description": "Schema for Type 3 intake: Implementation tasks ready for DDD → BDD → TDD workflow",
+  "type": "object",
+  "required": [
+    "type",
+    "task_id",
+    "title",
+    "created",
+    "sprint",
+    "priority",
+    "category",
+    "repo",
+    "estimated_effort",
+    "deliverables",
+    "acceptance_criteria"
+  ],
+  "properties": {
+    "type": {
+      "type": "string",
+      "const": "task",
+      "description": "Type discriminator - always 'task'"
+    },
+    "task_id": {
+      "type": "string",
+      "pattern": "^task-[0-9]{3,}$",
+      "description": "Unique task ID (e.g., task-001)",
+      "examples": ["task-001", "task-042"]
+    },
+    "title": {
+      "type": "string",
+      "minLength": 10,
+      "maxLength": 200,
+      "description": "Brief, descriptive title"
+    },
+    "created": {
+      "type": "string",
+      "format": "date",
+      "description": "Creation date (YYYY-MM-DD)"
+    },
+    "sprint": {
+      "type": "string",
+      "description": "Which sprint this belongs to",
+      "examples": ["Week 9-10", "Sprint 11", "Q1 2026"]
+    },
+    "priority": {
+      "type": "string",
+      "enum": ["P0", "P1", "P2"],
+      "description": "Priority level (P0=critical, P1=high, P2=medium)"
+    },
+    "category": {
+      "type": "string",
+      "enum": ["feature", "bug", "refactor", "docs", "test", "chore"],
+      "description": "Type of work"
+    },
+    "repo": {
+      "type": "string",
+      "description": "Target repository",
+      "examples": ["chora-base", "ecosystem-manifest", "mcp-orchestration"]
+    },
+    "assigned_to": {
+      "type": "string",
+      "description": "Who's working on this",
+      "examples": ["Claude Code", "Victor", "Team"]
+    },
+    "estimated_effort": {
+      "type": "string",
+      "description": "Rough effort estimate",
+      "examples": ["2-4 hours", "1-2 days", "1 week"]
+    },
+    "context": {
+      "type": "object",
+      "description": "Background information",
+      "properties": {
+        "background": {
+          "type": "string",
+          "description": "Why this task exists"
+        },
+        "related_work": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "Links to RFCs, issues, proposals, etc."
+        },
+        "waypoint": {
+          "type": "string",
+          "description": "Related waypoint (if any)"
+        }
+      }
+    },
+    "deliverables": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "minItems": 1,
+      "description": "What will be created/modified",
+      "examples": [["src/health.py", "tests/test_health.py", "README.md updated"]]
+    },
+    "acceptance_criteria": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "minItems": 1,
+      "description": "How to verify completion (will become BDD scenarios)",
+      "examples": [["Health endpoint returns 200 for healthy status", "Tests achieve ≥90% coverage"]]
+    },
+    "dependencies": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "Prerequisites that must be met",
+      "examples": [["RFC 0001 accepted", "chora-base v3.5.0 released"]]
+    },
+    "trace_id": {
+      "type": "string",
+      "description": "Trace context ID for event correlation (CHORA_TRACE_ID)",
+      "examples": ["task-001-trace", "chora-base-health-001"]
+    },
+    "parent": {
+      "type": "object",
+      "description": "If this task came from a coordination request or proposal",
+      "properties": {
+        "type": {
+          "type": "string",
+          "enum": ["coordination", "proposal"],
+          "description": "Parent type"
+        },
+        "id": {
+          "type": "string",
+          "description": "Parent ID (coord-NNN or prop-NNN)"
+        }
+      }
+    },
+    "workflow": {
+      "type": "object",
+      "description": "Workflow metadata (updated during implementation)",
+      "properties": {
+        "status": {
+          "type": "string",
+          "enum": ["pending", "ddd", "bdd", "tdd", "review", "completed"],
+          "description": "Current phase"
+        },
+        "started": {
+          "type": "string",
+          "format": "date-time",
+          "description": "When work started"
+        },
+        "completed": {
+          "type": "string",
+          "format": "date-time",
+          "description": "When work completed"
+        },
+        "actual_effort_hours": {
+          "type": "number",
+          "description": "Actual time spent (for metrics)"
+        },
+        "phase_durations": {
+          "type": "object",
+          "properties": {
+            "ddd": {
+              "type": "number",
+              "description": "Hours spent on DDD phase"
+            },
+            "bdd": {
+              "type": "number",
+              "description": "Hours spent on BDD phase"
+            },
+            "tdd": {
+              "type": "number",
+              "description": "Hours spent on TDD phase"
+            },
+            "review": {
+              "type": "number",
+              "description": "Hours spent on review"
+            }
+          }
+        }
+      }
+    },
+    "quality_metrics": {
+      "type": "object",
+      "description": "Quality metrics (added upon completion)",
+      "properties": {
+        "test_coverage_percent": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 100
+        },
+        "total_tests": {
+          "type": "integer"
+        },
+        "passed_tests": {
+          "type": "integer"
+        },
+        "failed_tests": {
+          "type": "integer"
+        },
+        "lines_of_code": {
+          "type": "integer"
+        },
+        "test_lines": {
+          "type": "integer"
+        },
+        "mypy_errors": {
+          "type": "integer"
+        },
+        "ruff_violations": {
+          "type": "integer"
+        }
+      }
+    },
+    "completion": {
+      "type": "object",
+      "description": "Completion metadata (added when done)",
+      "properties": {
+        "pr_number": {
+          "type": "integer",
+          "description": "Pull request number"
+        },
+        "pr_link": {
+          "type": "string",
+          "format": "uri",
+          "description": "Link to merged PR"
+        },
+        "merged_at": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "release_version": {
+          "type": "string",
+          "description": "Version this was released in"
+        },
+        "notification_sent": {
+          "type": "boolean",
+          "description": "Was coordination requester notified (if applicable)?"
+        }
+      }
+    },
+    "related": {
+      "type": "object",
+      "description": "Related documents and links",
+      "properties": {
+        "coordination_requests": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "rfcs": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "issues": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      }
+    }
+  }
+}

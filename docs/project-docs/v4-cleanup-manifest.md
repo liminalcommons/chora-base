@@ -35,7 +35,9 @@ As you work on each wave, **immediately add items to this manifest** when you:
 
 | File | Wave | Reason | Size | Verified Safe? | Status |
 |------|------|--------|------|----------------|--------|
-| *(No items yet)* | - | - | - | - | - |
+| docs/reference/ecosystem/ | 1 | Now empty directory after migration | - | YES | PENDING |
+| docs/research/ | 1 | Now empty directory (PDF file remains, not tracked) | - | YES | PENDING |
+| docs/reference/ | 1 | Only skilled-awareness remains, now moved to root | - | CHECK | PENDING |
 
 **Instructions**:
 - Add files that should be permanently deleted
@@ -65,7 +67,15 @@ As you work on each wave, **immediately add items to this manifest** when you:
 
 | From | To | Wave | Reason | Status |
 |------|-----|------|--------|--------|
-| *(No items yet)* | - | - | - | - |
+| docs/research/*.md | docs/dev-docs/research/ | 1 | Developer research content | DONE |
+| docs/DOCUMENTATION_PLAN.md | docs/project-docs/DOCUMENTATION_PLAN.md | 1 | Project lifecycle artifact | DONE |
+| docs/integration/ | docs/project-docs/integration/ | 1 | Project lifecycle artifact | DONE |
+| docs/inventory/ | docs/project-docs/inventory/ | 1 | Project lifecycle artifact | DONE |
+| docs/releases/ | docs/project-docs/releases/ | 1 | Project lifecycle artifact | DONE |
+| docs/BENEFITS.md | docs/user-docs/explanation/benefits-of-chora-base.md | 1 | User-facing explanation | DONE |
+| docs/reference/ecosystem/*.md | docs/user-docs/{how-to,explanation}/ | 1 | User-facing documentation | DONE |
+| docs/reference/writing-executable-howtos.md | docs/user-docs/how-to/write-executable-documentation.md | 1 | User-facing how-to | DONE |
+| docs/reference/skilled-awareness/ | docs/skilled-awareness/ | 1 | Elevate to root level | DONE |
 
 **Instructions**:
 - Add files that need new locations
@@ -80,7 +90,10 @@ As you work on each wave, **immediately add items to this manifest** when you:
 
 | File | Line/Section | Update Needed | Wave | Status |
 |------|--------------|---------------|------|--------|
-| *(No items yet)* | - | - | - | - |
+| AGENTS.md | Multiple | Update docs/reference/skilled-awareness → docs/skilled-awareness | 1 | DONE |
+| README.md | Multiple | Update docs/BENEFITS, docs/releases, docs/research paths | 1 | DONE |
+| docs/ARCHITECTURE.md | Throughout | All references use new 4-domain structure | 1 | DONE (new file) |
+| docs/*/README.md | Throughout | All domain READMEs reference new structure | 1 | DONE (new files) |
 
 **Instructions**:
 - Add any links, imports, or references that need updating

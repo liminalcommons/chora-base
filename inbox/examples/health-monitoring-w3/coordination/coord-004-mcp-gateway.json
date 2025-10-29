@@ -1,0 +1,89 @@
+{
+  "type": "coordination",
+  "request_id": "coord-004",
+  "title": "Implement Health Status Aggregation and Client Notifications",
+  "created": "2025-11-11",
+  "from_repo": "client-applications",
+  "to_repo": "mcp-gateway",
+  "priority": "P1",
+  "urgency": "next_sprint",
+  "blocks": [
+    "Waypoint W3 validation",
+    "Production client deployments",
+    "User-facing health dashboard"
+  ],
+  "requested_by": "Client Team",
+  "requested_delivery": "Week 16 (2025-12-23)",
+  "context": {
+    "waypoint": "W3",
+    "related_rfc": "0001-health-monitoring-rfc.md",
+    "background": "RFC 0001 defines health status aggregation in mcp-gateway. Clients need a single endpoint to check ecosystem health instead of polling all servers. WebSocket notifications enable real-time updates for dashboards."
+  },
+  "deliverables": [
+    "GET /health/ecosystem endpoint (aggregated health status)",
+    "WebSocket /health/stream endpoint (real-time notifications)",
+    "src/services/health_aggregator.py (aggregation logic)",
+    "src/api/health_routes.py (API endpoints)",
+    "Frontend dashboard component (health-dashboard.tsx)",
+    "docs/API.md updated with health endpoints",
+    "tests/test_health_aggregation.py (unit tests, >85% coverage)",
+    "tests/integration/test_health_stream.py (WebSocket integration tests)"
+  ],
+  "acceptance_criteria": [
+    "GET /health/ecosystem returns aggregated status from mcp-orchestration",
+    "Aggregation logic matches RFC 0001 spec (any down = degraded, >50% degraded = degraded)",
+    "WebSocket stream emits events on health status changes",
+    "Dashboard component displays real-time health status",
+    "API documentation includes curl examples and WebSocket protocol",
+    "Unit tests achieve >85% coverage",
+    "Integration tests verify WebSocket notifications",
+    "Graceful degradation if mcp-orchestration unavailable",
+    "Version bumped to v1.3.0"
+  ],
+  "dependencies": [
+    "coord-003 (mcp-orchestration monitoring) must complete",
+    "mcp-orchestration must expose health status API"
+  ],
+  "estimated_effort": "1-2 weeks",
+  "trace_id": "ecosystem-w3-health-monitoring",
+  "decision": {
+    "date": "2025-11-12",
+    "outcome": "next_sprint",
+    "sprint": "Sprint 6 (Week 11-12)",
+    "decision_makers": [
+      "Victor Piper",
+      "Gateway Team"
+    ],
+    "rationale": "P1 - completes W3 user-facing capabilities. Depends on coord-003 so starting in Sprint 6. Clear requirements from RFC 0001. Gateway team has capacity and this aligns with API roadmap."
+  },
+  "fulfillment": {
+    "completed_date": "2025-12-20",
+    "task_id": "task-004",
+    "pr_links": [
+      "https://github.com/liminalcommons/mcp-gateway/pull/23",
+      "https://github.com/liminalcommons/mcp-gateway/pull/24"
+    ],
+    "delivered_artifacts": [
+      "src/services/health_aggregator.py (280 lines)",
+      "src/api/health_routes.py (150 lines)",
+      "frontend/components/health-dashboard.tsx (320 lines)",
+      "docs/API.md (health endpoints documented)",
+      "tests/test_health_aggregation.py (87% coverage)",
+      "tests/integration/test_health_stream.py (WebSocket tests)",
+      "OpenAPI spec updated with /health/* endpoints"
+    ],
+    "notification_sent": true
+  },
+  "related": {
+    "proposals": [
+      "prop-001-health-monitoring.md"
+    ],
+    "rfcs": [
+      "0001-health-monitoring-rfc.md"
+    ],
+    "issues": [
+      "https://github.com/liminalcommons/mcp-gateway/issues/67",
+      "https://github.com/liminalcommons/mcp-gateway/issues/68"
+    ]
+  }
+}

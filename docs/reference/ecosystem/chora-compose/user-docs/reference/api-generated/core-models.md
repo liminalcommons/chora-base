@@ -1,0 +1,568 @@
+# chora_compose.core.models
+
+> **File:** `src/chora_compose/core/models.py`
+
+Pydantic models for Chora Compose configuration files.
+
+
+## Classes
+
+
+### GenerationFrequency
+
+**Inherits from:** str, Enum
+
+How often content should be regenerated.
+
+
+
+---
+
+
+### OutputFormat
+
+**Inherits from:** str, Enum
+
+Expected output format of generated content.
+
+
+
+---
+
+
+### GenerationSource
+
+**Inherits from:** str, Enum
+
+Primary source of element content.
+
+
+
+---
+
+
+### ReviewStatus
+
+**Inherits from:** str, Enum
+
+Human review status of generated content.
+
+
+
+---
+
+
+### SourceType
+
+**Inherits from:** str, Enum
+
+Type of input source.
+
+
+
+---
+
+
+### ElementFormat
+
+**Inherits from:** str, Enum
+
+Format type of content element.
+
+
+
+---
+
+
+### GenerationType
+
+**Inherits from:** str, Enum
+
+Generation strategy type.
+
+
+
+---
+
+
+### ValidationCheckType
+
+**Inherits from:** str, Enum
+
+Type of validation check.
+
+
+
+---
+
+
+### ValidationSeverity
+
+**Inherits from:** str, Enum
+
+Severity level of validation failure.
+
+
+
+---
+
+
+### EvolutionStage
+
+**Inherits from:** str, Enum
+
+Lifecycle stage of config.
+
+
+
+---
+
+
+### EvolutionEventType
+
+**Inherits from:** str, Enum
+
+Type of evolution event.
+
+
+
+---
+
+
+### SchemaRef
+
+**Inherits from:** BaseModel
+
+Reference to a schema version.
+
+
+
+---
+
+
+### ContentMetadata
+
+**Inherits from:** BaseModel
+
+Metadata for content configuration.
+
+
+
+---
+
+
+### Instructions
+
+**Inherits from:** BaseModel
+
+Guidance for content generation.
+
+
+
+---
+
+
+### InputSource
+
+**Inherits from:** BaseModel
+
+External input source for generation context.
+
+
+
+---
+
+
+### Inputs
+
+**Inherits from:** BaseModel
+
+Input sources configuration.
+
+
+
+---
+
+
+### EphemeralStorage
+
+**Inherits from:** BaseModel
+
+Configuration for ephemeral storage.
+
+
+
+---
+
+
+### ContentElement
+
+**Inherits from:** BaseModel
+
+Individual content element to generate.
+
+
+
+---
+
+
+### ChildReference
+
+**Inherits from:** BaseModel
+
+Reference to a child content config.
+
+
+
+---
+
+
+### GenerationVariable
+
+**Inherits from:** BaseModel
+
+Variable mapping for template generation.
+
+
+
+---
+
+
+### GenerationPattern
+
+**Inherits from:** BaseModel
+
+Pattern describing how to generate content.
+
+
+
+---
+
+
+### Generation
+
+**Inherits from:** BaseModel
+
+Generation configuration.
+
+
+
+---
+
+
+### ValidationRule
+
+**Inherits from:** BaseModel
+
+Validation rule for content quality.
+
+
+
+---
+
+
+### Validation
+
+**Inherits from:** BaseModel
+
+Validation configuration.
+
+
+
+---
+
+
+### StateTracking
+
+**Inherits from:** BaseModel
+
+State tracking configuration.
+
+
+
+---
+
+
+### State
+
+**Inherits from:** BaseModel
+
+State configuration.
+
+
+
+---
+
+
+### EvolutionEvent
+
+**Inherits from:** BaseModel
+
+Evolution history event.
+
+
+
+---
+
+
+### Evolution
+
+**Inherits from:** BaseModel
+
+Evolution tracking configuration.
+
+
+
+---
+
+
+### ContentConfig
+
+**Inherits from:** BaseModel
+
+Complete content configuration.
+
+
+**Methods:**
+
+
+#### `validate_id_format (classmethod)`
+
+```python
+def validate_id_format(cls, v: str) -> str
+```
+
+Validate ID follows kebab-case pattern.
+
+
+**Parameters:**
+
+
+- `cls`
+
+- `v` (str)
+
+
+
+
+**Returns:** `str`
+
+
+
+
+
+---
+
+
+### ArtifactType
+
+**Inherits from:** str, Enum
+
+Category of artifact.
+
+
+
+---
+
+
+### ArtifactOutputFormat
+
+**Inherits from:** str, Enum
+
+General format category of output.
+
+
+
+---
+
+
+### CompositionStrategy
+
+**Inherits from:** str, Enum
+
+Strategy for combining content sources.
+
+
+
+---
+
+
+### RetrievalStrategy
+
+**Inherits from:** str, Enum
+
+How to retrieve ephemeral content.
+
+
+
+---
+
+
+### ExpectedSource
+
+**Inherits from:** str, Enum
+
+Expected source for content.
+
+
+
+---
+
+
+### DependencyType
+
+**Inherits from:** str, Enum
+
+Type of dependency.
+
+
+
+---
+
+
+### DependencyRelationship
+
+**Inherits from:** str, Enum
+
+Relationship type between artifacts.
+
+
+
+---
+
+
+### ArtifactOutput
+
+**Inherits from:** BaseModel
+
+Output file specification.
+
+
+
+---
+
+
+### ArtifactMetadata
+
+**Inherits from:** BaseModel
+
+Metadata for artifact configuration.
+
+
+
+---
+
+
+### ContentChildReference
+
+**Inherits from:** BaseModel
+
+Reference to content config for artifact.
+
+
+
+---
+
+
+### Content
+
+**Inherits from:** BaseModel
+
+Content configuration for artifact.
+
+
+
+---
+
+
+### Dependency
+
+**Inherits from:** BaseModel
+
+Dependency on other artifact or system.
+
+
+
+---
+
+
+### ArtifactValidationCheckType
+
+**Inherits from:** str, Enum
+
+Type of artifact validation.
+
+
+
+---
+
+
+### ArtifactValidationRule
+
+**Inherits from:** BaseModel
+
+Validation rule for artifact.
+
+
+
+---
+
+
+### ArtifactValidation
+
+**Inherits from:** BaseModel
+
+Artifact validation configuration.
+
+
+
+---
+
+
+### ArtifactConfig
+
+**Inherits from:** BaseModel
+
+Complete artifact configuration.
+
+
+**Methods:**
+
+
+#### `validate_id_format (classmethod)`
+
+```python
+def validate_id_format(cls, v: str) -> str
+```
+
+Validate ID follows kebab-case pattern.
+
+
+**Parameters:**
+
+
+- `cls`
+
+- `v` (str)
+
+
+
+
+**Returns:** `str`
+
+
+
+
+
+---
+
+
+
+
+
+
+
+
+---
+
+**Generated by Chora Compose API Documentation Generator** | Phase 2 Dogfooding Feature 3

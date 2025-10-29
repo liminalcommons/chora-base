@@ -59,20 +59,17 @@ cp -r templates MIGRATION_ASSETS/ 2>/dev/null || true
 # Navigate to parent directory
 cd ..
 
-# Generate new project
-copier copy gh:liminalcommons/chora-base your-project-NEW
+# Generate new project using blueprints
+python setup.py your-project-NEW
 
-# Answer prompts (use same values as original project)
-# project_name: your-project
-# package_name: your_package
-# include_memory_system: true  # NEW feature
-# ... (see How-To 01 for full prompts)
+# Provide the same answers as the original project:
+# - project_name: your-project
+# - package_name: your_package
+# - include_memory_system: true  # NEW feature
+# - ... (see How-To 01 for full prompts)
 
-# Initialize git
+# Script initializes git and commits template snapshot automatically.
 cd your-project-NEW
-git init
-git add .
-git commit -m "chore: Initial generation from chora-base v1.0.0"
 ```
 
 ---

@@ -1,0 +1,77 @@
+{
+  "type": "implementation-task",
+  "task_id": "task-001",
+  "title": "Create Health Endpoint Template for MCP Servers",
+  "created": "2025-11-12",
+  "sprint": "Sprint 4",
+  "priority": "P0",
+  "category": "feature",
+  "repo": "chora-base",
+  "assigned_to": "Claude Code",
+  "estimated_effort": "6-8 hours",
+  "deliverables": [
+    "Health endpoint template (health.py)",
+    "JSON schema (health-check-v1.0.json)",
+    "Documentation (HEALTH_ENDPOINT.md)",
+    "Unit tests (test_health.py, >90% coverage)"
+  ],
+  "acceptance_criteria": [
+    "Implements ADR 0001 health check schema exactly",
+    "Returns valid JSON for ok/degraded/down states",
+    "Unit tests achieve >90% coverage",
+    "Documentation includes FastMCP integration example",
+    "Template integrated into mcp-server blueprint bundle"
+  ],
+  "workflow": {
+    "status": "completed",
+    "phases": {
+      "ddd": {
+        "started": "2025-11-12T09:00:00Z",
+        "completed": "2025-11-12T11:00:00Z",
+        "duration_hours": 2.0,
+        "artifact": "inbox/active/task-001-health-template/change-request.md"
+      },
+      "bdd": {
+        "started": "2025-11-12T11:00:00Z",
+        "completed": "2025-11-12T12:00:00Z",
+        "duration_hours": 1.0,
+        "artifact": "inbox/active/task-001-health-template/features/health_endpoint.feature"
+      },
+      "tdd": {
+        "started": "2025-11-12T12:00:00Z",
+        "completed": "2025-11-12T16:30:00Z",
+        "duration_hours": 4.5,
+        "artifacts": [
+          "static-template/templates/mcp-server/src/health.py",
+          "static-template/templates/mcp-server/tests/test_health.py"
+        ]
+      },
+      "review": {
+        "started": "2025-11-12T16:30:00Z",
+        "completed": "2025-11-18T10:00:00Z",
+        "duration_hours": 1.5,
+        "pr_link": "https://github.com/liminalcommons/chora-base/pull/42"
+      }
+    }
+  },
+  "test_results": {
+    "coverage_percent": 95.2,
+    "tests_passed": 18,
+    "tests_failed": 0,
+    "tests_skipped": 0
+  },
+  "related_coordination": "coord-001",
+  "trace_id": "ecosystem-w3-health-monitoring",
+  "dependencies": [],
+  "blocks": [
+    "task-002 (ecosystem-manifest spec can reference this implementation)",
+    "coord-002 completion"
+  ],
+  "completion": {
+    "completed_date": "2025-11-18",
+    "pr_merged": "https://github.com/liminalcommons/chora-base/pull/42",
+    "release": "v3.5.0",
+    "release_date": "2025-11-18",
+    "release_notes": "Added health endpoint template for MCP servers implementing ADR 0001 health check format"
+  }
+}

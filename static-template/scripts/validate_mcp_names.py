@@ -256,11 +256,11 @@ def validate_namespace_config() -> List[ValidationError]:
     if not validate_namespace(MCP_NAMESPACE):
         errors.append(
             ValidationError(
-                file_path=Path("copier.yml"),
+                file_path=Path("pyproject.toml"),
                 line_number=0,
                 violation_type="InvalidNamespace",
                 message="Namespace '{}' doesn't follow conventions".format(MCP_NAMESPACE),
-                suggestion="Must be lowercase, 3-20 chars, alphanumeric only",
+                suggestion="Update package/namespace configuration to use lowercase alphanumeric (3-20 chars)",
             )
         )
 

@@ -1,0 +1,31 @@
+{
+  "type": "task",
+  "task_id": "task-301",
+  "title": "Author inbox SAP weekly broadcast template",
+  "created": "2025-10-27",
+  "sprint": "Sprint 10",
+  "priority": "P1",
+  "category": "docs",
+  "repo": "chora-base",
+  "assigned_to": "Claude Code",
+  "estimated_effort": "3-5 hours",
+  "context": {
+    "background": "Support cross-repo awareness for inbox SAP rollout",
+    "related_work": [
+      "coord-101"
+    ],
+    "waypoint": "W3"
+  },
+  "deliverables": [
+    "inbox/coordination/broadcasts/broadcast-template.md",
+    "Update to inbox/coordination/ECOSYSTEM_STATUS.yaml"
+  ],
+  "acceptance_criteria": [
+    "Template includes sections for adoption status, blockers, upcoming actions",
+    "Example broadcast referencing ledger entries is provided"
+  ],
+  "dependencies": [
+    "coord-101 decision"
+  ],
+  "trace_id": "sap-inbox-dryrun-20251027"
+}

@@ -525,12 +525,254 @@ This is a multi-session task - using checkpoint for continuity."
 
 ---
 
-**See Also:**
-- [CHECKPOINT_PATTERNS.md](CHECKPOINT_PATTERNS.md) - State preservation strategies
-- [FRAMEWORK_TEMPLATES.md](FRAMEWORK_TEMPLATES.md) - Task templates with context specs
+## SAP-Specific Context Management
+
+### Overview
+
+Skilled Awareness Packages (SAPs) introduce structured capability packaging. Use these optimized loading patterns when working with SAPs.
+
+**Related**: [SKILLED_AWARENESS_PACKAGE_PROTOCOL.md](../SKILLED_AWARENESS_PACKAGE_PROTOCOL.md) - Root SAP protocol
+
+### Essential Context for SAP Work (10-15k tokens)
+
+**When Creating a SAP**:
+```markdown
+Phase 1: Load Framework (5k tokens)
+- [SKILLED_AWARENESS_PACKAGE_PROTOCOL.md](../SKILLED_AWARENESS_PACKAGE_PROTOCOL.md)
+- [document-templates.md](../docs/reference/skilled-awareness/document-templates.md)
+
+Phase 2: Load Reference Implementation (10k tokens)
+- [inbox SAP](../docs/reference/skilled-awareness/inbox/) (all 5 artifacts)
+- Study structure, patterns, tone
+
+Phase 3: Create Artifacts (progressive)
+- Start with Charter (understand problem)
+- Add Protocol (define contract)
+- Add Awareness, Blueprint, Ledger
+- Total: ~15-20k tokens of new content
+```
+
+**When Installing a SAP**:
+```markdown
+Essential Load (2-4k tokens)
+- Target SAP's adoption-blueprint.md
+- Validation commands section
+
+Extended Load (3-5k tokens, if needed)
+- Target SAP's protocol-spec.md
+- Prerequisites and dependencies
+```
+
+### Token Budget by SAP Activity
+
+| Activity | Essential | Extended | Full | Notes |
+|----------|-----------|----------|------|-------|
+| Create SAP | 5k | 15k | 30k | Essential: protocol + templates |
+| Install SAP | 2k | 5k | 10k | Essential: blueprint only |
+| Upgrade SAP | 3k | 8k | 15k | Essential: upgrade blueprint + current protocol |
+| Understand SAP | 1k | 3k | 8k | Essential: charter only |
+
+### Progressive Loading: Creating a SAP
+
+**Step 1: Understand Framework (5k tokens)**
+```
+Read: SKILLED_AWARENESS_PACKAGE_PROTOCOL.md
+Skip: Examples, optional sections
+Focus: SAP structure, 5 artifacts, installation pattern
+```
+
+**Step 2: Study Reference (10k tokens)**
+```
+Read: inbox SAP (all 5 artifacts)
+Skip: Infrastructure files, examples
+Focus: Artifact structure, writing style, frontmatter
+```
+
+**Step 3: Load Templates (4k tokens)**
+```
+Read: document-templates.md
+Skip: Already familiar sections
+Focus: Template for current artifact
+```
+
+**Step 4: Create Artifact (progressive)**
+```
+Charter: 3-5k tokens
+Protocol: 5-8k tokens
+Awareness: 4-6k tokens
+Blueprint: 4-6k tokens
+Ledger: 2-3k tokens
+Total: 18-28k tokens (created content)
+```
+
+**Total Context**: ~19-37k tokens (input) + 18-28k tokens (output) = 37-65k tokens
+
+**Optimization**: Drop templates after reading, drop reference after patterns understood
+
+### Progressive Loading: Installing a SAP
+
+**Step 1: Find SAP (minimal)**
+```
+Read: docs/reference/skilled-awareness/INDEX.md (skim, 1k tokens)
+Locate target SAP directory
+```
+
+**Step 2: Read Blueprint (2-4k tokens)**
+```
+Read: <sap>/adoption-blueprint.md
+Skip: Background, examples (unless needed)
+Focus: Prerequisites, installation steps, validation
+```
+
+**Step 3: Execute (minimal additional context)**
+```
+Load: Only infrastructure files as needed
+Execute: Step-by-step from blueprint
+Validate: Commands from blueprint
+```
+
+**Total Context**: ~3-5k tokens (most of session)
+
+**Optimization**: Blueprint is self-contained, minimal dependencies
+
+### Context Pruning for SAPs
+
+**What to Keep**:
+- Current artifact being created/edited
+- SAP protocol (if creating SAP)
+- Blueprint steps (if installing SAP)
+- Validation commands
+
+**What to Drop**:
+- Completed artifact sections
+- Reference SAP infrastructure
+- Examples (unless actively referencing)
+- Template sections already applied
+
+**Example Pruning Strategy (Creating SAP)**:
+```
+Token Budget: 50k used, need to prune
+
+Keep:
+- Current artifact (Charter, 4k tokens)
+- Protocol (5k tokens, reference)
+- Templates (2k tokens, current section)
+Total kept: 11k tokens
+
+Drop:
+- Previous conversation (15k tokens)
+- Reference SAP infrastructure (10k tokens)
+- Example projects (14k tokens)
+Total dropped: 39k tokens
+
+Result: 11k tokens, 39k freed
+```
+
+### SAP Workflow Context Patterns
+
+**Pattern 1: Create SAP (DDD → BDD → TDD)**
+
+```
+DDD Phase:
+  Load: Protocol (5k), Templates (2k), Charter template (1k)
+  Output: Charter (3-5k) + Protocol (5-8k)
+  Context: ~18k tokens
+
+BDD Phase:
+  Load: Charter (4k), Protocol (6k), BDD examples (3k)
+  Output: Feature files (2-3k, optional for SAPs)
+  Context: ~15k tokens
+
+TDD Phase:
+  Load: Charter (4k), Protocol (6k), Blueprint template (2k)
+  Output: Infrastructure + Awareness (4-6k) + Blueprint (4-6k) + Ledger (2-3k)
+  Context: ~28k tokens
+```
+
+**Pattern 2: Install SAP**
+
+```
+Read Blueprint → Execute Steps → Validate → Update Ledger
+Context: 3-5k tokens (entire workflow)
+```
+
+**Pattern 3: Upgrade SAP**
+
+```
+Check Version → Find Upgrade Blueprint → Execute → Validate → Update Ledger
+Context: 5-8k tokens (includes upgrade notes + rollback)
+```
+
+### Multi-SAP Context Management
+
+**Scenario**: Working with multiple SAPs simultaneously (e.g., dependencies)
+
+**Strategy**:
+1. **Primary SAP**: Full context (Charter + Protocol + current artifact)
+2. **Dependency SAPs**: Protocol only (reference)
+3. **Future SAPs**: INDEX.md summary only
+
+**Example** (creating testing-framework SAP, depends on project-bootstrap):
+```
+Primary (testing-framework):
+  - Charter (draft, 4k)
+  - Protocol (draft, 6k)
+  - Templates (2k)
+  Total: 12k tokens
+
+Dependency (project-bootstrap):
+  - Protocol only (5k)
+  Total: 5k tokens
+
+Context total: 17k tokens
+```
+
+### SAP Index as Context Hub
+
+**Use SAP Index for quick reference**:
+- Load once at session start (5k tokens)
+- Reference throughout session
+- Don't reload unless checking dependencies
+
+**Pattern**:
+```
+Session start: Load INDEX.md
+Throughout: Reference in memory
+Session end: Update if SAPs created
+```
+
+### Context Checkpoints for SAPs
+
+**Checkpoint after completing each artifact**:
+```
+After Charter: Checkpoint with "Charter complete"
+After Protocol: Checkpoint with "Protocol complete"
+After Awareness: Checkpoint with "Awareness complete"
+After Blueprint: Checkpoint with "Blueprint complete"
+After Ledger: Checkpoint with "SAP complete"
+```
+
+**Benefit**: Can resume SAP creation from any artifact
+
+**Recovery Pattern**:
+```
+Resume: Load checkpoint
+Identify: Last completed artifact
+Load: Current artifact template only
+Continue: Next artifact
+```
 
 ---
 
-**Version:** 3.3.0
+**See Also:**
+- [CHECKPOINT_PATTERNS.md](CHECKPOINT_PATTERNS.md) - State preservation strategies
+- [FRAMEWORK_TEMPLATES.md](FRAMEWORK_TEMPLATES.md) - Task templates with context specs
+- [SKILLED_AWARENESS_PACKAGE_PROTOCOL.md](../SKILLED_AWARENESS_PACKAGE_PROTOCOL.md) - SAP protocol
+- [docs/reference/skilled-awareness/INDEX.md](../docs/reference/skilled-awareness/INDEX.md) - SAP registry
+- [docs/reference/skilled-awareness/sap-framework/awareness-guide.md](../docs/reference/skilled-awareness/sap-framework/awareness-guide.md) - SAP agent guidance
+
+---
+
+**Version:** 3.3.0 + SAP Framework v1.0.0
 **Pattern Maturity:** ⭐⭐⭐ Production-ready
-**Last Updated:** 2025-10-26
+**Last Updated:** 2025-10-27

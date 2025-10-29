@@ -1,0 +1,91 @@
+{
+  "type": "coordination",
+  "request_id": "coord-003",
+  "title": "Implement Health Monitoring Service with Auto-Recovery",
+  "created": "2025-11-11",
+  "from_repo": "mcp-gateway",
+  "to_repo": "mcp-orchestration",
+  "priority": "P1",
+  "urgency": "next_sprint",
+  "blocks": [
+    "coord-004 (mcp-gateway status aggregation)",
+    "Waypoint W3 validation",
+    "Production readiness"
+  ],
+  "requested_by": "Gateway Team",
+  "requested_delivery": "Week 13 (2025-12-09)",
+  "context": {
+    "waypoint": "W3",
+    "related_rfc": "0001-health-monitoring-rfc.md",
+    "related_adr": "0001-health-check-format-adr.md",
+    "background": "RFC 0001 defines health monitoring service in mcp-orchestration. This is the core of W3 - polls all registered MCP servers, detects failures, attempts auto-recovery, emits events. Without this, no health monitoring happens."
+  },
+  "deliverables": [
+    "src/services/health_monitor.py (monitoring service implementation)",
+    "src/services/recovery_manager.py (auto-recovery logic with backoff)",
+    "src/config/health_config.yaml (configuration template)",
+    "docs/HEALTH_MONITORING.md (operational guide)",
+    "tests/test_health_monitor.py (unit tests, >85% coverage)",
+    "tests/integration/test_recovery.py (integration tests for recovery flows)",
+    "Event emission integrated with trace context (CHORA_TRACE_ID)"
+  ],
+  "acceptance_criteria": [
+    "Health monitor polls all registered servers every 30 seconds",
+    "Implements failure detection (3 consecutive failures)",
+    "Implements auto-recovery with exponential backoff (1s, 2s, 4s, 8s, 16s)",
+    "Emits health check events to JSONL log with trace_id",
+    "Emits recovery events (started, successful, failed, exhausted)",
+    "Configuration matches RFC 0001 spec",
+    "Integration tests verify recovery flows",
+    "Manual intervention flag set after 5 failed recovery attempts",
+    "Health status API endpoint exposes current state",
+    "Version bumped to v2.0.0 (major new capability)"
+  ],
+  "dependencies": [
+    "coord-002 (ecosystem-manifest health spec) must complete",
+    "ecosystem-manifest.yaml must list registered servers",
+    "Docker/Podman API for container restart"
+  ],
+  "estimated_effort": "2-3 weeks",
+  "trace_id": "ecosystem-w3-health-monitoring",
+  "decision": {
+    "date": "2025-11-12",
+    "outcome": "next_sprint",
+    "sprint": "Sprint 5 (Week 9-10)",
+    "decision_makers": [
+      "Victor Piper",
+      "Orchestration Team"
+    ],
+    "rationale": "P1 - core W3 capability but depends on coord-002 completion. Larger effort (2-3 weeks) so starting in Sprint 5 after foundation laid. Has clear requirements from RFC 0001."
+  },
+  "fulfillment": {
+    "completed_date": "2025-12-06",
+    "task_id": "task-003",
+    "pr_links": [
+      "https://github.com/liminalcommons/mcp-orchestration/pull/18",
+      "https://github.com/liminalcommons/mcp-orchestration/pull/19"
+    ],
+    "delivered_artifacts": [
+      "src/services/health_monitor.py (450 lines)",
+      "src/services/recovery_manager.py (320 lines)",
+      "src/config/health_config.yaml",
+      "docs/HEALTH_MONITORING.md (operational guide, 180 lines)",
+      "tests/test_health_monitor.py (88% coverage)",
+      "tests/integration/test_recovery.py (5 integration tests)",
+      "Event emission with CHORA_TRACE_ID (47 events during testing)"
+    ],
+    "notification_sent": true
+  },
+  "related": {
+    "proposals": [
+      "prop-001-health-monitoring.md"
+    ],
+    "rfcs": [
+      "0001-health-monitoring-rfc.md"
+    ],
+    "issues": [
+      "https://github.com/liminalcommons/mcp-orchestration/issues/45",
+      "https://github.com/liminalcommons/mcp-orchestration/issues/46"
+    ]
+  }
+}

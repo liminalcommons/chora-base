@@ -1,0 +1,5 @@
+{"event_type": "coordination_request_accepted", "request_id": "coord-101", "trace_id": "sap-inbox-dryrun-20251027", "timestamp": "2025-10-28T04:30:40Z", "repo": "chora-base"}
+{"event_type": "task_started", "task_id": "task-301", "trace_id": "sap-inbox-dryrun-20251027", "timestamp": "2025-10-28T04:30:56Z", "repo": "chora-base"}
+{"event_type": "checkpoint", "task_id": "task-301", "trace_id": "sap-inbox-dryrun-20251027", "timestamp": "2025-10-28T04:31:22Z", "repo": "chora-base", "notes": "Broadcast template drafted during dry run"}
+{"event_type": "task_completed", "task_id": "task-301", "trace_id": "sap-inbox-dryrun-20251027", "timestamp": "2025-10-28T04:31:51Z", "repo": "chora-base", "outcome": "Dry run broadcast template drafted"}
+{"event_type": "coordination_request_completed", "request_id": "coord-101", "trace_id": "sap-inbox-dryrun-20251027", "timestamp": "2025-10-28T04:31:56Z", "repo": "chora-base", "decision": "this_sprint"}

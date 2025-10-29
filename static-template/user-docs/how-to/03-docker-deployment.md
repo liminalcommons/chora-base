@@ -11,10 +11,10 @@
 **Enable Docker during project generation:**
 
 ```bash
-copier copy gh:liminalcommons/chora-base my-project
-# When prompted:
-# include_docker: true
-# docker_strategy: production  # or ci-only
+python setup.py my-project
+# After generation:
+# - Docker files (Dockerfile, Dockerfile.test, docker-compose.yml, .dockerignore) are included by default.
+# - Review and customize as needed (see sections below).
 ```
 
 **Or add to existing project:**
@@ -375,22 +375,22 @@ response = requests.get("http://chora-compose:8000/tools")
 
 ## Adding Docker to Existing Projects
 
-### Option 1: copier Update (Recommended)
+### Option 1: Sync from chora-base (Recommended)
 
 ```bash
-# Update from chora-base v1.9.0+
-copier update
+# Ensure you have chora-base available locally
+git remote add chora-base https://github.com/liminalcommons/chora-base.git 2>/dev/null || true
+git fetch chora-base
 
-# Answer prompts:
-# include_docker: true
-# docker_strategy: production  # or ci-only
+# Create upgrade branch
+git checkout -b upgrade-docker-$(date +%Y%m%d)
 
-# Review changes
+# Pull latest docker assets
+git checkout chora-base/main -- Dockerfile Dockerfile.test docker-compose.yml .dockerignore
+
+# Review and commit
 git diff
-
-# Commit
-git add Dockerfile* docker-compose.yml .dockerignore
-git commit -m "feat(docker): Add Docker support from chora-base v1.9.0"
+git commit -am "feat(docker): Sync Docker assets from chora-base"
 ```
 
 ### Option 2: Manual Addition
@@ -402,20 +402,20 @@ git commit -m "feat(docker): Add Docker support from chora-base v1.9.0"
 git clone https://github.com/liminalcommons/chora-base
 
 # Copy Docker templates
-cp chora-base/template/Dockerfile.jinja myproject/Dockerfile
-cp chora-base/template/Dockerfile.test.jinja myproject/Dockerfile.test
-cp chora-base/template/.dockerignore.jinja myproject/.dockerignore
-cp chora-base/template/docker-compose.yml.jinja myproject/docker-compose.yml
+cp chora-base/static-template/Dockerfile myproject/Dockerfile
+cp chora-base/static-template/Dockerfile.test myproject/Dockerfile.test
+cp chora-base/static-template/.dockerignore myproject/.dockerignore
+cp chora-base/static-template/docker-compose.yml myproject/docker-compose.yml
 ```
 
 **Step 2: Replace template variables**
 
 ```bash
-# Find and replace in copied files:
-{{ project_name }} → My Project Name
-{{ project_slug }} → my-project
-{{ package_name }} → my_project
-{{ python_version }} → 3.12
+# Review copied files and replace placeholders (if any) such as:
+# {{ project_name }} → My Project Name
+# {{ project_slug }} → my-project
+# {{ package_name }} → my_project
+# {{ python_version }} → 3.12
 ```
 
 **Step 3: Update justfile (optional)**

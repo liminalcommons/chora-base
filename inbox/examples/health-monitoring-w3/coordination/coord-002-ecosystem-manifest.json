@@ -1,0 +1,84 @@
+{
+  "type": "coordination",
+  "request_id": "coord-002",
+  "title": "Formalize Health Check Specification and Quality Standards",
+  "created": "2025-11-11",
+  "from_repo": "mcp-orchestration",
+  "to_repo": "ecosystem-manifest",
+  "priority": "P0",
+  "urgency": "blocks_sprint",
+  "blocks": [
+    "coord-003 (mcp-orchestration monitoring service)",
+    "Waypoint W3 validation",
+    "Future MCP server ecosystem inclusion"
+  ],
+  "requested_by": "Orchestration Team",
+  "requested_delivery": "Week 10 (2025-11-25)",
+  "context": {
+    "waypoint": "W3",
+    "related_rfc": "0001-health-monitoring-rfc.md",
+    "related_adr": "0001-health-check-format-adr.md",
+    "background": "RFC 0001 and ADR 0001 define health monitoring. ecosystem-manifest is the single source of truth for MCP ecosystem standards. Need to formalize health check spec so all servers implement consistently and monitoring service knows what to expect."
+  },
+  "deliverables": [
+    "specs/health-check-spec-v1.0.md (formal specification document)",
+    "schemas/health-check-v1.0.json (copy from ADR 0001)",
+    "QUALITY_STANDARDS.md updated (health endpoint now required for ecosystem inclusion)",
+    "ecosystem-manifest.yaml updated (add health_check_spec capability)",
+    "CHANGELOG.md entry for v1.1.0 release"
+  ],
+  "acceptance_criteria": [
+    "Health check spec defines all required/optional fields from ADR 0001",
+    "Spec includes example responses for ok/degraded/down states",
+    "Spec defines error handling (timeouts, HTTP codes)",
+    "Quality standards require health endpoint for ecosystem inclusion",
+    "JSON schema matches ADR 0001 exactly",
+    "ecosystem-manifest.yaml declares health_check_spec as provided capability",
+    "Version bumped to v1.1.0"
+  ],
+  "dependencies": [
+    "ADR 0001 must be finalized (status: accepted)",
+    "coord-001 (chora-base template) should complete first (shows reference implementation)"
+  ],
+  "estimated_effort": "6-8 hours",
+  "trace_id": "ecosystem-w3-health-monitoring",
+  "decision": {
+    "date": "2025-11-12",
+    "outcome": "this_sprint",
+    "sprint": "Sprint 4 (Week 7-8)",
+    "decision_makers": [
+      "Victor Piper",
+      "Ecosystem Team"
+    ],
+    "rationale": "P0 blocker for W3. Depends on coord-001 but can start in parallel. Clear requirements from ADR 0001. Ecosystem-manifest is the right home for this specification."
+  },
+  "fulfillment": {
+    "completed_date": "2025-11-20",
+    "task_id": "task-002",
+    "pr_links": [
+      "https://github.com/liminalcommons/ecosystem-manifest/pull/7"
+    ],
+    "delivered_artifacts": [
+      "specs/health-check-spec-v1.0.md (comprehensive spec, 250 lines)",
+      "schemas/health-check-v1.0.json (copied from ADR 0001)",
+      "QUALITY_STANDARDS.md (health endpoint now required)",
+      "ecosystem-manifest.yaml (health_check_spec capability added)",
+      "CHANGELOG.md (v1.1.0 entry)"
+    ],
+    "notification_sent": true
+  },
+  "related": {
+    "proposals": [
+      "prop-001-health-monitoring.md"
+    ],
+    "rfcs": [
+      "0001-health-monitoring-rfc.md"
+    ],
+    "adrs": [
+      "0001-health-check-format-adr.md"
+    ],
+    "issues": [
+      "https://github.com/liminalcommons/ecosystem-manifest/issues/12"
+    ]
+  }
+}

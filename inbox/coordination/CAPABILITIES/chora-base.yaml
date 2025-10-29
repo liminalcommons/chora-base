@@ -1,0 +1,172 @@
+# Capabilities: chora-base
+#
+# Purpose: Declare what chora-base provides and consumes in the ecosystem
+# Updated: Manually when capabilities change
+# Usage: Other repos read this to understand what chora-base can do
+
+repo: chora-base
+version: 1.0.0
+updated: 2025-10-27
+
+description: |
+  Production-ready Python project template for AI-agent-first development.
+  Provides templates, standards, and frameworks for building MCP servers,
+  Python libraries, CLI tools, and web services.
+
+# What this repo provides to the ecosystem
+provides:
+  - id: mcp_server_template
+    name: "MCP Server Template"
+    description: "Production-ready MCP server template with FastMCP"
+    location: "static-template/templates/mcp-server/"
+    version: "3.3.0"
+    consumers:
+      - ecosystem-manifest
+      - mcp-orchestration
+
+  - id: health_endpoint_template
+    name: "Health Endpoint Template"
+    description: "Standardized health endpoint for MCP servers"
+    location: "static-template/templates/mcp-server/src/health.py"
+    version: "3.5.0"  # Planned
+    status: planned
+    consumers:
+      - ecosystem-manifest
+      - all MCP servers
+
+  - id: drso_workflow
+    name: "DRSO Development Workflow"
+    description: "Documentation-driven development process (DDD→BDD→TDD)"
+    location: "static-template/dev-docs/workflows/"
+    version: "1.0.0"
+    consumers:
+      - all repos
+
+  - id: vision_framework
+    name: "Vision-Driven Development Framework"
+    description: "Strategic planning with capability waves"
+    location: "static-template/dev-docs/vision/"
+    version: "1.0.0"
+    consumers:
+      - all repos
+
+  - id: claude_optimization
+    name: "Claude Code Optimization Patterns"
+    description: "Claude-specific development patterns and templates"
+    location: "claude/"
+    version: "3.3.0"
+    consumers:
+      - all repos using Claude Code
+
+  - id: documentation_standard
+    name: "Diátaxis Documentation Standard"
+    description: "Structured documentation with frontmatter schema"
+    location: "static-template/DOCUMENTATION_STANDARD.md"
+    version: "1.6.0"
+    consumers:
+      - all repos
+
+# What this repo consumes from the ecosystem
+consumes:
+  - repo: ecosystem-manifest
+    capability: server_registry
+    reason: "Reference implementation for MCP server templates"
+    version: ">=1.0.0"
+
+  - repo: ecosystem-manifest
+    capability: quality_standards
+    reason: "Ensure templates meet ecosystem standards"
+    version: ">=1.0.0"
+
+# Intake capabilities - what requests this repo can handle
+capabilities:
+  can_receive:
+    - type: strategic
+      category: [template_enhancement, documentation_standard, workflow_improvement]
+      review_frequency: quarterly
+      decision_makers: ["Victor", "Template Maintainers"]
+
+    - type: coordination
+      category: [template_update, standard_change, framework_addition]
+      review_frequency: sprint_planning
+      decision_makers: ["Victor"]
+
+    - type: task
+      category: [feature, bug, refactor, docs, test]
+      review_frequency: continuous
+      assignable_to: ["Claude Code", "Victor"]
+
+  can_provide:
+    - capability: template_generation
+      for: [new MCP servers, Python libraries, CLI tools]
+      sla: "1-2 hours for template generation"
+
+    - capability: standard_definition
+      for: [documentation, development process, quality gates]
+      sla: "1-2 weeks for new standard"
+
+# Dependencies
+dependencies:
+  required:
+    - name: Python
+      version: ">=3.12"
+
+    - name: Poetry
+      version: ">=1.5"
+
+  ecosystem:
+    - repo: ecosystem-manifest
+      version: ">=1.0.0"
+      optional: false
+      reason: "Templates reference manifest for server standards"
+
+# Inbox Protocol
+inbox_protocol_version: "1.0"
+
+inbox_settings:
+  strategic_proposals:
+    enabled: true
+    review_frequency: quarterly
+    notification: ["Victor"]
+
+  coordination_requests:
+    enabled: true
+    sla: "reviewed within 2 weeks (sprint planning)"
+    accepts_from: ["ecosystem-manifest", "mcp-orchestration", "mcp-gateway"]
+
+  implementation_tasks:
+    enabled: true
+    workflow: "DDD → BDD → TDD"
+    phases:
+      - ddd: "2-4 hours"
+      - bdd: "1-2 hours"
+      - tdd: "4-8 hours"
+
+# Contact
+maintainers:
+  - name: Victor
+    github: victorpiper
+    role: "Lead Maintainer"
+
+contact:
+  - type: github_issue
+    url: https://github.com/liminalcommons/chora-base/issues
+    for: ["bugs", "feature requests", "questions"]
+
+  - type: github_discussions
+    url: https://github.com/liminalcommons/chora-base/discussions
+    for: ["proposals", "architectural discussions"]
+
+# Metrics
+metrics:
+  velocity:
+    tasks_per_sprint: 2-3
+    avg_task_duration: "6-8 hours"
+
+  quality:
+    test_coverage_target: ">=85%"
+    code_quality: "mypy strict, ruff compliant"
+
+  coordination:
+    active_requests: 0
+    pending_fulfillment: 0

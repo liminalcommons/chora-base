@@ -1,0 +1,80 @@
+{
+  "type": "implementation-task",
+  "task_id": "task-002",
+  "title": "Formalize Health Check Specification",
+  "created": "2025-11-12",
+  "sprint": "Sprint 4",
+  "priority": "P0",
+  "category": "docs",
+  "repo": "ecosystem-manifest",
+  "assigned_to": "Claude Code",
+  "estimated_effort": "6-8 hours",
+  "deliverables": [
+    "Health check specification (specs/health-check-spec-v1.0.md)",
+    "JSON schema (schemas/health-check-v1.0.json)",
+    "Updated quality standards (QUALITY_STANDARDS.md)",
+    "Updated ecosystem manifest (ecosystem-manifest.yaml)"
+  ],
+  "acceptance_criteria": [
+    "Spec defines all required/optional fields from ADR 0001",
+    "Spec includes example responses",
+    "Spec defines error handling",
+    "Quality standards require health endpoint",
+    "ecosystem-manifest.yaml declares health_check_spec capability"
+  ],
+  "workflow": {
+    "status": "completed",
+    "phases": {
+      "ddd": {
+        "started": "2025-11-13T09:00:00Z",
+        "completed": "2025-11-13T11:30:00Z",
+        "duration_hours": 2.5,
+        "artifact": "inbox/active/task-002-health-spec/change-request.md"
+      },
+      "bdd": {
+        "started": "2025-11-13T11:30:00Z",
+        "completed": "2025-11-13T12:30:00Z",
+        "duration_hours": 1.0,
+        "artifact": "inbox/active/task-002-health-spec/features/health_spec.feature"
+      },
+      "tdd": {
+        "started": "2025-11-13T12:30:00Z",
+        "completed": "2025-11-13T16:00:00Z",
+        "duration_hours": 3.5,
+        "artifacts": [
+          "specs/health-check-spec-v1.0.md",
+          "schemas/health-check-v1.0.json",
+          "QUALITY_STANDARDS.md",
+          "ecosystem-manifest.yaml"
+        ]
+      },
+      "review": {
+        "started": "2025-11-13T16:00:00Z",
+        "completed": "2025-11-20T10:00:00Z",
+        "duration_hours": 2.0,
+        "pr_link": "https://github.com/liminalcommons/ecosystem-manifest/pull/7"
+      }
+    }
+  },
+  "test_results": {
+    "schema_validated": true,
+    "examples_valid": true,
+    "quality_gates_defined": true
+  },
+  "related_coordination": "coord-002",
+  "trace_id": "ecosystem-w3-health-monitoring",
+  "dependencies": [
+    "task-001 (reference implementation helps validate spec)"
+  ],
+  "blocks": [
+    "task-003 (monitoring service needs spec to parse responses)",
+    "coord-003 completion"
+  ],
+  "completion": {
+    "completed_date": "2025-11-20",
+    "pr_merged": "https://github.com/liminalcommons/ecosystem-manifest/pull/7",
+    "release": "v1.1.0",
+    "release_date": "2025-11-20",
+    "release_notes": "Added health check specification v1.0 and updated quality standards to require health endpoints"
+  }
+}

@@ -1,0 +1,230 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://github.com/liminalcommons/chora-base/inbox/schemas/strategic-proposal.schema.json",
+  "title": "Strategic Proposal",
+  "description": "Schema for Type 1 intake: Strategic proposals that influence ecosystem vision and roadmap",
+  "type": "object",
+  "required": [
+    "type",
+    "proposal_id",
+    "title",
+    "created",
+    "author",
+    "status",
+    "impact",
+    "summary",
+    "problem",
+    "solution"
+  ],
+  "properties": {
+    "type": {
+      "type": "string",
+      "const": "strategic-proposal",
+      "description": "Type discriminator - always 'strategic-proposal'"
+    },
+    "proposal_id": {
+      "type": "string",
+      "pattern": "^prop-[0-9]{3,}$",
+      "description": "Unique proposal ID (e.g., prop-001)",
+      "examples": ["prop-001", "prop-042"]
+    },
+    "title": {
+      "type": "string",
+      "minLength": 10,
+      "maxLength": 200,
+      "description": "Brief, descriptive title"
+    },
+    "created": {
+      "type": "string",
+      "format": "date",
+      "description": "Creation date (YYYY-MM-DD)"
+    },
+    "author": {
+      "type": "string",
+      "description": "Author name or team"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "proposed",
+        "under-review",
+        "accepted",
+        "deferred",
+        "rejected"
+      ],
+      "description": "Current status of proposal"
+    },
+    "impact": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "minItems": 1,
+      "description": "List of affected repositories",
+      "examples": [["ecosystem-manifest", "mcp-orchestration", "mcp-gateway"]]
+    },
+    "summary": {
+      "type": "string",
+      "minLength": 50,
+      "description": "1-2 paragraph executive summary"
+    },
+    "problem": {
+      "type": "string",
+      "minLength": 50,
+      "description": "Problem statement - what pain point does this address?"
+    },
+    "solution": {
+      "type": "string",
+      "minLength": 50,
+      "description": "Proposed solution - detailed explanation"
+    },
+    "business_value": {
+      "type": "string",
+      "description": "Why this matters - business or user value"
+    },
+    "timeline_estimate": {
+      "type": "string",
+      "description": "When could this realistically be delivered?",
+      "examples": ["Q1 2026", "6-8 weeks", "3 months"]
+    },
+    "alternatives_considered": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["approach", "rationale"],
+        "properties": {
+          "approach": {
+            "type": "string",
+            "description": "Alternative approach considered"
+          },
+          "rationale": {
+            "type": "string",
+            "description": "Why not chosen"
+          }
+        }
+      },
+      "description": "Other approaches considered and why rejected"
+    },
+    "success_metrics": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "How to measure success",
+      "examples": [["Reduce setup time from 10min to 2min", "Achieve 90% test coverage"]]
+    },
+    "open_questions": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "Questions needing answers before proceeding"
+    },
+    "dependencies": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "Dependencies on other work, RFCs, or external factors"
+    },
+    "resources_required": {
+      "type": "object",
+      "properties": {
+        "engineering_weeks": {
+          "type": "number",
+          "description": "Estimated engineering time in weeks"
+        },
+        "design_weeks": {
+          "type": "number",
+          "description": "Estimated design time in weeks"
+        },
+        "other": {
+          "type": "string",
+          "description": "Other resource requirements"
+        }
+      }
+    },
+    "risks": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["risk", "severity", "mitigation"],
+        "properties": {
+          "risk": {
+            "type": "string",
+            "description": "Description of risk"
+          },
+          "severity": {
+            "type": "string",
+            "enum": ["low", "medium", "high", "critical"]
+          },
+          "mitigation": {
+            "type": "string",
+            "description": "How to mitigate this risk"
+          }
+        }
+      }
+    },
+    "decision": {
+      "type": "object",
+      "description": "Decision metadata (added when status changes)",
+      "properties": {
+        "date": {
+          "type": "string",
+          "format": "date",
+          "description": "When decision was made"
+        },
+        "decision_makers": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "Who made the decision"
+        },
+        "rationale": {
+          "type": "string",
+          "description": "Why this decision was made"
+        },
+        "next_review": {
+          "type": "string",
+          "format": "date",
+          "description": "When to review again (for deferred items)"
+        }
+      }
+    },
+    "related": {
+      "type": "object",
+      "description": "Related documents and links",
+      "properties": {
+        "rfcs": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "Related RFCs"
+        },
+        "adrs": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "Related ADRs"
+        },
+        "issues": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "Related GitHub issues"
+        },
+        "prs": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "Related pull requests"
+        }
+      }
+    }
+  }
+}

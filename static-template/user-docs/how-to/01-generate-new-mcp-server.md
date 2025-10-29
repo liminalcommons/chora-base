@@ -3,26 +3,20 @@
 ## Quick Reference
 
 **Time:** 5 minutes
-**Prerequisites:** Python 3.11+, Copier installed
+**Prerequisites:** Python 3.11+
 **Result:** Working MCP server with memory system, scripts, workflows
 
 ---
 
 ## Steps
 
-### 1. Install Copier
+### 1. Run the Blueprint Generator
 
 ```bash
-pipx install copier
+python setup.py /path/to/new-project
 ```
 
-### 2. Generate Project
-
-```bash
-copier copy gh:liminalcommons/chora-base /path/to/new-project
-```
-
-### 3. Answer Template Prompts
+### 2. Provide Project Details
 
 | Prompt | Answer | Notes |
 |--------|--------|-------|
@@ -43,7 +37,7 @@ copier copy gh:liminalcommons/chora-base /path/to/new-project
 | `include_justfile` | `true` | Task automation |
 | `license` | `MIT` | Choose license |
 
-### 4. Run Setup
+### 3. Run Setup
 
 ```bash
 cd /path/to/new-project
@@ -56,7 +50,7 @@ cd /path/to/new-project
 - Installs pre-commit hooks
 - Runs smoke tests
 
-### 5. Verify Installation
+### 4. Verify Installation
 
 ```bash
 # Check entry point
@@ -87,7 +81,7 @@ tests/test_memory.py::test_event_emission PASSED
 
 | Problem | Solution |
 |---------|----------|
-| `copier: command not found` | Install with `pipx install copier` |
+| Setup script exits early | Ensure Python 3.11+ is active (`python --version`) |
 | `setup.sh: Permission denied` | Run `chmod +x scripts/setup.sh` |
 | Tests failing | Check Python version with `python --version` |
 
@@ -97,4 +91,4 @@ tests/test_memory.py::test_event_emission PASSED
 
 - [How-To: Add Custom MCP Tools](03-add-custom-mcp-tools.md)
 - [How-To: Integrate Memory System](04-add-memory-to-tools.md)
-- [Reference: chora-base Configuration Options](../reference/template-configuration.md)
+- [Reference: chora-base Blueprint Configuration](../reference/template-configuration.md)

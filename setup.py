@@ -16,14 +16,17 @@ import re
 import shutil
 import subprocess
 import sys
+from datetime import datetime, timezone
 from pathlib import Path
 from typing import Dict, Optional
+
+TEMPLATE_VERSION = "3.0.0"
 
 
 def print_header():
     """Print welcome message."""
     print("=" * 60)
-    print("Chora-Base v3.0.0 Setup")
+    print(f"Chora-Base v{TEMPLATE_VERSION} Setup")
     print("=" * 60)
     print()
 
@@ -173,6 +176,10 @@ def gather_variables() -> Dict[str, str]:
     # Derive additional variables
     variables['python_version_nodots'] = variables['python_version'].replace('.', '')
     variables['test_coverage_threshold'] = "85"  # Default 85% coverage
+    now = datetime.now(timezone.utc)
+    variables['template_version'] = TEMPLATE_VERSION
+    variables['generation_date'] = now.strftime("%Y-%m-%d")
+    variables['generation_timestamp'] = now.isoformat()
 
     print()
     return variables
@@ -291,7 +298,7 @@ def initialize_git(target_dir: Path, variables: Dict[str, str]):
         subprocess.run(['git', 'add', '.'], cwd=target_dir, check=True)
         subprocess.run([
             'git', 'commit', '-m',
-            f'Apply chora-base v3.0.0 template\n\nProject: {variables["project_name"]}'
+            f'Apply chora-base v{variables["template_version"]} template\n\nProject: {variables["project_name"]}'
         ], cwd=target_dir, check=False)
     else:
         print("Initializing git repository...")
@@ -299,7 +306,7 @@ def initialize_git(target_dir: Path, variables: Dict[str, str]):
         subprocess.run(['git', 'add', '.'], cwd=target_dir, check=True)
         subprocess.run([
             'git', 'commit', '-m',
-            f'Initial commit from chora-base v3.0.0\n\n' +
+            f'Initial commit from chora-base v{variables["template_version"]}\n\n' +
             f'Project: {variables["project_name"]}\n' +
             f'Package: {variables["package_name"]}\n' +
             f'Template: https://github.com/liminalcommons/chora-base'

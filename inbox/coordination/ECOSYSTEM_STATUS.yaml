@@ -1,0 +1,18 @@
+# Ecosystem Status Summary
+sap_inbox:
+  - week: 2025-11-03
+    summary: >
+      Preparing inbox SAP rollout—dry run scheduled, second pilot scoped, first status broadcast planned.
+    details:
+      - item: "Agent dry run"
+        status: "Completed"
+        notes: "Executed Codex-led dry run on 2025-10-27; checklist updated with findings."
+      - item: "Second pilot"
+        status: "In planning"
+        notes: "chora-compose identified as next adopter; readiness data collection underway."
+      - item: "Copier cleanup"
+        status: "In progress"
+        notes: "Guidance and user docs converted to blueprint/SAP workflow (2025-10-28); legacy release notes flagged as historical."
+      - item: "Weekly broadcast"
+        status: "Pending"
+        notes: "Workflow documented; this entry seeds the cadence for the 2025-11-03 broadcast."

@@ -1,0 +1,90 @@
+{
+  "type": "implementation-task",
+  "task_id": "task-004",
+  "title": "Implement Health Status Aggregation and Client Notifications",
+  "created": "2025-12-09",
+  "sprint": "Sprint 6",
+  "priority": "P1",
+  "category": "feature",
+  "repo": "mcp-gateway",
+  "assigned_to": "Claude Code",
+  "estimated_effort": "12-16 hours (1-2 weeks)",
+  "deliverables": [
+    "Health aggregation service (health_aggregator.py)",
+    "API endpoints (health_routes.py)",
+    "Frontend dashboard (health-dashboard.tsx)",
+    "API documentation (API.md updated)",
+    "Unit tests (test_health_aggregation.py, >85% coverage)",
+    "Integration tests (test_health_stream.py)"
+  ],
+  "acceptance_criteria": [
+    "GET /health/ecosystem returns aggregated status",
+    "Aggregation logic matches RFC 0001",
+    "WebSocket /health/stream emits real-time events",
+    "Dashboard displays real-time health status",
+    "API documentation includes examples",
+    "Unit tests achieve >85% coverage",
+    "Integration tests verify WebSocket",
+    "Graceful degradation if orchestration unavailable"
+  ],
+  "workflow": {
+    "status": "completed",
+    "phases": {
+      "ddd": {
+        "started": "2025-12-09T09:00:00Z",
+        "completed": "2025-12-09T12:30:00Z",
+        "duration_hours": 3.5,
+        "artifact": "inbox/active/task-004-status-aggregation/change-request.md"
+      },
+      "bdd": {
+        "started": "2025-12-09T12:30:00Z",
+        "completed": "2025-12-09T14:30:00Z",
+        "duration_hours": 2.0,
+        "artifact": "inbox/active/task-004-status-aggregation/features/health_aggregation.feature"
+      },
+      "tdd": {
+        "started": "2025-12-09T14:30:00Z",
+        "completed": "2025-12-19T17:00:00Z",
+        "duration_hours": 14.5,
+        "artifacts": [
+          "src/services/health_aggregator.py (280 lines)",
+          "src/api/health_routes.py (150 lines)",
+          "frontend/components/health-dashboard.tsx (320 lines)",
+          "tests/test_health_aggregation.py",
+          "tests/integration/test_health_stream.py"
+        ]
+      },
+      "review": {
+        "started": "2025-12-19T17:00:00Z",
+        "completed": "2025-12-20T10:00:00Z",
+        "duration_hours": 1.5,
+        "pr_link": "https://github.com/liminalcommons/mcp-gateway/pull/23"
+      }
+    }
+  },
+  "test_results": {
+    "coverage_percent": 87.1,
+    "tests_passed": 34,
+    "tests_failed": 0,
+    "tests_skipped": 1,
+    "integration_tests_passed": 4
+  },
+  "related_coordination": "coord-004",
+  "trace_id": "ecosystem-w3-health-monitoring",
+  "dependencies": [
+    "task-003 (monitoring service must expose API)",
+    "mcp-orchestration v2.0.0 (health monitoring service)"
+  ],
+  "blocks": [
+    "Waypoint W3 validation",
+    "Production deployments"
+  ],
+  "completion": {
+    "completed_date": "2025-12-20",
+    "pr_merged": "https://github.com/liminalcommons/mcp-gateway/pull/23",
+    "release": "v1.3.0",
+    "release_date": "2025-12-20",
+    "release_notes": "Added health status aggregation and real-time notifications. Completes RFC 0001 implementation and Waypoint W3."
+  },
+  "notes": "Frontend dashboard includes visual indicators (green/yellow/red) and auto-reconnect logic for WebSocket. Tested with 10 simulated server failures - all events displayed correctly."
+}
