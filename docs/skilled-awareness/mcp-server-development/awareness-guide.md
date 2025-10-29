@@ -806,15 +806,15 @@ def set_task_assignee(task_id: int, assignee: str) -> dict:
 ### 4-Domain Cross-References
 
 **Development Documentation** (`docs/dev-docs/`):
-- [MCP Development Workflow](../../dev-docs/workflows/mcp-development-workflow.md) - Step-by-step MCP development process (to be created in Phase 3)
+- [MCP Development Workflow](../../dev-docs/workflows/mcp-development-workflow.md) - Step-by-step MCP development process 
 - [Testing Framework](../../dev-docs/workflows/TDD_WORKFLOW.md) - TDD patterns for MCP tools
 - [Git Workflows](../../dev-docs/workflows/git-workflows.md) - Version control for MCP servers
 
 **User Documentation** (`docs/user-docs/`):
-- [How to Implement MCP Server](../../user-docs/how-to/implement-mcp-server.md) - User-facing implementation guide (to be created in Phase 3)
-- [How to Configure Claude Desktop](../../user-docs/how-to/configure-claude-desktop-mcp.md) - MCP client configuration (to be created in Phase 3)
-- [MCP Protocol Reference](../../user-docs/reference/mcp-protocol-spec.md) - Technical reference (to be created in Phase 3)
-- [Why Use MCP Servers](../../user-docs/explanation/why-mcp-servers.md) - Conceptual explanation (to be created in Phase 3)
+- [How to Implement MCP Server](../../user-docs/how-to/implement-mcp-server.md) - User-facing implementation guide 
+- [How to Configure Claude Desktop](../../user-docs/how-to/configure-mcp-client.md) - MCP client configuration 
+- [MCP Protocol Reference](../../user-docs/reference/mcp-protocol-spec.md) - Technical reference 
+- [Why Use MCP Servers](../../user-docs/explanation/why-mcp-servers.md) - Conceptual explanation 
 
 **Project Documentation** (`docs/project-docs/`):
 - [MCP Specificity Audit](../../project-docs/mcp-specificity-audit.md) - Analysis of MCP-specific content
@@ -848,7 +848,7 @@ def set_task_assignee(task_id: int, assignee: str) -> dict:
 - [FastMCP Documentation](https://github.com/jlowin/fastmcp) - Python SDK
 
 **Chora Ecosystem**:
-- [Chora MCP Conventions v1.0](https://github.com/liminalcommons/chora-base/blob/main/docs/standards/CHORA_MCP_CONVENTIONS_v1.0.md) - Namespace standards (to be created in Phase 3)
+- [Chora MCP Conventions v1.0](../../standards/CHORA_MCP_CONVENTIONS_v1.0.md) - Namespace standards 
 - [chora-compose](https://github.com/liminalcommons/chora-compose) - Content generation MCP server (example)
 - [mcp-n8n](https://github.com/liminalcommons/mcp-n8n) - Workflow automation gateway
 
