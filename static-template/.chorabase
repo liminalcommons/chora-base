@@ -1,0 +1,236 @@
+# .chorabase - Chora-Base Project Metadata
+#
+# This file defines merge boundaries for projects created from chora-base.
+# It gets copied when you clone chora-base to start a new project.
+#
+# See: docs/user-docs/reference/chorabase-metadata-spec.md
+
+version: "4.1.0"
+structural_version: "4.1.0"
+created: "{{ CREATION_DATE }}"
+project_type: "chora-base-project"
+project_name: "{{ PROJECT_NAME }}"
+
+# Files that are pure structure (always safe to merge from upstream)
+structure_only:
+  # Core protocols and standards
+  - SKILLED_AWARENESS_PACKAGE_PROTOCOL.md
+  - DOCUMENTATION_STANDARD.md
+  - DOCKER_BEST_PRACTICES.md
+  - PYPI_SETUP.md
+  - NAMESPACES.md
+  - .chorabase
+
+  # SAP Framework (always from upstream)
+  - docs/skilled-awareness/sap-framework/**
+  - docs/skilled-awareness/document-templates.md
+  - docs/skilled-awareness/workflow-mapping.md
+
+  # Configuration templates (initial structure only)
+  - .editorconfig
+  - .dockerignore
+  - .pre-commit-config.yaml
+
+  # CI/CD templates (GitHub Actions)
+  - .github/workflows/test.yml
+  - .github/workflows/lint.yml
+  - .github/workflows/codeql.yml
+  - .github/workflows/dependency-review.yml
+
+  # Docker templates
+  - Dockerfile
+  - Dockerfile.test
+  - docker-compose.yml
+
+  # Build configuration templates
+  - justfile  # May need hybrid treatment if heavily customized
+
+  # Documentation templates (structure, not content)
+  - user-docs/explanation/vision-driven-development.md
+  - user-docs/reference/template-configuration.md
+  - user-docs/reference/mcp-naming-best-practices.md
+  - user-docs/reference/python-patterns.md
+  - user-docs/reference/mcp-conventions.md
+
+  # Development workflow docs
+  - dev-docs/workflows/**
+
+# Files that are pure content (never merge from upstream, project-specific)
+content_only:
+  # Source code (always project-specific)
+  - src/**
+  - tests/**
+
+  # MCP templates (once used, become project code)
+  - mcp-templates/**  # After generation, these are project-specific
+
+  # Version control
+  - .git/**
+  - .gitignore  # After initial customization
+
+  # Environment and secrets
+  - .env
+  - .env.*
+  - "*.local"
+
+  # Project-specific SAPs (installed via install-sap.py)
+  - docs/skilled-awareness/inbox/**
+  - docs/skilled-awareness/chora-base/**
+  - docs/skilled-awareness/project-bootstrap/**
+  - docs/skilled-awareness/testing-framework/**
+  - docs/skilled-awareness/ci-cd-workflows/**
+  - docs/skilled-awareness/quality-gates/**
+  - docs/skilled-awareness/documentation-framework/**
+  - docs/skilled-awareness/automation-scripts/**
+  - docs/skilled-awareness/agent-awareness/**
+  - docs/skilled-awareness/memory-system/**
+  - docs/skilled-awareness/docker-operations/**
+  - docs/skilled-awareness/development-lifecycle/**
+  - docs/skilled-awareness/metrics-tracking/**
+  - docs/skilled-awareness/link-validation-reference-management/**
+  - docs/skilled-awareness/mcp-server-development/**
+  - docs/skilled-awareness/chora-compose-integration/**
+  - docs/skilled-awareness/chora-compose-meta/**
+  # Note: Only include SAPs you've explicitly installed
+
+  # Project-specific documentation
+  - user-docs/how-to/**  # How-tos are project-specific
+  - project-docs/**      # Project docs are always specific
+  - docker/AGENTS.md     # Project-specific docker guidance
+  - docker/CLAUDE.md
+  - tests/AGENTS.md      # Project-specific test guidance
+  - tests/CLAUDE.md
+
+  # Build artifacts
+  - dist/**
+  - build/**
+  - "*.egg-info"
+  - __pycache__/**
+  - "*.pyc"
+  - .pytest_cache/**
+  - .coverage
+  - htmlcov/**
+
+  # IDE and editor
+  - .vscode/**
+  - .idea/**
+  - "*.swp"
+  - "*.swo"
+  - .DS_Store
+
+# Files that are hybrid (require intelligent merging with specific rules)
+hybrid:
+  AGENTS.md:
+    description: "Root agent awareness file with project structure and capabilities"
+    merge_strategy: "section-by-section"
+    structure_markers:
+      - "^## [A-Z]"        # Level 2 headers
+      - "^### [A-Z]"       # Level 3 headers
+    content_markers:
+      - "^(?!##|###)"      # Content paragraphs
+    preserve_sections:
+      # Always keep these from current project
+      - "Project Overview"
+      - "Common Tasks"
+      - "MCP Server Details"
+      - "Custom Features"
+      - "Environment Variables"
+    merge_sections:
+      # Can update these from upstream
+      - "Project Structure"
+      - "Development Process"
+      - "SAP Framework"
+      - "Available Scripts"
+
+  CLAUDE.md:
+    description: "Claude-specific project context"
+    merge_strategy: "section-by-section"
+    structure_markers:
+      - "^## [A-Z]"
+    preserve_sections:
+      - "Project Context"
+      - "Key Features"
+      - "Important Files"
+    merge_sections:
+      - "Development Workflow"
+      - "Best Practices"
+
+  README.md:
+    description: "Project README"
+    merge_strategy: "template-variables"
+    structure_markers:
+      - "^## [A-Z]"
+      - "badges_section"
+    content_markers:
+      - "project_name"
+      - "project_description"
+      - "features"
+    template_variables:
+      project_name: "{{ PROJECT_NAME }}"
+      project_description: "{{ PROJECT_DESCRIPTION }}"
+      mcp_server_name: "{{ MCP_SERVER_NAME }}"
+      repository_url: "{{ REPOSITORY_URL }}"
+    preserve_sections:
+      - "Overview"
+      - "Features"
+      - "Installation"
+      - "Usage"
+
+  UPGRADING.md:
+    description: "Upgrade guide"
+    merge_strategy: "append-only"
+    preserve_all_content: true
+
+  ROADMAP.md:
+    description: "Project roadmap"
+    merge_strategy: "manual"
+    require_manual_merge: true
+
+  docs/skilled-awareness/INDEX.md:
+    description: "SAP index"
+    merge_strategy: "table-rows"
+    structure_markers:
+      - "^| SAP ID"
+      - "^\\|---"
+    preserve_rows:
+      - "SAP-000"  # Keep framework SAP up-to-date
+    project_specific_rows:
+      # Mark your installed SAPs here
+      # Example: - "SAP-004"  # testing-framework
+      # Example: - "SAP-014"  # mcp-server-development
+
+# Customization tracking
+# Update this when you customize files
+customizations: []
+  # Example entries:
+  # - file: "AGENTS.md"
+  #   sections: ["Project Overview", "Common Tasks"]
+  #   last_modified: "2025-10-29"
+
+# Merge configuration
+merge:
+  upstream_remote: "chora-base"
+  upstream_url: "https://github.com/liminalcommons/chora-base.git"
+  upstream_branch: "main"
+
+  # Backup settings
+  backup_before_merge: true
+  backup_location: ".chora-backup-{timestamp}"
+
+  # Conflict resolution
+  conflict_strategy: "manual"
+  conflict_markers: true
+
+  # Validation (customize for your project)
+  validate_after_merge: true
+  validation_commands:
+    - "ruff check ."
+    - "mypy src"
+    - "pytest tests/ -x"
+
+# Migration tracking
+migration:
+  from_version: "{{ FROM_VERSION }}"
+  to_version: "{{ TO_VERSION }}"
+  last_merge: "{{ LAST_MERGE_DATE }}"
+  notes: []

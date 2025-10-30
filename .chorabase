@@ -1,0 +1,264 @@
+# .chorabase - Chora-Base Metadata
+#
+# This file defines the boundary between structural files (mergeable from upstream)
+# and content files (project-specific, never merged from upstream).
+#
+# See: docs/user-docs/reference/chorabase-metadata-spec.md
+
+version: "4.1.0"
+structural_version: "4.1.0"
+created: "2025-10-29"
+project_type: "chora-base-root"
+
+# Files that are pure structure (always safe to merge from upstream)
+structure_only:
+  # Core protocols and standards
+  - SKILLED_AWARENESS_PACKAGE_PROTOCOL.md
+  - DOCUMENTATION_STANDARD.md
+  - .chorabase
+
+  # SAP Framework (always from upstream)
+  - docs/skilled-awareness/sap-framework/**
+  - docs/skilled-awareness/document-templates.md
+  - docs/skilled-awareness/workflow-mapping.md
+
+  # Automation tooling (scripts)
+  - scripts/merge-upstream-structure.sh
+  - scripts/install-sap.py
+  - scripts/sap-catalog.py
+  - scripts/merge-agents-md.py
+  - scripts/merge-readme-md.py
+  - scripts/merge-index-md.py
+  - scripts/check-sap-awareness-integration.sh
+  - scripts/validate-links.sh
+  - scripts/wave2-audit.py
+
+  # Static template (structural scaffolding)
+  - static-template/DOCUMENTATION_STANDARD.md
+  - static-template/DOCKER_BEST_PRACTICES.md
+  - static-template/PYPI_SETUP.md
+  - static-template/NAMESPACES.md
+  - static-template/.editorconfig
+  - static-template/.dockerignore
+  - static-template/.github/**
+  - static-template/justfile
+  - static-template/docker-compose.yml
+  - static-template/Dockerfile
+  - static-template/Dockerfile.test
+  - static-template/docs/skilled-awareness/sap-framework/**
+
+  # User documentation templates
+  - static-template/user-docs/explanation/**
+  - static-template/user-docs/reference/**
+  - static-template/dev-docs/workflows/**
+
+  # Standards and conventions
+  - docs/standards/**
+
+# Files that are pure content (never merge from upstream, project-specific)
+content_only:
+  # Source code (always project-specific)
+  - src/**
+  - tests/**
+  - static-template/src/**
+  - static-template/tests/**
+
+  # Version control
+  - .git/**
+  - .gitignore  # After initial customization
+
+  # Environment and secrets
+  - .env
+  - .env.*
+  - "*.local"
+
+  # Project-specific SAPs (not sap-framework)
+  - docs/skilled-awareness/inbox/**
+  - docs/skilled-awareness/chora-base/**
+  - docs/skilled-awareness/project-bootstrap/**
+  - docs/skilled-awareness/testing-framework/**
+  - docs/skilled-awareness/ci-cd-workflows/**
+  - docs/skilled-awareness/quality-gates/**
+  - docs/skilled-awareness/documentation-framework/**
+  - docs/skilled-awareness/automation-scripts/**
+  - docs/skilled-awareness/agent-awareness/**
+  - docs/skilled-awareness/memory-system/**
+  - docs/skilled-awareness/docker-operations/**
+  - docs/skilled-awareness/development-lifecycle/**
+  - docs/skilled-awareness/metrics-tracking/**
+  - docs/skilled-awareness/link-validation-reference-management/**
+  - docs/skilled-awareness/mcp-server-development/**
+  - docs/skilled-awareness/chora-compose-integration/**
+  - docs/skilled-awareness/chora-compose-meta/**
+
+  # Project-specific documentation
+  - docs/user-docs/**  # User docs are project-specific
+  - docs/dev-docs/**   # Dev docs are project-specific
+  - docs/project-docs/**  # Project docs are always specific
+
+  # Build artifacts
+  - dist/**
+  - build/**
+  - "*.egg-info"
+  - __pycache__/**
+  - "*.pyc"
+  - .pytest_cache/**
+  - .coverage
+  - htmlcov/**
+
+  # IDE and editor
+  - .vscode/**
+  - .idea/**
+  - "*.swp"
+  - "*.swo"
+  - .DS_Store
+
+# Files that are hybrid (require intelligent merging with specific rules)
+hybrid:
+  AGENTS.md:
+    description: "Root agent awareness file with project structure and capabilities"
+    merge_strategy: "section-by-section"
+    structure_markers:
+      - "^## [A-Z]"        # Level 2 headers (## Project Overview)
+      - "^### [A-Z]"       # Level 3 headers (### Common Tasks)
+    content_markers:
+      - "^(?!##|###)"      # Everything that's not a header
+    preserve_sections:
+      # These sections are always project-specific, keep from current
+      - "Project Overview"
+      - "Project-Specific Workflows"
+      - "Common Tasks"
+      - "Custom Capabilities"
+    merge_sections:
+      # These sections can be updated from upstream
+      - "Project Structure"
+      - "Development Process"
+      - "SAP Framework"
+
+  README.md:
+    description: "Project README with standard structure but custom content"
+    merge_strategy: "template-variables"
+    structure_markers:
+      - "^## [A-Z]"                    # Section headers
+      - "badges_section: .*shields\\.io"  # Badge links
+      - "^### Features"                # Features section header
+    content_markers:
+      - "project_name"                 # Project name
+      - "project_description"          # Project description
+      - "features_list"                # List of features
+    template_variables:
+      project_name: "{{ PROJECT_NAME }}"
+      project_description: "{{ PROJECT_DESCRIPTION }}"
+      repository_url: "{{ REPOSITORY_URL }}"
+    preserve_sections:
+      - "Overview"
+      - "Features"
+      - "Project-Specific"
+
+  CHANGELOG.md:
+    description: "Changelog with version history"
+    merge_strategy: "append-only"
+    structure_markers:
+      - "^## \\[.*\\]"     # Version headers
+      - "^### Added"       # Change type headers
+      - "^### Changed"
+      - "^### Fixed"
+    content_markers:
+      - "^- "              # Changelog entries
+    preserve_all_content: true  # Never overwrite changelog entries
+
+  ROADMAP.md:
+    description: "Project roadmap"
+    merge_strategy: "manual"  # Too project-specific to auto-merge
+    require_manual_merge: true
+
+  docs/skilled-awareness/INDEX.md:
+    description: "SAP index showing all installed SAPs"
+    merge_strategy: "table-rows"
+    structure_markers:
+      - "^| SAP ID"        # Table header
+      - "^\\|---"          # Table separator
+      - "^## Active SAPs"  # Section headers
+      - "^## Planned SAPs"
+    content_markers:
+      - "^| SAP-[0-9]"     # SAP table rows
+    preserve_rows:
+      # Always preserve framework SAP from upstream
+      - "SAP-000"
+    merge_rows:
+      # Merge these rows from upstream if they exist
+      - "SAP-000"
+    project_specific_rows:
+      # All other SAP-* rows are project-specific
+      - "SAP-001"
+      - "SAP-002"
+      - "SAP-003"
+      - "SAP-004"
+      - "SAP-005"
+      - "SAP-006"
+      - "SAP-007"
+      - "SAP-008"
+      - "SAP-009"
+      - "SAP-010"
+      - "SAP-011"
+      - "SAP-012"
+      - "SAP-013"
+      - "SAP-014"
+      - "SAP-015"
+      - "SAP-016"
+      - "SAP-017"
+      - "SAP-018"
+
+# Customization tracking (what this project has customized)
+customizations:
+  - file: "AGENTS.md"
+    sections:
+      - "Project Overview"
+      - "Common Tasks"
+      - "Project-Specific Workflows"
+    last_modified: "2025-10-29"
+
+  - file: "README.md"
+    sections:
+      - "Overview"
+      - "Features"
+    variables:
+      project_name: "chora-base"
+      project_description: "Universal Python foundation for AI-native tooling"
+    last_modified: "2025-10-29"
+
+  - file: "docs/skilled-awareness/INDEX.md"
+    custom_saps:
+      - "SAP-001 through SAP-018"
+    last_modified: "2025-10-29"
+
+# Merge configuration
+merge:
+  upstream_remote: "chora-base"
+  upstream_url: "https://github.com/liminalcommons/chora-base.git"
+  upstream_branch: "main"
+
+  # Backup settings
+  backup_before_merge: true
+  backup_location: ".chora-backup-{timestamp}"
+
+  # Conflict resolution
+  conflict_strategy: "manual"  # manual | auto | abort
+  conflict_markers: true       # Add conflict markers for manual resolution
+
+  # Validation
+  validate_after_merge: true
+  validation_commands:
+    - "ruff check ."
+    - "mypy src"
+    - "pytest tests/ -x"  # Stop on first failure
+
+# Migration tracking
+migration:
+  from_version: "4.0.0"
+  to_version: "4.1.0"
+  migration_date: "2025-10-29"
+  notes:
+    - "Initial .chorabase file created"
+    - "Defined structure/content boundaries"
+    - "Set up hybrid file merge strategies"
