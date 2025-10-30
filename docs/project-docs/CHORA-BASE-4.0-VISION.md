@@ -1183,9 +1183,16 @@ Wave 4 primarily adds new capabilities, minimal cleanup - track in `v4-cleanup-m
 
 ---
 
-## Wave 5: SAP Installation Tooling (v3.8.0)
+## Wave 5: SAP Installation Tooling (v4.1.0)
 
 **Goal**: Make SAP adoption seamless for Claude and humans
+
+**Status**: 🔄 In Progress (started 2025-10-29)
+- ✅ SAP catalog created (commit e9653b2)
+- 🔄 SAP sets feature added (COORD-2025-001 decision)
+- 📋 install-sap.py pending
+
+**Strategic Enhancement**: Added **SAP Sets** feature in response to COORD-2025-001 (chora-workspace coordination request for lightweight ecosystem onboarding). SAP sets provide curated bundles of SAPs installable with one command, solving the "18 SAPs are too many for quick entry" problem without creating prescriptive tiers.
 
 ### Tasks
 
@@ -1252,6 +1259,65 @@ def check_dependencies(sap_id: str):
     """Show dependency tree"""
 ```
 
+#### 5.1b: SAP Sets Feature (NEW - from COORD-2025-001)
+
+**Enhancement**: Add `sap_sets` section to catalog for curated SAP bundles
+
+**Problem Solved**: chora-workspace identified that 18 SAPs (~100k tokens, 2-4 weeks) creates adoption friction for ecosystem coordination. Needed lightweight entry point.
+
+**Solution**: SAP sets - curated bundles installable with one command, without formal SAP-019 or prescriptive tier terminology.
+
+**5 Standard Sets**:
+
+1. **minimal-entry** (5 SAPs) - Ecosystem onboarding
+   - SAP-000 (sap-framework), SAP-001 (inbox), SAP-009 (agent-awareness), SAP-016 (link-validation), SAP-002 (chora-base-meta)
+   - ~29k tokens (71% reduction from 100k)
+   - 3-5 hours (90%+ reduction from 2-4 weeks)
+
+2. **recommended** (10 SAPs) - Core dev workflow
+   - Includes minimal-entry + SAP-003/004/005/006/007
+
+3. **full** (18 SAPs) - Comprehensive coverage
+   - All SAPs for advanced users
+
+4. **testing-focused** (6 SAPs) - Testing & quality
+   - SAP-000, 003, 004, 005, 006, 016
+
+5. **mcp-server** (10 SAPs) - MCP development
+   - Testing-focused + SAP-007, 009, 012, 014
+
+**Custom Sets**: Projects can define organization-specific sets in `.chorabase`:
+
+```yaml
+# .chorabase
+sap_sets:
+  my-org-minimal:
+    name: "Our Organization's Minimal Entry"
+    saps: [SAP-000, SAP-004, SAP-007, SAP-009]
+    estimated_tokens: 25000
+```
+
+**Installation**:
+```bash
+# Install standard set
+python scripts/install-sap.py --set minimal-entry
+
+# Install custom set
+python scripts/install-sap.py --set my-org-minimal
+
+# List available sets
+python scripts/install-sap.py --list-sets
+```
+
+**Strategic Advantages**:
+- ✅ Solves lightweight entry without formal SAP-019 (lower maintenance)
+- ✅ No prescriptive tiers (Bronze/Silver/Gold) - maintains v4.0 flexible adoption
+- ✅ Multiple use cases (minimal, testing, MCP, custom)
+- ✅ Extensible for organizations
+- ✅ Generalizable pattern for future needs
+
+**Response**: inbox/outgoing/COORD-2025-001-response.json
+
 #### 5.2: Create SAP Installation Script
 
 **File**: `scripts/install-sap.py`
@@ -1262,9 +1328,17 @@ def check_dependencies(sap_id: str):
 Install a SAP from chora-base into current project.
 
 Usage:
+    # Install individual SAP
     python scripts/install-sap.py SAP-004
     python scripts/install-sap.py SAP-004 --source /path/to/chora-base
+
+    # Install SAP set (NEW)
+    python scripts/install-sap.py --set minimal-entry
+    python scripts/install-sap.py --set recommended
+
+    # List options
     python scripts/install-sap.py --list
+    python scripts/install-sap.py --list-sets
 """
 
 import argparse
@@ -1469,8 +1543,21 @@ Wave 5 is primarily additive, minimal cleanup - track in `v4-cleanup-manifest.md
 - None (Wave 5 is additive)
 
 ### Timeline
-**Duration**: 2-3 weeks
-**Effort**: ~60-80 hours
+**Duration**: 3-4 weeks
+**Effort**: ~72-96 hours (increased from 60-80 due to SAP sets feature)
+- Base functionality: 48-63 hours
+- SAP sets enhancement: 24-33 hours
+
+**Started**: 2025-10-29 (sap-catalog.json created, commit e9653b2)
+**Target Completion**: Q1 2026 (v4.1.0)
+
+**Breakdown**:
+- Week 1: sap-catalog.json (✅ done), install-sap.py base (16-20 hours)
+- Week 2: SAP sets feature (12-16 hours), validation (4-6 hours)
+- Week 3: Documentation (10-14 hours), testing (8-12 hours)
+- Week 4: Integration, polish, update adoption blueprints (12-16 hours)
+
+**Strategic Note**: SAP sets feature added in response to COORD-2025-001 (chora-workspace coordination request). Adds ~20% complexity but solves ecosystem onboarding friction and aligns with v4.0 flexible adoption philosophy.
 
 ---
 

@@ -654,5 +654,180 @@
     "SAP-014",
     "SAP-017",
     "SAP-018"
-  ]
+  ],
+
+  "sap_sets": {
+    "minimal-entry": {
+      "id": "minimal-entry",
+      "name": "Minimal Ecosystem Entry",
+      "version": "1.0.0",
+      "description": "5 essential SAPs for quick ecosystem onboarding and cross-repo coordination",
+      "saps": ["SAP-000", "SAP-001", "SAP-009", "SAP-016", "SAP-002"],
+      "estimated_tokens": 29000,
+      "estimated_hours": "3-5",
+      "use_cases": [
+        "First-time chora ecosystem adoption",
+        "Contributing to ecosystem repos via inbox protocol",
+        "Cross-repo coordination",
+        "Lightweight onboarding before full adoption"
+      ],
+      "included_capabilities": [
+        "SAP framework and protocols (SAP-000)",
+        "Cross-repo inbox coordination (SAP-001)",
+        "Agent awareness via AGENTS.md (SAP-009)",
+        "Link validation for documentation quality (SAP-016)",
+        "chora-base meta documentation (SAP-002)"
+      ],
+      "next_steps": [
+        "Add domain-specific SAP (SAP-004 for testing, SAP-014 for MCP)",
+        "Upgrade to 'recommended' set for full productivity",
+        "Customize AGENTS.md for your project"
+      ],
+      "warnings": [
+        "SAP-001 (inbox-coordination) is in Pilot status and may undergo changes"
+      ],
+      "tags": ["minimal", "entry", "ecosystem", "coordination"]
+    },
+
+    "recommended": {
+      "id": "recommended",
+      "name": "Recommended Foundation",
+      "version": "1.0.0",
+      "description": "10 SAPs covering core development workflows for production-ready projects",
+      "saps": [
+        "SAP-000", "SAP-001", "SAP-002", "SAP-003", "SAP-004",
+        "SAP-005", "SAP-006", "SAP-007", "SAP-009", "SAP-016"
+      ],
+      "estimated_tokens": 60000,
+      "estimated_hours": "1-2 days",
+      "use_cases": [
+        "Standalone projects built on chora-base",
+        "Full development lifecycle support",
+        "Production-ready projects"
+      ],
+      "included_capabilities": [
+        "All minimal-entry capabilities",
+        "Project scaffolding with Copier (SAP-003)",
+        "Testing framework with pytest and 85%+ coverage (SAP-004)",
+        "CI/CD workflows with GitHub Actions (SAP-005)",
+        "Quality gates with ruff and mypy (SAP-006)",
+        "Documentation framework with Diátaxis (SAP-007)"
+      ],
+      "next_steps": [
+        "Add advanced capabilities (SAP-010 memory, SAP-011 docker)",
+        "Add technology-specific SAPs (SAP-014 MCP, etc.)",
+        "Customize CI/CD workflows for your tech stack"
+      ],
+      "warnings": [
+        "SAP-001 (inbox-coordination) is in Pilot status"
+      ],
+      "tags": ["recommended", "foundation", "core", "productivity"]
+    },
+
+    "full": {
+      "id": "full",
+      "name": "Complete Capability Suite",
+      "version": "1.0.0",
+      "description": "All 18 SAPs for comprehensive coverage of chora-base capabilities",
+      "saps": [
+        "SAP-000", "SAP-001", "SAP-002", "SAP-003", "SAP-004",
+        "SAP-005", "SAP-006", "SAP-007", "SAP-008", "SAP-009",
+        "SAP-010", "SAP-011", "SAP-012", "SAP-013", "SAP-014",
+        "SAP-016", "SAP-017", "SAP-018"
+      ],
+      "estimated_tokens": 100000,
+      "estimated_hours": "2-4 weeks",
+      "use_cases": [
+        "Advanced users wanting all capabilities",
+        "Organizations standardizing on chora-base",
+        "Reference implementations",
+        "chora-base contributors"
+      ],
+      "included_capabilities": [
+        "All recommended capabilities",
+        "Automation scripts with justfile (SAP-008)",
+        "Memory system with A-MEM (SAP-010)",
+        "Docker operations with multi-stage builds (SAP-011)",
+        "Development lifecycle with DDD/BDD/TDD (SAP-012)",
+        "Metrics tracking with ROI calculator (SAP-013)",
+        "MCP server development with FastMCP (SAP-014)",
+        "chora-compose integration (SAP-017, SAP-018)"
+      ],
+      "next_steps": [
+        "No additional SAPs needed",
+        "Customize capabilities for your domain",
+        "Consider contributing new SAPs back to chora-base"
+      ],
+      "warnings": [
+        "SAP-001 (inbox-coordination) is in Pilot status",
+        "Large token footprint - consider progressive adoption"
+      ],
+      "tags": ["full", "complete", "comprehensive", "advanced"]
+    },
+
+    "testing-focused": {
+      "id": "testing-focused",
+      "name": "Testing & Quality Focused",
+      "version": "1.0.0",
+      "description": "6 SAPs emphasizing testing, quality gates, and CI/CD for quality-first development",
+      "saps": ["SAP-000", "SAP-003", "SAP-004", "SAP-005", "SAP-006", "SAP-016"],
+      "estimated_tokens": 35000,
+      "estimated_hours": "4-6",
+      "use_cases": [
+        "Projects prioritizing test coverage and quality",
+        "CI/CD-heavy workflows",
+        "Quality-first development",
+        "QA-focused contributors"
+      ],
+      "included_capabilities": [
+        "SAP framework (SAP-000)",
+        "Project scaffolding (SAP-003)",
+        "Testing framework with 85%+ coverage (SAP-004)",
+        "CI/CD workflows with GitHub Actions (SAP-005)",
+        "Quality gates with pre-commit hooks (SAP-006)",
+        "Link validation for documentation quality (SAP-016)"
+      ],
+      "next_steps": [
+        "Add documentation framework (SAP-007) for quality docs",
+        "Add development lifecycle (SAP-012) for BDD/TDD workflows",
+        "Consider metrics tracking (SAP-013) for quality metrics"
+      ],
+      "warnings": [],
+      "tags": ["testing", "quality", "ci-cd", "coverage", "qa"]
+    },
+
+    "mcp-server": {
+      "id": "mcp-server",
+      "name": "MCP Server Development",
+      "version": "1.0.0",
+      "description": "10 SAPs for building Model Context Protocol servers with FastMCP",
+      "saps": [
+        "SAP-000", "SAP-003", "SAP-004", "SAP-005", "SAP-006",
+        "SAP-007", "SAP-009", "SAP-012", "SAP-014", "SAP-016"
+      ],
+      "estimated_tokens": 55000,
+      "estimated_hours": "1 day",
+      "use_cases": [
+        "Building MCP servers with FastMCP",
+        "Creating Claude Desktop integrations",
+        "Developing custom MCP tools and resources",
+        "MCP-first projects"
+      ],
+      "included_capabilities": [
+        "All testing-focused capabilities",
+        "Documentation framework with Diátaxis (SAP-007)",
+        "Agent awareness via AGENTS.md (SAP-009)",
+        "Development lifecycle with DDD/BDD/TDD (SAP-012)",
+        "MCP server development patterns and templates (SAP-014)"
+      ],
+      "next_steps": [
+        "Add chora-compose integration (SAP-017/018) for content generation",
+        "Add automation scripts (SAP-008) for MCP deployment",
+        "Consider memory system (SAP-010) for stateful MCP servers",
+        "Consider docker operations (SAP-011) for containerized MCP servers"
+      ],
+      "warnings": [],
+      "tags": ["mcp", "fastmcp", "model-context-protocol", "claude"]
+    }
+  }
 }
