@@ -130,12 +130,12 @@ python scripts/install-sap.py --set minimal-entry --source /path/to/chora-base
 
 ### Option 2: Recommended Set (Core Development Workflow)
 
-**Use Case**: Active development, want testing + docs + git workflow
+**Use Case**: Active development, want testing + docs + CI/CD
 
 **What You Get**:
-- 10 SAPs: All from minimal-entry, plus SAP-003, SAP-004, SAP-007, SAP-010, SAP-013
-- ~58k tokens
-- 1-2 weeks estimated adoption time
+- 10 SAPs: All from minimal-entry, plus SAP-003, SAP-004, SAP-005, SAP-006, SAP-007
+- ~60k tokens
+- 1-2 days estimated adoption time
 - Production-ready dev environment
 
 **Installation**:
@@ -148,9 +148,9 @@ python scripts/install-sap.py --set recommended --source /path/to/chora-base
 **Use Case**: QA contributors, test-driven development, quality focus
 
 **What You Get**:
-- 6 SAPs: SAP-000, SAP-003, SAP-004, SAP-011, SAP-012, SAP-016
+- 6 SAPs: SAP-000, SAP-003, SAP-004, SAP-005, SAP-006, SAP-016
 - ~35k tokens
-- 5-8 hours estimated adoption time
+- 4-6 hours estimated adoption time
 
 **Installation**:
 ```bash
@@ -162,9 +162,9 @@ python scripts/install-sap.py --set testing-focused --source /path/to/chora-base
 **Use Case**: Building Model Context Protocol servers
 
 **What You Get**:
-- 10 SAPs: Core SAPs + MCP-specific patterns
-- ~60k tokens
-- 1-2 weeks estimated adoption time
+- 10 SAPs: SAP-000, SAP-003, SAP-004, SAP-005, SAP-006, SAP-007, SAP-009, SAP-012, SAP-014, SAP-016
+- ~55k tokens
+- 1 day estimated adoption time
 
 **Installation**:
 ```bash
@@ -489,9 +489,9 @@ See: `docs/skilled-awareness/inbox-coordination/awareness-guide.md`
 - [chora-base Vision Document](../../project-docs/CHORA-BASE-4.0-VISION.md)
 
 ### Installation Reference
-- [Standard SAP Sets](../reference/standard-sap-sets.md) (to be created)
-- [Custom SAP Sets Guide](../how-to/create-custom-sap-sets.md) (to be created)
-- [install-sap.py Script Reference](../reference/install-sap-script.md) (to be created)
+- [Standard SAP Sets Reference](../reference/standard-sap-sets.md) - Detailed comparison of all 5 sets
+- [How to Create Custom SAP Sets](../how-to/create-custom-sap-sets.md) - Define organization-specific sets
+- [How to Install SAP Sets](../how-to/install-sap-set.md) - Complete installation guide
 
 ### Ecosystem Coordination
 - [Inbox Protocol Schema](../../skilled-awareness/inbox-coordination/protocol-spec.md)
