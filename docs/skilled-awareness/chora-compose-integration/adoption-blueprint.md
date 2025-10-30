@@ -50,6 +50,40 @@ This blueprint provides step-by-step instructions for integrating [chora-compose
 
 ---
 
+## Installing the SAP
+
+### Quick Install
+
+Use the automated installation script:
+
+```bash
+python scripts/install-sap.py SAP-017 --source /path/to/chora-base
+```
+
+**What This Installs**:
+- chora-compose-integration capability documentation (5 artifacts)
+- No system files (this SAP documents integration patterns)
+
+### Part of Sets
+
+This SAP is included in:
+- full
+
+To install a complete set:
+```bash
+python scripts/install-sap.py --set full --source /path/to/chora-base
+```
+
+### Validation
+
+Verify all 5 artifacts exist:
+
+```bash
+ls docs/skilled-awareness/chora-compose-integration/*.md
+```
+
+---
+
 ## Installation Steps
 
 ### Step 1: Verify Docker Installation

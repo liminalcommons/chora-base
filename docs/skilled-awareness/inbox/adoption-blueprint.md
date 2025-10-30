@@ -13,23 +13,56 @@
 
 ---
 
-## 2. Installation Paths
+## 2. Installation
 
-### Option A: Manual Installation (Initial Pilot)
-1. Create `inbox/` directory at repository root.
-2. Copy prototype structure from `chora-base/inbox/` (strategic, incoming, coordination, etc.).
-3. Add schema files under `inbox/schemas/`.
-4. Initialize `inbox/coordination/events.jsonl` as an empty append-only log.
-5. Customize `coordination/CAPABILITIES/<repo>.yaml` with repo-specific routing details.
-6. Add awareness references to the repo’s `CLAUDE.md` / `AGENTS.md`.
-7. Commit with message noting adoption (e.g., `chore(inbox): install cross-repo inbox`).
+### Quick Install
 
-### Option B: Scripted Installation (Future)
-- Placeholder for install script hook (e.g., `scripts/install-inbox.sh`).  
-- Until automation exists, document manual steps and gather feedback to inform script.
+Use the automated installation script:
 
-### Fallback (Minimal Adoption)
-- If full installation blocks, adopt only intake schemas and awareness guide to enable triage reading; log limitations in ledger.
+```bash
+python scripts/install-sap.py SAP-001 --source /path/to/chora-base
+```
+
+**What This Installs**:
+- Inbox coordination protocol documentation (5 artifacts)
+- `inbox/` directory structure at repository root
+- Schema files, CAPABILITIES configuration, and event log
+- Cross-repo coordination workflows
+
+### Part of Sets
+
+This SAP is included in:
+- minimal-entry
+- recommended
+- full
+
+To install a complete set:
+```bash
+python scripts/install-sap.py --set minimal-entry --source /path/to/chora-base
+```
+
+### Validation
+
+Verify all artifacts exist:
+
+```bash
+# Verify SAP documentation
+ls docs/skilled-awareness/inbox/*.md
+# Verify inbox directory structure
+ls inbox/coordination/events.jsonl inbox/incoming/
+```
+
+### Manual Installation (Alternative)
+
+If you cannot use the install script, follow these manual steps:
+
+1. Create `inbox/` directory at repository root
+2. Copy prototype structure from `chora-base/inbox/`
+3. Add schema files under `inbox/schemas/`
+4. Initialize `inbox/coordination/events.jsonl` as an empty append-only log
+5. Customize `coordination/CAPABILITIES/<repo>.yaml` with repo-specific routing details
+6. Add awareness references to the repo's `CLAUDE.md` / `AGENTS.md`
+7. Commit with message noting adoption
 
 ---
 

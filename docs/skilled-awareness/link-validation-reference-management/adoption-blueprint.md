@@ -33,6 +33,45 @@ This blueprint guides you through installing and integrating link validation int
 
 ---
 
+## Installing the SAP
+
+### Quick Install
+
+Use the automated installation script:
+
+```bash
+python scripts/install-sap.py SAP-016 --source /path/to/chora-base
+```
+
+**What This Installs**:
+- link-validation-reference-management capability documentation (5 artifacts)
+- Link validation script (scripts/validate-links.sh)
+
+### Part of Sets
+
+This SAP is included in:
+- minimal-entry
+- recommended
+- full
+- testing-focused
+- mcp-server
+
+To install a complete set:
+```bash
+python scripts/install-sap.py --set minimal-entry --source /path/to/chora-base
+```
+
+### Validation
+
+Verify all 5 artifacts exist:
+
+```bash
+ls docs/skilled-awareness/link-validation-reference-management/*.md
+ls scripts/validate-links.sh
+```
+
+---
+
 ## Phase 1: Installation (10 minutes)
 
 ### Step 1.1: Copy Validation Script

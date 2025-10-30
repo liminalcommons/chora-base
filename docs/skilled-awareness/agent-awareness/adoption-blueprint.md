@@ -14,7 +14,46 @@ This blueprint guides creating AGENTS.md and CLAUDE.md files for your project.
 
 ---
 
-## 2. Quick Start
+## 2. Installing the SAP
+
+### Quick Install
+
+Use the automated installation script:
+
+```bash
+python scripts/install-sap.py SAP-009 --source /path/to/chora-base
+```
+
+**What This Installs**:
+- agent-awareness capability documentation (5 artifacts)
+- AGENTS.md and CLAUDE.md templates
+- Example nested awareness files
+
+### Part of Sets
+
+This SAP is included in:
+- minimal-entry
+- recommended
+- full
+- mcp-server
+
+To install a complete set:
+```bash
+python scripts/install-sap.py --set minimal-entry --source /path/to/chora-base
+```
+
+### Validation
+
+Verify all 5 artifacts exist:
+
+```bash
+ls docs/skilled-awareness/agent-awareness/*.md
+ls AGENTS.md CLAUDE.md
+```
+
+---
+
+## 3. Quick Start
 
 ### Step 1: Create Root AGENTS.md
 

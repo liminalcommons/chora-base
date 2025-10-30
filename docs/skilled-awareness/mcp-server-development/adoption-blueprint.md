@@ -52,6 +52,43 @@ This blueprint provides step-by-step instructions for adopting the MCP Server De
 
 ---
 
+## Installing the SAP
+
+### Quick Install
+
+Use the automated installation script:
+
+```bash
+python scripts/install-sap.py SAP-014 --source /path/to/chora-base
+```
+
+**What This Installs**:
+- mcp-server-development capability documentation (5 artifacts)
+- MCP templates directory (mcp-templates/) with 11 templates
+- MCP development guides and patterns
+
+### Part of Sets
+
+This SAP is included in:
+- full
+- mcp-server
+
+To install a complete set:
+```bash
+python scripts/install-sap.py --set mcp-server --source /path/to/chora-base
+```
+
+### Validation
+
+Verify all 5 artifacts exist:
+
+```bash
+ls docs/skilled-awareness/mcp-server-development/*.md
+ls mcp-templates/
+```
+
+---
+
 ## Installation Steps
 
 ### Step 1: Create Project Directory

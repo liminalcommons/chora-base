@@ -22,7 +22,45 @@ This blueprint guides using chora-base's GitHub Actions workflows for CI/CD auto
 
 ---
 
-## 3. Quick Start
+## 3. Installing the SAP
+
+### Quick Install
+
+Use the automated installation script:
+
+```bash
+python scripts/install-sap.py SAP-005 --source /path/to/chora-base
+```
+
+**What This Installs**:
+- ci-cd-workflows capability documentation (5 artifacts)
+- GitHub Actions workflow files (.github/workflows/)
+
+### Part of Sets
+
+This SAP is included in:
+- recommended
+- full
+- testing-focused
+- mcp-server
+
+To install a complete set:
+```bash
+python scripts/install-sap.py --set recommended --source /path/to/chora-base
+```
+
+### Validation
+
+Verify all 5 artifacts exist:
+
+```bash
+ls docs/skilled-awareness/ci-cd-workflows/*.md
+ls .github/workflows/
+```
+
+---
+
+## 4. Quick Start
 
 ### Step 1: View Workflows
 

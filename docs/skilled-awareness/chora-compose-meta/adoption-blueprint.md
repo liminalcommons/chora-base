@@ -17,6 +17,40 @@ This blueprint provides meta-level adoption guidance for chora-compose at organi
 
 ---
 
+## Installing the SAP
+
+### Quick Install
+
+Use the automated installation script:
+
+```bash
+python scripts/install-sap.py SAP-018 --source /path/to/chora-base
+```
+
+**What This Installs**:
+- chora-compose-meta capability documentation (5 artifacts)
+- No system files (this is a meta-documentation SAP)
+
+### Part of Sets
+
+This SAP is included in:
+- full
+
+To install a complete set:
+```bash
+python scripts/install-sap.py --set full --source /path/to/chora-base
+```
+
+### Validation
+
+Verify all 5 artifacts exist:
+
+```bash
+ls docs/skilled-awareness/chora-compose-meta/*.md
+```
+
+---
+
 ## Decision Framework
 
 ### Should We Adopt chora-compose?

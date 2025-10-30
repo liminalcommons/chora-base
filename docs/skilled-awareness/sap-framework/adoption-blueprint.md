@@ -69,80 +69,72 @@ Read SAP framework documentation without installing.
 
 ## 4. Installation (Path A: Full Framework)
 
-### Step 1: Create SAP Framework Directory
+### Quick Install
 
-Create the skilled awareness directory structure:
+Use the automated installation script:
+
+```bash
+python scripts/install-sap.py SAP-000 --source /path/to/chora-base
+```
+
+**What This Installs**:
+- SAP framework documentation (5 artifacts)
+- Root protocol document (SKILLED_AWARENESS_PACKAGE_PROTOCOL.md)
+- Document templates for creating SAPs
+- No system files (framework is documentation-only)
+
+### Part of Sets
+
+This SAP is included in:
+- minimal-entry
+- recommended
+- full
+- testing-focused
+- mcp-server
+
+To install a complete set:
+```bash
+python scripts/install-sap.py --set minimal-entry --source /path/to/chora-base
+```
+
+### Manual Installation (Alternative)
+
+If you cannot use the install script, follow these manual steps:
+
+**Step 1: Create SAP Framework Directory**
 
 ```bash
 mkdir -p docs/reference/skilled-awareness
 ```
 
-**Validation**:
-```bash
-ls docs/reference/skilled-awareness && echo "✅ Directory created"
-```
+**Step 2: Copy Root Protocol**
 
-### Step 2: Copy Root Protocol
-
-Copy the SAP protocol from chora-base to your project root:
-
-**For agents**:
-1. Read: `/path/to/chora-base/SKILLED_AWARENESS_PACKAGE_PROTOCOL.md`
-2. Write to: `SKILLED_AWARENESS_PACKAGE_PROTOCOL.md` (project root)
-
-**For humans**:
 ```bash
 cp /path/to/chora-base/SKILLED_AWARENESS_PACKAGE_PROTOCOL.md \
    SKILLED_AWARENESS_PACKAGE_PROTOCOL.md
 ```
 
-**Validation**:
-```bash
-test -f SKILLED_AWARENESS_PACKAGE_PROTOCOL.md && echo "✅ Protocol copied"
-```
+**Step 3: Copy Framework SAP**
 
-### Step 3: Copy Framework SAP
-
-Copy the sap-framework SAP directory:
-
-**For agents**:
-1. Read all files in: `/path/to/chora-base/docs/skilled-awareness/sap-framework/`
-2. Write to: `docs/skilled-awareness/sap-framework/`
-
-Files to copy:
-- `capability-charter.md`
-- `protocol-spec.md`
-- `awareness-guide.md`
-- `adoption-blueprint.md` (this file)
-- `ledger.md`
-
-**For humans**:
 ```bash
 cp -r /path/to/chora-base/docs/skilled-awareness/sap-framework \
       docs/skilled-awareness/
 ```
 
-**Validation**:
-```bash
-ls docs/skilled-awareness/sap-framework/{capability-charter,protocol-spec,awareness-guide,adoption-blueprint,ledger}.md && echo "✅ Framework SAP copied"
-```
+**Step 4: Copy Document Templates**
 
-### Step 4: Copy Document Templates
-
-Copy SAP templates:
-
-**For agents**:
-1. Read: `/path/to/chora-base/docs/skilled-awareness/document-templates.md`
-2. Write to: `docs/skilled-awareness/document-templates.md`
-
-**For humans**:
 ```bash
 cp /path/to/chora-base/docs/skilled-awareness/document-templates.md \
    docs/skilled-awareness/
 ```
 
-**Validation**:
+### Validation
+
+Verify all 5 artifacts exist:
+
 ```bash
+ls docs/skilled-awareness/sap-framework/{capability-charter,protocol-spec,awareness-guide,adoption-blueprint,ledger}.md && echo "✅ Framework SAP installed"
+test -f SKILLED_AWARENESS_PACKAGE_PROTOCOL.md && echo "✅ Protocol copied"
 test -f docs/skilled-awareness/document-templates.md && echo "✅ Templates copied"
 ```
 

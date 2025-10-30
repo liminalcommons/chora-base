@@ -35,7 +35,47 @@ This blueprint guides **adopters** through using chora-base to generate producti
 
 ---
 
-## 3. Installation
+## 3. Installing the SAP Documentation
+
+This section covers installing the SAP-002 documentation itself into your project.
+
+### Quick Install
+
+Use the automated installation script:
+
+```bash
+python scripts/install-sap.py SAP-002 --source /path/to/chora-base
+```
+
+**What This Installs**:
+- chora-base capability documentation (5 artifacts)
+- No system files (this is a meta-documentation SAP)
+
+### Part of Sets
+
+This SAP is included in:
+- minimal-entry
+- recommended
+- full
+
+To install a complete set:
+```bash
+python scripts/install-sap.py --set minimal-entry --source /path/to/chora-base
+```
+
+### Validation
+
+Verify all 5 artifacts exist:
+
+```bash
+ls docs/skilled-awareness/chora-base/*.md
+```
+
+---
+
+## 4. Using chora-base to Generate Projects
+
+This section covers using chora-base as a template generator.
 
 ### Step 1: Clone chora-base
 

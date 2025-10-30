@@ -29,7 +29,43 @@ This blueprint helps projects adopt the **A-MEM architecture** with event logs, 
 
 ---
 
-## 2. Quick Start (15 Minutes)
+## 2. Installing the SAP
+
+### Quick Install
+
+Use the automated installation script:
+
+```bash
+python scripts/install-sap.py SAP-010 --source /path/to/chora-base
+```
+
+**What This Installs**:
+- memory-system capability documentation (5 artifacts)
+- .chora/memory/ directory structure
+- Event log, knowledge graph, and profile templates
+
+### Part of Sets
+
+This SAP is included in:
+- full
+
+To install a complete set:
+```bash
+python scripts/install-sap.py --set full --source /path/to/chora-base
+```
+
+### Validation
+
+Verify all 5 artifacts exist:
+
+```bash
+ls docs/skilled-awareness/memory-system/*.md
+ls -la .chora/memory/
+```
+
+---
+
+## 3. Quick Start (15 Minutes)
 
 ### Step 1: Verify Memory Structure Exists
 

@@ -42,7 +42,45 @@ This blueprint guides **adopters** (humans and AI agents) through using chora-ba
 
 ---
 
-## 3. Generation Workflow
+## 3. Installing the SAP
+
+### Quick Install
+
+Use the automated installation script:
+
+```bash
+python scripts/install-sap.py SAP-003 --source /path/to/chora-base
+```
+
+**What This Installs**:
+- project-bootstrap capability documentation (5 artifacts)
+- static-template/ directory with all project scaffolding files
+
+### Part of Sets
+
+This SAP is included in:
+- recommended
+- full
+- testing-focused
+- mcp-server
+
+To install a complete set:
+```bash
+python scripts/install-sap.py --set recommended --source /path/to/chora-base
+```
+
+### Validation
+
+Verify all 5 artifacts exist:
+
+```bash
+ls docs/skilled-awareness/project-bootstrap/*.md
+ls static-template/
+```
+
+---
+
+## 4. Generation Workflow
 
 ### Step 1: Clone chora-base
 

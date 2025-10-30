@@ -21,7 +21,46 @@ This blueprint guides using chora-base's Diataxis documentation framework.
 
 ---
 
-## 3. Quick Start
+## 3. Installing the SAP
+
+### Quick Install
+
+Use the automated installation script:
+
+```bash
+python scripts/install-sap.py SAP-007 --source /path/to/chora-base
+```
+
+**What This Installs**:
+- documentation-framework capability documentation (5 artifacts)
+- DOCUMENTATION_STANDARD.md (700 lines)
+- Documentation directory structure (user-docs/, dev-docs/, project-docs/)
+- Test extraction script (scripts/extract_tests.py)
+
+### Part of Sets
+
+This SAP is included in:
+- recommended
+- full
+- mcp-server
+
+To install a complete set:
+```bash
+python scripts/install-sap.py --set recommended --source /path/to/chora-base
+```
+
+### Validation
+
+Verify all 5 artifacts exist:
+
+```bash
+ls docs/skilled-awareness/documentation-framework/*.md
+ls docs/user-docs/ docs/dev-docs/ docs/project-docs/
+```
+
+---
+
+## 4. Quick Start
 
 ### Step 1: Choose Document Type
 

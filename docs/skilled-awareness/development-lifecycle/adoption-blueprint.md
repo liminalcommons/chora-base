@@ -28,7 +28,44 @@ This blueprint helps projects adopt the **8-phase development lifecycle** with i
 
 ---
 
-## 2. Prerequisites
+## 2. Installing the SAP
+
+### Quick Install
+
+Use the automated installation script:
+
+```bash
+python scripts/install-sap.py SAP-012 --source /path/to/chora-base
+```
+
+**What This Installs**:
+- development-lifecycle capability documentation (5 artifacts)
+- Workflow documentation in docs/dev-docs/workflows/
+- DDD → BDD → TDD templates and guides
+
+### Part of Sets
+
+This SAP is included in:
+- full
+- mcp-server
+
+To install a complete set:
+```bash
+python scripts/install-sap.py --set full --source /path/to/chora-base
+```
+
+### Validation
+
+Verify all 5 artifacts exist:
+
+```bash
+ls docs/skilled-awareness/development-lifecycle/*.md
+ls docs/dev-docs/workflows/
+```
+
+---
+
+## 3. Prerequisites
 
 ### Required Infrastructure
 

@@ -14,6 +14,42 @@ type: adoption-blueprint
 
 ---
 
+## Installing the SAP
+
+### Quick Install
+
+Use the automated installation script:
+
+```bash
+python scripts/install-sap.py SAP-013 --source /path/to/chora-base
+```
+
+**What This Installs**:
+- metrics-tracking capability documentation (5 artifacts)
+- ClaudeROICalculator utility (utils/claude_metrics.py)
+- PROCESS_METRICS.md template
+
+### Part of Sets
+
+This SAP is included in:
+- full
+
+To install a complete set:
+```bash
+python scripts/install-sap.py --set full --source /path/to/chora-base
+```
+
+### Validation
+
+Verify all 5 artifacts exist:
+
+```bash
+ls docs/skilled-awareness/metrics-tracking/*.md
+ls utils/claude_metrics.py
+```
+
+---
+
 ## Quick Start (30 Minutes)
 
 ### Step 1: Copy Files

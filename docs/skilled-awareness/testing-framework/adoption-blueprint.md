@@ -45,7 +45,45 @@ This blueprint guides **developers** (humans and AI agents) through using chora-
 
 ---
 
-## 3. Quick Start
+## 3. Installing the SAP
+
+### Quick Install
+
+Use the automated installation script:
+
+```bash
+python scripts/install-sap.py SAP-004 --source /path/to/chora-base
+```
+
+**What This Installs**:
+- testing-framework capability documentation (5 artifacts)
+- Test configuration files (pytest, coverage)
+- Example test templates in static-template/tests/
+
+### Part of Sets
+
+This SAP is included in:
+- recommended
+- full
+- testing-focused
+- mcp-server
+
+To install a complete set:
+```bash
+python scripts/install-sap.py --set testing-focused --source /path/to/chora-base
+```
+
+### Validation
+
+Verify all 5 artifacts exist:
+
+```bash
+ls docs/skilled-awareness/testing-framework/*.md
+```
+
+---
+
+## 4. Quick Start
 
 ### Step 1: Run Existing Tests
 

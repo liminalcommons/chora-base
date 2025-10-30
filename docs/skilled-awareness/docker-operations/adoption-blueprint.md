@@ -15,6 +15,42 @@ type: adoption-blueprint
 
 ---
 
+## Installing the SAP
+
+### Quick Install
+
+Use the automated installation script:
+
+```bash
+python scripts/install-sap.py SAP-011 --source /path/to/chora-base
+```
+
+**What This Installs**:
+- docker-operations capability documentation (5 artifacts)
+- Dockerfile, Dockerfile.test, docker-compose.yml
+- .dockerignore and DOCKER_BEST_PRACTICES.md
+
+### Part of Sets
+
+This SAP is included in:
+- full
+
+To install a complete set:
+```bash
+python scripts/install-sap.py --set full --source /path/to/chora-base
+```
+
+### Validation
+
+Verify all 5 artifacts exist:
+
+```bash
+ls docs/skilled-awareness/docker-operations/*.md
+ls Dockerfile docker-compose.yml
+```
+
+---
+
 ## Quick Start (15 Minutes)
 
 Get Docker running in your chora-base project:

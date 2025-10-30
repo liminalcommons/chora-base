@@ -29,7 +29,43 @@ This blueprint helps projects adopt **25 automation scripts** with **justfile as
 
 ---
 
-## 2. Adoption Levels
+## 2. Installing the SAP
+
+### Quick Install
+
+Use the automated installation script:
+
+```bash
+python scripts/install-sap.py SAP-008 --source /path/to/chora-base
+```
+
+**What This Installs**:
+- automation-scripts capability documentation (5 artifacts)
+- scripts/ directory with 25 automation scripts
+- justfile with unified interface
+
+### Part of Sets
+
+This SAP is included in:
+- full
+
+To install a complete set:
+```bash
+python scripts/install-sap.py --set full --source /path/to/chora-base
+```
+
+### Validation
+
+Verify all 5 artifacts exist:
+
+```bash
+ls docs/skilled-awareness/automation-scripts/*.md
+ls scripts/ justfile
+```
+
+---
+
+## 3. Adoption Levels
 
 ### Level 1: Basic Usage (Day 1)
 - Learn justfile interface (`just --list`, `just help`)

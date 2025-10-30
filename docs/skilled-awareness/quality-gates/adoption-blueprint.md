@@ -21,7 +21,45 @@ This blueprint guides using chora-base's pre-commit hooks for code quality.
 
 ---
 
-## 3. Quick Start
+## 3. Installing the SAP
+
+### Quick Install
+
+Use the automated installation script:
+
+```bash
+python scripts/install-sap.py SAP-006 --source /path/to/chora-base
+```
+
+**What This Installs**:
+- quality-gates capability documentation (5 artifacts)
+- Pre-commit configuration (.pre-commit-config.yaml)
+- Ruff and mypy configuration files
+
+### Part of Sets
+
+This SAP is included in:
+- recommended
+- full
+- testing-focused
+- mcp-server
+
+To install a complete set:
+```bash
+python scripts/install-sap.py --set recommended --source /path/to/chora-base
+```
+
+### Validation
+
+Verify all 5 artifacts exist:
+
+```bash
+ls docs/skilled-awareness/quality-gates/*.md
+```
+
+---
+
+## 4. Quick Start
 
 ### Step 1: Install Hooks
 
