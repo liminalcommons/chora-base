@@ -656,7 +656,474 @@ Collections as higher-level holons are valuable **regardless of generation**. St
 
 ---
 
-**Status**: Pilot Phase Approved (2025-10-29) - Previously Exploratory
+## UPDATE: Clarification Response (2025-10-30)
+
+### COORD-2025-002-CLARIFICATION Response Received
+
+**Summary**: All 5 architectural questions answered. Strong foundation confirmed with minor gaps. **No blockers for pilot** - missing features can be added incrementally (2-6 hours each).
+
+### Answers to Critical Questions
+
+#### Q1: Caching & Freshness Semantics (ANSWERED)
+
+**Short Answer**: Partial support - works for pilot, can enhance if needed
+
+**What Exists**:
+- ✅ Versioned ephemeral storage with timestamp-based versions
+- ✅ Session-level context cache (in-memory)
+- ✅ `force: bool` parameter in MCP tools (force=True bypasses cache)
+- ✅ RetrievalStrategy enum defined ("latest", "all", "version", "approved_only")
+
+**What Doesn't Exist**:
+- ❌ Automatic staleness detection (no TTL or input hash comparison)
+- ❌ Dependency-based invalidation (input changes don't auto-trigger regeneration)
+- ❌ force parameter at ArtifactComposer level (only in MCP tools)
+- ❌ Per-child cache control (can't configure which children to cache vs regenerate)
+
+**Terminology Clarification**:
+- They use: `force: bool` (industry standard from git, npm, docker)
+- Not: "latest" vs "fresh" (those are retrievalStrategy values)
+- **Mapping**:
+  - Our "latest" = Their `force=False` (default, use cached)
+  - Our "fresh" = Their `force=True` (always regenerate)
+
+**Workaround for Pilot**:
+- Use existing `force` parameter pattern from MCP tools
+- For cached: call `generate_content(config_id)` - uses session cache
+- For fresh: call `generate_content(config_id, force=True)` - bypasses cache
+- Limitation: Works for individual content, not automatic at artifact assembly level
+
+**Effort to Add Missing Features**:
+- `force` in ArtifactComposer: 2-3 hours
+- Per-child cache control (honor retrievalStrategy): 3-4 hours
+- Staleness detection: 6-8 hours (complex, likely not needed)
+
+**Recommendation**: Start with existing patterns, defer advanced caching to Phase 2
+
+#### Q2: Content Block Architecture (PERFECT MATCH)
+
+**Short Answer**: Hybrid - Template Slots + Modular Blocks. ContentElement provides structure, GenerationPattern provides assembly logic, ChildReference provides modularity.
+
+**ContentElement Structure** (Atomic Unit):
+```json
+{
+  "name": "problem-statement",
+  "description": "Human-readable description",
+  "prompt_guidance": "Hints for AI generation",
+  "format": "markdown | code | json | yaml | gherkin | section | text",
+  "example_output": "Actual content or example (the 'content block' itself)",
+  "generation_source": "ai | human | template | mixed | any",
+  "review_status": "pending | approved | needs_revision | rejected"
+}
+```
+
+**GenerationPattern Structure** (Assembly Logic):
+```json
+{
+  "id": "pattern-id",
+  "type": "jinja2 | demonstration | template_fill",
+  "template": "{{ title }}\n\n{{ features }}\n\n{{ installation }}",
+  "variables": [
+    {"name": "title", "source": "elements.title.example_output"},
+    {"name": "features", "source": "elements.features.example_output"}
+  ],
+  "generation_config": {
+    "context": {...}
+  }
+}
+```
+
+**ChildReference Structure** (Modular Composition):
+```json
+{
+  "id": "shared-pytest-setup",
+  "path": "configs/content/shared-pytest-setup/shared-pytest-setup-content.json",
+  "required": true,
+  "order": 10,
+  "version": "1.2.3",
+  "retrievalStrategy": "latest"
+}
+```
+
+**Composition Strategy**:
+- ✅ Concat (join children with `\n\n`) - implemented
+- ❌ Merge, template, custom - not yet implemented
+
+**Granularity Recommendations**:
+- **Element level**: Single logical unit (problem-statement, pytest-setup-code)
+- **Content config level**: Related elements forming coherent piece (SAP charter with 5-7 elements)
+- **Child config level**: When >5-7 elements OR reusability needed
+- **Artifact level**: Final assembly of multiple content configs
+
+**Recommended Structure for SAP Decomposition**:
+```
+Tier 1: Elements (5-7 ContentElements per artifact)
+  ↓
+Tier 2: Content Configs (one per artifact: sap-004-charter-content.json)
+  ↓
+Tier 3: Shared Blocks (extract common patterns, reference via children)
+  ↓
+Tier 4: Artifact (sap-004-testing-framework-artifact.json references 5 content configs)
+```
+
+**Example SAP-004 Charter Elements**:
+- title (markdown)
+- problem-statement (section)
+- solution-approach (section)
+- key-capabilities (section)
+- adoption-prerequisites (section)
+
+**Reusable Shared Blocks**:
+- shared-pytest-setup-content.json (referenced by multiple SAPs)
+- shared-ci-cd-patterns-content.json
+- shared-docker-integration-content.json
+
+**Decision**: Use hybrid model - template slots for structure, modular blocks for reusability
+
+#### Q3: Context Schema (FULLY FLEXIBLE)
+
+**Short Answer**: No predefined schema - users define exactly what they need. 6 source types, JSONPath selectors, nested objects, custom fields.
+
+**InputSource Types** (6 Built-in):
+1. **content_config**: Load another content config as context
+2. **external_file**: Load JSON/YAML/text from filesystem
+3. **git_reference**: Load file from git ref (commit, branch, tag) - format: `{ref}:{path}`
+4. **ephemeral_output**: Load previously generated content from storage
+5. **inline_data**: Embed JSON data directly in config
+6. **artifact_config**: Load artifact config metadata as context
+
+**Data Selectors** (Extract Portions):
+- **whole_content**: Return entire content (default)
+- **jsonpath**: `$.users[0].name`, `$.paths.*.get.summary`, `$..name`
+- **line_range**: `10-20`, `:50`, `100:`
+- **markdown_section**: `# Installation`, `## Usage Examples`
+- **code_element**: `function:calculate_total`, `class:UserManager`
+
+**Context Structure Flexibility**:
+- No predefined schema - define whatever you need
+- Nested objects fully supported
+- Any field names allowed (repo_role, existing_capabilities, preferences, team_structure)
+- Type system: Python `dict[str, Any]` (str, int, bool, list, dict, etc.)
+
+**Example Context for SAP Generation**:
+```json
+{
+  "inputs": {
+    "sources": [
+      {
+        "id": "repo_metadata",
+        "source_type": "external_file",
+        "source_locator": "target-repo/repo-metadata.json",
+        "data_selector": "$",
+        "required": true
+      },
+      {
+        "id": "existing_capabilities",
+        "source_type": "external_file",
+        "source_locator": "target-repo/sap-catalog.json",
+        "data_selector": "$.adopted_saps[*].id",
+        "required": false
+      },
+      {
+        "id": "user_preferences",
+        "source_type": "inline_data",
+        "source_locator": "{\"verbosity\": \"concise\", \"include_examples\": true, \"technical_depth\": \"intermediate\"}",
+        "required": false
+      }
+    ]
+  }
+}
+```
+
+**Resolved Context Structure**:
+```json
+{
+  "repo_metadata": {
+    "repo_name": "my-mcp-server",
+    "repo_role": "mcp_server_developer",
+    "team_structure": "solo_developer",
+    "coordination_needs": false
+  },
+  "existing_capabilities": ["SAP-000", "SAP-001", "SAP-003"],
+  "user_preferences": {
+    "verbosity": "concise",
+    "include_examples": true,
+    "technical_depth": "intermediate"
+  }
+}
+```
+
+**Recommended Context Fields for SAP Generation**:
+- **repo_metadata**: repo_name, repo_role, primary_language, team_structure
+- **existing_capabilities**: adopted_saps (array of SAP IDs), capability_tags
+- **user_preferences**: verbosity (concise|moderate|detailed), include_examples (bool), technical_depth (beginner|intermediate|advanced)
+- **coordination_context**: coordinates_with (array), coordination_mode (optional)
+
+**Decision**: Define custom context via InputSource, store schemas in chora-base, version alongside SAPs
+
+#### Q4: Hybrid Storage + Generation (PARTIAL SUPPORT, WORKS MANUALLY)
+
+**Short Answer**: Yes, can mix storage-based (canonical hand-written) and generation-based. Manual hybrid works today via external_file, automatic orchestration needs ~2-4 hours.
+
+**Current Hybrid Support**:
+
+**Via external_file** (Reference stored content):
+```json
+{
+  "inputs": {
+    "sources": [
+      {
+        "id": "canonical_sap_framework",
+        "source_type": "external_file",
+        "source_locator": "chora-base/docs/skilled-awareness/sap-framework/capability-charter.md",
+        "data_selector": "# SAP Structure",
+        "required": true
+      }
+    ]
+  },
+  "generation": {
+    "patterns": [{
+      "template": "This SAP follows the structure defined in SAP-000:\n\n{{ canonical_sap_framework }}\n\n## Specific to Testing Framework\n\n{{ generated_specific_content }}"
+    }]
+  }
+}
+```
+
+**Via ephemeral_output** (Reference previously generated):
+```json
+{
+  "artifact_children": [
+    {
+      "id": "sap-000-stored",
+      "path": "configs/content/sap-000-passthrough-content.json",
+      "note": "passthrough content config that loads from external_file (stored)"
+    },
+    {
+      "id": "sap-004-generated",
+      "path": "configs/content/sap-004-charter-content.json",
+      "note": "generated fresh based on target repo context"
+    }
+  ]
+}
+```
+
+**Via demonstration generator** (Pass-through mode):
+- Generate() returns stored content unchanged
+- Use for canonical SAPs that don't need customization
+
+**What's Missing**:
+- ❌ retrievalStrategy defined but not enforced in ArtifactComposer
+- ❌ Automatic decision (stored vs generated based on staleness)
+- ❌ Per-child mode control (explicit 'stored' vs 'generated' flag)
+
+**Effort to Add**:
+- Wire retrievalStrategy: 2-3 hours
+- Staleness-aware hybrid: 4-6 hours (complex)
+- Per-child mode control: 1-2 hours
+
+**Workaround for Pilot**:
+- Create passthrough content config that loads via external_file for canonical SAPs
+- Use normal generation patterns for customized SAPs
+- Artifact assembles mix of passthrough + generated children
+
+**Example Bronze Collection Hybrid**:
+- Canonical SAPs (stored): SAP-000 (framework), SAP-001 (inbox)
+- Generated SAPs (fresh): SAP-004 (testing customized for repo), SAP-009 (awareness customized)
+- Assembly: Artifact references 2 passthrough configs + 2 generated configs
+
+**Decision**: Start with manual hybrid via external_file, consider automatic orchestration if need emerges (2-4 hours)
+
+#### Q5: Content Block Storage Location (CLEAR PATTERNS EXIST)
+
+**Short Answer**: Hybrid (Option C recommended) - Domain content in chora-base, configs in both repos, generated outputs in ephemeral storage.
+
+**Existing Storage Patterns**:
+
+**Content configs**: `configs/content/{config-id}/{config-id}-content.json`
+- Example: `configs/content/my-feature/my-feature-content.json`
+- Purpose: Define what to generate and how
+
+**Artifact configs**: `configs/artifact/{artifact-id}/{artifact-id}-artifact.json`
+- Example: `configs/artifact/documentation-bundle/documentation-bundle-artifact.json`
+- Purpose: Define how to assemble multiple content pieces
+
+**Draft configs**: `ephemeral/drafts/{type}/{draft-id}.json`
+- Example: `ephemeral/drafts/content/draft-20251030T153045-a1b2c3.json`
+- Purpose: Temporary configs before persistence
+
+**Generated content**: `ephemeral/{content_id}/{timestamp}.{format}`
+- Example: `ephemeral/api-docs/2025-10-30T15:30:45.123456+00:00.md`
+- Fallback: `/tmp/chora-ephemeral/` or `${TMPDIR}/chora-ephemeral/`
+- Purpose: Versioned generated content (cached)
+
+**Final artifacts**: User-specified in `ArtifactConfig.metadata.outputs[].file`
+- Examples: `docs/MY_FEATURE.md`, `README.md`, `tests/test_feature.py`
+
+**Recommended Hybrid Approach**:
+
+**Domain content in chora-base**:
+- What: Actual content blocks (markdown files, reusable text)
+- Where: `chora-base/docs/content-blocks/testing-framework/*.md`
+- Why: Domain experts (chora-base maintainers) own and update content
+- Version control: Git history tracks content evolution
+- Examples:
+  - `docs/content-blocks/testing-framework/problem-statement.md`
+  - `docs/content-blocks/testing-framework/pytest-setup.md`
+  - `docs/content-blocks/testing-framework/coverage-requirements.md`
+  - `docs/content-blocks/shared/ci-cd-patterns.md`
+
+**Configs in both repos**:
+- **chora-base configs**: Content configs defining SAP generation
+  - Where: `chora-base/configs/content/sap-004/*.json`
+  - Examples: `sap-004-charter/sap-004-charter-content.json`
+- **chora-compose templates**: Jinja2 templates for SAP artifact structure
+  - Where: `chora-compose/templates/sap/*.j2` (if reusable across projects)
+  - Examples: `templates/sap/charter.md.j2`
+
+**Reference pattern**:
+```json
+{
+  "config_location": "chora-base/configs/content/sap-004-charter/sap-004-charter-content.json",
+  "references_content": {
+    "inputs": {
+      "sources": [
+        {
+          "id": "problem_statement",
+          "source_type": "external_file",
+          "source_locator": "../../docs/content-blocks/testing-framework/problem-statement.md",
+          "note": "Relative path from config to content block"
+        }
+      ]
+    }
+  }
+}
+```
+
+**Remote Content Support**:
+- ✅ git_reference: Load from git refs (commits, branches, tags)
+  - Format: `{ref}:{path}` - example: `main:README.md`, `v1.0.0:docs/charter.md`
+  - Use case: Reference content blocks from specific chora-base versions
+- ❌ HTTP URLs not supported (can add in 2-3 hours if needed)
+- Workaround: Use git_reference or external_file after git clone
+
+**Version Control Patterns**:
+- Content versioning: Git history for content blocks in chora-base
+- Config versioning: Evolution metadata in configs + git history
+- Generated artifact versioning: Ephemeral storage with timestamp-based versions
+
+**Recommendation for SAP Pilot**:
+
+**Content block storage**:
+- Location: `chora-base/docs/content-blocks/`
+- Structure:
+  - SAP-specific: `docs/content-blocks/testing-framework/*.md`
+  - Shared: `docs/content-blocks/shared/*.md` (reused across SAPs)
+  - Organized by SAP: `docs/content-blocks/{sap-name}/` directories
+- Ownership: chora-base team maintains content
+- Version control: Git history in chora-base tracks evolution
+
+**Config storage**:
+- Content configs: `chora-base/configs/content/sap-004-*/` (5 configs, one per artifact)
+- Artifact config: `chora-base/configs/artifact/sap-004-testing-framework/` (1 config referencing 5 content configs)
+- Templates: Start inline (in config), extract to files if reuse emerges
+
+**Cross-repo reference**:
+- Approach 1: Git submodule (add chora-base as submodule, reference via relative path) - **Recommended for pilot**
+- Approach 2: git_reference source type with chora-base repo URL
+- Approach 3: Copy configs from chora-base to target repo (loses upstream updates)
+
+**Decision**: Hybrid storage - content blocks in chora-base, configs in chora-base, templates inline or in chora-compose, generated in ephemeral
+
+### Pilot Execution Plan (Updated)
+
+**Week 1 Decomposition** (~2025-11-06 to 2025-11-12):
+
+**What You Now Know**:
+1. Content block architecture: Use ContentElement with hybrid template slots + modular blocks
+2. Context structure: Define custom fields via InputSource (repo_metadata, existing_capabilities, user_preferences)
+3. Storage locations: Content blocks in chora-base/docs/content-blocks/, configs in chora-base/configs/
+4. Hybrid approach: Reference stored content via external_file, generate customized content
+5. Caching: Use existing patterns (force parameter), defer advanced caching to Phase 2
+
+**Decomposition Steps**:
+1. Select SAP-004 artifacts (charter, protocol, guide, blueprint, ledger)
+2. Decompose each artifact into 5-7 ContentElements (problem-statement, solution-approach, etc.)
+3. Extract shared/reusable blocks into separate markdown files (pytest-setup.md, coverage-requirements.md)
+4. Create 5 content configs (one per artifact) in chora-base/configs/content/sap-004-*/
+5. Create 1 artifact config that references 5 content configs
+6. Define context schema (repo_metadata.json, user_preferences.json)
+
+**Expected Output**:
+- Content blocks: ~10-15 markdown files in docs/content-blocks/testing-framework/
+- Content configs: 5 JSON files in configs/content/sap-004-*/
+- Artifact config: 1 JSON file in configs/artifact/sap-004-testing-framework/
+- Context schemas: Example context files for testing
+
+**During Pilot Flexibility**:
+- Discovery mode: Experiment with patterns, adjust based on what works
+- Iteration expected: Decomposition may require 2-3 rounds of refinement
+- Feature additions: If discover need for force parameter or retrievalStrategy wiring, they can add (2-4 hours)
+- No commitment: Pilot is exploration - if patterns don't work, adjust or acknowledge misalignment
+
+### Feature Gaps and Effort Estimates
+
+**Missing Features Summary**:
+- ❌ force in ArtifactComposer: 2-3 hours (Low priority for pilot)
+- ❌ retrievalStrategy wiring: 2-4 hours (Medium priority if hybrid orchestration needed)
+- ❌ Staleness detection: 6-8 hours (Low priority - complex, likely not needed)
+- ❌ HTTP URL sources: 2-3 hours (Low priority - git_reference works for most cases)
+
+**What Doesn't Need Building**:
+- ✅ Content architecture - exists and works well
+- ✅ Context flexibility - fully flexible, no changes needed
+- ✅ Storage patterns - clear patterns exist
+- ✅ Hybrid via external_file - works today
+- ✅ Versioned ephemeral storage - production-ready
+
+### Architectural Alignment Assessment
+
+**Strong Alignment**:
+- ✅ Multi-tier composition (elements → content → artifact → collection) matches SAP → Collection → Collection-of-Collections vision
+- ✅ Hybrid storage + generation supported via InputSource patterns
+- ✅ Context-aware generation is core capability (Jinja2 + context)
+- ✅ Caching and versioning infrastructure exists (ephemeral storage)
+- ✅ Modular block reusability via child references
+
+**Minor Gaps**:
+- Caching terminology and control (use 'force: bool', can enhance 2-3 hours)
+- retrievalStrategy not wired (easy addition 2-4 hours)
+- No automatic staleness detection (complex 6-8 hours, likely not needed)
+
+**No Architectural Conflicts**: Our vision fits within chora-compose architecture. Gaps are feature additions, not design conflicts.
+
+### Next Steps
+
+**Our Side** (chora-base):
+- Begin SAP-004 decomposition using ContentElement pattern
+- Store content blocks in chora-base/docs/content-blocks/testing-framework/
+- Create content configs referencing blocks via external_file
+- Define context schemas (repo_metadata, user_preferences)
+- Share initial configs for review/iteration
+
+**Their Side** (chora-compose):
+- Available for questions during decomposition
+- Review configs and provide feedback
+- Add missing features if specific needs emerge (2-4 hours as needed)
+- Iterate on patterns based on pilot learnings
+
+**Collaboration Mode**: Async via inbox protocol or GitHub issues, sync call if helpful
+
+### Key Takeaway
+
+**Tone from chora-compose**: "Transparent and technical. We've given you honest assessment of what exists, what doesn't, and effort estimates. No overselling - strong foundation with pilot-friendly gaps."
+
+**Our Response**: Thrilled by the comprehensive 1,124-line technical response with code examples, effort estimates, workarounds, and recommendations. This is exactly what we needed to move forward with confidence.
+
+**Appreciation from them**: "Thank you for the detailed architectural questions! This level of specificity helps ensure we're aligned on approach before decomposition begins. Looking forward to the pilot."
+
+---
+
+**Status**: Clarification Complete (2025-10-30) - Ready for Week 1 Decomposition
 **Next Review**: After pilot completes (~2025-11-19) for go/no-go decision
 **Owner**: chora-base maintainers
 **Stakeholders**: chora-compose (collaboration partner), chora-workspace (collections adopter)

@@ -1638,7 +1638,51 @@ Wave 5 is primarily additive, minimal cleanup - track in `v4-cleanup-manifest.md
 
 **Related Coordination**:
 - COORD-2025-002: Exploratory request to chora-compose (sent 2025-10-29)
+- COORD-2025-002-response: chora-compose response (received 2025-10-29)
 - COORD-2025-002-RESPONSE: Acceptance of pilot (sent 2025-10-29)
+- COORD-2025-002-CLARIFICATION: 5 detailed architectural questions (sent 2025-10-30)
+- COORD-2025-002-CLARIFICATION-RESPONSE: Comprehensive answers (received 2025-10-30)
+- COORD-2025-002-CLARIFICATION-RESPONSE-acknowledgment: Readiness confirmed (sent 2025-10-30)
+
+**UPDATE (2025-10-30)**: **Clarification Complete** - All 5 architectural questions answered comprehensively (1,124-line technical response). **No blockers for pilot** - strong foundation with minor gaps (2-6 hours each if needed).
+
+**Key Findings from Clarification**:
+
+**Terminology Alignment**:
+- chora-compose uses: `force: bool` (industry standard from git, npm, docker)
+- Not: "latest" vs "fresh" terminology
+- **Mapping**: force=False (use cached) = our "latest", force=True (regenerate) = our "fresh"
+
+**Content Architecture** (Q2 - PERFECT MATCH):
+- Hybrid: Template Slots + Modular Blocks
+- ContentElement = atomic unit (5-7 per artifact)
+- GenerationPattern = assembly logic (Jinja2 templates)
+- ChildReference = modular composition (reusable blocks)
+- **Recommendation**: Decompose each SAP artifact into 5-7 ContentElements, extract shared patterns
+
+**Context Schema** (Q3 - FULLY FLEXIBLE):
+- No predefined schema - define exactly what we need
+- 6 InputSource types: content_config, external_file, git_reference, ephemeral_output, inline_data, artifact_config
+- JSONPath selectors for data extraction
+- **Recommendation**: Define repo_metadata, existing_capabilities, user_preferences, coordination_context
+
+**Hybrid Storage + Generation** (Q4 - PARTIAL SUPPORT, WORKS MANUALLY):
+- Can mix canonical (stored) and generated artifacts
+- Manual hybrid via external_file works today
+- Auto-orchestration needs 2-4 hours if desired
+- **Recommendation**: Create passthrough configs for canonical SAPs, generation for customized SAPs
+
+**Storage Location** (Q5 - CLEAR PATTERNS):
+- Content blocks: `chora-base/docs/content-blocks/` (domain content)
+- Configs: `chora-base/configs/content/` and `chora-base/configs/artifact/`
+- Generated outputs: `ephemeral/{content_id}/{timestamp}.{format}`
+- **Recommendation**: Hybrid approach - content in chora-base, configs in both repos
+
+**Pilot Readiness**:
+- Week 1 decomposition steps detailed with examples
+- Expected outputs: ~10-15 content blocks, 5 content configs, 1 artifact config
+- Feature gaps identified with effort estimates (2-6 hours each if needed)
+- Discovery mode encouraged - iterate based on what works
 
 ---
 

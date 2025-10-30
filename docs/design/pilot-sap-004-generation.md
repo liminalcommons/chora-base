@@ -228,6 +228,289 @@ Validate that chora-compose can generate SAP artifacts meeting our quality bar (
 
 ---
 
-**Last Updated**: 2025-10-29
-**Status**: Awaiting pilot start (~2025-11-06)
+## UPDATE: Clarification Complete (2025-10-30)
+
+### COORD-2025-002-CLARIFICATION Response Received
+
+**Summary**: All 5 architectural questions answered comprehensively (1,124-line technical response with code examples). **No blockers for pilot** - strong foundation with minor gaps (2-6 hours each if needed).
+
+### Week 1 Decomposition Guidance (Detailed)
+
+**What You Now Know**:
+1. **Content block architecture**: Use ContentElement with hybrid template slots + modular blocks
+2. **Context structure**: Define custom fields via InputSource (repo_metadata, existing_capabilities, user_preferences)
+3. **Storage locations**: Content blocks in `chora-base/docs/content-blocks/`, configs in `chora-base/configs/`
+4. **Hybrid approach**: Reference stored content via external_file, generate customized content
+5. **Caching**: Use existing patterns (`force` parameter), defer advanced caching to Phase 2
+
+### Enhanced Decomposition Steps
+
+**Step 1: Select SAP-004 Artifacts**
+- charter.md
+- protocol.md
+- awareness-guide.md
+- adoption-blueprint.md
+- ledger.md
+
+**Step 2: Decompose Each Artifact into ContentElements (5-7 per artifact)**
+
+Example for charter.md:
+```json
+{
+  "elements": {
+    "title": {
+      "name": "title",
+      "format": "markdown",
+      "example_output": "# SAP-004: Testing Framework"
+    },
+    "problem-statement": {
+      "name": "problem-statement",
+      "format": "section",
+      "description": "Why testing framework capability matters"
+    },
+    "solution-approach": {
+      "name": "solution-approach",
+      "format": "section",
+      "description": "How SAP-004 addresses testing needs"
+    },
+    "key-capabilities": {
+      "name": "key-capabilities",
+      "format": "section",
+      "description": "What capabilities SAP-004 provides"
+    },
+    "adoption-prerequisites": {
+      "name": "adoption-prerequisites",
+      "format": "section",
+      "description": "What's needed before adopting SAP-004"
+    }
+  }
+}
+```
+
+**Step 3: Extract Shared/Reusable Blocks**
+
+Create separate markdown files for content reused across SAPs:
+- `docs/content-blocks/shared/pytest-setup.md` (reused by multiple testing SAPs)
+- `docs/content-blocks/shared/ci-cd-patterns.md` (reused across automation SAPs)
+- `docs/content-blocks/shared/docker-integration.md` (reused by containerization SAPs)
+
+**Step 4: Create 5 Content Configs**
+
+Storage structure:
+```
+chora-base/configs/content/
+  ├── sap-004-charter/
+  │   └── sap-004-charter-content.json
+  ├── sap-004-protocol/
+  │   └── sap-004-protocol-content.json
+  ├── sap-004-guide/
+  │   └── sap-004-guide-content.json
+  ├── sap-004-blueprint/
+  │   └── sap-004-blueprint-content.json
+  └── sap-004-ledger/
+      └── sap-004-ledger-content.json
+```
+
+Each config references content blocks via external_file:
+```json
+{
+  "content_id": "sap-004-charter",
+  "inputs": {
+    "sources": [
+      {
+        "id": "problem_statement",
+        "source_type": "external_file",
+        "source_locator": "../../docs/content-blocks/testing-framework/problem-statement.md",
+        "required": true
+      },
+      {
+        "id": "pytest_setup",
+        "source_type": "external_file",
+        "source_locator": "../../docs/content-blocks/shared/pytest-setup.md",
+        "required": true
+      }
+    ]
+  },
+  "elements": {
+    "title": {...},
+    "problem-statement": {...},
+    "solution-approach": {...}
+  },
+  "generation": {
+    "patterns": [{
+      "type": "jinja2",
+      "template": "{{ title }}\n\n{{ problem_statement }}\n\n{{ solution_approach }}",
+      "variables": [
+        {"name": "title", "source": "elements.title.example_output"},
+        {"name": "problem_statement", "source": "inputs.problem_statement"}
+      ]
+    }]
+  }
+}
+```
+
+**Step 5: Create 1 Artifact Config**
+
+Storage location: `chora-base/configs/artifact/sap-004-testing-framework/sap-004-testing-framework-artifact.json`
+
+```json
+{
+  "artifact_id": "sap-004-testing-framework",
+  "children": [
+    {
+      "id": "charter",
+      "path": "configs/content/sap-004-charter/sap-004-charter-content.json",
+      "order": 1,
+      "required": true
+    },
+    {
+      "id": "protocol",
+      "path": "configs/content/sap-004-protocol/sap-004-protocol-content.json",
+      "order": 2,
+      "required": true
+    },
+    {
+      "id": "guide",
+      "path": "configs/content/sap-004-guide/sap-004-guide-content.json",
+      "order": 3,
+      "required": true
+    },
+    {
+      "id": "blueprint",
+      "path": "configs/content/sap-004-blueprint/sap-004-blueprint-content.json",
+      "order": 4,
+      "required": true
+    },
+    {
+      "id": "ledger",
+      "path": "configs/content/sap-004-ledger/sap-004-ledger-content.json",
+      "order": 5,
+      "required": true
+    }
+  ],
+  "composition_strategy": "concat",
+  "metadata": {
+    "outputs": [
+      {"file": "docs/skilled-awareness/testing-framework/capability-charter.md", "content": "charter"},
+      {"file": "docs/skilled-awareness/testing-framework/protocol.md", "content": "protocol"},
+      {"file": "docs/skilled-awareness/testing-framework/awareness-guide.md", "content": "guide"},
+      {"file": "docs/skilled-awareness/testing-framework/adoption-blueprint.md", "content": "blueprint"},
+      {"file": "docs/skilled-awareness/testing-framework/ledger.md", "content": "ledger"}
+    ]
+  }
+}
+```
+
+**Step 6: Define Context Schema**
+
+Create example context files for testing generation:
+
+`context-examples/repo-metadata.json`:
+```json
+{
+  "repo_name": "example-mcp-server",
+  "repo_role": "mcp_server_developer",
+  "primary_language": "python",
+  "team_structure": "solo_developer",
+  "coordination_needs": false
+}
+```
+
+`context-examples/user-preferences.json`:
+```json
+{
+  "verbosity": "concise",
+  "include_examples": true,
+  "technical_depth": "intermediate"
+}
+```
+
+### Expected Outputs (Week 1)
+
+**Content Blocks**: ~10-15 markdown files
+```
+docs/content-blocks/
+  ├── testing-framework/
+  │   ├── problem-statement.md
+  │   ├── solution-approach.md
+  │   ├── key-capabilities.md
+  │   ├── adoption-prerequisites.md
+  │   ├── pytest-configuration.md
+  │   ├── coverage-setup.md
+  │   ├── ci-integration.md
+  │   └── (3-8 more files)
+  └── shared/
+      ├── pytest-setup.md
+      ├── ci-cd-patterns.md
+      └── docker-integration.md
+```
+
+**Content Configs**: 5 JSON files (one per artifact)
+
+**Artifact Config**: 1 JSON file (references 5 content configs)
+
+**Context Schemas**: 2+ example files for testing
+
+### Architecture Decisions from Clarification
+
+**ContentElement Granularity**:
+- Element level: Single logical unit (problem-statement paragraph, pytest-setup code block)
+- Content config level: Related elements forming coherent piece (charter with 5-7 elements)
+- Child config level: When >5-7 elements OR reusability needed
+- Artifact level: Final assembly of multiple content configs
+
+**Context Fields** (Recommended):
+- `repo_metadata`: repo_name, repo_role, primary_language, team_structure
+- `existing_capabilities`: adopted_saps (array of SAP IDs)
+- `user_preferences`: verbosity, include_examples, technical_depth
+- `coordination_context`: coordinates_with, coordination_mode (optional)
+
+**Hybrid Model**:
+- Canonical SAPs (stored): SAP-000, SAP-001 referenced via external_file passthrough
+- Generated SAPs (fresh): SAP-004 customized for target repo context
+- Mix in collections: Some artifacts stored, others generated
+
+**Caching Terminology Alignment**:
+- chora-compose uses: `force: bool` (not "latest" vs "fresh")
+- `force=False` (default) = use cached
+- `force=True` = always regenerate, bypass cache
+
+### Feature Availability
+
+**Available Now** (No Changes Needed):
+- ✅ ContentElement structure
+- ✅ InputSource with 6 source types
+- ✅ external_file references for stored content
+- ✅ Versioned ephemeral storage
+- ✅ Session-level context cache
+- ✅ Concat composition strategy
+
+**Can Add During Pilot** (2-6 hours if needed):
+- `force` parameter at ArtifactComposer level: 2-3 hours
+- retrievalStrategy wiring (auto hybrid orchestration): 2-4 hours
+- Staleness detection (auto-regenerate on input changes): 6-8 hours (complex, likely not needed)
+
+### Pilot Flexibility
+
+**Discovery Mode**: Experiment with patterns, adjust based on what works
+
+**Iteration Expected**: Decomposition may require 2-3 rounds of refinement
+
+**Feature Additions**: If you discover need for missing features, chora-compose can add (2-4 hours)
+
+**No Commitment**: Pilot is exploration - if patterns don't work, adjust or acknowledge misalignment
+
+### Related Coordination
+
+- **COORD-2025-002**: Exploratory request (sent 2025-10-29)
+- **COORD-2025-002-response**: chora-compose response (received 2025-10-29)
+- **COORD-2025-002-RESPONSE**: Pilot acceptance (sent 2025-10-29)
+- **COORD-2025-002-CLARIFICATION**: 5 detailed questions (sent 2025-10-30)
+- **COORD-2025-002-CLARIFICATION-RESPONSE**: Comprehensive answers (received 2025-10-30)
+- **COORD-2025-002-CLARIFICATION-RESPONSE-acknowledgment**: Readiness confirmed (sent 2025-10-30)
+
+---
+
+**Last Updated**: 2025-10-30 (Clarification complete)
+**Status**: Ready for Week 1 Decomposition (~2025-11-06)
 **Owner**: chora-base team (pilot execution), both teams (collaboration)
