@@ -1,0 +1,290 @@
+{
+  "id": "COORD-2025-002-CLARIFICATION",
+  "type": "follow_up_clarification",
+  "in_reference_to": "COORD-2025-002",
+  "from_repo": "chora-base",
+  "to_repo": "chora-compose",
+  "created_at": "2025-10-29T22:00:00Z",
+  "priority": "medium",
+  "urgency": "before_pilot_week_1",
+
+  "purpose": "Clarify architectural details about collections, caching, and content architecture before pilot decomposition phase begins. Not changing pilot plan - just ensuring alignment on approach.",
+
+  "context": {
+    "pilot_status": "Approved (COORD-2025-002-RESPONSE sent 2025-10-29)",
+    "pilot_start": "~2025-11-06 (Week 1: Decomposition phase)",
+    "why_now": "Decomposition phase requires clarity on content block architecture, caching semantics, and storage patterns. Want to structure SAP-004 content blocks correctly from the start.",
+
+    "what_we_communicated_well": [
+      "Collections as role-based SAP bundles",
+      "Context-aware generation (same SAP, different contexts)",
+      "Content blocks + context → artifacts model",
+      "Pilot plan and timeline"
+    ],
+
+    "what_we_under_communicated": [
+      "'Latest' vs 'fresh' semantics (mentioned in 1 line, not explained)",
+      "Hybrid model as intentional architectural choice (not just fallback)",
+      "Constituent content architecture options",
+      "Content block storage location",
+      "Full collections vision (higher-level holons with multi-tier composition)"
+    ],
+
+    "realization": "After sending COORD-2025-002-RESPONSE, we realized we may have under-communicated some architectural details that affect how we approach the pilot. This clarification ensures we're aligned before decomposition begins."
+  },
+
+  "clarifying_questions": [
+    {
+      "id": "Q1",
+      "topic": "Caching & Freshness Semantics",
+      "priority": "CRITICAL",
+      "question": "Does chora-compose support both 'use cached artifact' and 'always regenerate fresh' modes?",
+
+      "our_vision": {
+        "latest_mode": "Use cached/stored artifact if available (fast, consistent)",
+        "fresh_mode": "Always regenerate from content blocks (up-to-date, context-specific)",
+        "user_choice": "Users should be able to choose: generate_collection('minimal-entry', freshness='latest') vs freshness='fresh'",
+        "system_determined": "Or system auto-detects when regeneration needed (content block modified, context changed, cache expired)"
+      },
+
+      "why_this_matters": "This affects how we structure content blocks and how repos consume collections. If caching isn't supported, we need different approach.",
+
+      "sub_questions": [
+        "How does caching work in chora-compose?",
+        "Can users explicitly request fresh generation vs cached?",
+        "What triggers cache invalidation? (content updates, context changes, TTL expiry?)",
+        "Where are cached artifacts stored? (filesystem, database, in-memory?)",
+        "How is cache versioning handled?"
+      ]
+    },
+
+    {
+      "id": "Q2",
+      "topic": "Content Block Architecture",
+      "priority": "CRITICAL",
+      "question": "Which model does chora-compose use for constituent content blocks?",
+
+      "three_models": {
+        "template_slots": {
+          "description": "Fixed structure with variable content slots",
+          "example": "Charter template has {{ problem_statement }}, {{ solution_approach }}, etc.",
+          "pros": "Simple, predictable, easy to validate",
+          "cons": "Less flexible, requires explicit template design"
+        },
+
+        "modular_blocks": {
+          "description": "Library of reusable content chunks that get assembled",
+          "example": "pytest-setup.md, coverage-requirements.md, ci-cd-patterns.md",
+          "pros": "Highly reusable, composable, DRY",
+          "cons": "More complex assembly logic, potential coherence issues"
+        },
+
+        "semantic_composition": {
+          "description": "Framework selects relevant content blocks based on context",
+          "example": "Given context='MCP server', select testing + MCP + docker blocks",
+          "pros": "Most flexible, context-aware selection",
+          "cons": "Requires AI/semantic understanding, less predictable"
+        }
+      },
+
+      "why_this_matters": "SAP-004 decomposition approach depends on which model you use. We want to structure content blocks in a way that aligns with your framework.",
+
+      "sub_questions": [
+        "Does chora-compose use one of these models, a hybrid, or something else?",
+        "How do content blocks reference/import each other?",
+        "Best practices for decomposing a 5-artifact SAP into content blocks?",
+        "How granular should content blocks be? (paragraph-level, section-level, document-level?)"
+      ]
+    },
+
+    {
+      "id": "Q3",
+      "topic": "Context Schema",
+      "priority": "IMPORTANT",
+      "question": "Can you share an example context schema from your framework?",
+
+      "our_assumptions": {
+        "repo_role": "MCP server, platform infrastructure, web app, etc.",
+        "existing_capabilities": "Array of capabilities already adopted",
+        "preferences": {
+          "verbosity": "concise, moderate, detailed",
+          "include_examples": "boolean",
+          "technical_depth": "beginner, intermediate, advanced"
+        },
+        "coordination_needs": "Does repo coordinate with other repos?",
+        "team_structure": "Solo developer, small team, large org"
+      },
+
+      "why_this_matters": "We want to structure SAP-004 generation to accept rich context. Need to understand what context dimensions your framework supports.",
+
+      "sub_questions": [
+        "What context variables does chora-compose support out-of-box?",
+        "Can we define custom context fields?",
+        "How deeply nested can context be?",
+        "Type system for context values? (string, enum, object, array?)",
+        "Context validation/schema enforcement?"
+      ]
+    },
+
+    {
+      "id": "Q4",
+      "topic": "Hybrid Model (Storage + Generation)",
+      "priority": "IMPORTANT",
+      "question": "Can some artifacts be storage-based (canonical hand-written) while others are generation-based?",
+
+      "our_vision": {
+        "hybrid_approach": "Not all SAPs need generation. Some are hand-crafted (SAP-000 foundational docs), others are generated (SAP-004 variants for different contexts).",
+
+        "use_cases": [
+          "SAP-000 (sap-framework): Always hand-written canonical version stored in chora-base",
+          "SAP-004 (testing-framework): Base version stored + generated variants for different repo types",
+          "SAP-014 (mcp-server): Highly context-specific, always generated fresh for target repo",
+          "Custom org SAP: Organization maintains canonical storage version, generates customized versions for teams"
+        ],
+
+        "question": "Is this hybrid approach supported, or does chora-compose require all-or-nothing (either all artifacts generated or all stored)?"
+      },
+
+      "why_this_matters": "We have 18 existing hand-written SAPs. Some may benefit from generation (customization), others should remain canonical. Need to understand if hybrid is architecturally supported.",
+
+      "sub_questions": [
+        "Can generation reference stored artifacts? (e.g., include canonical SAP-000, generate customized SAP-004)",
+        "Can collections contain mix of stored + generated artifacts?",
+        "How to handle dependencies between stored and generated artifacts?",
+        "Is there a 'pass-through' mode for artifacts that don't need generation?"
+      ]
+    },
+
+    {
+      "id": "Q5",
+      "topic": "Content Block Storage Location",
+      "priority": "HELPFUL",
+      "question": "Where should content blocks live: chora-base repo, chora-compose repo, both, or user-defined?",
+
+      "options": {
+        "option_a_chora_base": {
+          "approach": "Content blocks stored in chora-base (docs/content-blocks/)",
+          "pros": "Version controlled with SAPs, owned by domain experts, easy to update",
+          "cons": "chora-compose needs to access chora-base content, cross-repo dependency"
+        },
+
+        "option_b_chora_compose": {
+          "approach": "Content blocks stored in chora-compose as part of framework",
+          "pros": "Framework owns content, simpler deployment, no cross-repo access",
+          "cons": "chora-base doesn't own content, harder for domain experts to update"
+        },
+
+        "option_c_hybrid": {
+          "approach": "Domain content in chora-base, templates in chora-compose",
+          "pros": "Separation of concerns (content vs generation logic)",
+          "cons": "More complex, requires coordination between repos"
+        },
+
+        "option_d_user_defined": {
+          "approach": "Each project defines content block locations in config",
+          "pros": "Maximum flexibility, projects control their content",
+          "cons": "No standard location, harder to share content blocks"
+        }
+      },
+
+      "why_this_matters": "Affects where we put SAP-004 content blocks during decomposition. Want to use your recommended pattern.",
+
+      "sub_questions": [
+        "Does chora-compose have a standard location for content blocks?",
+        "Can content blocks be remote (e.g., fetched from chora-base repo URL)?",
+        "How to version control content blocks separate from generated artifacts?",
+        "Import/export patterns for content blocks across repos?"
+      ]
+    }
+  },
+
+  "collections_vision_summary": {
+    "what_are_collections": "Collections are higher-level holons (compositions of SAPs) that enable role-based bundling and context-aware generation.",
+
+    "role_based_bundles": {
+      "examples": [
+        "MCP Server Developer: SAPs 0, 3, 4, 14, 17, 18 (development workflow)",
+        "Platform Engineer: SAPs 0, 7, 8, 11, 13 (infrastructure/observability)",
+        "Bronze Tier Entry: SAPs 0, 1, 9, 16, 2 (minimal ecosystem onboarding)"
+      ],
+      "benefit": "Repos request collection by role, get exactly what they need"
+    },
+
+    "context_aware_generation": {
+      "same_collection_different_contexts": "MCP server repo gets MCP-specific SAP-004, Django repo gets Django-specific SAP-004",
+      "example": "generate_collection('bronze-tier', context={role: 'mcp-server', capabilities: ['docker'], preferences: {verbosity: 'concise'}})",
+      "benefit": "Customized documentation for each repo's needs, not one-size-fits-all"
+    },
+
+    "latest_vs_fresh_artifacts": {
+      "use_cases": {
+        "latest": "Production deployment needs stable, tested versions (use cached)",
+        "fresh": "Development needs up-to-date customizations (always regenerate)",
+        "hybrid": "Some artifacts cached (stable), others fresh (context-specific)"
+      },
+      "user_control": "generate_collection('minimal-entry', freshness='latest') vs freshness='fresh'",
+      "system_determined": "Auto-regenerate if content blocks changed since last generation"
+    },
+
+    "multi_tier_composition": {
+      "tier_1": "SAP (atomic capability holon) - 5 artifacts",
+      "tier_2": "Collection (role-based SAP bundle) - e.g., 'MCP Dev Stack'",
+      "tier_3": "Collection of collections - e.g., 'Ecosystem Health Monitoring' (Bronze + Observability + Coordination)",
+      "benefit": "Hierarchical composition enables complex use cases while maintaining simplicity"
+    }
+  },
+
+  "impact_on_pilot": {
+    "decomposition_phase": "Week 1 (starting ~2025-11-06) requires understanding content block architecture",
+    "what_we_need_to_know": [
+      "How to structure content blocks (Q2: template slots vs modular vs semantic)",
+      "Where to store content blocks (Q5: chora-base vs chora-compose vs hybrid)",
+      "What context to prepare (Q3: context schema)",
+      "Whether to plan for caching (Q1: latest vs fresh)",
+      "How hybrid model works (Q4: storage + generation)"
+    ],
+
+    "if_we_misunderstand": "May structure content blocks incorrectly, requiring rework during pilot or after",
+    "if_we_align_now": "Decomposition proceeds smoothly, content blocks structured optimally from start"
+  },
+
+  "our_flexibility": {
+    "willing_to_adapt": "We're flexible on implementation details. If your architecture requires different approach than our vision, we can adapt.",
+
+    "non_negotiables": [
+      "Quality must meet 80%+ of hand-written SAP bar",
+      "Generated artifacts must be agent-readable (Claude can parse)",
+      "Content must be factually accurate and coherent"
+    ],
+
+    "nice_to_haves": [
+      "User-controlled 'latest' vs 'fresh' (could be phase 2)",
+      "Hybrid storage + generation (could start with all-generation)",
+      "Multi-tier collections (could start with simple collections)"
+    ]
+  },
+
+  "what_we_are_NOT_asking": [
+    "Changes to pilot timeline or scope",
+    "Implementation of new features for pilot",
+    "Commitment to support collections architecture long-term",
+    "Answers to all questions immediately (helpful before Week 1, but not blocking)"
+  ],
+
+  "ideal_outcome": {
+    "by_week_1_start": "Answers to Q1 (caching) and Q2 (content architecture) so we decompose correctly",
+    "during_pilot": "Answers to Q3-Q5 inform how we structure configs and where we store blocks",
+    "after_pilot": "If pilot succeeds, we have clear path for scaling to 18 SAPs with aligned architecture"
+  },
+
+  "response_options": {
+    "brief_answers": "Quick answers to 5 questions (30 min effort on your side)",
+    "detailed_discussion": "We schedule 30-60 min call to discuss architecture alignment",
+    "documentation_links": "Point us to relevant docs that answer these questions",
+    "pilot_as_discovery": "We learn through pilot experimentation, adjust as we go"
+  },
+
+  "appreciation": "Thank you for the enthusiastic response to COORD-2025-002! The alignment is exciting. These clarifying questions help ensure we're approaching the pilot with shared understanding of the architecture.",
+
+  "tone": "Collaborative and curious, not demanding. We want to understand your architecture better so we can work within it effectively."
+}

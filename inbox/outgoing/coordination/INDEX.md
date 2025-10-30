@@ -17,8 +17,11 @@ This directory tracks coordination requests sent from chora-base to other reposi
   - `../../incoming/coordination/COORD-2025-002-response.json` (their response)
   - [../../COORD-2025-002-RESPONSE.json](../../COORD-2025-002-RESPONSE.json) (our acceptance)
   - [../../COORD-2025-002-RESPONSE-summary.md](../../COORD-2025-002-RESPONSE-summary.md) (acceptance summary)
+  - [../../COORD-2025-002-CLARIFICATION.json](../../COORD-2025-002-CLARIFICATION.json) (follow-up clarification)
+  - [../../COORD-2025-002-CLARIFICATION-summary.md](../../COORD-2025-002-CLARIFICATION-summary.md) (clarification summary)
 - **Outcome**: Pilot project approved - Generate SAP-004 (Testing Framework) - 1-2 weeks, 4-6 hours effort
-- **Next Step**: Execute pilot (~2025-11-06 to 2025-11-19), make go/no-go decision for Wave 6 Option B
+- **Clarification Sent**: 2025-10-29 - 5 questions about caching, content architecture, context schema, hybrid model, storage
+- **Next Step**: Await clarification responses (helpful before Week 1 ~2025-11-06), execute pilot, make go/no-go decision
 
 ## Completed Responses
 
