@@ -26,6 +26,43 @@ See [Standard SAP Sets Reference](../reference/standard-sap-sets.md) for detaile
 
 ---
 
+## Before You Begin
+
+### Pre-Flight Validation (Recommended)
+
+Before installing SAPs, validate your environment:
+
+```bash
+cd /path/to/chora-base
+bash scripts/validate-prerequisites.sh
+```
+
+This checks:
+- Python 3.8+ installed
+- Git 2.0+ available
+- Required directories exist
+- Write permissions
+- Disk space (100MB+)
+
+**Expected Output**:
+```
+✓ Pre-flight validation PASSED
+
+All checks passed! You're ready to install SAPs.
+```
+
+See [Troubleshooting](#troubleshooting) if validation fails.
+
+### Choosing a SAP Set
+
+Not sure which SAP set to install? See:
+- **[SAP Set Decision Tree](../reference/sap-set-decision-tree.md)** - Visual flowchart (5-minute choice)
+- **[Onboarding FAQ](../troubleshooting/onboarding-faq.md#which-sap-set-should-i-choose)** - Common questions
+
+**Quick recommendation**: Start with `minimal-entry` (5 SAPs, 3-5 hours) for first-time adoption.
+
+---
+
 ## Step-by-Step: Installing minimal-entry Set
 
 ### Step 1: Clone chora-base (if not already available)
@@ -399,6 +436,21 @@ Available SAP Sets:
 
 ## Troubleshooting
 
+For comprehensive troubleshooting, see: **[Onboarding FAQ](../troubleshooting/onboarding-faq.md)** - Covers 10+ common issues with solutions.
+
+### Common Issues
+
+### Issue: Pre-flight validation failed
+
+**Symptom**: `bash scripts/validate-prerequisites.sh` reports failures
+
+**Solution**: Follow the specific error messages. Common fixes:
+- **Python version**: Install Python 3.8+ from [python.org](https://www.python.org/downloads/)
+- **Git missing**: Install from [git-scm.com](https://git-scm.com/downloads)
+- **Permission denied**: Fix with `chmod -R u+w docs/skilled-awareness/`
+
+See [Onboarding FAQ - Installation Issues](../troubleshooting/onboarding-faq.md#installation-issues) for detailed solutions.
+
 ### Issue: Command not found
 
 **Symptom**:
@@ -508,6 +560,12 @@ After installing a SAP set:
 
 ## Related Documentation
 
+**Before Installation**:
+- [Pre-Flight Validation Script](../../scripts/validate-prerequisites.sh) - Environment validation
+- [SAP Set Decision Tree](../reference/sap-set-decision-tree.md) - Visual flowchart to choose SAP set
+- [Onboarding FAQ](../troubleshooting/onboarding-faq.md) - Common issues and solutions
+
+**Installation Resources**:
 - [Agent Onboarding Guide](../guides/agent-onboarding-chora-base.md) - Complete onboarding walkthrough
 - [Create Custom SAP Sets](create-custom-sap-sets.md) - Define organization-specific sets
 - [Standard SAP Sets Reference](../reference/standard-sap-sets.md) - Detailed comparison table

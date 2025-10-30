@@ -30,6 +30,7 @@ import argparse
 import json
 import shutil
 import sys
+import time
 from pathlib import Path
 from typing import Dict, List, Optional, Set, Tuple
 
@@ -55,6 +56,9 @@ class InstallStats:
         self.saps_skipped = 0
         self.errors = 0
         self.warnings = 0
+        self.start_time = None
+        self.current_sap_index = 0
+        self.total_saps = 0
 
 stats = InstallStats()
 
@@ -86,6 +90,47 @@ def print_error(text: str) -> None:
 def print_info(text: str) -> None:
     """Print info message"""
     print(f"{Colors.BLUE}ℹ{Colors.NC} {text}")
+
+def print_progress_bar(current: int, total: int, sap_name: str = "", bar_length: int = 40) -> None:
+    """Print progress bar for SAP set installation
+
+    Args:
+        current: Current SAP number (0-indexed, but will display as 1-indexed)
+        total: Total number of SAPs
+        sap_name: Name of current SAP being installed
+        bar_length: Length of the progress bar
+    """
+    if total == 0:
+        return
+
+    # Calculate progress
+    progress = (current + 1) / total
+    filled_length = int(bar_length * progress)
+
+    # Build progress bar
+    bar = '=' * filled_length + '>' if filled_length < bar_length else '=' * bar_length
+    bar = bar.ljust(bar_length)
+
+    # Calculate time estimate
+    time_str = ""
+    if stats.start_time and current > 0:
+        elapsed = time.time() - stats.start_time
+        avg_time_per_sap = elapsed / current
+        remaining_saps = total - current
+        estimated_remaining = avg_time_per_sap * remaining_saps
+
+        if estimated_remaining < 60:
+            time_str = f" ~{int(estimated_remaining)}s remaining"
+        else:
+            minutes = int(estimated_remaining / 60)
+            time_str = f" ~{minutes}m remaining"
+
+    # Print progress bar
+    percentage = int(progress * 100)
+    print(f"\r[{bar}] {current + 1}/{total} SAPs ({percentage}%){time_str}", end='', flush=True)
+
+    if current + 1 == total:
+        print()  # New line when complete
 
 #############################################################################
 # Catalog Functions
@@ -213,12 +258,23 @@ def install_sap_set(set_id: str, source_dir: Path, target_dir: Path, catalog: Di
             print(f"  - {warning}")
         print()
 
+    # Initialize progress tracking
+    stats.total_saps = len(sap_set['saps'])
+    stats.start_time = time.time()
+    stats.current_sap_index = 0
+
     # Install each SAP in the set
     success = True
-    for sap_id in sap_set['saps']:
+    for idx, sap_id in enumerate(sap_set['saps']):
+        stats.current_sap_index = idx
+
         if not install_sap(sap_id, source_dir, target_dir, catalog, dry_run, indent=True):
             success = False
             # Continue with other SAPs even if one fails
+
+        # Show progress bar (after installation)
+        if not dry_run and stats.total_saps > 1:
+            print_progress_bar(idx, stats.total_saps)
 
     return success
 
