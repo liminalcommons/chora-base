@@ -1561,30 +1561,88 @@ Wave 5 is primarily additive, minimal cleanup - track in `v4-cleanup-manifest.md
 
 ---
 
-## Wave 6: Collections Architecture (v4.2.0 - EXPLORATORY)
+## Wave 6: Collections Architecture (v4.2.0 - PILOT PHASE APPROVED)
 
-**Goal**: Evolve SAP sets into first-class collections with richer metadata and potential generation capabilities
+**Goal**: Evolve SAP sets into first-class collections with generation-based artifacts from constituent content
 
-**Status**: 📋 Planned (post-v4.1.0, depends on ecosystem co-discovery)
+**Status**: 🧪 Pilot Phase Approved (2025-10-29)
 
-**Context**: Wave 5 introduces storage-based SAP sets (simple bundles). Wave 6 explores evolution to collections as higher-level holons with potential for generation-based artifacts from constituent content. Scope depends on:
-1. chora-workspace feedback on minimal-entry set (pilot test results)
-2. Exploration of composition tools/approaches (see [docs/design/collections-exploration-notes.md](../design/collections-exploration-notes.md))
-3. Ecosystem needs for role-based SAP bundles
-4. Value assessment: Is generation complexity worth the benefits?
+**UPDATE (2025-10-29)**: **Major Discovery** - chora-compose IS a content generation framework (not Docker orchestration), with 17 production generators designed exactly for SAP use case. Pilot project approved to validate approach.
 
-**Strategic Decision**: Wave 6 scope is **not yet determined**. Could be:
-- **Option A**: Rich collection metadata only (dependencies, versioning, context requirements)
-- **Option B**: Generation-based artifacts from constituent content blocks
-- **Option C**: Defer to v4.3.0+ if not ready
+**Context**: Wave 5 introduces storage-based SAP sets (simple bundles). Wave 6 will implement generation-based collections using chora-compose as composition engine. Decision based on:
+1. ✅ COORD-2025-002 response from chora-compose (strong alignment discovered)
+2. ✅ Pilot project approved: Generate SAP-004 from constituent content blocks
+3. ✅ chora-compose has 17 production generators + MCP tools for structured documentation
+4. ⏳ Pilot must pass quality bar (80%+ of hand-written quality)
+
+**Strategic Decision**: **Pursuing Option B** (generation-based) pending pilot success
+- **Pilot Project**: Generate SAP-004 (Testing Framework) - 1-2 weeks, 4-6 hours effort
+- **Go/No-Go Decision**: End of pilot based on quality assessment
+- **If Go**: Full Wave 6 implementation in v4.2.0 with chora-compose
+- **If No-Go**: Fall back to Option A (metadata only) or Option C (defer)
+
+**Composition Tool Identified**: **chora-compose** (github.com/liminalcommons/chora-compose)
+- NOT Docker orchestration (our SAP-017/018 document outdated version)
+- IS content generation framework with artifact composition
+- 17 production generators + 17 MCP tools
+- Supports exactly our model: content blocks + context → SAP artifacts
 
 **Dependencies**:
 - ✅ Wave 5 (v4.1.0) ships and is adopted by at least one pilot repo (chora-workspace)
-- ⏳ Exploration of composition tools completes (see exploration notes)
-- ⏳ Feedback from ecosystem on collection needs
-- ⏳ Decision on generation approach (custom script, LLM API, template engine, or external tool)
+- ✅ chora-compose confirmed as composition engine
+- 🧪 Pilot project with chora-compose (SAP-004 generation)
+- ⏳ Pilot must pass quality bar (80%+ of hand-written quality)
+- ⏳ Feedback from chora-workspace on collections needs
 
-### Potential Tasks (Depends on Exploration Outcomes)
+---
+
+### Pilot Project: SAP-004 Generation (2025-11-06 to 2025-11-19)
+
+**Status**: 🧪 Approved (2025-10-29)
+
+**Goal**: Validate that chora-compose can generate SAP artifacts meeting quality bar
+
+**Pilot SAP**: SAP-004 (Testing Framework)
+- Why: Mature SAP with clear structure, technical depth, reusable patterns
+- Current: 5 hand-written artifacts (~15k tokens, 8-12 hours to create)
+- Target: Generate from content blocks + context
+
+**Timeline**: 1-2 weeks (starting ~2025-11-06)
+
+**Phases**:
+
+**Phase 1: Decomposition** (Week 1, 2-4 hours)
+- Decompose SAP-004 into constituent content blocks
+- Identify reusable vs SAP-specific content
+- Document content block structure
+
+**Phase 2: Configuration** (Week 1-2, 1-2 hours)
+- chora-compose creates content configs (5 artifact types)
+- chora-base reviews and provides feedback
+- Iterate on templates and structure
+
+**Phase 3: Generation & Quality Review** (Week 2, 1-2 hours)
+- Generate SAP-004 artifacts using chora-compose
+- Compare generated vs hand-written
+- Assess against 10 success criteria
+
+**Phase 4: Go/No-Go Decision** (Week 2, 1 hour)
+- If quality ≥ 80%: Proceed with Wave 6 Option B
+- If quality < 80%: Fall back to Option A or C
+- Document learnings regardless of outcome
+
+**Collaboration**:
+- Async coordination (24-48 hour response times)
+- Via inbox protocol + GitHub issues
+- Tracked in: docs/design/pilot-sap-004-generation.md
+
+**Related Coordination**:
+- COORD-2025-002: Exploratory request to chora-compose (sent 2025-10-29)
+- COORD-2025-002-RESPONSE: Acceptance of pilot (sent 2025-10-29)
+
+---
+
+### Tasks (If Pilot Succeeds → Option B)
 
 #### 6.1: Enhanced Collection Schema
 
@@ -1734,49 +1792,78 @@ python scripts/install-sap.py --collection minimal-entry
 - Collaboration modes as options
 - Explicit non-requirements documented
 
-### Effort Estimate (Highly Uncertain)
+### Effort Estimate (Updated 2025-10-29)
 
-**Option A: Rich Metadata Only**
+**Pilot Project (Approved)**:
+- SAP-004 decomposition: 2-4 hours (chora-base)
+- Config creation: 2-4 hours (chora-compose)
+- Generation & quality review: 1-2 hours (both)
+- Decision meeting: 1 hour (both)
+- **Total Pilot**: 6-11 hours combined, 4-6 hours chora-base effort
+
+**Option A: Rich Metadata Only** (Fallback if pilot fails)
 - Collection schema enhancement: 8-12 hours
 - Documentation: 6-8 hours
 - Migration guide: 4-6 hours
 - **Total**: 18-26 hours
 
-**Option B: Generation-Based Collections**
-- Content decomposition (1-2 SAPs): 12-16 hours
-- Composition engine (custom script): 20-30 hours
-- OR external tool integration: 30-50 hours (depends on tool)
-- Collection schema enhancement: 8-12 hours
-- Testing and quality assurance: 20-30 hours
-- Documentation: 15-20 hours
-- Migration guide: 6-10 hours
-- **Total**: 81-138 hours (wide range due to uncertainty)
+**Option B: Generation-Based Collections** (If pilot succeeds)
+- **Per chora-compose estimate**: 20-40 hours total (after initial setup)
+- **Breakdown**:
+  - Content decomposition (18 SAPs): 10-15 hours
+  - chora-compose integration: 5-10 hours (configs, templates)
+  - SAP-017/018 rewrite: 16-24 hours (document current chora-compose)
+  - Testing and quality assurance: 10-15 hours
+  - Documentation: 10-15 hours
+  - Migration guide: 5-10 hours
+- **Total**: 56-89 hours (vs original estimate of 81-138 hours)
+- **Maintenance reduction**: 144-216 hours → 20-40 hours (87% reduction)
 
-### Success Criteria
+### Success Criteria (Updated 2025-10-29)
 
-**Minimum (Option A)**:
+**Pilot Success Criteria** (SAP-004 Generation):
+- ✅ Generated artifacts match structure of hand-written SAP-004
+- ✅ Quality meets "could publish this" bar (80%+ of hand-written quality)
+- ✅ Performance: generation time < 5 seconds per artifact
+- ✅ Maintainability: updating content block → regenerate → changed artifacts
+- ✅ Flexibility: same blocks + different context → customized output
+- ✅ Technical accuracy: generated content is factually correct
+- ✅ Coherence: reads as unified documentation, not assembled fragments
+- ✅ Agent-readability: Claude can parse and understand generated SAPs
+- ✅ Ease of maintenance: content blocks easy to update without deep framework knowledge
+- ✅ Scalability: clear path to generating remaining 17 SAPs
+
+**Wave 6 Option B Success** (If pilot passes):
+- ✅ All 18 SAPs decomposed into constituent content blocks
+- ✅ chora-compose generates artifacts meeting quality bar for all SAPs
+- ✅ Generation time < 5 seconds per artifact across all SAPs
+- ✅ Content blocks maintained in chora-base (version controlled)
+- ✅ SAP-017/018 updated to reflect current chora-compose capabilities
+- ✅ Context-aware generation working (same SAP, different contexts → customized)
+- ✅ At least 1 ecosystem repo adopts generated collections successfully
+
+**Wave 6 Option A Success** (Fallback if pilot fails):
 - ✅ Collections have richer metadata than SAP sets
 - ✅ Dependency resolution automatic
 - ✅ Success criteria explicit and testable
 - ✅ At least 2 ecosystem repos adopt collections successfully
 
-**Stretch (Option B)**:
-- ✅ At least 2 SAPs decomposed into constituent content blocks
-- ✅ Composition engine generates artifacts comparable to hand-written quality
-- ✅ Generation time < 2 minutes per artifact
-- ✅ "Latest" vs "fresh" semantics working as documented
-- ✅ At least 1 ecosystem repo adopts generated collections successfully
+### Decision Points (Updated 2025-10-29)
 
-### Decision Points
+**Decision Point 1** (RESOLVED - 2025-10-29): Pursue Wave 6 in v4.2.0?
+- **Decision**: YES - Pilot project approved
+- **Factors**: chora-compose response showed strong alignment
+- **Next**: Pilot SAP-004 generation (1-2 weeks)
 
-**Decision Point 1** (Post-v4.1.0 Ship): Pursue Wave 6 in v4.2.0 or defer to v4.3.0?
-- Factors: chora-workspace pilot feedback, ecosystem demand, composition tool availability
+**Decision Point 2** (End of Pilot - ~2025-11-19): Go/No-Go for Option B?
+- **Go Threshold**: Generated SAP-004 meets 80%+ of hand-written quality
+- **If Go**: Proceed with Wave 6 Option B (generation-based) in v4.2.0
+- **If No-Go**: Fall back to Option A (metadata only) or Option C (defer to v4.3.0)
 
-**Decision Point 2** (If Pursuing): Option A (metadata) or Option B (generation)?
-- Factors: Tool exploration outcomes, value vs complexity assessment, team capacity
-
-**Decision Point 3** (If Option B): Which composition approach?
-- Factors: Tool availability, integration complexity, quality requirements, maintenance burden
+**Decision Point 3** (RESOLVED - 2025-10-29): Which composition approach?
+- **Decision**: chora-compose (content generation framework)
+- **Factors**: Perfect alignment, 17 production generators, proven at scale, MCP integration
+- **Status**: Pilot project underway to validate
 
 ### Cleanup Tracking
 

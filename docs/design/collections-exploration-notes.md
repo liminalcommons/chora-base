@@ -446,7 +446,217 @@ Collections as higher-level holons are valuable **regardless of generation**. St
 
 ---
 
-**Status**: Exploratory - NOT an RFC yet
-**Next Review**: After Wave 5 (v4.1.0) ships and ecosystem feedback gathered
+## UPDATE: chora-compose Response (2025-10-29)
+
+### Major Discovery: Perfect Alignment Found
+
+**COORD-2025-002 Response Received**: chora-compose is NOT Docker orchestration - it's a **content generation framework with 17 production generators** designed exactly for our use case!
+
+### What We Learned
+
+**chora-compose Reality**:
+- ✅ Content generation framework (not Docker tool)
+- ✅ 17 production generators for structured documentation
+- ✅ 17 MCP tools for AI-native workflows
+- ✅ Artifact composition from constituent content blocks
+- ✅ Supports exactly our model: content blocks + context → SAP artifacts
+- ✅ Template-based (Jinja2) with configuration-driven workflows
+- ✅ MCP integration (generate conversationally via Claude Desktop)
+
+**Our Documentation Gap**:
+- ❌ SAP-017 and SAP-018 document **outdated version** (Docker focus from early development)
+- ✅ Need to rewrite both SAPs after pilot validates current capabilities
+
+**Their Response**:
+> "STRONG ALIGNMENT! chora-compose is NOT just Docker orchestration - it's a content generation framework with 17 production generators, artifact composition, and template-based workflows. Documentation generation is EXACTLY our core capability."
+
+### Answers to Our Open Questions
+
+**Q2: Composition Tool** (ANSWERED)
+- ✅ **chora-compose** (content generation framework)
+- NOT custom script, NOT LLM API, NOT template engine
+- Proven at scale with 17 production generators
+- MCP integration enables AI-native workflows
+
+**Q1: Constituent Content Architecture** (CLARIFYING)
+- Likely: Template slots with Jinja2 rendering
+- Content configs (JSON) define what goes where
+- Artifact configs assemble multiple content pieces
+- **Pilot will validate**: Decompose SAP-004 to test model
+
+**Q3: Storage Model** (CLARIFYING)
+- Content blocks in chora-base (version controlled)
+- Configs and templates in chora-compose (generation logic)
+- Generated artifacts can be cached or regenerated
+- **Pilot will validate**: Test this hybrid approach
+
+**Q4: Freshness Semantics** (SUPPORTED)
+- chora-compose supports both "latest" (cached) and "fresh" (regenerate)
+- Versioning tracks changes across regenerations
+- **Pilot will validate**: Test caching and regeneration
+
+**Q5: Existing SAPs** (HYBRID LIKELY)
+- Keep hand-written SAPs as canonical (for now)
+- Generate customized variants for target repos
+- **Pilot will determine**: Can generated match hand-written quality?
+
+**Q6-10: Quality, Versioning, Maintenance** (PARTIALLY ANSWERED)
+- chora-compose has validation rules and quality gates
+- Config versioning and schema validation supported
+- **Pilot will validate**: Test quality assurance workflow
+
+### Pilot Project Approved
+
+**Decision**: ✅ Accept chora-compose pilot proposal (Option 3: Experiment Together)
+
+**Pilot SAP**: SAP-004 (Testing Framework)
+**Timeline**: 1-2 weeks (starting ~2025-11-06)
+**Effort**: 4-6 hours (chora-base), 4-6 hours (chora-compose)
+
+**Pilot Phases**:
+1. **Decomposition** (Week 1, 2-4 hours) - Decompose SAP-004 into content blocks
+2. **Configuration** (Week 1-2, 1-2 hours) - chora-compose creates configs, chora-base reviews
+3. **Generation & Quality Review** (Week 2, 1-2 hours) - Generate and assess quality
+4. **Go/No-Go Decision** (Week 2, 1 hour) - Proceed with Option B or fall back
+
+**Success Threshold**: Generated SAP-004 meets **80%+** of hand-written quality
+
+**Go/No-Go Outcomes**:
+- **Go**: Proceed with Wave 6 Option B (generation-based collections) in v4.2.0
+- **No-Go**: Fall back to Option A (metadata only) or Option C (defer to v4.3.0)
+
+### Effort Estimates Updated
+
+**Original Estimate** (v4.2.0 Option B):
+- 81-138 hours (wide range due to uncertainty)
+- Custom script: 20-30 hours OR external tool integration: 30-50 hours
+
+**New Estimate** (with chora-compose):
+- **20-40 hours total** (chora-compose's estimate after initial setup)
+- **56-89 hours including SAP-017/018 rewrite** (vs 81-138 original)
+- **87% maintenance reduction**: 144-216 hours → 20-40 hours
+
+**Pilot Project**:
+- 6-11 hours combined (4-6 hours chora-base, 2-4 hours chora-compose)
+
+### Mutual Benefits Identified
+
+**For chora-compose**:
+1. Flagship use case: 18 SAPs × 5 artifacts = 90 generated artifacts
+2. Quality validation: Our high bar tests generator robustness
+3. Ecosystem integration: Deep collaboration with widely-adopted chora-base
+4. Use case clarity: "Generate SAPs" vs abstract "content generation"
+5. Documentation at scale: Real-world stress test
+6. SAP generation showcase: Demonstrable capability
+
+**For chora-base**:
+1. 87% effort reduction (144-216h → 20-40h)
+2. Consistency via shared templates
+3. Efficiency: Update blocks once, regenerate all
+4. Adaptability: Context-aware generation
+5. Quality gates via framework
+6. MCP integration (generate conversationally)
+7. Versioning support
+8. Ecosystem benefit: Other repos can generate SAPs
+
+### Risks Acknowledged
+
+**Risk 1: Quality doesn't meet bar**
+- Likelihood: Medium
+- Mitigation: Pilot first, no obligation to continue
+- **Our addition**: Detailed quality rubric, 80% threshold
+
+**Risk 2: SAP interdependencies**
+- Likelihood: Low-Medium
+- Mitigation: Start simple, iterate
+- **Our addition**: SAP-004 has minimal interdependencies
+
+**Risk 3: Setup effort exceeds value**
+- Likelihood: Low
+- Mitigation: Break-even analysis after pilot
+- **Our addition**: Even 10 of 18 SAPs = 50%+ savings
+
+**Risk 4: Framework changes break generation**
+- Likelihood: Low
+- Mitigation: Config versioning, validation, tests
+- **Our addition**: Content blocks in chora-base (version controlled)
+
+### Updated Recommended Path
+
+1. ✅ **Ship v4.1.0 with SAP sets** (in progress - Wave 5)
+2. ✅ **Document generation vision** (this doc - complete)
+3. ✅ **Explore composition tools** (COORD-2025-002 - **chora-compose confirmed**)
+4. 🧪 **Execute pilot project** (SAP-004 generation - approved)
+5. 🎯 **Make go/no-go decision** (end of pilot - ~2025-11-19)
+6. ⏳ **If Go**: Implement v4.2.0 Option B with chora-compose
+7. ⏳ **If No-Go**: Fall back to Option A or C
+
+### Next Steps
+
+**Immediate (This Week)**:
+1. ✅ Accept pilot proposal (COORD-2025-002-RESPONSE sent)
+2. 📖 Review chora-compose documentation (README, architecture, configs)
+3. ⚠️ Add warning to SAP-017/018 (outdated content)
+4. 📋 Create pilot project tracking document
+
+**Pilot Week 1** (~2025-11-06 to 2025-11-12):
+1. Decompose SAP-004 into content blocks (2-4 hours)
+2. Review chora-compose configs (1-2 hours)
+3. Iterate on structure
+
+**Pilot Week 2** (~2025-11-13 to 2025-11-19):
+1. Generate SAP-004 artifacts (chora-compose)
+2. Quality assessment (1-2 hours)
+3. Go/no-go decision (1 hour)
+
+**If Pilot Succeeds**:
+1. Proceed with Wave 6 Option B in v4.2.0
+2. Rewrite SAP-017/018 (16-24 hours)
+3. Scale to remaining 17 SAPs
+4. Integrate with collections architecture
+
+**If Pilot Fails**:
+1. Document learnings
+2. Fall back to Option A or C
+3. Still update SAP-017/018 (correct documentation)
+
+### Key Insights
+
+**Collection Concept Validated**:
+- Storage-based (v4.1.0) solves immediate problem ✅
+- Generation-based (v4.2.0) now has clear implementation path ✅
+- Tool identified and validated ✅
+- Pilot provides low-risk validation ✅
+
+**Strategic Alignment**:
+- chora-compose needs validation use case (90 artifacts)
+- chora-base needs efficiency (87% reduction)
+- Ecosystem benefits from both (consistent SAP patterns)
+
+**Surprise Discovery**:
+- We thought we were reaching out to Docker tool
+- Discovered perfect-fit content generation framework
+- This is rare and exciting alignment!
+
+### Related Files
+
+**Coordination**:
+- `inbox/outgoing/coordination/COORD-2025-002-chora-compose-exploration.json` - Our request
+- `inbox/incoming/coordination/COORD-2025-002-response.json` - Their response
+- `inbox/outgoing/COORD-2025-002-RESPONSE.json` - Our acceptance
+
+**Planning**:
+- `docs/project-docs/CHORA-BASE-4.0-VISION.md` - Wave 6 updated to Pilot Phase
+- `docs/design/pilot-sap-004-generation.md` - Pilot tracking (to be created)
+- `docs/design/sap-017-018-update-plan.md` - SAP update planning (to be created)
+
+**SAPs Needing Update**:
+- `docs/skilled-awareness/chora-compose-integration/` (SAP-017) - Outdated
+- `docs/skilled-awareness/chora-compose-meta/` (SAP-018) - Outdated
+
+---
+
+**Status**: Pilot Phase Approved (2025-10-29) - Previously Exploratory
+**Next Review**: After pilot completes (~2025-11-19) for go/no-go decision
 **Owner**: chora-base maintainers
-**Stakeholders**: chora-workspace (pilot), future: composition tool maintainers (TBD)
+**Stakeholders**: chora-compose (collaboration partner), chora-workspace (collections adopter)
