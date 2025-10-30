@@ -1,0 +1,213 @@
+{
+  "id": "COORD-2025-002",
+  "type": "architecture_proposal",
+  "from_repo": "chora-base",
+  "to_repos": ["chora-compose"],
+  "priority": "medium",
+  "urgency": "backlog",
+  "created_at": "2025-10-29T20:00:00Z",
+
+  "title": "Explore Potential Collaboration on Structured Documentation Generation",
+
+  "description": "chora-base is exploring generation-based SAP (Skilled Awareness Package) artifacts and wondering if there's alignment with chora-compose's vision. This is an exploratory request to understand capabilities and potential collaboration, NOT a requirements prescription or implementation request.",
+
+  "context": {
+    "our_situation": "chora-base maintains 18 SAPs (documentation packages), each with 5 artifacts (charter, protocol, guide, blueprint, ledger). Currently hand-written (~8-12 hours per SAP). Exploring whether generation from constituent content blocks could reduce effort while maintaining quality.",
+
+    "why_reaching_out": "SAP-017 and SAP-018 document chora-compose as Docker Compose orchestration for AI agent development environments. We're reaching out because: (1) the name 'chora-compose' suggests composition capabilities, and (2) we want to understand if documentation generation is within your project's scope/vision, even if not currently implemented.",
+
+    "not_assuming": "We are NOT assuming chora-compose is a content generation tool. We understand you focus on Docker orchestration. This request is exploratory - if documentation generation is out of scope, that's completely fine and we'll explore other approaches.",
+
+    "our_vision": "Collections as higher-level holons (bundles of SAPs) with potential for context-aware artifact generation. See docs/design/collections-exploration-notes.md in chora-base for details.",
+
+    "timeline": "No urgency. v4.1.0 (Q1 2026) ships with storage-based SAP sets (doesn't need chora-compose). This exploration is for potential v4.2.0 (Q2 2026+) if aligned."
+  },
+
+  "questions_for_chora_compose": [
+    {
+      "category": "Vision & Scope",
+      "questions": [
+        "Is chora-compose solely focused on Docker orchestration, or is there a broader 'composition' vision?",
+        "Have you considered or explored structured documentation generation as a use case?",
+        "What does 'compose' mean in your project's context? (containers, content, capabilities, other?)",
+        "Is there a roadmap or vision document we should review to understand your direction?"
+      ]
+    },
+    {
+      "category": "Current Capabilities",
+      "questions": [
+        "What's the most complex multi-artifact generation you've done with chora-compose?",
+        "Do you have templating or content composition capabilities today?",
+        "Can chora-compose orchestrate multi-step workflows beyond Docker containers?",
+        "Are there examples of using chora-compose for documentation or artifact generation?"
+      ]
+    },
+    {
+      "category": "Potential Collaboration",
+      "questions": [
+        "If documentation generation WAS in scope, what would be a natural extension vs. completely new capability?",
+        "Would a collaboration around structured docs benefit chora-compose's goals, or is it orthogonal?",
+        "Are there other projects in the ecosystem doing content generation we should know about?",
+        "What would make this exploration valuable for chora-compose, not just chora-base?"
+      ]
+    },
+    {
+      "category": "Clarification",
+      "questions": [
+        "SAP-017 and SAP-018 reference two different GitHub URLs (liminalcommons/chora-compose and chrisdburr/chora-compose) - which is canonical?",
+        "Is there documentation beyond SAP-017/018 we should review?",
+        "Who are the right people to discuss this with?"
+      ]
+    }
+  ],
+
+  "collaboration_modes": [
+    {
+      "mode": "Quick Feedback",
+      "description": "Brief response clarifying chora-compose's scope and vision (30 min)",
+      "outcome": "We understand if documentation generation is in/out of scope"
+    },
+    {
+      "mode": "Discovery Call",
+      "description": "Video call where chora-base shares SAP structure and chora-compose shares capabilities (60 min)",
+      "outcome": "Mutual understanding of potential alignment"
+    },
+    {
+      "mode": "Experiment Together",
+      "description": "Collaborate on small prototype to test feasibility (4-8 hours each)",
+      "outcome": "Working example or clear understanding of why it won't work"
+    },
+    {
+      "mode": "Redirect",
+      "description": "chora-compose suggests alternative tools/approaches better suited for our use case",
+      "outcome": "We explore other directions, no wasted effort"
+    },
+    {
+      "mode": "Defer",
+      "description": "Interesting but not right timing - revisit in 6-12 months",
+      "outcome": "We pursue other approaches, keep door open for future"
+    }
+  ],
+
+  "what_we_are_NOT_requesting": [
+    "Implementation of SAP generation features",
+    "Commitment to build new capabilities",
+    "Changes to chora-compose roadmap",
+    "Integration work on chora-compose side",
+    "Urgent response or decision"
+  ],
+
+  "what_would_be_helpful": [
+    "Understanding chora-compose's vision and scope",
+    "Clarification on whether documentation generation fits or is orthogonal",
+    "Pointers to alternative tools if this is out of scope",
+    "Honest assessment of alignment (even if answer is 'not aligned')"
+  ],
+
+  "our_use_case_summary": {
+    "problem": "18 SAPs × 5 artifacts × 8-12 hours = 720-1080 hours total maintenance burden",
+    "hypothesis": "Generation from constituent content blocks could reduce effort while maintaining quality",
+    "alternatives_considered": [
+      "Custom Python script (full control, high effort)",
+      "LLM API directly (quality variability, cost)",
+      "Template engine like Jinja2 (limited adaptability)",
+      "External tool integration (if aligned vision exists)"
+    ],
+    "decision_pending": "Which approach aligns with chora-base philosophy and capabilities?",
+
+    "example_sap_structure": {
+      "sap_id": "SAP-004",
+      "name": "testing-framework",
+      "artifacts": [
+        "capability-charter.md (WHAT/WHY - 2-3k tokens)",
+        "protocol-spec.md (HOW - technical contract, 3-4k tokens)",
+        "awareness-guide.md (WHEN/WHERE - usage patterns, 4-5k tokens)",
+        "adoption-blueprint.md (INSTALL - step-by-step, 3-4k tokens)",
+        "ledger.md (WHO - adopter tracking, 1-2k tokens)"
+      ],
+      "total_per_sap": "~15-18k tokens, 8-12 hours to write"
+    },
+
+    "generation_concept": {
+      "constituent_content": "Reusable markdown blocks (problem statements, solution patterns, examples)",
+      "context": "Repo role, existing capabilities, user preferences",
+      "composition": "Assemble content blocks + context → coherent SAP artifacts",
+      "caching": "'Latest' (reuse cached) vs 'fresh' (regenerate on demand)",
+      "quality": "Must match hand-written quality (high bar)"
+    }
+  },
+
+  "estimated_effort": {
+    "chora_compose_side": {
+      "quick_feedback": "30 minutes (answer scope questions)",
+      "discovery_call": "1 hour (share capabilities, discuss alignment)",
+      "experiment": "4-8 hours (if pursuing prototype)",
+      "no_obligation": "We understand if answer is 'not aligned' after quick review"
+    },
+    "chora_base_side": {
+      "awaiting_response": "0 hours (we proceed with Wave 5 regardless)",
+      "if_aligned": "Co-design in v4.2.0 (Q2 2026)",
+      "if_not_aligned": "Pursue alternative approaches"
+    }
+  },
+
+  "success_metrics": [
+    "chora-compose team understands our question (no confusion about what we're asking)",
+    "We understand chora-compose's scope and vision (clarity, not speculation)",
+    "If aligned: Path forward identified (prototype, design session, etc.)",
+    "If not aligned: Alternative approaches suggested or we explore independently",
+    "No wasted effort on misaligned expectations"
+  ],
+
+  "decision_timeline": {
+    "response_window": "No deadline - respond when convenient",
+    "our_v4_1_0": "Q1 2026 (proceeds with SAP sets regardless of this exploration)",
+    "our_v4_2_0": "Q2 2026+ (collections architecture, scope depends on exploration outcomes)",
+    "flexibility": "We can adapt timeline based on your availability and interest"
+  },
+
+  "additional_context": {
+    "sap_framework": "SAP-000 defines the 5-artifact pattern used by all 18 SAPs",
+    "recent_coordination": "COORD-2025-001 from chora-workspace led to SAP sets feature (v4.1.0)",
+    "collections_vision": "See docs/design/collections-exploration-notes.md for detailed exploration",
+    "wave_5_status": "In progress - SAP sets (storage-based, no generation)",
+    "wave_6_status": "Exploratory - Collections architecture (generation-based, depends on tools)",
+
+    "chora_ecosystem": "chora-base is part of liminal commons ecosystem. Other repos: chora-workspace, ecosystem-manifest, chora-docs (emerging). SAPs are the protocol for transmitting architectural intelligence across ecosystem.",
+
+    "why_generation_matters": [
+      "Consistency: Ensure all SAPs follow same patterns and quality standards",
+      "Efficiency: Reduce 8-12 hours to 1-2 hours per SAP creation",
+      "Adaptability: Same SAP, different repo contexts → customized artifacts",
+      "Maintenance: Update content blocks once, regenerate all affected SAPs",
+      "Scalability: Enable 50+ SAPs without overwhelming maintenance burden"
+    ]
+  },
+
+  "references": {
+    "chora_base_saps": [
+      "docs/skilled-awareness/sap-framework/ (SAP-000 - defines pattern)",
+      "docs/skilled-awareness/testing-framework/ (SAP-004 - example SAP)",
+      "sap-catalog.json (machine-readable registry of all 18 SAPs)"
+    ],
+    "chora_compose_saps": [
+      "docs/skilled-awareness/chora-compose-integration/ (SAP-017)",
+      "docs/skilled-awareness/chora-compose-meta/ (SAP-018)"
+    ],
+    "exploration_docs": [
+      "docs/design/collections-exploration-notes.md (detailed architectural questions)",
+      "docs/project-docs/CHORA-BASE-4.0-VISION.md (Wave 6 planning)"
+    ]
+  },
+
+  "contact": {
+    "repo": "https://github.com/liminalcommons/chora-base",
+    "inbox": "inbox/ directory following SAP-001 inbox protocol",
+    "response_location_suggestion": "chora-compose/inbox/outgoing/COORD-2025-002-response.json (if you use inbox protocol)",
+    "alternative_channels": "GitHub issues, email, or direct message to chora-base maintainers"
+  },
+
+  "tone": "Exploratory and collaborative - We're genuinely curious about your vision and open to hearing 'this isn't in scope for chora-compose.' We'd rather know early than pursue misaligned paths.",
+
+  "appreciation": "Thank you for considering this exploration request! We recognize you may have clear priorities and this may not fit. Honest feedback (including 'not aligned') is valuable and appreciated."
+}
