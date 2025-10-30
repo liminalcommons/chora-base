@@ -1,0 +1,93 @@
+{
+  "id": "COORD-2025-001",
+  "type": "architecture_proposal",
+  "from_repo": "chora-workspace",
+  "to_repos": ["chora-base"],
+  "priority": "high",
+  "description": "Propose SAP-019 (Minimal Ecosystem Entry) for inclusion in chora-base SAP collection. Enable lightweight ecosystem onboarding (Bronze tier) to accelerate parallel execution across repos.",
+  "context": "chora-workspace has designed SAP-019 to address ecosystem entry friction. Current barrier: 18 SAPs (~100k tokens, 2-4 weeks) required for participation. SAP-019 reduces this to 5 essential SAPs (~29k tokens, 3-5 hours) for Bronze tier entry. This spike is part of broader initiative to enable agent onboarding across chora ecosystem repos via minimal SAP package teaching, prioritizing parallel execution where ecosystem-level scope complements local work.",
+  "capabilities_required": [
+    "sap.framework.management",
+    "sap.review.governance",
+    "ecosystem.coordination.strategic"
+  ],
+  "dependencies": [],
+  "trace_id": "COORD-2025-001",
+  "created_at": "2025-10-29T12:00:00Z",
+  "estimated_effort": {
+    "hours": 8,
+    "confidence": "medium"
+  },
+  "acceptance_criteria": [
+    "chora-base team reviews SAP-019 (5 artifacts: Charter, Protocol, Guide, Blueprint, Ledger)",
+    "Feedback provided on SAP-019 structure, content, and integration with existing SAPs",
+    "Decision made: Accept for inclusion, Request revisions, or Defer",
+    "If accepted: SAP-019 assigned official SAP ID in chora-base SAP index",
+    "If accepted: Integration plan created for adding SAP-019 to chora-base docs/skilled-awareness/",
+    "Minimal SAP set (SAP-000, SAP-001, SAP-009, SAP-019, +1 domain) validated by chora-base team"
+  ],
+  "outcomes": {
+    "deliverables": [
+      "SAP-019 artifacts (capability-charter.md, protocol-spec.md, awareness-guide.md, adoption-blueprint.md, ledger.md)",
+      "Minimal SAP Set documentation (minimal-sap-set.md)",
+      "Inbox protocol adoption in chora-workspace (inbox/ structure, README, schemas)",
+      "Pilot adoption record (chora-workspace self-adoption of Bronze tier)"
+    ],
+    "success_metrics": [
+      "chora-base team acknowledges receipt within 72 hours",
+      "Review completed within 2 weeks",
+      "At least 1 round of feedback provided",
+      "Clear next steps defined (accept, revise, defer)"
+    ]
+  },
+  "additional_context": {
+    "motivation": "Enable chora ecosystem repos to onboard quickly with minimal learning overhead. Support parallel execution model where ecosystem-level coordination happens alongside local development priorities. Teach agents multimodal communication via SAP system.",
+    "related_work": {
+      "sap_framework": "SAP-000 defines 5-artifact pattern, SAP-019 follows this structure",
+      "inbox_protocol": "SAP-001 provides coordination mechanism, SAP-019 integrates inbox adoption into Bronze tier",
+      "agent_awareness": "SAP-009 defines AGENTS.md protocol, SAP-019 requires AGENTS.md for Bronze tier",
+      "chora_compose": "SAP-017/018 demonstrate lightweight (SAP-017) vs. comprehensive (SAP-018) documentation split, SAP-019 follows this pattern"
+    },
+    "artifacts_location": {
+      "sap_019_artifacts": "chora-workspace/docs/skilled-awareness/minimal-ecosystem-entry/",
+      "minimal_sap_set": "chora-workspace/docs/skilled-awareness/minimal-sap-set.md",
+      "inbox_adoption": "chora-workspace/inbox/",
+      "pilot_validation": "chora-workspace/docs/skilled-awareness/minimal-ecosystem-entry/ledger.md (first adoption record)"
+    },
+    "questions_for_chora_base": [
+      "Does SAP-019 align with chora-base vision for ecosystem onboarding?",
+      "Should SAP-019 be numbered SAP-019, or renumbered to fit chora-base SAP sequence?",
+      "Are there existing patterns in chora-base that SAP-019 should reference or integrate with?",
+      "What's the process for proposing new SAPs to chora-base? (This coordination request follows inbox protocol, but is this the right channel?)",
+      "Would chora-base team like to collaborate on refining SAP-019 before inclusion?",
+      "Are there other repos in the ecosystem that should pilot SAP-019 before it's finalized?"
+    ],
+    "collaboration_modes": [
+      "Review and feedback: chora-base reviews SAP-019 artifacts, provides written feedback via inbox response or GitHub issues",
+      "Collaborative editing: chora-base team and chora-workspace team co-author revisions to SAP-019",
+      "Pilot expansion: chora-base identifies 2-3 repos to pilot SAP-019 Bronze tier adoption, gather feedback",
+      "Integration planning: Define how SAP-019 gets added to chora-base (file locations, SAP index update, cross-references)"
+    ]
+  },
+  "review_status": "responded",
+  "assigned_to": "chora-base-team",
+  "responded_at": "2025-10-29T18:00:00Z",
+  "response_time_hours": 6,
+  "notes": [
+    {
+      "date": "2025-10-29T18:00:00Z",
+      "author": "chora-base-team",
+      "note": "Reviewed and responded. Decision: Implement SAP Sets feature in Wave 5 instead of formal SAP-019. This solves the lightweight entry problem while maintaining v4.0 flexible adoption philosophy. Response files: inbox/outgoing/COORD-2025-001-response.json and COORD-2025-001-response-summary.md"
+    },
+    {
+      "date": "2025-10-29T18:00:00Z",
+      "author": "chora-base-team",
+      "note": "Key decision: minimal-entry set (5 SAPs: SAP-000, 001, 009, 016, 002) provides ~29k tokens (71% reduction), 3-5 hours (90%+ time savings), one-line installation: python scripts/install-sap.py --set minimal-entry"
+    },
+    {
+      "date": "2025-10-29T18:00:00Z",
+      "author": "chora-base-team",
+      "note": "Timeline: Wave 5 completion Q1 2026 (v4.1.0). Pilot testing invitation extended to chora-workspace. Awaiting feedback on set composition and pilot interest."
+    }
+  ]
+}
