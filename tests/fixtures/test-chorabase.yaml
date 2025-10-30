@@ -1,0 +1,34 @@
+# Test .chorabase file for custom SAP sets testing
+# Wave 5 (v4.1.0)
+
+sap_sets:
+  custom-minimal:
+    name: "Custom Minimal Set"
+    description: "Custom minimal configuration for testing"
+    saps:
+      - SAP-000
+      - SAP-001
+    estimated_tokens: 18000
+    estimated_hours: "2-3"
+    tags:
+      - custom
+      - minimal
+      - test
+
+  custom-with-deps:
+    name: "Custom Set With Dependencies"
+    description: "Includes SAP with dependencies"
+    saps:
+      - SAP-004  # Depends on SAP-000
+    estimated_tokens: 10000
+    estimated_hours: "1-2"
+    warnings:
+      - "Dependencies will be auto-installed"
+
+  custom-invalid:
+    name: "Invalid Custom Set"
+    description: "References non-existent SAP for error testing"
+    saps:
+      - SAP-999  # Does not exist
+    estimated_tokens: 5000
+    estimated_hours: "1"
