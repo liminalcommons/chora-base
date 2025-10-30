@@ -1,0 +1,658 @@
+{
+  "version": "4.1.0",
+  "updated": "2025-10-29",
+  "description": "Machine-readable catalog of all Skilled Awareness Packages in chora-base",
+  "total_saps": 18,
+  "saps": [
+    {
+      "id": "SAP-000",
+      "name": "sap-framework",
+      "full_name": "SAP Framework",
+      "status": "active",
+      "version": "1.0.0",
+      "included_by_default": true,
+      "size_kb": 125,
+      "description": "Core SAP framework and protocols defining how Skilled Awareness Packages work",
+      "capabilities": [
+        "SAP protocol specification",
+        "Governance standards",
+        "Document templates",
+        "Installation patterns",
+        "Awareness integration"
+      ],
+      "dependencies": [],
+      "tags": ["meta", "required", "foundational"],
+      "author": "chora-base",
+      "location": "docs/skilled-awareness/sap-framework",
+      "artifacts": {
+        "capability_charter": true,
+        "protocol_spec": true,
+        "awareness_guide": true,
+        "adoption_blueprint": true,
+        "ledger": true
+      },
+      "system_files": [],
+      "phase": "Phase 1",
+      "priority": "P0"
+    },
+    {
+      "id": "SAP-001",
+      "name": "inbox",
+      "full_name": "Inbox Coordination Protocol",
+      "status": "pilot",
+      "version": "1.0.0",
+      "included_by_default": false,
+      "size_kb": 45,
+      "description": "Cross-repo coordination protocol using inbox directory for capability discovery and coordination requests",
+      "capabilities": [
+        "Cross-repo coordination",
+        "Capability registry",
+        "Broadcast workflow",
+        "Async collaboration"
+      ],
+      "dependencies": [],
+      "tags": ["meta", "coordination", "ecosystem"],
+      "author": "chora-base",
+      "location": "docs/skilled-awareness/inbox",
+      "artifacts": {
+        "capability_charter": true,
+        "protocol_spec": true,
+        "awareness_guide": true,
+        "adoption_blueprint": true,
+        "ledger": true
+      },
+      "system_files": [
+        "inbox/"
+      ],
+      "phase": "Phase 1",
+      "priority": "P0"
+    },
+    {
+      "id": "SAP-002",
+      "name": "chora-base",
+      "full_name": "Chora-Base Meta Package",
+      "status": "active",
+      "version": "1.0.0",
+      "included_by_default": true,
+      "size_kb": 78,
+      "description": "Meta-capability describing chora-base itself using SAP framework (dogfooding demonstration)",
+      "capabilities": [
+        "Project charter",
+        "Architecture overview",
+        "4-domain documentation",
+        "SAP Framework integration",
+        "Universal foundation patterns"
+      ],
+      "dependencies": ["SAP-000"],
+      "tags": ["meta", "reference", "example"],
+      "author": "chora-base",
+      "location": "docs/skilled-awareness/chora-base",
+      "artifacts": {
+        "capability_charter": true,
+        "protocol_spec": true,
+        "awareness_guide": true,
+        "adoption_blueprint": true,
+        "ledger": true
+      },
+      "system_files": [],
+      "phase": "Phase 1",
+      "priority": "P0"
+    },
+    {
+      "id": "SAP-003",
+      "name": "project-bootstrap",
+      "full_name": "Project Bootstrap & Scaffolding",
+      "status": "active",
+      "version": "1.0.0",
+      "included_by_default": false,
+      "size_kb": 92,
+      "description": "Copier-based project generation from static-template with variable substitution",
+      "capabilities": [
+        "Project scaffolding",
+        "Template generation",
+        "Variable substitution",
+        "Directory structure setup"
+      ],
+      "dependencies": ["SAP-000"],
+      "tags": ["scaffolding", "generation", "setup"],
+      "author": "chora-base",
+      "location": "docs/skilled-awareness/project-bootstrap",
+      "artifacts": {
+        "capability_charter": true,
+        "protocol_spec": true,
+        "awareness_guide": true,
+        "adoption_blueprint": true,
+        "ledger": true
+      },
+      "system_files": [
+        "static-template/**"
+      ],
+      "phase": "Phase 2",
+      "priority": "P0"
+    },
+    {
+      "id": "SAP-004",
+      "name": "testing-framework",
+      "full_name": "Testing Framework",
+      "status": "active",
+      "version": "1.0.0",
+      "included_by_default": false,
+      "size_kb": 89,
+      "description": "pytest-based testing framework with 85%+ coverage patterns and async support",
+      "capabilities": [
+        "pytest configuration",
+        "Coverage enforcement (85%+)",
+        "Test fixtures",
+        "Async testing patterns",
+        "6 test pattern templates"
+      ],
+      "dependencies": ["SAP-000", "SAP-003"],
+      "tags": ["testing", "quality", "python", "pytest"],
+      "author": "chora-base",
+      "location": "docs/skilled-awareness/testing-framework",
+      "artifacts": {
+        "capability_charter": true,
+        "protocol_spec": true,
+        "awareness_guide": true,
+        "adoption_blueprint": true,
+        "ledger": true
+      },
+      "system_files": [
+        "static-template/tests/",
+        "static-template/conftest.py",
+        "static-template/.coveragerc"
+      ],
+      "phase": "Phase 2",
+      "priority": "P0"
+    },
+    {
+      "id": "SAP-005",
+      "name": "ci-cd-workflows",
+      "full_name": "CI/CD Workflows",
+      "status": "active",
+      "version": "1.0.0",
+      "included_by_default": false,
+      "size_kb": 67,
+      "description": "GitHub Actions workflows for testing, linting, security, and release automation",
+      "capabilities": [
+        "Matrix testing (Python 3.11-3.13)",
+        "Automated linting",
+        "Security scanning (CodeQL)",
+        "Dependency review",
+        "Release automation"
+      ],
+      "dependencies": ["SAP-000", "SAP-004"],
+      "tags": ["ci-cd", "github-actions", "automation", "quality"],
+      "author": "chora-base",
+      "location": "docs/skilled-awareness/ci-cd-workflows",
+      "artifacts": {
+        "capability_charter": true,
+        "protocol_spec": true,
+        "awareness_guide": true,
+        "adoption_blueprint": true,
+        "ledger": true
+      },
+      "system_files": [
+        "static-template/.github/workflows/"
+      ],
+      "phase": "Phase 2",
+      "priority": "P0"
+    },
+    {
+      "id": "SAP-006",
+      "name": "quality-gates",
+      "full_name": "Quality Gates",
+      "status": "active",
+      "version": "1.0.0",
+      "included_by_default": false,
+      "size_kb": 54,
+      "description": "Pre-commit hooks, ruff linting, mypy type checking, and coverage enforcement",
+      "capabilities": [
+        "Pre-commit hooks (7 hooks)",
+        "Ruff linting (200x faster)",
+        "Mypy type checking",
+        "Coverage enforcement",
+        "Security scanning"
+      ],
+      "dependencies": ["SAP-000", "SAP-004"],
+      "tags": ["quality", "linting", "type-checking", "ruff", "mypy"],
+      "author": "chora-base",
+      "location": "docs/skilled-awareness/quality-gates",
+      "artifacts": {
+        "capability_charter": true,
+        "protocol_spec": true,
+        "awareness_guide": true,
+        "adoption_blueprint": true,
+        "ledger": true
+      },
+      "system_files": [
+        "static-template/.pre-commit-config.yaml",
+        "static-template/pyproject.toml",
+        "static-template/ruff.toml"
+      ],
+      "phase": "Phase 2",
+      "priority": "P0"
+    },
+    {
+      "id": "SAP-007",
+      "name": "documentation-framework",
+      "full_name": "Documentation Framework",
+      "status": "active",
+      "version": "1.0.0",
+      "included_by_default": false,
+      "size_kb": 112,
+      "description": "Diátaxis-based 4-domain documentation architecture with frontmatter schema and test extraction",
+      "capabilities": [
+        "Diátaxis 4-domain structure",
+        "Frontmatter schema validation",
+        "Executable how-to guides",
+        "Test extraction from docs",
+        "DOCUMENTATION_STANDARD.md (700 lines)"
+      ],
+      "dependencies": ["SAP-000"],
+      "tags": ["documentation", "diataxis", "standards"],
+      "author": "chora-base",
+      "location": "docs/skilled-awareness/documentation-framework",
+      "artifacts": {
+        "capability_charter": true,
+        "protocol_spec": true,
+        "awareness_guide": true,
+        "adoption_blueprint": true,
+        "ledger": true
+      },
+      "system_files": [
+        "DOCUMENTATION_STANDARD.md",
+        "docs/user-docs/",
+        "docs/dev-docs/",
+        "docs/project-docs/",
+        "scripts/extract_tests.py"
+      ],
+      "phase": "Phase 3",
+      "priority": "P1"
+    },
+    {
+      "id": "SAP-008",
+      "name": "automation-scripts",
+      "full_name": "Automation Scripts",
+      "status": "active",
+      "version": "1.0.0",
+      "included_by_default": false,
+      "size_kb": 145,
+      "description": "25 automation scripts (shell + Python) with justfile unified interface and safety contracts",
+      "capabilities": [
+        "25 automation scripts",
+        "justfile with 30+ commands",
+        "Idempotent operations",
+        "Safety contracts",
+        "8 script categories"
+      ],
+      "dependencies": ["SAP-000", "SAP-012"],
+      "tags": ["automation", "scripts", "justfile", "tooling"],
+      "author": "chora-base",
+      "location": "docs/skilled-awareness/automation-scripts",
+      "artifacts": {
+        "capability_charter": true,
+        "protocol_spec": true,
+        "awareness_guide": true,
+        "adoption_blueprint": true,
+        "ledger": true
+      },
+      "system_files": [
+        "scripts/",
+        "justfile"
+      ],
+      "phase": "Phase 3",
+      "priority": "P1"
+    },
+    {
+      "id": "SAP-009",
+      "name": "agent-awareness",
+      "full_name": "Agent Awareness System",
+      "status": "active",
+      "version": "1.0.0",
+      "included_by_default": false,
+      "size_kb": 98,
+      "description": "AGENTS.md/CLAUDE.md patterns with nested awareness files and progressive context loading",
+      "capabilities": [
+        "Dual-file pattern (AGENTS + CLAUDE)",
+        "Nested awareness hierarchy",
+        "Nearest file wins",
+        "Progressive context loading",
+        "200k token budget management"
+      ],
+      "dependencies": ["SAP-000", "SAP-007"],
+      "tags": ["agent-awareness", "ai-context", "documentation"],
+      "author": "chora-base",
+      "location": "docs/skilled-awareness/agent-awareness",
+      "artifacts": {
+        "capability_charter": true,
+        "protocol_spec": true,
+        "awareness_guide": true,
+        "adoption_blueprint": true,
+        "ledger": true
+      },
+      "system_files": [
+        "AGENTS.md",
+        "CLAUDE.md",
+        "static-template/AGENTS.md",
+        "static-template/CLAUDE.md"
+      ],
+      "phase": "Phase 3",
+      "priority": "P1"
+    },
+    {
+      "id": "SAP-010",
+      "name": "memory-system",
+      "full_name": "Memory System (A-MEM)",
+      "status": "active",
+      "version": "1.0.0",
+      "included_by_default": false,
+      "size_kb": 87,
+      "description": "Agent Memory Architecture with event log, knowledge graph, profiles, and trace correlation",
+      "capabilities": [
+        "4 memory types (event, knowledge, profile, trace)",
+        "Zettelkasten knowledge graph",
+        "Cross-session learning",
+        "Event schema v1.0",
+        "30% reduction in repeated mistakes"
+      ],
+      "dependencies": ["SAP-000"],
+      "tags": ["memory", "a-mem", "learning", "zettelkasten"],
+      "author": "chora-base",
+      "location": "docs/skilled-awareness/memory-system",
+      "artifacts": {
+        "capability_charter": true,
+        "protocol_spec": true,
+        "awareness_guide": true,
+        "adoption_blueprint": true,
+        "ledger": true
+      },
+      "system_files": [
+        ".chora/memory/"
+      ],
+      "phase": "Phase 3",
+      "priority": "P1"
+    },
+    {
+      "id": "SAP-011",
+      "name": "docker-operations",
+      "full_name": "Docker Operations",
+      "status": "active",
+      "version": "1.0.0",
+      "included_by_default": false,
+      "size_kb": 73,
+      "description": "Multi-stage Dockerfiles, docker-compose patterns, and container optimization (150-250MB images)",
+      "capabilities": [
+        "Multi-stage builds",
+        "CI-optimized test containers",
+        "GitHub Actions cache integration",
+        "Non-root execution",
+        "81% build context reduction"
+      ],
+      "dependencies": ["SAP-000"],
+      "tags": ["docker", "containers", "deployment"],
+      "author": "chora-base",
+      "location": "docs/skilled-awareness/docker-operations",
+      "artifacts": {
+        "capability_charter": true,
+        "protocol_spec": true,
+        "awareness_guide": true,
+        "adoption_blueprint": true,
+        "ledger": true
+      },
+      "system_files": [
+        "Dockerfile",
+        "Dockerfile.test",
+        "docker-compose.yml",
+        ".dockerignore",
+        "DOCKER_BEST_PRACTICES.md"
+      ],
+      "phase": "Phase 3",
+      "priority": "P1"
+    },
+    {
+      "id": "SAP-012",
+      "name": "development-lifecycle",
+      "full_name": "Development Lifecycle",
+      "status": "active",
+      "version": "1.0.0",
+      "included_by_default": false,
+      "size_kb": 156,
+      "description": "8-phase lifecycle (Vision → Monitoring) with DDD → BDD → TDD workflow and anti-patterns guide",
+      "capabilities": [
+        "8-phase development lifecycle",
+        "DDD → BDD → TDD integration",
+        "40-80% defect reduction",
+        "Sprint/release templates",
+        "ANTI_PATTERNS.md (1,309 lines)"
+      ],
+      "dependencies": ["SAP-000"],
+      "tags": ["lifecycle", "ddd", "bdd", "tdd", "process"],
+      "author": "chora-base",
+      "location": "docs/skilled-awareness/development-lifecycle",
+      "artifacts": {
+        "capability_charter": true,
+        "protocol_spec": true,
+        "awareness_guide": true,
+        "adoption_blueprint": true,
+        "ledger": true
+      },
+      "system_files": [
+        "docs/dev-docs/workflows/"
+      ],
+      "phase": "Phase 3",
+      "priority": "P1"
+    },
+    {
+      "id": "SAP-013",
+      "name": "metrics-tracking",
+      "full_name": "Metrics Tracking",
+      "status": "active",
+      "version": "1.0.0",
+      "included_by_default": false,
+      "size_kb": 94,
+      "description": "ClaudeROICalculator, process metrics, sprint velocity tracking with $109k/year savings estimates",
+      "capabilities": [
+        "Claude ROI calculation",
+        "Quality/velocity/adherence tracking",
+        "Research-backed targets",
+        "Sprint dashboards",
+        "$109k/year savings estimate"
+      ],
+      "dependencies": ["SAP-000"],
+      "tags": ["metrics", "roi", "tracking", "analytics"],
+      "author": "chora-base",
+      "location": "docs/skilled-awareness/metrics-tracking",
+      "artifacts": {
+        "capability_charter": true,
+        "protocol_spec": true,
+        "awareness_guide": true,
+        "adoption_blueprint": true,
+        "ledger": true
+      },
+      "system_files": [
+        "utils/claude_metrics.py",
+        "docs/project-docs/PROCESS_METRICS.md"
+      ],
+      "phase": "Phase 4",
+      "priority": "P2"
+    },
+    {
+      "id": "SAP-014",
+      "name": "mcp-server-development",
+      "full_name": "MCP Server Development",
+      "status": "active",
+      "version": "1.0.0",
+      "included_by_default": false,
+      "size_kb": 234,
+      "description": "FastMCP-based Model Context Protocol server development patterns with 11 templates and 8 guides",
+      "capabilities": [
+        "FastMCP patterns",
+        "11 MCP templates",
+        "Tool definition patterns",
+        "Testing strategies",
+        "Deployment workflows"
+      ],
+      "dependencies": ["SAP-000", "SAP-003", "SAP-004", "SAP-012"],
+      "tags": ["mcp", "fastmcp", "server-development", "technology-specific"],
+      "author": "chora-base",
+      "location": "docs/skilled-awareness/mcp-server-development",
+      "artifacts": {
+        "capability_charter": true,
+        "protocol_spec": true,
+        "awareness_guide": true,
+        "adoption_blueprint": true,
+        "ledger": true,
+        "mcp_conventions": true
+      },
+      "system_files": [
+        "mcp-templates/"
+      ],
+      "phase": "Wave 3",
+      "priority": "P1"
+    },
+    {
+      "id": "SAP-015",
+      "name": "unused",
+      "full_name": "Reserved for Future Use",
+      "status": "reserved",
+      "version": "0.0.0",
+      "included_by_default": false,
+      "size_kb": 0,
+      "description": "Reserved SAP ID for future technology-specific capability",
+      "capabilities": [],
+      "dependencies": [],
+      "tags": ["reserved"],
+      "author": "chora-base",
+      "location": null,
+      "artifacts": {},
+      "system_files": [],
+      "phase": null,
+      "priority": null
+    },
+    {
+      "id": "SAP-016",
+      "name": "link-validation-reference-management",
+      "full_name": "Link Validation & Reference Management",
+      "status": "active",
+      "version": "1.0.0",
+      "included_by_default": false,
+      "size_kb": 62,
+      "description": "Automated markdown link validation (internal + external) preventing broken documentation references",
+      "capabilities": [
+        "Internal link validation (100%)",
+        "External link health checks",
+        "CI/CD integration",
+        "4-domain architecture validation",
+        "SAP audit workflow support"
+      ],
+      "dependencies": [],
+      "tags": ["quality", "validation", "documentation", "foundational"],
+      "author": "chora-base",
+      "location": "docs/skilled-awareness/link-validation-reference-management",
+      "artifacts": {
+        "capability_charter": true,
+        "protocol_spec": true,
+        "awareness_guide": true,
+        "adoption_blueprint": true,
+        "ledger": true
+      },
+      "system_files": [
+        "scripts/validate-links.sh"
+      ],
+      "phase": "Wave 2",
+      "priority": "P0"
+    },
+    {
+      "id": "SAP-017",
+      "name": "chora-compose-integration",
+      "full_name": "Chora-Compose Integration",
+      "status": "active",
+      "version": "1.0.0",
+      "included_by_default": false,
+      "size_kb": 108,
+      "description": "How to adopt chora-compose for content generation (pip, MCP, CLI) with role-based usage patterns",
+      "capabilities": [
+        "Installation methods (pip, MCP, CLI)",
+        "Docker integration",
+        "MCP server configuration",
+        "Role-based patterns",
+        "Content generation workflows"
+      ],
+      "dependencies": ["SAP-003"],
+      "tags": ["chora-compose", "content-generation", "mcp", "ecosystem"],
+      "author": "chora-base",
+      "location": "docs/skilled-awareness/chora-compose-integration",
+      "artifacts": {
+        "capability_charter": true,
+        "protocol_spec": true,
+        "awareness_guide": true,
+        "adoption_blueprint": true,
+        "ledger": true
+      },
+      "system_files": [],
+      "phase": "Wave 3",
+      "priority": "P1"
+    },
+    {
+      "id": "SAP-018",
+      "name": "chora-compose-meta",
+      "full_name": "Chora-Compose Meta Package",
+      "status": "active",
+      "version": "1.0.0",
+      "included_by_default": false,
+      "size_kb": 187,
+      "description": "Complete chora-compose architecture specification: 17 tools + 5 resources + 4 modalities",
+      "capabilities": [
+        "17 MCP tools specification",
+        "5 resource families",
+        "4 access modalities",
+        "Complete architecture",
+        "Ecosystem positioning"
+      ],
+      "dependencies": ["SAP-017"],
+      "tags": ["chora-compose", "meta", "architecture", "ecosystem"],
+      "author": "chora-base",
+      "location": "docs/skilled-awareness/chora-compose-meta",
+      "artifacts": {
+        "capability_charter": true,
+        "protocol_spec": true,
+        "awareness_guide": true,
+        "adoption_blueprint": true,
+        "ledger": true
+      },
+      "system_files": [],
+      "phase": "Wave 3",
+      "priority": "P1"
+    }
+  ],
+  "dependency_graph": {
+    "foundational": ["SAP-000", "SAP-016"],
+    "meta": ["SAP-001", "SAP-002"],
+    "core_infrastructure": ["SAP-003", "SAP-004", "SAP-005", "SAP-006"],
+    "developer_experience": ["SAP-007", "SAP-008", "SAP-009"],
+    "advanced_features": ["SAP-010", "SAP-011", "SAP-012"],
+    "cross_repository": ["SAP-013"],
+    "technology_specific": ["SAP-014", "SAP-017", "SAP-018"]
+  },
+  "installation_order": [
+    "SAP-000",
+    "SAP-001",
+    "SAP-002",
+    "SAP-016",
+    "SAP-003",
+    "SAP-004",
+    "SAP-005",
+    "SAP-006",
+    "SAP-007",
+    "SAP-012",
+    "SAP-008",
+    "SAP-009",
+    "SAP-010",
+    "SAP-011",
+    "SAP-013",
+    "SAP-014",
+    "SAP-017",
+    "SAP-018"
+  ]
+}
