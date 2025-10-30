@@ -271,6 +271,143 @@ docs/skilled-awareness/<capability>/upgrades/
 - MINOR/PATCH changes MAY have upgrade blueprint
 - Upgrade blueprints MUST be sequential
 
+### 3.4 Installation Tooling Interface
+
+As of v4.1.0, chora-base provides automated installation tooling for SAPs and SAP sets.
+
+#### 3.4.1 Installation Script
+
+**Script**: `scripts/install-sap.py`
+
+**Purpose**: Automated SAP installation from chora-base to target repositories.
+
+**Usage**:
+```bash
+# Install single SAP
+python scripts/install-sap.py SAP-XXX --source /path/to/chora-base
+
+# Install SAP set (curated bundle)
+python scripts/install-sap.py --set <set-name> --source /path/to/chora-base
+
+# Dry run (preview without installing)
+python scripts/install-sap.py SAP-XXX --source /path/to/chora-base --dry-run
+
+# List available SAP sets
+python scripts/install-sap.py --list-sets
+```
+
+**What the script does**:
+1. Loads `sap-catalog.json` (machine-readable SAP registry)
+2. Resolves dependencies automatically
+3. Copies 5 artifacts to `docs/skilled-awareness/{sap-name}/`
+4. Copies system files (if applicable) to project root
+5. Validates installation (checks for all 5 artifacts)
+6. Reports success/failure
+
+**Guarantees**:
+- Installation MUST be idempotent (safe to run multiple times)
+- Already-installed SAPs MUST be skipped automatically
+- Dependencies MUST be resolved and installed first
+- Installation MUST validate all artifacts exist
+- Script MUST work from any target directory
+
+#### 3.4.2 SAP Catalog
+
+**File**: `sap-catalog.json`
+
+**Purpose**: Machine-readable registry of all SAPs, sets, and metadata.
+
+**Schema**:
+```json
+{
+  "version": "4.1.0",
+  "total_saps": 18,
+  "saps": [
+    {
+      "id": "SAP-000",
+      "name": "sap-framework",
+      "status": "active",
+      "version": "1.0.0",
+      "size_kb": 125,
+      "description": "Core SAP framework",
+      "capabilities": ["..."],
+      "dependencies": [],
+      "tags": ["meta", "required"],
+      "location": "docs/skilled-awareness/sap-framework",
+      "artifacts": { "capability_charter": true, ... },
+      "system_files": []
+    }
+  ],
+  "sap_sets": {
+    "minimal-entry": {
+      "saps": ["SAP-000", "SAP-001", "SAP-009", "SAP-016", "SAP-002"],
+      "estimated_tokens": 29000,
+      "estimated_hours": "3-5",
+      "use_cases": ["..."]
+    }
+  }
+}
+```
+
+**Guarantees**:
+- Catalog MUST list all SAPs
+- Catalog MUST specify dependencies
+- Catalog MUST define all standard SAP sets
+- Catalog MUST be valid JSON
+- Catalog version MUST match chora-base version
+
+#### 3.4.3 SAP Sets
+
+**SAP Sets** are curated bundles of SAPs for specific use cases.
+
+**Standard Sets** (as of v4.1.0):
+| Set | SAPs | Tokens | Time | Use Case |
+|-----|------|--------|------|----------|
+| minimal-entry | 5 | ~29k | 3-5 hours | Ecosystem coordination |
+| recommended | 10 | ~60k | 1-2 days | Core development workflow |
+| testing-focused | 6 | ~35k | 4-6 hours | Testing and quality |
+| mcp-server | 10 | ~55k | 1 day | MCP server development |
+| full | 18 | ~100k | 2-4 weeks | Comprehensive coverage |
+
+**Custom Sets**: Organizations can define custom sets via `.chorabase` file in repository root.
+
+**Custom Set Format**:
+```yaml
+# .chorabase
+version: "4.1.0"
+project_type: "custom"
+
+sap_sets:
+  my-org-minimal:
+    name: "MyOrg Minimal Entry"
+    description: "Our organization's standard minimal set"
+    saps:
+      - SAP-000  # Framework (required)
+      - SAP-001  # Inbox coordination
+      - SAP-004  # Testing (required by our org)
+    estimated_tokens: 34000
+    estimated_hours: "4-6"
+    use_cases:
+      - "New repos in our organization"
+```
+
+**Installation**:
+```bash
+python scripts/install-sap.py --set my-org-minimal --source /path/to/chora-base
+```
+
+**Guarantees**:
+- Standard sets MUST be defined in sap-catalog.json
+- Custom sets MUST be defined in .chorabase file
+- Set installation MUST skip already-installed SAPs
+- Set installation MUST install dependencies first
+- Set installation MUST validate all SAPs
+
+**Related Documentation**:
+- [How to Install SAP Sets](../../user-docs/how-to/install-sap-set.md)
+- [How to Create Custom SAP Sets](../../user-docs/how-to/create-custom-sap-sets.md)
+- [Standard SAP Sets Reference](../../user-docs/reference/standard-sap-sets.md)
+
 ---
 
 ## 4. Data Models
