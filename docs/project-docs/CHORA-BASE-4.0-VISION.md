@@ -1561,56 +1561,264 @@ Wave 5 is primarily additive, minimal cleanup - track in `v4-cleanup-manifest.md
 
 ---
 
-## Wave 6: Multi-Repo Coordination (v3.9.0 - OPTIONAL)
+## Wave 6: Collections Architecture (v4.2.0 - EXPLORATORY)
 
-**Goal**: Enable SAP discovery and sharing across organization repos
+**Goal**: Evolve SAP sets into first-class collections with richer metadata and potential generation capabilities
 
-**Note**: This wave is optional for v4.0.0 and can be deferred to v4.1.0
+**Status**: 📋 Planned (post-v4.1.0, depends on ecosystem co-discovery)
 
-### Tasks (High-Level)
+**Context**: Wave 5 introduces storage-based SAP sets (simple bundles). Wave 6 explores evolution to collections as higher-level holons with potential for generation-based artifacts from constituent content. Scope depends on:
+1. chora-workspace feedback on minimal-entry set (pilot test results)
+2. Exploration of composition tools/approaches (see [docs/design/collections-exploration-notes.md](../design/collections-exploration-notes.md))
+3. Ecosystem needs for role-based SAP bundles
+4. Value assessment: Is generation complexity worth the benefits?
 
-#### 6.1: SAP Registry Protocol
-- Define JSON schema for SAP metadata
-- Create discovery API (search SAPs across repos)
-- Document how to publish SAPs to org registry
+**Strategic Decision**: Wave 6 scope is **not yet determined**. Could be:
+- **Option A**: Rich collection metadata only (dependencies, versioning, context requirements)
+- **Option B**: Generation-based artifacts from constituent content blocks
+- **Option C**: Defer to v4.3.0+ if not ready
 
-#### 6.2: Enhanced Inbox Integration
-- SAP adoption requests via inbox protocol
-- SAP upgrade notifications
-- Cross-repo capability coordination
+**Dependencies**:
+- ✅ Wave 5 (v4.1.0) ships and is adopted by at least one pilot repo (chora-workspace)
+- ⏳ Exploration of composition tools completes (see exploration notes)
+- ⏳ Feedback from ecosystem on collection needs
+- ⏳ Decision on generation approach (custom script, LLM API, template engine, or external tool)
 
-#### 6.3: SAP Versioning
-- Semantic versioning for each SAP
-- Upgrade blueprints (v1.0 → v2.0)
-- Backward compatibility tracking
-- Migration guides
+### Potential Tasks (Depends on Exploration Outcomes)
 
-#### 6.4: External SAP Installation
-```bash
-# Install SAP from another org repo
-python scripts/install-sap.py SAP-XYZ \
-  --source https://github.com/org/other-project
+#### 6.1: Enhanced Collection Schema
+
+**If pursuing rich metadata** (Option A - lower complexity):
+
+```json
+{
+  "collections": [
+    {
+      "id": "minimal-entry",
+      "name": "Minimal Ecosystem Entry",
+      "version": "1.0.0",
+      "saps": ["SAP-000", "SAP-001", "SAP-009", "SAP-016", "SAP-002"],
+      "dependencies_resolved": ["SAP-000", "SAP-016", "SAP-002", "SAP-001", "SAP-009"],
+      "installation_order": [...],
+      "estimated_tokens": 29000,
+      "estimated_hours": "3-5",
+      "success_criteria": [
+        "AGENTS.md declares capabilities",
+        "inbox/ structure exists"
+      ],
+      "context_requirements": {
+        "repo_role": "optional",
+        "existing_capabilities": "optional"
+      }
+    }
+  ]
+}
 ```
+
+**Enhancements over v4.1.0 SAP sets**:
+- Dependency resolution tracked
+- Success criteria explicit
+- Context requirements documented
+- Versioning support
+- Richer metadata for tools
+
+#### 6.2: Constituent Content Architecture
+
+**If pursuing generation-based** (Option B - higher complexity):
+
+**Exploration needed**:
+1. Decompose 1-2 example SAPs into constituent content blocks (manual exercise)
+2. Assess quality of decomposition
+3. Identify reusable patterns across SAPs
+4. Determine storage model (content-blocks/ in chora-base? external tool?)
+
+**Potential structure**:
+```
+docs/
+  content-blocks/          # NEW: Reusable content chunks
+    sap-framework-problem.md
+    sap-framework-solution-core.md
+    testing-introduction.md
+    testing-pytest-setup.md
+    ...
+  composition-recipes/     # NEW: How to assemble SAPs
+    SAP-000-charter.yaml
+    SAP-000-protocol.yaml
+    ...
+  skilled-awareness/       # EXISTING: May become generated artifacts
+    sap-framework/
+    testing-framework/
+    ...
+```
+
+**Key Questions**:
+- What tool generates artifacts? (custom script, LLM API, template engine, external tool?)
+- Where is authoritative source? (content blocks or generated artifacts?)
+- How to ensure generated quality matches hand-written quality?
+- "Latest" vs "fresh" semantics for caching?
+
+#### 6.3: Composition Tooling
+
+**If pursuing generation-based**:
+
+**Option A: Custom Python Script**
+```python
+#!/usr/bin/env python3
+"""Compose SAP artifacts from constituent content blocks"""
+
+def compose_sap_artifact(
+    sap_id: str,
+    artifact_type: str,  # charter, protocol, guide, blueprint, ledger
+    context: dict,       # repo_role, existing_capabilities, preferences
+    freshness: str = "latest"  # or "fresh"
+):
+    """Generate artifact from content blocks + context"""
+```
+
+**Option B: Integration with External Tool**
+- Coordinate with ecosystem tool for composition capabilities
+- Co-discover what's possible (not prescribe requirements)
+- See exploration notes for coordination approach
+
+**Option C: LLM-Based Generation**
+- Use Anthropic/OpenAI API for semantic composition
+- Content blocks as context, prompts for structure
+- Quality review required
+
+**Decision Needed**: Which approach aligns with chora-base capabilities and philosophy?
+
+#### 6.4: Migration Path (SAP Sets → Collections)
+
+**Breaking Change in v4.2.0**:
+
+v4.1.0 syntax:
+```bash
+python scripts/install-sap.py --set minimal-entry
+```
+
+v4.2.0 syntax:
+```bash
+python scripts/install-sap.py --collection minimal-entry
+# or migrate to chora-compose if external tool integration happens
+```
+
+**Migration Guide Required**:
+- Document syntax changes
+- Provide backward compatibility shim (deprecation warning)
+- Update all documentation examples
+- Notify ecosystem via inbox protocol
+
+### Coordination Requirements
+
+#### With chora-workspace (Pilot Feedback)
+
+**Questions to ask after v4.1.0 ships**:
+1. How well did minimal-entry set meet your needs?
+2. What role-based collections would be valuable?
+3. Should SAPs adapt to repo context (generation) or stay uniform (storage)?
+4. Are custom organizational sets needed?
+
+#### With Composition Tool (If Pursuing Generation)
+
+**See**: [docs/design/collections-exploration-notes.md](../design/collections-exploration-notes.md) for detailed co-discovery approach
+
+**NOT prescribing requirements**. Instead, exploring:
+- What capabilities exist today?
+- What would be natural extensions?
+- Is this aligned with tool's vision?
+- Can we experiment together?
+
+**Co-discovery coordination request** (to be created if pursuing):
+- Type: `architecture_proposal` (exploratory, not implementation request)
+- Questions, not requirements
+- Collaboration modes as options
+- Explicit non-requirements documented
+
+### Effort Estimate (Highly Uncertain)
+
+**Option A: Rich Metadata Only**
+- Collection schema enhancement: 8-12 hours
+- Documentation: 6-8 hours
+- Migration guide: 4-6 hours
+- **Total**: 18-26 hours
+
+**Option B: Generation-Based Collections**
+- Content decomposition (1-2 SAPs): 12-16 hours
+- Composition engine (custom script): 20-30 hours
+- OR external tool integration: 30-50 hours (depends on tool)
+- Collection schema enhancement: 8-12 hours
+- Testing and quality assurance: 20-30 hours
+- Documentation: 15-20 hours
+- Migration guide: 6-10 hours
+- **Total**: 81-138 hours (wide range due to uncertainty)
+
+### Success Criteria
+
+**Minimum (Option A)**:
+- ✅ Collections have richer metadata than SAP sets
+- ✅ Dependency resolution automatic
+- ✅ Success criteria explicit and testable
+- ✅ At least 2 ecosystem repos adopt collections successfully
+
+**Stretch (Option B)**:
+- ✅ At least 2 SAPs decomposed into constituent content blocks
+- ✅ Composition engine generates artifacts comparable to hand-written quality
+- ✅ Generation time < 2 minutes per artifact
+- ✅ "Latest" vs "fresh" semantics working as documented
+- ✅ At least 1 ecosystem repo adopts generated collections successfully
+
+### Decision Points
+
+**Decision Point 1** (Post-v4.1.0 Ship): Pursue Wave 6 in v4.2.0 or defer to v4.3.0?
+- Factors: chora-workspace pilot feedback, ecosystem demand, composition tool availability
+
+**Decision Point 2** (If Pursuing): Option A (metadata) or Option B (generation)?
+- Factors: Tool exploration outcomes, value vs complexity assessment, team capacity
+
+**Decision Point 3** (If Option B): Which composition approach?
+- Factors: Tool availability, integration complexity, quality requirements, maintenance burden
 
 ### Cleanup Tracking
 
 If Wave 6 is included, track in `v4-cleanup-manifest.md`:
 
 **Files to Delete**:
-- None expected (additive wave)
+- None (additive, though may deprecate --set flag in favor of --collection)
 
-**Files to Archive**:
-- None expected
+**Files to Create**:
+- `docs/design/collections-architecture-rfc.md` (formal RFC if pursuing)
+- `docs/content-blocks/` (if pursuing generation)
+- `docs/composition-recipes/` (if pursuing generation)
+- `scripts/compose-sap.py` (if custom composition script)
 
-**Files to Move**:
-- None expected
+**Files to Update**:
+- `sap-catalog.json` (collections schema enhancement)
+- `scripts/install-sap.py` (--collection flag, deprecate --set)
+- All Wave 5 documentation (migration examples)
 
 **References to Update**:
-- SAP-001 (Inbox) enhancements for SAP coordination
-- Documentation on multi-repo SAP discovery
+- SAP-000 (SAP Framework) - document collections pattern
+- Wave 5 documentation - migration notes
 
 **Git History**:
-- None (Wave 6 is additive)
+- Breaking change (v4.1.0 → v4.2.0) requires semver minor bump
+
+---
+
+## Wave 7: Multi-Repo Coordination (v4.3.0+ - DEFERRED)
+
+**Goal**: Enable SAP discovery and sharing across organization repos
+
+**Note**: Previously planned as Wave 6. Deferred to allow Wave 6 focus on collections architecture. May be implemented in v4.3.0 or later based on ecosystem needs.
+
+**See Previous Planning**: Original Wave 6 content (multi-repo coordination) available in git history if needed.
+
+### High-Level Tasks (When Implemented)
+
+- SAP Registry Protocol for cross-repo discovery
+- Enhanced Inbox Integration for SAP coordination
+- SAP Versioning with semantic versioning
+- External SAP installation from other repos
 
 ### Timeline
 **Duration**: 3-4 weeks (if included)
