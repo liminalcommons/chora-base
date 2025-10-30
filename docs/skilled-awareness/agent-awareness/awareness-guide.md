@@ -307,7 +307,68 @@ Some patterns here...
 
 ---
 
-## 6. Related Content
+## 6. Installation
+
+### Quick Install
+
+Install this SAP with its dependencies:
+
+```bash
+python scripts/install-sap.py SAP-009 --source /path/to/chora-base
+```
+
+This will automatically install:
+- SAP-009 (Agent Awareness System)
+- SAP-000 (SAP Framework)
+- SAP-007 (Documentation Framework)
+
+### Part of Sets
+
+This SAP is included in the following [standard sets](../../user-docs/reference/standard-sap-sets.md):
+
+- `minimal-entry` - 5 essential SAPs for quick ecosystem onboarding
+- `recommended` - 10 SAPs covering core development workflows
+- `mcp-server` - 10 SAPs for building MCP servers
+- `full` - All 18 SAPs (complete capability suite)
+
+To install a complete set:
+
+```bash
+python scripts/install-sap.py --set minimal-entry --source /path/to/chora-base
+```
+
+### Dependencies
+
+This SAP depends on:
+- SAP-000 (SAP Framework)
+- SAP-007 (Documentation Framework)
+
+All dependencies are automatically installed.
+
+### Validation
+
+After installation, verify the SAP artifacts exist:
+
+```bash
+ls docs/skilled-awareness/agent-awareness/
+# Should show: capability-charter.md, protocol-spec.md, awareness-guide.md, adoption-blueprint.md, ledger.md
+
+# Verify agent awareness files exist
+ls AGENTS.md
+ls CLAUDE.md
+ls static-template/AGENTS.md
+ls static-template/CLAUDE.md
+```
+
+### Custom Installation
+
+For custom installation paths or options, see:
+- [Install SAP Set How-To](../../user-docs/how-to/install-sap-set.md)
+- [Install SAP Script Reference](../../user-docs/reference/install-sap-script.md)
+
+---
+
+## 7. Related Content
 
 ### Within This SAP (skilled-awareness/agent-awareness/)
 

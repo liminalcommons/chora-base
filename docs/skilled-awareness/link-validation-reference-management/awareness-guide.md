@@ -534,6 +534,60 @@ sed -i '' 's|docs/BENEFITS.md|docs/user-docs/explanation/benefits-of-chora-base.
 
 ---
 
+## Installation
+
+### Quick Install
+
+Install this SAP with its dependencies:
+
+```bash
+python scripts/install-sap.py SAP-016 --source /path/to/chora-base
+```
+
+This will automatically install:
+- SAP-016 (Link Validation & Reference Management)
+
+### Part of Sets
+
+This SAP is included in the following [standard sets](../../user-docs/reference/standard-sap-sets.md):
+
+- `minimal-entry` - 5 essential SAPs for quick ecosystem onboarding
+- `recommended` - 10 SAPs covering core development workflows
+- `testing-focused` - 6 SAPs emphasizing testing and quality
+- `mcp-server` - 10 SAPs for building MCP servers
+- `full` - All 18 SAPs (complete capability suite)
+
+To install a complete set:
+
+```bash
+python scripts/install-sap.py --set minimal-entry --source /path/to/chora-base
+```
+
+### Dependencies
+
+This SAP has no dependencies.
+
+### Validation
+
+After installation, verify the SAP artifacts exist:
+
+```bash
+ls docs/skilled-awareness/link-validation-reference-management/
+# Should show: capability-charter.md, protocol-spec.md, awareness-guide.md, adoption-blueprint.md, ledger.md
+
+# Verify link validation script exists
+ls scripts/validate-links.sh
+# Should exist and be executable
+```
+
+### Custom Installation
+
+For custom installation paths or options, see:
+- [Install SAP Set How-To](../../user-docs/how-to/install-sap-set.md)
+- [Install SAP Script Reference](../../user-docs/reference/install-sap-script.md)
+
+---
+
 ## Related Content
 
 This SAP integrates with content across all 4 domains:

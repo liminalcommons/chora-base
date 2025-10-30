@@ -243,7 +243,63 @@ mv inbox/active/task-123-feature/ inbox/completed/
 
 ---
 
-## 7. Related Content
+## 7. Installation
+
+### Quick Install
+
+Install this SAP with its dependencies:
+
+```bash
+python scripts/install-sap.py SAP-001 --source /path/to/chora-base
+```
+
+This will automatically install:
+- SAP-001 (Inbox Coordination Protocol)
+
+### Part of Sets
+
+This SAP is included in the following [standard sets](../../user-docs/reference/standard-sap-sets.md):
+
+- `minimal-entry` - 5 essential SAPs for quick ecosystem onboarding
+- `recommended` - 10 SAPs covering core development workflows
+- `full` - All 18 SAPs (complete capability suite)
+
+To install a complete set:
+
+```bash
+python scripts/install-sap.py --set minimal-entry --source /path/to/chora-base
+```
+
+### Dependencies
+
+This SAP has no dependencies.
+
+### Important Notice
+
+**Pilot Status**: SAP-001 is currently in Pilot status and may undergo changes. Use with awareness that protocols and structures may evolve based on feedback from early adopters.
+
+### Validation
+
+After installation, verify the SAP artifacts exist:
+
+```bash
+ls docs/skilled-awareness/inbox/
+# Should show: capability-charter.md, protocol-spec.md, awareness-guide.md, adoption-blueprint.md, ledger.md
+
+# Verify inbox directory structure
+ls inbox/
+# Should show: coordination/, incoming/, outgoing/, schemas/
+```
+
+### Custom Installation
+
+For custom installation paths or options, see:
+- [Install SAP Set How-To](../../user-docs/how-to/install-sap-set.md)
+- [Install SAP Script Reference](../../user-docs/reference/install-sap-script.md)
+
+---
+
+## 8. Related Content
 
 ### Within This SAP (skilled-awareness/inbox/)
 - [capability-charter.md](capability-charter.md) - Business case for cross-repo inbox coordination

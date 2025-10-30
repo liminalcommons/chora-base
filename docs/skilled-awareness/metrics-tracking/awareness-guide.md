@@ -311,7 +311,61 @@ python scripts/generate_roi_report.py  # Should work with new path
 
 ---
 
-## 5. Related Content
+## 5. Installation
+
+### Quick Install
+
+Install this SAP with its dependencies:
+
+```bash
+python scripts/install-sap.py SAP-013 --source /path/to/chora-base
+```
+
+This will automatically install:
+- SAP-013 (Metrics Tracking)
+- SAP-000 (SAP Framework)
+
+### Part of Sets
+
+This SAP is included in the following [standard sets](../../user-docs/reference/standard-sap-sets.md):
+
+- `full` - All 18 SAPs (complete capability suite)
+
+To install a complete set:
+
+```bash
+python scripts/install-sap.py --set full --source /path/to/chora-base
+```
+
+### Dependencies
+
+This SAP depends on:
+- SAP-000 (SAP Framework)
+
+All dependencies are automatically installed.
+
+### Validation
+
+After installation, verify the SAP artifacts exist:
+
+```bash
+ls docs/skilled-awareness/metrics-tracking/
+# Should show: capability-charter.md, protocol-spec.md, awareness-guide.md, adoption-blueprint.md, ledger.md
+
+# Verify metrics tracking files exist
+ls utils/claude_metrics.py
+ls docs/project-docs/PROCESS_METRICS.md
+```
+
+### Custom Installation
+
+For custom installation paths or options, see:
+- [Install SAP Set How-To](../../user-docs/how-to/install-sap-set.md)
+- [Install SAP Script Reference](../../user-docs/reference/install-sap-script.md)
+
+---
+
+## 6. Related Content
 
 ### Within This SAP (skilled-awareness/metrics-tracking/)
 

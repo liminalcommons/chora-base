@@ -402,7 +402,67 @@ pytest --durations=10
 
 ---
 
-## 8. Related Resources
+## 8. Installation
+
+### Quick Install
+
+Install this SAP with its dependencies:
+
+```bash
+python scripts/install-sap.py SAP-004 --source /path/to/chora-base
+```
+
+This will automatically install:
+- SAP-004 (Testing Framework)
+- SAP-000 (SAP Framework)
+- SAP-003 (Project Bootstrap & Scaffolding)
+
+### Part of Sets
+
+This SAP is included in the following [standard sets](../../user-docs/reference/standard-sap-sets.md):
+
+- `recommended` - 10 SAPs covering core development workflows
+- `testing-focused` - 6 SAPs emphasizing testing and quality
+- `mcp-server` - 10 SAPs for building MCP servers
+- `full` - All 18 SAPs (complete capability suite)
+
+To install a complete set:
+
+```bash
+python scripts/install-sap.py --set testing-focused --source /path/to/chora-base
+```
+
+### Dependencies
+
+This SAP depends on:
+- SAP-000 (SAP Framework)
+- SAP-003 (Project Bootstrap & Scaffolding)
+
+All dependencies are automatically installed.
+
+### Validation
+
+After installation, verify the SAP artifacts exist:
+
+```bash
+ls docs/skilled-awareness/testing-framework/
+# Should show: capability-charter.md, protocol-spec.md, awareness-guide.md, adoption-blueprint.md, ledger.md
+
+# Verify test framework files exist
+ls static-template/tests/
+ls static-template/conftest.py
+ls static-template/.coveragerc
+```
+
+### Custom Installation
+
+For custom installation paths or options, see:
+- [Install SAP Set How-To](../../user-docs/how-to/install-sap-set.md)
+- [Install SAP Script Reference](../../user-docs/reference/install-sap-script.md)
+
+---
+
+## 9. Related Resources
 
 **SAP-004 Artifacts**:
 - [capability-charter.md](capability-charter.md) - This SAP's charter

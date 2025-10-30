@@ -289,7 +289,68 @@ pytest --cov=src --cov-fail-under=85
 
 ---
 
-## 6. Related Content
+## 6. Installation
+
+### Quick Install
+
+Install this SAP with its dependencies:
+
+```bash
+python scripts/install-sap.py SAP-006 --source /path/to/chora-base
+```
+
+This will automatically install:
+- SAP-006 (Quality Gates)
+- SAP-000 (SAP Framework)
+- SAP-004 (Testing Framework)
+- SAP-003 (Project Bootstrap & Scaffolding)
+
+### Part of Sets
+
+This SAP is included in the following [standard sets](../../user-docs/reference/standard-sap-sets.md):
+
+- `recommended` - 10 SAPs covering core development workflows
+- `testing-focused` - 6 SAPs emphasizing testing and quality
+- `mcp-server` - 10 SAPs for building MCP servers
+- `full` - All 18 SAPs (complete capability suite)
+
+To install a complete set:
+
+```bash
+python scripts/install-sap.py --set testing-focused --source /path/to/chora-base
+```
+
+### Dependencies
+
+This SAP depends on:
+- SAP-000 (SAP Framework)
+- SAP-004 (Testing Framework)
+
+All dependencies are automatically installed.
+
+### Validation
+
+After installation, verify the SAP artifacts exist:
+
+```bash
+ls docs/skilled-awareness/quality-gates/
+# Should show: capability-charter.md, protocol-spec.md, awareness-guide.md, adoption-blueprint.md, ledger.md
+
+# Verify quality gate files exist
+ls static-template/.pre-commit-config.yaml
+ls static-template/pyproject.toml
+ls static-template/ruff.toml
+```
+
+### Custom Installation
+
+For custom installation paths or options, see:
+- [Install SAP Set How-To](../../user-docs/how-to/install-sap-set.md)
+- [Install SAP Script Reference](../../user-docs/reference/install-sap-script.md)
+
+---
+
+## 7. Related Content
 
 ### Within This SAP (skilled-awareness/quality-gates/)
 

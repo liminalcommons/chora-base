@@ -801,6 +801,67 @@ def set_task_assignee(task_id: int, assignee: str) -> dict:
 
 ---
 
+## Installation
+
+### Quick Install
+
+Install this SAP with its dependencies:
+
+```bash
+python scripts/install-sap.py SAP-014 --source /path/to/chora-base
+```
+
+This will automatically install:
+- SAP-014 (MCP Server Development)
+- SAP-000 (SAP Framework)
+- SAP-003 (Project Bootstrap & Scaffolding)
+- SAP-004 (Testing Framework)
+- SAP-012 (Development Lifecycle)
+
+### Part of Sets
+
+This SAP is included in the following [standard sets](../../user-docs/reference/standard-sap-sets.md):
+
+- `mcp-server` - 10 SAPs for building MCP servers
+- `full` - All 18 SAPs (complete capability suite)
+
+To install a complete set:
+
+```bash
+python scripts/install-sap.py --set mcp-server --source /path/to/chora-base
+```
+
+### Dependencies
+
+This SAP depends on:
+- SAP-000 (SAP Framework)
+- SAP-003 (Project Bootstrap & Scaffolding)
+- SAP-004 (Testing Framework)
+- SAP-012 (Development Lifecycle)
+
+All dependencies are automatically installed.
+
+### Validation
+
+After installation, verify the SAP artifacts exist:
+
+```bash
+ls docs/skilled-awareness/mcp-server-development/
+# Should show: capability-charter.md, protocol-spec.md, awareness-guide.md, adoption-blueprint.md, ledger.md
+
+# Verify MCP templates exist
+ls mcp-templates/
+# Should show various MCP server templates and examples
+```
+
+### Custom Installation
+
+For custom installation paths or options, see:
+- [Install SAP Set How-To](../../user-docs/how-to/install-sap-set.md)
+- [Install SAP Script Reference](../../user-docs/reference/install-sap-script.md)
+
+---
+
 ## Related Content
 
 ### 4-Domain Cross-References

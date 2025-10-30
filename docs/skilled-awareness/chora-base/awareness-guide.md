@@ -373,7 +373,59 @@ Sequential:
 
 ---
 
-## 9. Related Content
+## 9. Installation
+
+### Quick Install
+
+Install this SAP with its dependencies:
+
+```bash
+python scripts/install-sap.py SAP-002 --source /path/to/chora-base
+```
+
+This will automatically install:
+- SAP-002 (Chora-Base Meta Package)
+- SAP-000 (SAP Framework)
+
+### Part of Sets
+
+This SAP is included in the following [standard sets](../../user-docs/reference/standard-sap-sets.md):
+
+- `minimal-entry` - 5 essential SAPs for quick ecosystem onboarding
+- `recommended` - 10 SAPs covering core development workflows
+- `full` - All 18 SAPs (complete capability suite)
+
+To install a complete set:
+
+```bash
+python scripts/install-sap.py --set minimal-entry --source /path/to/chora-base
+```
+
+### Dependencies
+
+This SAP depends on:
+- SAP-000 (SAP Framework)
+
+All dependencies are automatically installed.
+
+### Validation
+
+After installation, verify the SAP artifacts exist:
+
+```bash
+ls docs/skilled-awareness/chora-base/
+# Should show: capability-charter.md, protocol-spec.md, awareness-guide.md, adoption-blueprint.md, ledger.md
+```
+
+### Custom Installation
+
+For custom installation paths or options, see:
+- [Install SAP Set How-To](../../user-docs/how-to/install-sap-set.md)
+- [Install SAP Script Reference](../../user-docs/reference/install-sap-script.md)
+
+---
+
+## 10. Related Content
 
 ### Within This SAP (skilled-awareness/chora-base/)
 - [capability-charter.md](capability-charter.md) - Business value and scope of chora-base meta-SAP

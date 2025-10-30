@@ -283,7 +283,66 @@ last_updated: 2025-10-28
 
 ---
 
-## 7. Related Content
+## 7. Installation
+
+### Quick Install
+
+Install this SAP with its dependencies:
+
+```bash
+python scripts/install-sap.py SAP-007 --source /path/to/chora-base
+```
+
+This will automatically install:
+- SAP-007 (Documentation Framework)
+- SAP-000 (SAP Framework)
+
+### Part of Sets
+
+This SAP is included in the following [standard sets](../../user-docs/reference/standard-sap-sets.md):
+
+- `recommended` - 10 SAPs covering core development workflows
+- `mcp-server` - 10 SAPs for building MCP servers
+- `full` - All 18 SAPs (complete capability suite)
+
+To install a complete set:
+
+```bash
+python scripts/install-sap.py --set recommended --source /path/to/chora-base
+```
+
+### Dependencies
+
+This SAP depends on:
+- SAP-000 (SAP Framework)
+
+All dependencies are automatically installed.
+
+### Validation
+
+After installation, verify the SAP artifacts exist:
+
+```bash
+ls docs/skilled-awareness/documentation-framework/
+# Should show: capability-charter.md, protocol-spec.md, awareness-guide.md, adoption-blueprint.md, ledger.md
+
+# Verify documentation structure exists
+ls DOCUMENTATION_STANDARD.md
+ls docs/user-docs/
+ls docs/dev-docs/
+ls docs/project-docs/
+ls scripts/extract_tests.py
+```
+
+### Custom Installation
+
+For custom installation paths or options, see:
+- [Install SAP Set How-To](../../user-docs/how-to/install-sap-set.md)
+- [Install SAP Script Reference](../../user-docs/reference/install-sap-script.md)
+
+---
+
+## 8. Related Content
 
 ### Within This SAP (skilled-awareness/documentation-framework/)
 - [capability-charter.md](capability-charter.md) - Business value and scope of Documentation Framework
