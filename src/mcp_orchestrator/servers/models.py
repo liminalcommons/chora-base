@@ -18,6 +18,20 @@ class TransportType(str, Enum):
     SSE = "sse"  # Server-Sent Events (HTTP streaming)
 
 
+class PackageManager(str, Enum):
+    """Package manager for server installation.
+
+    Wave 2.2/3.0 - Automatic Server Installation
+    """
+
+    NPM = "npm"
+    PIP = "pip"
+    PIPX = "pipx"
+    UVX = "uvx"
+    CUSTOM = "custom"
+    NONE = "none"  # No package manager (local script, binary, etc.)
+
+
 class ParameterDefinition(BaseModel):
     """Definition of a server configuration parameter."""
 
@@ -93,6 +107,19 @@ class ServerDefinition(BaseModel):
     )
     tags: list[str] = Field(
         default_factory=list, description="Tags for categorization (e.g., 'search', 'database')"
+    )
+
+    # Package installation (Wave 2.2/3.0)
+    pypi_package: str | None = Field(
+        default=None, description="PyPI package name if installable via pip/pipx/uvx"
+    )
+    package_manager: PackageManager = Field(
+        default=PackageManager.NONE,
+        description="Preferred package manager for installation"
+    )
+    install_command: str | None = Field(
+        default=None,
+        description="Custom installation command (if package_manager=CUSTOM)"
     )
 
     model_config = ConfigDict(use_enum_values=True)

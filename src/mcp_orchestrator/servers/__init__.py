@@ -11,6 +11,7 @@ Wave 1.1 (v0.1.1):
 """
 
 from mcp_orchestrator.servers.models import (
+    PackageManager,
     ParameterDefinition,
     ServerDefinition,
     TransportType,
@@ -19,6 +20,7 @@ from mcp_orchestrator.servers.registry import ServerRegistry, get_default_regist
 
 __all__ = [
     "TransportType",
+    "PackageManager",
     "ParameterDefinition",
     "ServerDefinition",
     "ServerRegistry",

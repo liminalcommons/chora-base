@@ -73,6 +73,8 @@ async def list_profiles_endpoint(client_id: str) -> ProfilesResponse:
     """
     try:
         client_def = _registry.get_client(client_id)
+        if client_def is None:
+            raise HTTPException(status_code=404, detail=f"Client '{client_id}' not found")
         profile_ids = [p.profile_id for p in client_def.default_profiles]
         return ProfilesResponse(profiles=profile_ids)
     except KeyError:
@@ -129,15 +131,14 @@ async def diff_config_endpoint(request: DiffConfigRequest) -> DiffConfigResponse
     try:
         diff_result = compare_configs(request.config1, request.config2)
 
-        # Parse diff result (DiffResult object)
-        # Extract added/removed/modified server IDs from changes
-        added = [change.server_id for change in diff_result.changes if change.change_type == "added"]
-        removed = [change.server_id for change in diff_result.changes if change.change_type == "removed"]
-        modified = [change.server_id for change in diff_result.changes if change.change_type == "modified"]
+        # Parse diff result (DiffResult object with servers_added/removed/modified fields)
+        # Extract modified server IDs from servers_modified list
+        modified = [m["server_id"] if isinstance(m, dict) else m.get("server_id", "unknown")
+                    for m in diff_result.servers_modified]
 
         return DiffConfigResponse(
-            added=added,
-            removed=removed,
+            added=diff_result.servers_added,
+            removed=diff_result.servers_removed,
             modified=modified,
             diff=f"{diff_result.status}: {diff_result.total_changes} changes",
         )
@@ -354,19 +355,20 @@ async def list_servers_endpoint() -> ServersResponse:
 
     List all available MCP servers from registry.
     """
-    servers_data = _server_registry.list_all()
+    servers_data = _server_registry.list_all()  # Returns list[ServerDefinition]
 
     servers = []
-    for server_dict in servers_data:
+    for server_def in servers_data:
+        # Convert ServerDefinition (Pydantic model) to Server response model
         servers.append(
             Server(
-                server_id=server_dict["server_id"],
-                description=server_dict["description"],
-                transport=server_dict.get("transport", "stdio"),
-                npm_package=server_dict.get("npm_package"),
-                command=server_dict.get("command"),
-                args=server_dict.get("args"),
-                env=server_dict.get("env"),
+                server_id=server_def.server_id,
+                description=server_def.description,
+                transport=server_def.transport.value if hasattr(server_def.transport, 'value') else str(server_def.transport),
+                npm_package=server_def.npm_package if hasattr(server_def, 'npm_package') else None,
+                command=server_def.command if hasattr(server_def, 'command') else None,
+                args=server_def.args if hasattr(server_def, 'args') else None,
+                env=server_def.env if hasattr(server_def, 'env') else None,
             )
         )
 
@@ -380,16 +382,17 @@ async def describe_server_endpoint(server_id: str) -> ServerDetailResponse:
     Get detailed information about a specific server.
     """
     try:
-        server_dict = _server_registry.get(server_id)
+        server_def = _server_registry.get(server_id)  # Returns ServerDefinition
 
+        # Convert ServerDefinition to ServerDetailResponse
         return ServerDetailResponse(
-            server_id=server_dict["server_id"],
-            description=server_dict["description"],
-            transport=server_dict.get("transport", "stdio"),
-            npm_package=server_dict.get("npm_package"),
-            command=server_dict.get("command"),
-            args=server_dict.get("args"),
-            env=server_dict.get("env"),
+            server_id=server_def.server_id,
+            description=server_def.description,
+            transport=server_def.transport.value if hasattr(server_def.transport, 'value') else str(server_def.transport),
+            npm_package=server_def.npm_package if hasattr(server_def, 'npm_package') else None,
+            command=server_def.command if hasattr(server_def, 'command') else None,
+            args=server_def.args if hasattr(server_def, 'args') else None,
+            env=server_def.env if hasattr(server_def, 'env') else None,
         )
     except ServerNotFoundError:
         raise HTTPException(status_code=404, detail=f"Server '{server_id}' not found")

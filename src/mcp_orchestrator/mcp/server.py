@@ -1666,6 +1666,224 @@ async def deployed_config_resource(client_id: str, profile_id: str) -> str:
 
 
 # =============================================================================
+# TOOLS - Wave 2.2/3.0 (Automatic Server Installation)
+# =============================================================================
+
+
+@mcp.tool()
+async def check_server_installation(server_id: str) -> dict[str, Any]:
+    """Check if an MCP server is installed on the system.
+
+    Checks installation status by looking for the server's command in the
+    system PATH. Returns installation details including version and location.
+
+    Args:
+        server_id: Server identifier from registry (e.g., 'filesystem', 'lightrag-mcp')
+
+    Returns:
+        Dictionary with:
+        - server_id: Server identifier
+        - status: "installed", "not_installed", "unknown", or "error"
+        - installed_version: Version string if installed
+        - install_location: Path to installed binary
+        - package_manager: Package manager used
+        - installation_command: Suggested install command if not installed
+        - error_message: Error details if status is "error"
+
+    Raises:
+        ValueError: If server_id not found in registry
+
+    Example:
+        >>> result = await check_server_installation("filesystem")
+        >>> # Returns: {"status": "installed", "installed_version": "2025.8.21", ...}
+    """
+    from mcp_orchestrator.installation.validator import InstallationValidator
+
+    # Get server from registry
+    try:
+        server = _server_registry.get(server_id)
+    except ServerNotFoundError as e:
+        raise ValueError(str(e)) from e
+
+    # Check installation
+    validator = InstallationValidator()
+    result = validator.check_installation(server)
+
+    # Build response
+    response = result.model_dump()
+
+    # Add installation command if not installed
+    if result.status == "not_installed":
+        if server.npm_package:
+            response["installation_command"] = f"npm install -g {server.npm_package}"
+        elif server.pypi_package:
+            response["installation_command"] = f"pip install {server.pypi_package}"
+
+    return response
+
+
+@mcp.tool()
+async def install_server(
+    server_id: str,
+    confirm: bool = True,
+    package_manager: str | None = None
+) -> dict[str, Any]:
+    """Install an MCP server from npm or PyPI.
+
+    **IMPORTANT:** This tool will execute system commands. User confirmation
+    is required unless confirm=False is explicitly set.
+
+    The installation workflow:
+    1. Check if server is already installed
+    2. Validate server exists in registry
+    3. Request confirmation (if confirm=True)
+    4. Execute installation via package manager
+    5. Return installation result
+
+    Args:
+        server_id: Server identifier from registry
+        confirm: Require user confirmation before installing (default: True)
+        package_manager: Override package manager (npm, pip, pipx, uvx)
+
+    Returns:
+        Dictionary with:
+        - server_id: Server identifier
+        - status: "installed", "already_installed", "confirmation_required", or "error"
+        - installed_version: Version if successful
+        - installation_command: Command that was executed
+        - error_message: Error details if failed
+        - message: Human-readable message
+
+    Raises:
+        ValueError: If server_id not found or server doesn't support installation
+
+    Example:
+        >>> # Check what would be installed
+        >>> result = await install_server("filesystem")
+        >>> # Returns: {"status": "confirmation_required", ...}
+
+        >>> # Actually install
+        >>> result = await install_server("filesystem", confirm=False)
+        >>> # Returns: {"status": "installed", ...}
+    """
+    from mcp_orchestrator.installation.installer import ServerInstaller
+    from mcp_orchestrator.installation.validator import InstallationValidator
+    from mcp_orchestrator.servers.models import PackageManager
+
+    # Get server from registry
+    try:
+        server = _server_registry.get(server_id)
+    except ServerNotFoundError as e:
+        raise ValueError(str(e)) from e
+
+    # Check if already installed
+    validator = InstallationValidator()
+    check_result = validator.check_installation(server)
+
+    if check_result.status == "installed":
+        return {
+            "server_id": server_id,
+            "status": "already_installed",
+            "installed_version": check_result.installed_version,
+            "install_location": check_result.install_location
+        }
+
+    # Determine package manager
+    if package_manager:
+        pm = PackageManager(package_manager)
+    else:
+        pm = server.package_manager
+
+    # Get package name
+    if pm == PackageManager.NPM and server.npm_package:
+        package_name = server.npm_package
+    elif pm in [PackageManager.PIP, PackageManager.PIPX, PackageManager.UVX] and server.pypi_package:
+        package_name = server.pypi_package
+    else:
+        raise ValueError(
+            f"Server '{server_id}' does not support package manager '{pm.value}'"
+        )
+
+    # Require confirmation in production
+    if confirm:
+        from mcp_orchestrator.installation.package_manager import PackageManagerDetector
+        cmd = PackageManagerDetector.get_install_command(pm, package_name)
+        return {
+            "server_id": server_id,
+            "status": "confirmation_required",
+            "message": f"Ready to install {package_name} via {pm.value}. "
+                      f"Call install_server(server_id='{server_id}', confirm=False) to proceed.",
+            "installation_command": " ".join(cmd)
+        }
+
+    # Execute installation
+    installer = ServerInstaller()
+    result = installer.install(
+        package_manager=pm,
+        package_name=package_name,
+        server_id=server_id
+    )
+
+    return result.model_dump()
+
+
+@mcp.tool()
+async def list_installed_servers() -> dict[str, Any]:
+    """List all MCP servers and their installation status.
+
+    Checks all servers in the registry and returns their installation status,
+    including version information for installed servers.
+
+    Returns:
+        Dictionary with:
+        - servers: List of server installation statuses
+          - server_id: Server identifier
+          - display_name: Human-readable name
+          - status: Installation status
+          - installed_version: Version if installed
+          - package_manager: Package manager used
+        - installed_count: Number of installed servers
+        - not_installed_count: Number of not installed servers
+        - total_count: Total servers in registry
+
+    Example:
+        >>> result = await list_installed_servers()
+        >>> # Returns: {"installed_count": 3, "not_installed_count": 12, ...}
+    """
+    from mcp_orchestrator.installation.validator import InstallationValidator
+
+    servers = _server_registry.list_all()
+    validator = InstallationValidator()
+
+    results = []
+    installed_count = 0
+    not_installed_count = 0
+
+    for server in servers:
+        check_result = validator.check_installation(server)
+
+        if check_result.status == "installed":
+            installed_count += 1
+        elif check_result.status == "not_installed":
+            not_installed_count += 1
+
+        results.append({
+            "server_id": server.server_id,
+            "display_name": server.display_name,
+            "status": check_result.status.value,
+            "installed_version": check_result.installed_version,
+            "package_manager": server.package_manager.value if server.package_manager else None
+        })
+
+    return {
+        "servers": results,
+        "installed_count": installed_count,
+        "not_installed_count": not_installed_count,
+        "total_count": len(servers)
+    }
+
+
+# =============================================================================
 # ENTRY POINT
 # =============================================================================
 

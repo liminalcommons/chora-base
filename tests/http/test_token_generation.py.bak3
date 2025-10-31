@@ -348,7 +348,6 @@ class TestTokenGenerationSecurity:
         assert re.match(r"^[A-Za-z0-9_-]+$", token)
 
 
-@pytest.mark.skip(reason="Subprocess tests require package installation")
 class TestTokenGenerationIntegration:
     """Test integration between CLI and HTTP server."""
 
@@ -450,7 +449,6 @@ class TestTokenGenerationErrorHandling:
             assert len(result.stderr) > 0 or "error" in result.stdout.lower()
 
 
-@pytest.mark.skip(reason="Subprocess tests require package installation")
 class TestTokenGenerationPerformance:
     """Test token generation performance."""
 
