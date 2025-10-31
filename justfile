@@ -83,7 +83,7 @@ bump-patch:
     ./scripts/bump-version.sh patch
 
 prepare-release TYPE:
-    ./scripts/prepare-release.sh 
+    ./scripts/prepare-release.sh
 
 # Run tests with coverage
 test-coverage:
@@ -156,7 +156,7 @@ publish-prod:
 
 release TYPE:
     @echo "Starting full release workflow for  version..."
-    just prepare-release 
+    just prepare-release
     just build
     @echo ""
     @echo "Build complete. Test on TestPyPI first:"

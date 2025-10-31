@@ -4,18 +4,20 @@ from typing import Any
 
 try:
     # Prefer platform emitter when available
-    from chora_platform_tools.telemetry import TelemetryEmitter as PlatformEmitter  # type: ignore
+    from chora_platform_tools.telemetry import (
+        TelemetryEmitter as PlatformEmitter,  # type: ignore
+    )
 except Exception:  # pragma: no cover - fallback path
     PlatformEmitter = None  # type: ignore
 
-from pathlib import Path
-from dataclasses import dataclass, asdict
-from datetime import datetime, timezone
 import json
+from dataclasses import asdict, dataclass
+from datetime import UTC, datetime
+from pathlib import Path
 
 
 def _utc_now_iso() -> str:
-    return datetime.now(timezone.utc).isoformat()
+    return datetime.now(UTC).isoformat()
 
 
 @dataclass

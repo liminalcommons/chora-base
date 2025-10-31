@@ -9,7 +9,6 @@ import tempfile
 from pathlib import Path
 
 import pytest
-
 from mcp_orchestrator.servers.models import (
     ParameterDefinition,
     ServerDefinition,
@@ -91,7 +90,6 @@ class TestViewDraftConfig:
         server._builders = {}
 
         # Import the tool logic (simulate calling it)
-        from mcp_orchestrator.building import ConfigBuilder
 
         # View draft that doesn't exist
         key = "claude-desktop/default"
@@ -366,7 +364,7 @@ class TestInitializeKeys:
 
             # Check permissions (should be 0600)
             st = os.stat(private_key_path)
-            mode = stat.filemode(st.st_mode)
+            stat.filemode(st.st_mode)
 
             # Private key should only be readable/writable by owner
             assert st.st_mode & stat.S_IRWXU  # Owner has some permissions

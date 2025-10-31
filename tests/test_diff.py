@@ -1,8 +1,6 @@
 """Tests for configuration diff module."""
 
-import pytest
-
-from mcp_orchestrator.diff import ConfigChangeType, DiffResult, compare_configs
+from mcp_orchestrator.diff import DiffResult, compare_configs
 
 
 class TestConfigDiff:

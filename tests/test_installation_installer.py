@@ -5,14 +5,16 @@ BDD tests for executing package installations.
 Wave 2.2/3.0 - Automatic Server Installation
 """
 
-import pytest
-from unittest.mock import patch, MagicMock
 import subprocess
+from unittest.mock import MagicMock, patch
 
+import pytest
 from mcp_orchestrator.servers.models import PackageManager
 
 # Import will fail until we implement the module - that's expected in BDD
-pytest.importorskip("mcp_orchestrator.installation", reason="Module not yet implemented")
+pytest.importorskip(
+    "mcp_orchestrator.installation", reason="Module not yet implemented"
+)
 
 
 class TestServerInstaller:
@@ -27,14 +29,14 @@ class TestServerInstaller:
         mock_run.return_value = MagicMock(
             returncode=0,
             stdout="+ @modelcontextprotocol/server-filesystem@2025.8.21\n",
-            stderr=""
+            stderr="",
         )
 
         installer = ServerInstaller(dry_run=False)
         result = installer.install(
             package_manager=PackageManager.NPM,
             package_name="@modelcontextprotocol/server-filesystem",
-            server_id="filesystem"
+            server_id="filesystem",
         )
 
         assert result.status == InstallationStatus.INSTALLED
@@ -51,14 +53,14 @@ class TestServerInstaller:
         mock_run.return_value = MagicMock(
             returncode=0,
             stdout="Successfully installed lightrag-mcp-0.1.0\n",
-            stderr=""
+            stderr="",
         )
 
         installer = ServerInstaller(dry_run=False)
         result = installer.install(
             package_manager=PackageManager.PIP,
             package_name="lightrag-mcp",
-            server_id="lightrag-mcp"
+            server_id="lightrag-mcp",
         )
 
         assert result.status == InstallationStatus.INSTALLED
@@ -80,14 +82,14 @@ class TestServerInstaller:
         mock_run.side_effect = subprocess.CalledProcessError(
             returncode=1,
             cmd=["npm", "install", "-g", "nonexistent-package"],
-            stderr="npm ERR! 404 Not Found"
+            stderr="npm ERR! 404 Not Found",
         )
 
         installer = ServerInstaller(dry_run=False)
         result = installer.install(
             package_manager=PackageManager.NPM,
             package_name="nonexistent-package",
-            server_id="nonexistent"
+            server_id="nonexistent",
         )
 
         assert result.status == InstallationStatus.ERROR
@@ -100,8 +102,7 @@ class TestServerInstaller:
         from mcp_orchestrator.installation.models import InstallationStatus
 
         mock_run.side_effect = subprocess.TimeoutExpired(
-            cmd=["pip", "install", "slow-package"],
-            timeout=300
+            cmd=["pip", "install", "slow-package"], timeout=300
         )
 
         installer = ServerInstaller(dry_run=False)
@@ -109,7 +110,7 @@ class TestServerInstaller:
             package_manager=PackageManager.PIP,
             package_name="slow-package",
             server_id="slow",
-            timeout=300
+            timeout=300,
         )
 
         assert result.status == InstallationStatus.ERROR
@@ -124,18 +125,19 @@ class TestServerInstaller:
         mock_run.side_effect = subprocess.CalledProcessError(
             returncode=1,
             cmd=["npm", "install", "-g", "package"],
-            stderr="npm ERR! network request failed"
+            stderr="npm ERR! network request failed",
         )
 
         installer = ServerInstaller(dry_run=False)
         result = installer.install(
-            package_manager=PackageManager.NPM,
-            package_name="package",
-            server_id="test"
+            package_manager=PackageManager.NPM, package_name="package", server_id="test"
         )
 
         assert result.status == InstallationStatus.ERROR
-        assert "network" in result.error_message.lower() or "failed" in result.error_message.lower()
+        assert (
+            "network" in result.error_message.lower()
+            or "failed" in result.error_message.lower()
+        )
 
 
 class TestServerInstallerDryRun:
@@ -150,7 +152,7 @@ class TestServerInstallerDryRun:
         result = installer.install(
             package_manager=PackageManager.NPM,
             package_name="test-package",
-            server_id="test"
+            server_id="test",
         )
 
         # Should return success but indicate dry run
@@ -166,7 +168,7 @@ class TestServerInstallerDryRun:
         result = installer.install(
             package_manager=PackageManager.PIP,
             package_name="lightrag-mcp",
-            server_id="lightrag"
+            server_id="lightrag",
         )
 
         assert "pip install lightrag-mcp" in result.installation_command
@@ -187,7 +189,7 @@ class TestServerInstallerCustomTimeout:
             package_manager=PackageManager.NPM,
             package_name="test-package",
             server_id="test",
-            timeout=600  # 10 minutes
+            timeout=600,  # 10 minutes
         )
 
         # Check that subprocess.run was called with correct timeout
@@ -210,7 +212,7 @@ class TestServerInstallerPackageManagerSupport:
         result = installer.install(
             package_manager=PackageManager.PIPX,
             package_name="lightrag-mcp",
-            server_id="lightrag"
+            server_id="lightrag",
         )
 
         assert result.status == InstallationStatus.INSTALLED
@@ -232,7 +234,7 @@ class TestServerInstallerPackageManagerSupport:
         result = installer.install(
             package_manager=PackageManager.UVX,
             package_name="lightrag-mcp",
-            server_id="lightrag"
+            server_id="lightrag",
         )
 
         assert result.status == InstallationStatus.INSTALLED
@@ -249,13 +251,14 @@ class TestServerInstallerPackageManagerSupport:
 
         installer = ServerInstaller(dry_run=False)
         result = installer.install(
-            package_manager=PackageManager.CUSTOM,
-            package_name="test",
-            server_id="test"
+            package_manager=PackageManager.CUSTOM, package_name="test", server_id="test"
         )
 
         assert result.status == InstallationStatus.ERROR
-        assert "Unsupported" in result.error_message or "not supported" in result.error_message.lower()
+        assert (
+            "Unsupported" in result.error_message
+            or "not supported" in result.error_message.lower()
+        )
 
 
 class TestServerInstallerCommandGeneration:
@@ -272,11 +275,16 @@ class TestServerInstallerCommandGeneration:
         installer.install(
             package_manager=PackageManager.NPM,
             package_name="@modelcontextprotocol/server-filesystem",
-            server_id="filesystem"
+            server_id="filesystem",
         )
 
         call_args = mock_run.call_args[0][0]
-        assert call_args == ["npm", "install", "-g", "@modelcontextprotocol/server-filesystem"]
+        assert call_args == [
+            "npm",
+            "install",
+            "-g",
+            "@modelcontextprotocol/server-filesystem",
+        ]
 
     @patch("subprocess.run")
     def test_installation_command_in_result(self, mock_run: MagicMock) -> None:
@@ -289,7 +297,7 @@ class TestServerInstallerCommandGeneration:
         result = installer.install(
             package_manager=PackageManager.PIP,
             package_name="lightrag-mcp",
-            server_id="lightrag"
+            server_id="lightrag",
         )
 
         assert result.installation_command is not None
@@ -308,18 +316,19 @@ class TestServerInstallerErrorHandling:
         mock_run.side_effect = subprocess.CalledProcessError(
             returncode=1,
             cmd=["npm", "install", "-g", "package"],
-            stderr="npm ERR! EACCES: permission denied"
+            stderr="npm ERR! EACCES: permission denied",
         )
 
         installer = ServerInstaller(dry_run=False)
         result = installer.install(
-            package_manager=PackageManager.NPM,
-            package_name="package",
-            server_id="test"
+            package_manager=PackageManager.NPM, package_name="package", server_id="test"
         )
 
         assert result.status == InstallationStatus.ERROR
-        assert "permission" in result.error_message.lower() or "EACCES" in result.error_message
+        assert (
+            "permission" in result.error_message.lower()
+            or "EACCES" in result.error_message
+        )
 
     @patch("subprocess.run")
     def test_install_with_disk_space_error(self, mock_run: MagicMock) -> None:
@@ -330,15 +339,16 @@ class TestServerInstallerErrorHandling:
         mock_run.side_effect = subprocess.CalledProcessError(
             returncode=1,
             cmd=["pip", "install", "package"],
-            stderr="OSError: [Errno 28] No space left on device"
+            stderr="OSError: [Errno 28] No space left on device",
         )
 
         installer = ServerInstaller(dry_run=False)
         result = installer.install(
-            package_manager=PackageManager.PIP,
-            package_name="package",
-            server_id="test"
+            package_manager=PackageManager.PIP, package_name="package", server_id="test"
         )
 
         assert result.status == InstallationStatus.ERROR
-        assert "space" in result.error_message.lower() or "No space" in result.error_message
+        assert (
+            "space" in result.error_message.lower()
+            or "No space" in result.error_message
+        )

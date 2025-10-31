@@ -1,6 +1,6 @@
 # MCP Ecosystem Setup Architecture - Clarification
 
-**Date:** 2025-10-26  
+**Date:** 2025-10-26
 **In Response To:** Victor's setup flow conceptualization
 
 ---
@@ -113,11 +113,11 @@
      liminalcommons/mcp-ecosystem
    ```
    This starts a single container with BOTH gateway + orchestration
-   
+
 3. **Connect Claude Desktop to gateway (ONE connection):**
    - Custom Connector: `http://localhost:8679`
    - Or JSON config with mcp-remote bridge
-   
+
 4. **Done!** Now deploy servers:
    ```bash
    docker exec mcp-ecosystem mcp-orchestration deploy mcp-server-github
@@ -169,7 +169,7 @@ Advanced settings: [none needed initially]
 
 ### Why NOT Connect to Orchestration?
 
-**mcp-orchestration is infrastructure, not an MCP server.** 
+**mcp-orchestration is infrastructure, not an MCP server.**
 
 Think of it like:
 - **mcp-gateway** = nginx/API Gateway (frontend, clients connect here)
@@ -220,7 +220,7 @@ n8n workflow → mcp-gateway → [any MCP backend]
 
 # Now n8n workflows can call:
 #   - github.repos.search
-#   - coda.doc.create  
+#   - coda.doc.create
 #   - slack.message.post
 #   - ANY tool exposed by gateway
 ```
@@ -302,7 +302,7 @@ mcp setup
 
 # Automatically:
 # ✓ Checks Docker Desktop
-# ✓ Starts ecosystem container  
+# ✓ Starts ecosystem container
 # ✓ Configures Claude Desktop
 # ✓ Tests connection
 ```
@@ -376,7 +376,7 @@ Claude Desktop   → mcp-gateway          → MCP servers
 
                    kubernetes            → manages deployments
                    (orchestration)
-                   
+
                    mcp-orchestration     → manages MCP servers
 ```
 
@@ -424,12 +424,12 @@ This guide should be completed BEFORE attempting any waypoint guides, as it esta
 
 ## Questions This Clarifies
 
-✅ **Do I connect Claude Desktop to orchestration?** No, only to gateway  
-✅ **Do I need two connections?** No, just one (to gateway)  
-✅ **What's the bootstrap flow?** One Docker command, one Claude Desktop config  
-✅ **Where does n8n connect?** To gateway (not orchestration)  
-✅ **How do backends get deployed?** Orchestration deploys, gateway discovers  
-✅ **What's in the bootstrap container?** Both gateway + orchestration  
+✅ **Do I connect Claude Desktop to orchestration?** No, only to gateway
+✅ **Do I need two connections?** No, just one (to gateway)
+✅ **What's the bootstrap flow?** One Docker command, one Claude Desktop config
+✅ **Where does n8n connect?** To gateway (not orchestration)
+✅ **How do backends get deployed?** Orchestration deploys, gateway discovers
+✅ **What's in the bootstrap container?** Both gateway + orchestration
 ✅ **Do I need mcp-remote?** Optional, can use custom connector instead
 
 ---

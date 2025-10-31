@@ -5,19 +5,20 @@ BDD tests for checking if MCP servers are installed on the system.
 Wave 2.2/3.0 - Automatic Server Installation
 """
 
-import pytest
-from unittest.mock import patch, MagicMock
-from pathlib import Path
+from unittest.mock import MagicMock, patch
 
+import pytest
+from mcp_orchestrator.installation.models import InstallationStatus
 from mcp_orchestrator.servers.models import (
+    PackageManager,
     ServerDefinition,
     TransportType,
-    PackageManager
 )
-from mcp_orchestrator.installation.models import InstallationStatus
 
 # Import will fail until we implement the module - that's expected in BDD
-pytest.importorskip("mcp_orchestrator.installation", reason="Module not yet implemented")
+pytest.importorskip(
+    "mcp_orchestrator.installation", reason="Module not yet implemented"
+)
 
 
 class TestInstallationValidator:
@@ -26,8 +27,8 @@ class TestInstallationValidator:
     @patch("shutil.which")
     def test_check_installation_installed(self, mock_which: MagicMock) -> None:
         """Should detect when a server is installed."""
-        from mcp_orchestrator.installation.validator import InstallationValidator
         from mcp_orchestrator.installation.models import InstallationStatus
+        from mcp_orchestrator.installation.validator import InstallationValidator
 
         mock_which.return_value = "/usr/local/bin/npx"
 
@@ -39,7 +40,7 @@ class TestInstallationValidator:
             stdio_command="npx",
             stdio_args=["-y", "@modelcontextprotocol/server-filesystem"],
             package_manager=PackageManager.NPM,
-            npm_package="@modelcontextprotocol/server-filesystem"
+            npm_package="@modelcontextprotocol/server-filesystem",
         )
 
         validator = InstallationValidator()
@@ -52,8 +53,8 @@ class TestInstallationValidator:
     @patch("shutil.which")
     def test_check_installation_not_installed(self, mock_which: MagicMock) -> None:
         """Should detect when a server is not installed."""
-        from mcp_orchestrator.installation.validator import InstallationValidator
         from mcp_orchestrator.installation.models import InstallationStatus
+        from mcp_orchestrator.installation.validator import InstallationValidator
 
         mock_which.return_value = None
 
@@ -63,7 +64,7 @@ class TestInstallationValidator:
             description="Custom",
             transport=TransportType.STDIO,
             stdio_command="custom-binary",
-            package_manager=PackageManager.NONE
+            package_manager=PackageManager.NONE,
         )
 
         validator = InstallationValidator()
@@ -76,8 +77,8 @@ class TestInstallationValidator:
     @patch("shutil.which")
     def test_check_installation_unknown_no_command(self, mock_which: MagicMock) -> None:
         """Should return unknown status when server has no stdio_command."""
-        from mcp_orchestrator.installation.validator import InstallationValidator
         from mcp_orchestrator.installation.models import InstallationStatus
+        from mcp_orchestrator.installation.validator import InstallationValidator
 
         server = ServerDefinition(
             server_id="http-server",
@@ -85,7 +86,7 @@ class TestInstallationValidator:
             description="HTTP based",
             transport=TransportType.HTTP,
             http_url="http://localhost:8080",
-            package_manager=PackageManager.NONE
+            package_manager=PackageManager.NONE,
         )
 
         validator = InstallationValidator()
@@ -97,19 +98,14 @@ class TestInstallationValidator:
     @patch("shutil.which")
     @patch("subprocess.run")
     def test_check_installation_with_version(
-        self,
-        mock_run: MagicMock,
-        mock_which: MagicMock
+        self, mock_run: MagicMock, mock_which: MagicMock
     ) -> None:
         """Should extract version information when available."""
-        from mcp_orchestrator.installation.validator import InstallationValidator
         from mcp_orchestrator.installation.models import InstallationStatus
+        from mcp_orchestrator.installation.validator import InstallationValidator
 
         mock_which.return_value = "/usr/local/bin/npm"
-        mock_run.return_value = MagicMock(
-            returncode=0,
-            stdout="npm version 9.8.1\n"
-        )
+        mock_run.return_value = MagicMock(returncode=0, stdout="npm version 9.8.1\n")
 
         server = ServerDefinition(
             server_id="test",
@@ -117,7 +113,7 @@ class TestInstallationValidator:
             description="Test",
             transport=TransportType.STDIO,
             stdio_command="npm",
-            package_manager=PackageManager.NPM
+            package_manager=PackageManager.NPM,
         )
 
         validator = InstallationValidator()
@@ -125,14 +121,15 @@ class TestInstallationValidator:
 
         assert result.status == InstallationStatus.INSTALLED
         assert result.installed_version is not None
-        assert "9.8.1" in result.installed_version or "npm version" in result.installed_version
+        assert (
+            "9.8.1" in result.installed_version
+            or "npm version" in result.installed_version
+        )
 
     @patch("shutil.which")
     @patch("subprocess.run")
     def test_get_version_multiple_flags(
-        self,
-        mock_run: MagicMock,
-        mock_which: MagicMock
+        self, mock_run: MagicMock, mock_which: MagicMock
     ) -> None:
         """Should try multiple version flags to extract version."""
         from mcp_orchestrator.installation.validator import InstallationValidator
@@ -151,7 +148,7 @@ class TestInstallationValidator:
             description="Python",
             transport=TransportType.STDIO,
             stdio_command="python",
-            package_manager=PackageManager.PIP
+            package_manager=PackageManager.PIP,
         )
 
         validator = InstallationValidator()
@@ -164,13 +161,12 @@ class TestInstallationValidator:
     @patch("shutil.which")
     @patch("subprocess.run")
     def test_get_version_timeout_handling(
-        self,
-        mock_run: MagicMock,
-        mock_which: MagicMock
+        self, mock_run: MagicMock, mock_which: MagicMock
     ) -> None:
         """Should handle timeout when getting version gracefully."""
-        from mcp_orchestrator.installation.validator import InstallationValidator
         import subprocess
+
+        from mcp_orchestrator.installation.validator import InstallationValidator
 
         mock_which.return_value = "/usr/bin/slow-command"
         mock_run.side_effect = subprocess.TimeoutExpired("cmd", 5)
@@ -181,7 +177,7 @@ class TestInstallationValidator:
             description="Slow",
             transport=TransportType.STDIO,
             stdio_command="slow-command",
-            package_manager=PackageManager.NONE
+            package_manager=PackageManager.NONE,
         )
 
         validator = InstallationValidator()
@@ -198,8 +194,8 @@ class TestInstallationValidatorBatchOperations:
     @patch("shutil.which")
     def test_check_multiple_servers(self, mock_which: MagicMock) -> None:
         """Should correctly check installation status of multiple servers."""
-        from mcp_orchestrator.installation.validator import InstallationValidator
         from mcp_orchestrator.installation.models import InstallationStatus
+        from mcp_orchestrator.installation.validator import InstallationValidator
 
         # npm is installed, python is not
         def which_mock(cmd: str) -> str | None:
@@ -219,7 +215,7 @@ class TestInstallationValidatorBatchOperations:
                 description="File access",
                 transport=TransportType.STDIO,
                 stdio_command="npx",
-                package_manager=PackageManager.NPM
+                package_manager=PackageManager.NPM,
             ),
             ServerDefinition(
                 server_id="python-server",
@@ -227,8 +223,8 @@ class TestInstallationValidatorBatchOperations:
                 description="Python",
                 transport=TransportType.STDIO,
                 stdio_command="python-custom",
-                package_manager=PackageManager.PIP
-            )
+                package_manager=PackageManager.PIP,
+            ),
         ]
 
         validator = InstallationValidator()
@@ -244,8 +240,8 @@ class TestInstallationValidatorEdgeCases:
     @patch("shutil.which")
     def test_check_installation_with_symlink(self, mock_which: MagicMock) -> None:
         """Should handle symlinked binaries correctly."""
-        from mcp_orchestrator.installation.validator import InstallationValidator
         from mcp_orchestrator.installation.models import InstallationStatus
+        from mcp_orchestrator.installation.validator import InstallationValidator
 
         # Symlink path
         mock_which.return_value = "/usr/local/bin/node -> /opt/node/bin/node"
@@ -256,7 +252,7 @@ class TestInstallationValidatorEdgeCases:
             description="Node",
             transport=TransportType.STDIO,
             stdio_command="node",
-            package_manager=PackageManager.NPM
+            package_manager=PackageManager.NPM,
         )
 
         validator = InstallationValidator()
@@ -267,8 +263,8 @@ class TestInstallationValidatorEdgeCases:
     @patch("shutil.which")
     def test_check_installation_empty_command(self, mock_which: MagicMock) -> None:
         """Should handle empty stdio_command gracefully."""
-        from mcp_orchestrator.installation.validator import InstallationValidator
         from mcp_orchestrator.installation.models import InstallationStatus
+        from mcp_orchestrator.installation.validator import InstallationValidator
 
         server = ServerDefinition(
             server_id="empty-server",
@@ -276,11 +272,14 @@ class TestInstallationValidatorEdgeCases:
             description="Empty",
             transport=TransportType.STDIO,
             stdio_command="",  # Empty string
-            package_manager=PackageManager.NONE
+            package_manager=PackageManager.NONE,
         )
 
         validator = InstallationValidator()
         result = validator.check_installation(server)
 
         # Should handle gracefully, not crash
-        assert result.status in [InstallationStatus.UNKNOWN, InstallationStatus.NOT_INSTALLED]
+        assert result.status in [
+            InstallationStatus.UNKNOWN,
+            InstallationStatus.NOT_INSTALLED,
+        ]

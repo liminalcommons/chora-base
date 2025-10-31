@@ -2,25 +2,36 @@
 
 **Last Updated:** 2025-10-31
 **Current Version:** v0.2.0
-**Status:** Active Development (Wave 2.0 Complete | Chora-Base Adoption: Week 1/4)
+**Status:** Active Development (Wave 2.0 Complete | Chora-Base Adoption: Week 2/4)
 
 ---
 
 ## Chora-Base v4.1.0 Adoption
 
-**Status:** 📋 Week 1 of 4 Complete (6/18 SAPs, 33% adoption)
+**Status:** ✅ Week 2 Complete - 10/18 SAPs Installed (55.6% adoption)
 **Plan:** [CHORA_BASE_ADOPTION_PLAN.md](project-docs/CHORA_BASE_ADOPTION_PLAN.md)
+**Test Coverage:** 86.29% (target: 85%) ✅ **EXCEEDED**
 
 **Installed SAPs:**
 - ✅ SAP-000: SAP Framework (core protocols)
 - ✅ SAP-001: Inbox Coordination (cross-repo collaboration) [PILOT]
 - ✅ SAP-002: Chora-Base Meta (meta-capability documentation)
+- ✅ SAP-003: Project Bootstrap (audited - for new projects)
+- ✅ SAP-004: Testing Framework (comprehensive test suite, 86% coverage)
+- ✅ SAP-005: CI/CD Workflows (8 GitHub Actions workflows)
+- ✅ SAP-006: Quality Gates (7 pre-commit hooks configured)
 - ✅ SAP-007: Documentation Framework (Diátaxis 4-domain structure)
 - ✅ SAP-009: Agent Awareness (AGENTS.md/CLAUDE.md patterns)
 - ✅ SAP-016: Link Validation (automated link checking)
 
-**Documentation:** [docs/skilled-awareness/](docs/skilled-awareness/) (35 artifacts, ~520 KB)
-**Next:** Week 2 - Development Workflow (SAP-003 through SAP-006)
+**Week 2 Achievements:**
+- Test coverage: 60.48% → 86.29% (+25.81 percentage points)
+- New tests: 178 tests in 5 new test files (~4,000 lines)
+- Pre-commit hooks: Configured with 7 quality gates
+- CI/CD: 8 workflows validated (test, lint, smoke, codeql, etc.)
+
+**Documentation:** [docs/skilled-awareness/](docs/skilled-awareness/) (55 artifacts, ~1.2 MB)
+**Next:** Week 3 - Developer Experience (SAP-008, 010, 011, 012)
 
 ---
 

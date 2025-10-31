@@ -173,9 +173,7 @@ class ArtifactSigner:
         """
         try:
             # Canonicalize payload to deterministic JSON
-            canonical_json = json.dumps(
-                payload, sort_keys=True, separators=(",", ":")
-            )
+            canonical_json = json.dumps(payload, sort_keys=True, separators=(",", ":"))
             canonical_bytes = canonical_json.encode("utf-8")
 
             # Sign
@@ -215,9 +213,7 @@ def verify_signature(
 
         public_key = serialization.load_pem_public_key(key_bytes)
         if not isinstance(public_key, Ed25519PublicKey):
-            raise SigningError(
-                f"Key at {public_key_path} is not an Ed25519 public key"
-            )
+            raise SigningError(f"Key at {public_key_path} is not an Ed25519 public key")
 
         # Canonicalize payload
         canonical_json = json.dumps(payload, sort_keys=True, separators=(",", ":"))

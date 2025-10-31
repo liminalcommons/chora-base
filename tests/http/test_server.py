@@ -21,16 +21,11 @@ Note: These tests are written BEFORE implementation (TDD).
 All tests will fail initially until implementation is complete.
 """
 
-import asyncio
-import json
 import subprocess
-import tempfile
-from pathlib import Path
-from unittest.mock import AsyncMock, MagicMock, patch
+from unittest.mock import MagicMock
 
 import pytest
 from fastapi.testclient import TestClient
-
 
 # Import will fail initially (TDD) - implementation doesn't exist yet
 try:
@@ -207,7 +202,9 @@ class TestHTTPEndpointExposure:
 
     def test_list_profiles_endpoint_exists(self, client, auth_headers):
         """Test GET /v1/clients/{client_id}/profiles endpoint exists."""
-        response = client.get("/v1/clients/claude-desktop/profiles", headers=auth_headers)
+        response = client.get(
+            "/v1/clients/claude-desktop/profiles", headers=auth_headers
+        )
         assert response.status_code in [200, 404]  # 404 if client doesn't exist
 
     # Config endpoints
@@ -409,6 +406,7 @@ class TestBackwardCompatibility:
 
         try:
             from mcp_orchestrator.http.server import HTTPTransportServer
+
             server = HTTPTransportServer()
             # Don't actually start (would block), just verify it can be imported
             assert server is not None
@@ -498,7 +496,9 @@ class TestServerIntegration:
     def test_error_handling_returns_valid_json(self, client, auth_headers):
         """Test that errors are returned as valid JSON."""
         # Try to get non-existent server
-        response = client.get("/v1/servers/nonexistent_server_xyz", headers=auth_headers)
+        response = client.get(
+            "/v1/servers/nonexistent_server_xyz", headers=auth_headers
+        )
 
         # Should return 404 or 400
         assert response.status_code in [404, 400]

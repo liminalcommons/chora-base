@@ -208,26 +208,26 @@ We phase the effort as releases that produce reusable standards, services, and a
 
 This repository owns the shared deliverables in each release (standards, validators, queue, indexer, protocol libraries). Capability-provider repositories consume those artifacts and emit their own change signals when ready.
 
-- **Release A — Shared Standards & Change Signaling**  
-  - Participating repositories: this platform-tooling repo (publishes standards, validators, discovery indexer, change queue, CI/CLI templates, capability catalog) and the MCP orchestration capability repo (adopts manifest/behavior schema and consumes the validator package).  
-  - Deliverables: compatibility policy, governance flow, security baseline (versioned in `docs/standards/`); schema validators published as reusable CI/CLI packages; reusable CI workflow, AGENTS snippet, and value scenario templates; minimal discovery indexer service with generated capability/catalog; change-signal queue + decision log running.  
+- **Release A — Shared Standards & Change Signaling**
+  - Participating repositories: this platform-tooling repo (publishes standards, validators, discovery indexer, change queue, CI/CLI templates, capability catalog) and the MCP orchestration capability repo (adopts manifest/behavior schema and consumes the validator package).
+  - Deliverables: compatibility policy, governance flow, security baseline (versioned in `docs/standards/`); schema validators published as reusable CI/CLI packages; reusable CI workflow, AGENTS snippet, and value scenario templates; minimal discovery indexer service with generated capability/catalog; change-signal queue + decision log running.
   - Change Signal: `SIG-release-a-complete` (requires standards published, packages/templates released, catalog generated, change queue live, first capability provider onboarded with manifests, behaviors, and value scenario).
 
-- **Release B — Ecosystem Adoption & Observability**  
-  - Participating repositories: platform-tooling repo (ships offline mirror CLI, telemetry libraries/dashboards, repo-overview generator, updates capability catalog/templates, prototypes the `chora-liminal` hub), MCP orchestration repo (continues adoption), plus 3–5 additional capability-provider repos (e.g., agent runtime services) onboarding to manifest/behavior/telemetry standards.  
-  - Deliverables: onboard additional capability providers; offline mirror CLI with TTL enforcement published; telemetry schema embedded in shared libraries and surfaced through RBAC-protected dashboards; repository overview template/generator available; initial `chora-liminal` hub demonstrating the signal inbox; capability catalog and templates refreshed.  
+- **Release B — Ecosystem Adoption & Observability**
+  - Participating repositories: platform-tooling repo (ships offline mirror CLI, telemetry libraries/dashboards, repo-overview generator, updates capability catalog/templates, prototypes the `chora-liminal` hub), MCP orchestration repo (continues adoption), plus 3–5 additional capability-provider repos (e.g., agent runtime services) onboarding to manifest/behavior/telemetry standards.
+  - Deliverables: onboard additional capability providers; offline mirror CLI with TTL enforcement published; telemetry schema embedded in shared libraries and surfaced through RBAC-protected dashboards; repository overview template/generator available; initial `chora-liminal` hub demonstrating the signal inbox; capability catalog and templates refreshed.
   - Change Signal: `SIG-release-b-complete` (requires break-detection scenario passing, mirror prototype validated, telemetry events visible in shared dashboards, catalog & repo overviews updated, liminal hub spike delivered).
 
-- **Release C — Runtime Interop & Hardening**  
-  - Participating repositories: platform-tooling repo (hardens indexer, publishes negotiation library, authors architecture ADR) plus the two capability-provider repos exercising the runtime pilot (e.g., MCP orchestration provider and the consuming service).  
-  - Deliverables: protocol negotiation module exercised on a runtime service pair and published as a reusable library; discovery indexer hardened (incremental updates, signing, authz) with compatibility matrix published; architecture ADR capturing long-term discovery model; launch of a separate ecosystem-overview capability repo aggregating multi-repo signals/catalog data.  
+- **Release C — Runtime Interop & Hardening**
+  - Participating repositories: platform-tooling repo (hardens indexer, publishes negotiation library, authors architecture ADR) plus the two capability-provider repos exercising the runtime pilot (e.g., MCP orchestration provider and the consuming service).
+  - Deliverables: protocol negotiation module exercised on a runtime service pair and published as a reusable library; discovery indexer hardened (incremental updates, signing, authz) with compatibility matrix published; architecture ADR capturing long-term discovery model; launch of a separate ecosystem-overview capability repo aggregating multi-repo signals/catalog data.
   - Change Signal: `SIG-release-c-complete` (requires successful runtime pilot, hardened indexer deployed, ADR merged).
 
-- **Release D — Interactive Liminal Experience**  
-  - Participating repositories: platform-tooling repo (updates standards/templates and exposes telemetry hooks), `chora-signal` (push-based change-signal adapters), `chora-privacy` (privacy controls and policy enforcement), `chora-voice` (voice assistant pipeline), `chora-hud` (Godot HUD assets/SDK), and the `chora-liminal` capability repo that composes these capabilities into the user-facing hub. Additional capability providers may opt in by exposing liminal-ready manifests/scenarios.  
-  - Deliverables: push-enabled change-signal service with subscription controls (`chora-signal`); reusable privacy templates and policy checks (`chora-privacy`); voice interface flows with sample prompts/actions (`chora-voice`); baseline Godot HUD package and Diátaxis docs (`chora-hud`); `chora-liminal` integrating these modules to present voice + HUD inbox, scenario dashboard, and telemetry view; platform repo publishes updated standards/templates to support the new components.  
+- **Release D — Interactive Liminal Experience**
+  - Participating repositories: platform-tooling repo (updates standards/templates and exposes telemetry hooks), `chora-signal` (push-based change-signal adapters), `chora-privacy` (privacy controls and policy enforcement), `chora-voice` (voice assistant pipeline), `chora-hud` (Godot HUD assets/SDK), and the `chora-liminal` capability repo that composes these capabilities into the user-facing hub. Additional capability providers may opt in by exposing liminal-ready manifests/scenarios.
+  - Deliverables: push-enabled change-signal service with subscription controls (`chora-signal`); reusable privacy templates and policy checks (`chora-privacy`); voice interface flows with sample prompts/actions (`chora-voice`); baseline Godot HUD package and Diátaxis docs (`chora-hud`); `chora-liminal` integrating these modules to present voice + HUD inbox, scenario dashboard, and telemetry view; platform repo publishes updated standards/templates to support the new components.
   - Change Signal: `SIG-release-d-complete` (requires the liminal hub to consume the new capabilities end-to-end, push signal service live, privacy guidelines published, voice/HUD interfaces operational, telemetry flowing into liminal dashboards).
-  
+
 ## Naming Conventions
 
 Consistent names reinforce the ontology and improve discoverability. Adopt the following patterns (root namespace `chora` for shared components):

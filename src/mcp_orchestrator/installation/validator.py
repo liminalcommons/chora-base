@@ -5,7 +5,6 @@ Wave 2.2/3.0 - Automatic Server Installation
 
 import shutil
 import subprocess
-from typing import Optional
 
 from mcp_orchestrator.installation.models import (
     InstallationResult,
@@ -17,10 +16,7 @@ from mcp_orchestrator.servers.models import PackageManager, ServerDefinition
 class InstallationValidator:
     """Validate server installation status."""
 
-    def check_installation(
-        self,
-        server: ServerDefinition
-    ) -> InstallationResult:
+    def check_installation(self, server: ServerDefinition) -> InstallationResult:
         """Check if a server is installed.
 
         Args:
@@ -36,7 +32,7 @@ class InstallationValidator:
             return InstallationResult(
                 server_id=server.server_id,
                 status=InstallationStatus.UNKNOWN,
-                error_message="No stdio_command defined"
+                error_message="No stdio_command defined",
             )
 
         # Handle empty command
@@ -44,7 +40,7 @@ class InstallationValidator:
             return InstallationResult(
                 server_id=server.server_id,
                 status=InstallationStatus.UNKNOWN,
-                error_message="stdio_command is empty"
+                error_message="stdio_command is empty",
             )
 
         # Check if command exists in PATH
@@ -59,20 +55,16 @@ class InstallationValidator:
                 status=InstallationStatus.INSTALLED,
                 install_location=location,
                 installed_version=version,
-                package_manager=server.package_manager
+                package_manager=server.package_manager,
             )
         else:
             return InstallationResult(
                 server_id=server.server_id,
                 status=InstallationStatus.NOT_INSTALLED,
-                package_manager=server.package_manager
+                package_manager=server.package_manager,
             )
 
-    def _get_version(
-        self,
-        command: str,
-        package_manager: PackageManager
-    ) -> Optional[str]:
+    def _get_version(self, command: str, package_manager: PackageManager) -> str | None:
         """Try to get installed version.
 
         Args:
@@ -86,10 +78,7 @@ class InstallationValidator:
         for flag in ["--version", "-v", "-V", "version"]:
             try:
                 result = subprocess.run(
-                    [command, flag],
-                    capture_output=True,
-                    text=True,
-                    timeout=5
+                    [command, flag], capture_output=True, text=True, timeout=5
                 )
                 if result.returncode == 0:
                     # Return first line of output

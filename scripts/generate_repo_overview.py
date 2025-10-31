@@ -3,21 +3,21 @@ from __future__ import annotations
 
 import argparse
 from pathlib import Path
-from typing import Any, Dict, List
+from typing import Any
 
 import yaml
 
 
-def load_manifest(path: Path) -> Dict[str, Any]:
+def load_manifest(path: Path) -> dict[str, Any]:
     return yaml.safe_load(path.read_text(encoding="utf-8"))
 
 
-def fmt_list(values: List[str]) -> str:
+def fmt_list(values: list[str]) -> str:
     return ", ".join(values) if values else "-"
 
 
-def render_overview(data: Dict[str, Any]) -> str:
-    lines: List[str] = []
+def render_overview(data: dict[str, Any]) -> str:
+    lines: list[str] = []
     lines.append("# Repository Overview — MCP Orchestration")
     lines.append("")
     lines.append(f"- id: `{data.get('id')}`")
@@ -32,7 +32,9 @@ def render_overview(data: Dict[str, Any]) -> str:
         lines.append(f"- `{cap.get('id')}`")
         behs = cap.get("behaviors") or []
         for b in behs:
-            lines.append(f"  - behavior: `{b.get('id')}` status=`{b.get('status')}` ref=`{b.get('ref')}`")
+            lines.append(
+                f"  - behavior: `{b.get('id')}` status=`{b.get('status')}` ref=`{b.get('ref')}`"
+            )
     lines.append("")
     lines.append("## Value Scenarios")
     for s in data.get("value_scenarios", []) or []:
@@ -44,17 +46,23 @@ def render_overview(data: Dict[str, Any]) -> str:
     lines.append("")
     lines.append("## Telemetry Signals")
     for sig in (data.get("telemetry") or {}).get("signals", []) or []:
-        lines.append(f"- `{sig.get('id')}` — status=`{sig.get('status')}` doc=`{sig.get('doc')}`")
+        lines.append(
+            f"- `{sig.get('id')}` — status=`{sig.get('status')}` doc=`{sig.get('doc')}`"
+        )
     lines.append("")
     lines.append("## Dependencies")
     for d in data.get("dependencies", []) or []:
-        lines.append(f"- `{d.get('id')}` type=`{d.get('type')}` version=`{d.get('version')}` scope=`{d.get('scope')}`")
+        lines.append(
+            f"- `{d.get('id')}` type=`{d.get('type')}` version=`{d.get('version')}` scope=`{d.get('scope')}`"
+        )
     lines.append("")
     return "\n".join(lines) + "\n"
 
 
 def main() -> int:
-    ap = argparse.ArgumentParser(description="Generate repository overview from manifest")
+    ap = argparse.ArgumentParser(
+        description="Generate repository overview from manifest"
+    )
     ap.add_argument("manifest", default="manifests/star.yaml")
     ap.add_argument("-o", "--output", default="docs/reference/overview.md")
     args = ap.parse_args()
@@ -68,4 +76,3 @@ def main() -> int:
 
 if __name__ == "__main__":
     raise SystemExit(main())
-

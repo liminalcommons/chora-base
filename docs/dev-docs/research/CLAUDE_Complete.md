@@ -466,7 +466,7 @@ class ClaudeErrorRecovery:
     """
     Pattern for handling Claude-generated code errors
     """
-    
+
     @staticmethod
     def validation_checkpoint():
         """
@@ -480,7 +480,7 @@ class ClaudeErrorRecovery:
             run_security_scan()
         ]
         return all(validations)
-    
+
     @staticmethod
     def rollback_strategy():
         """
@@ -577,7 +577,7 @@ class ClaudeErrorRecovery:
 # Claude Performance Tracking
 class ClaudeMetrics:
     """Track Claude's effectiveness in your project"""
-    
+
     metrics = {
         'first_pass_success_rate': 0.0,  # % of code working without modification
         'average_iterations': 0,          # Iterations needed for completion
@@ -586,7 +586,7 @@ class ClaudeMetrics:
         'documentation_quality': 0.0,     # Team rating of generated docs
         'test_coverage': 0.0,             # Average test coverage of Claude code
     }
-    
+
     @classmethod
     def track_session(cls, session_data):
         """Log metrics for continuous improvement"""
@@ -640,7 +640,7 @@ jobs:
         run: |
           echo "Loading project-specific Claude instructions..."
           cat CLAUDE.md > /tmp/claude_context.md
-      
+
       - name: Prepare Review Request
         run: |
           echo "## Code Review Request" >> /tmp/claude_context.md
@@ -769,15 +769,15 @@ from great_expectations import DataContext
 class FeatureEngineeringPipeline:
     def __init__(self, config_path):
         pass
-    
+
     def validate_data(self, df):
         """Use Great Expectations for validation"""
         pass
-    
+
     def create_features(self, df):
         """Generate derived features"""
         pass
-    
+
     def handle_missing(self, df):
         """Implement sophisticated imputation"""
         pass
@@ -816,7 +816,7 @@ class ClaudeCheckpoint:
             'decisions': self.decisions,
             'context': self.get_relevant_context()
         }
-    
+
     def restore_state(self, checkpoint):
         # Restore and summarize for Claude
         summary = self.generate_summary(checkpoint)
@@ -879,7 +879,7 @@ if not user:
 1. **Request Chunking**
 ```python
 # Instead of one large request
-"Implement complete user management system with authentication, 
+"Implement complete user management system with authentication,
 authorization, profile management, and admin panel"
 
 # Break into chunks
@@ -937,14 +937,14 @@ interface ComponentProps {
 
 export function ComponentName({ prop }: ComponentProps) {
   const [state, setState] = useState(initial)
-  
+
   useEffect(() => {
     // Effect logic
   }, [dependencies])
-  
+
   if (loading) return <LoadingState />
   if (error) return <ErrorState error={error} />
-  
+
   return (
     <Card>
       {/* Component JSX */}
@@ -976,7 +976,7 @@ class BaseModel(models.Model):
     """Abstract base model with common fields"""
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
-    
+
     class Meta:
         abstract = True
 
@@ -988,12 +988,12 @@ class YourModel(BaseModel):
         on_delete=models.CASCADE,
         related_name='your_models'
     )
-    
+
     class Meta:
         indexes = [
             # Always consider indexes
         ]
-        
+
     def clean(self):
         # Business logic validation
         pass
@@ -1032,21 +1032,21 @@ class ClaudeMetric:
 
 class ClaudeROICalculator:
     """Calculate return on investment for Claude usage"""
-    
+
     def __init__(self, developer_hourly_rate: float):
         self.hourly_rate = developer_hourly_rate
         self.metrics: List[ClaudeMetric] = []
-    
+
     def calculate_time_saved(self) -> Dict[str, float]:
         total_time_saved = sum(m.time_saved_minutes for m in self.metrics)
         cost_savings = (total_time_saved / 60) * self.hourly_rate
-        
+
         return {
             'hours_saved': total_time_saved / 60,
             'cost_savings': cost_savings,
             'average_acceleration': self._calc_acceleration_factor()
         }
-    
+
     def calculate_quality_metrics(self) -> Dict[str, float]:
         return {
             'average_iterations': self._avg('iterations_required'),
@@ -1054,21 +1054,21 @@ class ClaudeROICalculator:
             'documentation_quality': self._avg('documentation_quality_score'),
             'test_coverage': self._avg('test_coverage')
         }
-    
+
     def generate_report(self) -> str:
         """Generate executive summary of Claude ROI"""
         time_metrics = self.calculate_time_saved()
         quality_metrics = self.calculate_quality_metrics()
-        
+
         return f"""
         Claude ROI Report
         =================
-        
+
         Time & Cost Savings:
         - Hours saved: {time_metrics['hours_saved']:.1f}
         - Cost savings: ${time_metrics['cost_savings']:.2f}
         - Acceleration factor: {time_metrics['average_acceleration']:.1f}x
-        
+
         Quality Metrics:
         - Iterations per task: {quality_metrics['average_iterations']:.1f}
         - Bug rate: {quality_metrics['bug_introduction_rate']:.2%}
@@ -1138,7 +1138,7 @@ class ClaudePatterns:
         - Logging for debugging
         - Response caching where appropriate
         """
-    
+
     @staticmethod
     def database_operation_pattern():
         return """
@@ -1150,7 +1150,7 @@ class ClaudePatterns:
         - SQL injection prevention
         - Audit logging
         """
-    
+
     @staticmethod
     def async_task_pattern():
         return """
@@ -1216,7 +1216,7 @@ As Claude and similar AI coding assistants continue to evolve, the CLAUDE.md sta
 
 ---
 
-*Version: 1.0.0*  
-*Last Updated: 2024*  
-*License: MIT*  
+*Version: 1.0.0*
+*Last Updated: 2024*
+*License: MIT*
 *Contributors: Created specifically for Claude-powered development workflows*

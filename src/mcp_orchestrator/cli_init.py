@@ -4,7 +4,7 @@ This module provides a command to generate and store initial MCP configurations
 for supported client families.
 """
 
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 from pathlib import Path
 
 import click
@@ -197,7 +197,7 @@ def init_configs(
                 artifact_id=artifact_id,
                 client_id=client_id,
                 profile_id=profile_id,
-                created_at=datetime.now(timezone.utc).isoformat().replace("+00:00", "Z"),
+                created_at=datetime.now(UTC).isoformat().replace("+00:00", "Z"),
                 payload=payload,
                 signature=signature,
                 signing_key_id=signer.key_id,
@@ -211,14 +211,12 @@ def init_configs(
             # Store artifact
             store.store(artifact)
 
-            click.echo(
-                f"✅ Created {client_id}/{profile_id}: {artifact_id[:16]}..."
-            )
+            click.echo(f"✅ Created {client_id}/{profile_id}: {artifact_id[:16]}...")
             total_created += 1
 
     # Summary
     click.echo("\n" + "=" * 60)
-    click.echo(f"📊 Summary:")
+    click.echo("📊 Summary:")
     click.echo(f"   • Created: {total_created} configurations")
     click.echo(f"   • Skipped: {total_skipped} (already existed)")
     click.echo(f"   • Storage: {storage_path}")

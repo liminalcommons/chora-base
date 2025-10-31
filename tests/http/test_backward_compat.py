@@ -21,7 +21,6 @@ import json
 import subprocess
 import tempfile
 from pathlib import Path
-from unittest.mock import patch
 
 import pytest
 
@@ -142,6 +141,7 @@ class TestStdioUnaffectedByHTTPImport:
         # Import HTTP server module
         try:
             from mcp_orchestrator.http.server import HTTPTransportServer
+
             server = HTTPTransportServer()
             assert server is not None
         except ImportError:
@@ -170,6 +170,7 @@ class TestStdioUnaffectedByHTTPImport:
 
         try:
             from mcp_orchestrator.http.auth import AuthenticationService
+
             auth = AuthenticationService()
             assert auth is not None
         except ImportError:
@@ -225,6 +226,7 @@ class TestParallelTransportExecution:
             # Get servers via HTTP client (mocked)
             try:
                 from mcp_orchestrator.registry import ServerRegistry
+
                 registry = ServerRegistry()
                 http_servers = registry.get_all_servers()
                 http_server_ids = sorted([s["server_id"] for s in http_servers])
@@ -240,7 +242,7 @@ class TestParallelTransportExecution:
     def test_stdio_and_http_use_same_client_discovery(self):
         """Test that stdio and HTTP both discover same clients."""
         # Get clients via stdio
-        stdio_result = subprocess.run(
+        subprocess.run(
             ["mcp-orchestration-discover"],
             capture_output=True,
             text=True,
@@ -248,11 +250,10 @@ class TestParallelTransportExecution:
         )
 
         try:
-            stdio_output = stdio_result.stdout
-
             # Get clients via HTTP (mocked)
             try:
                 from mcp_orchestrator.tools.discover import discover_clients
+
                 http_clients = discover_clients()
 
                 # Both should find same clients
@@ -286,6 +287,7 @@ class TestDataConsistency:
             # Get servers via registry (used by HTTP)
             try:
                 from mcp_orchestrator.registry import ServerRegistry
+
                 registry = ServerRegistry()
                 http_servers = registry.get_all_servers()
                 http_server_ids = set([s["server_id"] for s in http_servers])
@@ -315,6 +317,7 @@ class TestDataConsistency:
             # Get clients via discovery tool (used by HTTP)
             try:
                 from mcp_orchestrator.tools.discover import discover_clients
+
                 http_clients = discover_clients()
 
                 # Should have at least one client
@@ -377,14 +380,15 @@ class TestExistingIntegrations:
 
         # Import HTTP module
         try:
-            from mcp_orchestrator.http.server import HTTPTransportServer
             # Just importing should not start server
             # This is important for backward compatibility
-
             # Verify no server is running on port 8000
             import socket
+
+            from mcp_orchestrator.http.server import HTTPTransportServer
+
             sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-            result = sock.connect_ex(('127.0.0.1', 8000))
+            result = sock.connect_ex(("127.0.0.1", 8000))
 
             # Should fail to connect (server not running)
             assert result != 0
@@ -492,14 +496,14 @@ class TestRegressionTests:
             tmppath = Path(tmpdir)
 
             # Count files before import
-            files_before = list(tmppath.glob("**/*"))
+            list(tmppath.glob("**/*"))
 
             try:
-                from mcp_orchestrator.http.server import HTTPTransportServer
                 from mcp_orchestrator.http.auth import AuthenticationService
+                from mcp_orchestrator.http.server import HTTPTransportServer
 
                 # Import should not create files
-                files_after = list(tmppath.glob("**/*"))
+                list(tmppath.glob("**/*"))
 
                 # File count should be same (no side effects)
                 # Note: This test assumes imports don't write to test directory

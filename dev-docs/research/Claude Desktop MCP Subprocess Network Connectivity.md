@@ -97,14 +97,14 @@ async def app_lifespan(server):
         base_url="http://localhost:5679",
         timeout=aiohttp.ClientTimeout(total=10)
     )
-    
+
     # Schedule health check in background (don't await)
     health_task = asyncio.create_task(
         check_n8n_health_background(client)
     )
-    
+
     yield {"client": client, "ready": asyncio.Event()}
-    
+
     # Cleanup
     health_task.cancel()
     await client.close()
@@ -148,7 +148,7 @@ class N8NBackend:
     def __init__(self):
         self.client = None
         self._connected = False
-    
+
     @once
     async def ensure_connected(self):
         """Initialize on first use, cache for subsequent calls"""
@@ -166,7 +166,7 @@ class N8NBackend:
             logger.error(f"Failed to connect to n8n: {e}")
             raise
         return self.client
-    
+
     async def execute_workflow(self, workflow_id: str, data: dict):
         """Tool method that lazily connects"""
         await self.ensure_connected()  # First call connects; subsequent calls instant
@@ -262,9 +262,9 @@ async def n8n_lifespan(server: FastMCP):
         headers={"X-N8N-API-KEY": os.getenv("N8N_API_KEY", "")},
         timeout=aiohttp.ClientTimeout(total=30, connect=10)
     )
-    
+
     health = HealthStatus()
-    
+
     # Background health monitoring
     async def monitor_health():
         while True:
@@ -277,9 +277,9 @@ async def n8n_lifespan(server: FastMCP):
                 health.n8n_available = False
                 logger.warning(f"Health check failed: {e}")
             await asyncio.sleep(30)  # Check every 30s
-    
+
     health_task = asyncio.create_task(monitor_health())
-    
+
     try:
         yield {"client": client, "health": health}
     finally:
@@ -296,7 +296,7 @@ async def execute_workflow(workflow_id: str, input_data: dict, ctx: Context) -> 
     resources = ctx.request_context.lifespan_context
     client = resources["client"]
     health = resources["health"]
-    
+
     # Check if n8n is available
     if not health.n8n_available:
         return {
@@ -304,7 +304,7 @@ async def execute_workflow(workflow_id: str, input_data: dict, ctx: Context) -> 
             "status": "degraded",
             "last_check": health.last_check.isoformat() if health.last_check else None
         }
-    
+
     # Execute workflow
     try:
         async with client.post(
@@ -324,7 +324,7 @@ async def get_server_status(ctx: Context) -> dict:
     """Get MCP server and n8n backend status"""
     resources = ctx.request_context.lifespan_context
     health = resources["health"]
-    
+
     return {
         "server": "running",
         "n8n_backend": "healthy" if health.n8n_available else "unavailable",

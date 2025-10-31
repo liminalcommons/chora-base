@@ -20,7 +20,6 @@ All tests will fail initially until implementation is complete.
 import pytest
 from fastapi.testclient import TestClient
 
-
 # Import will fail initially (TDD) - implementation doesn't exist yet
 try:
     from mcp_orchestrator.http.server import create_app
@@ -111,7 +110,10 @@ class TestCORSAllowedOrigins:
         )
 
         # Should allow all origins (wildcard)
-        assert response.headers.get("access-control-allow-origin") in ["*", "http://localhost:3000"]
+        assert response.headers.get("access-control-allow-origin") in [
+            "*",
+            "http://localhost:3000",
+        ]
 
     def test_localhost_origin_is_allowed(self, client):
         """Test that localhost origins are allowed."""
@@ -231,7 +233,9 @@ class TestCORSAllowedHeaders:
             },
         )
 
-        allowed_headers = response.headers.get("access-control-allow-headers", "").lower()
+        allowed_headers = response.headers.get(
+            "access-control-allow-headers", ""
+        ).lower()
 
         assert "authorization" in allowed_headers or "*" in allowed_headers
 
@@ -245,7 +249,9 @@ class TestCORSAllowedHeaders:
             },
         )
 
-        allowed_headers = response.headers.get("access-control-allow-headers", "").lower()
+        allowed_headers = response.headers.get(
+            "access-control-allow-headers", ""
+        ).lower()
 
         assert "content-type" in allowed_headers or "*" in allowed_headers
 
@@ -259,7 +265,9 @@ class TestCORSAllowedHeaders:
             },
         )
 
-        allowed_headers = response.headers.get("access-control-allow-headers", "").lower()
+        allowed_headers = response.headers.get(
+            "access-control-allow-headers", ""
+        ).lower()
 
         assert "x-api-key" in allowed_headers or "*" in allowed_headers
 
@@ -275,13 +283,14 @@ class TestCORSAllowedHeaders:
 
         assert "access-control-allow-headers" in response.headers
 
-        allowed_headers = response.headers.get("access-control-allow-headers", "").lower()
+        allowed_headers = response.headers.get(
+            "access-control-allow-headers", ""
+        ).lower()
 
         # All headers should be allowed (either explicitly or via wildcard)
         assert (
-            ("authorization" in allowed_headers and "content-type" in allowed_headers)
-            or "*" in allowed_headers
-        )
+            "authorization" in allowed_headers and "content-type" in allowed_headers
+        ) or "*" in allowed_headers
 
 
 class TestCORSActualRequests:
@@ -353,7 +362,10 @@ class TestCORSCredentials:
         )
 
         # Should allow credentials
-        assert response.headers.get("access-control-allow-credentials") in ["true", None]
+        assert response.headers.get("access-control-allow-credentials") in [
+            "true",
+            None,
+        ]
         # None is acceptable if wildcard origin is used (some CORS implementations)
 
 
@@ -474,7 +486,10 @@ class TestCORSConfigurationCustomization:
         )
 
         # Default should allow all origins
-        assert response.headers.get("access-control-allow-origin") in ["*", "http://localhost:3000"]
+        assert response.headers.get("access-control-allow-origin") in [
+            "*",
+            "http://localhost:3000",
+        ]
 
     # Future tests for environment-based CORS configuration
     # (e.g., MCP_ORCHESTRATION_CORS_ORIGINS env var)
@@ -554,7 +569,10 @@ class TestCORSCompliance:
         # Vary header should include Origin (for caching)
         # This is a best practice but not always required
         if "vary" in response.headers:
-            assert "Origin" in response.headers["vary"] or "origin" in response.headers["vary"]
+            assert (
+                "Origin" in response.headers["vary"]
+                or "origin" in response.headers["vary"]
+            )
 
     def test_cors_headers_case_insensitive(self, client):
         """Test that CORS headers work regardless of case."""

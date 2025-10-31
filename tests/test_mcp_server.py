@@ -15,30 +15,23 @@ Test Coverage:
 """
 
 import json
-import tempfile
-from pathlib import Path
-from typing import Any, Dict
-from unittest.mock import AsyncMock, Mock, patch
+from unittest.mock import Mock, patch
 
 import pytest
-
 from mcp_orchestrator.building import ConfigBuilder
 from mcp_orchestrator.crypto import ArtifactSigner
-from mcp_orchestrator.deployment import DeploymentError
 from mcp_orchestrator.deployment.log import DeploymentLog
 from mcp_orchestrator.mcp import server
-from mcp_orchestrator.publishing import PublishingWorkflow, ValidationError
+from mcp_orchestrator.publishing import PublishingWorkflow
 from mcp_orchestrator.registry import get_default_registry
-from mcp_orchestrator.servers import ServerRegistry, get_default_registry as get_server_registry
+from mcp_orchestrator.servers import ServerRegistry
 from mcp_orchestrator.servers.models import (
+    PackageManager,
     ParameterDefinition,
     ServerDefinition,
     TransportType,
-    PackageManager,
 )
-from mcp_orchestrator.servers.registry import ServerNotFoundError
-from mcp_orchestrator.storage import ArtifactStore, StorageError
-
+from mcp_orchestrator.storage import ArtifactStore
 
 # =============================================================================
 # FIXTURES
@@ -137,7 +130,9 @@ def setup_mcp_server(tmp_path, sample_server_registry):
     server._registry = get_default_registry()
     server._server_registry = sample_server_registry
     server._builders = {}
-    server._deployment_log = DeploymentLog(deployments_dir=str(tmp_path / "deployments"))
+    server._deployment_log = DeploymentLog(
+        deployments_dir=str(tmp_path / "deployments")
+    )
 
     yield {
         "tmp_path": tmp_path,
@@ -216,7 +211,9 @@ class TestListProfiles:
             await server.list_profiles.fn(client_id="nonexistent")
 
     @pytest.mark.asyncio
-    async def test_list_profiles_includes_metadata_when_available(self, setup_mcp_server):
+    async def test_list_profiles_includes_metadata_when_available(
+        self, setup_mcp_server
+    ):
         """Test list_profiles includes storage metadata when profile exists."""
         setup = setup_mcp_server
 
@@ -225,19 +222,20 @@ class TestListProfiles:
         builder.add_server("filesystem", params={"path": "/tmp"})
 
         workflow = PublishingWorkflow(
-            store=setup["store"],
-            client_registry=setup["registry"]
+            store=setup["store"], client_registry=setup["registry"]
         )
         workflow.publish(
             builder=builder,
             private_key_path=str(setup["private_key_path"]),
-            signing_key_id="test"
+            signing_key_id="test",
         )
 
         # Now list profiles - should include artifact metadata
         result = await server.list_profiles.fn(client_id="claude-desktop")
 
-        default_profile = next(p for p in result["profiles"] if p["profile_id"] == "default")
+        default_profile = next(
+            p for p in result["profiles"] if p["profile_id"] == "default"
+        )
         assert "latest_artifact_id" in default_profile
         assert default_profile["latest_artifact_id"] is not None
 
@@ -255,21 +253,19 @@ class TestGetConfig:
         builder.add_server("filesystem", params={"path": "/tmp"})
 
         workflow = PublishingWorkflow(
-            store=setup["store"],
-            client_registry=setup["registry"]
+            store=setup["store"], client_registry=setup["registry"]
         )
         result = workflow.publish(
             builder=builder,
             private_key_path=str(setup["private_key_path"]),
-            signing_key_id="test"
+            signing_key_id="test",
         )
 
         artifact_id = result["artifact_id"]
 
         # Retrieve config
         config = await server.get_config.fn(
-            client_id="claude-desktop",
-            profile_id="default"
+            client_id="claude-desktop", profile_id="default"
         )
 
         assert config["artifact_id"] == artifact_id
@@ -305,20 +301,19 @@ class TestDiffConfig:
         builder.add_server("filesystem", params={"path": "/tmp"})
 
         workflow = PublishingWorkflow(
-            store=setup["store"],
-            client_registry=setup["registry"]
+            store=setup["store"], client_registry=setup["registry"]
         )
         workflow.publish(
             builder=builder,
             private_key_path=str(setup["private_key_path"]),
-            signing_key_id="test"
+            signing_key_id="test",
         )
 
         # Diff against same config
         diff_result = await server.diff_config.fn(
             client_id="claude-desktop",
             profile_id="default",
-            local_payload=builder.build()
+            local_payload=builder.build(),
         )
 
         assert diff_result["status"] == "up-to-date"
@@ -329,10 +324,11 @@ class TestDiffConfig:
     @pytest.mark.asyncio
     async def test_diff_config_requires_local_payload_or_id(self, setup_mcp_server):
         """Test diff_config raises error when neither payload nor ID provided."""
-        with pytest.raises(ValueError, match="Must provide either local_artifact_id or local_payload"):
+        with pytest.raises(
+            ValueError, match="Must provide either local_artifact_id or local_payload"
+        ):
             await server.diff_config.fn(
-                client_id="claude-desktop",
-                profile_id="default"
+                client_id="claude-desktop", profile_id="default"
             )
 
 
@@ -452,7 +448,7 @@ class TestAddServerToConfig:
             server_id="filesystem",
             params={"path": "/tmp"},
             client_id="claude-desktop",
-            profile_id="default"
+            profile_id="default",
         )
 
         assert result["status"] == "added"
@@ -469,7 +465,7 @@ class TestAddServerToConfig:
             params={"path": "/tmp"},
             server_name="my-filesystem",
             client_id="claude-desktop",
-            profile_id="default"
+            profile_id="default",
         )
 
         assert result["server_name"] == "my-filesystem"
@@ -482,7 +478,7 @@ class TestAddServerToConfig:
             server_id="github",
             env_vars={"GITHUB_TOKEN": "test-token"},
             client_id="claude-desktop",
-            profile_id="default"
+            profile_id="default",
         )
 
         assert result["status"] == "added"
@@ -499,7 +495,7 @@ class TestAddServerToConfig:
             server_id="filesystem",
             params=params_json,
             client_id="claude-desktop",
-            profile_id="default"
+            profile_id="default",
         )
 
         assert result["status"] == "added"
@@ -512,7 +508,7 @@ class TestAddServerToConfig:
             await server.add_server_to_config.fn(
                 server_id="nonexistent",
                 client_id="claude-desktop",
-                profile_id="default"
+                profile_id="default",
             )
 
 
@@ -524,19 +520,15 @@ class TestRemoveServerFromConfig:
         """Test removing server from draft configuration."""
         # Add servers first
         await server.add_server_to_config.fn(
-            server_id="filesystem",
-            params={"path": "/tmp"}
+            server_id="filesystem", params={"path": "/tmp"}
         )
         await server.add_server_to_config.fn(
-            server_id="github",
-            env_vars={"GITHUB_TOKEN": "test"}
+            server_id="github", env_vars={"GITHUB_TOKEN": "test"}
         )
 
         # Remove one
         result = await server.remove_server_from_config.fn(
-            server_name="filesystem",
-            client_id="claude-desktop",
-            profile_id="default"
+            server_name="filesystem", client_id="claude-desktop", profile_id="default"
         )
 
         assert result["status"] == "removed"
@@ -552,7 +544,7 @@ class TestRemoveServerFromConfig:
             await server.remove_server_from_config.fn(
                 server_name="nonexistent",
                 client_id="claude-desktop",
-                profile_id="default"
+                profile_id="default",
             )
 
 
@@ -568,8 +560,7 @@ class TestViewDraftConfig:
     async def test_view_empty_draft(self, setup_mcp_server):
         """Test viewing draft when none exists."""
         result = await server.view_draft_config.fn(
-            client_id="claude-desktop",
-            profile_id="default"
+            client_id="claude-desktop", profile_id="default"
         )
 
         assert result["server_count"] == 0
@@ -580,8 +571,12 @@ class TestViewDraftConfig:
     async def test_view_populated_draft(self, setup_mcp_server):
         """Test viewing draft with servers."""
         # Add servers
-        await server.add_server_to_config.fn(server_id="filesystem", params={"path": "/tmp"})
-        await server.add_server_to_config.fn(server_id="github", env_vars={"GITHUB_TOKEN": "test"})
+        await server.add_server_to_config.fn(
+            server_id="filesystem", params={"path": "/tmp"}
+        )
+        await server.add_server_to_config.fn(
+            server_id="github", env_vars={"GITHUB_TOKEN": "test"}
+        )
 
         # View draft
         result = await server.view_draft_config.fn()
@@ -607,8 +602,12 @@ class TestClearDraftConfig:
     async def test_clear_populated_draft(self, setup_mcp_server):
         """Test clearing draft with servers."""
         # Add servers
-        await server.add_server_to_config.fn(server_id="filesystem", params={"path": "/tmp"})
-        await server.add_server_to_config.fn(server_id="github", env_vars={"GITHUB_TOKEN": "test"})
+        await server.add_server_to_config.fn(
+            server_id="filesystem", params={"path": "/tmp"}
+        )
+        await server.add_server_to_config.fn(
+            server_id="github", env_vars={"GITHUB_TOKEN": "test"}
+        )
 
         # Clear
         result = await server.clear_draft_config.fn()
@@ -676,8 +675,7 @@ class TestValidateConfig:
         """Test validating valid config passes."""
         # Add valid server
         await server.add_server_to_config.fn(
-            server_id="filesystem",
-            params={"path": "/tmp"}
+            server_id="filesystem", params={"path": "/tmp"}
         )
 
         result = await server.validate_config.fn()
@@ -708,8 +706,7 @@ class TestDeployConfig:
         """Test deploy raises error when no published config exists."""
         with pytest.raises(ValueError):
             await server.deploy_config.fn(
-                client_id="claude-desktop",
-                profile_id="default"
+                client_id="claude-desktop", profile_id="default"
             )
 
 
@@ -722,7 +719,9 @@ class TestCheckServerInstallation:
     """Tests for check_server_installation tool."""
 
     @pytest.mark.asyncio
-    async def test_check_installation_invalid_server_raises_error(self, setup_mcp_server):
+    async def test_check_installation_invalid_server_raises_error(
+        self, setup_mcp_server
+    ):
         """Test checking installation for invalid server raises error."""
         with pytest.raises(ValueError, match="not found"):
             await server.check_server_installation.fn(server_id="nonexistent")
@@ -746,7 +745,9 @@ class TestInstallServer:
         """Test install_server requires confirmation by default."""
         from mcp_orchestrator.installation.models import InstallationStatus
 
-        with patch("mcp_orchestrator.installation.validator.InstallationValidator.check_installation") as mock_check:
+        with patch(
+            "mcp_orchestrator.installation.validator.InstallationValidator.check_installation"
+        ) as mock_check:
             mock_result = Mock()
             mock_result.status = InstallationStatus.NOT_INSTALLED
             mock_check.return_value = mock_result
@@ -771,7 +772,9 @@ class TestListInstalledServers:
         """Test list_installed_servers returns all servers with status."""
         from mcp_orchestrator.installation.models import InstallationStatus
 
-        with patch("mcp_orchestrator.installation.validator.InstallationValidator.check_installation") as mock_check:
+        with patch(
+            "mcp_orchestrator.installation.validator.InstallationValidator.check_installation"
+        ) as mock_check:
             # Mock some servers as installed, some not
             def check_side_effect(srv):
                 mock_result = Mock()
@@ -903,8 +906,7 @@ class TestDraftConfigResource:
     async def test_draft_config_resource_empty(self, setup_mcp_server):
         """Test draft_config_resource returns empty draft."""
         result = await server.draft_config_resource.fn(
-            client_id="claude-desktop",
-            profile_id="default"
+            client_id="claude-desktop", profile_id="default"
         )
 
         assert isinstance(result, str)
@@ -918,11 +920,12 @@ class TestDraftConfigResource:
     async def test_draft_config_resource_with_servers(self, setup_mcp_server):
         """Test draft_config_resource returns populated draft."""
         # Add servers
-        await server.add_server_to_config.fn(server_id="filesystem", params={"path": "/tmp"})
+        await server.add_server_to_config.fn(
+            server_id="filesystem", params={"path": "/tmp"}
+        )
 
         result = await server.draft_config_resource.fn(
-            client_id="claude-desktop",
-            profile_id="default"
+            client_id="claude-desktop", profile_id="default"
         )
 
         draft_info = json.loads(result)
@@ -934,16 +937,19 @@ class TestLatestConfigResource:
     """Tests for latest_config_resource."""
 
     @pytest.mark.asyncio
-    async def test_latest_config_resource_no_artifact_raises_error(self, setup_mcp_server):
+    async def test_latest_config_resource_no_artifact_raises_error(
+        self, setup_mcp_server
+    ):
         """Test latest_config_resource raises error when no artifact exists."""
         with pytest.raises(ValueError, match="No published artifact found"):
             await server.latest_config_resource.fn(
-                client_id="claude-desktop",
-                profile_id="default"
+                client_id="claude-desktop", profile_id="default"
             )
 
     @pytest.mark.asyncio
-    async def test_latest_config_resource_returns_published_artifact(self, setup_mcp_server):
+    async def test_latest_config_resource_returns_published_artifact(
+        self, setup_mcp_server
+    ):
         """Test latest_config_resource returns latest published artifact."""
         setup = setup_mcp_server
 
@@ -952,19 +958,17 @@ class TestLatestConfigResource:
         builder.add_server("filesystem", params={"path": "/tmp"})
 
         workflow = PublishingWorkflow(
-            store=setup["store"],
-            client_registry=setup["registry"]
+            store=setup["store"], client_registry=setup["registry"]
         )
         publish_result = workflow.publish(
             builder=builder,
             private_key_path=str(setup["private_key_path"]),
-            signing_key_id="test"
+            signing_key_id="test",
         )
 
         # Get latest via resource
         result = await server.latest_config_resource.fn(
-            client_id="claude-desktop",
-            profile_id="default"
+            client_id="claude-desktop", profile_id="default"
         )
 
         assert isinstance(result, str)
@@ -979,12 +983,13 @@ class TestDeployedConfigResource:
     """Tests for deployed_config_resource."""
 
     @pytest.mark.asyncio
-    async def test_deployed_config_resource_no_deployment_raises_error(self, setup_mcp_server):
+    async def test_deployed_config_resource_no_deployment_raises_error(
+        self, setup_mcp_server
+    ):
         """Test deployed_config_resource raises error when no deployment exists."""
         with pytest.raises(ValueError, match="No deployment found"):
             await server.deployed_config_resource.fn(
-                client_id="claude-desktop",
-                profile_id="default"
+                client_id="claude-desktop", profile_id="default"
             )
 
 
@@ -1053,9 +1058,10 @@ class TestMCPServerIntegration:
     """Integration tests for complete MCP server workflows."""
 
     @pytest.mark.asyncio
-    async def test_complete_workflow_browse_add_validate_publish(self, setup_mcp_server):
+    async def test_complete_workflow_browse_add_validate_publish(
+        self, setup_mcp_server
+    ):
         """Test complete workflow from browsing to publishing."""
-        setup = setup_mcp_server
 
         # Step 1: Browse available servers
         servers = await server.list_available_servers.fn()
@@ -1067,8 +1073,7 @@ class TestMCPServerIntegration:
 
         # Step 3: Add server to draft
         add_result = await server.add_server_to_config.fn(
-            server_id="filesystem",
-            params={"path": "/tmp"}
+            server_id="filesystem", params={"path": "/tmp"}
         )
         assert add_result["status"] == "added"
 
@@ -1081,9 +1086,7 @@ class TestMCPServerIntegration:
         assert validation["valid"] is True
 
         # Step 6: Publish
-        publish_result = await server.publish_config.fn(
-            changelog="Test config"
-        )
+        publish_result = await server.publish_config.fn(changelog="Test config")
         assert publish_result["status"] == "published"
 
     @pytest.mark.asyncio
@@ -1091,16 +1094,12 @@ class TestMCPServerIntegration:
         """Test that different profiles maintain isolated drafts."""
         # Add server to default profile
         await server.add_server_to_config.fn(
-            server_id="filesystem",
-            params={"path": "/tmp"},
-            profile_id="default"
+            server_id="filesystem", params={"path": "/tmp"}, profile_id="default"
         )
 
         # Add different server to dev profile
         await server.add_server_to_config.fn(
-            server_id="github",
-            env_vars={"GITHUB_TOKEN": "test"},
-            profile_id="dev"
+            server_id="github", env_vars={"GITHUB_TOKEN": "test"}, profile_id="dev"
         )
 
         # Verify isolation

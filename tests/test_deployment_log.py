@@ -15,10 +15,8 @@ Testing patterns:
 
 import json
 from datetime import datetime
-from pathlib import Path
 
 import pytest
-
 from mcp_orchestrator.deployment.log import DeploymentLog, DeploymentRecord
 
 
@@ -52,7 +50,7 @@ class TestRecordDeployment:
             client_id="claude-desktop",
             profile_id="default",
             artifact_id="abc123",
-            config_path="/path/to/config.json"
+            config_path="/path/to/config.json",
         )
 
         log_path = tmp_path / "deployments" / "claude-desktop" / "default.json"
@@ -65,7 +63,7 @@ class TestRecordDeployment:
             profile_id="default",
             artifact_id="abc123",
             config_path="/path/to/config.json",
-            changelog="Added filesystem server"
+            changelog="Added filesystem server",
         )
 
         deployed = deployment_log.get_deployed_artifact("claude-desktop", "default")
@@ -80,7 +78,7 @@ class TestRecordDeployment:
             client_id="cursor",
             profile_id="default",
             artifact_id="def456",
-            config_path="/path/to/config.json"
+            config_path="/path/to/config.json",
         )
 
         assert client_dir.exists()
@@ -93,7 +91,7 @@ class TestRecordDeployment:
             client_id="claude-desktop",
             profile_id="default",
             artifact_id="v1",
-            config_path="/path/v1.json"
+            config_path="/path/v1.json",
         )
 
         # Record second deployment
@@ -101,7 +99,7 @@ class TestRecordDeployment:
             client_id="claude-desktop",
             profile_id="default",
             artifact_id="v2",
-            config_path="/path/v2.json"
+            config_path="/path/v2.json",
         )
 
         # Current deployment should be v2
@@ -115,7 +113,7 @@ class TestRecordDeployment:
             client_id="claude-desktop",
             profile_id="default",
             artifact_id="v1",
-            config_path="/path/v1.json"
+            config_path="/path/v1.json",
         )
 
         # Record second deployment
@@ -123,7 +121,7 @@ class TestRecordDeployment:
             client_id="claude-desktop",
             profile_id="default",
             artifact_id="v2",
-            config_path="/path/v2.json"
+            config_path="/path/v2.json",
         )
 
         # Get history (includes current + historical)
@@ -141,7 +139,7 @@ class TestRecordDeployment:
                 client_id="claude-desktop",
                 profile_id="default",
                 artifact_id=f"v{i}",
-                config_path=f"/path/v{i}.json"
+                config_path=f"/path/v{i}.json",
             )
 
         # Get history (should include current + 9 historical = 10 total)
@@ -149,7 +147,7 @@ class TestRecordDeployment:
 
         assert len(history) == 10
         assert history[0].artifact_id == "v14"  # Most recent (current)
-        assert history[9].artifact_id == "v5"   # Oldest kept in history
+        assert history[9].artifact_id == "v5"  # Oldest kept in history
 
     def test_record_deployment_creates_valid_timestamp(self, deployment_log):
         """Test that deployment record has valid ISO 8601 timestamp."""
@@ -157,7 +155,7 @@ class TestRecordDeployment:
             client_id="claude-desktop",
             profile_id="default",
             artifact_id="abc123",
-            config_path="/path/to/config.json"
+            config_path="/path/to/config.json",
         )
 
         history = deployment_log.get_deployment_history("claude-desktop", "default")
@@ -178,7 +176,7 @@ class TestGetDeployedArtifact:
             client_id="claude-desktop",
             profile_id="default",
             artifact_id="abc123",
-            config_path="/path/to/config.json"
+            config_path="/path/to/config.json",
         )
 
         deployed = deployment_log.get_deployed_artifact("claude-desktop", "default")
@@ -189,7 +187,9 @@ class TestGetDeployedArtifact:
         deployed = deployment_log.get_deployed_artifact("nonexistent", "profile")
         assert deployed is None
 
-    def test_get_deployed_artifact_empty_current_returns_none(self, deployment_log, tmp_path):
+    def test_get_deployed_artifact_empty_current_returns_none(
+        self, deployment_log, tmp_path
+    ):
         """Test get_deployed_artifact returns None when current_deployment is None."""
         # Manually create log with null current_deployment
         log_dir = tmp_path / "deployments" / "claude-desktop"
@@ -200,7 +200,7 @@ class TestGetDeployedArtifact:
             "client_id": "claude-desktop",
             "profile_id": "default",
             "current_deployment": None,
-            "history": []
+            "history": [],
         }
 
         with open(log_file, "w") as f:
@@ -222,7 +222,7 @@ class TestGetDeploymentHistory:
                 profile_id="default",
                 artifact_id=f"v{i}",
                 config_path=f"/path/v{i}.json",
-                changelog=f"Version {i}"
+                changelog=f"Version {i}",
             )
 
         history = deployment_log.get_deployment_history("claude-desktop", "default")
@@ -236,14 +236,14 @@ class TestGetDeploymentHistory:
             client_id="claude-desktop",
             profile_id="default",
             artifact_id="v1",
-            config_path="/path/v1.json"
+            config_path="/path/v1.json",
         )
 
         deployment_log.record_deployment(
             client_id="claude-desktop",
             profile_id="default",
             artifact_id="v2",
-            config_path="/path/v2.json"
+            config_path="/path/v2.json",
         )
 
         history = deployment_log.get_deployment_history("claude-desktop", "default")
@@ -259,10 +259,12 @@ class TestGetDeploymentHistory:
                 client_id="claude-desktop",
                 profile_id="default",
                 artifact_id=f"v{i}",
-                config_path=f"/path/v{i}.json"
+                config_path=f"/path/v{i}.json",
             )
 
-        history = deployment_log.get_deployment_history("claude-desktop", "default", limit=3)
+        history = deployment_log.get_deployment_history(
+            "claude-desktop", "default", limit=3
+        )
 
         assert len(history) == 3
         assert history[0].artifact_id == "v4"  # Most recent
@@ -280,7 +282,7 @@ class TestGetDeploymentHistory:
             profile_id="default",
             artifact_id="abc123",
             config_path="/path/to/config.json",
-            changelog="Added filesystem and github servers"
+            changelog="Added filesystem and github servers",
         )
 
         history = deployment_log.get_deployment_history("claude-desktop", "default")
@@ -296,7 +298,7 @@ class TestDeploymentRecordModel:
         record = DeploymentRecord(
             artifact_id="abc123",
             config_path="/path/to/config.json",
-            deployed_at="2025-10-31T12:00:00Z"
+            deployed_at="2025-10-31T12:00:00Z",
         )
 
         assert record.artifact_id == "abc123"
@@ -310,7 +312,7 @@ class TestDeploymentRecordModel:
             artifact_id="abc123",
             config_path="/path/to/config.json",
             deployed_at="2025-10-31T12:00:00Z",
-            changelog="Test changelog"
+            changelog="Test changelog",
         )
 
         assert record.changelog == "Test changelog"
@@ -325,7 +327,7 @@ class TestLogFileStructure:
             client_id="claude-desktop",
             profile_id="default",
             artifact_id="abc123",
-            config_path="/path/to/config.json"
+            config_path="/path/to/config.json",
         )
 
         log_file = tmp_path / "deployments" / "claude-desktop" / "default.json"
@@ -352,7 +354,7 @@ class TestLogFileStructure:
             client_id="claude-desktop",
             profile_id="default",
             artifact_id="abc123",
-            config_path="/path/to/config.json"
+            config_path="/path/to/config.json",
         )
 
         # Create second instance and read deployment
@@ -371,17 +373,19 @@ class TestMultiClientMultiProfile:
             client_id="claude-desktop",
             profile_id="default",
             artifact_id="claude-abc",
-            config_path="/path/claude.json"
+            config_path="/path/claude.json",
         )
 
         deployment_log.record_deployment(
             client_id="cursor",
             profile_id="default",
             artifact_id="cursor-def",
-            config_path="/path/cursor.json"
+            config_path="/path/cursor.json",
         )
 
-        claude_deployed = deployment_log.get_deployed_artifact("claude-desktop", "default")
+        claude_deployed = deployment_log.get_deployed_artifact(
+            "claude-desktop", "default"
+        )
         cursor_deployed = deployment_log.get_deployed_artifact("cursor", "default")
 
         assert claude_deployed == "claude-abc"
@@ -393,17 +397,19 @@ class TestMultiClientMultiProfile:
             client_id="claude-desktop",
             profile_id="default",
             artifact_id="default-abc",
-            config_path="/path/default.json"
+            config_path="/path/default.json",
         )
 
         deployment_log.record_deployment(
             client_id="claude-desktop",
             profile_id="dev",
             artifact_id="dev-def",
-            config_path="/path/dev.json"
+            config_path="/path/dev.json",
         )
 
-        default_deployed = deployment_log.get_deployed_artifact("claude-desktop", "default")
+        default_deployed = deployment_log.get_deployed_artifact(
+            "claude-desktop", "default"
+        )
         dev_deployed = deployment_log.get_deployed_artifact("claude-desktop", "dev")
 
         assert default_deployed == "default-abc"

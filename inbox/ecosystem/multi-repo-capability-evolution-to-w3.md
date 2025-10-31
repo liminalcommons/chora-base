@@ -1,9 +1,9 @@
 # Multi-Repo Capability Evolution: Path to Waypoint W3
 
-**Document Type:** Cross-Repository Capability Evolution  
-**Created:** 2025-10-26  
-**Target Milestone:** Waypoint W3 - Health Monitoring & Auto-Recovery  
-**Timeline:** Q4 2025 - Q1 2026  
+**Document Type:** Cross-Repository Capability Evolution
+**Created:** 2025-10-26
+**Target Milestone:** Waypoint W3 - Health Monitoring & Auto-Recovery
+**Timeline:** Q4 2025 - Q1 2026
 **Maintainer:** Ecosystem Coordination Team
 
 ---
@@ -82,8 +82,8 @@ This document provides coordinated capability evolution across **four repositori
 
 ## Wave 1: Foundation (Q4 2025, Weeks 1-8)
 
-**Goal:** Establish core infrastructure for ecosystem discovery and deployment  
-**Target:** Waypoint W1 validation (Deploy new server in <5 minutes)  
+**Goal:** Establish core infrastructure for ecosystem discovery and deployment
+**Target:** Waypoint W1 validation (Deploy new server in <5 minutes)
 **Timeline:** 8 weeks (Sprint 1-4, November-December 2025)
 
 ### Week-by-Week Breakdown
@@ -98,7 +98,7 @@ actions:
       org: liminalcommons
       name: ecosystem-manifest
       description: "Single source of truth for Liminal Commons MCP ecosystem"
-      
+
   - initialize_structure:
       files:
         - README.md
@@ -107,7 +107,7 @@ actions:
         - TRUST_MODEL.md
         - CONTRIBUTING.md
         - GOVERNANCE.md
-      
+
   - define_manifest_schema:
       version: "1.0"
       includes:
@@ -115,7 +115,7 @@ actions:
         - docker_configuration
         - config_requirements
         - version_strategy
-        
+
   - add_initial_servers:
       count: 3
       servers:
@@ -144,7 +144,7 @@ actions:
         - tests/ (Test structure)
         - Dockerfile (Multi-stage build)
         - docker-compose.yml (Development setup)
-        
+
   - document_mcp_standards:
       file: docs/mcp-server-template.md
       sections:
@@ -178,26 +178,26 @@ actions:
       org: liminalcommons
       name: mcp-orchestration
       template: chora-base
-      
+
   - implement_core:
       components:
         - manifest_parser:
             reads: ecosystem-manifest.yaml
             validates: schema v1.0
             caches: server metadata
-            
+
         - docker_manager:
             uses: docker-py
             manages: container lifecycle
             handles: images, networks, volumes
-            
+
         - mcp_tools:
             exposes:
               - list_servers()
               - deploy_server()
               - server_status()
               - stop_server()
-              
+
         - http_api:
             endpoints:
               - GET /servers (list available)
@@ -235,7 +235,7 @@ actions:
         - query_available_backends()
         - get_backend_status()
         - subscribe_to_status_updates()
-        
+
   - update_discovery_loop:
       file: src/mcp_gateway/discovery.py
       changes:
@@ -243,7 +243,7 @@ actions:
         - Poll orchestration every 30s
         - Auto-register discovered backends
         - Remove backends when stopped
-        
+
   - add_http_transport:
       file: src/mcp_gateway/transports/http.py
       implements:
@@ -285,20 +285,20 @@ actions:
           - Gateway detects new backend via polling
           - Gateway loads manifest and registers backend
           - User sees github.* tools in Claude Desktop
-          
+
       validation_criteria:
         - Deployment completes in <60 seconds
         - Gateway registers backend in <5 seconds
         - Tools appear immediately
         - Health endpoint returns 200 OK
         - Zero manual configuration required
-        
+
   - documentation:
       create:
         - how-to-setup-mcp-ecosystem.md
         - how-to-deploy-new-mcp-server.md
         - troubleshooting-guide.md
-        
+
   - release_preparation:
       versions:
         - ecosystem-manifest v1.0.0
@@ -351,8 +351,8 @@ actions:
 
 ## Wave 2: Lifecycle Management (Q1 2026, Weeks 9-16)
 
-**Goal:** Automatic updates and health monitoring with auto-recovery  
-**Target:** Waypoints W2 & W3 validation  
+**Goal:** Automatic updates and health monitoring with auto-recovery
+**Target:** Waypoints W2 & W3 validation
 **Timeline:** 8 weeks (Sprint 5-8, January-February 2026)
 
 ### Week-by-Week Breakdown
@@ -372,9 +372,9 @@ actions:
           timeout_seconds: 5
           failure_threshold: 3
           success_threshold: 2
-          
+
         restart_policy: always | on-failure | unless-stopped
-        
+
         health_check_response:
           required_fields:
             - status: "healthy" | "unhealthy" | "degraded"
@@ -383,14 +383,14 @@ actions:
           optional_fields:
             - dependencies: object
             - metrics: object
-            
+
   - add_update_policies:
       per_server:
         auto_update: boolean
         version_strategy: latest | pinned | semantic
         rollback_on_failure: boolean
         notification_channel: string?
-        
+
   - update_quality_standards:
       requires:
         - Health endpoint implementation
@@ -415,7 +415,7 @@ actions:
         - Metrics collection
         - Graceful degradation states
         - Structured logging
-        
+
   - add_shutdown_handler:
       file: templates/mcp-server/src/server.py
       implements:
@@ -454,31 +454,31 @@ actions:
         - Track consecutive failures
         - Track consecutive successes
         - State: healthy | degraded | unhealthy
-        
+
       state_transitions:
         - healthy → degraded: 1 failure
         - degraded → unhealthy: 3 consecutive failures
         - unhealthy → degraded: 1 success
         - degraded → healthy: 2 consecutive successes
-        
+
   - implement_auto_recovery:
       component: RecoveryManager
       triggers:
         - on: backend marked unhealthy
         - attempts: 3 recovery tries
         - backoff: exponential (30s, 60s, 120s)
-        
+
       recovery_actions:
         - attempt_restart()
         - redeploy_container()
         - notify_admin()
-        
+
   - add_mcp_tools:
       new_tools:
         - health_check(server_id: string)
         - health_events(server_id: string, limit: int)
         - restart_server(server_id: string)
-        
+
   - update_http_api:
       new_endpoints:
         - GET /servers/{id}/health
@@ -517,26 +517,26 @@ actions:
         - backend_health: Map<backend_id, health_status>
         - last_health_check: Map<backend_id, timestamp>
         - health_transitions: EventLog
-        
+
   - implement_health_aware_routing:
       updates: src/mcp_gateway/router.py
       routing_logic:
         - if backend.health == "healthy": route normally
         - if backend.health == "degraded": route with warning
         - if backend.health == "unhealthy": return error
-        
+
       error_responses:
         - error_code: BACKEND_UNHEALTHY
         - message: "Backend '{backend}' is currently unhealthy"
         - suggested_action: "Try again later or contact support"
         - affected_tools: [list of tool names]
-        
+
   - add_health_endpoints:
       new_endpoints:
         - GET /health (gateway overall health)
         - GET /backends (includes health status)
         - GET /backends/{id}/health
-        
+
   - implement_hot_reload:
       updates: backend registration
       enables:
@@ -577,13 +577,13 @@ actions:
         - Gateway hot-reloads backend without restart
         - Zero downtime during update
         - Active sessions preserved
-        
+
       validation_criteria:
         - Update detection: <5 minutes
         - Deployment: <30 seconds
         - Gateway downtime: 0 seconds
         - Session preservation: 100%
-        
+
   - waypoint_w3_validation:
       test_scenario: "Health Monitoring & Auto-Recovery"
       given: "5 backends deployed, 1 becomes unhealthy"
@@ -595,14 +595,14 @@ actions:
         - Orchestration attempts auto-recovery (3 tries)
         - Healthy backends unaffected
         - Backend recovers and routing restores
-        
+
       validation_criteria:
         - Failure detection: <90 seconds
         - Routing update: <5 seconds
         - Healthy backends: 0 impact
         - Error messages: clear and actionable
         - Auto-recovery: attempted and logged
-        
+
   - update_management_validation:
       test_scenario: "Background Updates"
       features:
@@ -610,7 +610,7 @@ actions:
         - Update policies (auto vs manual)
         - Rollback on failure
         - Audit trail
-        
+
   - documentation:
       create:
         - how-to-enable-automatic-updates.md
@@ -731,7 +731,7 @@ The **critical path** to W3 is:
 7. **Weeks 13-14:** Health routing (blocked by 11-12)
 8. **Weeks 15-16:** W2 & W3 validation (blocked by 13-14)
 
-**Total Duration:** 16 weeks (4 months)  
+**Total Duration:** 16 weeks (4 months)
 **Target Completion:** February 2026
 
 ---
@@ -749,11 +749,11 @@ contract:
   reads: ecosystem-manifest.yaml
   validates: schema version
   parses: server metadata
-  
+
 breaking_changes:
   - Schema version change
   - Required field additions
-  
+
 notification: GitHub issue in orchestration repo
 ```
 
@@ -768,20 +768,20 @@ contract:
     - GET /servers/{id}/status
     - GET /servers/{id}/health
     - GET /health/status (all servers)
-    
+
   polling:
     - Interval: 30 seconds
     - Timeout: 5 seconds
-    
+
   response_format:
     - JSON with snake_case keys
     - ISO 8601 timestamps
-    
+
 breaking_changes:
   - Endpoint URL changes
   - Response schema changes
   - Authentication requirements
-  
+
 notification: Slack #ecosystem-dev + GitHub issue
 ```
 
@@ -802,11 +802,11 @@ contract:
       uptime_seconds: number
       dependencies?: object
       metrics?: object
-      
+
 breaking_changes:
   - Response format changes
   - New required fields
-  
+
 notification: Update chora-base template + ecosystem-manifest
 ```
 
@@ -818,8 +818,8 @@ notification: Update chora-base template + ecosystem-manifest
 
 #### Risk 1: Docker Socket Access
 
-**Probability:** Medium  
-**Impact:** High  
+**Probability:** Medium
+**Impact:** High
 **Description:** mcp-orchestration requires Docker socket access to spawn containers
 
 **Mitigation:**
@@ -835,8 +835,8 @@ notification: Update chora-base template + ecosystem-manifest
 
 #### Risk 2: Health Check False Positives
 
-**Probability:** Medium  
-**Impact:** Medium  
+**Probability:** Medium
+**Impact:** Medium
 **Description:** Network glitches cause temporary health check failures
 
 **Mitigation:**
@@ -851,8 +851,8 @@ notification: Update chora-base template + ecosystem-manifest
 
 #### Risk 3: Gateway Hot-Reload Complexity
 
-**Probability:** Medium  
-**Impact:** High  
+**Probability:** Medium
+**Impact:** High
 **Description:** Hot-reloading backends without dropping sessions is complex
 
 **Mitigation:**
@@ -867,8 +867,8 @@ notification: Update chora-base template + ecosystem-manifest
 
 #### Risk 4: Cross-Repo Coordination
 
-**Probability:** High  
-**Impact:** Medium  
+**Probability:** High
+**Impact:** Medium
 **Description:** Four repos with dependencies risk schedule slips
 
 **Mitigation:**
@@ -898,8 +898,8 @@ notification: Update chora-base template + ecosystem-manifest
 
 ### Weekly Updates
 
-**Channel:** Slack #ecosystem-dev  
-**Format:** Standup-style update  
+**Channel:** Slack #ecosystem-dev
+**Format:** Standup-style update
 **Content:**
 - Progress this week
 - Blockers
@@ -931,8 +931,8 @@ notification: Update chora-base template + ecosystem-manifest
 
 ### Bi-Weekly Integration Sync
 
-**When:** Every 2 weeks (Weeks 2, 4, 6, 8, 10, 12, 14, 16)  
-**Duration:** 60 minutes  
+**When:** Every 2 weeks (Weeks 2, 4, 6, 8, 10, 12, 14, 16)
+**Duration:** 60 minutes
 **Attendees:** All repo maintainers + coordinator
 
 **Agenda:**
@@ -943,8 +943,8 @@ notification: Update chora-base template + ecosystem-manifest
 
 ### Monthly Stakeholder Update
 
-**When:** End of each month  
-**Duration:** 30 minutes  
+**When:** End of each month
+**Duration:** 30 minutes
 **Attendees:** Maintainers + leadership
 
 **Content:**
@@ -1142,7 +1142,7 @@ After achieving Waypoint W3 (end of Wave 2), the ecosystem will have:
 - Capability-based search
 - Registry service (if ecosystem scales to 25+ servers)
 
-**Decision Point:** Q1 2026  
+**Decision Point:** Q1 2026
 Review ecosystem adoption and decide between:
 - **Option A:** Focus on stability and refinement (if 5-10 servers)
 - **Option B:** Scale infrastructure (if 10-25 servers)
@@ -1180,9 +1180,9 @@ Review ecosystem adoption and decide between:
 
 ---
 
-**Document Status:** Active  
-**Last Updated:** 2025-10-26  
-**Next Review:** 2025-11-01 (Wave 1 kickoff)  
+**Document Status:** Active
+**Last Updated:** 2025-10-26
+**Next Review:** 2025-11-01 (Wave 1 kickoff)
 **Maintainer:** Ecosystem Coordination Team
 
 ---

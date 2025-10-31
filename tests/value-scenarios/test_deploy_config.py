@@ -14,7 +14,6 @@ import tempfile
 from pathlib import Path
 
 import pytest
-
 from mcp_orchestrator.building import ConfigBuilder
 from mcp_orchestrator.crypto import ArtifactSigner
 from mcp_orchestrator.deployment import DeploymentWorkflow
@@ -79,9 +78,7 @@ def test_value_scenario_deploy_latest_config(temp_storage):
     server_registry = get_server_registry()
     client_registry = get_client_registry()
     store = ArtifactStore(base_path=str(temp_storage["base"]))
-    deployment_log = DeploymentLog(
-        deployments_dir=str(temp_storage["deployments_dir"])
-    )
+    deployment_log = DeploymentLog(deployments_dir=str(temp_storage["deployments_dir"]))
 
     # 1. Create and publish configuration
     builder = ConfigBuilder("claude-desktop", "default", server_registry)
@@ -91,7 +88,7 @@ def test_value_scenario_deploy_latest_config(temp_storage):
     artifact = builder.to_artifact(
         signing_key_id="default",
         private_key_path=str(temp_storage["private_key_path"]),
-        changelog="Added filesystem and github servers"
+        changelog="Added filesystem and github servers",
     )
 
     store.store(artifact)
@@ -103,12 +100,12 @@ def test_value_scenario_deploy_latest_config(temp_storage):
         client_registry=client_registry,
         deployment_log=deployment_log,
         config_base_dir=str(temp_storage["config_dir"]),  # Override for testing
-        public_key_path=str(temp_storage["public_key_path"])
+        public_key_path=str(temp_storage["public_key_path"]),
     )
 
     result = workflow.deploy(
         client_id="claude-desktop",
-        profile_id="default"
+        profile_id="default",
         # artifact_id not specified → deploys latest
     )
 
@@ -130,7 +127,9 @@ def test_value_scenario_deploy_latest_config(temp_storage):
     assert "github" in deployed_config["mcpServers"]
 
     # 5. Verify deployment was logged
-    deployed_artifact = deployment_log.get_deployed_artifact("claude-desktop", "default")
+    deployed_artifact = deployment_log.get_deployed_artifact(
+        "claude-desktop", "default"
+    )
     assert deployed_artifact == published_artifact_id
 
 
@@ -151,15 +150,13 @@ def test_value_scenario_deploy_specific_version(temp_storage):
     server_registry = get_server_registry()
     client_registry = get_client_registry()
     store = ArtifactStore(base_path=str(temp_storage["base"]))
-    deployment_log = DeploymentLog(
-        deployments_dir=str(temp_storage["deployments_dir"])
-    )
+    deployment_log = DeploymentLog(deployments_dir=str(temp_storage["deployments_dir"]))
     workflow = DeploymentWorkflow(
         store=store,
         client_registry=client_registry,
         deployment_log=deployment_log,
         config_base_dir=str(temp_storage["config_dir"]),
-        public_key_path=str(temp_storage["public_key_path"])
+        public_key_path=str(temp_storage["public_key_path"]),
     )
 
     # 1. Publish v1
@@ -169,7 +166,7 @@ def test_value_scenario_deploy_specific_version(temp_storage):
     artifact_v1 = builder_v1.to_artifact(
         signing_key_id="default",
         private_key_path=str(temp_storage["private_key_path"]),
-        changelog="v1: Initial config"
+        changelog="v1: Initial config",
     )
     store.store(artifact_v1)
 
@@ -181,7 +178,7 @@ def test_value_scenario_deploy_specific_version(temp_storage):
     artifact_v2 = builder_v2.to_artifact(
         signing_key_id="default",
         private_key_path=str(temp_storage["private_key_path"]),
-        changelog="v2: Added github"
+        changelog="v2: Added github",
     )
     store.store(artifact_v2)
 
@@ -194,7 +191,7 @@ def test_value_scenario_deploy_specific_version(temp_storage):
     artifact_v3 = builder_v3.to_artifact(
         signing_key_id="default",
         private_key_path=str(temp_storage["private_key_path"]),
-        changelog="v3: Added brave-search"
+        changelog="v3: Added brave-search",
     )
     store.store(artifact_v3)
 
@@ -202,7 +199,7 @@ def test_value_scenario_deploy_specific_version(temp_storage):
     result = workflow.deploy(
         client_id="claude-desktop",
         profile_id="default",
-        artifact_id=artifact_v1.artifact_id  # Pin to v1
+        artifact_id=artifact_v1.artifact_id,  # Pin to v1
     )
 
     # 5. Verify v1 was deployed
@@ -223,7 +220,9 @@ def test_value_scenario_deploy_specific_version(temp_storage):
     assert latest.artifact_id == artifact_v3.artifact_id
 
     # 7. Verify deployment log shows v1
-    deployed_artifact = deployment_log.get_deployed_artifact("claude-desktop", "default")
+    deployed_artifact = deployment_log.get_deployed_artifact(
+        "claude-desktop", "default"
+    )
     assert deployed_artifact == artifact_v1.artifact_id
 
 
@@ -245,15 +244,13 @@ def test_value_scenario_query_deployed_vs_latest(temp_storage):
     server_registry = get_server_registry()
     client_registry = get_client_registry()
     store = ArtifactStore(base_path=str(temp_storage["base"]))
-    deployment_log = DeploymentLog(
-        deployments_dir=str(temp_storage["deployments_dir"])
-    )
+    deployment_log = DeploymentLog(deployments_dir=str(temp_storage["deployments_dir"]))
     workflow = DeploymentWorkflow(
         store=store,
         client_registry=client_registry,
         deployment_log=deployment_log,
         config_base_dir=str(temp_storage["config_dir"]),
-        public_key_path=str(temp_storage["public_key_path"])
+        public_key_path=str(temp_storage["public_key_path"]),
     )
 
     # 1. Publish and deploy v1
@@ -263,7 +260,7 @@ def test_value_scenario_query_deployed_vs_latest(temp_storage):
     artifact_v1 = builder_v1.to_artifact(
         signing_key_id="default",
         private_key_path=str(temp_storage["private_key_path"]),
-        changelog="v1: Initial"
+        changelog="v1: Initial",
     )
     store.store(artifact_v1)
 
@@ -277,12 +274,14 @@ def test_value_scenario_query_deployed_vs_latest(temp_storage):
     artifact_v2 = builder_v2.to_artifact(
         signing_key_id="default",
         private_key_path=str(temp_storage["private_key_path"]),
-        changelog="v2: Added github"
+        changelog="v2: Added github",
     )
     store.store(artifact_v2)
 
     # 3. Query deployed artifact
-    deployed_artifact_id = deployment_log.get_deployed_artifact("claude-desktop", "default")
+    deployed_artifact_id = deployment_log.get_deployed_artifact(
+        "claude-desktop", "default"
+    )
     assert deployed_artifact_id == artifact_v1.artifact_id
 
     # 4. Query latest artifact
@@ -290,7 +289,7 @@ def test_value_scenario_query_deployed_vs_latest(temp_storage):
     assert latest.artifact_id == artifact_v2.artifact_id
 
     # 5. Detect drift
-    drift_detected = (deployed_artifact_id != latest.artifact_id)
+    drift_detected = deployed_artifact_id != latest.artifact_id
     assert drift_detected is True
 
     # This is the "configuration drift" scenario described in the guide:

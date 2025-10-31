@@ -24,11 +24,10 @@ from unittest.mock import MagicMock, patch
 
 import pytest
 
-
 # Import will fail initially (TDD) - implementation doesn't exist yet
 try:
-    from mcp_orchestrator.http_cli.token import generate_token_cli
     from mcp_orchestrator.http.auth import AuthenticationService
+    from mcp_orchestrator.http_cli.token import generate_token_cli
 except ImportError:
     pytest.skip("Token generation CLI not implemented yet", allow_module_level=True)
 
@@ -127,7 +126,11 @@ class TestTokenGenerationCLI:
             # Extract token
             lines = result.stdout.strip().split("\n")
             token_line = [l for l in lines if "token" in l.lower()][0]
-            token = token_line.split(":")[-1].strip() if ":" in token_line else token_line.split()[-1].strip()
+            token = (
+                token_line.split(":")[-1].strip()
+                if ":" in token_line
+                else token_line.split()[-1].strip()
+            )
 
             tokens.append(token)
 
@@ -146,7 +149,11 @@ class TestTokenGenerationCLI:
         # Extract token
         lines = result.stdout.strip().split("\n")
         token_line = [l for l in lines if "token" in l.lower()][0]
-        token = token_line.split(":")[-1].strip() if ":" in token_line else token_line.split()[-1].strip()
+        token = (
+            token_line.split(":")[-1].strip()
+            if ":" in token_line
+            else token_line.split()[-1].strip()
+        )
 
         # Token should not be predictable (e.g., not all same character)
         assert len(set(token)) > 10  # Should have variety of characters
@@ -263,12 +270,16 @@ class TestTokenGenerationFunction:
 
     def test_generate_token_cli_uses_auth_service(self):
         """Test that generate_token_cli uses AuthenticationService."""
-        with patch("mcp_orchestrator.http.auth.AuthenticationService") as mock_auth_service:
+        with patch(
+            "mcp_orchestrator.http.auth.AuthenticationService"
+        ) as mock_auth_service:
             mock_instance = MagicMock()
-            mock_instance.generate_token.return_value = "test_token_abc123_xyz789_secure_token_value"
+            mock_instance.generate_token.return_value = (
+                "test_token_abc123_xyz789_secure_token_value"
+            )
             mock_auth_service.return_value = mock_instance
 
-            token = generate_token_cli()
+            generate_token_cli()
 
             # Should have called generate_token on auth service
             mock_instance.generate_token.assert_called_once()
@@ -308,7 +319,11 @@ class TestTokenGenerationSecurity:
             # Extract token
             lines = result.stdout.strip().split("\n")
             token_line = [l for l in lines if "token" in l.lower()][0]
-            token = token_line.split(":")[-1].strip() if ":" in token_line else token_line.split()[-1].strip()
+            token = (
+                token_line.split(":")[-1].strip()
+                if ":" in token_line
+                else token_line.split()[-1].strip()
+            )
             tokens.append(token)
 
         # All tokens should be unique (no collisions)
@@ -322,7 +337,9 @@ class TestTokenGenerationSecurity:
                 char_counts[char] = char_counts.get(char, 0) + 1
 
         # Should use a good variety of characters
-        assert len(char_counts) > 30  # At least 30 different characters across all tokens
+        assert (
+            len(char_counts) > 30
+        )  # At least 30 different characters across all tokens
 
     def test_token_is_url_safe(self):
         """Test that token is URL-safe (no special characters)."""
@@ -336,7 +353,11 @@ class TestTokenGenerationSecurity:
         # Extract token
         lines = result.stdout.strip().split("\n")
         token_line = [l for l in lines if "token" in l.lower()][0]
-        token = token_line.split(":")[-1].strip() if ":" in token_line else token_line.split()[-1].strip()
+        token = (
+            token_line.split(":")[-1].strip()
+            if ":" in token_line
+            else token_line.split()[-1].strip()
+        )
 
         # URL-safe base64 uses: A-Z, a-z, 0-9, -, _
         # Should NOT have: +, /, =
@@ -370,7 +391,11 @@ class TestTokenGenerationIntegration:
         # Extract token
         lines = result.stdout.strip().split("\n")
         token_line = [l for l in lines if "token" in l.lower()][0]
-        token = token_line.split(":")[-1].strip() if ":" in token_line else token_line.split()[-1].strip()
+        token = (
+            token_line.split(":")[-1].strip()
+            if ":" in token_line
+            else token_line.split()[-1].strip()
+        )
 
         # Token should be valid for HTTP requests
         # (Full integration test is in test_http_transport.py)
@@ -378,7 +403,7 @@ class TestTokenGenerationIntegration:
 
         # Note: This requires shared token storage between CLI and server
         # Implementation will use a singleton or shared storage mechanism
-        auth_service = AuthenticationService()
+        AuthenticationService()
 
         # Token should be in the service (if shared storage works)
         # This may need adjustment based on actual implementation
@@ -399,7 +424,11 @@ class TestTokenGenerationIntegration:
 
             lines = result.stdout.strip().split("\n")
             token_line = [l for l in lines if "token" in l.lower()][0]
-            token = token_line.split(":")[-1].strip() if ":" in token_line else token_line.split()[-1].strip()
+            token = (
+                token_line.split(":")[-1].strip()
+                if ":" in token_line
+                else token_line.split()[-1].strip()
+            )
             tokens.append(token)
 
         # All tokens should be unique
@@ -460,7 +489,7 @@ class TestTokenGenerationPerformance:
 
         start = time.time()
 
-        result = subprocess.run(
+        subprocess.run(
             ["mcp-orchestration-generate-token"],
             capture_output=True,
             text=True,

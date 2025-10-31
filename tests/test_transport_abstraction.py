@@ -5,7 +5,6 @@ performs transport abstraction for stdio and HTTP/SSE servers.
 """
 
 import pytest
-
 from mcp_orchestrator.servers.models import (
     ParameterDefinition,
     ServerDefinition,
@@ -156,7 +155,9 @@ class TestStdioTransportAbstraction:
 
         registry = ServerRegistry([server])
 
-        with pytest.raises(ValueError, match="Missing required environment.*GITHUB_TOKEN"):
+        with pytest.raises(
+            ValueError, match="Missing required environment.*GITHUB_TOKEN"
+        ):
             registry.to_client_config("github")  # No env_vars provided
 
 

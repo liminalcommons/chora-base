@@ -10,7 +10,7 @@ last_updated: 2025-10-26
 validates:
   - feature: Initial MCP Ecosystem Bootstrap
   - components: [mcp-gateway, mcp-orchestration]
-prerequisites_for: 
+prerequisites_for:
   - how-to-deploy-new-mcp-server.md (Waypoint W1)
 related:
   - docs/explanation/ecosystem-architecture.md
@@ -272,7 +272,7 @@ List all available MCP tools
 
 **Expected Response:**
 ```
-Currently, there are no MCP tools available because no backends are deployed yet. 
+Currently, there are no MCP tools available because no backends are deployed yet.
 The MCP gateway is running and ready to discover backends as they're deployed.
 
 To deploy your first backend, you can:

@@ -1,11 +1,9 @@
 """Tests for cryptographic signing module."""
 
 import base64
-import json
 from pathlib import Path
 
 import pytest
-
 from mcp_orchestrator.crypto import ArtifactSigner, SigningError, verify_signature
 
 

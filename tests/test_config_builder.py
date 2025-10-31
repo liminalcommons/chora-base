@@ -4,11 +4,7 @@ This module tests the ConfigBuilder class for managing draft configurations
 and building MCP client config payloads.
 """
 
-import tempfile
-from pathlib import Path
-
 import pytest
-
 from mcp_orchestrator.building import ConfigBuilder
 from mcp_orchestrator.building.builder import (
     ServerAlreadyAddedError,
@@ -102,7 +98,9 @@ class TestConfigBuilderBasics:
         payload = builder.build()
         assert "n8n" in payload["mcpServers"]
         assert payload["mcpServers"]["n8n"]["command"] == "npx"
-        assert "@modelcontextprotocol/mcp-remote" in payload["mcpServers"]["n8n"]["args"]
+        assert (
+            "@modelcontextprotocol/mcp-remote" in payload["mcpServers"]["n8n"]["args"]
+        )
 
     def test_add_server_with_custom_name(self, sample_registry):
         """Test adding a server with custom name."""

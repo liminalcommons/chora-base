@@ -180,9 +180,7 @@ class ArtifactStore:
         except Exception as e:
             raise StorageError(f"Failed to store artifact: {e}")
 
-    def _update_index(
-        self, client_id: str, profile_id: str, artifact_id: str
-    ) -> None:
+    def _update_index(self, client_id: str, profile_id: str, artifact_id: str) -> None:
         """Update profile index to point to latest artifact.
 
         Args:
@@ -258,7 +256,9 @@ class ArtifactStore:
             return self.get_by_id(index_entry.latest_artifact_id)
 
         except Exception as e:
-            raise StorageError(f"Failed to retrieve artifact for {client_id}/{profile_id}: {e}")
+            raise StorageError(
+                f"Failed to retrieve artifact for {client_id}/{profile_id}: {e}"
+            )
 
     def list_clients(self) -> list[str]:
         """List all client IDs with stored configurations.
@@ -270,7 +270,9 @@ class ArtifactStore:
             return []
 
         return [
-            d.name for d in self.index_dir.iterdir() if d.is_dir() and not d.name.startswith(".")
+            d.name
+            for d in self.index_dir.iterdir()
+            if d.is_dir() and not d.name.startswith(".")
         ]
 
     def list_profiles(self, client_id: str) -> list[str]:
@@ -289,13 +291,10 @@ class ArtifactStore:
 
         if not client_dir.exists():
             raise StorageError(
-                f"Client not found: {client_id}. "
-                f"Available: {self.list_clients()}"
+                f"Client not found: {client_id}. " f"Available: {self.list_clients()}"
             )
 
-        return [
-            p.stem for p in client_dir.glob("*.json") if p.is_file()
-        ]
+        return [p.stem for p in client_dir.glob("*.json") if p.is_file()]
 
     def get_profile_metadata(self, client_id: str, profile_id: str) -> ProfileIndex:
         """Get profile index metadata without loading artifact.

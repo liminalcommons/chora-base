@@ -36,12 +36,12 @@ import sys
 def discover_liminalcommons_servers():
     """Discover all installed liminalcommons MCP servers."""
     servers = {}
-    
+
     if sys.version_info >= (3, 10):
         discovered = entry_points(group='liminalcommons.servers')
     else:
         discovered = entry_points().get('liminalcommons.servers', [])
-    
+
     for ep in discovered:
         try:
             servers[ep.name] = {
@@ -51,7 +51,7 @@ def discover_liminalcommons_servers():
             }
         except Exception as e:
             print(f"Warning: Failed to load {ep.name}: {e}")
-    
+
     return servers
 ```
 
@@ -83,25 +83,25 @@ def verify_github_org_membership(package_repo_url, org_name="liminalcommons"):
     parts = package_repo_url.rstrip('/').split('/')
     owner = parts[-2]
     repo_name = parts[-1]
-    
+
     if owner.lower() != org_name.lower():
         return False
-    
+
     # Verify organization exists
     response = requests.get(
         f"https://api.github.com/orgs/{org_name}",
         headers={"Accept": "application/vnd.github+json"}
     )
-    
+
     if response.status_code != 200:
         return False
-    
+
     # Verify repository exists in organization
     repo_response = requests.get(
         f"https://api.github.com/repos/{org_name}/{repo_name}",
         headers={"Accept": "application/vnd.github+json"}
     )
-    
+
     return repo_response.status_code == 200
 ```
 
@@ -191,12 +191,12 @@ from pathlib import Path
 
 class DiscoveryCache:
     """Fast persistent cache for discovered packages."""
-    
+
     def __init__(self, cache_dir: Path = None):
         self.cache_dir = cache_dir or Path.home() / '.liminalcommons' / 'cache'
         self.cache_dir.mkdir(parents=True, exist_ok=True)
         self.cache_file = self.cache_dir / 'packages.json'
-        
+
     def _get_cache_key(self) -> str:
         """Generate cache key based on sys.path and mtimes."""
         import sys
@@ -205,25 +205,25 @@ class DiscoveryCache:
         mtime = site_packages.stat().st_mtime if site_packages.exists() else 0
         key_data = f"{path_str}|{mtime}"
         return hashlib.sha256(key_data.encode()).hexdigest()[:16]
-    
+
     def load(self):
         """Load cached discovery results if valid."""
         if not self.cache_file.exists():
             return None
-        
+
         try:
             with open(self.cache_file, 'r') as f:
                 cache_data = json.load(f)
-            
+
             # Validate cache key matches current environment
             if cache_data.get('cache_key') != self._get_cache_key():
                 return None
-            
+
             # Check cache age (invalidate after 1 hour)
             cache_age = time.time() - cache_data.get('timestamp', 0)
             if cache_age > 3600:
                 return None
-            
+
             return cache_data.get('packages', {})
         except (json.JSONDecodeError, IOError):
             return None
@@ -245,13 +245,13 @@ from typing import Any, Callable
 
 class LazyPackage:
     """Lazy-loading wrapper for packages."""
-    
+
     def __init__(self, name: str, loader: Callable):
         self._name = name
         self._loader = loader
         self._instance = None
         self._loaded = False
-    
+
     def __getattr__(self, item):
         """Load on first attribute access."""
         if not self._loaded:
@@ -261,19 +261,19 @@ class LazyPackage:
 
 class LazyPackageRegistry:
     """Registry with lazy loading."""
-    
+
     def __init__(self):
         self._packages = {}
         self._discovery = PackageDiscovery()
-    
+
     def register_all(self):
         """Register all packages as lazy loaders (fast)."""
         discovered = self._discovery.discover_all()
-        
+
         for name, pkg_info in discovered.items():
             loader = lambda n=name: self._discovery.load_package(n)
             self._packages[name] = LazyPackage(name, loader)
-    
+
     def get(self, name: str) -> LazyPackage:
         """Get package (loads on first use)."""
         return self._packages.get(name)
@@ -298,22 +298,22 @@ else:
 
 class FastPackageDiscovery:
     """High-performance package discovery with <200ms startup."""
-    
+
     ENTRY_GROUP = 'liminalcommons.servers'
-    
+
     def __init__(self):
         self.packages: Dict[str, Any] = {}
         self.cache = DiscoveryCache()
         self._memory_cache: Dict[str, Any] = {}
         self.startup_time_ms = 0
-    
+
     def startup(self):
         """Main startup sequence targeting <50ms."""
         start = time.perf_counter()
-        
+
         # Try L2 cache first (<5ms)
         cached = self.cache.load()
-        
+
         if cached:
             self._memory_cache = cached
             self.packages = self._reconstruct_from_cache(cached)
@@ -321,16 +321,16 @@ class FastPackageDiscovery:
             # Cache miss - full discovery (<50ms)
             self._discover_packages()
             self.cache.save(self._memory_cache)
-        
+
         self.startup_time_ms = (time.perf_counter() - start) * 1000
-        
+
         assert self.startup_time_ms < 200, \
             f"Startup {self.startup_time_ms:.2f}ms exceeds threshold"
-    
+
     def _discover_packages(self):
         """Discover via entry points."""
         discovered = entry_points(group=self.ENTRY_GROUP)
-        
+
         for ep in discovered:
             pkg_info = {
                 'name': ep.name,
@@ -343,21 +343,21 @@ class FastPackageDiscovery:
                 'name': ep.name,
                 'value': ep.value
             }
-    
+
     def load_package(self, name: str):
         """Lazy load package on demand (<10ms)."""
         if name not in self.packages:
             raise ValueError(f"Package {name} not found")
-        
+
         pkg = self.packages[name]
         if pkg['loaded']:
             return pkg['instance']
-        
+
         start = time.perf_counter()
         pkg['instance'] = pkg['entry_point'].load()
         pkg['loaded'] = True
         load_time = (time.perf_counter() - start) * 1000
-        
+
         return pkg['instance']
 ```
 
@@ -404,11 +404,11 @@ def verify_package_phase2(package_name: str, repo_url: str) -> bool:
     # Check manual allowlist first
     if package_name in ALLOWED_PACKAGES:
         return True
-    
+
     # Automatic trust for liminalcommons org
     if 'github.com/liminalcommons' in repo_url:
         return verify_github_org_membership(repo_url, 'liminalcommons')
-    
+
     return False
 ```
 
@@ -419,23 +419,23 @@ This phase scales to **dozens or hundreds** of packages without manual intervent
 Require cryptographic attestations and supply chain security guarantees:
 
 ```python
-def verify_package_phase3(package_name: str, package_path: Path, 
+def verify_package_phase3(package_name: str, package_path: Path,
                          repo_url: str) -> bool:
     """Phase 3: Automated security verification."""
     # Still check org membership
     if not verify_github_org_membership(repo_url, 'liminalcommons'):
         return False
-    
+
     # Verify Sigstore attestation
     if not verify_sigstore_attestation(package_path):
         return False
-    
+
     # Check SLSA level
     metadata = get_package_metadata(package_path)
     slsa_level = check_slsa_level(metadata)
     if slsa_level < 2:
         return False
-    
+
     return True
 ```
 
@@ -448,28 +448,28 @@ PyPI gained **Sigstore attestation support in November 2024**, making cryptograp
 ```python
 from sigstore.verify import Verifier, policy
 
-def verify_sigstore_attestation(package_path: Path, 
+def verify_sigstore_attestation(package_path: Path,
                                expected_repo: str) -> bool:
     """Verify package using Sigstore attestations."""
     try:
         verifier = Verifier.production()
-        
+
         # Verify package was built by GitHub Actions in expected repo
         verification_policy = policy.Identity(
             identity=f"https://github.com/{expected_repo}/.github/workflows/",
             issuer="https://token.actions.githubusercontent.com"
         )
-        
+
         # Fetch attestation from PyPI
         attestation = fetch_pypi_attestation(package_path.name)
-        
+
         # Verify signature and identity
         result = verifier.verify_artifact(
             input_=package_path,
             bundle=attestation,
             policy=verification_policy
         )
-        
+
         return True
     except Exception as e:
         print(f"Verification failed: {e}")
@@ -501,29 +501,29 @@ def verify_github_org(repo_url: str, expected_org: str) -> bool:
     parts = repo_url.rstrip('/').split('/')
     if len(parts) < 2:
         return False
-    
+
     org = parts[-2]
     repo = parts[-1]
-    
+
     # Quick check: org name matches
     if org.lower() != expected_org.lower():
         return False
-    
+
     # Verify org exists (cached after first call)
     org_response = requests.get(
         f"https://api.github.com/orgs/{org}",
         headers={"Accept": "application/vnd.github+json"}
     )
-    
+
     if org_response.status_code != 200:
         return False
-    
+
     # Verify repo exists in org
     repo_response = requests.get(
         f"https://api.github.com/repos/{org}/{repo}",
         headers={"Accept": "application/vnd.github+json"}
     )
-    
+
     return repo_response.status_code == 200
 ```
 
@@ -555,11 +555,11 @@ class TrustPolicy:
 
 class PackageVerifier:
     """Progressive trust verifier for packages."""
-    
+
     def __init__(self, policy: TrustPolicy):
         self.policy = policy
-    
-    def verify_package(self, 
+
+    def verify_package(self,
                       package_name: str,
                       repo_url: Optional[str] = None,
                       package_path: Optional[Path] = None) -> TrustLevel:
@@ -568,22 +568,22 @@ class PackageVerifier:
         if self.policy.blocked_packages and \
            package_name in self.policy.blocked_packages:
             return TrustLevel.BLOCKED
-        
+
         # Phase 1: Manual allowlist
         if package_name in self.policy.allowed_packages:
             return TrustLevel.MANUAL_ALLOWLIST
-        
+
         # Phase 2: Verified organization
         if repo_url:
             for org in self.policy.trusted_orgs:
                 if verify_github_org(repo_url, org):
                     return TrustLevel.VERIFIED_ORG
-        
+
         # Phase 3: Automated verification
         if self.policy.require_sigstore and package_path:
             if verify_sigstore_attestation(package_path, repo_url):
                 return TrustLevel.AUTOMATED_VERIFIED
-        
+
         return TrustLevel.BLOCKED
 ```
 
@@ -604,11 +604,11 @@ for package in discovered_packages:
         package_name=package.name,
         repo_url=package.repo_url
     )
-    
+
     if trust_level == TrustLevel.BLOCKED:
         print(f"⚠️  Blocking untrusted package: {package.name}")
         continue
-    
+
     # Load verified package
     gateway.load_package(package)
 ```
@@ -637,12 +637,12 @@ import qdrant_client
 
 class SemanticToolRegistry:
     """Registry with semantic search capabilities."""
-    
+
     def __init__(self):
         self.embedding_model = SentenceTransformer('all-MiniLM-L6-v2')
         self.vector_db = qdrant_client.QdrantClient(":memory:")
         self._init_collection()
-    
+
     def _init_collection(self):
         """Initialize vector collection."""
         self.vector_db.create_collection(
@@ -652,7 +652,7 @@ class SemanticToolRegistry:
                 "distance": "Cosine"
             }
         )
-    
+
     def register_tool(self, tool_metadata: dict):
         """Register tool with semantic embedding."""
         # Create rich description for embedding
@@ -661,9 +661,9 @@ class SemanticToolRegistry:
             f"Capabilities: {', '.join(tool_metadata['capabilities'])}. "
             f"Use cases: {', '.join(tool_metadata['use_cases'])}"
         )
-        
+
         embedding = self.embedding_model.encode(description)
-        
+
         self.vector_db.upsert(
             collection_name="tools",
             points=[{
@@ -672,17 +672,17 @@ class SemanticToolRegistry:
                 "payload": tool_metadata
             }]
         )
-    
+
     def search_by_capability(self, task_description: str, limit: int = 5):
         """Search for tools that can accomplish described task."""
         query_embedding = self.embedding_model.encode(task_description)
-        
+
         results = self.vector_db.search(
             collection_name="tools",
             query_vector=query_embedding.tolist(),
             limit=limit
         )
-        
+
         return [{
             'tool': result.payload,
             'relevance_score': result.score
@@ -714,7 +714,7 @@ Pure semantic search sometimes misses important constraints. Hybrid search adds 
 def search_tools_hybrid(self, task: str, filters: dict = None, limit: int = 5):
     """Hybrid search: semantic similarity + metadata filtering."""
     query_embedding = self.embedding_model.encode(task)
-    
+
     # Build Qdrant filter from metadata constraints
     must_conditions = []
     if filters:
@@ -728,14 +728,14 @@ def search_tools_hybrid(self, task: str, filters: dict = None, limit: int = 5):
                 "key": "reliability_score",
                 "range": {"gte": filters['min_reliability']}
             })
-    
+
     results = self.vector_db.search(
         collection_name="tools",
         query_vector=query_embedding.tolist(),
         query_filter={"must": must_conditions} if must_conditions else None,
         limit=limit
     )
-    
+
     return self._format_results(results)
 ```
 
@@ -774,7 +774,7 @@ Rich metadata enables effective discovery and filtering:
     "secondary": ["filter", "rank", "summarize"],
     "use_cases": [
       "Find recent news articles",
-      "Research technical topics", 
+      "Research technical topics",
       "Verify facts and claims"
     ],
     "limitations": ["Results limited to public content", "No access to paywalled sites"]
@@ -924,7 +924,7 @@ The registry also implements an MCP server, enabling protocol-native discovery:
         "description": "Natural language description of what you need to accomplish"
       },
       "category": {
-        "type": "string", 
+        "type": "string",
         "description": "Optional category filter"
       },
       "limit": {
@@ -1011,29 +1011,29 @@ Support both JSON configuration and entry points simultaneously:
 ```python
 class GatewayConfigLoader:
     """Load server configuration from multiple sources."""
-    
+
     def __init__(self, config_path: Optional[Path] = None):
         self.config_path = config_path
         self.discovery = FastPackageDiscovery()
-    
+
     def load_all_servers(self) -> Dict[str, Any]:
         """Load from both JSON config and entry points."""
         servers = {}
-        
+
         # Load legacy JSON configuration
         if self.config_path and self.config_path.exists():
             legacy_servers = self._load_json_config()
             servers.update(legacy_servers)
             print(f"Loaded {len(legacy_servers)} servers from JSON config")
-        
+
         # Discover via entry points
         discovered_servers = self.discovery.discover_all()
         servers.update(discovered_servers)
         print(f"Discovered {len(discovered_servers)} servers via entry points")
-        
+
         # Deduplicate (entry points take precedence)
         return servers
-    
+
     def _load_json_config(self) -> Dict[str, Any]:
         """Load legacy JSON configuration."""
         with open(self.config_path, 'r') as f:
@@ -1053,10 +1053,10 @@ def generate_pyproject_from_json(json_config: Path, output: Path):
     """Generate pyproject.toml from legacy JSON config."""
     with open(json_config, 'r') as f:
         config = json.load(f)
-    
+
     for server in config['servers']:
         package_name = f"liminalcommons-{server['name']}"
-        
+
         # Generate pyproject.toml template
         pyproject = f"""
 [project]
@@ -1070,7 +1070,7 @@ description = "{server.get('description', '')}"
 [project.urls]
 Repository = "{server.get('repo_url', '')}"
 """
-        
+
         output_file = output / f"{package_name}.toml"
         output_file.write_text(pyproject)
         print(f"Generated {output_file}")
@@ -1135,16 +1135,16 @@ Add registry service as optional discovery source:
 ```python
 class MultiSourceDiscovery:
     """Discover from local entry points + remote registry."""
-    
+
     def __init__(self, registry_url: Optional[str] = None):
         self.local = FastPackageDiscovery()
         self.registry_url = registry_url
-    
+
     def discover_all(self) -> Dict[str, Any]:
         """Discover from multiple sources."""
         # Local installed packages (always checked)
         local_packages = self.local.discover_all()
-        
+
         # Remote registry (optional)
         remote_packages = {}
         if self.registry_url:
@@ -1152,22 +1152,22 @@ class MultiSourceDiscovery:
                 remote_packages = self._discover_from_registry()
             except Exception as e:
                 print(f"Warning: Registry discovery failed: {e}")
-        
+
         # Merge (local takes precedence)
         all_packages = {**remote_packages, **local_packages}
         return all_packages
-    
+
     def _discover_from_registry(self) -> Dict[str, Any]:
         """Query registry for available tools."""
         response = requests.get(
             f"{self.registry_url}/api/v1/tools",
             params={'ecosystem': 'liminalcommons'}
         )
-        
+
         if response.status_code == 200:
             tools = response.json()['tools']
             return {t['name']: t for t in tools}
-        
+
         return {}
 ```
 
@@ -1256,11 +1256,11 @@ def verify_github_org(repo_url: str, expected_org: str) -> bool:
     parts = repo_url.rstrip('/').split('/')
     if len(parts) < 2:
         return False
-    
+
     org = parts[-2]
     if org.lower() != expected_org.lower():
         return False
-    
+
     try:
         response = requests.get(
             f"https://api.github.com/orgs/{org}",
@@ -1278,12 +1278,12 @@ def verify_github_org(repo_url: str, expected_org: str) -> bool:
 
 class DiscoveryCache:
     """Fast persistent cache for discovered packages."""
-    
+
     def __init__(self, cache_dir: Path = None):
         self.cache_dir = cache_dir or Path.home() / '.liminalcommons' / 'cache'
         self.cache_dir.mkdir(parents=True, exist_ok=True)
         self.cache_file = self.cache_dir / 'packages.json'
-    
+
     def _get_cache_key(self) -> str:
         """Generate cache key based on environment."""
         path_str = '|'.join(sorted(sys.path))
@@ -1291,27 +1291,27 @@ class DiscoveryCache:
         mtime = site_packages.stat().st_mtime if site_packages.exists() else 0
         key_data = f"{path_str}|{mtime}"
         return hashlib.sha256(key_data.encode()).hexdigest()[:16]
-    
+
     def load(self) -> Optional[Dict]:
         """Load cached discovery results if valid."""
         if not self.cache_file.exists():
             return None
-        
+
         try:
             with open(self.cache_file, 'r') as f:
                 cache_data = json.load(f)
-            
+
             if cache_data.get('cache_key') != self._get_cache_key():
                 return None
-            
+
             cache_age = time.time() - cache_data.get('timestamp', 0)
             if cache_age > 3600:  # 1 hour TTL
                 return None
-            
+
             return cache_data.get('packages', {})
         except:
             return None
-    
+
     def save(self, packages: Dict):
         """Save discovery results to cache."""
         cache_data = {
@@ -1319,7 +1319,7 @@ class DiscoveryCache:
             'timestamp': time.time(),
             'packages': packages
         }
-        
+
         with open(self.cache_file, 'w') as f:
             json.dump(cache_data, f, indent=2)
 
@@ -1330,22 +1330,22 @@ class DiscoveryCache:
 
 class EcosystemDiscovery:
     """Complete ecosystem-native discovery with verification."""
-    
+
     ENTRY_GROUP = 'liminalcommons.servers'
-    
+
     def __init__(self, trust_policy: TrustPolicy):
         self.trust_policy = trust_policy
         self.cache = DiscoveryCache()
         self.packages: Dict[str, Any] = {}
         self.startup_time_ms = 0
-    
+
     def startup(self) -> Dict[str, Any]:
         """
         Complete startup sequence: discovery + verification.
         Target: <200ms total.
         """
         start = time.perf_counter()
-        
+
         # Try cache first (<5ms)
         cached = self.cache.load()
         if cached:
@@ -1356,22 +1356,22 @@ class EcosystemDiscovery:
             self._discover_packages()
             self.cache.save(self.packages)
             print(f"✓ Discovered {len(self.packages)} packages")
-        
+
         # Verify all packages (<50ms for ~50 packages)
         verified_packages = self._verify_all_packages()
-        
+
         self.startup_time_ms = (time.perf_counter() - start) * 1000
         print(f"🚀 Startup completed in {self.startup_time_ms:.2f}ms")
-        
+
         if self.startup_time_ms > 200:
             print(f"⚠️  Warning: Startup exceeded 200ms threshold")
-        
+
         return verified_packages
-    
+
     def _discover_packages(self):
         """Discover packages via entry points."""
         discovered = entry_points(group=self.ENTRY_GROUP)
-        
+
         for ep in discovered:
             self.packages[ep.name] = {
                 'name': ep.name,
@@ -1380,11 +1380,11 @@ class EcosystemDiscovery:
                 'entry_point': str(ep.value),
                 'loaded': False
             }
-    
+
     def _verify_all_packages(self) -> Dict[str, Any]:
         """Verify all discovered packages against trust policy."""
         verified = {}
-        
+
         for name, pkg_info in self.packages.items():
             # Check manual allowlist
             if name in self.trust_policy.allowed_packages:
@@ -1392,47 +1392,47 @@ class EcosystemDiscovery:
                 pkg_info['verified'] = True
                 verified[name] = pkg_info
                 continue
-            
+
             # Check GitHub org (if metadata available)
             # In production, this would fetch from PyPI metadata
             pkg_info['trust_level'] = TrustLevel.BLOCKED
             pkg_info['verified'] = False
-            
+
             # For demo: trust packages with liminalcommons prefix
             if name.startswith('liminalcommons'):
                 pkg_info['trust_level'] = TrustLevel.VERIFIED_ORG
                 pkg_info['verified'] = True
                 verified[name] = pkg_info
-        
+
         print(f"✓ Verified {len(verified)}/{len(self.packages)} packages")
         return verified
-    
+
     def load_package(self, name: str):
         """Lazy load package on demand."""
         if name not in self.packages:
             raise ValueError(f"Package {name} not found")
-        
+
         pkg = self.packages[name]
-        
+
         if not pkg.get('verified', False):
             raise SecurityError(f"Package {name} is not verified")
-        
+
         if pkg['loaded']:
             return pkg['instance']
-        
+
         # Load package
         start = time.perf_counter()
         ep_value = pkg['entry_point']
         module_name, class_name = ep_value.split(':')
-        
+
         import importlib
         module = importlib.import_module(module_name)
         pkg['instance'] = getattr(module, class_name)()
         pkg['loaded'] = True
-        
+
         load_time = (time.perf_counter() - start) * 1000
         print(f"✓ Loaded {name} in {load_time:.2f}ms")
-        
+
         return pkg['instance']
 
 
@@ -1442,30 +1442,30 @@ class EcosystemDiscovery:
 
 class LiminalCommonsGateway:
     """Main gateway with ecosystem-native discovery."""
-    
+
     def __init__(self, trust_policy: TrustPolicy = None):
         if trust_policy is None:
             trust_policy = TrustPolicy(
                 allowed_packages={'liminalcommons-core'},
                 trusted_orgs={'liminalcommons'}
             )
-        
+
         self.discovery = EcosystemDiscovery(trust_policy)
         self.servers = {}
-    
+
     def startup(self):
         """Start gateway with automatic server discovery."""
         print("=" * 60)
         print("LIMINALCOMMONS GATEWAY STARTUP")
         print("=" * 60)
-        
+
         self.servers = self.discovery.startup()
-        
+
         print(f"\n📦 Available servers:")
         for name, server in self.servers.items():
             trust = server['trust_level'].name
             print(f"  - {name} ({trust})")
-    
+
     def get_server(self, name: str):
         """Get server instance (lazy load)."""
         return self.discovery.load_package(name)
@@ -1485,11 +1485,11 @@ if __name__ == '__main__':
         },
         trusted_orgs={'liminalcommons'}
     )
-    
+
     # Start gateway
     gateway = LiminalCommonsGateway(policy)
     gateway.startup()
-    
+
     # Use a server
     # server = gateway.get_server('weather')
     # result = server.get_weather('San Francisco')

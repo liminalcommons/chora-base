@@ -56,4 +56,3 @@
 - Script to parse ledger and render summary YAML automatically.
 - GitHub Action or cron job to remind coordinator if update not committed by end-of-day Monday.
 - Dashboard integration pulling from `ECOSYSTEM_STATUS.yaml`.
-

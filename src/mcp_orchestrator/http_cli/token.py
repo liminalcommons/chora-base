@@ -45,7 +45,7 @@ Security:
         """,
     )
 
-    args = parser.parse_args()
+    parser.parse_args()
 
     try:
         # Get auth service and generate token
@@ -64,7 +64,9 @@ Security:
         print("Usage in Python:")
         print("  import requests")
         print(f'  headers = {{"Authorization": "Bearer {token}"}}')
-        print('  response = requests.get("http://localhost:8000/v1/clients", headers=headers)')
+        print(
+            '  response = requests.get("http://localhost:8000/v1/clients", headers=headers)'
+        )
         print()
         print("Security:")
         print("  - Store this token securely")

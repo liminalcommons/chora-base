@@ -4,7 +4,6 @@ Wave 2.2/3.0 - Automatic Server Installation
 """
 
 import shutil
-from typing import List
 
 from mcp_orchestrator.servers.models import PackageManager
 
@@ -13,7 +12,7 @@ class PackageManagerDetector:
     """Detect available package managers on the system."""
 
     @staticmethod
-    def detect_available() -> List[PackageManager]:
+    def detect_available() -> list[PackageManager]:
         """Detect which package managers are installed.
 
         Returns:
@@ -41,10 +40,8 @@ class PackageManagerDetector:
 
     @staticmethod
     def get_install_command(
-        package_manager: PackageManager,
-        package_name: str,
-        global_install: bool = True
-    ) -> List[str]:
+        package_manager: PackageManager, package_name: str, global_install: bool = True
+    ) -> list[str]:
         """Get installation command for package manager.
 
         Args:

@@ -6,9 +6,9 @@ Tests follow behavior-driven development approach.
 Wave 2.2/3.0 - Automatic Server Installation
 """
 
-import pytest
-from unittest.mock import patch, MagicMock
+from unittest.mock import MagicMock, patch
 
+import pytest
 from mcp_orchestrator.servers.models import PackageManager
 
 
@@ -35,7 +35,9 @@ class TestPackageManagerEnum:
 
 # Import will fail until we implement the module - that's expected in BDD
 # We'll add pytest.importorskip for now
-pytest.importorskip("mcp_orchestrator.installation", reason="Module not yet implemented")
+pytest.importorskip(
+    "mcp_orchestrator.installation", reason="Module not yet implemented"
+)
 
 
 class TestPackageManagerDetector:
@@ -58,7 +60,9 @@ class TestPackageManagerDetector:
         """Should detect pip when it's installed."""
         from mcp_orchestrator.installation.package_manager import PackageManagerDetector
 
-        mock_which.side_effect = lambda cmd: "/usr/bin/pip" if cmd in ["pip", "pip3"] else None
+        mock_which.side_effect = (
+            lambda cmd: "/usr/bin/pip" if cmd in ["pip", "pip3"] else None
+        )
 
         detector = PackageManagerDetector()
         available = detector.detect_available()
@@ -75,7 +79,7 @@ class TestPackageManagerDetector:
                 "npm": "/usr/bin/npm",
                 "pip": "/usr/bin/pip",
                 "pip3": "/usr/bin/pip3",
-                "pipx": "/usr/local/bin/pipx"
+                "pipx": "/usr/local/bin/pipx",
             }
             return paths.get(cmd)
 
@@ -111,10 +115,15 @@ class TestPackageManagerCommandGeneration:
         cmd = PackageManagerDetector.get_install_command(
             PackageManager.NPM,
             "@modelcontextprotocol/server-filesystem",
-            global_install=True
+            global_install=True,
         )
 
-        assert cmd == ["npm", "install", "-g", "@modelcontextprotocol/server-filesystem"]
+        assert cmd == [
+            "npm",
+            "install",
+            "-g",
+            "@modelcontextprotocol/server-filesystem",
+        ]
 
     def test_get_npm_install_command_local(self) -> None:
         """Should generate correct npm local install command."""
@@ -123,7 +132,7 @@ class TestPackageManagerCommandGeneration:
         cmd = PackageManagerDetector.get_install_command(
             PackageManager.NPM,
             "@modelcontextprotocol/server-filesystem",
-            global_install=False
+            global_install=False,
         )
 
         assert cmd == ["npm", "install", "@modelcontextprotocol/server-filesystem"]
@@ -133,8 +142,7 @@ class TestPackageManagerCommandGeneration:
         from mcp_orchestrator.installation.package_manager import PackageManagerDetector
 
         cmd = PackageManagerDetector.get_install_command(
-            PackageManager.PIP,
-            "lightrag-mcp"
+            PackageManager.PIP, "lightrag-mcp"
         )
 
         assert cmd == ["pip", "install", "lightrag-mcp"]
@@ -144,8 +152,7 @@ class TestPackageManagerCommandGeneration:
         from mcp_orchestrator.installation.package_manager import PackageManagerDetector
 
         cmd = PackageManagerDetector.get_install_command(
-            PackageManager.PIPX,
-            "lightrag-mcp"
+            PackageManager.PIPX, "lightrag-mcp"
         )
 
         assert cmd == ["pipx", "install", "lightrag-mcp"]
@@ -155,8 +162,7 @@ class TestPackageManagerCommandGeneration:
         from mcp_orchestrator.installation.package_manager import PackageManagerDetector
 
         cmd = PackageManagerDetector.get_install_command(
-            PackageManager.UVX,
-            "lightrag-mcp"
+            PackageManager.UVX, "lightrag-mcp"
         )
 
         assert cmd == ["uvx", "lightrag-mcp"]
@@ -167,8 +173,7 @@ class TestPackageManagerCommandGeneration:
 
         with pytest.raises(ValueError, match="Unsupported package manager"):
             PackageManagerDetector.get_install_command(
-                PackageManager.CUSTOM,
-                "some-package"
+                PackageManager.CUSTOM, "some-package"
             )
 
 
@@ -190,8 +195,7 @@ class TestPackageManagerIntegration:
 
         # Generate command
         cmd = detector.get_install_command(
-            PackageManager.NPM,
-            "@modelcontextprotocol/server-filesystem"
+            PackageManager.NPM, "@modelcontextprotocol/server-filesystem"
         )
         assert "npm" in cmd
         assert "install" in cmd
@@ -210,8 +214,5 @@ class TestPackageManagerIntegration:
         assert PackageManager.PIP in available
 
         # Generate command
-        cmd = detector.get_install_command(
-            PackageManager.PIP,
-            "lightrag-mcp"
-        )
+        cmd = detector.get_install_command(PackageManager.PIP, "lightrag-mcp")
         assert cmd == ["pip", "install", "lightrag-mcp"]

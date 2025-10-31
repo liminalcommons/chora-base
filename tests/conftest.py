@@ -4,20 +4,18 @@ This module provides common fixtures used across multiple test files,
 reducing code duplication and ensuring consistent test setup.
 """
 
-import tempfile
 from pathlib import Path
-from typing import Any, Dict
+from typing import Any
 
 import pytest
-
+from mcp_orchestrator.building import ConfigBuilder
 from mcp_orchestrator.crypto import ArtifactSigner
 from mcp_orchestrator.servers import get_default_registry
 from mcp_orchestrator.storage import ArtifactStore
-from mcp_orchestrator.building import ConfigBuilder
 
 
 @pytest.fixture
-def tmp_storage(tmp_path: Path) -> Dict[str, Path]:
+def tmp_storage(tmp_path: Path) -> dict[str, Path]:
     """Create temporary storage structure for testing.
 
     Returns:
@@ -69,7 +67,7 @@ def artifact_store(tmp_path: Path) -> ArtifactStore:
 
 
 @pytest.fixture
-def sample_config_payload() -> Dict[str, Any]:
+def sample_config_payload() -> dict[str, Any]:
     """Sample MCP configuration payload.
 
     Returns:
@@ -80,7 +78,7 @@ def sample_config_payload() -> Dict[str, Any]:
             "filesystem": {
                 "command": "npx",
                 "args": ["-y", "@modelcontextprotocol/server-filesystem"],
-                "env": {"PATH": "/tmp"}
+                "env": {"PATH": "/tmp"},
             }
         }
     }
@@ -98,7 +96,7 @@ def config_builder() -> ConfigBuilder:
 
 
 @pytest.fixture
-def test_keypair(tmp_path: Path) -> Dict[str, Path]:
+def test_keypair(tmp_path: Path) -> dict[str, Path]:
     """Generate temporary test keypair.
 
     Returns:

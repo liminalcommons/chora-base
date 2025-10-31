@@ -33,14 +33,12 @@ Note: These tests are written BEFORE implementation (TDD).
 All tests will fail initially until implementation is complete.
 """
 
-import json
 import tempfile
 from pathlib import Path
-from unittest.mock import MagicMock, patch
+from unittest.mock import patch
 
 import pytest
 from fastapi.testclient import TestClient
-
 
 # Import will fail initially (TDD) - implementation doesn't exist yet
 try:
@@ -107,14 +105,18 @@ class TestClientEndpoints:
 
     def test_list_profiles_returns_200(self, client, auth_headers):
         """Test GET /v1/clients/{client_id}/profiles returns 200 or 404."""
-        response = client.get("/v1/clients/claude-desktop/profiles", headers=auth_headers)
+        response = client.get(
+            "/v1/clients/claude-desktop/profiles", headers=auth_headers
+        )
 
         # 200 if client exists, 404 if not
         assert response.status_code in [200, 404]
 
     def test_list_profiles_returns_json(self, client, auth_headers):
         """Test GET /v1/clients/{client_id}/profiles returns valid JSON."""
-        response = client.get("/v1/clients/claude-desktop/profiles", headers=auth_headers)
+        response = client.get(
+            "/v1/clients/claude-desktop/profiles", headers=auth_headers
+        )
 
         assert response.headers["content-type"] == "application/json"
 
@@ -127,7 +129,9 @@ class TestClientEndpoints:
         if len(clients) > 0:
             client_id = clients[0]["client_id"]
 
-            response = client.get(f"/v1/clients/{client_id}/profiles", headers=auth_headers)
+            response = client.get(
+                f"/v1/clients/{client_id}/profiles", headers=auth_headers
+            )
 
             if response.status_code == 200:
                 data = response.json()
@@ -136,7 +140,9 @@ class TestClientEndpoints:
 
     def test_list_profiles_nonexistent_client_returns_404(self, client, auth_headers):
         """Test GET /v1/clients/{client_id}/profiles returns 404 for nonexistent client."""
-        response = client.get("/v1/clients/nonexistent_client_xyz/profiles", headers=auth_headers)
+        response = client.get(
+            "/v1/clients/nonexistent_client_xyz/profiles", headers=auth_headers
+        )
 
         assert response.status_code == 404
 
@@ -193,7 +199,9 @@ class TestConfigEndpoints:
         data = response.json()
 
         # Should have added/removed/modified keys
-        assert "added" in data or "removed" in data or "modified" in data or "diff" in data
+        assert (
+            "added" in data or "removed" in data or "modified" in data or "diff" in data
+        )
 
     def test_diff_config_invalid_json_returns_400(self, client, auth_headers):
         """Test POST /v1/config/diff returns 400 for invalid JSON."""
@@ -440,7 +448,9 @@ class TestServerRegistryEndpoints:
 
     def test_describe_server_nonexistent_returns_404(self, client, auth_headers):
         """Test GET /v1/servers/{server_id} returns 404 for nonexistent server."""
-        response = client.get("/v1/servers/nonexistent_server_xyz", headers=auth_headers)
+        response = client.get(
+            "/v1/servers/nonexistent_server_xyz", headers=auth_headers
+        )
 
         assert response.status_code == 404
 
@@ -459,7 +469,9 @@ class TestKeyManagementEndpoints:
         """Test POST /v1/keys/initialize creates signing keys."""
         with tempfile.TemporaryDirectory() as tmpdir:
             # Set keys directory for test
-            with patch("mcp_orchestrator.storage.base.get_base_dir", return_value=Path(tmpdir)):
+            with patch(
+                "mcp_orchestrator.storage.base.get_base_dir", return_value=Path(tmpdir)
+            ):
                 response = client.post("/v1/keys/initialize", headers=auth_headers)
 
                 if response.status_code == 200:
@@ -467,7 +479,9 @@ class TestKeyManagementEndpoints:
                     # Should indicate success
                     assert "success" in data or "message" in data or "keys" in data
 
-    def test_initialize_keys_already_initialized_returns_400(self, client, auth_headers):
+    def test_initialize_keys_already_initialized_returns_400(
+        self, client, auth_headers
+    ):
         """Test POST /v1/keys/initialize returns 400 if keys already exist."""
         # Initialize keys
         response1 = client.post("/v1/keys/initialize", headers=auth_headers)
@@ -540,10 +554,15 @@ class TestEndpointResponseHeaders:
     def test_cors_headers_present(self, client):
         """Test that CORS headers are present (basic check)."""
         # This is tested more thoroughly in test_cors.py
-        response = client.options("/v1/clients", headers={"Origin": "http://localhost:3000"})
+        response = client.options(
+            "/v1/clients", headers={"Origin": "http://localhost:3000"}
+        )
 
         # Should have CORS headers
-        assert "access-control-allow-origin" in response.headers or response.status_code == 200
+        assert (
+            "access-control-allow-origin" in response.headers
+            or response.status_code == 200
+        )
 
 
 class TestEndpointIntegrationWithMCPTools:

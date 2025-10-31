@@ -30,7 +30,7 @@ class ServerInstaller:
         package_manager: PackageManager,
         package_name: str,
         server_id: str,
-        timeout: int = 300  # 5 minutes
+        timeout: int = 300,  # 5 minutes
     ) -> InstallationResult:
         """Install a server package.
 
@@ -45,15 +45,12 @@ class ServerInstaller:
         """
         # Get install command
         try:
-            cmd = self.detector.get_install_command(
-                package_manager,
-                package_name
-            )
+            cmd = self.detector.get_install_command(package_manager, package_name)
         except ValueError as e:
             return InstallationResult(
                 server_id=server_id,
                 status=InstallationStatus.ERROR,
-                error_message=str(e)
+                error_message=str(e),
             )
 
         # Convert command list to string for display
@@ -65,34 +62,34 @@ class ServerInstaller:
                 server_id=server_id,
                 status=InstallationStatus.INSTALLED,
                 installation_command=cmd_string,
-                error_message="Dry run - installation not executed"
+                error_message="Dry run - installation not executed",
             )
 
         # Execute installation
         try:
-            result = subprocess.run(
-                cmd,
-                capture_output=True,
-                text=True,
-                timeout=timeout,
-                check=True
+            subprocess.run(
+                cmd, capture_output=True, text=True, timeout=timeout, check=True
             )
 
             return InstallationResult(
                 server_id=server_id,
                 status=InstallationStatus.INSTALLED,
                 package_manager=package_manager,
-                installation_command=cmd_string
+                installation_command=cmd_string,
             )
 
         except subprocess.CalledProcessError as e:
             # Installation failed
-            error_msg = f"Installation failed: {e.stderr}" if e.stderr else "Installation failed"
+            error_msg = (
+                f"Installation failed: {e.stderr}"
+                if e.stderr
+                else "Installation failed"
+            )
             return InstallationResult(
                 server_id=server_id,
                 status=InstallationStatus.ERROR,
                 error_message=error_msg,
-                installation_command=cmd_string
+                installation_command=cmd_string,
             )
 
         except subprocess.TimeoutExpired:
@@ -100,5 +97,5 @@ class ServerInstaller:
                 server_id=server_id,
                 status=InstallationStatus.ERROR,
                 error_message=f"Installation timed out after {timeout}s",
-                installation_command=cmd_string
+                installation_command=cmd_string,
             )

@@ -31,12 +31,12 @@ from typing import Any
 from fastmcp import FastMCP
 
 from mcp_orchestrator.building import ConfigBuilder
-from mcp_orchestrator.deployment import DeploymentWorkflow, DeploymentError
+from mcp_orchestrator.deployment import DeploymentError, DeploymentWorkflow
 from mcp_orchestrator.deployment.log import DeploymentLog
 from mcp_orchestrator.diff import compare_configs
 from mcp_orchestrator.publishing import PublishingWorkflow, ValidationError
 from mcp_orchestrator.registry import get_default_registry
-from mcp_orchestrator.servers import ServerRegistry, get_default_registry as get_server_registry
+from mcp_orchestrator.servers import get_default_registry as get_server_registry
 from mcp_orchestrator.servers.registry import ServerNotFoundError
 from mcp_orchestrator.storage import ArtifactStore, StorageError
 
@@ -124,9 +124,7 @@ async def list_profiles(client_id: str) -> dict[str, Any]:
     # Validate client exists in registry
     if not _registry.has_client(client_id):
         available = _registry.client_ids()
-        raise ValueError(
-            f"Client '{client_id}' not found. Available: {available}"
-        )
+        raise ValueError(f"Client '{client_id}' not found. Available: {available}")
 
     # Get profile definitions from registry
     profile_defs = _registry.get_profiles(client_id)
@@ -208,9 +206,7 @@ async def get_config(
     # Validate client exists
     if not _registry.has_client(client_id):
         available = _registry.client_ids()
-        raise ValueError(
-            f"Client '{client_id}' not found. Available: {available}"
-        )
+        raise ValueError(f"Client '{client_id}' not found. Available: {available}")
 
     # Retrieve artifact from storage
     try:
@@ -286,9 +282,7 @@ async def diff_config(
 
     if not _registry.has_client(client_id):
         available = _registry.client_ids()
-        raise ValueError(
-            f"Client '{client_id}' not found. Available: {available}"
-        )
+        raise ValueError(f"Client '{client_id}' not found. Available: {available}")
 
     # Get local payload if only artifact_id provided
     if local_artifact_id and not local_payload:
@@ -656,11 +650,13 @@ async def add_server_to_config(
         # Parse params if passed as JSON string (Claude Desktop serialization)
         if isinstance(params, str):
             import json
+
             params = json.loads(params)
 
         # Parse env_vars if passed as JSON string
         if isinstance(env_vars, str):
             import json
+
             env_vars = json.loads(env_vars)
 
         # Add server (will validate params and env_vars)
@@ -923,10 +919,14 @@ async def publish_config(
                 signing_key_id="default",
                 changelog=changelog,
             )
-            logger.info(f"Publish succeeded with artifact_id: {result.get('artifact_id', 'UNKNOWN')[:16]}...")
+            logger.info(
+                f"Publish succeeded with artifact_id: {result.get('artifact_id', 'UNKNOWN')[:16]}..."
+            )
 
         except Exception as publish_error:
-            logger.error(f"workflow.publish() raised exception: {type(publish_error).__name__}: {publish_error}")
+            logger.error(
+                f"workflow.publish() raised exception: {type(publish_error).__name__}: {publish_error}"
+            )
             raise
 
         # Ensure result is JSON-serializable
@@ -951,9 +951,7 @@ async def publish_config(
         logger.error(f"Validation failed: {e}")
         errors = e.validation_result.get("errors", [])
         error_msgs = [f"  - [{err['code']}] {err['message']}" for err in errors]
-        raise ValueError(
-            f"Configuration validation failed:\n" + "\n".join(error_msgs)
-        )
+        raise ValueError("Configuration validation failed:\n" + "\n".join(error_msgs))
 
     except ValueError as e:
         logger.error(f"ValueError in publish_config: {e}")
@@ -966,7 +964,10 @@ async def publish_config(
 
     except Exception as e:
         # Catch-all for unexpected errors
-        logger.error(f"Unexpected error in publish_config: {type(e).__name__}: {e}", exc_info=True)
+        logger.error(
+            f"Unexpected error in publish_config: {type(e).__name__}: {e}",
+            exc_info=True,
+        )
         raise ValueError(f"Failed to publish config: {type(e).__name__}: {e}")
 
 
@@ -1121,7 +1122,9 @@ async def validate_config(
                     )
 
                 # Check args is a list
-                if "args" in server_config and not isinstance(server_config["args"], list):
+                if "args" in server_config and not isinstance(
+                    server_config["args"], list
+                ):
                     errors.append(
                         {
                             "code": "INVALID_ARGS_TYPE",
@@ -1237,7 +1240,7 @@ async def validate_config(
 async def deploy_config(
     client_id: str = "claude-desktop",
     profile_id: str = "default",
-    artifact_id: str | None = None
+    artifact_id: str | None = None,
 ) -> dict[str, Any]:
     """Deploy configuration to client.
 
@@ -1280,16 +1283,12 @@ async def deploy_config(
     try:
         # Create deployment workflow
         workflow = DeploymentWorkflow(
-            store=_store,
-            client_registry=_registry,
-            deployment_log=_deployment_log
+            store=_store, client_registry=_registry, deployment_log=_deployment_log
         )
 
         # Deploy configuration
         result = workflow.deploy(
-            client_id=client_id,
-            profile_id=profile_id,
-            artifact_id=artifact_id
+            client_id=client_id, profile_id=profile_id, artifact_id=artifact_id
         )
 
         return result.model_dump()
@@ -1647,7 +1646,7 @@ async def deployed_config_resource(client_id: str, profile_id: str) -> str:
     try:
         latest_artifact = _store.get(client_id, profile_id)
         latest_artifact_id = latest_artifact.artifact_id
-        drift_detected = (deployed_artifact_id != latest_artifact_id)
+        drift_detected = deployed_artifact_id != latest_artifact_id
     except Exception:
         # No latest artifact - can't detect drift
         pass
@@ -1724,9 +1723,7 @@ async def check_server_installation(server_id: str) -> dict[str, Any]:
 
 @mcp.tool()
 async def install_server(
-    server_id: str,
-    confirm: bool = True,
-    package_manager: str | None = None
+    server_id: str, confirm: bool = True, package_manager: str | None = None
 ) -> dict[str, Any]:
     """Install an MCP server from npm or PyPI.
 
@@ -1785,7 +1782,7 @@ async def install_server(
             "server_id": server_id,
             "status": "already_installed",
             "installed_version": check_result.installed_version,
-            "install_location": check_result.install_location
+            "install_location": check_result.install_location,
         }
 
     # Determine package manager
@@ -1797,7 +1794,10 @@ async def install_server(
     # Get package name
     if pm == PackageManager.NPM and server.npm_package:
         package_name = server.npm_package
-    elif pm in [PackageManager.PIP, PackageManager.PIPX, PackageManager.UVX] and server.pypi_package:
+    elif (
+        pm in [PackageManager.PIP, PackageManager.PIPX, PackageManager.UVX]
+        and server.pypi_package
+    ):
         package_name = server.pypi_package
     else:
         raise ValueError(
@@ -1807,21 +1807,20 @@ async def install_server(
     # Require confirmation in production
     if confirm:
         from mcp_orchestrator.installation.package_manager import PackageManagerDetector
+
         cmd = PackageManagerDetector.get_install_command(pm, package_name)
         return {
             "server_id": server_id,
             "status": "confirmation_required",
             "message": f"Ready to install {package_name} via {pm.value}. "
-                      f"Call install_server(server_id='{server_id}', confirm=False) to proceed.",
-            "installation_command": " ".join(cmd)
+            f"Call install_server(server_id='{server_id}', confirm=False) to proceed.",
+            "installation_command": " ".join(cmd),
         }
 
     # Execute installation
     installer = ServerInstaller()
     result = installer.install(
-        package_manager=pm,
-        package_name=package_name,
-        server_id=server_id
+        package_manager=pm, package_name=package_name, server_id=server_id
     )
 
     return result.model_dump()
@@ -1867,19 +1866,23 @@ async def list_installed_servers() -> dict[str, Any]:
         elif check_result.status == "not_installed":
             not_installed_count += 1
 
-        results.append({
-            "server_id": server.server_id,
-            "display_name": server.display_name,
-            "status": check_result.status.value,
-            "installed_version": check_result.installed_version,
-            "package_manager": server.package_manager.value if server.package_manager else None
-        })
+        results.append(
+            {
+                "server_id": server.server_id,
+                "display_name": server.display_name,
+                "status": check_result.status.value,
+                "installed_version": check_result.installed_version,
+                "package_manager": server.package_manager.value
+                if server.package_manager
+                else None,
+            }
+        )
 
     return {
         "servers": results,
         "installed_count": installed_count,
         "not_installed_count": not_installed_count,
-        "total_count": len(servers)
+        "total_count": len(servers),
     }
 
 

@@ -20,15 +20,12 @@ Coverage targets:
 - serve_http.py: 21.05% -> 80%+
 """
 
-import argparse
-import sys
-from io import StringIO
-from unittest.mock import MagicMock, patch, call
+from unittest.mock import MagicMock, patch
 
 import pytest
-
-from mcp_orchestrator.http_cli.token import generate_token_cli, main as token_main
 from mcp_orchestrator.http_cli.serve_http import serve_http_cli
+from mcp_orchestrator.http_cli.token import generate_token_cli
+from mcp_orchestrator.http_cli.token import main as token_main
 
 
 class TestTokenGenerationCLI:
@@ -40,7 +37,10 @@ class TestTokenGenerationCLI:
         mock_auth_service = MagicMock()
         mock_auth_service.generate_token.return_value = mock_token
 
-        with patch("mcp_orchestrator.http_cli.token.get_auth_service", return_value=mock_auth_service):
+        with patch(
+            "mcp_orchestrator.http_cli.token.get_auth_service",
+            return_value=mock_auth_service,
+        ):
             with patch("sys.argv", ["mcp-orchestration-generate-token"]):
                 result = generate_token_cli()
 
@@ -61,7 +61,10 @@ class TestTokenGenerationCLI:
         mock_auth_service = MagicMock()
         mock_auth_service.generate_token.return_value = mock_token
 
-        with patch("mcp_orchestrator.http_cli.token.get_auth_service", return_value=mock_auth_service):
+        with patch(
+            "mcp_orchestrator.http_cli.token.get_auth_service",
+            return_value=mock_auth_service,
+        ):
             with patch("sys.argv", ["mcp-orchestration-generate-token"]):
                 generate_token_cli()
 
@@ -79,7 +82,10 @@ class TestTokenGenerationCLI:
         mock_auth_service = MagicMock()
         mock_auth_service.generate_token.return_value = "token"
 
-        with patch("mcp_orchestrator.http_cli.token.get_auth_service", return_value=mock_auth_service):
+        with patch(
+            "mcp_orchestrator.http_cli.token.get_auth_service",
+            return_value=mock_auth_service,
+        ):
             with patch("sys.argv", ["mcp-orchestration-generate-token"]):
                 generate_token_cli()
 
@@ -93,9 +99,14 @@ class TestTokenGenerationCLI:
     def test_generate_token_cli_error_handling(self, capsys):
         """Test CLI error handling when token generation fails."""
         mock_auth_service = MagicMock()
-        mock_auth_service.generate_token.side_effect = Exception("Token generation failed")
+        mock_auth_service.generate_token.side_effect = Exception(
+            "Token generation failed"
+        )
 
-        with patch("mcp_orchestrator.http_cli.token.get_auth_service", return_value=mock_auth_service):
+        with patch(
+            "mcp_orchestrator.http_cli.token.get_auth_service",
+            return_value=mock_auth_service,
+        ):
             with patch("sys.argv", ["mcp-orchestration-generate-token"]):
                 with pytest.raises(SystemExit) as exc_info:
                     generate_token_cli()
@@ -113,7 +124,10 @@ class TestTokenGenerationCLI:
         mock_auth_service = MagicMock()
         mock_auth_service.generate_token.return_value = "token123"
 
-        with patch("mcp_orchestrator.http_cli.token.get_auth_service", return_value=mock_auth_service):
+        with patch(
+            "mcp_orchestrator.http_cli.token.get_auth_service",
+            return_value=mock_auth_service,
+        ):
             with patch("sys.argv", ["mcp-orchestration-generate-token"]):
                 generate_token_cli()
 
@@ -148,7 +162,10 @@ class TestTokenGenerationCLI:
         mock_auth_service = MagicMock()
         mock_auth_service.generate_token.return_value = "token"
 
-        with patch("mcp_orchestrator.http_cli.token.get_auth_service", return_value=mock_auth_service):
+        with patch(
+            "mcp_orchestrator.http_cli.token.get_auth_service",
+            return_value=mock_auth_service,
+        ):
             with patch("sys.argv", ["mcp-orchestration-generate-token"]):
                 exit_code = token_main()
 
@@ -160,7 +177,10 @@ class TestTokenGenerationCLI:
         mock_auth_service = MagicMock()
         mock_auth_service.generate_token.side_effect = Exception("Test error")
 
-        with patch("mcp_orchestrator.http_cli.token.get_auth_service", return_value=mock_auth_service):
+        with patch(
+            "mcp_orchestrator.http_cli.token.get_auth_service",
+            return_value=mock_auth_service,
+        ):
             with patch("sys.argv", ["mcp-orchestration-generate-token"]):
                 # main() catches exception from generate_token_cli() which calls sys.exit(1)
                 # So we need to catch the SystemExit
@@ -182,7 +202,10 @@ class TestTokenGenerationCLI:
         mock_auth_service = MagicMock()
         mock_auth_service.generate_token.side_effect = KeyboardInterrupt()
 
-        with patch("mcp_orchestrator.http_cli.token.get_auth_service", return_value=mock_auth_service):
+        with patch(
+            "mcp_orchestrator.http_cli.token.get_auth_service",
+            return_value=mock_auth_service,
+        ):
             with patch("sys.argv", ["mcp-orchestration-generate-token"]):
                 # KeyboardInterrupt propagates as SystemExit
                 try:
@@ -197,7 +220,10 @@ class TestTokenGenerationCLI:
     def test_token_main_exception_in_main_function(self, capsys):
         """Test main() catches exceptions raised outside generate_token_cli()."""
         # Mock generate_token_cli to raise an exception that doesn't call sys.exit
-        with patch("mcp_orchestrator.http_cli.token.generate_token_cli", side_effect=RuntimeError("Direct error")):
+        with patch(
+            "mcp_orchestrator.http_cli.token.generate_token_cli",
+            side_effect=RuntimeError("Direct error"),
+        ):
             with patch("sys.argv", ["mcp-orchestration-generate-token"]):
                 exit_code = token_main()
 
@@ -217,7 +243,10 @@ class TestServeHTTPCLI:
         mock_server = MagicMock()
         mock_server_class = MagicMock(return_value=mock_server)
 
-        with patch("mcp_orchestrator.http_cli.serve_http.HTTPTransportServer", mock_server_class):
+        with patch(
+            "mcp_orchestrator.http_cli.serve_http.HTTPTransportServer",
+            mock_server_class,
+        ):
             with patch("sys.argv", ["mcp-orchestration-serve-http"]):
                 exit_code = serve_http_cli()
 
@@ -239,8 +268,13 @@ class TestServeHTTPCLI:
         mock_server = MagicMock()
         mock_server_class = MagicMock(return_value=mock_server)
 
-        with patch("mcp_orchestrator.http_cli.serve_http.HTTPTransportServer", mock_server_class):
-            with patch("sys.argv", ["mcp-orchestration-serve-http", "--host", "127.0.0.1"]):
+        with patch(
+            "mcp_orchestrator.http_cli.serve_http.HTTPTransportServer",
+            mock_server_class,
+        ):
+            with patch(
+                "sys.argv", ["mcp-orchestration-serve-http", "--host", "127.0.0.1"]
+            ):
                 serve_http_cli()
 
         # Verify custom host
@@ -251,7 +285,10 @@ class TestServeHTTPCLI:
         mock_server = MagicMock()
         mock_server_class = MagicMock(return_value=mock_server)
 
-        with patch("mcp_orchestrator.http_cli.serve_http.HTTPTransportServer", mock_server_class):
+        with patch(
+            "mcp_orchestrator.http_cli.serve_http.HTTPTransportServer",
+            mock_server_class,
+        ):
             with patch("sys.argv", ["mcp-orchestration-serve-http", "--port", "9000"]):
                 serve_http_cli()
 
@@ -263,8 +300,14 @@ class TestServeHTTPCLI:
         mock_server = MagicMock()
         mock_server_class = MagicMock(return_value=mock_server)
 
-        with patch("mcp_orchestrator.http_cli.serve_http.HTTPTransportServer", mock_server_class):
-            with patch("sys.argv", ["mcp-orchestration-serve-http", "--host", "0.0.0.0", "--port", "8080"]):
+        with patch(
+            "mcp_orchestrator.http_cli.serve_http.HTTPTransportServer",
+            mock_server_class,
+        ):
+            with patch(
+                "sys.argv",
+                ["mcp-orchestration-serve-http", "--host", "0.0.0.0", "--port", "8080"],
+            ):
                 serve_http_cli()
 
         # Verify both custom values
@@ -274,7 +317,10 @@ class TestServeHTTPCLI:
         """Test HTTP server CLI with default log level."""
         mock_server = MagicMock()
 
-        with patch("mcp_orchestrator.http_cli.serve_http.HTTPTransportServer", return_value=mock_server):
+        with patch(
+            "mcp_orchestrator.http_cli.serve_http.HTTPTransportServer",
+            return_value=mock_server,
+        ):
             with patch("sys.argv", ["mcp-orchestration-serve-http"]):
                 serve_http_cli()
 
@@ -285,8 +331,13 @@ class TestServeHTTPCLI:
         """Test HTTP server CLI with custom log level."""
         mock_server = MagicMock()
 
-        with patch("mcp_orchestrator.http_cli.serve_http.HTTPTransportServer", return_value=mock_server):
-            with patch("sys.argv", ["mcp-orchestration-serve-http", "--log-level", "debug"]):
+        with patch(
+            "mcp_orchestrator.http_cli.serve_http.HTTPTransportServer",
+            return_value=mock_server,
+        ):
+            with patch(
+                "sys.argv", ["mcp-orchestration-serve-http", "--log-level", "debug"]
+            ):
                 serve_http_cli()
 
         # Verify custom log level
@@ -299,8 +350,14 @@ class TestServeHTTPCLI:
         for log_level in valid_log_levels:
             mock_server = MagicMock()
 
-            with patch("mcp_orchestrator.http_cli.serve_http.HTTPTransportServer", return_value=mock_server):
-                with patch("sys.argv", ["mcp-orchestration-serve-http", "--log-level", log_level]):
+            with patch(
+                "mcp_orchestrator.http_cli.serve_http.HTTPTransportServer",
+                return_value=mock_server,
+            ):
+                with patch(
+                    "sys.argv",
+                    ["mcp-orchestration-serve-http", "--log-level", log_level],
+                ):
                     exit_code = serve_http_cli()
 
             # Verify log level accepted
@@ -309,7 +366,9 @@ class TestServeHTTPCLI:
 
     def test_serve_http_cli_invalid_log_level(self):
         """Test HTTP server CLI rejects invalid log level."""
-        with patch("sys.argv", ["mcp-orchestration-serve-http", "--log-level", "invalid"]):
+        with patch(
+            "sys.argv", ["mcp-orchestration-serve-http", "--log-level", "invalid"]
+        ):
             with pytest.raises(SystemExit) as exc_info:
                 serve_http_cli()
 
@@ -352,7 +411,10 @@ class TestServeHTTPCLI:
         mock_server = MagicMock()
         mock_server.run.side_effect = KeyboardInterrupt()
 
-        with patch("mcp_orchestrator.http_cli.serve_http.HTTPTransportServer", return_value=mock_server):
+        with patch(
+            "mcp_orchestrator.http_cli.serve_http.HTTPTransportServer",
+            return_value=mock_server,
+        ):
             with patch("sys.argv", ["mcp-orchestration-serve-http"]):
                 exit_code = serve_http_cli()
 
@@ -368,7 +430,10 @@ class TestServeHTTPCLI:
         mock_server = MagicMock()
         mock_server.run.side_effect = Exception("Server startup failed")
 
-        with patch("mcp_orchestrator.http_cli.serve_http.HTTPTransportServer", return_value=mock_server):
+        with patch(
+            "mcp_orchestrator.http_cli.serve_http.HTTPTransportServer",
+            return_value=mock_server,
+        ):
             with patch("sys.argv", ["mcp-orchestration-serve-http"]):
                 exit_code = serve_http_cli()
 
@@ -385,7 +450,10 @@ class TestServeHTTPCLI:
         mock_server = MagicMock()
         mock_server.run.side_effect = OSError("Address already in use")
 
-        with patch("mcp_orchestrator.http_cli.serve_http.HTTPTransportServer", return_value=mock_server):
+        with patch(
+            "mcp_orchestrator.http_cli.serve_http.HTTPTransportServer",
+            return_value=mock_server,
+        ):
             with patch("sys.argv", ["mcp-orchestration-serve-http"]):
                 exit_code = serve_http_cli()
 
@@ -399,7 +467,9 @@ class TestServeHTTPCLI:
 
     def test_serve_http_cli_invalid_port_type(self):
         """Test HTTP server CLI rejects invalid port type."""
-        with patch("sys.argv", ["mcp-orchestration-serve-http", "--port", "not-a-number"]):
+        with patch(
+            "sys.argv", ["mcp-orchestration-serve-http", "--port", "not-a-number"]
+        ):
             with pytest.raises(SystemExit) as exc_info:
                 serve_http_cli()
 
@@ -411,7 +481,10 @@ class TestServeHTTPCLI:
         mock_server = MagicMock()
         mock_server_class = MagicMock(return_value=mock_server)
 
-        with patch("mcp_orchestrator.http_cli.serve_http.HTTPTransportServer", mock_server_class):
+        with patch(
+            "mcp_orchestrator.http_cli.serve_http.HTTPTransportServer",
+            mock_server_class,
+        ):
             # argparse allows any int, but server may reject it
             with patch("sys.argv", ["mcp-orchestration-serve-http", "--port", "99999"]):
                 serve_http_cli()
@@ -430,7 +503,10 @@ class TestCLIIntegration:
         mock_token = "integration_test_token_abc123"
         mock_auth_service.generate_token.return_value = mock_token
 
-        with patch("mcp_orchestrator.http_cli.token.get_auth_service", return_value=mock_auth_service):
+        with patch(
+            "mcp_orchestrator.http_cli.token.get_auth_service",
+            return_value=mock_auth_service,
+        ):
             with patch("sys.argv", ["mcp-orchestration-generate-token"]):
                 token = generate_token_cli()
 
@@ -439,7 +515,10 @@ class TestCLIIntegration:
         # Verify token can be used with server
         mock_server = MagicMock()
 
-        with patch("mcp_orchestrator.http_cli.serve_http.HTTPTransportServer", return_value=mock_server):
+        with patch(
+            "mcp_orchestrator.http_cli.serve_http.HTTPTransportServer",
+            return_value=mock_server,
+        ):
             with patch("sys.argv", ["mcp-orchestration-serve-http"]):
                 serve_http_cli()
 
@@ -452,21 +531,30 @@ class TestCLIIntegration:
         mock_auth_service = MagicMock()
         mock_auth_service.generate_token.return_value = "token1"
 
-        with patch("mcp_orchestrator.http_cli.token.get_auth_service", return_value=mock_auth_service):
+        with patch(
+            "mcp_orchestrator.http_cli.token.get_auth_service",
+            return_value=mock_auth_service,
+        ):
             with patch("sys.argv", ["mcp-orchestration-generate-token"]):
                 token1 = generate_token_cli()
 
         # Run HTTP server
         mock_server = MagicMock()
 
-        with patch("mcp_orchestrator.http_cli.serve_http.HTTPTransportServer", return_value=mock_server):
+        with patch(
+            "mcp_orchestrator.http_cli.serve_http.HTTPTransportServer",
+            return_value=mock_server,
+        ):
             with patch("sys.argv", ["mcp-orchestration-serve-http"]):
                 serve_http_cli()
 
         # Run token generation again
         mock_auth_service.generate_token.return_value = "token2"
 
-        with patch("mcp_orchestrator.http_cli.token.get_auth_service", return_value=mock_auth_service):
+        with patch(
+            "mcp_orchestrator.http_cli.token.get_auth_service",
+            return_value=mock_auth_service,
+        ):
             with patch("sys.argv", ["mcp-orchestration-generate-token"]):
                 token2 = generate_token_cli()
 
@@ -482,7 +570,10 @@ class TestCLIIntegration:
 
         generated_tokens = []
 
-        with patch("mcp_orchestrator.http_cli.token.get_auth_service", return_value=mock_auth_service):
+        with patch(
+            "mcp_orchestrator.http_cli.token.get_auth_service",
+            return_value=mock_auth_service,
+        ):
             for _ in range(3):
                 with patch("sys.argv", ["mcp-orchestration-generate-token"]):
                     token = generate_token_cli()
@@ -496,14 +587,20 @@ class TestCLIIntegration:
         configurations = [
             ({"host": "127.0.0.1", "port": 8000}, ["--host", "127.0.0.1"]),
             ({"host": "0.0.0.0", "port": 9000}, ["--port", "9000"]),
-            ({"host": "localhost", "port": 8080}, ["--host", "localhost", "--port", "8080"]),
+            (
+                {"host": "localhost", "port": 8080},
+                ["--host", "localhost", "--port", "8080"],
+            ),
         ]
 
         for expected_args, cli_args in configurations:
             mock_server = MagicMock()
             mock_server_class = MagicMock(return_value=mock_server)
 
-            with patch("mcp_orchestrator.http_cli.serve_http.HTTPTransportServer", mock_server_class):
+            with patch(
+                "mcp_orchestrator.http_cli.serve_http.HTTPTransportServer",
+                mock_server_class,
+            ):
                 with patch("sys.argv", ["mcp-orchestration-serve-http"] + cli_args):
                     serve_http_cli()
 
@@ -518,7 +615,10 @@ class TestCLIErrorScenarios:
 
     def test_token_generation_auth_service_unavailable(self, capsys):
         """Test token generation when auth service is unavailable."""
-        with patch("mcp_orchestrator.http_cli.token.get_auth_service", side_effect=Exception("Service unavailable")):
+        with patch(
+            "mcp_orchestrator.http_cli.token.get_auth_service",
+            side_effect=Exception("Service unavailable"),
+        ):
             with patch("sys.argv", ["mcp-orchestration-generate-token"]):
                 with pytest.raises(SystemExit) as exc_info:
                     generate_token_cli()
@@ -530,7 +630,10 @@ class TestCLIErrorScenarios:
 
     def test_serve_http_server_initialization_fails(self, capsys):
         """Test HTTP server when initialization fails."""
-        with patch("mcp_orchestrator.http_cli.serve_http.HTTPTransportServer", side_effect=Exception("Init failed")):
+        with patch(
+            "mcp_orchestrator.http_cli.serve_http.HTTPTransportServer",
+            side_effect=Exception("Init failed"),
+        ):
             with patch("sys.argv", ["mcp-orchestration-serve-http"]):
                 exit_code = serve_http_cli()
 
@@ -542,9 +645,14 @@ class TestCLIErrorScenarios:
     def test_token_generation_permission_error(self, capsys):
         """Test token generation with permission error."""
         mock_auth_service = MagicMock()
-        mock_auth_service.generate_token.side_effect = PermissionError("Permission denied")
+        mock_auth_service.generate_token.side_effect = PermissionError(
+            "Permission denied"
+        )
 
-        with patch("mcp_orchestrator.http_cli.token.get_auth_service", return_value=mock_auth_service):
+        with patch(
+            "mcp_orchestrator.http_cli.token.get_auth_service",
+            return_value=mock_auth_service,
+        ):
             with patch("sys.argv", ["mcp-orchestration-generate-token"]):
                 with pytest.raises(SystemExit) as exc_info:
                     generate_token_cli()
@@ -560,7 +668,10 @@ class TestCLIErrorScenarios:
         mock_server = MagicMock()
         mock_server.run.side_effect = ConnectionError("Network unreachable")
 
-        with patch("mcp_orchestrator.http_cli.serve_http.HTTPTransportServer", return_value=mock_server):
+        with patch(
+            "mcp_orchestrator.http_cli.serve_http.HTTPTransportServer",
+            return_value=mock_server,
+        ):
             with patch("sys.argv", ["mcp-orchestration-serve-http"]):
                 exit_code = serve_http_cli()
 
@@ -580,7 +691,10 @@ class TestCLIOutputFormatting:
         mock_auth_service = MagicMock()
         mock_auth_service.generate_token.return_value = mock_token
 
-        with patch("mcp_orchestrator.http_cli.token.get_auth_service", return_value=mock_auth_service):
+        with patch(
+            "mcp_orchestrator.http_cli.token.get_auth_service",
+            return_value=mock_auth_service,
+        ):
             with patch("sys.argv", ["mcp-orchestration-generate-token"]):
                 generate_token_cli()
 
@@ -597,7 +711,10 @@ class TestCLIOutputFormatting:
         mock_auth_service = MagicMock()
         mock_auth_service.generate_token.return_value = "token"
 
-        with patch("mcp_orchestrator.http_cli.token.get_auth_service", return_value=mock_auth_service):
+        with patch(
+            "mcp_orchestrator.http_cli.token.get_auth_service",
+            return_value=mock_auth_service,
+        ):
             with patch("sys.argv", ["mcp-orchestration-generate-token"]):
                 generate_token_cli()
 
@@ -622,7 +739,10 @@ class TestCLIOutputFormatting:
         for args, expected_exception in test_cases:
             mock_server = MagicMock()
 
-            with patch("mcp_orchestrator.http_cli.serve_http.HTTPTransportServer", return_value=mock_server):
+            with patch(
+                "mcp_orchestrator.http_cli.serve_http.HTTPTransportServer",
+                return_value=mock_server,
+            ):
                 with patch("sys.argv", ["mcp-orchestration-serve-http"] + args):
                     if expected_exception:
                         with pytest.raises(expected_exception):

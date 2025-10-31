@@ -108,7 +108,10 @@ class ConfigBuilder:
 
         # Generate config from registry (with transport abstraction)
         config = self._registry.to_client_config(
-            server_id=server_id, params=params, env_vars=env_vars, server_name=server_name
+            server_id=server_id,
+            params=params,
+            env_vars=env_vars,
+            server_name=server_name,
         )
 
         # Add to draft

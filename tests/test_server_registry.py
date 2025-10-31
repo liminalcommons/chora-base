@@ -8,7 +8,6 @@ Wave 1.1 (v0.1.1):
 """
 
 import pytest
-
 from mcp_orchestrator.servers import (
     ParameterDefinition,
     ServerDefinition,

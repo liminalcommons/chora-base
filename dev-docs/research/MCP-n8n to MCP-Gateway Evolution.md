@@ -48,7 +48,7 @@ gateway.run(
 gateway:
   name: mcp-gateway
   version: 2.0.0
-  
+
 backends:
   - name: weather
     endpoint: http://weather-api.com/mcp
@@ -57,7 +57,7 @@ backends:
       type: bearer
       token: ${WEATHER_API_KEY}
     tags: [public, free]
-    
+
   - name: database
     endpoint: http://db-server.com/mcp
     prefix: db
@@ -86,25 +86,25 @@ async def create_gateway():
         include_tags={"public"},
         exclude_tags={"internal"}
     )
-    
+
     configs = load_yaml_config("gateway.yaml")
-    
+
     for backend in configs["backends"]:
         try:
             client = Client(backend["endpoint"])
-            
+
             # EAGER VALIDATION - force tool discovery
             async with client:
                 tools = await client.list_tools()
                 logger.info(f"✓ {backend['name']}: {len(tools)} tools")
-            
+
             proxy = FastMCP.as_proxy(client, name=backend["name"])
             gateway.mount(backend["prefix"], proxy)
-            
+
         except Exception as e:
             logger.error(f"✗ Failed to mount {backend['name']}: {e}")
             continue
-    
+
     return gateway
 ```
 
@@ -132,7 +132,7 @@ MCP Gateway (Python) → [Backend Proxy A, Backend Proxy B]
 
 Define a **universal configuration format** enabling MCP servers to be discovered by:
 - MCP Gateway (dynamic registration)
-- Claude Desktop (user configuration)  
+- Claude Desktop (user configuration)
 - n8n MCP Server Trigger (workflow integration)
 - VS Code MCP extensions
 
@@ -193,11 +193,11 @@ async def discover_and_register(gateway, server_url: str):
     async with httpx.AsyncClient() as client:
         response = await client.get(f"{server_url}/mcp-server.json")
         server_def = MCPServerDefinition(**response.json())
-    
+
     endpoint_url = server_def.endpoints["http"]["url"]
     backend_client = Client(endpoint_url)
     proxy = FastMCP.as_proxy(backend_client, name=server_def.server["name"])
-    
+
     gateway.mount(
         prefix=server_def.server["name"],
         server=proxy,
@@ -227,11 +227,11 @@ async def _load_tools(self, *, via_server: bool = False):
             client_tools = await client.list_tools()
     except Exception as e:
         logger.warning(f"Failed to get tools from {self.server.name}: {e}")
-        
+
         # Raise in development mode
         if os.environ.get("MCP_RAISE_LOAD_ERRORS", "false").lower() == "true":
             raise RuntimeError(f"Tool loading failed for {self.server.name}") from e
-        
+
         continue
 ```
 
@@ -247,13 +247,13 @@ async def __aenter__(self):
     async with self.transport.connect_session(**self._session_kwargs) as session:
         self._session = session
         self._initialize_result = await self._session.initialize()
-        
+
         # Validate session immediately
         if self._session_task and self._session_task.done():
             exception = self._session_task.exception()
             if exception:
                 raise ConnectionError(f"Client failed to connect: {exception}")
-        
+
         return self
 ```
 
@@ -270,7 +270,7 @@ async def create_validated_proxy(client: Client, name: str):
     async with client:
         tools = await client.list_tools()
         logger.info(f"Backend {name} has {len(tools)} tools")
-    
+
     proxy = FastMCP.as_proxy(client, name=name)
     return proxy, tools
 
@@ -325,10 +325,10 @@ async def test_eager_tool_discovery():
     gateway = FastMCP("TestGateway")
     backend_client = MockClient(tools=["tool1", "tool2"])
     proxy, tools = await create_validated_proxy(backend_client, "backend")
-    
+
     assert len(tools) == 2
     gateway.mount("backend", proxy)
-    
+
     gateway_tools = await gateway.list_tools()
     assert "backend_tool1" in [t.name for t in gateway_tools]
 
@@ -337,7 +337,7 @@ async def test_backend_connection_failure():
     os.environ["MCP_RAISE_LOAD_ERRORS"] = "true"
     gateway = FastMCP("TestGateway")
     failing_client = MockClient(should_fail=True)
-    
+
     with pytest.raises(RuntimeError, match="Tool loading failed"):
         await create_validated_proxy(failing_client, "failing")
 ```
@@ -549,7 +549,7 @@ async def risky_operation(value: int):
             message="Value must be positive",
             details={"provided": value}
         )
-    
+
     result = await external_api.call(value)
     return result
 ```
@@ -566,7 +566,7 @@ import pytest
 async def test_search_tool(client):
     tools = await client.list_tools()
     assert "search" in [t.name for t in tools]
-    
+
     result = await client.call_tool("search", {"query": "test"})
     assert result.success
     assert len(result.data) > 0

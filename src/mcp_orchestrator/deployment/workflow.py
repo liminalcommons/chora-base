@@ -65,7 +65,7 @@ class DeploymentWorkflow:
         client_registry: ClientRegistry,
         deployment_log: DeploymentLog,
         config_base_dir: str | None = None,
-        public_key_path: str | None = None
+        public_key_path: str | None = None,
     ):
         """Initialize deployment workflow.
 
@@ -90,10 +90,7 @@ class DeploymentWorkflow:
             self.public_key_path = home / ".mcp-orchestration" / "keys" / "signing.pub"
 
     def deploy(
-        self,
-        client_id: str,
-        profile_id: str,
-        artifact_id: str | None = None
+        self, client_id: str, profile_id: str, artifact_id: str | None = None
     ) -> DeploymentResult:
         """Deploy configuration artifact.
 
@@ -121,7 +118,7 @@ class DeploymentWorkflow:
         if client is None:
             raise DeploymentError(
                 f"Client '{client_id}' not found in registry",
-                {"code": "CLIENT_NOT_FOUND", "client_id": client_id}
+                {"code": "CLIENT_NOT_FOUND", "client_id": client_id},
             )
 
         # Step 2: Resolve artifact
@@ -139,7 +136,7 @@ class DeploymentWorkflow:
         except Exception as e:
             raise DeploymentError(
                 f"Failed to write config to {config_path}: {e}",
-                {"code": "WRITE_FAILED", "path": str(config_path)}
+                {"code": "WRITE_FAILED", "path": str(config_path)},
             ) from e
 
         # Step 5: Record deployment
@@ -149,7 +146,7 @@ class DeploymentWorkflow:
             profile_id=profile_id,
             artifact_id=artifact.artifact_id,
             config_path=str(config_path),
-            changelog=changelog
+            changelog=changelog,
         )
 
         # Step 6: Return result
@@ -157,14 +154,11 @@ class DeploymentWorkflow:
             status="deployed",
             config_path=str(config_path),
             artifact_id=artifact.artifact_id,
-            deployed_at=datetime.now(UTC).isoformat().replace("+00:00", "Z")
+            deployed_at=datetime.now(UTC).isoformat().replace("+00:00", "Z"),
         )
 
     def _resolve_artifact(
-        self,
-        client_id: str,
-        profile_id: str,
-        artifact_id: str | None
+        self, client_id: str, profile_id: str, artifact_id: str | None
     ) -> ConfigArtifact:
         """Resolve artifact to deploy.
 
@@ -193,12 +187,16 @@ class DeploymentWorkflow:
             if artifact_id:
                 raise DeploymentError(
                     f"Artifact '{artifact_id}' not found",
-                    {"code": "ARTIFACT_NOT_FOUND", "artifact_id": artifact_id}
+                    {"code": "ARTIFACT_NOT_FOUND", "artifact_id": artifact_id},
                 ) from e
             else:
                 raise DeploymentError(
                     f"No published artifact found for {client_id}/{profile_id}",
-                    {"code": "ARTIFACT_NOT_FOUND", "client_id": client_id, "profile_id": profile_id}
+                    {
+                        "code": "ARTIFACT_NOT_FOUND",
+                        "client_id": client_id,
+                        "profile_id": profile_id,
+                    },
                 ) from e
 
     def _verify_signature(self, artifact: ConfigArtifact) -> None:
@@ -213,20 +211,20 @@ class DeploymentWorkflow:
         if not self.public_key_path.exists():
             raise DeploymentError(
                 f"Public key not found at {self.public_key_path}",
-                {"code": "PUBLIC_KEY_NOT_FOUND"}
+                {"code": "PUBLIC_KEY_NOT_FOUND"},
             )
 
         try:
             is_valid = verify_signature(
                 payload=artifact.payload,
                 signature_b64=artifact.signature,
-                public_key_path=str(self.public_key_path)
+                public_key_path=str(self.public_key_path),
             )
 
             if not is_valid:
                 raise DeploymentError(
                     "Signature verification failed",
-                    {"code": "SIGNATURE_INVALID", "artifact_id": artifact.artifact_id}
+                    {"code": "SIGNATURE_INVALID", "artifact_id": artifact.artifact_id},
                 )
 
         except Exception as e:
@@ -234,8 +232,7 @@ class DeploymentWorkflow:
                 raise
 
             raise DeploymentError(
-                f"Signature verification failed: {e}",
-                {"code": "SIGNATURE_INVALID"}
+                f"Signature verification failed: {e}", {"code": "SIGNATURE_INVALID"}
             ) from e
 
     def _get_config_path(self, client_id: str) -> Path:
@@ -256,7 +253,7 @@ class DeploymentWorkflow:
         except Exception as e:
             raise DeploymentError(
                 f"Client '{client_id}' not found in registry",
-                {"code": "CLIENT_NOT_FOUND", "client_id": client_id}
+                {"code": "CLIENT_NOT_FOUND", "client_id": client_id},
             ) from e
 
         # Get config location
@@ -296,9 +293,7 @@ class DeploymentWorkflow:
 
         # Step 2: Write to temporary file
         temp_fd, temp_path = tempfile.mkstemp(
-            dir=config_path.parent,
-            prefix=".tmp_",
-            suffix=".json"
+            dir=config_path.parent, prefix=".tmp_", suffix=".json"
         )
 
         try:

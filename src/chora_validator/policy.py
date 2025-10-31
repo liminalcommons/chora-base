@@ -1,9 +1,9 @@
 from __future__ import annotations
 
-from typing import Any, Dict
+from typing import Any
 
 
-def load_policy() -> Dict[str, Any]:
+def load_policy() -> dict[str, Any]:
     """Return a minimal validation policy placeholder.
 
     The real chora-validator would supply detailed schemas and rules.
@@ -24,4 +24,3 @@ def load_policy() -> Dict[str, Any]:
             "telemetry",
         ]
     }
-

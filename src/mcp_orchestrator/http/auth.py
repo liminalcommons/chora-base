@@ -10,7 +10,6 @@ Supports:
 import os
 import secrets
 from datetime import datetime
-from typing import Dict, List, Optional, Set
 
 from pydantic import BaseModel
 
@@ -20,8 +19,8 @@ class TokenMetadata(BaseModel):
 
     token_id: str
     created_at: datetime
-    expires_at: Optional[datetime] = None
-    last_used: Optional[datetime] = None
+    expires_at: datetime | None = None
+    last_used: datetime | None = None
     usage_count: int = 0
 
     def is_expired(self) -> bool:
@@ -41,7 +40,7 @@ class AuthenticationService:
         _token_metadata: Token creation time, expiry, usage stats
     """
 
-    def __init__(self, api_key: Optional[str] = None):
+    def __init__(self, api_key: str | None = None):
         """
         Initialize authentication service.
 
@@ -55,8 +54,8 @@ class AuthenticationService:
         self.api_key = api_key
 
         # Token store (in-memory for v0.2.0)
-        self._tokens: Set[str] = set()
-        self._token_metadata: Dict[str, TokenMetadata] = {}
+        self._tokens: set[str] = set()
+        self._token_metadata: dict[str, TokenMetadata] = {}
 
     def generate_token(self) -> str:
         """
@@ -88,7 +87,7 @@ class AuthenticationService:
 
         return token
 
-    def validate_token(self, token: Optional[str]) -> bool:
+    def validate_token(self, token: str | None) -> bool:
         """
         Validate a bearer token.
 
@@ -120,7 +119,7 @@ class AuthenticationService:
 
         return True
 
-    def validate_api_key(self, api_key: Optional[str]) -> bool:
+    def validate_api_key(self, api_key: str | None) -> bool:
         """
         Validate an API key.
 
@@ -152,7 +151,7 @@ class AuthenticationService:
         self._tokens.discard(token)  # discard doesn't raise if not present
         self._token_metadata.pop(token, None)
 
-    def list_tokens(self) -> List[TokenMetadata]:
+    def list_tokens(self) -> list[TokenMetadata]:
         """
         List all token metadata.
 
@@ -164,7 +163,7 @@ class AuthenticationService:
 
 # Global singleton instance for shared token store
 # This allows CLI-generated tokens to be used by HTTP server
-_global_auth_service: Optional[AuthenticationService] = None
+_global_auth_service: AuthenticationService | None = None
 
 
 def get_auth_service() -> AuthenticationService:

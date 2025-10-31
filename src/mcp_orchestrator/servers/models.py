@@ -106,7 +106,8 @@ class ServerDefinition(BaseModel):
         default=None, description="NPM package name if installable via npm"
     )
     tags: list[str] = Field(
-        default_factory=list, description="Tags for categorization (e.g., 'search', 'database')"
+        default_factory=list,
+        description="Tags for categorization (e.g., 'search', 'database')",
     )
 
     # Package installation (Wave 2.2/3.0)
@@ -115,11 +116,11 @@ class ServerDefinition(BaseModel):
     )
     package_manager: PackageManager = Field(
         default=PackageManager.NONE,
-        description="Preferred package manager for installation"
+        description="Preferred package manager for installation",
     )
     install_command: str | None = Field(
         default=None,
-        description="Custom installation command (if package_manager=CUSTOM)"
+        description="Custom installation command (if package_manager=CUSTOM)",
     )
 
     model_config = ConfigDict(use_enum_values=True)

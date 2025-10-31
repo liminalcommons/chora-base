@@ -4,8 +4,6 @@ This module defines the registry of supported MCP client families, their
 capabilities, and default profiles.
 """
 
-from typing import Any
-
 from pydantic import BaseModel, Field
 
 
@@ -54,12 +52,8 @@ class ClientDefinition(BaseModel):
     platform: str = Field(
         ..., description="Primary platform (macos, windows, linux, cross-platform)"
     )
-    config_location: str = Field(
-        ..., description="Default config file path pattern"
-    )
-    config_format: str = Field(
-        default="json", description="Configuration file format"
-    )
+    config_location: str = Field(..., description="Default config file path pattern")
+    config_format: str = Field(default="json", description="Configuration file format")
     version_min: str | None = Field(
         default=None, description="Minimum supported client version"
     )
@@ -135,9 +129,7 @@ class ClientRegistry:
         client = self.get_client(client_id)
         return client.default_profiles if client else []
 
-    def get_profile(
-        self, client_id: str, profile_id: str
-    ) -> ProfileDefinition | None:
+    def get_profile(self, client_id: str, profile_id: str) -> ProfileDefinition | None:
         """Get specific profile definition.
 
         Args:
@@ -229,9 +221,7 @@ def get_default_registry() -> ClientRegistry:
                 working_directory=False,  # Cursor doesn't support this
                 multiple_servers=True,
             ),
-            limitations=ClientLimitations(
-                max_servers=20, max_env_vars_per_server=50
-            ),
+            limitations=ClientLimitations(max_servers=20, max_env_vars_per_server=50),
             default_profiles=[
                 ProfileDefinition(
                     profile_id="default",

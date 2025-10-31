@@ -32,9 +32,7 @@ class ServerChange(BaseModel):
 class DiffResult(BaseModel):
     """Result of comparing two configurations."""
 
-    status: str = Field(
-        ..., description="up-to-date, outdated, diverged, or unknown"
-    )
+    status: str = Field(..., description="up-to-date, outdated, diverged, or unknown")
     servers_added: list[str] = Field(
         default_factory=list, description="Server IDs added in remote"
     )
@@ -50,9 +48,7 @@ class DiffResult(BaseModel):
     total_changes: int = Field(0, description="Total number of changes")
 
 
-def _diff_values(
-    path: str, local_val: Any, remote_val: Any
-) -> list[dict[str, Any]]:
+def _diff_values(path: str, local_val: Any, remote_val: Any) -> list[dict[str, Any]]:
     """Recursively diff two values and return list of changes.
 
     Args:
@@ -71,9 +67,7 @@ def _diff_values(
 
     # If types differ, report as simple change
     if type(local_val) != type(remote_val):
-        changes.append(
-            {"path": path, "old_value": local_val, "new_value": remote_val}
-        )
+        changes.append({"path": path, "old_value": local_val, "new_value": remote_val})
         return changes
 
     # Dict: Recursively diff fields
@@ -168,9 +162,7 @@ def compare_configs(
         changes = _diff_values("", local_config, remote_config)
 
         if changes:
-            modified_servers.append(
-                {"server_id": server_id, "changes": changes}
-            )
+            modified_servers.append({"server_id": server_id, "changes": changes})
         else:
             unchanged_servers.append(server_id)
 

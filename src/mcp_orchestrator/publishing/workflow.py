@@ -166,11 +166,13 @@ class PublishingWorkflow:
 
         # Validation 1: Check for empty config
         if builder.count() == 0:
-            errors.append({
-                "code": "EMPTY_CONFIG",
-                "message": "Configuration is empty. Add at least one server before publishing.",
-                "severity": "error",
-            })
+            errors.append(
+                {
+                    "code": "EMPTY_CONFIG",
+                    "message": "Configuration is empty. Add at least one server before publishing.",
+                    "severity": "error",
+                }
+            )
 
         # Validation 2: Check each server configuration
         payload = builder.build()
@@ -180,50 +182,62 @@ class PublishingWorkflow:
             for server_name, server_config in servers.items():
                 # Check required fields
                 if "command" not in server_config:
-                    errors.append({
-                        "code": "MISSING_COMMAND",
-                        "message": f"Server '{server_name}' is missing required 'command' field.",
-                        "severity": "error",
-                        "server": server_name,
-                    })
+                    errors.append(
+                        {
+                            "code": "MISSING_COMMAND",
+                            "message": f"Server '{server_name}' is missing required 'command' field.",
+                            "severity": "error",
+                            "server": server_name,
+                        }
+                    )
 
                 if "args" not in server_config:
-                    errors.append({
-                        "code": "MISSING_ARGS",
-                        "message": f"Server '{server_name}' is missing required 'args' field.",
-                        "severity": "error",
-                        "server": server_name,
-                    })
+                    errors.append(
+                        {
+                            "code": "MISSING_ARGS",
+                            "message": f"Server '{server_name}' is missing required 'args' field.",
+                            "severity": "error",
+                            "server": server_name,
+                        }
+                    )
 
                 # Check args is a list
-                if "args" in server_config and not isinstance(server_config["args"], list):
-                    errors.append({
-                        "code": "INVALID_ARGS_TYPE",
-                        "message": f"Server '{server_name}' has invalid 'args' type (must be list).",
-                        "severity": "error",
-                        "server": server_name,
-                    })
+                if "args" in server_config and not isinstance(
+                    server_config["args"], list
+                ):
+                    errors.append(
+                        {
+                            "code": "INVALID_ARGS_TYPE",
+                            "message": f"Server '{server_name}' has invalid 'args' type (must be list).",
+                            "severity": "error",
+                            "server": server_name,
+                        }
+                    )
 
                 # Check env vars if present
                 if "env" in server_config:
                     env_vars = server_config["env"]
                     if not isinstance(env_vars, dict):
-                        errors.append({
-                            "code": "INVALID_ENV_TYPE",
-                            "message": f"Server '{server_name}' has invalid 'env' type (must be dict).",
-                            "severity": "error",
-                            "server": server_name,
-                        })
+                        errors.append(
+                            {
+                                "code": "INVALID_ENV_TYPE",
+                                "message": f"Server '{server_name}' has invalid 'env' type (must be dict).",
+                                "severity": "error",
+                                "server": server_name,
+                            }
+                        )
                     else:
                         # Check for empty env var values
                         for env_key, env_value in env_vars.items():
                             if not env_value or not str(env_value).strip():
-                                warnings.append({
-                                    "code": "EMPTY_ENV_VAR",
-                                    "message": f"Server '{server_name}' has empty environment variable '{env_key}'.",
-                                    "severity": "warning",
-                                    "server": server_name,
-                                })
+                                warnings.append(
+                                    {
+                                        "code": "EMPTY_ENV_VAR",
+                                        "message": f"Server '{server_name}' has empty environment variable '{env_key}'.",
+                                        "severity": "warning",
+                                        "server": server_name,
+                                    }
+                                )
 
         # Validation 3: Check client-specific limitations
         try:
@@ -232,13 +246,15 @@ class PublishingWorkflow:
             # Check max servers
             max_servers = client_def.limitations.max_servers
             if max_servers and builder.count() > max_servers:
-                errors.append({
-                    "code": "TOO_MANY_SERVERS",
-                    "message": f"Configuration has {builder.count()} servers, but {builder.client_id} supports max {max_servers}.",
-                    "severity": "error",
-                    "limit": max_servers,
-                    "actual": builder.count(),
-                })
+                errors.append(
+                    {
+                        "code": "TOO_MANY_SERVERS",
+                        "message": f"Configuration has {builder.count()} servers, but {builder.client_id} supports max {max_servers}.",
+                        "severity": "error",
+                        "limit": max_servers,
+                        "actual": builder.count(),
+                    }
+                )
 
             # Check max env vars per server
             max_env_vars = client_def.limitations.max_env_vars_per_server
@@ -247,22 +263,26 @@ class PublishingWorkflow:
                     if "env" in server_config:
                         env_count = len(server_config["env"])
                         if env_count > max_env_vars:
-                            errors.append({
-                                "code": "TOO_MANY_ENV_VARS",
-                                "message": f"Server '{server_name}' has {env_count} env vars, but {builder.client_id} supports max {max_env_vars}.",
-                                "severity": "error",
-                                "server": server_name,
-                                "limit": max_env_vars,
-                                "actual": env_count,
-                            })
+                            errors.append(
+                                {
+                                    "code": "TOO_MANY_ENV_VARS",
+                                    "message": f"Server '{server_name}' has {env_count} env vars, but {builder.client_id} supports max {max_env_vars}.",
+                                    "severity": "error",
+                                    "server": server_name,
+                                    "limit": max_env_vars,
+                                    "actual": env_count,
+                                }
+                            )
 
         except Exception:
             # Client not found - add warning but don't fail validation
-            warnings.append({
-                "code": "UNKNOWN_CLIENT",
-                "message": f"Client '{builder.client_id}' not found in registry. Cannot validate client-specific limitations.",
-                "severity": "warning",
-            })
+            warnings.append(
+                {
+                    "code": "UNKNOWN_CLIENT",
+                    "message": f"Client '{builder.client_id}' not found in registry. Cannot validate client-specific limitations.",
+                    "severity": "warning",
+                }
+            )
 
         # Determine if valid
         valid = len(errors) == 0

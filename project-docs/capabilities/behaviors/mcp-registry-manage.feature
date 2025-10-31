@@ -32,4 +32,3 @@ Feature: Manage MCP server registry
     Given a server "to-remove.srv" exists in the registry
     When I unregister server "to-remove.srv"
     Then the registry does not contain server "to-remove.srv"
-

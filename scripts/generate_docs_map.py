@@ -15,7 +15,6 @@ import re
 import sys
 from datetime import datetime
 from pathlib import Path
-from typing import Dict, List
 
 try:
     import yaml
@@ -32,11 +31,11 @@ class DocumentationMapGenerator:
 
     def __init__(self, root_dir: Path):
         self.root_dir = root_dir
-        self.docs: Dict[Path, Dict] = {}  # path -> frontmatter
+        self.docs: dict[Path, dict] = {}  # path -> frontmatter
 
     def run(self) -> None:
         """Generate DOCUMENTATION_MAP.md."""
-        print("Generating DOCUMENTATION_MAP.md for {}...".format(self.root_dir))
+        print(f"Generating DOCUMENTATION_MAP.md for {self.root_dir}...")
 
         # Step 1: Find and parse all markdown files
         self._parse_all_docs()
@@ -45,7 +44,7 @@ class DocumentationMapGenerator:
             print("No markdown files found. Skipping DOCUMENTATION_MAP.md generation.")
             return
 
-        print("Found {} markdown files".format(len(self.docs)))
+        print(f"Found {len(self.docs)} markdown files")
 
         # Step 2: Generate markdown content
         content = self._generate_markdown()
@@ -54,7 +53,7 @@ class DocumentationMapGenerator:
         output_path = self.root_dir / "DOCUMENTATION_MAP.md"
         output_path.write_text(content, encoding="utf-8")
 
-        print("✅ Generated {}".format(output_path))
+        print(f"✅ Generated {output_path}")
 
     def _parse_all_docs(self) -> None:
         """Parse frontmatter from all markdown files in doc directories."""
@@ -95,11 +94,17 @@ class DocumentationMapGenerator:
         # Header
         lines.append("# Documentation Map")
         lines.append("")
-        lines.append("**Generated:** {}".format(datetime.now().strftime('%Y-%m-%d %H:%M:%S')))
-        lines.append("**Total Documents:** {}".format(len(self.docs)))
+        lines.append(
+            "**Generated:** {}".format(datetime.now().strftime("%Y-%m-%d %H:%M:%S"))
+        )
+        lines.append(f"**Total Documents:** {len(self.docs)}")
         lines.append("")
-        lines.append("This file is auto-generated from frontmatter in documentation files.")
-        lines.append("Do not edit manually - run `python scripts/generate_docs_map.py` to regenerate.")
+        lines.append(
+            "This file is auto-generated from frontmatter in documentation files."
+        )
+        lines.append(
+            "Do not edit manually - run `python scripts/generate_docs_map.py` to regenerate."
+        )
         lines.append("")
         lines.append("---")
         lines.append("")
@@ -138,10 +143,10 @@ class DocumentationMapGenerator:
                 "dev-docs": "Developer Documentation",
             }.get(doc_dir, doc_dir)
 
-            lines.append("### {}".format(dir_title))
+            lines.append(f"### {dir_title}")
             lines.append("")
-            lines.append("**Location:** `{}/`".format(doc_dir))
-            lines.append("**Count:** {} documents".format(len(dir_docs)))
+            lines.append(f"**Location:** `{doc_dir}/`")
+            lines.append(f"**Count:** {len(dir_docs)} documents")
             lines.append("")
 
             # Table
@@ -155,7 +160,9 @@ class DocumentationMapGenerator:
                 status = fm.get("status", "unknown")
                 last_updated = fm.get("last_updated", "unknown")
 
-                lines.append("| [{}]({}) | {} | {} | {} |".format(title, rel_path, doc_type, status, last_updated))
+                lines.append(
+                    f"| [{title}]({rel_path}) | {doc_type} | {status} | {last_updated} |"
+                )
 
             lines.append("")
 
@@ -164,7 +171,7 @@ class DocumentationMapGenerator:
         lines.append("")
 
         # Group by type
-        by_type: Dict[str, List] = {}
+        by_type: dict[str, list] = {}
         for path, fm in self.docs.items():
             doc_type = fm.get("type", "unknown")
             if doc_type not in by_type:
@@ -173,9 +180,9 @@ class DocumentationMapGenerator:
 
         for doc_type in sorted(by_type.keys()):
             docs_of_type = by_type[doc_type]
-            lines.append("### {}".format(doc_type.title()))
+            lines.append(f"### {doc_type.title()}")
             lines.append("")
-            lines.append("**Count:** {} documents".format(len(docs_of_type)))
+            lines.append(f"**Count:** {len(docs_of_type)} documents")
             lines.append("")
 
             # Table
@@ -189,7 +196,9 @@ class DocumentationMapGenerator:
                 status = fm.get("status", "unknown")
                 last_updated = fm.get("last_updated", "unknown")
 
-                lines.append("| [{}]({}) | {} | {} | {} |".format(title, rel_path, location, status, last_updated))
+                lines.append(
+                    f"| [{title}]({rel_path}) | {location} | {status} | {last_updated} |"
+                )
 
             lines.append("")
 
@@ -198,7 +207,7 @@ class DocumentationMapGenerator:
         lines.append("")
 
         # Group by status
-        by_status: Dict[str, List] = {}
+        by_status: dict[str, list] = {}
         for path, fm in self.docs.items():
             status = fm.get("status", "unknown")
             if status not in by_status:
@@ -210,9 +219,9 @@ class DocumentationMapGenerator:
             status_emoji = {"current": "✅", "draft": "🚧", "deprecated": "⚠️"}.get(
                 status, "❓"
             )
-            lines.append("### {} {}".format(status_emoji, status.title()))
+            lines.append(f"### {status_emoji} {status.title()}")
             lines.append("")
-            lines.append("**Count:** {} documents".format(len(docs_with_status)))
+            lines.append(f"**Count:** {len(docs_with_status)} documents")
             lines.append("")
 
             # Table
@@ -226,7 +235,9 @@ class DocumentationMapGenerator:
                 location = str(rel_path.parent)
                 last_updated = fm.get("last_updated", "unknown")
 
-                lines.append("| [{}]({}) | {} | {} | {} |".format(title, rel_path, doc_type, location, last_updated))
+                lines.append(
+                    f"| [{title}]({rel_path}) | {doc_type} | {location} | {last_updated} |"
+                )
 
             lines.append("")
 

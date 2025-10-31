@@ -84,43 +84,43 @@ If you cannot use the install script, follow these manual steps:
 
 ## 4. Configuration Checklist
 
-- [ ] Repo maintainer owns inbox package (listed in ledger).  
-- [ ] `CAPABILITIES/<repo>.yaml` defines `provides`, `consumes`, `can_receive`.  
-- [ ] Awareness guide cross-linked from root `CLAUDE.md` / `AGENTS.md`.  
-- [ ] Event log file created with header comment describing format (optional metadata).  
-- [ ] Schema validation command tested (`cat … | jq .` or `python -m json.tool`).  
+- [ ] Repo maintainer owns inbox package (listed in ledger).
+- [ ] `CAPABILITIES/<repo>.yaml` defines `provides`, `consumes`, `can_receive`.
+- [ ] Awareness guide cross-linked from root `CLAUDE.md` / `AGENTS.md`.
+- [ ] Event log file created with header comment describing format (optional metadata).
+- [ ] Schema validation command tested (`cat … | jq .` or `python -m json.tool`).
 - [ ] Documentation plan updated to include inbox capability (if applicable).
 
 ---
 
 ## 5. Verification
 
-- **Smoke Checks:**  
-  - Create sample coordination request (JSON) and ensure schema validation passes.  
-  - Move sample task through `incoming → active → completed` while logging events.  
+- **Smoke Checks:**
+  - Create sample coordination request (JSON) and ensure schema validation passes.
+  - Move sample task through `incoming → active → completed` while logging events.
   - Run awareness checklist: agent performs triage simulation using guide.
 
-- **Acceptance Tests:**  
-  - Ensure README/CLAUDE instructions clear to another maintainer (peer review).  
-  - Confirm event log entry format consistent with spec.  
+- **Acceptance Tests:**
+  - Ensure README/CLAUDE instructions clear to another maintainer (peer review).
+  - Confirm event log entry format consistent with spec.
   - Review adoption ledger entry for accuracy and completeness.
 
-- **Rollback Plan:**  
-  - Remove `inbox/` directory and revert supporting docs to previous state.  
-  - Update ledger with rollback note and reason.  
+- **Rollback Plan:**
+  - Remove `inbox/` directory and revert supporting docs to previous state.
+  - Update ledger with rollback note and reason.
   - Communicate to ecosystem coordinator via inbox strategic note.
 
 ---
 
 ## 6. Post-Install Tasks
 
-- **Awareness Enablement:**  
-  - Update root `CLAUDE.md` and `AGENTS.md` to reference inbox awareness guide.  
+- **Awareness Enablement:**
+  - Update root `CLAUDE.md` and `AGENTS.md` to reference inbox awareness guide.
   - Schedule agent dry run to confirm instructions.
 
-- **Status Ledger Update:**  
+- **Status Ledger Update:**
   - Add entry to `docs/reference/skilled-awareness/inbox/ledger.md` noting adoption date, version, and feedback channel.
 
-- **Feedback Loop:**  
-  - After first sprint of usage, document lessons learned in ledger feedback log.  
+- **Feedback Loop:**
+  - After first sprint of usage, document lessons learned in ledger feedback log.
   - Raise coordination item if additional automation or schema changes needed.

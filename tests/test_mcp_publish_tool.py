@@ -15,7 +15,6 @@ import tempfile
 from pathlib import Path
 
 import pytest
-
 from mcp_orchestrator.building import ConfigBuilder
 from mcp_orchestrator.crypto import ArtifactSigner
 from mcp_orchestrator.publishing import PublishingWorkflow
@@ -107,7 +106,7 @@ def test_publish_workflow_returns_serializable_result():
 
         print("✓ Test passed: PublishingWorkflow returns JSON-serializable result")
         print(f"  - Artifact ID: {result['artifact_id'][:16]}...")
-        print(f"  - JSON round-trip: successful")
+        print("  - JSON round-trip: successful")
 
 
 def test_publish_workflow_error_messages_are_serializable():
@@ -207,22 +206,22 @@ def test_publish_config_tool_result_format():
             "profile_id": str(raw_result.get("profile_id", "default")),
             "server_count": int(raw_result.get("server_count", 0)),
             "created_at": str(raw_result.get("created_at", "")),
-            "changelog": str("Test"),
+            "changelog": "Test",
         }
 
         # Verify all values are primitive types
         for key, value in serializable_result.items():
-            assert isinstance(value, (str, int, float, bool, type(None))), (
-                f"Field '{key}' has non-primitive type: {type(value)}"
-            )
+            assert isinstance(
+                value, str | int | float | bool | type(None)
+            ), f"Field '{key}' has non-primitive type: {type(value)}"
 
         # Verify JSON serialization works
         json_str = json.dumps(serializable_result)
         assert len(json_str) > 0
 
         print("✓ Test passed: publish_config result is properly formatted")
-        print(f"  - All fields are primitive types: ✓")
-        print(f"  - JSON serialization succeeds: ✓")
+        print("  - All fields are primitive types: ✓")
+        print("  - JSON serialization succeeds: ✓")
 
 
 def test_publish_without_signing_keys():
@@ -263,13 +262,19 @@ def test_publish_without_signing_keys():
         with pytest.raises((FileNotFoundError, SigningError)) as exc_info:
             workflow.publish(
                 builder=builder,
-                private_key_path=str(base_path / "keys" / "signing.key"),  # Doesn't exist
+                private_key_path=str(
+                    base_path / "keys" / "signing.key"
+                ),  # Doesn't exist
                 signing_key_id="default",
             )
 
         # Verify error message is helpful
         error_msg = str(exc_info.value)
-        assert "signing" in error_msg.lower() or "key" in error_msg.lower() or "file" in error_msg.lower()
+        assert (
+            "signing" in error_msg.lower()
+            or "key" in error_msg.lower()
+            or "file" in error_msg.lower()
+        )
 
         print("✓ Test passed: Publish without keys fails with clear error")
         print(f"  - Error message: {error_msg}")
@@ -334,5 +339,5 @@ def test_publish_config_error_message_quality():
 
             print("✓ Test passed: Error messages are JSON-serializable and helpful")
             print(f"  - Error type: {type(e).__name__}")
-            print(f"  - Error mentions keys/signing: ✓")
-            print(f"  - Error is JSON-serializable: ✓")
+            print("  - Error mentions keys/signing: ✓")
+            print("  - Error is JSON-serializable: ✓")

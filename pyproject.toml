@@ -122,6 +122,10 @@ target-version = "py312"
 [tool.ruff.lint]
 select = ["E", "F", "I", "N", "W", "UP"]
 
+[tool.ruff.lint.per-file-ignores]
+"tests/**/*.py" = ["E501", "N802"]  # Ignore line-too-long and function naming in test files
+"scripts/**/*.py" = ["E501"]  # Ignore line-too-long in scripts
+
 [tool.black]
 line-length = 88
 target-version = ["py312"]

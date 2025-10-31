@@ -7,7 +7,6 @@ are currently deployed for each client/profile combination.
 import json
 from datetime import UTC, datetime
 from pathlib import Path
-from typing import Any
 
 from pydantic import BaseModel, Field
 
@@ -53,7 +52,7 @@ class DeploymentLog:
         profile_id: str,
         artifact_id: str,
         config_path: str,
-        changelog: str | None = None
+        changelog: str | None = None,
     ) -> None:
         """Record a deployment event.
 
@@ -71,7 +70,7 @@ class DeploymentLog:
             artifact_id=artifact_id,
             config_path=config_path,
             deployed_at=datetime.now(UTC).isoformat().replace("+00:00", "Z"),
-            changelog=changelog
+            changelog=changelog,
         )
 
         # Load existing log or create new
@@ -83,7 +82,7 @@ class DeploymentLog:
                 "client_id": client_id,
                 "profile_id": profile_id,
                 "current_deployment": None,
-                "history": []
+                "history": [],
             }
 
         # Move current deployment to history (if exists)
@@ -125,10 +124,7 @@ class DeploymentLog:
         return None
 
     def get_deployment_history(
-        self,
-        client_id: str,
-        profile_id: str,
-        limit: int = 10
+        self, client_id: str, profile_id: str, limit: int = 10
     ) -> list[DeploymentRecord]:
         """Get deployment history for client/profile.
 

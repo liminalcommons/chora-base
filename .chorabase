@@ -3,8 +3,9 @@
 # Documentation: project-docs/CHORA_BASE_ADOPTION_PLAN.md
 
 version: v4.1.0
-adoption_status: partial  # Will be 'complete' after Week 4
+adoption_status: partial  # 55.6% complete (10/18 SAPs)
 adoption_date: 2025-10-31
+last_updated: 2025-10-31
 
 adopted_saps:
   - id: SAP-000
@@ -22,11 +23,31 @@ adopted_saps:
     adopted_date: 2025-10-31
     status: installed
     notes: Meta-capability for chora-base itself
+  - id: SAP-003
+    name: project-bootstrap
+    adopted_date: 2025-10-31
+    status: installed
+    notes: Audited - for new project generation only
+  - id: SAP-004
+    name: testing-framework
+    adopted_date: 2025-10-31
+    status: fully-adopted
+    notes: Coverage threshold 85%, comprehensive test suite
+  - id: SAP-005
+    name: ci-cd-workflows
+    adopted_date: 2025-10-31
+    status: fully-adopted
+    notes: 8 GitHub Actions workflows validated
+  - id: SAP-006
+    name: quality-gates
+    adopted_date: 2025-10-31
+    status: fully-adopted
+    notes: All 7 pre-commit hooks configured
   - id: SAP-007
     name: documentation-framework
     adopted_date: 2025-10-31
     status: installed
-    notes: Installed as dependency of SAP-009
+    notes: Installed as dependency, Diátaxis 4-domain structure
   - id: SAP-009
     name: agent-awareness
     adopted_date: 2025-10-31
@@ -38,21 +59,30 @@ adopted_saps:
     status: installed
     notes: Automated markdown link validation
 
-pending_saps: 12  # SAP-003, 004, 005, 006, 008, 010, 011, 012, 013, 014, 017, 018
+pending_saps: 8  # SAP-008, 010, 011, 012, 013, 014, 017, 018
 total_saps: 18
-completion: 33.3%  # 6/18 (includes SAP-007 dependency)
+completion: 55.6%  # 10/18 SAPs installed
+
+test_coverage:
+  starting: 60.48%
+  current: 86.29%
+  target: 85%
+  status: exceeded
 
 notes: |
-  Week 1 of 4-week adoption plan complete.
-  Focus: Foundation (minimal-entry set + SAP-007 dependency)
-  Next: Week 2 - Development Workflow (SAP-003 through SAP-006)
+  Week 2 of 4-week adoption plan complete (Days 1-3).
+  Focus: Development Workflow + Testing (SAP-003 through SAP-006)
+  Next: Week 3 - Developer Experience (SAP-008, 010, 011, 012)
 
-  Installed SAPs:
-  - SAP-000: SAP Framework (125 KB)
-  - SAP-001: Inbox Coordination (45 KB) [PILOT]
-  - SAP-002: Chora-Base Meta (78 KB)
-  - SAP-007: Documentation Framework (112 KB) [dependency]
-  - SAP-009: Agent Awareness (98 KB)
-  - SAP-016: Link Validation (62 KB)
+  Week 2 Achievements:
+  - Test coverage: 60.48% → 86.29% (+25.81 percentage points)
+  - New test files: 5 files (~4,000 lines of test code)
+  - New tests: 178 tests (174 passing)
+  - Pre-commit hooks: Configured with 7 hooks
+  - CI/CD workflows: 8 workflows validated
 
-  Total: 35 artifacts, ~520 KB documentation
+  Installed SAPs by Week:
+  Week 1: SAP-000, 001, 002, 007, 009, 016 (6 SAPs, 35 artifacts)
+  Week 2: SAP-003, 004, 005, 006 (4 SAPs, 20 artifacts)
+
+  Total: 55 artifacts, ~1.2 MB documentation

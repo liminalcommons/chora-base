@@ -7,7 +7,11 @@ from mcp_orchestrator.cli import main
 def read_events(p: Path):
     if not p.exists():
         return []
-    return [json.loads(line) for line in p.read_text(encoding="utf-8").splitlines() if line.strip()]
+    return [
+        json.loads(line)
+        for line in p.read_text(encoding="utf-8").splitlines()
+        if line.strip()
+    ]
 
 
 def test_telemetry_emitted_for_cli_commands(tmp_path):
@@ -26,4 +30,3 @@ def test_telemetry_emitted_for_cli_commands(tmp_path):
     assert "manifest.validate" in names
     assert any(n.startswith("behavior.validate") for n in names)
     # assert "scenario.validate" in names
-

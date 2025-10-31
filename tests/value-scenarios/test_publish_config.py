@@ -14,7 +14,6 @@ from pathlib import Path
 
 from mcp_orchestrator.building import ConfigBuilder
 from mcp_orchestrator.crypto import ArtifactSigner, verify_signature
-from mcp_orchestrator.servers import get_default_registry
 from mcp_orchestrator.servers.models import (
     ParameterDefinition,
     ServerDefinition,
@@ -148,7 +147,9 @@ def test_value_scenario_publish_config_full_workflow():
         assert retrieved.payload == artifact.payload
 
         # Verify signature
-        is_valid = verify_signature(retrieved.payload, retrieved.signature, str(public_key_path))
+        is_valid = verify_signature(
+            retrieved.payload, retrieved.signature, str(public_key_path)
+        )
         assert is_valid is True, "Signature should be valid"
 
         # Verify profile index updated
@@ -158,10 +159,10 @@ def test_value_scenario_publish_config_full_workflow():
 
         print("✓ Value scenario: Publish configuration - PASSED")
         print(f"  - Keys initialized: {key_dir}")
-        print(f"  - Servers added: filesystem, github")
-        print(f"  - Validation: passed")
+        print("  - Servers added: filesystem, github")
+        print("  - Validation: passed")
         print(f"  - Published artifact: {artifact.artifact_id[:16]}...")
-        print(f"  - Signature: valid")
+        print("  - Signature: valid")
         print(f"  - Metadata: {artifact.metadata}")
 
 
@@ -220,7 +221,9 @@ def test_value_scenario_publish_with_validation_errors():
 
         # Validate again - should pass now
         draft = builder.build()
-        assert draft["mcpServers"]["github"]["env"]["GITHUB_TOKEN"] == "ghp_actual_token"
+        assert (
+            draft["mcpServers"]["github"]["env"]["GITHUB_TOKEN"] == "ghp_actual_token"
+        )
 
         # Publish successfully
         artifact = builder.to_artifact(
@@ -262,10 +265,12 @@ def test_value_scenario_publish_empty_config_rejected():
         # Simulate validation check
         validation_errors = []
         if builder.count() == 0:
-            validation_errors.append({
-                "code": "EMPTY_CONFIG",
-                "message": "Configuration is empty. Add at least one server before publishing.",
-            })
+            validation_errors.append(
+                {
+                    "code": "EMPTY_CONFIG",
+                    "message": "Configuration is empty. Add at least one server before publishing.",
+                }
+            )
 
         assert len(validation_errors) == 1
         assert validation_errors[0]["code"] == "EMPTY_CONFIG"

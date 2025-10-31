@@ -4,7 +4,6 @@ from datetime import datetime
 from pathlib import Path
 
 import pytest
-
 from mcp_orchestrator.storage import ArtifactStore, ConfigArtifact, StorageError
 
 
@@ -48,7 +47,7 @@ class TestArtifactStore:
 
     def test_init_creates_directories(self, tmp_path: Path) -> None:
         """Test that initialization creates required directories."""
-        store = ArtifactStore(base_path=tmp_path)
+        ArtifactStore(base_path=tmp_path)
 
         assert (tmp_path / "artifacts").exists()
         assert (tmp_path / "index").exists()
@@ -220,7 +219,9 @@ class TestArtifactStore:
         assert metadata.latest_artifact_id == sample_artifact.artifact_id
         assert metadata.updated_at  # Should have timestamp
 
-    def test_exists(self, store: ArtifactStore, sample_artifact: ConfigArtifact) -> None:
+    def test_exists(
+        self, store: ArtifactStore, sample_artifact: ConfigArtifact
+    ) -> None:
         """Test checking if artifact exists."""
         assert store.exists(sample_artifact.artifact_id) is False
 

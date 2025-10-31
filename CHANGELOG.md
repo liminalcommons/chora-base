@@ -611,4 +611,3 @@ After deployment, restart the client application to load the new configuration.
 - Testing infrastructure with 70%+ coverage
 - Project scaffolding from chora-base template
 - Core infrastructure and documentation
-

@@ -14,7 +14,7 @@ Update this table as questions resolve; link to meeting notes or decisions where
 How should ledger updates integrate with ecosystem? Dashboards are inbox broadcasts.
 I don't know please make a suggestion.
 
-Do we prioritize building automated installer?  
+Do we prioritize building automated installer?
 I'm not sure it depends on what needs to be set up in the adopter repos, I can imagine that adoption is agent driven and so instead of programmatic logic driving installation, we could have LLM intelligent installation and appropriate, documentation, checklist, etc.
 
 What is the SLA for processing coordination items once inbox is adopted?

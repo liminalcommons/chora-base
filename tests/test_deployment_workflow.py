@@ -14,10 +14,8 @@ Test Coverage:
 import json
 import tempfile
 from pathlib import Path
-from unittest.mock import MagicMock, patch
 
 import pytest
-
 from mcp_orchestrator.building import ConfigBuilder
 from mcp_orchestrator.crypto import ArtifactSigner
 from mcp_orchestrator.registry import get_default_registry as get_client_registry
@@ -71,7 +69,7 @@ def sample_artifact(temp_storage):
     artifact = builder.to_artifact(
         signing_key_id="default",
         private_key_path=str(temp_storage["private_key_path"]),
-        changelog="Test artifact"
+        changelog="Test artifact",
     )
 
     store = ArtifactStore(base_path=str(temp_storage["base"]))
@@ -102,12 +100,12 @@ class TestDeploymentWorkflowBasics:
             client_registry=client_registry,
             deployment_log=deployment_log,
             config_base_dir=str(temp_storage["config_dir"]),
-            public_key_path=str(temp_storage["public_key_path"])
+            public_key_path=str(temp_storage["public_key_path"]),
         )
 
         result = workflow.deploy(
             client_id="claude-desktop",
-            profile_id="default"
+            profile_id="default",
             # artifact_id not specified → should deploy latest
         )
 
@@ -135,13 +133,13 @@ class TestDeploymentWorkflowBasics:
             client_registry=client_registry,
             deployment_log=deployment_log,
             config_base_dir=str(temp_storage["config_dir"]),
-            public_key_path=str(temp_storage["public_key_path"])
+            public_key_path=str(temp_storage["public_key_path"]),
         )
 
         result = workflow.deploy(
             client_id="claude-desktop",
             profile_id="default",
-            artifact_id=sample_artifact.artifact_id  # Explicit artifact
+            artifact_id=sample_artifact.artifact_id,  # Explicit artifact
         )
 
         assert result.status == "deployed"
@@ -152,7 +150,7 @@ class TestDeploymentWorkflowBasics:
 
         BDD: Scenario: Deploy to non-existent client fails
         """
-        from mcp_orchestrator.deployment import DeploymentWorkflow, DeploymentError
+        from mcp_orchestrator.deployment import DeploymentError, DeploymentWorkflow
         from mcp_orchestrator.deployment.log import DeploymentLog
 
         client_registry = get_client_registry()
@@ -166,14 +164,11 @@ class TestDeploymentWorkflowBasics:
             client_registry=client_registry,
             deployment_log=deployment_log,
             config_base_dir=str(temp_storage["config_dir"]),
-            public_key_path=str(temp_storage["public_key_path"])
+            public_key_path=str(temp_storage["public_key_path"]),
         )
 
         with pytest.raises(DeploymentError) as exc_info:
-            workflow.deploy(
-                client_id="unknown-client",
-                profile_id="default"
-            )
+            workflow.deploy(client_id="unknown-client", profile_id="default")
 
         error = exc_info.value
         assert "unknown-client" in str(error)
@@ -184,7 +179,7 @@ class TestDeploymentWorkflowBasics:
 
         BDD: Scenario: Deploy with invalid artifact ID fails
         """
-        from mcp_orchestrator.deployment import DeploymentWorkflow, DeploymentError
+        from mcp_orchestrator.deployment import DeploymentError, DeploymentWorkflow
         from mcp_orchestrator.deployment.log import DeploymentLog
 
         client_registry = get_client_registry()
@@ -198,14 +193,14 @@ class TestDeploymentWorkflowBasics:
             client_registry=client_registry,
             deployment_log=deployment_log,
             config_base_dir=str(temp_storage["config_dir"]),
-            public_key_path=str(temp_storage["public_key_path"])
+            public_key_path=str(temp_storage["public_key_path"]),
         )
 
         with pytest.raises(DeploymentError) as exc_info:
             workflow.deploy(
                 client_id="claude-desktop",
                 profile_id="default",
-                artifact_id="invalid-sha256-hash"
+                artifact_id="invalid-sha256-hash",
             )
 
         error = exc_info.value
@@ -234,7 +229,7 @@ class TestDeploymentWorkflowSecurity:
             client_registry=client_registry,
             deployment_log=deployment_log,
             config_base_dir=str(temp_storage["config_dir"]),
-            public_key_path=str(temp_storage["public_key_path"])
+            public_key_path=str(temp_storage["public_key_path"]),
         )
 
         # Should succeed with valid signature
@@ -246,14 +241,16 @@ class TestDeploymentWorkflowSecurity:
 
         BDD: Scenario: Deploy verifies signature before writing
         """
-        from mcp_orchestrator.deployment import DeploymentWorkflow, DeploymentError
+        from mcp_orchestrator.deployment import DeploymentError, DeploymentWorkflow
         from mcp_orchestrator.deployment.log import DeploymentLog
 
         client_registry = get_client_registry()
         store = ArtifactStore(base_path=str(temp_storage["base"]))
 
         # Corrupt the signature
-        artifact_file = temp_storage["artifacts_dir"] / f"{sample_artifact.artifact_id}.json"
+        artifact_file = (
+            temp_storage["artifacts_dir"] / f"{sample_artifact.artifact_id}.json"
+        )
         with open(artifact_file) as f:
             artifact_data = json.load(f)
 
@@ -271,7 +268,7 @@ class TestDeploymentWorkflowSecurity:
             client_registry=client_registry,
             deployment_log=deployment_log,
             config_base_dir=str(temp_storage["config_dir"]),
-            public_key_path=str(temp_storage["public_key_path"])
+            public_key_path=str(temp_storage["public_key_path"]),
         )
 
         with pytest.raises(DeploymentError) as exc_info:
@@ -299,7 +296,9 @@ class TestDeploymentWorkflowFilesystem:
         )
 
         # Use a config dir that doesn't exist yet
-        nonexistent_config_dir = temp_storage["base"] / "nonexistent" / "nested" / "path"
+        nonexistent_config_dir = (
+            temp_storage["base"] / "nonexistent" / "nested" / "path"
+        )
         assert not nonexistent_config_dir.exists()
 
         workflow = DeploymentWorkflow(
@@ -307,7 +306,7 @@ class TestDeploymentWorkflowFilesystem:
             client_registry=client_registry,
             deployment_log=deployment_log,
             config_base_dir=str(nonexistent_config_dir),
-            public_key_path=str(temp_storage["public_key_path"])
+            public_key_path=str(temp_storage["public_key_path"]),
         )
 
         result = workflow.deploy("claude-desktop", "default")
@@ -322,7 +321,7 @@ class TestDeploymentWorkflowFilesystem:
 
         BDD: Scenario: Atomic deployment rolls back on write failure
         """
-        from mcp_orchestrator.deployment import DeploymentWorkflow, DeploymentError
+        from mcp_orchestrator.deployment import DeploymentError, DeploymentWorkflow
         from mcp_orchestrator.deployment.log import DeploymentLog
 
         client_registry = get_client_registry()
@@ -336,7 +335,7 @@ class TestDeploymentWorkflowFilesystem:
             client_registry=client_registry,
             deployment_log=deployment_log,
             config_base_dir=str(temp_storage["config_dir"]),
-            public_key_path=str(temp_storage["public_key_path"])
+            public_key_path=str(temp_storage["public_key_path"]),
         )
 
         # Make config directory read-only to cause write failure
@@ -381,13 +380,15 @@ class TestDeploymentWorkflowLogging:
             client_registry=client_registry,
             deployment_log=deployment_log,
             config_base_dir=str(temp_storage["config_dir"]),
-            public_key_path=str(temp_storage["public_key_path"])
+            public_key_path=str(temp_storage["public_key_path"]),
         )
 
-        result = workflow.deploy("claude-desktop", "default")
+        workflow.deploy("claude-desktop", "default")
 
         # Check deployment was logged
-        deployed_artifact = deployment_log.get_deployed_artifact("claude-desktop", "default")
+        deployed_artifact = deployment_log.get_deployed_artifact(
+            "claude-desktop", "default"
+        )
         assert deployed_artifact == sample_artifact.artifact_id
 
     def test_query_deployed_vs_latest_resources(self, temp_storage):
@@ -410,7 +411,7 @@ class TestDeploymentWorkflowLogging:
             client_registry=client_registry,
             deployment_log=deployment_log,
             config_base_dir=str(temp_storage["config_dir"]),
-            public_key_path=str(temp_storage["public_key_path"])
+            public_key_path=str(temp_storage["public_key_path"]),
         )
 
         # Publish and deploy v1
@@ -419,7 +420,7 @@ class TestDeploymentWorkflowLogging:
         artifact_v1 = builder_v1.to_artifact(
             signing_key_id="default",
             private_key_path=str(temp_storage["private_key_path"]),
-            changelog="v1"
+            changelog="v1",
         )
         store.store(artifact_v1)
         workflow.deploy("claude-desktop", "default")
@@ -431,7 +432,7 @@ class TestDeploymentWorkflowLogging:
         artifact_v2 = builder_v2.to_artifact(
             signing_key_id="default",
             private_key_path=str(temp_storage["private_key_path"]),
-            changelog="v2"
+            changelog="v2",
         )
         store.store(artifact_v2)
 

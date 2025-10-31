@@ -16,21 +16,19 @@ Testing patterns:
 import json
 import tempfile
 from pathlib import Path
-from unittest.mock import Mock, patch, MagicMock
+from unittest.mock import Mock, patch
 
 import pytest
 from click.testing import CliRunner
-
 from mcp_orchestrator.cli_building import (
     add_server,
-    remove_server,
-    publish_config,
     deploy_config,
+    publish_config,
+    remove_server,
 )
-from mcp_orchestrator.building import ConfigBuilder
 from mcp_orchestrator.crypto import ArtifactSigner
-from mcp_orchestrator.publishing import ValidationError
 from mcp_orchestrator.deployment import DeploymentError, DeploymentResult
+from mcp_orchestrator.publishing import ValidationError
 from mcp_orchestrator.servers.models import (
     ParameterDefinition,
     ServerDefinition,
@@ -110,7 +108,7 @@ def sample_config_file(tmp_path):
             "filesystem": {
                 "command": "npx",
                 "args": ["-y", "@modelcontextprotocol/server-filesystem", "/tmp"],
-                "env": {}
+                "env": {},
             }
         }
     }
@@ -126,16 +124,23 @@ class TestAddServerCommand:
 
     def test_add_server_success_text_output(self, cli_runner, sample_registry):
         """Test add_server with text output format."""
-        with patch("mcp_orchestrator.cli_building.get_default_registry", return_value=sample_registry):
+        with patch(
+            "mcp_orchestrator.cli_building.get_default_registry",
+            return_value=sample_registry,
+        ):
             result = cli_runner.invoke(
                 add_server,
                 [
                     "filesystem",
-                    "--client", "claude-desktop",
-                    "--profile", "default",
-                    "--param", "path=/Users/me/Documents",
-                    "--format", "text"
-                ]
+                    "--client",
+                    "claude-desktop",
+                    "--profile",
+                    "default",
+                    "--param",
+                    "path=/Users/me/Documents",
+                    "--format",
+                    "text",
+                ],
             )
 
         assert result.exit_code == 0
@@ -147,16 +152,23 @@ class TestAddServerCommand:
 
     def test_add_server_success_json_output(self, cli_runner, sample_registry):
         """Test add_server with JSON output format."""
-        with patch("mcp_orchestrator.cli_building.get_default_registry", return_value=sample_registry):
+        with patch(
+            "mcp_orchestrator.cli_building.get_default_registry",
+            return_value=sample_registry,
+        ):
             result = cli_runner.invoke(
                 add_server,
                 [
                     "filesystem",
-                    "--client", "claude-desktop",
-                    "--profile", "default",
-                    "--param", "path=/tmp",
-                    "--format", "json"
-                ]
+                    "--client",
+                    "claude-desktop",
+                    "--profile",
+                    "default",
+                    "--param",
+                    "path=/tmp",
+                    "--format",
+                    "json",
+                ],
             )
 
         assert result.exit_code == 0
@@ -172,17 +184,25 @@ class TestAddServerCommand:
 
     def test_add_server_with_custom_name(self, cli_runner, sample_registry):
         """Test add_server with custom server name."""
-        with patch("mcp_orchestrator.cli_building.get_default_registry", return_value=sample_registry):
+        with patch(
+            "mcp_orchestrator.cli_building.get_default_registry",
+            return_value=sample_registry,
+        ):
             result = cli_runner.invoke(
                 add_server,
                 [
                     "filesystem",
-                    "--client", "claude-desktop",
-                    "--profile", "dev",
-                    "--param", "path=/tmp",
-                    "--name", "filesystem-tmp",
-                    "--format", "json"
-                ]
+                    "--client",
+                    "claude-desktop",
+                    "--profile",
+                    "dev",
+                    "--param",
+                    "path=/tmp",
+                    "--name",
+                    "filesystem-tmp",
+                    "--format",
+                    "json",
+                ],
             )
 
         assert result.exit_code == 0
@@ -191,33 +211,48 @@ class TestAddServerCommand:
 
     def test_add_server_with_multiple_params(self, cli_runner, sample_registry):
         """Test add_server with multiple parameters."""
-        with patch("mcp_orchestrator.cli_building.get_default_registry", return_value=sample_registry):
+        with patch(
+            "mcp_orchestrator.cli_building.get_default_registry",
+            return_value=sample_registry,
+        ):
             result = cli_runner.invoke(
                 add_server,
                 [
                     "filesystem",
-                    "--client", "claude-desktop",
-                    "--profile", "default",
-                    "--param", "path=/tmp",
-                    "--param", "readonly=true",
-                    "--format", "json"
-                ]
+                    "--client",
+                    "claude-desktop",
+                    "--profile",
+                    "default",
+                    "--param",
+                    "path=/tmp",
+                    "--param",
+                    "readonly=true",
+                    "--format",
+                    "json",
+                ],
             )
 
         assert result.exit_code == 0
 
     def test_add_server_with_env_vars(self, cli_runner, sample_registry):
         """Test add_server with environment variables."""
-        with patch("mcp_orchestrator.cli_building.get_default_registry", return_value=sample_registry):
+        with patch(
+            "mcp_orchestrator.cli_building.get_default_registry",
+            return_value=sample_registry,
+        ):
             result = cli_runner.invoke(
                 add_server,
                 [
                     "github",
-                    "--client", "claude-desktop",
-                    "--profile", "default",
-                    "--env", "GITHUB_TOKEN=ghp_test123",
-                    "--format", "json"
-                ]
+                    "--client",
+                    "claude-desktop",
+                    "--profile",
+                    "default",
+                    "--env",
+                    "GITHUB_TOKEN=ghp_test123",
+                    "--format",
+                    "json",
+                ],
             )
 
         assert result.exit_code == 0
@@ -226,32 +261,46 @@ class TestAddServerCommand:
 
     def test_add_server_with_multiple_env_vars(self, cli_runner, sample_registry):
         """Test add_server with multiple environment variables."""
-        with patch("mcp_orchestrator.cli_building.get_default_registry", return_value=sample_registry):
+        with patch(
+            "mcp_orchestrator.cli_building.get_default_registry",
+            return_value=sample_registry,
+        ):
             result = cli_runner.invoke(
                 add_server,
                 [
                     "github",
-                    "--client", "claude-desktop",
-                    "--profile", "default",
-                    "--env", "GITHUB_TOKEN=ghp_test123",
-                    "--env", "GITHUB_ORG=myorg",
-                    "--format", "json"
-                ]
+                    "--client",
+                    "claude-desktop",
+                    "--profile",
+                    "default",
+                    "--env",
+                    "GITHUB_TOKEN=ghp_test123",
+                    "--env",
+                    "GITHUB_ORG=myorg",
+                    "--format",
+                    "json",
+                ],
             )
 
         assert result.exit_code == 0
 
     def test_add_server_invalid_param_format(self, cli_runner, sample_registry):
         """Test add_server with invalid parameter format (missing =)."""
-        with patch("mcp_orchestrator.cli_building.get_default_registry", return_value=sample_registry):
+        with patch(
+            "mcp_orchestrator.cli_building.get_default_registry",
+            return_value=sample_registry,
+        ):
             result = cli_runner.invoke(
                 add_server,
                 [
                     "filesystem",
-                    "--client", "claude-desktop",
-                    "--profile", "default",
-                    "--param", "invalid-param-format"
-                ]
+                    "--client",
+                    "claude-desktop",
+                    "--profile",
+                    "default",
+                    "--param",
+                    "invalid-param-format",
+                ],
             )
 
         assert result.exit_code == 1
@@ -260,15 +309,21 @@ class TestAddServerCommand:
 
     def test_add_server_invalid_env_format(self, cli_runner, sample_registry):
         """Test add_server with invalid env format (missing =)."""
-        with patch("mcp_orchestrator.cli_building.get_default_registry", return_value=sample_registry):
+        with patch(
+            "mcp_orchestrator.cli_building.get_default_registry",
+            return_value=sample_registry,
+        ):
             result = cli_runner.invoke(
                 add_server,
                 [
                     "github",
-                    "--client", "claude-desktop",
-                    "--profile", "default",
-                    "--env", "INVALID_ENV_FORMAT"
-                ]
+                    "--client",
+                    "claude-desktop",
+                    "--profile",
+                    "default",
+                    "--env",
+                    "INVALID_ENV_FORMAT",
+                ],
             )
 
         assert result.exit_code == 1
@@ -277,7 +332,10 @@ class TestAddServerCommand:
 
     def test_add_server_exception_handling(self, cli_runner, sample_registry):
         """Test add_server handles exceptions gracefully."""
-        with patch("mcp_orchestrator.cli_building.get_default_registry", return_value=sample_registry):
+        with patch(
+            "mcp_orchestrator.cli_building.get_default_registry",
+            return_value=sample_registry,
+        ):
             with patch("mcp_orchestrator.cli_building.ConfigBuilder") as mock_builder:
                 mock_builder.side_effect = Exception("Test error")
 
@@ -285,10 +343,13 @@ class TestAddServerCommand:
                     add_server,
                     [
                         "filesystem",
-                        "--client", "claude-desktop",
-                        "--profile", "default",
-                        "--param", "path=/tmp"
-                    ]
+                        "--client",
+                        "claude-desktop",
+                        "--profile",
+                        "default",
+                        "--param",
+                        "path=/tmp",
+                    ],
                 )
 
         assert result.exit_code == 1
@@ -296,10 +357,7 @@ class TestAddServerCommand:
 
     def test_add_server_missing_required_option(self, cli_runner):
         """Test add_server with missing required --client option."""
-        result = cli_runner.invoke(
-            add_server,
-            ["filesystem", "--profile", "default"]
-        )
+        result = cli_runner.invoke(add_server, ["filesystem", "--profile", "default"])
 
         assert result.exit_code != 0
         assert "Missing option" in result.output or "required" in result.output.lower()
@@ -310,14 +368,13 @@ class TestRemoveServerCommand:
 
     def test_remove_server_shows_limitation_warning(self, cli_runner, sample_registry):
         """Test remove_server shows CLI limitation warning."""
-        with patch("mcp_orchestrator.cli_building.get_default_registry", return_value=sample_registry):
+        with patch(
+            "mcp_orchestrator.cli_building.get_default_registry",
+            return_value=sample_registry,
+        ):
             result = cli_runner.invoke(
                 remove_server,
-                [
-                    "filesystem",
-                    "--client", "claude-desktop",
-                    "--profile", "default"
-                ]
+                ["filesystem", "--client", "claude-desktop", "--profile", "default"],
             )
 
         # Command will fail because draft is empty, but should show warnings first
@@ -327,8 +384,13 @@ class TestRemoveServerCommand:
     def test_remove_server_text_output(self, cli_runner, sample_registry):
         """Test remove_server with text output format."""
         # Mock builder to have a server to remove
-        with patch("mcp_orchestrator.cli_building.get_default_registry", return_value=sample_registry):
-            with patch("mcp_orchestrator.cli_building.ConfigBuilder") as mock_builder_class:
+        with patch(
+            "mcp_orchestrator.cli_building.get_default_registry",
+            return_value=sample_registry,
+        ):
+            with patch(
+                "mcp_orchestrator.cli_building.ConfigBuilder"
+            ) as mock_builder_class:
                 mock_builder = Mock()
                 mock_builder.count.return_value = 0
                 mock_builder.build.return_value = {"mcpServers": {}}
@@ -338,10 +400,13 @@ class TestRemoveServerCommand:
                     remove_server,
                     [
                         "filesystem",
-                        "--client", "claude-desktop",
-                        "--profile", "default",
-                        "--format", "text"
-                    ]
+                        "--client",
+                        "claude-desktop",
+                        "--profile",
+                        "default",
+                        "--format",
+                        "text",
+                    ],
                 )
 
         # Should show limitation warnings
@@ -349,8 +414,13 @@ class TestRemoveServerCommand:
 
     def test_remove_server_json_output(self, cli_runner, sample_registry):
         """Test remove_server with JSON output format."""
-        with patch("mcp_orchestrator.cli_building.get_default_registry", return_value=sample_registry):
-            with patch("mcp_orchestrator.cli_building.ConfigBuilder") as mock_builder_class:
+        with patch(
+            "mcp_orchestrator.cli_building.get_default_registry",
+            return_value=sample_registry,
+        ):
+            with patch(
+                "mcp_orchestrator.cli_building.ConfigBuilder"
+            ) as mock_builder_class:
                 mock_builder = Mock()
                 mock_builder.count.return_value = 0
                 mock_builder.build.return_value = {"mcpServers": {}}
@@ -360,10 +430,13 @@ class TestRemoveServerCommand:
                     remove_server,
                     [
                         "filesystem",
-                        "--client", "claude-desktop",
-                        "--profile", "default",
-                        "--format", "json"
-                    ]
+                        "--client",
+                        "claude-desktop",
+                        "--profile",
+                        "default",
+                        "--format",
+                        "json",
+                    ],
                 )
 
         # Check for warning in stderr
@@ -371,8 +444,13 @@ class TestRemoveServerCommand:
 
     def test_remove_server_exception_handling(self, cli_runner, sample_registry):
         """Test remove_server handles exceptions gracefully."""
-        with patch("mcp_orchestrator.cli_building.get_default_registry", return_value=sample_registry):
-            with patch("mcp_orchestrator.cli_building.ConfigBuilder") as mock_builder_class:
+        with patch(
+            "mcp_orchestrator.cli_building.get_default_registry",
+            return_value=sample_registry,
+        ):
+            with patch(
+                "mcp_orchestrator.cli_building.ConfigBuilder"
+            ) as mock_builder_class:
                 mock_builder = Mock()
                 mock_builder.remove_server.side_effect = Exception("Server not found")
                 mock_builder_class.return_value = mock_builder
@@ -381,9 +459,11 @@ class TestRemoveServerCommand:
                     remove_server,
                     [
                         "filesystem",
-                        "--client", "claude-desktop",
-                        "--profile", "default"
-                    ]
+                        "--client",
+                        "claude-desktop",
+                        "--profile",
+                        "default",
+                    ],
                 )
 
         assert result.exit_code == 1
@@ -391,10 +471,7 @@ class TestRemoveServerCommand:
 
     def test_remove_server_missing_required_options(self, cli_runner):
         """Test remove_server with missing required options."""
-        result = cli_runner.invoke(
-            remove_server,
-            ["filesystem"]
-        )
+        result = cli_runner.invoke(remove_server, ["filesystem"])
 
         assert result.exit_code != 0
 
@@ -402,12 +479,22 @@ class TestRemoveServerCommand:
 class TestPublishConfigCommand:
     """Tests for publish_config CLI command."""
 
-    def test_publish_config_success_text_output(self, cli_runner, sample_config_file, temp_keys, sample_registry):
+    def test_publish_config_success_text_output(
+        self, cli_runner, sample_config_file, temp_keys, sample_registry
+    ):
         """Test publish_config with text output format."""
-        with patch("mcp_orchestrator.cli_building.get_default_registry", return_value=sample_registry):
+        with patch(
+            "mcp_orchestrator.cli_building.get_default_registry",
+            return_value=sample_registry,
+        ):
             with patch("mcp_orchestrator.cli_building.get_client_registry"):
-                with patch("mcp_orchestrator.cli_building.Path.home", return_value=temp_keys["home_dir"]):
-                    with patch("mcp_orchestrator.cli_building.PublishingWorkflow") as mock_workflow_class:
+                with patch(
+                    "mcp_orchestrator.cli_building.Path.home",
+                    return_value=temp_keys["home_dir"],
+                ):
+                    with patch(
+                        "mcp_orchestrator.cli_building.PublishingWorkflow"
+                    ) as mock_workflow_class:
                         mock_workflow = Mock()
                         mock_workflow.publish.return_value = {
                             "artifact_id": "abc123def456" * 4,
@@ -420,12 +507,17 @@ class TestPublishConfigCommand:
                         result = cli_runner.invoke(
                             publish_config,
                             [
-                                "--client", "claude-desktop",
-                                "--profile", "default",
-                                "--file", str(sample_config_file),
-                                "--changelog", "Test publish",
-                                "--format", "text"
-                            ]
+                                "--client",
+                                "claude-desktop",
+                                "--profile",
+                                "default",
+                                "--file",
+                                str(sample_config_file),
+                                "--changelog",
+                                "Test publish",
+                                "--format",
+                                "text",
+                            ],
                         )
 
         assert result.exit_code == 0
@@ -437,12 +529,22 @@ class TestPublishConfigCommand:
         assert "Server count: 1" in result.output
         assert "Changelog: Test publish" in result.output
 
-    def test_publish_config_success_json_output(self, cli_runner, sample_config_file, temp_keys, sample_registry):
+    def test_publish_config_success_json_output(
+        self, cli_runner, sample_config_file, temp_keys, sample_registry
+    ):
         """Test publish_config with JSON output format."""
-        with patch("mcp_orchestrator.cli_building.get_default_registry", return_value=sample_registry):
+        with patch(
+            "mcp_orchestrator.cli_building.get_default_registry",
+            return_value=sample_registry,
+        ):
             with patch("mcp_orchestrator.cli_building.get_client_registry"):
-                with patch("mcp_orchestrator.cli_building.Path.home", return_value=temp_keys["home_dir"]):
-                    with patch("mcp_orchestrator.cli_building.PublishingWorkflow") as mock_workflow_class:
+                with patch(
+                    "mcp_orchestrator.cli_building.Path.home",
+                    return_value=temp_keys["home_dir"],
+                ):
+                    with patch(
+                        "mcp_orchestrator.cli_building.PublishingWorkflow"
+                    ) as mock_workflow_class:
                         mock_workflow = Mock()
                         result_data = {
                             "artifact_id": "abc123",
@@ -456,11 +558,15 @@ class TestPublishConfigCommand:
                         result = cli_runner.invoke(
                             publish_config,
                             [
-                                "--client", "claude-desktop",
-                                "--profile", "default",
-                                "--file", str(sample_config_file),
-                                "--format", "json"
-                            ]
+                                "--client",
+                                "claude-desktop",
+                                "--profile",
+                                "default",
+                                "--file",
+                                str(sample_config_file),
+                                "--format",
+                                "json",
+                            ],
                         )
 
         assert result.exit_code == 0
@@ -469,19 +575,27 @@ class TestPublishConfigCommand:
         assert output["client_id"] == "claude-desktop"
         assert output["server_count"] == 1
 
-    def test_publish_config_missing_mcpServers_key(self, cli_runner, tmp_path, temp_keys):
+    def test_publish_config_missing_mcpServers_key(
+        self, cli_runner, tmp_path, temp_keys
+    ):
         """Test publish_config with config missing 'mcpServers' key."""
         bad_config = tmp_path / "bad-config.json"
         bad_config.write_text(json.dumps({"servers": {}}))
 
-        with patch("mcp_orchestrator.cli_building.Path.home", return_value=temp_keys["home_dir"]):
+        with patch(
+            "mcp_orchestrator.cli_building.Path.home",
+            return_value=temp_keys["home_dir"],
+        ):
             result = cli_runner.invoke(
                 publish_config,
                 [
-                    "--client", "claude-desktop",
-                    "--profile", "default",
-                    "--file", str(bad_config)
-                ]
+                    "--client",
+                    "claude-desktop",
+                    "--profile",
+                    "default",
+                    "--file",
+                    str(bad_config),
+                ],
             )
 
         assert result.exit_code == 1
@@ -492,20 +606,28 @@ class TestPublishConfigCommand:
         empty_config = tmp_path / "empty-config.json"
         empty_config.write_text(json.dumps({"mcpServers": {}}))
 
-        with patch("mcp_orchestrator.cli_building.Path.home", return_value=temp_keys["home_dir"]):
+        with patch(
+            "mcp_orchestrator.cli_building.Path.home",
+            return_value=temp_keys["home_dir"],
+        ):
             result = cli_runner.invoke(
                 publish_config,
                 [
-                    "--client", "claude-desktop",
-                    "--profile", "default",
-                    "--file", str(empty_config)
-                ]
+                    "--client",
+                    "claude-desktop",
+                    "--profile",
+                    "default",
+                    "--file",
+                    str(empty_config),
+                ],
             )
 
         assert result.exit_code == 1
         assert "Configuration has no servers" in result.output
 
-    def test_publish_config_missing_signing_key(self, cli_runner, sample_config_file, tmp_path):
+    def test_publish_config_missing_signing_key(
+        self, cli_runner, sample_config_file, tmp_path
+    ):
         """Test publish_config when signing key doesn't exist."""
         fake_home = tmp_path / "fake-home"
         fake_home.mkdir()
@@ -514,29 +636,48 @@ class TestPublishConfigCommand:
             result = cli_runner.invoke(
                 publish_config,
                 [
-                    "--client", "claude-desktop",
-                    "--profile", "default",
-                    "--file", str(sample_config_file)
-                ]
+                    "--client",
+                    "claude-desktop",
+                    "--profile",
+                    "default",
+                    "--file",
+                    str(sample_config_file),
+                ],
             )
 
         assert result.exit_code == 1
         assert "Signing key not found" in result.output
         assert "mcp-orchestration-init-keys" in result.output
 
-    def test_publish_config_validation_error(self, cli_runner, sample_config_file, temp_keys, sample_registry):
+    def test_publish_config_validation_error(
+        self, cli_runner, sample_config_file, temp_keys, sample_registry
+    ):
         """Test publish_config with validation errors."""
-        with patch("mcp_orchestrator.cli_building.get_default_registry", return_value=sample_registry):
+        with patch(
+            "mcp_orchestrator.cli_building.get_default_registry",
+            return_value=sample_registry,
+        ):
             with patch("mcp_orchestrator.cli_building.get_client_registry"):
-                with patch("mcp_orchestrator.cli_building.Path.home", return_value=temp_keys["home_dir"]):
-                    with patch("mcp_orchestrator.cli_building.PublishingWorkflow") as mock_workflow_class:
+                with patch(
+                    "mcp_orchestrator.cli_building.Path.home",
+                    return_value=temp_keys["home_dir"],
+                ):
+                    with patch(
+                        "mcp_orchestrator.cli_building.PublishingWorkflow"
+                    ) as mock_workflow_class:
                         mock_workflow = Mock()
 
                         # Create ValidationError with validation_result
                         validation_result = {
                             "errors": [
-                                {"code": "INVALID_COMMAND", "message": "Command not found"},
-                                {"code": "MISSING_ENV", "message": "Required env var missing"}
+                                {
+                                    "code": "INVALID_COMMAND",
+                                    "message": "Command not found",
+                                },
+                                {
+                                    "code": "MISSING_ENV",
+                                    "message": "Required env var missing",
+                                },
                             ]
                         }
                         error = ValidationError(validation_result)
@@ -546,10 +687,13 @@ class TestPublishConfigCommand:
                         result = cli_runner.invoke(
                             publish_config,
                             [
-                                "--client", "claude-desktop",
-                                "--profile", "default",
-                                "--file", str(sample_config_file)
-                            ]
+                                "--client",
+                                "claude-desktop",
+                                "--profile",
+                                "default",
+                                "--file",
+                                str(sample_config_file),
+                            ],
                         )
 
         assert result.exit_code == 1
@@ -562,10 +706,13 @@ class TestPublishConfigCommand:
         result = cli_runner.invoke(
             publish_config,
             [
-                "--client", "claude-desktop",
-                "--profile", "default",
-                "--file", "/nonexistent/config.json"
-            ]
+                "--client",
+                "claude-desktop",
+                "--profile",
+                "default",
+                "--file",
+                "/nonexistent/config.json",
+            ],
         )
 
         # Click validates file existence, so this should fail during argument parsing
@@ -576,34 +723,53 @@ class TestPublishConfigCommand:
         bad_json = tmp_path / "bad.json"
         bad_json.write_text("{ invalid json }")
 
-        with patch("mcp_orchestrator.cli_building.Path.home", return_value=temp_keys["home_dir"]):
+        with patch(
+            "mcp_orchestrator.cli_building.Path.home",
+            return_value=temp_keys["home_dir"],
+        ):
             result = cli_runner.invoke(
                 publish_config,
                 [
-                    "--client", "claude-desktop",
-                    "--profile", "default",
-                    "--file", str(bad_json)
-                ]
+                    "--client",
+                    "claude-desktop",
+                    "--profile",
+                    "default",
+                    "--file",
+                    str(bad_json),
+                ],
             )
 
         assert result.exit_code == 1
         assert "Invalid JSON in configuration file" in result.output
 
-    def test_publish_config_general_exception(self, cli_runner, sample_config_file, temp_keys, sample_registry):
+    def test_publish_config_general_exception(
+        self, cli_runner, sample_config_file, temp_keys, sample_registry
+    ):
         """Test publish_config handles general exceptions."""
-        with patch("mcp_orchestrator.cli_building.get_default_registry", return_value=sample_registry):
+        with patch(
+            "mcp_orchestrator.cli_building.get_default_registry",
+            return_value=sample_registry,
+        ):
             with patch("mcp_orchestrator.cli_building.get_client_registry"):
-                with patch("mcp_orchestrator.cli_building.Path.home", return_value=temp_keys["home_dir"]):
-                    with patch("mcp_orchestrator.cli_building.PublishingWorkflow") as mock_workflow_class:
+                with patch(
+                    "mcp_orchestrator.cli_building.Path.home",
+                    return_value=temp_keys["home_dir"],
+                ):
+                    with patch(
+                        "mcp_orchestrator.cli_building.PublishingWorkflow"
+                    ) as mock_workflow_class:
                         mock_workflow_class.side_effect = Exception("Unexpected error")
 
                         result = cli_runner.invoke(
                             publish_config,
                             [
-                                "--client", "claude-desktop",
-                                "--profile", "default",
-                                "--file", str(sample_config_file)
-                            ]
+                                "--client",
+                                "claude-desktop",
+                                "--profile",
+                                "default",
+                                "--file",
+                                str(sample_config_file),
+                            ],
                         )
 
         assert result.exit_code == 1
@@ -616,15 +782,20 @@ class TestDeployConfigCommand:
     def test_deploy_config_success_text_output(self, cli_runner, temp_keys):
         """Test deploy_config with text output format."""
         with patch("mcp_orchestrator.cli_building.get_client_registry"):
-            with patch("mcp_orchestrator.cli_building.Path.home", return_value=temp_keys["home_dir"]):
-                with patch("mcp_orchestrator.cli_building.DeploymentWorkflow") as mock_workflow_class:
+            with patch(
+                "mcp_orchestrator.cli_building.Path.home",
+                return_value=temp_keys["home_dir"],
+            ):
+                with patch(
+                    "mcp_orchestrator.cli_building.DeploymentWorkflow"
+                ) as mock_workflow_class:
                     mock_workflow = Mock()
 
                     result_obj = DeploymentResult(
                         status="deployed",
                         artifact_id="abc123def456",
                         config_path="/path/to/config.json",
-                        deployed_at="2025-10-31T12:00:00Z"
+                        deployed_at="2025-10-31T12:00:00Z",
                     )
                     mock_workflow.deploy.return_value = result_obj
                     mock_workflow_class.return_value = mock_workflow
@@ -632,10 +803,13 @@ class TestDeployConfigCommand:
                     result = cli_runner.invoke(
                         deploy_config,
                         [
-                            "--client", "claude-desktop",
-                            "--profile", "default",
-                            "--format", "text"
-                        ]
+                            "--client",
+                            "claude-desktop",
+                            "--profile",
+                            "default",
+                            "--format",
+                            "text",
+                        ],
                     )
 
         assert result.exit_code == 0
@@ -649,15 +823,20 @@ class TestDeployConfigCommand:
     def test_deploy_config_success_json_output(self, cli_runner, temp_keys):
         """Test deploy_config with JSON output format."""
         with patch("mcp_orchestrator.cli_building.get_client_registry"):
-            with patch("mcp_orchestrator.cli_building.Path.home", return_value=temp_keys["home_dir"]):
-                with patch("mcp_orchestrator.cli_building.DeploymentWorkflow") as mock_workflow_class:
+            with patch(
+                "mcp_orchestrator.cli_building.Path.home",
+                return_value=temp_keys["home_dir"],
+            ):
+                with patch(
+                    "mcp_orchestrator.cli_building.DeploymentWorkflow"
+                ) as mock_workflow_class:
                     mock_workflow = Mock()
 
                     result_obj = DeploymentResult(
                         status="deployed",
                         artifact_id="abc123",
                         config_path="/path/to/config.json",
-                        deployed_at="2025-10-31T12:00:00Z"
+                        deployed_at="2025-10-31T12:00:00Z",
                     )
                     mock_workflow.deploy.return_value = result_obj
                     mock_workflow_class.return_value = mock_workflow
@@ -665,10 +844,13 @@ class TestDeployConfigCommand:
                     result = cli_runner.invoke(
                         deploy_config,
                         [
-                            "--client", "claude-desktop",
-                            "--profile", "default",
-                            "--format", "json"
-                        ]
+                            "--client",
+                            "claude-desktop",
+                            "--profile",
+                            "default",
+                            "--format",
+                            "json",
+                        ],
                     )
 
         assert result.exit_code == 0
@@ -680,15 +862,20 @@ class TestDeployConfigCommand:
     def test_deploy_config_with_artifact_id(self, cli_runner, temp_keys):
         """Test deploy_config with specific artifact ID (rollback scenario)."""
         with patch("mcp_orchestrator.cli_building.get_client_registry"):
-            with patch("mcp_orchestrator.cli_building.Path.home", return_value=temp_keys["home_dir"]):
-                with patch("mcp_orchestrator.cli_building.DeploymentWorkflow") as mock_workflow_class:
+            with patch(
+                "mcp_orchestrator.cli_building.Path.home",
+                return_value=temp_keys["home_dir"],
+            ):
+                with patch(
+                    "mcp_orchestrator.cli_building.DeploymentWorkflow"
+                ) as mock_workflow_class:
                     mock_workflow = Mock()
 
                     result_obj = DeploymentResult(
                         status="deployed",
                         artifact_id="old123",
                         config_path="/path/to/config.json",
-                        deployed_at="2025-10-31T12:00:00Z"
+                        deployed_at="2025-10-31T12:00:00Z",
                     )
                     mock_workflow.deploy.return_value = result_obj
                     mock_workflow_class.return_value = mock_workflow
@@ -696,41 +883,43 @@ class TestDeployConfigCommand:
                     result = cli_runner.invoke(
                         deploy_config,
                         [
-                            "--client", "claude-desktop",
-                            "--profile", "default",
-                            "--artifact-id", "old123"
-                        ]
+                            "--client",
+                            "claude-desktop",
+                            "--profile",
+                            "default",
+                            "--artifact-id",
+                            "old123",
+                        ],
                     )
 
         assert result.exit_code == 0
         mock_workflow.deploy.assert_called_once_with(
-            client_id="claude-desktop",
-            profile_id="default",
-            artifact_id="old123"
+            client_id="claude-desktop", profile_id="default", artifact_id="old123"
         )
 
     def test_deploy_config_cursor_restart_instructions(self, cli_runner, temp_keys):
         """Test deploy_config shows Cursor-specific restart instructions."""
         with patch("mcp_orchestrator.cli_building.get_client_registry"):
-            with patch("mcp_orchestrator.cli_building.Path.home", return_value=temp_keys["home_dir"]):
-                with patch("mcp_orchestrator.cli_building.DeploymentWorkflow") as mock_workflow_class:
+            with patch(
+                "mcp_orchestrator.cli_building.Path.home",
+                return_value=temp_keys["home_dir"],
+            ):
+                with patch(
+                    "mcp_orchestrator.cli_building.DeploymentWorkflow"
+                ) as mock_workflow_class:
                     mock_workflow = Mock()
 
                     result_obj = DeploymentResult(
                         status="deployed",
                         artifact_id="abc123",
                         config_path="/path/to/config.json",
-                        deployed_at="2025-10-31T12:00:00Z"
+                        deployed_at="2025-10-31T12:00:00Z",
                     )
                     mock_workflow.deploy.return_value = result_obj
                     mock_workflow_class.return_value = mock_workflow
 
                     result = cli_runner.invoke(
-                        deploy_config,
-                        [
-                            "--client", "cursor",
-                            "--profile", "default"
-                        ]
+                        deploy_config, ["--client", "cursor", "--profile", "default"]
                     )
 
         assert result.exit_code == 0
@@ -742,13 +931,12 @@ class TestDeployConfigCommand:
         fake_home.mkdir()
 
         with patch("mcp_orchestrator.cli_building.get_client_registry"):
-            with patch("mcp_orchestrator.cli_building.Path.home", return_value=fake_home):
+            with patch(
+                "mcp_orchestrator.cli_building.Path.home", return_value=fake_home
+            ):
                 result = cli_runner.invoke(
                     deploy_config,
-                    [
-                        "--client", "claude-desktop",
-                        "--profile", "default"
-                    ]
+                    ["--client", "claude-desktop", "--profile", "default"],
                 )
 
         assert result.exit_code == 1
@@ -757,15 +945,21 @@ class TestDeployConfigCommand:
 
     def test_deploy_config_client_not_found_error(self, cli_runner, temp_keys):
         """Test deploy_config with CLIENT_NOT_FOUND error."""
-        with patch("mcp_orchestrator.cli_building.get_client_registry") as mock_registry_func:
-            with patch("mcp_orchestrator.cli_building.Path.home", return_value=temp_keys["home_dir"]):
-                with patch("mcp_orchestrator.cli_building.DeploymentWorkflow") as mock_workflow_class:
+        with patch(
+            "mcp_orchestrator.cli_building.get_client_registry"
+        ) as mock_registry_func:
+            with patch(
+                "mcp_orchestrator.cli_building.Path.home",
+                return_value=temp_keys["home_dir"],
+            ):
+                with patch(
+                    "mcp_orchestrator.cli_building.DeploymentWorkflow"
+                ) as mock_workflow_class:
                     mock_workflow = Mock()
 
                     # Create error with message attribute for CLI compatibility
                     error = DeploymentError(
-                        "Client not found",
-                        {"code": "CLIENT_NOT_FOUND"}
+                        "Client not found", {"code": "CLIENT_NOT_FOUND"}
                     )
                     error.message = "Client not found"  # Add message attribute
                     mock_workflow.deploy.side_effect = error
@@ -780,10 +974,7 @@ class TestDeployConfigCommand:
 
                     result = cli_runner.invoke(
                         deploy_config,
-                        [
-                            "--client", "invalid-client",
-                            "--profile", "default"
-                        ]
+                        ["--client", "invalid-client", "--profile", "default"],
                     )
 
         assert result.exit_code == 1
@@ -793,13 +984,17 @@ class TestDeployConfigCommand:
     def test_deploy_config_artifact_not_found_error(self, cli_runner, temp_keys):
         """Test deploy_config with ARTIFACT_NOT_FOUND error."""
         with patch("mcp_orchestrator.cli_building.get_client_registry"):
-            with patch("mcp_orchestrator.cli_building.Path.home", return_value=temp_keys["home_dir"]):
-                with patch("mcp_orchestrator.cli_building.DeploymentWorkflow") as mock_workflow_class:
+            with patch(
+                "mcp_orchestrator.cli_building.Path.home",
+                return_value=temp_keys["home_dir"],
+            ):
+                with patch(
+                    "mcp_orchestrator.cli_building.DeploymentWorkflow"
+                ) as mock_workflow_class:
                     mock_workflow = Mock()
 
                     error = DeploymentError(
-                        "Artifact not found",
-                        {"code": "ARTIFACT_NOT_FOUND"}
+                        "Artifact not found", {"code": "ARTIFACT_NOT_FOUND"}
                     )
                     error.message = "Artifact not found"  # Add message attribute
                     mock_workflow.deploy.side_effect = error
@@ -807,10 +1002,7 @@ class TestDeployConfigCommand:
 
                     result = cli_runner.invoke(
                         deploy_config,
-                        [
-                            "--client", "claude-desktop",
-                            "--profile", "default"
-                        ]
+                        ["--client", "claude-desktop", "--profile", "default"],
                     )
 
         assert result.exit_code == 1
@@ -821,13 +1013,17 @@ class TestDeployConfigCommand:
     def test_deploy_config_signature_invalid_error(self, cli_runner, temp_keys):
         """Test deploy_config with SIGNATURE_INVALID error."""
         with patch("mcp_orchestrator.cli_building.get_client_registry"):
-            with patch("mcp_orchestrator.cli_building.Path.home", return_value=temp_keys["home_dir"]):
-                with patch("mcp_orchestrator.cli_building.DeploymentWorkflow") as mock_workflow_class:
+            with patch(
+                "mcp_orchestrator.cli_building.Path.home",
+                return_value=temp_keys["home_dir"],
+            ):
+                with patch(
+                    "mcp_orchestrator.cli_building.DeploymentWorkflow"
+                ) as mock_workflow_class:
                     mock_workflow = Mock()
 
                     error = DeploymentError(
-                        "Signature invalid",
-                        {"code": "SIGNATURE_INVALID"}
+                        "Signature invalid", {"code": "SIGNATURE_INVALID"}
                     )
                     error.message = "Signature invalid"  # Add message attribute
                     mock_workflow.deploy.side_effect = error
@@ -835,10 +1031,7 @@ class TestDeployConfigCommand:
 
                     result = cli_runner.invoke(
                         deploy_config,
-                        [
-                            "--client", "claude-desktop",
-                            "--profile", "default"
-                        ]
+                        ["--client", "claude-desktop", "--profile", "default"],
                     )
 
         assert result.exit_code == 1
@@ -851,24 +1044,23 @@ class TestDeployConfigCommand:
     def test_deploy_config_write_failed_error(self, cli_runner, temp_keys):
         """Test deploy_config with WRITE_FAILED error."""
         with patch("mcp_orchestrator.cli_building.get_client_registry"):
-            with patch("mcp_orchestrator.cli_building.Path.home", return_value=temp_keys["home_dir"]):
-                with patch("mcp_orchestrator.cli_building.DeploymentWorkflow") as mock_workflow_class:
+            with patch(
+                "mcp_orchestrator.cli_building.Path.home",
+                return_value=temp_keys["home_dir"],
+            ):
+                with patch(
+                    "mcp_orchestrator.cli_building.DeploymentWorkflow"
+                ) as mock_workflow_class:
                     mock_workflow = Mock()
 
-                    error = DeploymentError(
-                        "Write failed",
-                        {"code": "WRITE_FAILED"}
-                    )
+                    error = DeploymentError("Write failed", {"code": "WRITE_FAILED"})
                     error.message = "Write failed"  # Add message attribute
                     mock_workflow.deploy.side_effect = error
                     mock_workflow_class.return_value = mock_workflow
 
                     result = cli_runner.invoke(
                         deploy_config,
-                        [
-                            "--client", "claude-desktop",
-                            "--profile", "default"
-                        ]
+                        ["--client", "claude-desktop", "--profile", "default"],
                     )
 
         assert result.exit_code == 1
@@ -881,23 +1073,22 @@ class TestDeployConfigCommand:
     def test_deploy_config_unknown_deployment_error(self, cli_runner, temp_keys):
         """Test deploy_config with unknown DeploymentError code."""
         with patch("mcp_orchestrator.cli_building.get_client_registry"):
-            with patch("mcp_orchestrator.cli_building.Path.home", return_value=temp_keys["home_dir"]):
-                with patch("mcp_orchestrator.cli_building.DeploymentWorkflow") as mock_workflow_class:
+            with patch(
+                "mcp_orchestrator.cli_building.Path.home",
+                return_value=temp_keys["home_dir"],
+            ):
+                with patch(
+                    "mcp_orchestrator.cli_building.DeploymentWorkflow"
+                ) as mock_workflow_class:
                     mock_workflow = Mock()
 
-                    error = DeploymentError(
-                        "Unknown error",
-                        {"code": "UNKNOWN_ERROR"}
-                    )
+                    error = DeploymentError("Unknown error", {"code": "UNKNOWN_ERROR"})
                     mock_workflow.deploy.side_effect = error
                     mock_workflow_class.return_value = mock_workflow
 
                     result = cli_runner.invoke(
                         deploy_config,
-                        [
-                            "--client", "claude-desktop",
-                            "--profile", "default"
-                        ]
+                        ["--client", "claude-desktop", "--profile", "default"],
                     )
 
         assert result.exit_code == 1
@@ -906,16 +1097,20 @@ class TestDeployConfigCommand:
     def test_deploy_config_general_exception(self, cli_runner, temp_keys):
         """Test deploy_config handles general exceptions."""
         with patch("mcp_orchestrator.cli_building.get_client_registry"):
-            with patch("mcp_orchestrator.cli_building.Path.home", return_value=temp_keys["home_dir"]):
-                with patch("mcp_orchestrator.cli_building.DeploymentWorkflow") as mock_workflow_class:
-                    mock_workflow_class.side_effect = Exception("Unexpected deployment error")
+            with patch(
+                "mcp_orchestrator.cli_building.Path.home",
+                return_value=temp_keys["home_dir"],
+            ):
+                with patch(
+                    "mcp_orchestrator.cli_building.DeploymentWorkflow"
+                ) as mock_workflow_class:
+                    mock_workflow_class.side_effect = Exception(
+                        "Unexpected deployment error"
+                    )
 
                     result = cli_runner.invoke(
                         deploy_config,
-                        [
-                            "--client", "claude-desktop",
-                            "--profile", "default"
-                        ]
+                        ["--client", "claude-desktop", "--profile", "default"],
                     )
 
         assert result.exit_code == 1
@@ -925,19 +1120,28 @@ class TestDeployConfigCommand:
 class TestCLIIntegration:
     """Integration tests for CLI commands working together."""
 
-    def test_add_server_then_publish_workflow(self, cli_runner, sample_registry, temp_keys, tmp_path):
+    def test_add_server_then_publish_workflow(
+        self, cli_runner, sample_registry, temp_keys, tmp_path
+    ):
         """Test workflow: add server → save to file → publish config."""
         # Step 1: Add server to get draft config
-        with patch("mcp_orchestrator.cli_building.get_default_registry", return_value=sample_registry):
+        with patch(
+            "mcp_orchestrator.cli_building.get_default_registry",
+            return_value=sample_registry,
+        ):
             result = cli_runner.invoke(
                 add_server,
                 [
                     "filesystem",
-                    "--client", "claude-desktop",
-                    "--profile", "default",
-                    "--param", "path=/tmp",
-                    "--format", "json"
-                ]
+                    "--client",
+                    "claude-desktop",
+                    "--profile",
+                    "default",
+                    "--param",
+                    "path=/tmp",
+                    "--format",
+                    "json",
+                ],
             )
 
         assert result.exit_code == 0
@@ -948,10 +1152,18 @@ class TestCLIIntegration:
         config_file.write_text(json.dumps(draft, indent=2))
 
         # Step 3: Publish the config
-        with patch("mcp_orchestrator.cli_building.get_default_registry", return_value=sample_registry):
+        with patch(
+            "mcp_orchestrator.cli_building.get_default_registry",
+            return_value=sample_registry,
+        ):
             with patch("mcp_orchestrator.cli_building.get_client_registry"):
-                with patch("mcp_orchestrator.cli_building.Path.home", return_value=temp_keys["home_dir"]):
-                    with patch("mcp_orchestrator.cli_building.PublishingWorkflow") as mock_workflow_class:
+                with patch(
+                    "mcp_orchestrator.cli_building.Path.home",
+                    return_value=temp_keys["home_dir"],
+                ):
+                    with patch(
+                        "mcp_orchestrator.cli_building.PublishingWorkflow"
+                    ) as mock_workflow_class:
                         mock_workflow = Mock()
                         mock_workflow.publish.return_value = {
                             "artifact_id": "abc123",
@@ -964,10 +1176,13 @@ class TestCLIIntegration:
                         result = cli_runner.invoke(
                             publish_config,
                             [
-                                "--client", "claude-desktop",
-                                "--profile", "default",
-                                "--file", str(config_file)
-                            ]
+                                "--client",
+                                "claude-desktop",
+                                "--profile",
+                                "default",
+                                "--file",
+                                str(config_file),
+                            ],
                         )
 
         assert result.exit_code == 0

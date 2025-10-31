@@ -13,7 +13,7 @@ from typing import Any
 import click
 
 from mcp_orchestrator.building import ConfigBuilder
-from mcp_orchestrator.deployment import DeploymentWorkflow, DeploymentError
+from mcp_orchestrator.deployment import DeploymentError, DeploymentWorkflow
 from mcp_orchestrator.deployment.log import DeploymentLog
 from mcp_orchestrator.publishing import PublishingWorkflow, ValidationError
 from mcp_orchestrator.registry import get_default_registry as get_client_registry
@@ -23,7 +23,9 @@ from mcp_orchestrator.storage import ArtifactStore
 
 @click.command("add-server")
 @click.argument("server_id")
-@click.option("--client", "-c", required=True, help="Client family (e.g., claude-desktop)")
+@click.option(
+    "--client", "-c", required=True, help="Client family (e.g., claude-desktop)"
+)
 @click.option("--profile", "-p", required=True, help="Profile (e.g., default)")
 @click.option(
     "--param",
@@ -37,9 +39,7 @@ from mcp_orchestrator.storage import ArtifactStore
     multiple=True,
     help="Environment variable in KEY=VALUE format (can specify multiple)",
 )
-@click.option(
-    "--name", "-n", help="Server name in config (defaults to server_id)"
-)
+@click.option("--name", "-n", help="Server name in config (defaults to server_id)")
 @click.option(
     "--format",
     "-f",
@@ -87,7 +87,9 @@ def add_server(
         params: dict[str, Any] = {}
         for p in param:
             if "=" not in p:
-                click.echo(f"Error: Invalid parameter format '{p}'. Use key=value", err=True)
+                click.echo(
+                    f"Error: Invalid parameter format '{p}'. Use key=value", err=True
+                )
                 sys.exit(1)
             key, value = p.split("=", 1)
             params[key] = value
@@ -223,7 +225,9 @@ def remove_server(
 
 
 @click.command("publish-config")
-@click.option("--client", "-c", required=True, help="Client family (e.g., claude-desktop)")
+@click.option(
+    "--client", "-c", required=True, help="Client family (e.g., claude-desktop)"
+)
 @click.option("--profile", "-p", required=True, help="Profile (e.g., default)")
 @click.option(
     "--file",
@@ -388,7 +392,9 @@ def publish_config(
 
 
 @click.command("deploy-config")
-@click.option("--client", "-c", required=True, help="Client family (e.g., claude-desktop)")
+@click.option(
+    "--client", "-c", required=True, help="Client family (e.g., claude-desktop)"
+)
 @click.option("--profile", "-p", required=True, help="Profile (e.g., default)")
 @click.option(
     "--artifact-id",
@@ -448,9 +454,7 @@ def deploy_config(
 
         store = ArtifactStore()
         client_registry = get_client_registry()
-        deployment_log = DeploymentLog(
-            deployments_dir=str(base_dir / "deployments")
-        )
+        deployment_log = DeploymentLog(deployments_dir=str(base_dir / "deployments"))
 
         # Get public key for signature verification
         public_key_path = base_dir / "keys" / "signing.pub"
@@ -494,7 +498,9 @@ def deploy_config(
             if client == "claude-desktop":
                 click.echo("  killall Claude && open -a 'Claude'")
             elif client == "cursor":
-                click.echo("  Reload window in Cursor (Cmd+Shift+P → 'Developer: Reload Window')")
+                click.echo(
+                    "  Reload window in Cursor (Cmd+Shift+P → 'Developer: Reload Window')"
+                )
 
     except DeploymentError as e:
         # Deployment-specific errors
@@ -514,12 +520,19 @@ def deploy_config(
 
         elif error_code == "ARTIFACT_NOT_FOUND":
             click.echo()
-            click.echo("No published artifact found. Publish a configuration first:", err=True)
-            click.echo(f"  mcp-orchestration-publish-config --client {client} --profile {profile} --file config.json", err=True)
+            click.echo(
+                "No published artifact found. Publish a configuration first:", err=True
+            )
+            click.echo(
+                f"  mcp-orchestration-publish-config --client {client} --profile {profile} --file config.json",
+                err=True,
+            )
 
         elif error_code == "SIGNATURE_INVALID":
             click.echo()
-            click.echo("The artifact's signature is invalid. This may indicate:", err=True)
+            click.echo(
+                "The artifact's signature is invalid. This may indicate:", err=True
+            )
             click.echo("  - Corrupted storage", err=True)
             click.echo("  - Tampering", err=True)
             click.echo("  - Wrong public key", err=True)
@@ -531,7 +544,7 @@ def deploy_config(
             click.echo("Failed to write config file. Check:", err=True)
             click.echo("  - File permissions", err=True)
             click.echo("  - Parent directory exists", err=True)
-            click.echo(f"  - Disk space available", err=True)
+            click.echo("  - Disk space available", err=True)
 
         sys.exit(1)
 

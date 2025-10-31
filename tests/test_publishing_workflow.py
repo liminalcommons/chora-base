@@ -10,7 +10,6 @@ import tempfile
 from pathlib import Path
 
 import pytest
-
 from mcp_orchestrator.building import ConfigBuilder
 from mcp_orchestrator.crypto import ArtifactSigner
 from mcp_orchestrator.registry import ClientRegistry
@@ -218,7 +217,9 @@ class TestPublishingWorkflowValidation:
         # Assert - no artifacts should be created
         artifacts_dir = temp_storage["base_path"] / "artifacts"
         if artifacts_dir.exists():
-            assert len(list(artifacts_dir.iterdir())) == 0, "No artifacts should be created"
+            assert (
+                len(list(artifacts_dir.iterdir())) == 0
+            ), "No artifacts should be created"
 
 
 class TestPublishingWorkflowMetadata:
@@ -317,7 +318,7 @@ class TestPublishingWorkflowAtomicity:
         # Create a store that will fail on store()
         class FailingStore(ArtifactStore):
             def store(self, artifact):
-                raise IOError("Simulated storage failure")
+                raise OSError("Simulated storage failure")
 
         store = FailingStore(base_path=temp_storage["base_path"])
         client_registry = ClientRegistry()
@@ -352,8 +353,8 @@ class TestPublishingWorkflowSigning:
 
     def test_artifact_is_signed(self, temp_storage, sample_registry):
         """Test published artifact is cryptographically signed."""
-        from mcp_orchestrator.publishing import PublishingWorkflow
         from mcp_orchestrator.crypto import verify_signature
+        from mcp_orchestrator.publishing import PublishingWorkflow
 
         # Arrange
         builder = ConfigBuilder("claude-desktop", "default", sample_registry)
@@ -389,9 +390,10 @@ class TestPublishingWorkflowSigning:
 
         BDD: Scenario: Content-addressable artifact ID
         """
-        from mcp_orchestrator.publishing import PublishingWorkflow
         import hashlib
         import json
+
+        from mcp_orchestrator.publishing import PublishingWorkflow
 
         # Arrange
         builder = ConfigBuilder("claude-desktop", "default", sample_registry)

@@ -93,7 +93,11 @@ def get_default_servers() -> list[ServerDefinition]:
             description="Query and manage PostgreSQL databases",
             transport=TransportType.STDIO,
             stdio_command="npx",
-            stdio_args=["-y", "@modelcontextprotocol/server-postgres", "{connection_string}"],
+            stdio_args=[
+                "-y",
+                "@modelcontextprotocol/server-postgres",
+                "{connection_string}",
+            ],
             parameters=[
                 ParameterDefinition(
                     name="connection_string",

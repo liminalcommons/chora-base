@@ -22,13 +22,13 @@ Example:
     >>> print(calculator.generate_report())
 """
 
+import csv
+import json
+import statistics
 from dataclasses import dataclass, field
 from datetime import datetime
 from pathlib import Path
 from typing import Any
-import csv
-import json
-import statistics
 
 
 @dataclass
@@ -202,7 +202,9 @@ class ClaudeROICalculator:
         bug_rate = (total_bugs / total_lines * 1000) if total_lines > 0 else 0.0
 
         # First-pass success rate (1 iteration = success)
-        first_pass_successes = sum(1 for m in self.metrics if m.iterations_required == 1)
+        first_pass_successes = sum(
+            1 for m in self.metrics if m.iterations_required == 1
+        )
         first_pass_rate = (
             first_pass_successes / len(self.metrics) if self.metrics else 0.0
         )
@@ -343,7 +345,7 @@ TASK PERFORMANCE
             summary += f"{task_type}: {metrics['count']} sessions, "
             summary += f"{metrics['hours_saved']:.1f} hours saved\n"
 
-        summary += f"""
+        summary += """
 RECOMMENDATIONS
 ---------------
 """
@@ -378,7 +380,9 @@ RECOMMENDATIONS
         if recommendations:
             summary += "\n".join(recommendations)
         else:
-            summary += "✅ All metrics within target ranges - continue current practices"
+            summary += (
+                "✅ All metrics within target ranges - continue current practices"
+            )
 
         return summary
 

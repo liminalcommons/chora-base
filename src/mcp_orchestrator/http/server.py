@@ -4,8 +4,7 @@ FastAPI HTTP server for MCP orchestration.
 Exposes all 10 MCP tools via HTTP REST API with authentication and CORS.
 """
 
-import asyncio
-from typing import Any, Dict, Optional
+from typing import Any
 
 import uvicorn
 from fastapi import Depends, FastAPI, Header, HTTPException
@@ -14,10 +13,9 @@ from fastapi.responses import JSONResponse
 
 from .auth import AuthenticationService, get_auth_service
 from .endpoints import *
-from .models import ErrorResponse
 
 
-def create_app(auth_service: Optional[AuthenticationService] = None) -> FastAPI:
+def create_app(auth_service: AuthenticationService | None = None) -> FastAPI:
     """
     Create FastAPI application with all endpoints and middleware.
 
@@ -51,8 +49,8 @@ def create_app(auth_service: Optional[AuthenticationService] = None) -> FastAPI:
 
     # Authentication dependency
     async def verify_auth(
-        authorization: Optional[str] = Header(None),
-        x_api_key: Optional[str] = Header(None),
+        authorization: str | None = Header(None),
+        x_api_key: str | None = Header(None),
     ) -> None:
         """
         Verify authentication (bearer token or API key).
@@ -112,11 +110,13 @@ def create_app(auth_service: Optional[AuthenticationService] = None) -> FastAPI:
 
     @app.get(
         "/v1/config/{client_id}/{profile}",
-        response_model=Dict[str, Any],
+        response_model=dict[str, Any],
         tags=["Configuration"],
         summary="Get configuration",
     )
-    async def get_config(client_id: str, profile: str, auth: None = Depends(verify_auth)):
+    async def get_config(
+        client_id: str, profile: str, auth: None = Depends(verify_auth)
+    ):
         """Get current configuration for a client/profile."""
         return await get_config_endpoint(client_id, profile)
 
@@ -126,7 +126,9 @@ def create_app(auth_service: Optional[AuthenticationService] = None) -> FastAPI:
         tags=["Configuration"],
         summary="Compare two configurations",
     )
-    async def diff_config(request: DiffConfigRequest, auth: None = Depends(verify_auth)):
+    async def diff_config(
+        request: DiffConfigRequest, auth: None = Depends(verify_auth)
+    ):
         """Compare two configurations and return differences."""
         return await diff_config_endpoint(request)
 
@@ -166,21 +168,25 @@ def create_app(auth_service: Optional[AuthenticationService] = None) -> FastAPI:
 
     @app.get(
         "/v1/config/{client_id}/{profile}/draft",
-        response_model=Dict[str, Any],
+        response_model=dict[str, Any],
         tags=["Draft Configuration"],
         summary="View draft configuration",
     )
-    async def draft_view(client_id: str, profile: str, auth: None = Depends(verify_auth)):
+    async def draft_view(
+        client_id: str, profile: str, auth: None = Depends(verify_auth)
+    ):
         """View current draft configuration."""
         return await draft_view_endpoint(client_id, profile)
 
     @app.delete(
         "/v1/config/{client_id}/{profile}/draft",
-        response_model=Dict[str, Any],
+        response_model=dict[str, Any],
         tags=["Draft Configuration"],
         summary="Clear draft configuration",
     )
-    async def draft_clear(client_id: str, profile: str, auth: None = Depends(verify_auth)):
+    async def draft_clear(
+        client_id: str, profile: str, auth: None = Depends(verify_auth)
+    ):
         """Clear draft configuration."""
         return await draft_clear_endpoint(client_id, profile)
 
@@ -194,7 +200,9 @@ def create_app(auth_service: Optional[AuthenticationService] = None) -> FastAPI:
         tags=["Configuration Workflow"],
         summary="Validate configuration",
     )
-    async def validate_config(client_id: str, profile: str, auth: None = Depends(verify_auth)):
+    async def validate_config(
+        client_id: str, profile: str, auth: None = Depends(verify_auth)
+    ):
         """Validate draft configuration."""
         return await validate_config_endpoint(client_id, profile)
 
@@ -204,7 +212,9 @@ def create_app(auth_service: Optional[AuthenticationService] = None) -> FastAPI:
         tags=["Configuration Workflow"],
         summary="Publish configuration",
     )
-    async def publish_config(client_id: str, profile: str, auth: None = Depends(verify_auth)):
+    async def publish_config(
+        client_id: str, profile: str, auth: None = Depends(verify_auth)
+    ):
         """Publish draft configuration (sign and store artifact)."""
         return await publish_config_endpoint(client_id, profile)
 
@@ -214,7 +224,9 @@ def create_app(auth_service: Optional[AuthenticationService] = None) -> FastAPI:
         tags=["Configuration Workflow"],
         summary="Deploy configuration",
     )
-    async def deploy_config(client_id: str, profile: str, auth: None = Depends(verify_auth)):
+    async def deploy_config(
+        client_id: str, profile: str, auth: None = Depends(verify_auth)
+    ):
         """Deploy published configuration to client."""
         return await deploy_config_endpoint(client_id, profile)
 
@@ -293,7 +305,7 @@ class HTTPTransportServer:
         self,
         host: str = "0.0.0.0",
         port: int = 8000,
-        auth_service: Optional[AuthenticationService] = None,
+        auth_service: AuthenticationService | None = None,
     ):
         """
         Initialize HTTP server.
@@ -331,7 +343,7 @@ class HTTPTransportServer:
         self.running = False
         # Cleanup logic would go here
 
-    def health_check(self) -> Dict[str, Any]:
+    def health_check(self) -> dict[str, Any]:
         """
         Get server health status.
 

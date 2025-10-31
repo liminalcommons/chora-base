@@ -22,14 +22,11 @@ All tests will fail initially until implementation is complete.
 """
 
 import os
-import secrets
 from datetime import datetime, timedelta
-from unittest.mock import MagicMock, patch
+from unittest.mock import patch
 
 import pytest
-from fastapi import HTTPException
 from fastapi.testclient import TestClient
-
 
 # Import will fail initially (TDD) - implementation doesn't exist yet
 try:
@@ -553,7 +550,10 @@ class TestAuthenticationErrorMessages:
         error_message = data.get("detail", data.get("error", ""))
 
         # Error message should explain authentication requirement
-        assert "authentication" in error_message.lower() or "authorization" in error_message.lower()
+        assert (
+            "authentication" in error_message.lower()
+            or "authorization" in error_message.lower()
+        )
 
     def test_invalid_token_error_message(self, client):
         """Test that invalid token returns helpful error message."""
@@ -569,7 +569,10 @@ class TestAuthenticationErrorMessages:
         error_message = data.get("detail", data.get("error", ""))
 
         # Error message should explain token is invalid
-        assert "invalid" in error_message.lower() or "unauthorized" in error_message.lower()
+        assert (
+            "invalid" in error_message.lower()
+            or "unauthorized" in error_message.lower()
+        )
 
 
 class TestAuthenticationPerformance:

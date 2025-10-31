@@ -20,13 +20,13 @@ _Add new rows as repositories adopt the package._
 
 ## 3. Feedback Log
 
-- **Date:** 2025-10-27  
-  **Source:** chora-base (prototype)  
-  **Summary:** Manual installation exposes need for automation script and explicit schema validation instructions.  
+- **Date:** 2025-10-27
+  **Source:** chora-base (prototype)
+  **Summary:** Manual installation exposes need for automation script and explicit schema validation instructions.
   **Action Taken:** Captured in adoption blueprint as future enhancement.
-- **Date:** 2025-10-27  
-  **Source:** Inbox SAP dry run  
-  **Summary:** Executed end-to-end dry run (triage → activation → completion). Noted requirement to initialize `events.jsonl` and confirmed awareness guide covers escalation.  
+- **Date:** 2025-10-27
+  **Source:** Inbox SAP dry run
+  **Summary:** Executed end-to-end dry run (triage → activation → completion). Noted requirement to initialize `events.jsonl` and confirmed awareness guide covers escalation.
   **Action Taken:** Updated dry-run checklist and adoption blueprint follow-up notes; broadcast template skeleton added.
 
 _Record feedback chronologically with concrete follow-up actions._

@@ -5,7 +5,7 @@ Maps HTTP endpoints to underlying MCP tools.
 """
 
 import json
-from typing import Any, Dict
+from typing import Any
 
 from fastapi import HTTPException
 
@@ -13,23 +13,22 @@ from fastapi import HTTPException
 # These are async functions that implement the actual MCP tool logic
 from mcp_orchestrator.building import ConfigBuilder
 from mcp_orchestrator.crypto.signing import SigningError
-from mcp_orchestrator.deployment import DeploymentWorkflow, DeploymentError
+from mcp_orchestrator.deployment import DeploymentError, DeploymentWorkflow
 from mcp_orchestrator.deployment.log import DeploymentLog
 from mcp_orchestrator.diff import compare_configs
 from mcp_orchestrator.publishing import PublishingWorkflow, ValidationError
 from mcp_orchestrator.registry import get_default_registry
-from mcp_orchestrator.servers import ServerRegistry, get_default_registry as get_server_registry
+from mcp_orchestrator.servers import get_default_registry as get_server_registry
 from mcp_orchestrator.servers.registry import ServerNotFoundError
 from mcp_orchestrator.storage import ArtifactStore, StorageError
 
 from .models import *
 
-
 # Global state (matching MCP server pattern)
 _registry = get_default_registry()  # Client registry
 _server_registry = get_server_registry()  # Server registry
 _store = ArtifactStore()  # Artifact storage
-_builders: Dict[str, ConfigBuilder] = {}  # Draft config builders
+_builders: dict[str, ConfigBuilder] = {}  # Draft config builders
 _deployment_log = DeploymentLog(deployments_dir=str(_store.base_path / "deployments"))
 
 
@@ -51,7 +50,7 @@ async def list_clients_endpoint() -> ClientsResponse:
     clients = []
     for client_def in registry_clients:
         # Get profile IDs from registry
-        profile_ids = [p.profile_id for p in client_def.default_profiles]
+        [p.profile_id for p in client_def.default_profiles]
 
         clients.append(
             Client(
@@ -74,7 +73,9 @@ async def list_profiles_endpoint(client_id: str) -> ProfilesResponse:
     try:
         client_def = _registry.get_client(client_id)
         if client_def is None:
-            raise HTTPException(status_code=404, detail=f"Client '{client_id}' not found")
+            raise HTTPException(
+                status_code=404, detail=f"Client '{client_id}' not found"
+            )
         profile_ids = [p.profile_id for p in client_def.default_profiles]
         return ProfilesResponse(profiles=profile_ids)
     except KeyError:
@@ -86,7 +87,7 @@ async def list_profiles_endpoint(client_id: str) -> ProfilesResponse:
 # =============================================================================
 
 
-async def get_config_endpoint(client_id: str, profile: str) -> Dict[str, Any]:
+async def get_config_endpoint(client_id: str, profile: str) -> dict[str, Any]:
     """
     GET /v1/config/{client_id}/{profile}
 
@@ -108,6 +109,7 @@ async def get_config_endpoint(client_id: str, profile: str) -> Dict[str, Any]:
         if deployment and deployment.status == "completed":
             # Load config from deployed path
             import pathlib
+
             config_path = pathlib.Path(deployment.deployed_path)
             if config_path.exists():
                 config = json.loads(config_path.read_text())
@@ -117,8 +119,7 @@ async def get_config_endpoint(client_id: str, profile: str) -> Dict[str, Any]:
 
     # No config found
     raise HTTPException(
-        status_code=404,
-        detail=f"No configuration found for {client_id}/{profile}"
+        status_code=404, detail=f"No configuration found for {client_id}/{profile}"
     )
 
 
@@ -133,8 +134,10 @@ async def diff_config_endpoint(request: DiffConfigRequest) -> DiffConfigResponse
 
         # Parse diff result (DiffResult object with servers_added/removed/modified fields)
         # Extract modified server IDs from servers_modified list
-        modified = [m["server_id"] if isinstance(m, dict) else m.get("server_id", "unknown")
-                    for m in diff_result.servers_modified]
+        modified = [
+            m["server_id"] if isinstance(m, dict) else m.get("server_id", "unknown")
+            for m in diff_result.servers_modified
+        ]
 
         return DiffConfigResponse(
             added=diff_result.servers_added,
@@ -143,7 +146,9 @@ async def diff_config_endpoint(request: DiffConfigRequest) -> DiffConfigResponse
             diff=f"{diff_result.status}: {diff_result.total_changes} changes",
         )
     except Exception as e:
-        raise HTTPException(status_code=400, detail=f"Failed to compare configs: {str(e)}")
+        raise HTTPException(
+            status_code=400, detail=f"Failed to compare configs: {str(e)}"
+        )
 
 
 # =============================================================================
@@ -183,7 +188,9 @@ async def draft_add_endpoint(
             draft=draft_config,
         )
     except ServerNotFoundError:
-        raise HTTPException(status_code=404, detail=f"Server '{request.server_id}' not found")
+        raise HTTPException(
+            status_code=404, detail=f"Server '{request.server_id}' not found"
+        )
     except Exception as e:
         raise HTTPException(status_code=400, detail=f"Failed to add server: {str(e)}")
 
@@ -211,10 +218,12 @@ async def draft_remove_endpoint(
             message=f"Removed {request.server_id} from draft configuration",
         )
     except Exception as e:
-        raise HTTPException(status_code=400, detail=f"Failed to remove server: {str(e)}")
+        raise HTTPException(
+            status_code=400, detail=f"Failed to remove server: {str(e)}"
+        )
 
 
-async def draft_view_endpoint(client_id: str, profile: str) -> Dict[str, Any]:
+async def draft_view_endpoint(client_id: str, profile: str) -> dict[str, Any]:
     """
     GET /v1/config/{client_id}/{profile}/draft
 
@@ -231,7 +240,7 @@ async def draft_view_endpoint(client_id: str, profile: str) -> Dict[str, Any]:
     return draft_config
 
 
-async def draft_clear_endpoint(client_id: str, profile: str) -> Dict[str, Any]:
+async def draft_clear_endpoint(client_id: str, profile: str) -> dict[str, Any]:
     """
     DELETE /v1/config/{client_id}/{profile}/draft
 
@@ -250,7 +259,9 @@ async def draft_clear_endpoint(client_id: str, profile: str) -> Dict[str, Any]:
 # =============================================================================
 
 
-async def validate_config_endpoint(client_id: str, profile: str) -> ValidateConfigResponse:
+async def validate_config_endpoint(
+    client_id: str, profile: str
+) -> ValidateConfigResponse:
     """
     POST /v1/config/{client_id}/{profile}/validate
 
@@ -266,7 +277,7 @@ async def validate_config_endpoint(client_id: str, profile: str) -> ValidateConf
     try:
         # Validate configuration
         # The builder automatically validates, so if build() succeeds, it's valid
-        config = builder.build()
+        builder.build()
 
         # Additional validation logic can be added here
         errors = []
@@ -276,7 +287,9 @@ async def validate_config_endpoint(client_id: str, profile: str) -> ValidateConf
         return ValidateConfigResponse(valid=False, errors=[str(e)])
 
 
-async def publish_config_endpoint(client_id: str, profile: str) -> PublishConfigResponse:
+async def publish_config_endpoint(
+    client_id: str, profile: str
+) -> PublishConfigResponse:
     """
     POST /v1/config/{client_id}/{profile}/publish
 
@@ -341,7 +354,9 @@ async def deploy_config_endpoint(client_id: str, profile: str) -> DeployConfigRe
         raise HTTPException(status_code=400, detail=str(e))
     except Exception as e:
         # No published config found
-        raise HTTPException(status_code=404, detail=f"No published configuration found: {str(e)}")
+        raise HTTPException(
+            status_code=404, detail=f"No published configuration found: {str(e)}"
+        )
 
 
 # =============================================================================
@@ -364,11 +379,15 @@ async def list_servers_endpoint() -> ServersResponse:
             Server(
                 server_id=server_def.server_id,
                 description=server_def.description,
-                transport=server_def.transport.value if hasattr(server_def.transport, 'value') else str(server_def.transport),
-                npm_package=server_def.npm_package if hasattr(server_def, 'npm_package') else None,
-                command=server_def.command if hasattr(server_def, 'command') else None,
-                args=server_def.args if hasattr(server_def, 'args') else None,
-                env=server_def.env if hasattr(server_def, 'env') else None,
+                transport=server_def.transport.value
+                if hasattr(server_def.transport, "value")
+                else str(server_def.transport),
+                npm_package=server_def.npm_package
+                if hasattr(server_def, "npm_package")
+                else None,
+                command=server_def.command if hasattr(server_def, "command") else None,
+                args=server_def.args if hasattr(server_def, "args") else None,
+                env=server_def.env if hasattr(server_def, "env") else None,
             )
         )
 
@@ -388,11 +407,15 @@ async def describe_server_endpoint(server_id: str) -> ServerDetailResponse:
         return ServerDetailResponse(
             server_id=server_def.server_id,
             description=server_def.description,
-            transport=server_def.transport.value if hasattr(server_def.transport, 'value') else str(server_def.transport),
-            npm_package=server_def.npm_package if hasattr(server_def, 'npm_package') else None,
-            command=server_def.command if hasattr(server_def, 'command') else None,
-            args=server_def.args if hasattr(server_def, 'args') else None,
-            env=server_def.env if hasattr(server_def, 'env') else None,
+            transport=server_def.transport.value
+            if hasattr(server_def.transport, "value")
+            else str(server_def.transport),
+            npm_package=server_def.npm_package
+            if hasattr(server_def, "npm_package")
+            else None,
+            command=server_def.command if hasattr(server_def, "command") else None,
+            args=server_def.args if hasattr(server_def, "args") else None,
+            env=server_def.env if hasattr(server_def, "env") else None,
         )
     except ServerNotFoundError:
         raise HTTPException(status_code=404, detail=f"Server '{server_id}' not found")
@@ -417,7 +440,9 @@ async def initialize_keys_endpoint() -> InitializeKeysResponse:
 
         # Check if keys already exist
         if signing_service.has_keys():
-            raise HTTPException(status_code=400, detail="Signing keys already initialized")
+            raise HTTPException(
+                status_code=400, detail="Signing keys already initialized"
+            )
 
         # Generate keys
         key_paths = signing_service.generate_keypair()
@@ -433,4 +458,6 @@ async def initialize_keys_endpoint() -> InitializeKeysResponse:
     except FileExistsError:
         raise HTTPException(status_code=400, detail="Signing keys already exist")
     except Exception as e:
-        raise HTTPException(status_code=500, detail=f"Failed to initialize keys: {str(e)}")
+        raise HTTPException(
+            status_code=500, detail=f"Failed to initialize keys: {str(e)}"
+        )

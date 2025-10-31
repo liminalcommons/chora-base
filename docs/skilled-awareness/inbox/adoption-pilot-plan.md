@@ -44,5 +44,5 @@
 
 ---
 
-**Status:** Planned (target window: 2025-11-01 → 2025-11-05)  
+**Status:** Planned (target window: 2025-11-01 → 2025-11-05)
 Update this document with findings and handoffs after pilot completion.

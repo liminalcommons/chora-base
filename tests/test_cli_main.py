@@ -13,13 +13,9 @@ Testing patterns:
 """
 
 import builtins
-import os
-import tempfile
-from pathlib import Path
 from unittest.mock import Mock, patch
 
 import pytest
-
 from mcp_orchestrator.cli import CLI, main
 
 
@@ -200,7 +196,9 @@ Feature: Bad Feature
                 with pytest.raises(SystemExit) as exc_info:
                     cli.run(["behavior-validate", str(behavior_dir)])
 
-                assert "@behavior" in str(exc_info.value) or "@status" in str(exc_info.value)
+                assert "@behavior" in str(exc_info.value) or "@status" in str(
+                    exc_info.value
+                )
 
     def test_behavior_validate_fallback_no_specs_found(self, tmp_path):
         """Test behavior-validate fallback with empty directory."""
@@ -294,7 +292,9 @@ class TestScenarioValidateCommand:
         def mock_import_error(name, *args, **kwargs):
             if name == "chora_validator.validators":
                 mock_module = Mock()
-                mock_module.validate_scenarios = Mock(side_effect=ValueError("Invalid scenario format"))
+                mock_module.validate_scenarios = Mock(
+                    side_effect=ValueError("Invalid scenario format")
+                )
                 return mock_module
             return __import__(name, *args, **kwargs)
 

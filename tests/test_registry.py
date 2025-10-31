@@ -1,7 +1,6 @@
 """Tests for client registry module."""
 
 import pytest
-
 from mcp_orchestrator.registry import (
     ClientDefinition,
     ClientRegistry,

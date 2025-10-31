@@ -15,7 +15,6 @@ import re
 import sys
 from datetime import datetime, timedelta
 from pathlib import Path
-from typing import Dict, List, Set
 
 try:
     import yaml
@@ -33,13 +32,13 @@ class DocumentationMetrics:
 
     def __init__(self, root_dir: Path):
         self.root_dir = root_dir
-        self.docs: Dict[Path, Dict] = {}  # path -> frontmatter
-        self.code_files: List[Path] = []
-        self.metrics: Dict[str, any] = {}
+        self.docs: dict[Path, dict] = {}  # path -> frontmatter
+        self.code_files: list[Path] = []
+        self.metrics: dict[str, any] = {}
 
     def run(self) -> None:
         """Generate metrics and create DOCUMENTATION_METRICS.md."""
-        print("Analyzing documentation metrics for {}...".format(self.root_dir))
+        print(f"Analyzing documentation metrics for {self.root_dir}...")
         print()
 
         # Step 1: Parse all documentation
@@ -73,9 +72,9 @@ class DocumentationMetrics:
                 if frontmatter:
                     self.docs[md_file] = frontmatter
 
-        print("Found {} documentation files".format(len(self.docs)))
+        print(f"Found {len(self.docs)} documentation files")
 
-    def _parse_frontmatter(self, md_file: Path) -> Dict | None:
+    def _parse_frontmatter(self, md_file: Path) -> dict | None:
         """Parse YAML frontmatter from markdown file."""
         try:
             content = md_file.read_text(encoding="utf-8")
@@ -105,11 +104,12 @@ class DocumentationMetrics:
 
         # Exclude __init__.py and test files
         self.code_files = [
-            f for f in self.code_files
+            f
+            for f in self.code_files
             if f.name != "__init__.py" and not f.name.startswith("test_")
         ]
 
-        print("Found {} code files".format(len(self.code_files)))
+        print(f"Found {len(self.code_files)} code files")
 
     def _calculate_coverage(self) -> None:
         """Calculate documentation coverage metrics."""
@@ -126,13 +126,12 @@ class DocumentationMetrics:
                     break
 
         total_modules = len(self.code_files)
-        coverage_pct = (documented_modules / total_modules * 100) if total_modules > 0 else 0
+        coverage_pct = (
+            (documented_modules / total_modules * 100) if total_modules > 0 else 0
+        )
 
         # Count API reference docs
-        api_docs = sum(
-            1 for fm in self.docs.values()
-            if fm.get("type") == "reference"
-        )
+        api_docs = sum(1 for fm in self.docs.values() if fm.get("type") == "reference")
 
         self.metrics["coverage"] = {
             "total_modules": total_modules,
@@ -173,7 +172,9 @@ class DocumentationMetrics:
         for fm in self.docs.values():
             if "last_updated" in fm:
                 try:
-                    last_updated = datetime.strptime(str(fm["last_updated"]), "%Y-%m-%d").date()
+                    last_updated = datetime.strptime(
+                        str(fm["last_updated"]), "%Y-%m-%d"
+                    ).date()
                     if last_updated < threshold:
                         stale_docs += 1
                 except ValueError:
@@ -182,11 +183,14 @@ class DocumentationMetrics:
         # Check frontmatter completeness
         required_fields = ["title", "type", "status", "last_updated"]
         complete_frontmatter = sum(
-            1 for fm in self.docs.values()
+            1
+            for fm in self.docs.values()
             if all(field in fm for field in required_fields)
         )
 
-        frontmatter_pct = (complete_frontmatter / len(self.docs) * 100) if self.docs else 0
+        frontmatter_pct = (
+            (complete_frontmatter / len(self.docs) * 100) if self.docs else 0
+        )
 
         # Calculate health score (0-100)
         # Factors: no broken links (40 pts), low staleness (30 pts), frontmatter complete (30 pts)
@@ -230,7 +234,9 @@ class DocumentationMetrics:
         for fm in self.docs.values():
             if "last_updated" in fm:
                 try:
-                    last_updated = datetime.strptime(str(fm["last_updated"]), "%Y-%m-%d").date()
+                    last_updated = datetime.strptime(
+                        str(fm["last_updated"]), "%Y-%m-%d"
+                    ).date()
                     days_ago = (today - last_updated).days
 
                     if days_ago <= 30:
@@ -244,7 +250,9 @@ class DocumentationMetrics:
 
         # Count new vs deprecated
         new_docs = sum(1 for fm in self.docs.values() if fm.get("status") == "draft")
-        deprecated_docs = sum(1 for fm in self.docs.values() if fm.get("status") == "deprecated")
+        deprecated_docs = sum(
+            1 for fm in self.docs.values() if fm.get("status") == "deprecated"
+        )
 
         self.metrics["activity"] = {
             "updated_30d": updated_30d,
@@ -258,16 +266,14 @@ class DocumentationMetrics:
         """Calculate documentation quality metrics."""
         # Cross-reference density
         docs_with_refs = sum(
-            1 for fm in self.docs.values()
-            if "related" in fm and fm["related"]
+            1 for fm in self.docs.values() if "related" in fm and fm["related"]
         )
 
         ref_density_pct = (docs_with_refs / len(self.docs) * 100) if self.docs else 0
 
         # Test extraction usage
         docs_with_tests = sum(
-            1 for fm in self.docs.values()
-            if fm.get("test_extraction") is True
+            1 for fm in self.docs.values() if fm.get("test_extraction") is True
         )
 
         # Count by type
@@ -291,8 +297,10 @@ class DocumentationMetrics:
         # Header
         lines.append("# Documentation Metrics")
         lines.append("")
-        lines.append("**Generated:** {}".format(datetime.now().strftime('%Y-%m-%d %H:%M:%S')))
-        lines.append("**Total Documents:** {}".format(len(self.docs)))
+        lines.append(
+            "**Generated:** {}".format(datetime.now().strftime("%Y-%m-%d %H:%M:%S"))
+        )
+        lines.append(f"**Total Documents:** {len(self.docs)}")
         lines.append("")
         lines.append("---")
         lines.append("")
@@ -301,39 +309,73 @@ class DocumentationMetrics:
         cov = self.metrics["coverage"]
         lines.append("## Coverage")
         lines.append("")
-        lines.append("- **Code Coverage:** {:.1f}% ({}/{} modules documented)".format(cov['coverage_pct'], cov['documented_modules'], cov['total_modules']))
-        lines.append("- **API Documentation:** {} reference docs".format(cov['api_docs']))
+        lines.append(
+            "- **Code Coverage:** {:.1f}% ({}/{} modules documented)".format(
+                cov["coverage_pct"], cov["documented_modules"], cov["total_modules"]
+            )
+        )
+        lines.append(
+            "- **API Documentation:** {} reference docs".format(cov["api_docs"])
+        )
         lines.append("")
 
         # Health section
         health = self.metrics["health"]
-        health_icon = "🟢" if health["score"] >= 80 else "🟡" if health["score"] >= 60 else "🔴"
+        health_icon = (
+            "🟢" if health["score"] >= 80 else "🟡" if health["score"] >= 60 else "🔴"
+        )
         lines.append("## Health Score: {} {}/100".format(health_icon, health["score"]))
         lines.append("")
         lines.append("**Factors:**")
-        lines.append("- {} Broken links: {}".format('✅' if health['broken_links'] == 0 else '❌', health['broken_links']))
-        lines.append("- {} Stale docs (>90 days): {}".format('✅' if health['stale_docs'] < len(self.docs) * 0.1 else '⚠️ ', health['stale_docs']))
-        lines.append("- {} Frontmatter complete: {:.1f}%".format('✅' if health['frontmatter_complete_pct'] > 90 else '⚠️ ', health['frontmatter_complete_pct']))
+        lines.append(
+            "- {} Broken links: {}".format(
+                "✅" if health["broken_links"] == 0 else "❌", health["broken_links"]
+            )
+        )
+        lines.append(
+            "- {} Stale docs (>90 days): {}".format(
+                "✅" if health["stale_docs"] < len(self.docs) * 0.1 else "⚠️ ",
+                health["stale_docs"],
+            )
+        )
+        lines.append(
+            "- {} Frontmatter complete: {:.1f}%".format(
+                "✅" if health["frontmatter_complete_pct"] > 90 else "⚠️ ",
+                health["frontmatter_complete_pct"],
+            )
+        )
         lines.append("")
 
         # Activity section
         activity = self.metrics["activity"]
         lines.append("## Activity (Last 30/60/90 Days)")
         lines.append("")
-        lines.append("- **Last 30 days:** {} docs updated".format(activity['updated_30d']))
-        lines.append("- **Last 60 days:** {} docs updated".format(activity['updated_60d']))
-        lines.append("- **Last 90 days:** {} docs updated".format(activity['updated_90d']))
+        lines.append(
+            "- **Last 30 days:** {} docs updated".format(activity["updated_30d"])
+        )
+        lines.append(
+            "- **Last 60 days:** {} docs updated".format(activity["updated_60d"])
+        )
+        lines.append(
+            "- **Last 90 days:** {} docs updated".format(activity["updated_90d"])
+        )
         lines.append("")
-        lines.append("- **New (draft):** {} docs".format(activity['new_docs']))
-        lines.append("- **Deprecated:** {} docs".format(activity['deprecated_docs']))
+        lines.append("- **New (draft):** {} docs".format(activity["new_docs"]))
+        lines.append("- **Deprecated:** {} docs".format(activity["deprecated_docs"]))
         lines.append("")
 
         # Quality section
         quality = self.metrics["quality"]
         lines.append("## Quality")
         lines.append("")
-        lines.append("- **Cross-reference density:** {:.1f}% (docs with related links)".format(quality['cross_ref_density_pct']))
-        lines.append("- **Test extraction enabled:** {} docs".format(quality['docs_with_tests']))
+        lines.append(
+            "- **Cross-reference density:** {:.1f}% (docs with related links)".format(
+                quality["cross_ref_density_pct"]
+            )
+        )
+        lines.append(
+            "- **Test extraction enabled:** {} docs".format(quality["docs_with_tests"])
+        )
         lines.append("")
 
         # By type breakdown
@@ -344,7 +386,7 @@ class DocumentationMetrics:
         for doc_type in sorted(quality["by_type"].keys()):
             count = quality["by_type"][doc_type]
             pct = (count / len(self.docs) * 100) if self.docs else 0
-            lines.append("| {} | {} | {:.1f}% |".format(doc_type, count, pct))
+            lines.append(f"| {doc_type} | {count} | {pct:.1f}% |")
         lines.append("")
 
         # Recommendations
@@ -352,19 +394,35 @@ class DocumentationMetrics:
         lines.append("")
 
         if health["broken_links"] > 0:
-            lines.append("- ⚠️  Fix {} broken internal links".format(health['broken_links']))
+            lines.append(
+                "- ⚠️  Fix {} broken internal links".format(health["broken_links"])
+            )
 
         if health["stale_docs"] > 0:
-            lines.append("- ⚠️  Review {} stale docs (>90 days old)".format(health['stale_docs']))
+            lines.append(
+                "- ⚠️  Review {} stale docs (>90 days old)".format(health["stale_docs"])
+            )
 
         if health["frontmatter_complete_pct"] < 90:
-            lines.append("- ⚠️  Add missing frontmatter fields ({:.1f}% incomplete)".format(100 - health['frontmatter_complete_pct']))
+            lines.append(
+                "- ⚠️  Add missing frontmatter fields ({:.1f}% incomplete)".format(
+                    100 - health["frontmatter_complete_pct"]
+                )
+            )
 
         if cov["coverage_pct"] < 75:
-            lines.append("- 📝 Document {} undocumented modules".format(cov['total_modules'] - cov['documented_modules']))
+            lines.append(
+                "- 📝 Document {} undocumented modules".format(
+                    cov["total_modules"] - cov["documented_modules"]
+                )
+            )
 
         if quality["cross_ref_density_pct"] < 50:
-            lines.append("- 🔗 Add cross-references to more docs (currently {:.1f}%)".format(quality['cross_ref_density_pct']))
+            lines.append(
+                "- 🔗 Add cross-references to more docs (currently {:.1f}%)".format(
+                    quality["cross_ref_density_pct"]
+                )
+            )
 
         if not lines[-1].startswith("-"):
             lines.append("- ✅ No critical issues detected")
@@ -374,18 +432,20 @@ class DocumentationMetrics:
         # Footer
         lines.append("---")
         lines.append("")
-        lines.append("**Note:** Run `python scripts/docs_metrics.py` to regenerate this report.")
+        lines.append(
+            "**Note:** Run `python scripts/docs_metrics.py` to regenerate this report."
+        )
         lines.append("")
 
         # Write to file
         content = "\n".join(lines)
         output_file.write_text(content, encoding="utf-8")
 
-        print("✅ Generated {}".format(output_file))
+        print(f"✅ Generated {output_file}")
         print()
-        print("Health Score: {}/100".format(health['score']))
-        print("Coverage: {:.1f}%".format(cov['coverage_pct']))
-        print("Stale docs: {}".format(health['stale_docs']))
+        print("Health Score: {}/100".format(health["score"]))
+        print("Coverage: {:.1f}%".format(cov["coverage_pct"]))
+        print("Stale docs: {}".format(health["stale_docs"]))
         print()
 
 

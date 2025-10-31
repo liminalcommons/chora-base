@@ -171,7 +171,11 @@ class ServerRegistry:
 
         for server in self._servers.values():
             # Handle both enum and string values (Pydantic may serialize to string)
-            transport_val = server.transport.value if isinstance(server.transport, TransportType) else server.transport
+            transport_val = (
+                server.transport.value
+                if isinstance(server.transport, TransportType)
+                else server.transport
+            )
             counts[transport_val] += 1
 
         return counts

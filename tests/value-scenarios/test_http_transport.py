@@ -18,9 +18,7 @@ Test Strategy:
 import json
 import os
 import subprocess
-import tempfile
 import time
-from pathlib import Path
 
 import pytest
 import requests
@@ -36,8 +34,9 @@ def http_server_process():
     """
     # Find available port
     import socket
+
     with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
-        s.bind(('', 0))
+        s.bind(("", 0))
         s.listen(1)
         port = s.getsockname()[1]
 
@@ -105,8 +104,9 @@ def api_key_server():
     """
     # Find available port
     import socket
+
     with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
-        s.bind(('', 0))
+        s.bind(("", 0))
         s.listen(1)
         port = s.getsockname()[1]
 
@@ -314,7 +314,7 @@ def test_n8n_automation_workflow(http_server_process, bearer_token):
         timeout=5,
     )
     assert response.status_code == 200
-    server_detail = response.json()
+    response.json()
 
     # Step 3: Add server to draft
     # Prepare params based on server type
@@ -434,7 +434,9 @@ def test_stdio_to_http_migration_workflow(http_server_process, bearer_token):
         check=False,
     )
     assert stdio_discover_after.returncode == 0, "stdio should still work after HTTP"
-    assert stdio_discover_after.stdout == stdio_discover.stdout, "stdio output should be unchanged"
+    assert (
+        stdio_discover_after.stdout == stdio_discover.stdout
+    ), "stdio output should be unchanged"
 
     # Step 5: Test HTTP transport
     response = requests.get(
@@ -467,13 +469,15 @@ def test_stdio_to_http_migration_workflow(http_server_process, bearer_token):
     http_server_ids = sorted([s["server_id"] for s in http_servers])
 
     # Verify both transports return servers
-    assert len(stdio_server_ids) > 0 or len(http_server_ids) > 0, \
-        "At least one transport should return servers"
+    assert (
+        len(stdio_server_ids) > 0 or len(http_server_ids) > 0
+    ), "At least one transport should return servers"
 
     # If stdio parsing succeeded, verify they match
     if stdio_server_ids:
-        assert stdio_server_ids == http_server_ids, \
-            f"stdio and HTTP should return same servers: {stdio_server_ids} vs {http_server_ids}"
+        assert (
+            stdio_server_ids == http_server_ids
+        ), f"stdio and HTTP should return same servers: {stdio_server_ids} vs {http_server_ids}"
 
     # Verify stdio still works one more time (no interference)
     stdio_final = subprocess.run(

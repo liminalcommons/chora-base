@@ -1,7 +1,7 @@
 # Claude Desktop MCP Configuration & HTTP Transport Support: Technical Briefing
 
-**Date:** October 23, 2025  
-**Context:** Investigating whether Claude Desktop can connect to remote HTTP MCP endpoints without spawning a local executable  
+**Date:** October 23, 2025
+**Context:** Investigating whether Claude Desktop can connect to remote HTTP MCP endpoints without spawning a local executable
 **Error Encountered:** `spawn . EACCES` when attempting HTTP transport configuration without `command` field
 
 ---
@@ -70,7 +70,7 @@ Claude Desktop validates configuration entries as follows:
 
 **Official Statement (GitHub Discussion #16):**
 > "Configuring the MCP servers into Claude Desktop App currently only show how to add the stdio protocol versions. ==> How do I add MCP server using HTTP with SSE transport? Or is it not yet supported?"
-> 
+>
 > **Response from @dsp-ant (Maintainer, Nov 27, 2024):** "This is not supported at the moment."
 
 **Updated Status (June 2025):**
@@ -100,7 +100,7 @@ Claude Desktop validates configuration entries as follows:
 - OAuth 2.1 with Dynamic Client Registration (DCR)
 - Authless connections
 
-**Source:** 
+**Source:**
 - https://support.anthropic.com/en/articles/11503834-building-custom-connectors-via-remote-mcp-servers
 - https://support.anthropic.com/en/articles/11175166-about-custom-integrations-using-remote-mcp
 

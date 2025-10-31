@@ -5,11 +5,10 @@ These tests validate that all components work together correctly:
 - End-to-end workflows
 """
 
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 from pathlib import Path
 
 import pytest
-
 from mcp_orchestrator.crypto import ArtifactSigner, verify_signature
 from mcp_orchestrator.diff import compare_configs
 from mcp_orchestrator.registry import get_default_registry
@@ -25,7 +24,9 @@ class TestEndToEndFlow:
         return tmp_path / "storage"
 
     @pytest.fixture
-    def initialized_storage(self, temp_storage: Path) -> tuple[ArtifactStore, ArtifactSigner]:
+    def initialized_storage(
+        self, temp_storage: Path
+    ) -> tuple[ArtifactStore, ArtifactSigner]:
         """Initialize storage with sample configs."""
         store = ArtifactStore(base_path=temp_storage)
         signer = ArtifactSigner.generate(key_id="test-integration")
@@ -52,7 +53,7 @@ class TestEndToEndFlow:
             artifact_id=artifact_id,
             client_id="claude-desktop",
             profile_id="default",
-            created_at=datetime.now(timezone.utc).isoformat().replace("+00:00", "Z"),
+            created_at=datetime.now(UTC).isoformat().replace("+00:00", "Z"),
             payload=payload,
             signature=signature,
             signing_key_id=signer.key_id,
@@ -131,6 +132,7 @@ class TestEndToEndFlow:
 
         # Modify local payload (deep copy to avoid mutating artifact)
         import copy
+
         local_payload = copy.deepcopy(artifact.payload)
         local_payload["mcpServers"]["filesystem"]["args"] = [
             "-y",
@@ -229,7 +231,7 @@ class TestEndToEndFlow:
             artifact_id=artifact_id,
             client_id="test-client",
             profile_id="test-profile",
-            created_at=datetime.now(timezone.utc).isoformat().replace("+00:00", "Z"),
+            created_at=datetime.now(UTC).isoformat().replace("+00:00", "Z"),
             payload=payload,
             signature=signature,
             signing_key_id=signer.key_id,
@@ -246,7 +248,9 @@ class TestEndToEndFlow:
         assert retrieved.artifact_id == artifact_id
         assert retrieved.payload == payload
 
-        is_valid = verify_signature(retrieved.payload, retrieved.signature, public_key_path)
+        is_valid = verify_signature(
+            retrieved.payload, retrieved.signature, public_key_path
+        )
         assert is_valid is True
 
 
@@ -262,9 +266,7 @@ class TestCliIntegration:
         from mcp_orchestrator.cli_init import init_configs
 
         runner = CliRunner()
-        result = runner.invoke(
-            init_configs, ["--storage-path", str(storage_path)]
-        )
+        result = runner.invoke(init_configs, ["--storage-path", str(storage_path)])
 
         assert result.exit_code == 0
         assert "Created: 3 configurations" in result.output
@@ -295,16 +297,12 @@ class TestCliIntegration:
         runner = CliRunner()
 
         # First run
-        result1 = runner.invoke(
-            init_configs, ["--storage-path", str(storage_path)]
-        )
+        result1 = runner.invoke(init_configs, ["--storage-path", str(storage_path)])
         assert result1.exit_code == 0
         assert "Created: 3" in result1.output
 
         # Second run without --regenerate (should skip)
-        result2 = runner.invoke(
-            init_configs, ["--storage-path", str(storage_path)]
-        )
+        result2 = runner.invoke(init_configs, ["--storage-path", str(storage_path)])
         assert result2.exit_code == 0
         assert "Skipped: 3" in result2.output
         assert "Created: 0" in result2.output
