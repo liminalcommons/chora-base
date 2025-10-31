@@ -604,6 +604,125 @@
 
 ---
 
+## Pattern 8: Checking Inbox Status
+
+**When user says:** "inbox status", "what's in the inbox?", "show coordination queue"
+
+### Your Workflow
+
+1. **Run status dashboard:**
+   ```bash
+   # Quick overview
+   python scripts/inbox-status.py
+   ```
+
+2. **Interpret the output:**
+   - **📥 Incoming Queue**: Coordination requests awaiting triage
+     - Check priority levels (P0 = blocks sprint, P1 = high, P2 = medium)
+     - If P0 requests exist, flag for immediate attention
+   - **🔄 Active Work**: Tasks currently in progress
+     - Note any blockers or long-running items
+   - **⏱️ Recent Activity**: Event stream (last 10-20 events)
+     - Understand recent coordination flow
+   - **✅ Recent Completions**: Last 5-10 completed items
+     - Reference for success patterns
+   - **💡 Summary**: Actionable next steps
+
+3. **For detailed analysis:**
+   ```bash
+   # Show details with P0 filter
+   python scripts/inbox-status.py --detailed --priority P0
+
+   # Last 7 days of activity
+   python scripts/inbox-status.py --last 7d
+
+   # Specific coordination request
+   python scripts/inbox-status.py --trace-id coord-003
+
+   # Export for documentation
+   python scripts/inbox-status.py --format markdown > STATUS_REPORT.md
+   ```
+
+4. **Summarize to user:**
+   ```markdown
+   ## Inbox Status Summary
+
+   **Incoming Queue:**
+   - {N} coordination requests ({N} P0, {N} P1, {N} P2)
+   - {N} implementation tasks
+
+   **Active Work:**
+   - {list active items with status}
+
+   **Recommended Actions:**
+   - Priority 1: {highest priority action}
+   - Priority 2: {next action}
+
+   **Recent Completions:**
+   - {list last 3 completions with outcomes}
+   ```
+
+### Common Scenarios
+
+**Sprint Planning:**
+```bash
+# Get full view of incoming work
+python scripts/inbox-status.py --detailed
+
+# Review each P0/P1 coordination request
+# Estimate capacity and prioritize for sprint
+```
+
+**Daily Standup:**
+```bash
+# Quick check of active work and blockers
+python scripts/inbox-status.py
+
+# Note any items in active/ that need attention
+```
+
+**Context Switch:**
+```bash
+# Before switching to different work, capture current state
+python scripts/inbox-status.py --format json > .inbox-snapshot.json
+
+# After returning, compare to see what changed
+```
+
+**Reporting:**
+```bash
+# Generate markdown status report for documentation
+python scripts/inbox-status.py --format markdown > STATUS.md
+git add STATUS.md
+git commit -m "docs: Add inbox status snapshot"
+```
+
+### Output Formats
+
+**Terminal (default):**
+- Human-readable with color coding
+- Emoji indicators for quick scanning
+- Summary with actionable next steps
+
+**JSON:**
+- Machine-readable for automation
+- Programmatic access to all data
+- Integration with other tools
+
+**Markdown:**
+- Documentation-ready format
+- Can be committed to repo
+- Good for status reports
+
+### Tips
+
+- **Check before sprint planning**: Get full view of pending work
+- **Check during triage**: Understand priority distribution
+- **Check after major events**: Verify completion logging
+- **Export periodically**: Track inbox trends over time
+
+---
+
 ## Tips for Claude Code
 
 ### 1. **Always Set Trace Context**

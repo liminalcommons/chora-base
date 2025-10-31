@@ -71,13 +71,45 @@ The inbox coordinates strategic proposals, cross-repo dependencies, and approved
 3. **Confirm:** Deliver completion summary, attach diff highlights, and highlight any follow-up actions.
 
 ### Pattern D: Prepare Weekly Broadcast
-1. **Recognize:** Scheduled Monday update or user request to publish inbox broadcast.  
-2. **Act:**  
-   - Review latest ledger entries and ecosystem status YAML.  
-   - Open `inbox/coordination/broadcasts/broadcast-template.md` and replace placeholders with current data (adoption counts, blockers, actions, CTAs).  
-   - Save filled template as `inbox/coordination/broadcasts/<week>-broadcast.md`.  
-   - Append `broadcast_prepared` (and later `broadcast_shared`) events to `coordination/events.jsonl`.  
+1. **Recognize:** Scheduled Monday update or user request to publish inbox broadcast.
+2. **Act:**
+   - Review latest ledger entries and ecosystem status YAML.
+   - Open `inbox/coordination/broadcasts/broadcast-template.md` and replace placeholders with current data (adoption counts, blockers, actions, CTAs).
+   - Save filled template as `inbox/coordination/broadcasts/<week>-broadcast.md`.
+   - Append `broadcast_prepared` (and later `broadcast_shared`) events to `coordination/events.jsonl`.
 3. **Confirm:** Share summary with Victor for approval before posting to coordination channel; once shared, note link in ledger feedback.
+
+### Pattern E: Check Inbox Status Dashboard
+1. **Recognize:** User asks for "inbox status", wants to know current state, or needs coordination overview.
+2. **Act:**
+   - Run status dashboard: `python scripts/inbox-status.py`
+   - For detailed view with priorities: `python scripts/inbox-status.py --detailed --priority P0`
+   - For specific time window: `python scripts/inbox-status.py --last 7d`
+   - For JSON export (programmatic): `python scripts/inbox-status.py --format json`
+   - For markdown report: `python scripts/inbox-status.py --format markdown > STATUS.md`
+3. **Interpret Output:**
+   - **Incoming Queue**: Coordination requests awaiting triage (review these first if P0/P1)
+   - **Active Work**: Current tasks in progress with phase tracking
+   - **Recent Activity**: Event stream showing coordination flow
+   - **Recent Completions**: Last 5-10 completed items for reference
+   - **Summary**: Actionable next steps based on current state
+4. **Common Filters:**
+   - By priority: `--priority P0` (or P1, P2)
+   - By time: `--last 7d` (last 7 days)
+   - By trace: `--trace-id coord-003` (specific coordination request)
+5. **Confirm:** Summarize key findings and recommend priority actions (e.g., "3 P0 coordination requests need immediate review").
+
+**When to Use:**
+- Sprint planning (weekly review of incoming queue)
+- Daily standup (check active work and blockers)
+- Ad-hoc status checks (user asks "what's in the inbox?")
+- Before context switches (understand current state)
+- After major events (verify completion logging)
+
+**Output Formats:**
+- **Terminal** (default): Human-readable with color coding and emojis
+- **JSON**: Machine-readable for scripts/automation
+- **Markdown**: Documentation/reports (can commit to repo)
 
 ---
 
