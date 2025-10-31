@@ -1,0 +1,298 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://chora-base.com/schemas/sap-adoption-roadmap.json",
+  "title": "SAP Adoption Roadmap",
+  "description": "Strategic adoption plan over time with sprint breakdown",
+  "type": "object",
+  "required": [
+    "generated_at",
+    "target_quarter",
+    "total_saps_installed",
+    "adoption_distribution",
+    "priority_gaps"
+  ],
+  "properties": {
+    "generated_at": {
+      "type": "string",
+      "format": "date-time",
+      "description": "When this roadmap was generated"
+    },
+    "target_quarter": {
+      "type": "string",
+      "pattern": "^Q[1-4]-[0-9]{4}$",
+      "description": "Target planning quarter (e.g., Q1-2026)",
+      "examples": ["Q1-2026", "Q2-2026"]
+    },
+    "next_review_date": {
+      "type": "string",
+      "format": "date",
+      "description": "When to review/update this roadmap"
+    },
+    "total_saps_installed": {
+      "type": "integer",
+      "minimum": 0,
+      "description": "Number of SAPs currently installed"
+    },
+    "adoption_distribution": {
+      "type": "object",
+      "description": "Count of SAPs at each level",
+      "required": ["level_0", "level_1", "level_2", "level_3"],
+      "properties": {
+        "level_0": {"type": "integer", "minimum": 0},
+        "level_1": {"type": "integer", "minimum": 0},
+        "level_2": {"type": "integer", "minimum": 0},
+        "level_3": {"type": "integer", "minimum": 0}
+      }
+    },
+    "average_adoption_level": {
+      "type": "number",
+      "minimum": 0,
+      "maximum": 3,
+      "description": "Average level across installed SAPs"
+    },
+    "total_hours_invested": {
+      "type": "number",
+      "minimum": 0,
+      "description": "Cumulative time spent on SAP adoption"
+    },
+    "quarterly_goals": {
+      "type": "object",
+      "description": "Targets for next quarter",
+      "properties": {
+        "target_level_2_saps": {
+          "type": "integer",
+          "minimum": 0,
+          "description": "Goal: # of SAPs at Level 2+"
+        },
+        "target_new_installations": {
+          "type": "integer",
+          "minimum": 0,
+          "description": "Goal: # of new SAPs to install"
+        },
+        "target_roi": {
+          "type": "number",
+          "minimum": 0,
+          "description": "Goal: ROI multiplier (e.g., 3.0 = 3x)"
+        },
+        "target_hours_saved": {
+          "type": "number",
+          "minimum": 0,
+          "description": "Goal: Total hours saved from SAP capabilities"
+        }
+      }
+    },
+    "target_saps_to_install": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "pattern": "^SAP-[0-9]{3}$"
+      },
+      "description": "SAP IDs planned for installation"
+    },
+    "target_level_2_count": {
+      "type": "integer",
+      "minimum": 0,
+      "description": "Target number of SAPs at Level 2+"
+    },
+    "target_roi": {
+      "type": "number",
+      "minimum": 0,
+      "description": "Target ROI multiplier"
+    },
+    "priority_gaps": {
+      "type": "array",
+      "description": "Prioritized list of gaps to address",
+      "items": {
+        "$ref": "#/definitions/prioritized_gap"
+      }
+    },
+    "this_sprint": {
+      "$ref": "#/definitions/sprint_plan",
+      "description": "Current sprint tasks"
+    },
+    "next_sprint": {
+      "$ref": "#/definitions/sprint_plan",
+      "description": "Next sprint tasks"
+    },
+    "future_sprints": {
+      "type": "array",
+      "items": {"$ref": "#/definitions/sprint_plan"},
+      "description": "Future sprint plans"
+    },
+    "velocity_analysis": {
+      "type": "object",
+      "description": "Historical adoption metrics",
+      "properties": {
+        "saps_installed_per_month": {
+          "type": "number",
+          "minimum": 0
+        },
+        "time_to_level_1_avg_days": {
+          "type": "number",
+          "minimum": 0
+        },
+        "time_to_level_2_avg_days": {
+          "type": "number",
+          "minimum": 0
+        },
+        "adoption_trend": {
+          "type": "string",
+          "enum": ["accelerating", "steady", "slowing"]
+        }
+      }
+    },
+    "projected_outcomes": {
+      "type": "object",
+      "description": "Expected results at end of roadmap",
+      "properties": {
+        "end_of_quarter": {
+          "type": "object",
+          "properties": {
+            "level_2_saps": {"type": "integer", "minimum": 0},
+            "total_hours_invested": {"type": "number", "minimum": 0},
+            "estimated_hours_saved": {"type": "number", "minimum": 0},
+            "projected_roi": {"type": "number", "minimum": 0},
+            "adoption_maturity": {
+              "type": "number",
+              "minimum": 0,
+              "maximum": 100,
+              "description": "Percentage of SAPs at Level 2+"
+            }
+          }
+        }
+      }
+    }
+  },
+  "definitions": {
+    "prioritized_gap": {
+      "type": "object",
+      "required": ["rank", "sap_id", "gap_id", "gap_title", "priority_score"],
+      "properties": {
+        "rank": {
+          "type": "integer",
+          "minimum": 1,
+          "description": "Priority ranking (1 = highest)"
+        },
+        "sap_id": {
+          "type": "string",
+          "pattern": "^SAP-[0-9]{3}$"
+        },
+        "gap_id": {
+          "type": "string",
+          "description": "Unique gap identifier"
+        },
+        "gap_title": {
+          "type": "string",
+          "description": "Short gap description"
+        },
+        "impact": {
+          "type": "string",
+          "enum": ["high", "medium", "low"]
+        },
+        "effort": {
+          "type": "string",
+          "enum": ["high", "medium", "low"]
+        },
+        "priority_score": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 1,
+          "description": "Calculated priority (impact / effort)"
+        },
+        "reason": {
+          "type": "string",
+          "description": "Why this gap is prioritized"
+        },
+        "impact_score": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 1
+        },
+        "effort_score": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 1
+        },
+        "sprint": {
+          "type": "string",
+          "enum": ["current", "next", "future"],
+          "description": "Which sprint to address in"
+        },
+        "deliverables": {
+          "type": "array",
+          "items": {"type": "string"},
+          "description": "Concrete outputs expected"
+        },
+        "blocks": {
+          "type": "array",
+          "items": {"type": "string", "pattern": "^SAP-[0-9]{3}$"},
+          "description": "SAP IDs unblocked by fixing this gap"
+        },
+        "estimated_hours": {
+          "type": "number",
+          "minimum": 0
+        }
+      }
+    },
+    "sprint_plan": {
+      "type": "object",
+      "required": ["sprint_name", "focus_saps", "total_estimated_hours"],
+      "properties": {
+        "sprint_name": {
+          "type": "string",
+          "description": "Sprint identifier (e.g., Sprint 23)",
+          "examples": ["Sprint 23", "Q1-2026 Sprint 1"]
+        },
+        "start_date": {
+          "type": "string",
+          "format": "date"
+        },
+        "end_date": {
+          "type": "string",
+          "format": "date"
+        },
+        "focus_saps": {
+          "type": "array",
+          "items": {"type": "string", "pattern": "^SAP-[0-9]{3}$"},
+          "description": "SAP IDs to work on this sprint"
+        },
+        "target_levels": {
+          "type": "object",
+          "additionalProperties": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 3
+          },
+          "description": "Target level per SAP (e.g., {SAP-004: 2})"
+        },
+        "tasks": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "description": {"type": "string"},
+              "estimated_hours": {"type": "number", "minimum": 0},
+              "validation": {"type": "string"}
+            }
+          },
+          "description": "Specific tasks for this sprint"
+        },
+        "total_estimated_hours": {
+          "type": "number",
+          "minimum": 0,
+          "description": "Sum of task estimates"
+        },
+        "validation_commands": {
+          "type": "array",
+          "items": {"type": "string"},
+          "description": "Commands to verify sprint success"
+        },
+        "expected_outcomes": {
+          "type": "array",
+          "items": {"type": "string"},
+          "description": "Concrete results expected"
+        }
+      }
+    }
+  }
+}

@@ -611,6 +611,123 @@ Test feature combinations that users commonly choose:
 
 ---
 
+## SAP Evaluation Workflow
+
+### Purpose
+
+SAP-019 (Self-Evaluation) enables you to assess SAP adoption depth, identify gaps, and generate improvement roadmaps.
+
+### When to Evaluate
+
+- **After installing new SAP**: Validate installation (`--quick`)
+- **Sprint planning**: Generate roadmap for next sprint (`--strategic`)
+- **User asks "How's our SAP adoption?"**: Quick status check
+- **User asks "How can we improve SAP-X?"**: Deep dive analysis
+- **Quarterly reviews**: Track progress over time
+
+### Evaluation Modes
+
+**Quick Check** (30 seconds):
+```bash
+# Check all installed SAPs
+python scripts/sap-evaluator.py --quick
+
+# Check specific SAP
+python scripts/sap-evaluator.py --quick SAP-004
+```
+
+**Deep Dive** (5 minutes):
+```bash
+# Analyze specific SAP, save report
+python scripts/sap-evaluator.py --deep SAP-004 --output docs/adoption-reports/SAP-004-assessment.md
+```
+
+**Strategic Analysis** (30 minutes):
+```bash
+# Generate quarterly roadmap
+python scripts/sap-evaluator.py --strategic --output docs/adoption-reports/sap-roadmap.yaml
+```
+
+### Common Workflow: "How can we improve SAP-X?"
+
+1. **Run deep dive**:
+   ```bash
+   python scripts/sap-evaluator.py --deep SAP-004 --output docs/adoption-reports/SAP-004-assessment.md
+   ```
+
+2. **Read report** (use Read tool):
+   ```
+   Read: docs/adoption-reports/SAP-004-assessment.md
+   ```
+
+3. **Extract top 3 gaps** from report:
+   - Gap 1 (P0): [Title], [Impact], [Effort], [Actions]
+   - Gap 2 (P1): [...]
+   - Gap 3 (P2): [...]
+
+4. **Present to user**:
+   ```markdown
+   ## SAP-004 Improvement Opportunities
+
+   **Current Level**: 1 (Basic)
+   **Next Milestone**: Level 2
+
+   ### Priority Gaps
+   1. **[Gap 1 Title]** (P0, 3 hours)
+      - Impact: [description]
+      - Actions: [concrete steps]
+
+   2. **[Gap 2 Title]** (P1, 1.5 hours)
+      - Impact: [description]
+      - Actions: [concrete steps]
+
+   Shall I create tasks and implement Gap 1?
+   ```
+
+5. **Offer to execute**: If user agrees, use TodoWrite to create tasks, then implement
+
+### Report Structure
+
+Generated reports include:
+- **Current State**: Adoption level, completion %, next milestone
+- **Validation Results**: Automated checks (✅/❌)
+- **Gap Analysis**: Prioritized gaps (P0/P1/P2) with concrete actions
+- **Sprint Plan**: This sprint focus, next sprint goals
+
+Example gap:
+```
+### Gap 1: Test coverage 0% < 85% target (P0)
+**Impact**: High - Blocks SAP-005 CI/CD coverage gates
+**Effort**: Medium - 3 hours, 8 tests needed
+**Actions**:
+1. Generate coverage report (5 min)
+2. Write 8 tests for API handlers (2.5 hours)
+3. Validate ≥85% coverage (2 min)
+```
+
+### Integration with Sprint Planning
+
+**Sprint Planning Workflow**:
+1. Run strategic analysis to generate roadmap
+2. Review priority gaps (top 5)
+3. Select 1-2 gaps for current sprint
+4. Add to sprint backlog with time estimates
+5. Track progress via re-evaluation at sprint end
+
+**Quarterly Review**:
+1. Generate strategic roadmap
+2. Compare to previous quarter
+3. Calculate adoption velocity
+4. Update quarterly goals
+
+### Tips for AI Agents
+
+- **Start with quick check**: Don't deep dive unless user asks
+- **Focus on top 3 gaps**: Don't overwhelm with full list
+- **Prioritize P0 gaps**: These block other SAPs
+- **Be specific**: Reference exact commands, files, line numbers from reports
+- **Track progress**: Re-run evaluation after implementing improvements
+
 ## Questions & Support
 
 ### Where to Find Information

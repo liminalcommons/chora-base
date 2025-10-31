@@ -1,8 +1,8 @@
 {
   "version": "4.1.0",
-  "updated": "2025-10-29",
+  "updated": "2025-10-30",
   "description": "Machine-readable catalog of all Skilled Awareness Packages in chora-base",
-  "total_saps": 18,
+  "total_saps": 19,
   "saps": [
     {
       "id": "SAP-000",
@@ -624,11 +624,45 @@
       "system_files": [],
       "phase": "Wave 3",
       "priority": "P1"
+    },
+    {
+      "id": "SAP-019",
+      "name": "sap-self-evaluation",
+      "full_name": "SAP Self-Evaluation Framework",
+      "status": "active",
+      "version": "1.0.0",
+      "included_by_default": false,
+      "size_kb": 150,
+      "description": "Progressive evaluation framework for assessing SAP adoption depth, identifying gaps, and generating actionable roadmaps",
+      "capabilities": [
+        "Quick check validation (30s)",
+        "Deep dive gap analysis (5min)",
+        "Strategic roadmap generation (30min)",
+        "Timeline tracking and trend analysis",
+        "Multi-format reporting (terminal, JSON, markdown, YAML)"
+      ],
+      "dependencies": ["SAP-000"],
+      "tags": ["evaluation", "assessment", "roadmap", "planning", "meta"],
+      "author": "chora-base",
+      "location": "docs/skilled-awareness/sap-self-evaluation",
+      "artifacts": {
+        "capability_charter": true,
+        "protocol_spec": true,
+        "awareness_guide": true,
+        "adoption_blueprint": true,
+        "ledger": true
+      },
+      "system_files": [
+        "scripts/sap-evaluator.py",
+        "utils/sap_evaluation.py"
+      ],
+      "phase": "Wave 3",
+      "priority": "P1"
     }
   ],
   "dependency_graph": {
     "foundational": ["SAP-000", "SAP-016"],
-    "meta": ["SAP-001", "SAP-002"],
+    "meta": ["SAP-001", "SAP-002", "SAP-019"],
     "core_infrastructure": ["SAP-003", "SAP-004", "SAP-005", "SAP-006"],
     "developer_experience": ["SAP-007", "SAP-008", "SAP-009"],
     "advanced_features": ["SAP-010", "SAP-011", "SAP-012"],

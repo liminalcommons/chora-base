@@ -1,0 +1,274 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://chora-base.com/schemas/sap-evaluation-result.json",
+  "title": "SAP Evaluation Result",
+  "description": "Result of a SAP adoption evaluation (quick/deep/strategic)",
+  "type": "object",
+  "required": [
+    "sap_id",
+    "sap_name",
+    "evaluation_type",
+    "timestamp",
+    "is_installed",
+    "current_level"
+  ],
+  "properties": {
+    "sap_id": {
+      "type": "string",
+      "pattern": "^SAP-[0-9]{3}$",
+      "description": "SAP identifier (e.g., SAP-004)",
+      "examples": ["SAP-004", "SAP-009", "SAP-013"]
+    },
+    "sap_name": {
+      "type": "string",
+      "description": "SAP human-readable name",
+      "examples": ["testing-framework", "agent-awareness", "metrics-tracking"]
+    },
+    "evaluation_type": {
+      "type": "string",
+      "enum": ["quick", "deep", "strategic"],
+      "description": "Type of evaluation performed"
+    },
+    "timestamp": {
+      "type": "string",
+      "format": "date-time",
+      "description": "ISO 8601 timestamp of evaluation"
+    },
+    "is_installed": {
+      "type": "boolean",
+      "description": "Whether SAP artifacts are present"
+    },
+    "current_level": {
+      "type": "integer",
+      "minimum": 0,
+      "maximum": 3,
+      "description": "Current adoption level (0=not installed, 1=basic, 2=standard, 3=advanced)"
+    },
+    "completion_percent": {
+      "type": "number",
+      "minimum": 0,
+      "maximum": 100,
+      "description": "Progress toward next adoption level (%)"
+    },
+    "validation_results": {
+      "type": "object",
+      "description": "Results of automated validation checks",
+      "additionalProperties": {
+        "type": "boolean"
+      },
+      "examples": [
+        {
+          "artifacts_complete": true,
+          "tests_passing": true,
+          "coverage_target_met": false
+        }
+      ]
+    },
+    "quality_scores": {
+      "type": "object",
+      "description": "LLM-assessed quality metrics (0-1)",
+      "additionalProperties": {
+        "type": "number",
+        "minimum": 0,
+        "maximum": 1
+      },
+      "examples": [
+        {
+          "documentation_completeness": 0.85,
+          "integration_depth": 0.60,
+          "pattern_usage": 0.45
+        }
+      ]
+    },
+    "gaps": {
+      "type": "array",
+      "description": "Identified improvement opportunities",
+      "items": {
+        "$ref": "#/definitions/gap"
+      }
+    },
+    "blockers": {
+      "type": "array",
+      "description": "Issues preventing next adoption level",
+      "items": {
+        "type": "string"
+      },
+      "examples": [
+        ["Missing async test patterns", "Coverage below 85%"]
+      ]
+    },
+    "next_milestone": {
+      "type": "string",
+      "description": "Next achievement target",
+      "examples": ["Level 2 adoption", "85% test coverage", "Domain AGENTS.md files"]
+    },
+    "recommended_actions": {
+      "type": "array",
+      "description": "Prioritized next steps",
+      "items": {
+        "$ref": "#/definitions/action"
+      }
+    },
+    "estimated_effort_hours": {
+      "type": "number",
+      "minimum": 0,
+      "description": "Total estimated time to next level"
+    },
+    "duration_seconds": {
+      "type": "number",
+      "minimum": 0,
+      "description": "Time taken to run this evaluation"
+    },
+    "confidence": {
+      "type": "string",
+      "enum": ["high", "medium", "low"],
+      "description": "Confidence in assessment results"
+    },
+    "warnings": {
+      "type": "array",
+      "description": "Non-blocking issues detected",
+      "items": {
+        "type": "string"
+      }
+    }
+  },
+  "definitions": {
+    "gap": {
+      "type": "object",
+      "required": ["gap_id", "gap_type", "title", "impact", "effort", "priority"],
+      "properties": {
+        "gap_id": {
+          "type": "string",
+          "description": "Unique gap identifier"
+        },
+        "gap_type": {
+          "type": "string",
+          "enum": ["installation", "integration", "quality", "optimization"],
+          "description": "Category of gap"
+        },
+        "title": {
+          "type": "string",
+          "description": "Short gap description"
+        },
+        "description": {
+          "type": "string",
+          "description": "Detailed explanation"
+        },
+        "impact": {
+          "type": "string",
+          "enum": ["high", "medium", "low"],
+          "description": "Business impact of gap"
+        },
+        "effort": {
+          "type": "string",
+          "enum": ["high", "medium", "low"],
+          "description": "Effort required to fix"
+        },
+        "priority": {
+          "type": "string",
+          "enum": ["P0", "P1", "P2"],
+          "description": "Priority level"
+        },
+        "urgency": {
+          "type": "string",
+          "enum": ["blocks_sprint", "next_sprint", "future"],
+          "description": "Timeline urgency"
+        },
+        "current_state": {
+          "type": "string",
+          "description": "Current situation"
+        },
+        "desired_state": {
+          "type": "string",
+          "description": "Target situation"
+        },
+        "blocks": {
+          "type": "array",
+          "items": {"type": "string", "pattern": "^SAP-[0-9]{3}$"},
+          "description": "SAP IDs blocked by this gap"
+        },
+        "blocked_by": {
+          "type": "array",
+          "items": {"type": "string"},
+          "description": "Dependencies blocking resolution"
+        },
+        "actions": {
+          "type": "array",
+          "items": {"$ref": "#/definitions/action"},
+          "description": "Steps to fix gap"
+        },
+        "estimated_hours": {
+          "type": "number",
+          "minimum": 0,
+          "description": "Time estimate to resolve"
+        },
+        "validation": {
+          "type": "string",
+          "description": "How to verify gap is fixed"
+        }
+      }
+    },
+    "action": {
+      "type": "object",
+      "required": ["action_id", "description", "tool"],
+      "properties": {
+        "action_id": {
+          "type": "string",
+          "description": "Unique action identifier"
+        },
+        "description": {
+          "type": "string",
+          "description": "What to do"
+        },
+        "tool": {
+          "type": "string",
+          "enum": ["Read", "Write", "Edit", "Bash", "NotebookEdit", "Other"],
+          "description": "Tool to use for execution"
+        },
+        "file_path": {
+          "type": "string",
+          "description": "Target file path (if applicable)"
+        },
+        "location": {
+          "type": "string",
+          "description": "Line number, section, etc."
+        },
+        "content": {
+          "type": "string",
+          "description": "Exact content to add/change"
+        },
+        "command": {
+          "type": "string",
+          "description": "Bash command to run (if tool=Bash)"
+        },
+        "rationale": {
+          "type": "string",
+          "description": "Why this action helps"
+        },
+        "expected_outcome": {
+          "type": "string",
+          "description": "What changes after action"
+        },
+        "validation_command": {
+          "type": "string",
+          "description": "How to verify action succeeded"
+        },
+        "estimated_minutes": {
+          "type": "integer",
+          "minimum": 0,
+          "description": "Time estimate for this action"
+        },
+        "sequence": {
+          "type": "integer",
+          "minimum": 1,
+          "description": "Order to execute (1, 2, 3...)"
+        },
+        "depends_on": {
+          "type": "array",
+          "items": {"type": "string"},
+          "description": "Action IDs that must complete first"
+        }
+      }
+    }
+  }
+}
