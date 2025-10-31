@@ -1,0 +1,2166 @@
+/Users/victorpiper/.pyenv/versions/3.12.0/lib/python3.12/site-packages/pytest_asyncio/plugin.py:208: PytestDeprecationWarning: The configuration option "asyncio_default_fixture_loop_scope" is unset.
+The event loop scope for asynchronous fixtures will default to the fixture caching scope. Future versions of pytest-asyncio will default the loop scope for asynchronous fixtures to function scope. Set the default fixture loop scope explicitly in order to avoid unexpected behavior in the future. Valid fixture loop scopes are: "function", "class", "module", "package", "session"
+
+  warnings.warn(PytestDeprecationWarning(_DEFAULT_FIXTURE_LOOP_SCOPE_UNSET))
+============================= test session starts ==============================
+platform darwin -- Python 3.12.0, pytest-8.3.0, pluggy-1.5.0
+rootdir: /Users/victorpiper/code/mcp-orchestration
+configfile: pyproject.toml
+testpaths: tests
+plugins: asyncio-0.24.0, cov-6.0.0, anyio-4.9.0
+asyncio: mode=Mode.AUTO, default_loop_scope=None
+collected 443 items
+
+tests/e2e/test_complete_workflow.py ....                                 [  0%]
+tests/http/test_auth.py ........................................F..      [ 10%]
+tests/http/test_backward_compat.py ssssssssssssssssssssss                [ 15%]
+tests/http/test_cors.py F..F........FFFF..........F...                   [ 22%]
+tests/http/test_endpoints.py ....................F...........FF.......s. [ 32%]
+                                                                         [ 32%]
+tests/http/test_server.py ..........FFFFFFFFFFFFFF...F.FFFFFF            [ 39%]
+tests/http/test_token_generation.py ssssssssssssFF.FFssF.ss              [ 45%]
+tests/test_behaviors.py .                                                [ 45%]
+tests/test_config_builder.py ...................                         [ 49%]
+tests/test_crypto.py .............                                       [ 52%]
+tests/test_deployment_workflow.py ..........                             [ 54%]
+tests/test_diff.py ...........                                           [ 57%]
+tests/test_installation_installer.py ...............                     [ 60%]
+tests/test_installation_mcp_tools.py FFFFFFFFFFFFFFFFFF                  [ 64%]
+tests/test_installation_package_manager.py ..............                [ 67%]
+tests/test_installation_validator.py .........                           [ 69%]
+tests/test_integration.py .........                                      [ 72%]
+tests/test_manifest.py .                                                 [ 72%]
+tests/test_mcp_ergonomic_tools.py .............                          [ 75%]
+tests/test_mcp_publish_tool.py .....                                     [ 76%]
+tests/test_publishing_workflow.py ..........                             [ 78%]
+tests/test_registry.py .........                                         [ 80%]
+tests/test_server_registry.py ........................                   [ 86%]
+tests/test_storage.py .....................                              [ 90%]
+tests/test_telemetry.py .                                                [ 90%]
+tests/test_transport_abstraction.py ................                     [ 94%]
+tests/test_validate_config.py ............                               [ 97%]
+tests/value-scenarios/test_create_doc.py .                               [ 97%]
+tests/value-scenarios/test_deploy_config.py ...                          [ 98%]
+tests/value-scenarios/test_http_transport.py EEEEE                       [ 99%]
+tests/value-scenarios/test_publish_config.py ...                         [100%]
+
+==================================== ERRORS ====================================
+__________________ ERROR at setup of test_developer_workflow ___________________
+
+    @pytest.fixture
+    def http_server_process():
+        """
+        Start HTTP server in background, yield process, then clean up.
+    
+        Simulates: deploy-http-server.md Step 2
+        """
+        # Find available port
+        import socket
+        with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
+            s.bind(('', 0))
+            s.listen(1)
+            port = s.getsockname()[1]
+    
+        # Start server
+        process = subprocess.Popen(
+            ["mcp-orchestration-serve-http", "--host", "127.0.0.1", "--port", str(port)],
+            stdout=subprocess.PIPE,
+            stderr=subprocess.PIPE,
+            text=True,
+        )
+    
+        # Wait for server to be ready (max 10 seconds)
+        base_url = f"http://127.0.0.1:{port}"
+        for _ in range(20):  # 20 * 0.5s = 10s
+            try:
+                response = requests.get(f"{base_url}/docs", timeout=1)
+                if response.status_code == 200:
+                    break
+            except requests.exceptions.RequestException:
+                pass
+            time.sleep(0.5)
+        else:
+            process.kill()
+>           pytest.fail("HTTP server did not start within 10 seconds")
+E           Failed: HTTP server did not start within 10 seconds
+
+tests/value-scenarios/test_http_transport.py:64: Failed
+________________ ERROR at setup of test_n8n_automation_workflow ________________
+
+    @pytest.fixture
+    def http_server_process():
+        """
+        Start HTTP server in background, yield process, then clean up.
+    
+        Simulates: deploy-http-server.md Step 2
+        """
+        # Find available port
+        import socket
+        with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
+            s.bind(('', 0))
+            s.listen(1)
+            port = s.getsockname()[1]
+    
+        # Start server
+        process = subprocess.Popen(
+            ["mcp-orchestration-serve-http", "--host", "127.0.0.1", "--port", str(port)],
+            stdout=subprocess.PIPE,
+            stderr=subprocess.PIPE,
+            text=True,
+        )
+    
+        # Wait for server to be ready (max 10 seconds)
+        base_url = f"http://127.0.0.1:{port}"
+        for _ in range(20):  # 20 * 0.5s = 10s
+            try:
+                response = requests.get(f"{base_url}/docs", timeout=1)
+                if response.status_code == 200:
+                    break
+            except requests.exceptions.RequestException:
+                pass
+            time.sleep(0.5)
+        else:
+            process.kill()
+>           pytest.fail("HTTP server did not start within 10 seconds")
+E           Failed: HTTP server did not start within 10 seconds
+
+tests/value-scenarios/test_http_transport.py:64: Failed
+___________ ERROR at setup of test_stdio_to_http_migration_workflow ____________
+
+    @pytest.fixture
+    def http_server_process():
+        """
+        Start HTTP server in background, yield process, then clean up.
+    
+        Simulates: deploy-http-server.md Step 2
+        """
+        # Find available port
+        import socket
+        with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
+            s.bind(('', 0))
+            s.listen(1)
+            port = s.getsockname()[1]
+    
+        # Start server
+        process = subprocess.Popen(
+            ["mcp-orchestration-serve-http", "--host", "127.0.0.1", "--port", str(port)],
+            stdout=subprocess.PIPE,
+            stderr=subprocess.PIPE,
+            text=True,
+        )
+    
+        # Wait for server to be ready (max 10 seconds)
+        base_url = f"http://127.0.0.1:{port}"
+        for _ in range(20):  # 20 * 0.5s = 10s
+            try:
+                response = requests.get(f"{base_url}/docs", timeout=1)
+                if response.status_code == 200:
+                    break
+            except requests.exceptions.RequestException:
+                pass
+            time.sleep(0.5)
+        else:
+            process.kill()
+>           pytest.fail("HTTP server did not start within 10 seconds")
+E           Failed: HTTP server did not start within 10 seconds
+
+tests/value-scenarios/test_http_transport.py:64: Failed
+________________ ERROR at setup of test_api_key_authentication _________________
+
+    @pytest.fixture
+    def api_key_server():
+        """
+        Start HTTP server with API key authentication.
+    
+        Simulates: authenticate-http-api.md Method 2
+        """
+        # Find available port
+        import socket
+        with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
+            s.bind(('', 0))
+            s.listen(1)
+            port = s.getsockname()[1]
+    
+        # Set API key environment variable
+        api_key = "test-api-key-12345"
+        env = os.environ.copy()
+        env["MCP_ORCHESTRATION_API_KEY"] = api_key
+    
+        # Start server with API key
+        process = subprocess.Popen(
+            ["mcp-orchestration-serve-http", "--host", "127.0.0.1", "--port", str(port)],
+            stdout=subprocess.PIPE,
+            stderr=subprocess.PIPE,
+            text=True,
+            env=env,
+        )
+    
+        # Wait for server to be ready
+        base_url = f"http://127.0.0.1:{port}"
+        for _ in range(20):
+            try:
+                response = requests.get(f"{base_url}/docs", timeout=1)
+                if response.status_code == 200:
+                    break
+            except requests.exceptions.RequestException:
+                pass
+            time.sleep(0.5)
+        else:
+            process.kill()
+>           pytest.fail("HTTP server with API key did not start within 10 seconds")
+E           Failed: HTTP server with API key did not start within 10 seconds
+
+tests/value-scenarios/test_http_transport.py:139: Failed
+________________ ERROR at setup of test_bearer_token_lifecycle _________________
+
+    @pytest.fixture
+    def http_server_process():
+        """
+        Start HTTP server in background, yield process, then clean up.
+    
+        Simulates: deploy-http-server.md Step 2
+        """
+        # Find available port
+        import socket
+        with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
+            s.bind(('', 0))
+            s.listen(1)
+            port = s.getsockname()[1]
+    
+        # Start server
+        process = subprocess.Popen(
+            ["mcp-orchestration-serve-http", "--host", "127.0.0.1", "--port", str(port)],
+            stdout=subprocess.PIPE,
+            stderr=subprocess.PIPE,
+            text=True,
+        )
+    
+        # Wait for server to be ready (max 10 seconds)
+        base_url = f"http://127.0.0.1:{port}"
+        for _ in range(20):  # 20 * 0.5s = 10s
+            try:
+                response = requests.get(f"{base_url}/docs", timeout=1)
+                if response.status_code == 200:
+                    break
+            except requests.exceptions.RequestException:
+                pass
+            time.sleep(0.5)
+        else:
+            process.kill()
+>           pytest.fail("HTTP server did not start within 10 seconds")
+E           Failed: HTTP server did not start within 10 seconds
+
+tests/value-scenarios/test_http_transport.py:64: Failed
+=================================== FAILURES ===================================
+_______ TestAuthenticationErrorMessages.test_invalid_token_error_message _______
+
+self = <test_auth.TestAuthenticationErrorMessages object at 0x1133a17c0>
+client = <starlette.testclient.TestClient object at 0x113e04770>
+
+    def test_invalid_token_error_message(self, client):
+        """Test that invalid token returns helpful error message."""
+        response = client.get(
+            "/v1/clients",
+            headers={"Authorization": "Bearer invalid_token"},
+        )
+    
+        assert response.status_code == 401
+        data = response.json()
+    
+        assert "detail" in data or "error" in data
+        error_message = data.get("detail", data.get("error", ""))
+    
+        # Error message should explain token is invalid
+>       assert "invalid" in error_message.lower() or "unauthorized" in error_message.lower()
+E       AssertionError: assert ('invalid' in 'authentication required. provide bearer token (authorization: bearer <token>) or api key (x-api-key: <key>)' or 'unauthorized' in 'authentication required. provide bearer token (authorization: bearer <token>) or api key (x-api-key: <key>)')
+E        +  where 'authentication required. provide bearer token (authorization: bearer <token>) or api key (x-api-key: <key>)' = <built-in method lower of str object at 0x113dfeab0>()
+E        +    where <built-in method lower of str object at 0x113dfeab0> = 'Authentication required. Provide bearer token (Authorization: Bearer <token>) or API key (X-API-Key: <key>)'.lower
+E        +  and   'authentication required. provide bearer token (authorization: bearer <token>) or api key (x-api-key: <key>)' = <built-in method lower of str object at 0x113dfeab0>()
+E        +    where <built-in method lower of str object at 0x113dfeab0> = 'Authentication required. Provide bearer token (Authorization: Bearer <token>) or API key (X-API-Key: <key>)'.lower
+
+tests/http/test_auth.py:572: AssertionError
+_________ TestCORSPreflightRequests.test_preflight_request_returns_200 _________
+
+self = <test_cors.TestCORSPreflightRequests object at 0x1133d1c70>
+client = <starlette.testclient.TestClient object at 0x1135da390>
+
+    def test_preflight_request_returns_200(self, client):
+        """Test that OPTIONS preflight request returns 200 OK."""
+        response = client.options(
+            "/v1/clients",
+            headers={"Origin": "http://localhost:3000"},
+        )
+    
+>       assert response.status_code == 200
+E       assert 405 == 200
+E        +  where 405 = <Response [405 Method Not Allowed]>.status_code
+
+tests/http/test_cors.py:52: AssertionError
+______ TestCORSPreflightRequests.test_preflight_has_allow_headers_header _______
+
+self = <test_cors.TestCORSPreflightRequests object at 0x1133d21e0>
+client = <starlette.testclient.TestClient object at 0x113e6af30>
+
+    def test_preflight_has_allow_headers_header(self, client):
+        """Test that preflight response includes Access-Control-Allow-Headers header."""
+        response = client.options(
+            "/v1/clients",
+            headers={
+                "Origin": "http://localhost:3000",
+                "Access-Control-Request-Headers": "authorization, content-type",
+            },
+        )
+    
+>       assert "access-control-allow-headers" in response.headers
+E       AssertionError: assert 'access-control-allow-headers' in Headers({'allow': 'GET', 'content-length': '31', 'content-type': 'application/json', 'access-control-allow-origin': '*', 'access-control-allow-credentials': 'true'})
+E        +  where Headers({'allow': 'GET', 'content-length': '31', 'content-type': 'application/json', 'access-control-allow-origin': '*', 'access-control-allow-credentials': 'true'}) = <Response [405 Method Not Allowed]>.headers
+
+tests/http/test_cors.py:85: AssertionError
+_________ TestCORSAllowedHeaders.test_authorization_header_is_allowed __________
+
+self = <test_cors.TestCORSAllowedHeaders object at 0x1133d31d0>
+client = <starlette.testclient.TestClient object at 0x113e05c10>
+
+    def test_authorization_header_is_allowed(self, client):
+        """Test that Authorization header is allowed."""
+        response = client.options(
+            "/v1/clients",
+            headers={
+                "Origin": "http://localhost:3000",
+                "Access-Control-Request-Headers": "authorization",
+            },
+        )
+    
+        allowed_headers = response.headers.get("access-control-allow-headers", "").lower()
+    
+>       assert "authorization" in allowed_headers or "*" in allowed_headers
+E       AssertionError: assert ('authorization' in '' or '*' in '')
+
+tests/http/test_cors.py:236: AssertionError
+__________ TestCORSAllowedHeaders.test_content_type_header_is_allowed __________
+
+self = <test_cors.TestCORSAllowedHeaders object at 0x1133d3380>
+client = <starlette.testclient.TestClient object at 0x113dbe1b0>
+
+    def test_content_type_header_is_allowed(self, client):
+        """Test that Content-Type header is allowed."""
+        response = client.options(
+            "/v1/config/diff",
+            headers={
+                "Origin": "http://localhost:3000",
+                "Access-Control-Request-Headers": "content-type",
+            },
+        )
+    
+        allowed_headers = response.headers.get("access-control-allow-headers", "").lower()
+    
+>       assert "content-type" in allowed_headers or "*" in allowed_headers
+E       AssertionError: assert ('content-type' in '' or '*' in '')
+
+tests/http/test_cors.py:250: AssertionError
+___________ TestCORSAllowedHeaders.test_x_api_key_header_is_allowed ____________
+
+self = <test_cors.TestCORSAllowedHeaders object at 0x1133d3560>
+client = <starlette.testclient.TestClient object at 0x113dcd490>
+
+    def test_x_api_key_header_is_allowed(self, client):
+        """Test that X-API-Key header is allowed."""
+        response = client.options(
+            "/v1/clients",
+            headers={
+                "Origin": "http://localhost:3000",
+                "Access-Control-Request-Headers": "x-api-key",
+            },
+        )
+    
+        allowed_headers = response.headers.get("access-control-allow-headers", "").lower()
+    
+>       assert "x-api-key" in allowed_headers or "*" in allowed_headers
+E       AssertionError: assert ('x-api-key' in '' or '*' in '')
+
+tests/http/test_cors.py:264: AssertionError
+___________ TestCORSAllowedHeaders.test_multiple_headers_are_allowed ___________
+
+self = <test_cors.TestCORSAllowedHeaders object at 0x1133d3740>
+client = <starlette.testclient.TestClient object at 0x113eb3ce0>
+
+    def test_multiple_headers_are_allowed(self, client):
+        """Test that multiple headers can be requested together."""
+        response = client.options(
+            "/v1/config/diff",
+            headers={
+                "Origin": "http://localhost:3000",
+                "Access-Control-Request-Headers": "authorization, content-type, x-api-key",
+            },
+        )
+    
+>       assert "access-control-allow-headers" in response.headers
+E       AssertionError: assert 'access-control-allow-headers' in Headers({'allow': 'POST', 'content-length': '31', 'content-type': 'application/json', 'access-control-allow-origin': '*', 'access-control-allow-credentials': 'true'})
+E        +  where Headers({'allow': 'POST', 'content-length': '31', 'content-type': 'application/json', 'access-control-allow-origin': '*', 'access-control-allow-credentials': 'true'}) = <Response [405 Method Not Allowed]>.headers
+
+tests/http/test_cors.py:276: AssertionError
+_ TestCORSSecurityConsiderations.test_authentication_still_required_despite_cors _
+
+self = <test_cors.TestCORSSecurityConsiderations object at 0x1133fcc80>
+client = <starlette.testclient.TestClient object at 0x113e1cf50>
+
+    def test_authentication_still_required_despite_cors(self, client):
+        """
+        Test that CORS headers don't bypass authentication.
+    
+        CORS only controls browser access, not authentication.
+        """
+        # Preflight should succeed (CORS check)
+        preflight = client.options(
+            "/v1/clients",
+            headers={"Origin": "http://localhost:3000"},
+        )
+>       assert preflight.status_code == 200
+E       assert 405 == 200
+E        +  where 405 = <Response [405 Method Not Allowed]>.status_code
+
+tests/http/test_cors.py:514: AssertionError
+_________ TestConfigWorkflowEndpoints.test_validate_config_returns_200 _________
+
+self = <test_endpoints.TestConfigWorkflowEndpoints object at 0x113428d70>
+client = <starlette.testclient.TestClient object at 0x113de36b0>
+auth_headers = {'Authorization': 'Bearer test_token_123'}
+
+    def test_validate_config_returns_200(self, client, auth_headers):
+        """Test POST /v1/config/{client}/{profile}/validate returns 200."""
+        response = client.post(
+            "/v1/config/claude-desktop/default/validate",
+            headers=auth_headers,
+        )
+    
+>       assert response.status_code in [200, 400]
+E       assert 404 in [200, 400]
+E        +  where 404 = <Response [404 Not Found]>.status_code
+
+tests/http/test_endpoints.py:310: AssertionError
+______ TestKeyManagementEndpoints.test_initialize_keys_returns_200_or_400 ______
+
+self = <test_endpoints.TestKeyManagementEndpoints object at 0x113429d00>
+client = <starlette.testclient.TestClient object at 0x11401c320>
+auth_headers = {'Authorization': 'Bearer test_token_123'}
+
+    def test_initialize_keys_returns_200_or_400(self, client, auth_headers):
+        """Test POST /v1/keys/initialize returns 200 or 400."""
+        response = client.post("/v1/keys/initialize", headers=auth_headers)
+    
+        # 200 if successful, 400 if keys already exist
+>       assert response.status_code in [200, 400]
+E       assert 500 in [200, 400]
+E        +  where 500 = <Response [500 Internal Server Error]>.status_code
+
+tests/http/test_endpoints.py:456: AssertionError
+_________ TestKeyManagementEndpoints.test_initialize_keys_creates_keys _________
+
+self = <test_endpoints.TestKeyManagementEndpoints object at 0x113429ee0>
+client = <starlette.testclient.TestClient object at 0x113da2b40>
+auth_headers = {'Authorization': 'Bearer test_token_123'}
+
+    def test_initialize_keys_creates_keys(self, client, auth_headers):
+        """Test POST /v1/keys/initialize creates signing keys."""
+        with tempfile.TemporaryDirectory() as tmpdir:
+            # Set keys directory for test
+>           with patch("mcp_orchestrator.storage.base.get_base_dir", return_value=Path(tmpdir)):
+
+tests/http/test_endpoints.py:462: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+../../.pyenv/versions/3.12.0/lib/python3.12/unittest/mock.py:1439: in __enter__
+    self.target = self.getter()
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+name = 'mcp_orchestrator.storage.base'
+
+    def resolve_name(name):
+        """
+        Resolve a name to an object.
+    
+        It is expected that `name` will be a string in one of the following
+        formats, where W is shorthand for a valid Python identifier and dot stands
+        for a literal period in these pseudo-regexes:
+    
+        W(.W)*
+        W(.W)*:(W(.W)*)?
+    
+        The first form is intended for backward compatibility only. It assumes that
+        some part of the dotted name is a package, and the rest is an object
+        somewhere within that package, possibly nested inside other objects.
+        Because the place where the package stops and the object hierarchy starts
+        can't be inferred by inspection, repeated attempts to import must be done
+        with this form.
+    
+        In the second form, the caller makes the division point clear through the
+        provision of a single colon: the dotted name to the left of the colon is a
+        package to be imported, and the dotted name to the right is the object
+        hierarchy within that package. Only one import is needed in this form. If
+        it ends with the colon, then a module object is returned.
+    
+        The function will return an object (which might be a module), or raise one
+        of the following exceptions:
+    
+        ValueError - if `name` isn't in a recognised format
+        ImportError - if an import failed when it shouldn't have
+        AttributeError - if a failure occurred when traversing the object hierarchy
+                         within the imported package to get to the desired object.
+        """
+        global _NAME_PATTERN
+        if _NAME_PATTERN is None:
+            # Lazy import to speedup Python startup time
+            import re
+            dotted_words = r'(?!\d)(\w+)(\.(?!\d)(\w+))*'
+            _NAME_PATTERN = re.compile(f'^(?P<pkg>{dotted_words})'
+                                       f'(?P<cln>:(?P<obj>{dotted_words})?)?$',
+                                       re.UNICODE)
+    
+        m = _NAME_PATTERN.match(name)
+        if not m:
+            raise ValueError(f'invalid format: {name!r}')
+        gd = m.groupdict()
+        if gd.get('cln'):
+            # there is a colon - a one-step import is all that's needed
+            mod = importlib.import_module(gd['pkg'])
+            parts = gd.get('obj')
+            parts = parts.split('.') if parts else []
+        else:
+            # no colon - have to iterate to find the package boundary
+            parts = name.split('.')
+            modname = parts.pop(0)
+            # first part *must* be a module/package.
+            mod = importlib.import_module(modname)
+            while parts:
+                p = parts[0]
+                s = f'{modname}.{p}'
+                try:
+                    mod = importlib.import_module(s)
+                    parts.pop(0)
+                    modname = s
+                except ImportError:
+                    break
+        # if we reach this point, mod is the module, already imported, and
+        # parts is the list of parts in the object hierarchy to be traversed, or
+        # an empty list if just the module is wanted.
+        result = mod
+        for p in parts:
+>           result = getattr(result, p)
+E           AttributeError: module 'mcp_orchestrator.storage' has no attribute 'base'
+
+../../.pyenv/versions/3.12.0/lib/python3.12/pkgutil.py:528: AttributeError
+__________ TestHTTPEndpointExposure.test_list_clients_endpoint_exists __________
+
+self = <test_server.TestHTTPEndpointExposure object at 0x11345c5c0>
+client = <starlette.testclient.TestClient object at 0x113e9be90>
+auth_headers = {'Authorization': 'Bearer test_token_123'}
+
+    def test_list_clients_endpoint_exists(self, client, auth_headers):
+        """Test GET /v1/clients endpoint exists and returns 200."""
+        response = client.get("/v1/clients", headers=auth_headers)
+>       assert response.status_code == 200
+E       assert 401 == 200
+E        +  where 401 = <Response [401 Unauthorized]>.status_code
+
+tests/http/test_server.py:206: AssertionError
+_________ TestHTTPEndpointExposure.test_list_profiles_endpoint_exists __________
+
+self = <test_server.TestHTTPEndpointExposure object at 0x11345d610>
+client = <starlette.testclient.TestClient object at 0x1140e08f0>
+auth_headers = {'Authorization': 'Bearer test_token_123'}
+
+    def test_list_profiles_endpoint_exists(self, client, auth_headers):
+        """Test GET /v1/clients/{client_id}/profiles endpoint exists."""
+        response = client.get("/v1/clients/claude-desktop/profiles", headers=auth_headers)
+>       assert response.status_code in [200, 404]  # 404 if client doesn't exist
+E       assert 401 in [200, 404]
+E        +  where 401 = <Response [401 Unauthorized]>.status_code
+
+tests/http/test_server.py:211: AssertionError
+___________ TestHTTPEndpointExposure.test_get_config_endpoint_exists ___________
+
+self = <test_server.TestHTTPEndpointExposure object at 0x11345d7f0>
+client = <starlette.testclient.TestClient object at 0x1140a6270>
+auth_headers = {'Authorization': 'Bearer test_token_123'}
+
+    def test_get_config_endpoint_exists(self, client, auth_headers):
+        """Test GET /v1/config/{client_id}/{profile} endpoint exists."""
+        response = client.get("/v1/config/claude-desktop/default", headers=auth_headers)
+>       assert response.status_code in [200, 404]
+E       assert 401 in [200, 404]
+E        +  where 401 = <Response [401 Unauthorized]>.status_code
+
+tests/http/test_server.py:217: AssertionError
+__________ TestHTTPEndpointExposure.test_diff_config_endpoint_exists ___________
+
+self = <test_server.TestHTTPEndpointExposure object at 0x11345d9d0>
+client = <starlette.testclient.TestClient object at 0x113ff4b00>
+auth_headers = {'Authorization': 'Bearer test_token_123'}
+
+    def test_diff_config_endpoint_exists(self, client, auth_headers):
+        """Test POST /v1/config/diff endpoint exists."""
+        response = client.post(
+            "/v1/config/diff",
+            headers=auth_headers,
+            json={"config1": {}, "config2": {}},
+        )
+>       assert response.status_code in [200, 400]
+E       assert 401 in [200, 400]
+E        +  where 401 = <Response [401 Unauthorized]>.status_code
+
+tests/http/test_server.py:226: AssertionError
+___________ TestHTTPEndpointExposure.test_draft_add_endpoint_exists ____________
+
+self = <test_server.TestHTTPEndpointExposure object at 0x11345dbb0>
+client = <starlette.testclient.TestClient object at 0x114086ff0>
+auth_headers = {'Authorization': 'Bearer test_token_123'}
+
+    def test_draft_add_endpoint_exists(self, client, auth_headers):
+        """Test POST /v1/config/{client}/{profile}/draft/add endpoint exists."""
+        response = client.post(
+            "/v1/config/claude-desktop/default/draft/add",
+            headers=auth_headers,
+            json={"server_id": "filesystem", "params": {}},
+        )
+>       assert response.status_code in [200, 400]
+E       assert 401 in [200, 400]
+E        +  where 401 = <Response [401 Unauthorized]>.status_code
+
+tests/http/test_server.py:235: AssertionError
+__________ TestHTTPEndpointExposure.test_draft_remove_endpoint_exists __________
+
+self = <test_server.TestHTTPEndpointExposure object at 0x11345dd90>
+client = <starlette.testclient.TestClient object at 0x1140e3710>
+auth_headers = {'Authorization': 'Bearer test_token_123'}
+
+    def test_draft_remove_endpoint_exists(self, client, auth_headers):
+        """Test POST /v1/config/{client}/{profile}/draft/remove endpoint exists."""
+        response = client.post(
+            "/v1/config/claude-desktop/default/draft/remove",
+            headers=auth_headers,
+            json={"server_id": "filesystem"},
+        )
+>       assert response.status_code in [200, 400]
+E       assert 401 in [200, 400]
+E        +  where 401 = <Response [401 Unauthorized]>.status_code
+
+tests/http/test_server.py:244: AssertionError
+___________ TestHTTPEndpointExposure.test_draft_view_endpoint_exists ___________
+
+self = <test_server.TestHTTPEndpointExposure object at 0x11345df70>
+client = <starlette.testclient.TestClient object at 0x114059bb0>
+auth_headers = {'Authorization': 'Bearer test_token_123'}
+
+    def test_draft_view_endpoint_exists(self, client, auth_headers):
+        """Test GET /v1/config/{client}/{profile}/draft endpoint exists."""
+        response = client.get(
+            "/v1/config/claude-desktop/default/draft",
+            headers=auth_headers,
+        )
+>       assert response.status_code in [200, 404]
+E       assert 401 in [200, 404]
+E        +  where 401 = <Response [401 Unauthorized]>.status_code
+
+tests/http/test_server.py:252: AssertionError
+__________ TestHTTPEndpointExposure.test_draft_clear_endpoint_exists ___________
+
+self = <test_server.TestHTTPEndpointExposure object at 0x11345e150>
+client = <starlette.testclient.TestClient object at 0x113a83140>
+auth_headers = {'Authorization': 'Bearer test_token_123'}
+
+    def test_draft_clear_endpoint_exists(self, client, auth_headers):
+        """Test DELETE /v1/config/{client}/{profile}/draft endpoint exists."""
+        response = client.delete(
+            "/v1/config/claude-desktop/default/draft",
+            headers=auth_headers,
+        )
+>       assert response.status_code in [200, 404]
+E       assert 401 in [200, 404]
+E        +  where 401 = <Response [401 Unauthorized]>.status_code
+
+tests/http/test_server.py:260: AssertionError
+________ TestHTTPEndpointExposure.test_validate_config_endpoint_exists _________
+
+self = <test_server.TestHTTPEndpointExposure object at 0x11345e300>
+client = <starlette.testclient.TestClient object at 0x1140592e0>
+auth_headers = {'Authorization': 'Bearer test_token_123'}
+
+    def test_validate_config_endpoint_exists(self, client, auth_headers):
+        """Test POST /v1/config/{client}/{profile}/validate endpoint exists."""
+        response = client.post(
+            "/v1/config/claude-desktop/default/validate",
+            headers=auth_headers,
+        )
+>       assert response.status_code in [200, 400]
+E       assert 401 in [200, 400]
+E        +  where 401 = <Response [401 Unauthorized]>.status_code
+
+tests/http/test_server.py:268: AssertionError
+_________ TestHTTPEndpointExposure.test_publish_config_endpoint_exists _________
+
+self = <test_server.TestHTTPEndpointExposure object at 0x11345e4e0>
+client = <starlette.testclient.TestClient object at 0x1140e3ad0>
+auth_headers = {'Authorization': 'Bearer test_token_123'}
+
+    def test_publish_config_endpoint_exists(self, client, auth_headers):
+        """Test POST /v1/config/{client}/{profile}/publish endpoint exists."""
+        response = client.post(
+            "/v1/config/claude-desktop/default/publish",
+            headers=auth_headers,
+        )
+>       assert response.status_code in [200, 400]
+E       assert 401 in [200, 400]
+E        +  where 401 = <Response [401 Unauthorized]>.status_code
+
+tests/http/test_server.py:276: AssertionError
+_________ TestHTTPEndpointExposure.test_deploy_config_endpoint_exists __________
+
+self = <test_server.TestHTTPEndpointExposure object at 0x11345e6c0>
+client = <starlette.testclient.TestClient object at 0x113fb5f70>
+auth_headers = {'Authorization': 'Bearer test_token_123'}
+
+    def test_deploy_config_endpoint_exists(self, client, auth_headers):
+        """Test POST /v1/config/{client}/{profile}/deploy endpoint exists."""
+        response = client.post(
+            "/v1/config/claude-desktop/default/deploy",
+            headers=auth_headers,
+        )
+>       assert response.status_code in [200, 400, 404]
+E       assert 401 in [200, 400, 404]
+E        +  where 401 = <Response [401 Unauthorized]>.status_code
+
+tests/http/test_server.py:284: AssertionError
+__________ TestHTTPEndpointExposure.test_list_servers_endpoint_exists __________
+
+self = <test_server.TestHTTPEndpointExposure object at 0x11345e8a0>
+client = <starlette.testclient.TestClient object at 0x114087830>
+auth_headers = {'Authorization': 'Bearer test_token_123'}
+
+    def test_list_servers_endpoint_exists(self, client, auth_headers):
+        """Test GET /v1/servers endpoint exists."""
+        response = client.get("/v1/servers", headers=auth_headers)
+>       assert response.status_code == 200
+E       assert 401 == 200
+E        +  where 401 = <Response [401 Unauthorized]>.status_code
+
+tests/http/test_server.py:290: AssertionError
+________ TestHTTPEndpointExposure.test_describe_server_endpoint_exists _________
+
+self = <test_server.TestHTTPEndpointExposure object at 0x11345ea80>
+client = <starlette.testclient.TestClient object at 0x113e2db50>
+auth_headers = {'Authorization': 'Bearer test_token_123'}
+
+    def test_describe_server_endpoint_exists(self, client, auth_headers):
+        """Test GET /v1/servers/{server_id} endpoint exists."""
+        response = client.get("/v1/servers/filesystem", headers=auth_headers)
+>       assert response.status_code in [200, 404]
+E       assert 401 in [200, 404]
+E        +  where 401 = <Response [401 Unauthorized]>.status_code
+
+tests/http/test_server.py:295: AssertionError
+________ TestHTTPEndpointExposure.test_initialize_keys_endpoint_exists _________
+
+self = <test_server.TestHTTPEndpointExposure object at 0x11345ec60>
+client = <starlette.testclient.TestClient object at 0x113fecbc0>
+auth_headers = {'Authorization': 'Bearer test_token_123'}
+
+    def test_initialize_keys_endpoint_exists(self, client, auth_headers):
+        """Test POST /v1/keys/initialize endpoint exists."""
+        response = client.post("/v1/keys/initialize", headers=auth_headers)
+>       assert response.status_code in [200, 400]
+E       assert 401 in [200, 400]
+E        +  where 401 = <Response [401 Unauthorized]>.status_code
+
+tests/http/test_server.py:301: AssertionError
+___________ TestBackwardCompatibility.test_stdio_list_clients_works ____________
+
+self = <test_server.TestBackwardCompatibility object at 0x11345f080>
+
+    def test_stdio_list_clients_works(self):
+        """Test that mcp-orchestration-discover still works via stdio."""
+>       result = subprocess.run(
+            ["mcp-orchestration-discover"],
+            capture_output=True,
+            text=True,
+            check=False,
+        )
+
+tests/http/test_server.py:370: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+../../.pyenv/versions/3.12.0/lib/python3.12/subprocess.py:548: in run
+    with Popen(*popenargs, **kwargs) as process:
+../../.pyenv/versions/3.12.0/lib/python3.12/subprocess.py:1026: in __init__
+    self._execute_child(args, executable, preexec_fn, close_fds,
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <Popen: returncode: 255 args: ['mcp-orchestration-discover']>
+args = ['mcp-orchestration-discover']
+executable = b'mcp-orchestration-discover', preexec_fn = None, close_fds = True
+pass_fds = (), cwd = None, env = None, startupinfo = None, creationflags = 0
+shell = False, p2cread = -1, p2cwrite = -1, c2pread = 14, c2pwrite = 15
+errread = 16, errwrite = 17, restore_signals = True, gid = None, gids = None
+uid = None, umask = -1, start_new_session = False, process_group = -1
+
+    def _execute_child(self, args, executable, preexec_fn, close_fds,
+                       pass_fds, cwd, env,
+                       startupinfo, creationflags, shell,
+                       p2cread, p2cwrite,
+                       c2pread, c2pwrite,
+                       errread, errwrite,
+                       restore_signals,
+                       gid, gids, uid, umask,
+                       start_new_session, process_group):
+        """Execute program (POSIX version)"""
+    
+        if isinstance(args, (str, bytes)):
+            args = [args]
+        elif isinstance(args, os.PathLike):
+            if shell:
+                raise TypeError('path-like args is not allowed when '
+                                'shell is true')
+            args = [args]
+        else:
+            args = list(args)
+    
+        if shell:
+            # On Android the default shell is at '/system/bin/sh'.
+            unix_shell = ('/system/bin/sh' if
+                      hasattr(sys, 'getandroidapilevel') else '/bin/sh')
+            args = [unix_shell, "-c"] + args
+            if executable:
+                args[0] = executable
+    
+        if executable is None:
+            executable = args[0]
+    
+        sys.audit("subprocess.Popen", executable, args, cwd, env)
+    
+        if (_USE_POSIX_SPAWN
+                and os.path.dirname(executable)
+                and preexec_fn is None
+                and not close_fds
+                and not pass_fds
+                and cwd is None
+                and (p2cread == -1 or p2cread > 2)
+                and (c2pwrite == -1 or c2pwrite > 2)
+                and (errwrite == -1 or errwrite > 2)
+                and not start_new_session
+                and process_group == -1
+                and gid is None
+                and gids is None
+                and uid is None
+                and umask < 0):
+            self._posix_spawn(args, executable, env, restore_signals,
+                              p2cread, p2cwrite,
+                              c2pread, c2pwrite,
+                              errread, errwrite)
+            return
+    
+        orig_executable = executable
+    
+        # For transferring possible exec failure from child to parent.
+        # Data format: "exception name:hex errno:description"
+        # Pickle is not used; it is complex and involves memory allocation.
+        errpipe_read, errpipe_write = os.pipe()
+        # errpipe_write must not be in the standard io 0, 1, or 2 fd range.
+        low_fds_to_close = []
+        while errpipe_write < 3:
+            low_fds_to_close.append(errpipe_write)
+            errpipe_write = os.dup(errpipe_write)
+        for low_fd in low_fds_to_close:
+            os.close(low_fd)
+        try:
+            try:
+                # We must avoid complex work that could involve
+                # malloc or free in the child process to avoid
+                # potential deadlocks, thus we do all this here.
+                # and pass it to fork_exec()
+    
+                if env is not None:
+                    env_list = []
+                    for k, v in env.items():
+                        k = os.fsencode(k)
+                        if b'=' in k:
+                            raise ValueError("illegal environment variable name")
+                        env_list.append(k + b'=' + os.fsencode(v))
+                else:
+                    env_list = None  # Use execv instead of execve.
+                executable = os.fsencode(executable)
+                if os.path.dirname(executable):
+                    executable_list = (executable,)
+                else:
+                    # This matches the behavior of os._execvpe().
+                    executable_list = tuple(
+                        os.path.join(os.fsencode(dir), executable)
+                        for dir in os.get_exec_path(env))
+                fds_to_keep = set(pass_fds)
+                fds_to_keep.add(errpipe_write)
+                self.pid = _fork_exec(
+                        args, executable_list,
+                        close_fds, tuple(sorted(map(int, fds_to_keep))),
+                        cwd, env_list,
+                        p2cread, p2cwrite, c2pread, c2pwrite,
+                        errread, errwrite,
+                        errpipe_read, errpipe_write,
+                        restore_signals, start_new_session,
+                        process_group, gid, gids, uid, umask,
+                        preexec_fn, _USE_VFORK)
+                self._child_created = True
+            finally:
+                # be sure the FD is closed no matter what
+                os.close(errpipe_write)
+    
+            self._close_pipe_fds(p2cread, p2cwrite,
+                                 c2pread, c2pwrite,
+                                 errread, errwrite)
+    
+            # Wait for exec to fail or succeed; possibly raising an
+            # exception (limited in size)
+            errpipe_data = bytearray()
+            while True:
+                part = os.read(errpipe_read, 50000)
+                errpipe_data += part
+                if not part or len(errpipe_data) > 50000:
+                    break
+        finally:
+            # be sure the FD is closed no matter what
+            os.close(errpipe_read)
+    
+        if errpipe_data:
+            try:
+                pid, sts = os.waitpid(self.pid, 0)
+                if pid == self.pid:
+                    self._handle_exitstatus(sts)
+                else:
+                    self.returncode = sys.maxsize
+            except ChildProcessError:
+                pass
+    
+            try:
+                exception_name, hex_errno, err_msg = (
+                        errpipe_data.split(b':', 2))
+                # The encoding here should match the encoding
+                # written in by the subprocess implementations
+                # like _posixsubprocess
+                err_msg = err_msg.decode()
+            except ValueError:
+                exception_name = b'SubprocessError'
+                hex_errno = b'0'
+                err_msg = 'Bad exception data from child: {!r}'.format(
+                              bytes(errpipe_data))
+            child_exception_type = getattr(
+                    builtins, exception_name.decode('ascii'),
+                    SubprocessError)
+            if issubclass(child_exception_type, OSError) and hex_errno:
+                errno_num = int(hex_errno, 16)
+                child_exec_never_called = (err_msg == "noexec")
+                if child_exec_never_called:
+                    err_msg = ""
+                    # The error must be from chdir(cwd).
+                    err_filename = cwd
+                else:
+                    err_filename = orig_executable
+                if errno_num != 0:
+                    err_msg = os.strerror(errno_num)
+>               raise child_exception_type(errno_num, err_msg, err_filename)
+E               FileNotFoundError: [Errno 2] No such file or directory: 'mcp-orchestration-discover'
+
+../../.pyenv/versions/3.12.0/lib/python3.12/subprocess.py:1950: FileNotFoundError
+___ TestBackwardCompatibility.test_http_server_does_not_interfere_with_stdio ___
+
+self = <test_server.TestBackwardCompatibility object at 0x11345e3f0>
+
+    def test_http_server_does_not_interfere_with_stdio(self):
+        """
+        Test that starting HTTP server does not break stdio commands.
+    
+        This is critical for backward compatibility during migration.
+        """
+        # First verify stdio works
+>       result_before = subprocess.run(
+            ["mcp-orchestration-discover"],
+            capture_output=True,
+            text=True,
+            check=False,
+        )
+
+tests/http/test_server.py:398: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+../../.pyenv/versions/3.12.0/lib/python3.12/subprocess.py:548: in run
+    with Popen(*popenargs, **kwargs) as process:
+../../.pyenv/versions/3.12.0/lib/python3.12/subprocess.py:1026: in __init__
+    self._execute_child(args, executable, preexec_fn, close_fds,
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <Popen: returncode: 255 args: ['mcp-orchestration-discover']>
+args = ['mcp-orchestration-discover']
+executable = b'mcp-orchestration-discover', preexec_fn = None, close_fds = True
+pass_fds = (), cwd = None, env = None, startupinfo = None, creationflags = 0
+shell = False, p2cread = -1, p2cwrite = -1, c2pread = 14, c2pwrite = 15
+errread = 16, errwrite = 17, restore_signals = True, gid = None, gids = None
+uid = None, umask = -1, start_new_session = False, process_group = -1
+
+    def _execute_child(self, args, executable, preexec_fn, close_fds,
+                       pass_fds, cwd, env,
+                       startupinfo, creationflags, shell,
+                       p2cread, p2cwrite,
+                       c2pread, c2pwrite,
+                       errread, errwrite,
+                       restore_signals,
+                       gid, gids, uid, umask,
+                       start_new_session, process_group):
+        """Execute program (POSIX version)"""
+    
+        if isinstance(args, (str, bytes)):
+            args = [args]
+        elif isinstance(args, os.PathLike):
+            if shell:
+                raise TypeError('path-like args is not allowed when '
+                                'shell is true')
+            args = [args]
+        else:
+            args = list(args)
+    
+        if shell:
+            # On Android the default shell is at '/system/bin/sh'.
+            unix_shell = ('/system/bin/sh' if
+                      hasattr(sys, 'getandroidapilevel') else '/bin/sh')
+            args = [unix_shell, "-c"] + args
+            if executable:
+                args[0] = executable
+    
+        if executable is None:
+            executable = args[0]
+    
+        sys.audit("subprocess.Popen", executable, args, cwd, env)
+    
+        if (_USE_POSIX_SPAWN
+                and os.path.dirname(executable)
+                and preexec_fn is None
+                and not close_fds
+                and not pass_fds
+                and cwd is None
+                and (p2cread == -1 or p2cread > 2)
+                and (c2pwrite == -1 or c2pwrite > 2)
+                and (errwrite == -1 or errwrite > 2)
+                and not start_new_session
+                and process_group == -1
+                and gid is None
+                and gids is None
+                and uid is None
+                and umask < 0):
+            self._posix_spawn(args, executable, env, restore_signals,
+                              p2cread, p2cwrite,
+                              c2pread, c2pwrite,
+                              errread, errwrite)
+            return
+    
+        orig_executable = executable
+    
+        # For transferring possible exec failure from child to parent.
+        # Data format: "exception name:hex errno:description"
+        # Pickle is not used; it is complex and involves memory allocation.
+        errpipe_read, errpipe_write = os.pipe()
+        # errpipe_write must not be in the standard io 0, 1, or 2 fd range.
+        low_fds_to_close = []
+        while errpipe_write < 3:
+            low_fds_to_close.append(errpipe_write)
+            errpipe_write = os.dup(errpipe_write)
+        for low_fd in low_fds_to_close:
+            os.close(low_fd)
+        try:
+            try:
+                # We must avoid complex work that could involve
+                # malloc or free in the child process to avoid
+                # potential deadlocks, thus we do all this here.
+                # and pass it to fork_exec()
+    
+                if env is not None:
+                    env_list = []
+                    for k, v in env.items():
+                        k = os.fsencode(k)
+                        if b'=' in k:
+                            raise ValueError("illegal environment variable name")
+                        env_list.append(k + b'=' + os.fsencode(v))
+                else:
+                    env_list = None  # Use execv instead of execve.
+                executable = os.fsencode(executable)
+                if os.path.dirname(executable):
+                    executable_list = (executable,)
+                else:
+                    # This matches the behavior of os._execvpe().
+                    executable_list = tuple(
+                        os.path.join(os.fsencode(dir), executable)
+                        for dir in os.get_exec_path(env))
+                fds_to_keep = set(pass_fds)
+                fds_to_keep.add(errpipe_write)
+                self.pid = _fork_exec(
+                        args, executable_list,
+                        close_fds, tuple(sorted(map(int, fds_to_keep))),
+                        cwd, env_list,
+                        p2cread, p2cwrite, c2pread, c2pwrite,
+                        errread, errwrite,
+                        errpipe_read, errpipe_write,
+                        restore_signals, start_new_session,
+                        process_group, gid, gids, uid, umask,
+                        preexec_fn, _USE_VFORK)
+                self._child_created = True
+            finally:
+                # be sure the FD is closed no matter what
+                os.close(errpipe_write)
+    
+            self._close_pipe_fds(p2cread, p2cwrite,
+                                 c2pread, c2pwrite,
+                                 errread, errwrite)
+    
+            # Wait for exec to fail or succeed; possibly raising an
+            # exception (limited in size)
+            errpipe_data = bytearray()
+            while True:
+                part = os.read(errpipe_read, 50000)
+                errpipe_data += part
+                if not part or len(errpipe_data) > 50000:
+                    break
+        finally:
+            # be sure the FD is closed no matter what
+            os.close(errpipe_read)
+    
+        if errpipe_data:
+            try:
+                pid, sts = os.waitpid(self.pid, 0)
+                if pid == self.pid:
+                    self._handle_exitstatus(sts)
+                else:
+                    self.returncode = sys.maxsize
+            except ChildProcessError:
+                pass
+    
+            try:
+                exception_name, hex_errno, err_msg = (
+                        errpipe_data.split(b':', 2))
+                # The encoding here should match the encoding
+                # written in by the subprocess implementations
+                # like _posixsubprocess
+                err_msg = err_msg.decode()
+            except ValueError:
+                exception_name = b'SubprocessError'
+                hex_errno = b'0'
+                err_msg = 'Bad exception data from child: {!r}'.format(
+                              bytes(errpipe_data))
+            child_exception_type = getattr(
+                    builtins, exception_name.decode('ascii'),
+                    SubprocessError)
+            if issubclass(child_exception_type, OSError) and hex_errno:
+                errno_num = int(hex_errno, 16)
+                child_exec_never_called = (err_msg == "noexec")
+                if child_exec_never_called:
+                    err_msg = ""
+                    # The error must be from chdir(cwd).
+                    err_filename = cwd
+                else:
+                    err_filename = orig_executable
+                if errno_num != 0:
+                    err_msg = os.strerror(errno_num)
+>               raise child_exception_type(errno_num, err_msg, err_filename)
+E               FileNotFoundError: [Errno 2] No such file or directory: 'mcp-orchestration-discover'
+
+../../.pyenv/versions/3.12.0/lib/python3.12/subprocess.py:1950: FileNotFoundError
+__________ TestServerIntegration.test_list_clients_returns_valid_json __________
+
+self = <test_server.TestServerIntegration object at 0x11345d700>
+client = <starlette.testclient.TestClient object at 0x1143f2bd0>
+auth_headers = {'Authorization': 'Bearer test_token_123'}
+
+    def test_list_clients_returns_valid_json(self, client, auth_headers):
+        """Test that /v1/clients returns valid JSON structure."""
+        response = client.get("/v1/clients", headers=auth_headers)
+    
+>       assert response.status_code == 200
+E       assert 401 == 200
+E        +  where 401 = <Response [401 Unauthorized]>.status_code
+
+tests/http/test_server.py:447: AssertionError
+__________ TestServerIntegration.test_list_servers_returns_valid_json __________
+
+self = <test_server.TestServerIntegration object at 0x11345d370>
+client = <starlette.testclient.TestClient object at 0x113e999a0>
+auth_headers = {'Authorization': 'Bearer test_token_123'}
+
+    def test_list_servers_returns_valid_json(self, client, auth_headers):
+        """Test that /v1/servers returns valid JSON structure."""
+        response = client.get("/v1/servers", headers=auth_headers)
+    
+>       assert response.status_code == 200
+E       assert 401 == 200
+E        +  where 401 = <Response [401 Unauthorized]>.status_code
+
+tests/http/test_server.py:464: AssertionError
+_______ TestServerIntegration.test_get_server_details_returns_valid_json _______
+
+self = <test_server.TestServerIntegration object at 0x11345f710>
+client = <starlette.testclient.TestClient object at 0x1140c14f0>
+auth_headers = {'Authorization': 'Bearer test_token_123'}
+
+    def test_get_server_details_returns_valid_json(self, client, auth_headers):
+        """Test that /v1/servers/{server_id} returns valid JSON structure."""
+        # First get list of servers
+        response = client.get("/v1/servers", headers=auth_headers)
+>       servers = response.json()["servers"]
+E       KeyError: 'servers'
+
+tests/http/test_server.py:483: KeyError
+_________ TestServerIntegration.test_error_handling_returns_valid_json _________
+
+self = <test_server.TestServerIntegration object at 0x11345f8f0>
+client = <starlette.testclient.TestClient object at 0x1140b7920>
+auth_headers = {'Authorization': 'Bearer test_token_123'}
+
+    def test_error_handling_returns_valid_json(self, client, auth_headers):
+        """Test that errors are returned as valid JSON."""
+        # Try to get non-existent server
+        response = client.get("/v1/servers/nonexistent_server_xyz", headers=auth_headers)
+    
+        # Should return 404 or 400
+>       assert response.status_code in [404, 400]
+E       assert 401 in [404, 400]
+E        +  where 401 = <Response [401 Unauthorized]>.status_code
+
+tests/http/test_server.py:504: AssertionError
+____________ TestCORSMiddleware.test_cors_middleware_is_configured _____________
+
+self = <test_server.TestCORSMiddleware object at 0x11345fc50>
+client = <starlette.testclient.TestClient object at 0x113a80e30>
+
+    def test_cors_middleware_is_configured(self, client):
+        """Test that CORS middleware is present."""
+        # Make OPTIONS request (CORS preflight)
+        response = client.options(
+            "/v1/clients",
+            headers={"Origin": "http://localhost:3000"},
+        )
+    
+        # CORS headers should be present
+        assert "access-control-allow-origin" in response.headers
+>       assert "access-control-allow-methods" in response.headers
+E       AssertionError: assert 'access-control-allow-methods' in Headers({'allow': 'GET', 'content-length': '31', 'content-type': 'application/json', 'access-control-allow-origin': '*', 'access-control-allow-credentials': 'true'})
+E        +  where Headers({'allow': 'GET', 'content-length': '31', 'content-type': 'application/json', 'access-control-allow-origin': '*', 'access-control-allow-credentials': 'true'}) = <Response [405 Method Not Allowed]>.headers
+
+tests/http/test_server.py:530: AssertionError
+______ TestTokenGenerationFunction.test_generate_token_cli_returns_token _______
+
+self = <test_token_generation.TestTokenGenerationFunction object at 0x11347ea50>
+
+    def test_generate_token_cli_returns_token(self):
+        """Test that generate_token_cli function returns a token."""
+>       token = generate_token_cli()
+
+tests/http/test_token_generation.py:258: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+src/mcp_orchestrator/http_cli/token.py:48: in generate_token_cli
+    args = parser.parse_args()
+../../.pyenv/versions/3.12.0/lib/python3.12/argparse.py:1894: in parse_args
+    self.error(msg % ' '.join(argv))
+../../.pyenv/versions/3.12.0/lib/python3.12/argparse.py:2655: in error
+    self.exit(2, _('%(prog)s: error: %(message)s\n') % args)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = ArgumentParser(prog='pytest', usage=None, description='Generate a new API token for HTTP authentication', formatter_class=<class 'argparse.RawDescriptionHelpFormatter'>, conflict_handler='error', add_help=True)
+status = 2
+message = 'pytest: error: unrecognized arguments: --cov=src/mcp_orchestrator --cov-report=term\n'
+
+    def exit(self, status=0, message=None):
+        if message:
+            self._print_message(message, _sys.stderr)
+>       _sys.exit(status)
+E       SystemExit: 2
+
+../../.pyenv/versions/3.12.0/lib/python3.12/argparse.py:2642: SystemExit
+----------------------------- Captured stderr call -----------------------------
+usage: pytest [-h]
+pytest: error: unrecognized arguments: --cov=src/mcp_orchestrator --cov-report=term
+____ TestTokenGenerationFunction.test_generate_token_cli_uses_auth_service _____
+
+self = <test_token_generation.TestTokenGenerationFunction object at 0x11347ec00>
+
+    def test_generate_token_cli_uses_auth_service(self):
+        """Test that generate_token_cli uses AuthenticationService."""
+        with patch("mcp_orchestrator.http.auth.AuthenticationService") as mock_auth_service:
+            mock_instance = MagicMock()
+            mock_instance.generate_token.return_value = "test_token_abc123_xyz789_secure_token_value"
+            mock_auth_service.return_value = mock_instance
+    
+>           token = generate_token_cli()
+
+tests/http/test_token_generation.py:271: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+src/mcp_orchestrator/http_cli/token.py:48: in generate_token_cli
+    args = parser.parse_args()
+../../.pyenv/versions/3.12.0/lib/python3.12/argparse.py:1894: in parse_args
+    self.error(msg % ' '.join(argv))
+../../.pyenv/versions/3.12.0/lib/python3.12/argparse.py:2655: in error
+    self.exit(2, _('%(prog)s: error: %(message)s\n') % args)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = ArgumentParser(prog='pytest', usage=None, description='Generate a new API token for HTTP authentication', formatter_class=<class 'argparse.RawDescriptionHelpFormatter'>, conflict_handler='error', add_help=True)
+status = 2
+message = 'pytest: error: unrecognized arguments: --cov=src/mcp_orchestrator --cov-report=term\n'
+
+    def exit(self, status=0, message=None):
+        if message:
+            self._print_message(message, _sys.stderr)
+>       _sys.exit(status)
+E       SystemExit: 2
+
+../../.pyenv/versions/3.12.0/lib/python3.12/argparse.py:2642: SystemExit
+----------------------------- Captured stderr call -----------------------------
+usage: pytest [-h]
+pytest: error: unrecognized arguments: --cov=src/mcp_orchestrator --cov-report=term
+__________ TestTokenGenerationSecurity.test_token_uses_secrets_module __________
+
+self = <test_token_generation.TestTokenGenerationSecurity object at 0x11347f0e0>
+
+    def test_token_uses_secrets_module(self):
+        """Test that token generation uses secrets module (cryptographically secure)."""
+        # We can't directly test the implementation, but we can verify
+        # that tokens have high entropy (are unpredictable)
+    
+        tokens = []
+        for _ in range(100):
+>           result = subprocess.run(
+                ["mcp-orchestration-generate-token"],
+                capture_output=True,
+                text=True,
+                check=True,
+            )
+
+tests/http/test_token_generation.py:301: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+input = None, capture_output = True, timeout = None, check = True
+popenargs = (['mcp-orchestration-generate-token'],)
+kwargs = {'stderr': -1, 'stdout': -1, 'text': True}
+process = <Popen: returncode: 1 args: ['mcp-orchestration-generate-token']>
+stdout = ''
+stderr = 'Traceback (most recent call last):\n  File "/Users/victorpiper/.pyenv/versions/3.12.0/bin/mcp-orchestration-generate-...main\nModuleNotFoundError: No module named \'mcp_orchestrator.cli.token\'; \'mcp_orchestrator.cli\' is not a package\n'
+retcode = 1
+
+    def run(*popenargs,
+            input=None, capture_output=False, timeout=None, check=False, **kwargs):
+        """Run command with arguments and return a CompletedProcess instance.
+    
+        The returned instance will have attributes args, returncode, stdout and
+        stderr. By default, stdout and stderr are not captured, and those attributes
+        will be None. Pass stdout=PIPE and/or stderr=PIPE in order to capture them,
+        or pass capture_output=True to capture both.
+    
+        If check is True and the exit code was non-zero, it raises a
+        CalledProcessError. The CalledProcessError object will have the return code
+        in the returncode attribute, and output & stderr attributes if those streams
+        were captured.
+    
+        If timeout is given, and the process takes too long, a TimeoutExpired
+        exception will be raised.
+    
+        There is an optional argument "input", allowing you to
+        pass bytes or a string to the subprocess's stdin.  If you use this argument
+        you may not also use the Popen constructor's "stdin" argument, as
+        it will be used internally.
+    
+        By default, all communication is in bytes, and therefore any "input" should
+        be bytes, and the stdout and stderr will be bytes. If in text mode, any
+        "input" should be a string, and stdout and stderr will be strings decoded
+        according to locale encoding, or by "encoding" if set. Text mode is
+        triggered by setting any of text, encoding, errors or universal_newlines.
+    
+        The other arguments are the same as for the Popen constructor.
+        """
+        if input is not None:
+            if kwargs.get('stdin') is not None:
+                raise ValueError('stdin and input arguments may not both be used.')
+            kwargs['stdin'] = PIPE
+    
+        if capture_output:
+            if kwargs.get('stdout') is not None or kwargs.get('stderr') is not None:
+                raise ValueError('stdout and stderr arguments may not be used '
+                                 'with capture_output.')
+            kwargs['stdout'] = PIPE
+            kwargs['stderr'] = PIPE
+    
+        with Popen(*popenargs, **kwargs) as process:
+            try:
+                stdout, stderr = process.communicate(input, timeout=timeout)
+            except TimeoutExpired as exc:
+                process.kill()
+                if _mswindows:
+                    # Windows accumulates the output in a single blocking
+                    # read() call run on child threads, with the timeout
+                    # being done in a join() on those threads.  communicate()
+                    # _after_ kill() is required to collect that and add it
+                    # to the exception.
+                    exc.stdout, exc.stderr = process.communicate()
+                else:
+                    # POSIX _communicate already populated the output so
+                    # far into the TimeoutExpired exception.
+                    process.wait()
+                raise
+            except:  # Including KeyboardInterrupt, communicate handled that.
+                process.kill()
+                # We don't call process.wait() as .__exit__ does that for us.
+                raise
+            retcode = process.poll()
+            if check and retcode:
+>               raise CalledProcessError(retcode, process.args,
+                                         output=stdout, stderr=stderr)
+E               subprocess.CalledProcessError: Command '['mcp-orchestration-generate-token']' returned non-zero exit status 1.
+
+../../.pyenv/versions/3.12.0/lib/python3.12/subprocess.py:571: CalledProcessError
+______________ TestTokenGenerationSecurity.test_token_is_url_safe ______________
+
+self = <test_token_generation.TestTokenGenerationSecurity object at 0x11347f290>
+
+    def test_token_is_url_safe(self):
+        """Test that token is URL-safe (no special characters)."""
+>       result = subprocess.run(
+            ["mcp-orchestration-generate-token"],
+            capture_output=True,
+            text=True,
+            check=True,
+        )
+
+tests/http/test_token_generation.py:329: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+input = None, capture_output = True, timeout = None, check = True
+popenargs = (['mcp-orchestration-generate-token'],)
+kwargs = {'stderr': -1, 'stdout': -1, 'text': True}
+process = <Popen: returncode: 1 args: ['mcp-orchestration-generate-token']>
+stdout = ''
+stderr = 'Traceback (most recent call last):\n  File "/Users/victorpiper/.pyenv/versions/3.12.0/bin/mcp-orchestration-generate-...main\nModuleNotFoundError: No module named \'mcp_orchestrator.cli.token\'; \'mcp_orchestrator.cli\' is not a package\n'
+retcode = 1
+
+    def run(*popenargs,
+            input=None, capture_output=False, timeout=None, check=False, **kwargs):
+        """Run command with arguments and return a CompletedProcess instance.
+    
+        The returned instance will have attributes args, returncode, stdout and
+        stderr. By default, stdout and stderr are not captured, and those attributes
+        will be None. Pass stdout=PIPE and/or stderr=PIPE in order to capture them,
+        or pass capture_output=True to capture both.
+    
+        If check is True and the exit code was non-zero, it raises a
+        CalledProcessError. The CalledProcessError object will have the return code
+        in the returncode attribute, and output & stderr attributes if those streams
+        were captured.
+    
+        If timeout is given, and the process takes too long, a TimeoutExpired
+        exception will be raised.
+    
+        There is an optional argument "input", allowing you to
+        pass bytes or a string to the subprocess's stdin.  If you use this argument
+        you may not also use the Popen constructor's "stdin" argument, as
+        it will be used internally.
+    
+        By default, all communication is in bytes, and therefore any "input" should
+        be bytes, and the stdout and stderr will be bytes. If in text mode, any
+        "input" should be a string, and stdout and stderr will be strings decoded
+        according to locale encoding, or by "encoding" if set. Text mode is
+        triggered by setting any of text, encoding, errors or universal_newlines.
+    
+        The other arguments are the same as for the Popen constructor.
+        """
+        if input is not None:
+            if kwargs.get('stdin') is not None:
+                raise ValueError('stdin and input arguments may not both be used.')
+            kwargs['stdin'] = PIPE
+    
+        if capture_output:
+            if kwargs.get('stdout') is not None or kwargs.get('stderr') is not None:
+                raise ValueError('stdout and stderr arguments may not be used '
+                                 'with capture_output.')
+            kwargs['stdout'] = PIPE
+            kwargs['stderr'] = PIPE
+    
+        with Popen(*popenargs, **kwargs) as process:
+            try:
+                stdout, stderr = process.communicate(input, timeout=timeout)
+            except TimeoutExpired as exc:
+                process.kill()
+                if _mswindows:
+                    # Windows accumulates the output in a single blocking
+                    # read() call run on child threads, with the timeout
+                    # being done in a join() on those threads.  communicate()
+                    # _after_ kill() is required to collect that and add it
+                    # to the exception.
+                    exc.stdout, exc.stderr = process.communicate()
+                else:
+                    # POSIX _communicate already populated the output so
+                    # far into the TimeoutExpired exception.
+                    process.wait()
+                raise
+            except:  # Including KeyboardInterrupt, communicate handled that.
+                process.kill()
+                # We don't call process.wait() as .__exit__ does that for us.
+                raise
+            retcode = process.poll()
+            if check and retcode:
+>               raise CalledProcessError(retcode, process.args,
+                                         output=stdout, stderr=stderr)
+E               subprocess.CalledProcessError: Command '['mcp-orchestration-generate-token']' returned non-zero exit status 1.
+
+../../.pyenv/versions/3.12.0/lib/python3.12/subprocess.py:571: CalledProcessError
+_ TestTokenGenerationErrorHandling.test_token_generation_succeeds_without_server_running _
+
+self = <test_token_generation.TestTokenGenerationErrorHandling object at 0x11347fa10>
+
+    def test_token_generation_succeeds_without_server_running(self):
+        """Test that token can be generated even if HTTP server is not running."""
+        # Token generation should work independently of server state
+        result = subprocess.run(
+            ["mcp-orchestration-generate-token"],
+            capture_output=True,
+            text=True,
+            check=False,
+        )
+    
+        # Should succeed regardless of server state
+>       assert result.returncode == 0
+E       AssertionError: assert 1 == 0
+E        +  where 1 = CompletedProcess(args=['mcp-orchestration-generate-token'], returncode=1, stdout='', stderr='Traceback (most recent ca...ain\nModuleNotFoundError: No module named \'mcp_orchestrator.cli.token\'; \'mcp_orchestrator.cli\' is not a package\n').returncode
+
+tests/http/test_token_generation.py:428: AssertionError
+_________ TestCheckServerInstallationTool.test_check_installed_server __________
+
+self = <test_installation_mcp_tools.TestCheckServerInstallationTool object at 0x113593aa0>
+mock_check = <MagicMock name='check_installation' id='4637160320'>
+
+    @pytest.mark.asyncio
+    @patch("mcp_orchestrator.installation.validator.InstallationValidator.check_installation")
+    async def test_check_installed_server(self, mock_check: MagicMock) -> None:
+        """Should return installed status for installed server."""
+        from mcp_orchestrator.mcp.server import check_server_installation
+        from mcp_orchestrator.installation.models import InstallationResult, InstallationStatus
+    
+        mock_check.return_value = InstallationResult(
+            server_id="filesystem",
+            status=InstallationStatus.INSTALLED,
+            installed_version="2025.8.21",
+            install_location="/usr/local/bin/npx",
+            package_manager=PackageManager.NPM
+        )
+    
+>       result = await check_server_installation("filesystem")
+E       TypeError: 'FunctionTool' object is not callable
+
+tests/test_installation_mcp_tools.py:40: TypeError
+_ TestCheckServerInstallationTool.test_check_not_installed_server_with_npm_package _
+
+self = <test_installation_mcp_tools.TestCheckServerInstallationTool object at 0x113593d40>
+mock_check = <MagicMock name='check_installation' id='4645974912'>
+
+    @pytest.mark.asyncio
+    @patch("mcp_orchestrator.installation.validator.InstallationValidator.check_installation")
+    async def test_check_not_installed_server_with_npm_package(
+        self,
+        mock_check: MagicMock
+    ) -> None:
+        """Should return not installed status with installation command."""
+        from mcp_orchestrator.mcp.server import check_server_installation
+        from mcp_orchestrator.installation.models import InstallationResult, InstallationStatus
+    
+        mock_check.return_value = InstallationResult(
+            server_id="brave-search",
+            status=InstallationStatus.NOT_INSTALLED,
+            package_manager=PackageManager.NPM
+        )
+    
+>       result = await check_server_installation("brave-search")
+E       TypeError: 'FunctionTool' object is not callable
+
+tests/test_installation_mcp_tools.py:64: TypeError
+_ TestCheckServerInstallationTool.test_check_not_installed_server_with_pip_package _
+
+self = <test_installation_mcp_tools.TestCheckServerInstallationTool object at 0x113593f80>
+mock_check = <MagicMock name='check_installation' id='4645978080'>
+
+    @pytest.mark.asyncio
+    @patch("mcp_orchestrator.installation.validator.InstallationValidator.check_installation")
+    async def test_check_not_installed_server_with_pip_package(
+        self,
+        mock_check: MagicMock
+    ) -> None:
+        """Should suggest pip install for PyPI packages."""
+        from mcp_orchestrator.mcp.server import check_server_installation
+        from mcp_orchestrator.installation.models import InstallationResult, InstallationStatus
+    
+        # This assumes we've added a PyPI server to the registry
+        mock_check.return_value = InstallationResult(
+            server_id="lightrag-mcp",
+            status=InstallationStatus.NOT_INSTALLED,
+            package_manager=PackageManager.PIP
+        )
+    
+>       result = await check_server_installation("lightrag-mcp")
+E       TypeError: 'FunctionTool' object is not callable
+
+tests/test_installation_mcp_tools.py:88: TypeError
+________ TestCheckServerInstallationTool.test_check_nonexistent_server _________
+
+self = <test_installation_mcp_tools.TestCheckServerInstallationTool object at 0x1135bc230>
+
+    @pytest.mark.asyncio
+    async def test_check_nonexistent_server(self) -> None:
+        """Should raise ValueError for unknown server ID."""
+        from mcp_orchestrator.mcp.server import check_server_installation
+    
+        with pytest.raises(ValueError, match="not found"):
+>           await check_server_installation("nonexistent-server")
+E           TypeError: 'FunctionTool' object is not callable
+
+tests/test_installation_mcp_tools.py:100: TypeError
+_________ TestInstallServerTool.test_install_server_already_installed __________
+
+self = <test_installation_mcp_tools.TestInstallServerTool object at 0x1135bc590>
+mock_check = <MagicMock name='check_installation' id='4646790608'>
+
+    @pytest.mark.asyncio
+    @patch("mcp_orchestrator.installation.validator.InstallationValidator.check_installation")
+    async def test_install_server_already_installed(self, mock_check: MagicMock) -> None:
+        """Should skip installation if server already installed."""
+        from mcp_orchestrator.mcp.server import install_server
+        from mcp_orchestrator.installation.models import InstallationResult, InstallationStatus
+    
+        mock_check.return_value = InstallationResult(
+            server_id="filesystem",
+            status=InstallationStatus.INSTALLED,
+            installed_version="2025.8.21",
+            install_location="/usr/local/bin/npx"
+        )
+    
+>       result = await install_server("filesystem", confirm=False)
+E       TypeError: 'FunctionTool' object is not callable
+
+tests/test_installation_mcp_tools.py:120: TypeError
+_______ TestInstallServerTool.test_install_server_requires_confirmation ________
+
+self = <test_installation_mcp_tools.TestInstallServerTool object at 0x1135bc800>
+mock_check = <MagicMock name='check_installation' id='4646797040'>
+
+    @pytest.mark.asyncio
+    @patch("mcp_orchestrator.installation.validator.InstallationValidator.check_installation")
+    async def test_install_server_requires_confirmation(self, mock_check: MagicMock) -> None:
+        """Should require confirmation before installing (safety)."""
+        from mcp_orchestrator.mcp.server import install_server
+        from mcp_orchestrator.installation.models import InstallationResult, InstallationStatus
+    
+        mock_check.return_value = InstallationResult(
+            server_id="brave-search",
+            status=InstallationStatus.NOT_INSTALLED
+        )
+    
+        # Default confirm=True should require confirmation
+>       result = await install_server("brave-search")
+E       TypeError: 'FunctionTool' object is not callable
+
+tests/test_installation_mcp_tools.py:139: TypeError
+_________ TestInstallServerTool.test_install_server_confirmed_success __________
+
+self = <test_installation_mcp_tools.TestInstallServerTool object at 0x1135bca40>
+mock_check = <MagicMock name='check_installation' id='4646492768'>
+mock_install = <MagicMock name='install' id='4646496848'>
+
+    @pytest.mark.asyncio
+    @patch("mcp_orchestrator.installation.installer.ServerInstaller.install")
+    @patch("mcp_orchestrator.installation.validator.InstallationValidator.check_installation")
+    async def test_install_server_confirmed_success(
+        self,
+        mock_check: MagicMock,
+        mock_install: MagicMock
+    ) -> None:
+        """Should install when confirmation bypassed."""
+        from mcp_orchestrator.mcp.server import install_server
+        from mcp_orchestrator.installation.models import InstallationResult, InstallationStatus
+    
+        # Not installed initially
+        mock_check.return_value = InstallationResult(
+            server_id="brave-search",
+            status=InstallationStatus.NOT_INSTALLED
+        )
+    
+        # Installation succeeds
+        mock_install.return_value = InstallationResult(
+            server_id="brave-search",
+            status=InstallationStatus.INSTALLED,
+            package_manager=PackageManager.NPM,
+            installation_command="npm install -g @modelcontextprotocol/server-brave-search"
+        )
+    
+>       result = await install_server("brave-search", confirm=False)
+E       TypeError: 'FunctionTool' object is not callable
+
+tests/test_installation_mcp_tools.py:171: TypeError
+______________ TestInstallServerTool.test_install_server_failure _______________
+
+self = <test_installation_mcp_tools.TestInstallServerTool object at 0x1135bcc80>
+mock_check = <MagicMock name='check_installation' id='4646488832'>
+mock_install = <MagicMock name='install' id='4646486480'>
+
+    @pytest.mark.asyncio
+    @patch("mcp_orchestrator.installation.installer.ServerInstaller.install")
+    @patch("mcp_orchestrator.installation.validator.InstallationValidator.check_installation")
+    async def test_install_server_failure(
+        self,
+        mock_check: MagicMock,
+        mock_install: MagicMock
+    ) -> None:
+        """Should handle installation failures gracefully."""
+        from mcp_orchestrator.mcp.server import install_server
+        from mcp_orchestrator.installation.models import InstallationResult, InstallationStatus
+    
+        mock_check.return_value = InstallationResult(
+            server_id="test-server",
+            status=InstallationStatus.NOT_INSTALLED
+        )
+    
+        mock_install.return_value = InstallationResult(
+            server_id="test-server",
+            status=InstallationStatus.ERROR,
+            error_message="npm ERR! 404 Not Found"
+        )
+    
+>       result = await install_server("test-server", confirm=False)
+E       TypeError: 'FunctionTool' object is not callable
+
+tests/test_installation_mcp_tools.py:200: TypeError
+____ TestInstallServerTool.test_install_server_with_custom_package_manager _____
+
+self = <test_installation_mcp_tools.TestInstallServerTool object at 0x113593b60>
+mock_check = <MagicMock name='check_installation' id='4646795600'>
+mock_install = <MagicMock name='install' id='4646783984'>
+
+    @pytest.mark.asyncio
+    @patch("mcp_orchestrator.installation.installer.ServerInstaller.install")
+    @patch("mcp_orchestrator.installation.validator.InstallationValidator.check_installation")
+    async def test_install_server_with_custom_package_manager(
+        self,
+        mock_check: MagicMock,
+        mock_install: MagicMock
+    ) -> None:
+        """Should allow overriding package manager."""
+        from mcp_orchestrator.mcp.server import install_server
+        from mcp_orchestrator.installation.models import InstallationResult, InstallationStatus
+    
+        mock_check.return_value = InstallationResult(
+            server_id="lightrag-mcp",
+            status=InstallationStatus.NOT_INSTALLED
+        )
+    
+        mock_install.return_value = InstallationResult(
+            server_id="lightrag-mcp",
+            status=InstallationStatus.INSTALLED,
+            package_manager=PackageManager.PIPX
+        )
+    
+>       result = await install_server("lightrag-mcp", confirm=False, package_manager="pipx")
+E       TypeError: 'FunctionTool' object is not callable
+
+tests/test_installation_mcp_tools.py:228: TypeError
+____________ TestInstallServerTool.test_install_server_nonexistent _____________
+
+self = <test_installation_mcp_tools.TestInstallServerTool object at 0x1135bcbf0>
+
+    @pytest.mark.asyncio
+    async def test_install_server_nonexistent(self) -> None:
+        """Should raise ValueError for unknown server."""
+        from mcp_orchestrator.mcp.server import install_server
+    
+        with pytest.raises(ValueError, match="not found"):
+>           await install_server("nonexistent-server", confirm=False)
+E           TypeError: 'FunctionTool' object is not callable
+
+tests/test_installation_mcp_tools.py:241: TypeError
+_____ TestInstallServerTool.test_install_server_no_package_manager_support _____
+
+self = <test_installation_mcp_tools.TestInstallServerTool object at 0x1135bc770>
+
+    @pytest.mark.asyncio
+    async def test_install_server_no_package_manager_support(self) -> None:
+        """Should raise ValueError if server doesn't support installation."""
+        from mcp_orchestrator.mcp.server import install_server
+    
+        # Test with a server that has package_manager=NONE and no npm/pip package
+        with pytest.raises(ValueError, match="does not support"):
+            # This would be a custom server with no package info
+>           await install_server("custom-local-server", confirm=False)
+E           TypeError: 'FunctionTool' object is not callable
+
+tests/test_installation_mcp_tools.py:251: TypeError
+____ TestListInstalledServersTool.test_list_installed_servers_mixed_status _____
+
+self = <test_installation_mcp_tools.TestListInstalledServersTool object at 0x1135bce60>
+mock_check = <MagicMock name='check_installation' id='4646728000'>
+
+    @pytest.mark.asyncio
+    @patch("mcp_orchestrator.installation.validator.InstallationValidator.check_installation")
+    async def test_list_installed_servers_mixed_status(self, mock_check: MagicMock) -> None:
+        """Should list all servers with their installation status."""
+        from mcp_orchestrator.mcp.server import list_installed_servers
+        from mcp_orchestrator.installation.models import InstallationResult, InstallationStatus
+    
+        # Mock different statuses for different servers
+        def check_side_effect(server):
+            if server.server_id == "filesystem":
+                return InstallationResult(
+                    server_id="filesystem",
+                    status=InstallationStatus.INSTALLED,
+                    installed_version="2025.8.21"
+                )
+            elif server.server_id == "memory":
+                return InstallationResult(
+                    server_id="memory",
+                    status=InstallationStatus.INSTALLED,
+                    installed_version="2025.8.21"
+                )
+            else:
+                return InstallationResult(
+                    server_id=server.server_id,
+                    status=InstallationStatus.NOT_INSTALLED
+                )
+    
+        mock_check.side_effect = check_side_effect
+    
+>       result = await list_installed_servers()
+E       TypeError: 'FunctionTool' object is not callable
+
+tests/test_installation_mcp_tools.py:286: TypeError
+___ TestListInstalledServersTool.test_list_installed_servers_shows_versions ____
+
+self = <test_installation_mcp_tools.TestListInstalledServersTool object at 0x1135bd0d0>
+mock_check = <MagicMock name='check_installation' id='4646722144'>
+
+    @pytest.mark.asyncio
+    @patch("mcp_orchestrator.installation.validator.InstallationValidator.check_installation")
+    async def test_list_installed_servers_shows_versions(self, mock_check: MagicMock) -> None:
+        """Should include version information for installed servers."""
+        from mcp_orchestrator.mcp.server import list_installed_servers
+        from mcp_orchestrator.installation.models import InstallationResult, InstallationStatus
+    
+        def check_side_effect(server):
+            if server.server_id == "filesystem":
+                return InstallationResult(
+                    server_id="filesystem",
+                    status=InstallationStatus.INSTALLED,
+                    installed_version="2025.8.21",
+                    package_manager=PackageManager.NPM
+                )
+            else:
+                return InstallationResult(
+                    server_id=server.server_id,
+                    status=InstallationStatus.NOT_INSTALLED
+                )
+    
+        mock_check.side_effect = check_side_effect
+    
+>       result = await list_installed_servers()
+E       TypeError: 'FunctionTool' object is not callable
+
+tests/test_installation_mcp_tools.py:316: TypeError
+___ TestListInstalledServersTool.test_list_installed_servers_empty_registry ____
+
+self = <test_installation_mcp_tools.TestListInstalledServersTool object at 0x1135bd310>
+mock_check = <MagicMock name='check_installation' id='4646729968'>
+
+    @pytest.mark.asyncio
+    @patch("mcp_orchestrator.installation.validator.InstallationValidator.check_installation")
+    async def test_list_installed_servers_empty_registry(self, mock_check: MagicMock) -> None:
+        """Should handle empty registry gracefully."""
+        from mcp_orchestrator.mcp.server import list_installed_servers
+    
+        # This would only happen in tests with empty registry
+>       result = await list_installed_servers()
+E       TypeError: 'FunctionTool' object is not callable
+
+tests/test_installation_mcp_tools.py:334: TypeError
+_____ TestInstallationWorkflowIntegration.test_check_then_install_workflow _____
+
+self = <test_installation_mcp_tools.TestInstallationWorkflowIntegration object at 0x1135bd6a0>
+mock_check = <MagicMock name='check_installation' id='4646802192'>
+mock_install = <MagicMock name='install' id='4646806560'>
+
+    @pytest.mark.asyncio
+    @patch("mcp_orchestrator.installation.installer.ServerInstaller.install")
+    @patch("mcp_orchestrator.installation.validator.InstallationValidator.check_installation")
+    async def test_check_then_install_workflow(
+        self,
+        mock_check: MagicMock,
+        mock_install: MagicMock
+    ) -> None:
+        """Should follow check → install → verify workflow."""
+        from mcp_orchestrator.mcp.server import (
+            check_server_installation,
+            install_server
+        )
+        from mcp_orchestrator.installation.models import InstallationResult, InstallationStatus
+    
+        # Step 1: Check - not installed
+        mock_check.return_value = InstallationResult(
+            server_id="brave-search",
+            status=InstallationStatus.NOT_INSTALLED
+        )
+    
+>       check_result = await check_server_installation("brave-search")
+E       TypeError: 'FunctionTool' object is not callable
+
+tests/test_installation_mcp_tools.py:365: TypeError
+_____ TestInstallationWorkflowIntegration.test_list_then_install_workflow ______
+
+self = <test_installation_mcp_tools.TestInstallationWorkflowIntegration object at 0x1135bd910>
+mock_check = <MagicMock name='check_installation' id='4646802384'>
+mock_install = <MagicMock name='install' id='4646768080'>
+
+    @pytest.mark.asyncio
+    @patch("mcp_orchestrator.installation.installer.ServerInstaller.install")
+    @patch("mcp_orchestrator.installation.validator.InstallationValidator.check_installation")
+    async def test_list_then_install_workflow(
+        self,
+        mock_check: MagicMock,
+        mock_install: MagicMock
+    ) -> None:
+        """Should follow list → install → list workflow."""
+        from mcp_orchestrator.mcp.server import (
+            list_installed_servers,
+            install_server
+        )
+        from mcp_orchestrator.installation.models import InstallationResult, InstallationStatus
+    
+        # Step 1: List - shows some not installed
+        def check_before(server):
+            return InstallationResult(
+                server_id=server.server_id,
+                status=InstallationStatus.NOT_INSTALLED
+            )
+    
+        mock_check.side_effect = check_before
+    
+>       list_before = await list_installed_servers()
+E       TypeError: 'FunctionTool' object is not callable
+
+tests/test_installation_mcp_tools.py:411: TypeError
+____ TestInstallationToolErrorHandling.test_tools_handle_invalid_server_id _____
+
+self = <test_installation_mcp_tools.TestInstallationToolErrorHandling object at 0x1135bdcd0>
+
+    @pytest.mark.asyncio
+    async def test_tools_handle_invalid_server_id(self) -> None:
+        """All tools should handle invalid server IDs gracefully."""
+        from mcp_orchestrator.mcp.server import (
+            check_server_installation,
+            install_server
+        )
+    
+        with pytest.raises(ValueError):
+>           await check_server_installation("invalid-server-id")
+E           TypeError: 'FunctionTool' object is not callable
+
+tests/test_installation_mcp_tools.py:453: TypeError
+_____ TestInstallationToolErrorHandling.test_tools_handle_validator_errors _____
+
+self = <test_installation_mcp_tools.TestInstallationToolErrorHandling object at 0x1135bdf10>
+mock_check = <MagicMock name='check_installation' id='4646778016'>
+
+    @pytest.mark.asyncio
+    @patch("mcp_orchestrator.installation.validator.InstallationValidator.check_installation")
+    async def test_tools_handle_validator_errors(self, mock_check: MagicMock) -> None:
+        """Should handle validator errors gracefully."""
+        from mcp_orchestrator.mcp.server import check_server_installation
+        from mcp_orchestrator.installation.models import InstallationResult, InstallationStatus
+    
+        mock_check.return_value = InstallationResult(
+            server_id="filesystem",
+            status=InstallationStatus.ERROR,
+            error_message="Something went wrong"
+        )
+    
+>       result = await check_server_installation("filesystem")
+E       TypeError: 'FunctionTool' object is not callable
+
+tests/test_installation_mcp_tools.py:471: TypeError
+=============================== warnings summary ===============================
+tests/value-scenarios/test_http_transport.py:152
+  /Users/victorpiper/code/mcp-orchestration/tests/value-scenarios/test_http_transport.py:152: PytestUnknownMarkWarning: Unknown pytest.mark.e2e - is this a typo?  You can register custom marks to avoid this warning - for details, see https://docs.pytest.org/en/stable/how-to/mark.html
+    @pytest.mark.e2e
+
+tests/value-scenarios/test_http_transport.py:153
+  /Users/victorpiper/code/mcp-orchestration/tests/value-scenarios/test_http_transport.py:153: PytestUnknownMarkWarning: Unknown pytest.mark.value_scenario - is this a typo?  You can register custom marks to avoid this warning - for details, see https://docs.pytest.org/en/stable/how-to/mark.html
+    @pytest.mark.value_scenario
+
+tests/value-scenarios/test_http_transport.py:257
+  /Users/victorpiper/code/mcp-orchestration/tests/value-scenarios/test_http_transport.py:257: PytestUnknownMarkWarning: Unknown pytest.mark.e2e - is this a typo?  You can register custom marks to avoid this warning - for details, see https://docs.pytest.org/en/stable/how-to/mark.html
+    @pytest.mark.e2e
+
+tests/value-scenarios/test_http_transport.py:258
+  /Users/victorpiper/code/mcp-orchestration/tests/value-scenarios/test_http_transport.py:258: PytestUnknownMarkWarning: Unknown pytest.mark.value_scenario - is this a typo?  You can register custom marks to avoid this warning - for details, see https://docs.pytest.org/en/stable/how-to/mark.html
+    @pytest.mark.value_scenario
+
+tests/value-scenarios/test_http_transport.py:379
+  /Users/victorpiper/code/mcp-orchestration/tests/value-scenarios/test_http_transport.py:379: PytestUnknownMarkWarning: Unknown pytest.mark.e2e - is this a typo?  You can register custom marks to avoid this warning - for details, see https://docs.pytest.org/en/stable/how-to/mark.html
+    @pytest.mark.e2e
+
+tests/value-scenarios/test_http_transport.py:380
+  /Users/victorpiper/code/mcp-orchestration/tests/value-scenarios/test_http_transport.py:380: PytestUnknownMarkWarning: Unknown pytest.mark.value_scenario - is this a typo?  You can register custom marks to avoid this warning - for details, see https://docs.pytest.org/en/stable/how-to/mark.html
+    @pytest.mark.value_scenario
+
+tests/value-scenarios/test_http_transport.py:489
+  /Users/victorpiper/code/mcp-orchestration/tests/value-scenarios/test_http_transport.py:489: PytestUnknownMarkWarning: Unknown pytest.mark.e2e - is this a typo?  You can register custom marks to avoid this warning - for details, see https://docs.pytest.org/en/stable/how-to/mark.html
+    @pytest.mark.e2e
+
+tests/value-scenarios/test_http_transport.py:490
+  /Users/victorpiper/code/mcp-orchestration/tests/value-scenarios/test_http_transport.py:490: PytestUnknownMarkWarning: Unknown pytest.mark.value_scenario - is this a typo?  You can register custom marks to avoid this warning - for details, see https://docs.pytest.org/en/stable/how-to/mark.html
+    @pytest.mark.value_scenario
+
+tests/value-scenarios/test_http_transport.py:554
+  /Users/victorpiper/code/mcp-orchestration/tests/value-scenarios/test_http_transport.py:554: PytestUnknownMarkWarning: Unknown pytest.mark.e2e - is this a typo?  You can register custom marks to avoid this warning - for details, see https://docs.pytest.org/en/stable/how-to/mark.html
+    @pytest.mark.e2e
+
+tests/value-scenarios/test_http_transport.py:555
+  /Users/victorpiper/code/mcp-orchestration/tests/value-scenarios/test_http_transport.py:555: PytestUnknownMarkWarning: Unknown pytest.mark.value_scenario - is this a typo?  You can register custom marks to avoid this warning - for details, see https://docs.pytest.org/en/stable/how-to/mark.html
+    @pytest.mark.value_scenario
+
+tests/e2e/test_complete_workflow.py: 6 warnings
+tests/test_config_builder.py: 3 warnings
+tests/test_deployment_workflow.py: 9 warnings
+tests/test_mcp_publish_tool.py: 2 warnings
+tests/test_publishing_workflow.py: 7 warnings
+tests/value-scenarios/test_deploy_config.py: 6 warnings
+tests/value-scenarios/test_publish_config.py: 2 warnings
+  /Users/victorpiper/code/mcp-orchestration/src/mcp_orchestrator/building/builder.py:235: DeprecationWarning: datetime.datetime.utcnow() is deprecated and scheduled for removal in a future version. Use timezone-aware objects to represent datetimes in UTC: datetime.datetime.now(datetime.UTC).
+    created_at=datetime.utcnow().isoformat() + "Z",
+
+tests/e2e/test_complete_workflow.py: 5 warnings
+tests/test_deployment_workflow.py: 9 warnings
+tests/test_integration.py: 15 warnings
+tests/test_mcp_publish_tool.py: 2 warnings
+tests/test_publishing_workflow.py: 6 warnings
+tests/test_storage.py: 13 warnings
+tests/value-scenarios/test_deploy_config.py: 6 warnings
+tests/value-scenarios/test_publish_config.py: 1 warning
+  /Users/victorpiper/code/mcp-orchestration/src/mcp_orchestrator/storage/artifacts.py:203: DeprecationWarning: datetime.datetime.utcnow() is deprecated and scheduled for removal in a future version. Use timezone-aware objects to represent datetimes in UTC: datetime.datetime.now(datetime.UTC).
+    updated_at=datetime.utcnow().isoformat() + "Z",
+
+tests/test_storage.py: 13 warnings
+  /Users/victorpiper/code/mcp-orchestration/tests/test_storage.py:42: DeprecationWarning: datetime.datetime.utcnow() is deprecated and scheduled for removal in a future version. Use timezone-aware objects to represent datetimes in UTC: datetime.datetime.now(datetime.UTC).
+    created_at=datetime.utcnow().isoformat() + "Z",
+
+tests/test_validate_config.py: 12 warnings
+  /Users/victorpiper/code/mcp-orchestration/tests/test_validate_config.py:141: DeprecationWarning: datetime.datetime.utcnow() is deprecated and scheduled for removal in a future version. Use timezone-aware objects to represent datetimes in UTC: datetime.datetime.now(datetime.UTC).
+    "validated_at": datetime.utcnow().isoformat() + "Z",
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+
+---------- coverage: platform darwin, python 3.12.0-final-0 ----------
+Name                                                   Stmts   Miss   Cover   Missing
+-------------------------------------------------------------------------------------
+src/mcp_orchestrator/__init__.py                           2      0 100.00%
+src/mcp_orchestrator/building/__init__.py                  2      0 100.00%
+src/mcp_orchestrator/building/builder.py                  47      0 100.00%
+src/mcp_orchestrator/cli.py                               59     26  55.93%   48-76
+src/mcp_orchestrator/cli_building.py                     206    206   0.00%   8-540
+src/mcp_orchestrator/cli_init.py                          67      2  97.01%   84, 137
+src/mcp_orchestrator/cli_servers.py                      154    101  34.42%   62, 64-65, 71-87, 91-92, 151-243, 262, 275-321, 328
+src/mcp_orchestrator/crypto/__init__.py                    2      0 100.00%
+src/mcp_orchestrator/crypto/signing.py                    75     10  86.67%   84, 90-91, 128-129, 154-155, 189-190, 218
+src/mcp_orchestrator/deployment/__init__.py                2      0 100.00%
+src/mcp_orchestrator/deployment/log.py                    53     16  69.81%   79-80, 91, 116, 125, 143-161
+src/mcp_orchestrator/deployment/workflow.py               88     12  86.36%   89-90, 199, 214, 227, 234, 256-257, 311-315
+src/mcp_orchestrator/diff/__init__.py                      2      0 100.00%
+src/mcp_orchestrator/diff/config_diff.py                  72      4  94.44%   74-77, 92, 113
+src/mcp_orchestrator/http/__init__.py                      3      0 100.00%
+src/mcp_orchestrator/http/auth.py                         56      1  98.21%   115
+src/mcp_orchestrator/http/endpoints.py                   152     33  78.29%   81, 101-103, 108-114, 145-146, 178-180, 186, 202, 209, 226, 275-276, 288, 304, 312-313, 333-335, 341, 416-425, 434
+src/mcp_orchestrator/http/models.py                       70      0 100.00%
+src/mcp_orchestrator/http/server.py                      101     10  90.10%   74, 274, 353-368
+src/mcp_orchestrator/http_cli/__init__.py                  3      0 100.00%
+src/mcp_orchestrator/http_cli/serve_http.py               19     15  21.05%   20-77
+src/mcp_orchestrator/http_cli/token.py                    38     31  18.42%   50-78, 83-88
+src/mcp_orchestrator/installation/__init__.py              2      0 100.00%
+src/mcp_orchestrator/installation/installer.py            24      0 100.00%
+src/mcp_orchestrator/installation/models.py               22      0 100.00%
+src/mcp_orchestrator/installation/package_manager.py      31      1  96.77%   38
+src/mcp_orchestrator/installation/validator.py            28      3  89.29%   44, 99-101
+src/mcp_orchestrator/mcp/__init__.py                       2      0 100.00%
+src/mcp_orchestrator/mcp/server.py                       462    392  15.15%   79-97, 125-168, 209-247, 284-337, 383-415, 446-492, 518-568, 588-590, 603-606, 652-685, 719-742, 769-788, 814-830, 879-970, 995-1032, 1077-1219, 1280-1306, 1324-1398, 1412-1437, 1455-1464, 1483-1488, 1521-1532, 1573-1594, 1629-1665, 1700-1722, 1769-1827, 1853-1878, 1893
+src/mcp_orchestrator/publishing/__init__.py                2      0 100.00%
+src/mcp_orchestrator/publishing/workflow.py               61      9  85.25%   200, 211, 221, 235, 246-250
+src/mcp_orchestrator/registry/__init__.py                  2      0 100.00%
+src/mcp_orchestrator/registry/clients.py                  52      0 100.00%
+src/mcp_orchestrator/servers/__init__.py                   3      0 100.00%
+src/mcp_orchestrator/servers/defaults.py                   3      0 100.00%
+src/mcp_orchestrator/servers/models.py                    40      0 100.00%
+src/mcp_orchestrator/servers/registry.py                  96      0 100.00%
+src/mcp_orchestrator/storage/__init__.py                   2      0 100.00%
+src/mcp_orchestrator/storage/artifacts.py                102     10  90.20%   180-181, 228-229, 260-261, 270, 316, 321-322
+src/mcp_orchestrator/telemetry.py                         25      0 100.00%
+-------------------------------------------------------------------------------------
+TOTAL                                                   2232    882  60.48%
+
+Required test coverage of 20.0% reached. Total coverage: 60.48%
+=========================== short test summary info ============================
+FAILED tests/http/test_auth.py::TestAuthenticationErrorMessages::test_invalid_token_error_message
+FAILED tests/http/test_cors.py::TestCORSPreflightRequests::test_preflight_request_returns_200
+FAILED tests/http/test_cors.py::TestCORSPreflightRequests::test_preflight_has_allow_headers_header
+FAILED tests/http/test_cors.py::TestCORSAllowedHeaders::test_authorization_header_is_allowed
+FAILED tests/http/test_cors.py::TestCORSAllowedHeaders::test_content_type_header_is_allowed
+FAILED tests/http/test_cors.py::TestCORSAllowedHeaders::test_x_api_key_header_is_allowed
+FAILED tests/http/test_cors.py::TestCORSAllowedHeaders::test_multiple_headers_are_allowed
+FAILED tests/http/test_cors.py::TestCORSSecurityConsiderations::test_authentication_still_required_despite_cors
+FAILED tests/http/test_endpoints.py::TestConfigWorkflowEndpoints::test_validate_config_returns_200
+FAILED tests/http/test_endpoints.py::TestKeyManagementEndpoints::test_initialize_keys_returns_200_or_400
+FAILED tests/http/test_endpoints.py::TestKeyManagementEndpoints::test_initialize_keys_creates_keys
+FAILED tests/http/test_server.py::TestHTTPEndpointExposure::test_list_clients_endpoint_exists
+FAILED tests/http/test_server.py::TestHTTPEndpointExposure::test_list_profiles_endpoint_exists
+FAILED tests/http/test_server.py::TestHTTPEndpointExposure::test_get_config_endpoint_exists
+FAILED tests/http/test_server.py::TestHTTPEndpointExposure::test_diff_config_endpoint_exists
+FAILED tests/http/test_server.py::TestHTTPEndpointExposure::test_draft_add_endpoint_exists
+FAILED tests/http/test_server.py::TestHTTPEndpointExposure::test_draft_remove_endpoint_exists
+FAILED tests/http/test_server.py::TestHTTPEndpointExposure::test_draft_view_endpoint_exists
+FAILED tests/http/test_server.py::TestHTTPEndpointExposure::test_draft_clear_endpoint_exists
+FAILED tests/http/test_server.py::TestHTTPEndpointExposure::test_validate_config_endpoint_exists
+FAILED tests/http/test_server.py::TestHTTPEndpointExposure::test_publish_config_endpoint_exists
+FAILED tests/http/test_server.py::TestHTTPEndpointExposure::test_deploy_config_endpoint_exists
+FAILED tests/http/test_server.py::TestHTTPEndpointExposure::test_list_servers_endpoint_exists
+FAILED tests/http/test_server.py::TestHTTPEndpointExposure::test_describe_server_endpoint_exists
+FAILED tests/http/test_server.py::TestHTTPEndpointExposure::test_initialize_keys_endpoint_exists
+FAILED tests/http/test_server.py::TestBackwardCompatibility::test_stdio_list_clients_works
+FAILED tests/http/test_server.py::TestBackwardCompatibility::test_http_server_does_not_interfere_with_stdio
+FAILED tests/http/test_server.py::TestServerIntegration::test_list_clients_returns_valid_json
+FAILED tests/http/test_server.py::TestServerIntegration::test_list_servers_returns_valid_json
+FAILED tests/http/test_server.py::TestServerIntegration::test_get_server_details_returns_valid_json
+FAILED tests/http/test_server.py::TestServerIntegration::test_error_handling_returns_valid_json
+FAILED tests/http/test_server.py::TestCORSMiddleware::test_cors_middleware_is_configured
+FAILED tests/http/test_token_generation.py::TestTokenGenerationFunction::test_generate_token_cli_returns_token
+FAILED tests/http/test_token_generation.py::TestTokenGenerationFunction::test_generate_token_cli_uses_auth_service
+FAILED tests/http/test_token_generation.py::TestTokenGenerationSecurity::test_token_uses_secrets_module
+FAILED tests/http/test_token_generation.py::TestTokenGenerationSecurity::test_token_is_url_safe
+FAILED tests/http/test_token_generation.py::TestTokenGenerationErrorHandling::test_token_generation_succeeds_without_server_running
+FAILED tests/test_installation_mcp_tools.py::TestCheckServerInstallationTool::test_check_installed_server
+FAILED tests/test_installation_mcp_tools.py::TestCheckServerInstallationTool::test_check_not_installed_server_with_npm_package
+FAILED tests/test_installation_mcp_tools.py::TestCheckServerInstallationTool::test_check_not_installed_server_with_pip_package
+FAILED tests/test_installation_mcp_tools.py::TestCheckServerInstallationTool::test_check_nonexistent_server
+FAILED tests/test_installation_mcp_tools.py::TestInstallServerTool::test_install_server_already_installed
+FAILED tests/test_installation_mcp_tools.py::TestInstallServerTool::test_install_server_requires_confirmation
+FAILED tests/test_installation_mcp_tools.py::TestInstallServerTool::test_install_server_confirmed_success
+FAILED tests/test_installation_mcp_tools.py::TestInstallServerTool::test_install_server_failure
+FAILED tests/test_installation_mcp_tools.py::TestInstallServerTool::test_install_server_with_custom_package_manager
+FAILED tests/test_installation_mcp_tools.py::TestInstallServerTool::test_install_server_nonexistent
+FAILED tests/test_installation_mcp_tools.py::TestInstallServerTool::test_install_server_no_package_manager_support
+FAILED tests/test_installation_mcp_tools.py::TestListInstalledServersTool::test_list_installed_servers_mixed_status
+FAILED tests/test_installation_mcp_tools.py::TestListInstalledServersTool::test_list_installed_servers_shows_versions
+FAILED tests/test_installation_mcp_tools.py::TestListInstalledServersTool::test_list_installed_servers_empty_registry
+FAILED tests/test_installation_mcp_tools.py::TestInstallationWorkflowIntegration::test_check_then_install_workflow
+FAILED tests/test_installation_mcp_tools.py::TestInstallationWorkflowIntegration::test_list_then_install_workflow
+FAILED tests/test_installation_mcp_tools.py::TestInstallationToolErrorHandling::test_tools_handle_invalid_server_id
+FAILED tests/test_installation_mcp_tools.py::TestInstallationToolErrorHandling::test_tools_handle_validator_errors
+ERROR tests/value-scenarios/test_http_transport.py::test_developer_workflow
+ERROR tests/value-scenarios/test_http_transport.py::test_n8n_automation_workflow
+ERROR tests/value-scenarios/test_http_transport.py::test_stdio_to_http_migration_workflow
+ERROR tests/value-scenarios/test_http_transport.py::test_api_key_authentication
+ERROR tests/value-scenarios/test_http_transport.py::test_bearer_token_lifecycle
+= 55 failed, 344 passed, 39 skipped, 127 warnings, 5 errors in 132.00s (0:02:11) =

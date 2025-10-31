@@ -76,6 +76,11 @@ testpaths = ["tests"]
 python_files = ["test_*.py"]
 python_classes = ["Test*"]
 python_functions = ["test_*"]
+addopts = [
+    "--cov=src/mcp_orchestrator",
+    "--cov-report=term-missing",
+    "--cov-fail-under=85",
+]
 
 [tool.mypy]
 python_version = "3.12"
@@ -134,7 +139,7 @@ omit = [
 precision = 2
 show_missing = true
 skip_covered = false
-fail_under = 20.0  # Lowered from 50.0 for Wave 2.0 HTTP transport (127/166 tests passing)
+fail_under = 85.0  # Raised to 85% for chora-base SAP-004 adoption (Week 2)
 exclude_lines = [
     "pragma: no cover",
     "def __repr__",
