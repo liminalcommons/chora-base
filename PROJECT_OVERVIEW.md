@@ -1,8 +1,26 @@
 # mcp-orchestration: Strategic Overview
 
-**Last Updated:** 2025-10-26
+**Last Updated:** 2025-10-31
 **Current Version:** v0.2.0
-**Status:** Active Development (Wave 2.0 Complete)
+**Status:** Active Development (Wave 2.0 Complete | Chora-Base Adoption: Week 1/4)
+
+---
+
+## Chora-Base v4.1.0 Adoption
+
+**Status:** 📋 Week 1 of 4 Complete (6/18 SAPs, 33% adoption)
+**Plan:** [CHORA_BASE_ADOPTION_PLAN.md](project-docs/CHORA_BASE_ADOPTION_PLAN.md)
+
+**Installed SAPs:**
+- ✅ SAP-000: SAP Framework (core protocols)
+- ✅ SAP-001: Inbox Coordination (cross-repo collaboration) [PILOT]
+- ✅ SAP-002: Chora-Base Meta (meta-capability documentation)
+- ✅ SAP-007: Documentation Framework (Diátaxis 4-domain structure)
+- ✅ SAP-009: Agent Awareness (AGENTS.md/CLAUDE.md patterns)
+- ✅ SAP-016: Link Validation (automated link checking)
+
+**Documentation:** [docs/skilled-awareness/](docs/skilled-awareness/) (35 artifacts, ~520 KB)
+**Next:** Week 2 - Development Workflow (SAP-003 through SAP-006)
 
 ---
 

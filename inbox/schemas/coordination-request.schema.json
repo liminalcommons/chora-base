@@ -1,0 +1,58 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://liminalcommons.org/schemas/inbox/coordination-request.schema.json",
+  "title": "Coordination Request",
+  "description": "Schema for cross-repository coordination requests",
+  "type": "object",
+  "required": [
+    "type",
+    "from_repo",
+    "to_repo",
+    "priority",
+    "description",
+    "trace_id"
+  ],
+  "properties": {
+    "type": {
+      "type": "string",
+      "const": "coordination_request"
+    },
+    "from_repo": {
+      "type": "string",
+      "description": "Source repository making the request"
+    },
+    "to_repo": {
+      "type": "string",
+      "description": "Target repository to fulfill the request"
+    },
+    "priority": {
+      "type": "string",
+      "enum": ["high", "medium", "low"],
+      "description": "Priority level of the coordination request"
+    },
+    "description": {
+      "type": "string",
+      "description": "Detailed description of the coordination request"
+    },
+    "trace_id": {
+      "type": "string",
+      "description": "Unique trace ID for request tracking (CHORA_TRACE_ID format)"
+    },
+    "capabilities_required": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "List of capabilities required from target repository"
+    },
+    "deadline": {
+      "type": "string",
+      "format": "date",
+      "description": "Optional deadline for fulfillment"
+    },
+    "context": {
+      "type": "object",
+      "description": "Additional context for the request"
+    }
+  }
+}

@@ -1,0 +1,61 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://liminalcommons.org/schemas/inbox/implementation-task.schema.json",
+  "title": "Implementation Task",
+  "description": "Schema for implementation tasks in the inbox workflow",
+  "type": "object",
+  "required": [
+    "type",
+    "title",
+    "description",
+    "trace_id",
+    "status"
+  ],
+  "properties": {
+    "type": {
+      "type": "string",
+      "const": "implementation_task"
+    },
+    "title": {
+      "type": "string",
+      "description": "Concise title of the implementation task"
+    },
+    "description": {
+      "type": "string",
+      "description": "Detailed description of what needs to be implemented"
+    },
+    "trace_id": {
+      "type": "string",
+      "description": "Unique trace ID for task tracking (CHORA_TRACE_ID format)"
+    },
+    "status": {
+      "type": "string",
+      "enum": ["incoming", "active", "completed", "deferred"],
+      "description": "Current status of the task"
+    },
+    "priority": {
+      "type": "string",
+      "enum": ["high", "medium", "low"],
+      "description": "Priority level"
+    },
+    "assignee": {
+      "type": "string",
+      "description": "Assigned developer or agent"
+    },
+    "related_capability": {
+      "type": "string",
+      "description": "Capability this task relates to"
+    },
+    "acceptance_criteria": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "List of acceptance criteria for completion"
+    },
+    "estimated_hours": {
+      "type": "number",
+      "description": "Estimated hours to complete"
+    }
+  }
+}

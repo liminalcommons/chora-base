@@ -1,0 +1,58 @@
+# Chora-Base Adoption Tracking
+# Generated: 2025-10-31
+# Documentation: project-docs/CHORA_BASE_ADOPTION_PLAN.md
+
+version: v4.1.0
+adoption_status: partial  # Will be 'complete' after Week 4
+adoption_date: 2025-10-31
+
+adopted_saps:
+  - id: SAP-000
+    name: sap-framework
+    adopted_date: 2025-10-31
+    status: installed
+    notes: Core SAP framework and protocols
+  - id: SAP-001
+    name: inbox-coordination
+    adopted_date: 2025-10-31
+    status: installed
+    notes: Pilot status - may undergo changes. JSON schemas created.
+  - id: SAP-002
+    name: chora-base
+    adopted_date: 2025-10-31
+    status: installed
+    notes: Meta-capability for chora-base itself
+  - id: SAP-007
+    name: documentation-framework
+    adopted_date: 2025-10-31
+    status: installed
+    notes: Installed as dependency of SAP-009
+  - id: SAP-009
+    name: agent-awareness
+    adopted_date: 2025-10-31
+    status: installed
+    notes: AGENTS.md/CLAUDE.md patterns for AI agents
+  - id: SAP-016
+    name: link-validation-reference-management
+    adopted_date: 2025-10-31
+    status: installed
+    notes: Automated markdown link validation
+
+pending_saps: 12  # SAP-003, 004, 005, 006, 008, 010, 011, 012, 013, 014, 017, 018
+total_saps: 18
+completion: 33.3%  # 6/18 (includes SAP-007 dependency)
+
+notes: |
+  Week 1 of 4-week adoption plan complete.
+  Focus: Foundation (minimal-entry set + SAP-007 dependency)
+  Next: Week 2 - Development Workflow (SAP-003 through SAP-006)
+
+  Installed SAPs:
+  - SAP-000: SAP Framework (125 KB)
+  - SAP-001: Inbox Coordination (45 KB) [PILOT]
+  - SAP-002: Chora-Base Meta (78 KB)
+  - SAP-007: Documentation Framework (112 KB) [dependency]
+  - SAP-009: Agent Awareness (98 KB)
+  - SAP-016: Link Validation (62 KB)
+
+  Total: 35 artifacts, ~520 KB documentation

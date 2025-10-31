@@ -1,0 +1,86 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://liminalcommons.org/schemas/inbox/strategic-proposal.schema.json",
+  "title": "Strategic Proposal",
+  "description": "Schema for strategic proposals requiring governance review",
+  "type": "object",
+  "required": [
+    "type",
+    "title",
+    "proposer",
+    "description",
+    "rationale",
+    "trace_id"
+  ],
+  "properties": {
+    "type": {
+      "type": "string",
+      "const": "strategic_proposal"
+    },
+    "title": {
+      "type": "string",
+      "description": "Concise title of the strategic proposal"
+    },
+    "proposer": {
+      "type": "string",
+      "description": "Individual or organization proposing the strategy"
+    },
+    "description": {
+      "type": "string",
+      "description": "Detailed description of the proposed strategy"
+    },
+    "rationale": {
+      "type": "string",
+      "description": "Why this strategy is needed and beneficial"
+    },
+    "trace_id": {
+      "type": "string",
+      "description": "Unique trace ID for proposal tracking (CHORA_TRACE_ID format)"
+    },
+    "scope": {
+      "type": "string",
+      "enum": ["project", "ecosystem", "governance"],
+      "description": "Scope of impact"
+    },
+    "timeline": {
+      "type": "string",
+      "description": "Proposed timeline for implementation"
+    },
+    "resources_required": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "Resources needed to implement the strategy"
+    },
+    "stakeholders": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "Affected stakeholders who should be consulted"
+    },
+    "alternatives_considered": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string"
+          },
+          "reason_rejected": {
+            "type": "string"
+          }
+        }
+      },
+      "description": "Alternative approaches that were considered and why they were rejected"
+    },
+    "success_metrics": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "How success will be measured"
+    }
+  }
+}
