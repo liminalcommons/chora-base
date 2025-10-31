@@ -929,27 +929,27 @@ If full adoption not feasible:
 
 | Week | Timeline | SAPs | Status | Started | Completed | Notes |
 |------|----------|------|--------|---------|-----------|-------|
-| 1 | Nov XX-XX | 5 | 📋 Planned | - | - | Foundation (minimal-entry) |
+| 1 | Oct 31 | 6 | ✅ Complete | 2025-10-31 | 2025-10-31 | Foundation (5+1 dependency: SAP-007) |
 | 2 | Nov XX-XX | 5 | 📋 Planned | - | - | Development Workflow |
 | 3 | Dec XX-XX | 4 | 📋 Planned | - | - | Developer Experience |
 | 4 | Dec XX-XX | 4 | 📋 Planned | - | - | MCP-Specific & Metrics |
 
-**Overall Status:** 📋 Planning (0/18 SAPs, 0%)
+**Overall Status:** 🚧 In Progress (6/18 SAPs, 33.3%)
 
 ### SAP Installation Tracker
 
 | SAP | Name | Week | Status | Installed | Adopted | Notes |
 |-----|------|------|--------|-----------|---------|-------|
-| SAP-000 | SAP Framework | 1 | 📋 Planned | - | - | Core protocol |
-| SAP-001 | Inbox Coordination | 1 | 📋 Planned | - | - | Pilot status ⚠️ |
-| SAP-002 | Chora-Base Meta | 1 | 📋 Planned | - | - | Meta-capability |
-| SAP-009 | Agent Awareness | 1 | 📋 Planned | - | - | AGENTS.md/CLAUDE.md |
-| SAP-016 | Link Validation | 1 | 📋 Planned | - | - | CI integration |
+| SAP-000 | SAP Framework | 1 | ✅ Complete | 2025-10-31 | 2025-10-31 | Core protocol |
+| SAP-001 | Inbox Coordination | 1 | ✅ Complete | 2025-10-31 | 2025-10-31 | Pilot status ⚠️, schemas created |
+| SAP-002 | Chora-Base Meta | 1 | ✅ Complete | 2025-10-31 | 2025-10-31 | .chorabase file created |
+| SAP-007 | Documentation Framework | 1 | ✅ Complete | 2025-10-31 | 2025-10-31 | Dependency of SAP-009 |
+| SAP-009 | Agent Awareness | 1 | ✅ Complete | 2025-10-31 | 2025-10-31 | AGENTS.md enhanced |
+| SAP-016 | Link Validation | 1 | ✅ Complete | 2025-10-31 | 2025-10-31 | Script installed, 20+ broken links identified |
 | SAP-003 | Project Bootstrap | 2 | 📋 Planned | - | - | Already generated |
 | SAP-004 | Testing Framework | 2 | 📋 Planned | - | - | 85%+ coverage |
 | SAP-005 | CI/CD Workflows | 2 | 📋 Planned | - | - | Matrix testing |
 | SAP-006 | Quality Gates | 2 | 📋 Planned | - | - | Pre-commit hooks |
-| SAP-007 | Documentation Framework | 2 | 📋 Planned | - | - | 4-domain Diátaxis |
 | SAP-012 | Development Lifecycle | 3 | 📋 Planned | - | - | DDD→BDD→TDD |
 | SAP-008 | Automation Scripts | 3 | 📋 Planned | - | - | justfile + 25 scripts |
 | SAP-011 | Docker Operations | 3 | 📋 Planned | - | - | Multi-stage builds |
