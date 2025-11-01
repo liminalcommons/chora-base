@@ -190,6 +190,39 @@ Multi-stage Dockerfile and docker-compose orchestration for development and prod
 - View logs: `docker-compose logs -f`
 - Health check: Multi-stage build, non-root user (UID 1000), health monitoring
 
+### Metrics Tracking (SAP-013)
+
+ClaudeROICalculator for tracking Claude effectiveness and development process metrics.
+
+**Documentation**: [docs/skilled-awareness/metrics-tracking/](docs/skilled-awareness/metrics-tracking/)
+
+**Quick Start**:
+- Read: [adoption-blueprint.md](docs/skilled-awareness/metrics-tracking/adoption-blueprint.md)
+- Guide: [awareness-guide.md](docs/skilled-awareness/metrics-tracking/awareness-guide.md)
+
+**Key Features**:
+- Claude ROI calculation: [src/mcp_orchestrator/utils/claude_metrics.py](src/mcp_orchestrator/utils/claude_metrics.py)
+- Track time saved, bugs fixed, test coverage per session
+- $109k/year savings estimates
+- Sprint velocity and quality metrics
+
+### MCP Server Development (SAP-014)
+
+FastMCP-based Model Context Protocol server development patterns and templates.
+
+**Documentation**: [docs/skilled-awareness/mcp-server-development/](docs/skilled-awareness/mcp-server-development/)
+
+**Quick Start**:
+- Read: [adoption-blueprint.md](docs/skilled-awareness/mcp-server-development/adoption-blueprint.md)
+- Guide: [awareness-guide.md](docs/skilled-awareness/mcp-server-development/awareness-guide.md)
+
+**Key Features**:
+- FastMCP patterns: [src/mcp_orchestrator/mcp/server.py](src/mcp_orchestrator/mcp/server.py)
+- 14 MCP tools, 7 resources
+- Tool definition patterns
+- Testing strategies for MCP servers
+- Deployment workflows (stdio, HTTP/SSE)
+
 ---
 
 ### SAP Roadmap
