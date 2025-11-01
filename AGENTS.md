@@ -120,6 +120,78 @@ cat docs/skilled-awareness/inbox/adoption-blueprint.md
 ls inbox/coordination/CAPABILITIES && echo "✅ Installed"
 ```
 
+---
+
+## Installed Capabilities (mcp-orchestration)
+
+mcp-orchestration has adopted the following chora-base SAPs:
+
+### Automation Scripts (SAP-008)
+
+25+ automation scripts with justfile interface for development workflows.
+
+**Documentation**: [docs/skilled-awareness/automation-scripts/](docs/skilled-awareness/automation-scripts/)
+
+**Quick Start**:
+- Read: [adoption-blueprint.md](docs/skilled-awareness/automation-scripts/adoption-blueprint.md)
+- Guide: [awareness-guide.md](docs/skilled-awareness/automation-scripts/awareness-guide.md)
+
+**Core Commands**:
+- `just test`: Run test suite
+- `just smoke`: Quick validation
+- `just lint`: Check code style
+- `just pre-merge`: All quality gates
+- `just --list`: Show all commands
+
+### Development Lifecycle (SAP-012)
+
+8-phase development lifecycle with integrated DDD→BDD→TDD workflow.
+
+**Documentation**: [docs/skilled-awareness/development-lifecycle/](docs/skilled-awareness/development-lifecycle/)
+
+**Quick Start**:
+- Read: [adoption-blueprint.md](docs/skilled-awareness/development-lifecycle/adoption-blueprint.md)
+- Guide: [awareness-guide.md](docs/skilled-awareness/development-lifecycle/awareness-guide.md)
+
+**Key Phases**:
+- Documentation-Driven Design (DDD): Write docs first
+- Behavior-Driven Development (BDD): Gherkin scenarios
+- Test-Driven Development (TDD): RED-GREEN-REFACTOR
+
+### Memory System (A-MEM) (SAP-010)
+
+Cross-session memory with event logs, knowledge graphs, and agent profiles.
+
+**Documentation**: [docs/skilled-awareness/memory-system/](docs/skilled-awareness/memory-system/)
+
+**Quick Start**:
+- Read: [adoption-blueprint.md](docs/skilled-awareness/memory-system/adoption-blueprint.md)
+- Guide: [awareness-guide.md](docs/skilled-awareness/memory-system/awareness-guide.md)
+
+**Key Features**:
+- Event logs: .chora/memory/events/ (JSONL format)
+- Knowledge notes: .chora/memory/knowledge/notes/
+- Agent profiles: .chora/memory/profiles/
+- Operational telemetry: var/telemetry/events.jsonl (existing)
+
+### Docker Operations (SAP-011)
+
+Multi-stage Dockerfile and docker-compose orchestration for development and production.
+
+**Documentation**: [docs/skilled-awareness/docker-operations/](docs/skilled-awareness/docker-operations/)
+
+**Quick Start**:
+- Read: [adoption-blueprint.md](docs/skilled-awareness/docker-operations/adoption-blueprint.md)
+- Guide: [awareness-guide.md](docs/skilled-awareness/docker-operations/awareness-guide.md)
+
+**Key Commands**:
+- Build image: `docker build -t mcp-orchestration:latest .`
+- Start services: `docker-compose up -d`
+- View logs: `docker-compose logs -f`
+- Health check: Multi-stage build, non-root user (UID 1000), health monitoring
+
+---
+
 ### SAP Roadmap
 
 **Phase 1** (2025-10 → 2025-11): Framework Hardening

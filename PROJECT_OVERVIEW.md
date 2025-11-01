@@ -8,11 +8,11 @@
 
 ## Chora-Base v4.1.0 Adoption
 
-**Status:** ✅ Week 2 Complete - 10/18 SAPs Installed (55.6% adoption)
+**Status:** ✅ Week 3 Complete - 14/18 SAPs Installed (77.8% adoption)
 **Plan:** [CHORA_BASE_ADOPTION_PLAN.md](project-docs/CHORA_BASE_ADOPTION_PLAN.md)
-**Test Coverage:** 86.29% (target: 85%) ✅ **EXCEEDED**
+**Test Coverage:** 86.29% (target: 85%) ✅ **MAINTAINED**
 
-**Installed SAPs:**
+**Installed SAPs (14/18):**
 - ✅ SAP-000: SAP Framework (core protocols)
 - ✅ SAP-001: Inbox Coordination (cross-repo collaboration) [PILOT]
 - ✅ SAP-002: Chora-Base Meta (meta-capability documentation)
@@ -21,17 +21,22 @@
 - ✅ SAP-005: CI/CD Workflows (8 GitHub Actions workflows)
 - ✅ SAP-006: Quality Gates (7 pre-commit hooks configured)
 - ✅ SAP-007: Documentation Framework (Diátaxis 4-domain structure)
+- ✅ SAP-008: Automation Scripts (justfile with 25+ commands) **NEW**
 - ✅ SAP-009: Agent Awareness (AGENTS.md/CLAUDE.md patterns)
+- ✅ SAP-010: Memory System (A-MEM event logs, knowledge graph, agent profiles) **NEW**
+- ✅ SAP-011: Docker Operations (multi-stage builds, health checks) **NEW**
+- ✅ SAP-012: Development Lifecycle (DDD→BDD→TDD workflows) **NEW**
 - ✅ SAP-016: Link Validation (automated link checking)
 
-**Week 2 Achievements:**
-- Test coverage: 60.48% → 86.29% (+25.81 percentage points)
-- New tests: 178 tests in 5 new test files (~4,000 lines)
-- Pre-commit hooks: Configured with 7 quality gates
-- CI/CD: 8 workflows validated (test, lint, smoke, codeql, etc.)
+**Week 3 Achievements:**
+- Advanced Features SAPs: 4 SAPs installed (SAP-008, 010, 011, 012)
+- Memory System activated: Events, knowledge notes, agent profiles
+- Workflow documentation: 6 workflow guides in dev-docs/workflows/
+- Test coverage: Maintained at 86.29% (no regression)
+- AGENTS.md: 4 new capability entries
 
-**Documentation:** [docs/skilled-awareness/](docs/skilled-awareness/) (55 artifacts, ~1.2 MB)
-**Next:** Week 3 - Developer Experience (SAP-008, 010, 011, 012)
+**Documentation:** [docs/skilled-awareness/](docs/skilled-awareness/) (75 artifacts, ~1.5 MB)
+**Next:** Week 4 - Ecosystem Integration (SAP-013, 014) OR 100% adoption (remaining 4 SAPs)
 
 ---
 
