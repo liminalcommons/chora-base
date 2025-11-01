@@ -225,6 +225,47 @@ FastMCP-based Model Context Protocol server development patterns and templates.
 
 ---
 
+### Chora-Compose Integration (SAP-017)
+
+How to adopt chora-compose for content generation with role-based generators.
+
+**Documentation**: [docs/skilled-awareness/chora-compose-integration/](docs/skilled-awareness/chora-compose-integration/)
+
+**Quick Start**:
+- Read: [adoption-blueprint.md](docs/skilled-awareness/chora-compose-integration/adoption-blueprint.md)
+- Guide: [awareness-guide.md](docs/skilled-awareness/chora-compose-integration/awareness-guide.md)
+
+**Key Features**:
+- Role-based generators: Demonstration, Template Fill, BDD Scenario, Code Generation
+- Content generation via MCP, CLI, or Python API
+- Ephemeral storage for draft content
+- Integration patterns for existing projects
+
+**Status**: Awareness-only (chora-compose is a dependency but not yet actively used)
+
+---
+
+### Chora-Compose Meta (SAP-018)
+
+Complete chora-compose architecture specification with 17 tools, 5 resources, and 4 modalities.
+
+**Documentation**: [docs/skilled-awareness/chora-compose-meta/](docs/skilled-awareness/chora-compose-meta/)
+
+**Quick Start**:
+- Read: [architecture-overview.md](docs/skilled-awareness/chora-compose-meta/architecture-overview.md)
+- Design: [design-philosophy.md](docs/skilled-awareness/chora-compose-meta/design-philosophy.md)
+- Patterns: [integration-patterns.md](docs/skilled-awareness/chora-compose-meta/integration-patterns.md)
+
+**Key Features**:
+- 17 MCP tools for content generation
+- 5 resources for config management
+- 4 generation modalities (Demonstration, Template Fill, BDD Scenario, Code Generation)
+- Comprehensive architecture documentation
+
+**Status**: Awareness-only (reference documentation for future chora-compose usage)
+
+---
+
 ### SAP Roadmap
 
 **Phase 1** (2025-10 → 2025-11): Framework Hardening
