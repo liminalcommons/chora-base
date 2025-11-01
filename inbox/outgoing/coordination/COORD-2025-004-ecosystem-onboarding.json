@@ -1,0 +1,133 @@
+{
+  "type": "coordination_request",
+  "from_repo": "mcp-orchestration",
+  "to_repo": "chora-workspace",
+  "priority": "high",
+  "trace_id": "ecosystem-coordination-launch-2025-10-31",
+  "description": "mcp-orchestration accepts Full Onboarding to ecosystem coordination hub with conditional W3 Health Monitoring participation",
+  "capabilities_required": [
+    "dependency-tracking",
+    "event-traceability",
+    "blocker-visibility",
+    "coordination-dashboard",
+    "async-coordination-protocol"
+  ],
+  "deadline": "2025-11-14",
+  "context": {
+    "participation_level": "full_onboarding",
+    "onboarding_commitment": {
+      "capability_declaration": "Ready to submit (pre-filled template reviewed)",
+      "inbox_protocol_adoption": "Will create inbox/ directory structure in mcp-orchestration",
+      "time_investment": "45 min onboarding + 10 min/week ongoing",
+      "estimated_submission_date": "2025-11-07"
+    },
+    "w3_health_monitoring": {
+      "participation": "conditional",
+      "prerequisites": [
+        {
+          "item": "Wave 2.0 v0.2.0 release",
+          "status": "in_progress",
+          "estimated_completion": "2025-11-08",
+          "details": "77% test pass rate (120/157 passing, 37 failures to fix), 6-day sprint planned"
+        },
+        {
+          "item": "ecosystem-manifest server registry",
+          "status": "blocked",
+          "required_by": "Week 4 (2025-11-22)",
+          "details": "Repository doesn't exist yet, need server registry v1.0 for auto-discovery"
+        },
+        {
+          "item": "chora-base health templates",
+          "status": "unknown",
+          "required_by": "Week 4 (2025-11-22)",
+          "details": "Need W3-specific health check patterns and Docker deployment templates"
+        }
+      ],
+      "timeline": {
+        "go_decision": "2025-11-15",
+        "implementation_start": "Week 5 (2025-11-25)",
+        "implementation_end": "Week 8 (2025-12-13)",
+        "integration_testing": "Week 9-12 (with mcp-gateway)"
+      },
+      "workaround_if_blocked": "Can start with hardcoded server list (technical debt to resolve when registry available)"
+    },
+    "blockers_declared": [
+      {
+        "type": "dependency",
+        "description": "Awaiting ecosystem-manifest server registry",
+        "from_repo": "ecosystem-manifest",
+        "required_for": "Auto-discovery feature (W3 health monitoring)",
+        "impact": "Blocks Sprint 3 (Week 5-8 in W3 timeline)",
+        "priority": "P1",
+        "mitigation": "Can implement with hardcoded servers initially"
+      },
+      {
+        "type": "dependency",
+        "description": "Need chora-base health check templates",
+        "from_repo": "chora-base",
+        "required_for": "W3 Docker deployment and health monitoring",
+        "impact": "1-2 day delay (can implement custom, migrate later)",
+        "priority": "P2",
+        "mitigation": "Custom health checks initially, migrate to templates when available"
+      }
+    ],
+    "questions_for_teams": {
+      "ecosystem-manifest": [
+        "Is Week 4 delivery realistic for server registry v1.0? Repository creation timeline?",
+        "What health check fields will registry include? Schema versioning strategy?",
+        "Can we get sample registry file for early integration testing?"
+      ],
+      "mcp-gateway": [
+        "What response format do you expect for health status API? (JSON schema, required fields)",
+        "Real-time WebSocket or HTTP polling preference? Or both?",
+        "Ready for integration testing Week 9? Test environment available?"
+      ],
+      "chora-base": [
+        "Health check template status? W3-ready?",
+        "Best practices for health monitoring? (polling intervals, failure thresholds)",
+        "Can you validate claimed 200-300% ROI for template usage?"
+      ]
+    },
+    "deliverables_we_offer": {
+      "for_mcp_gateway": [
+        "Health status API v1.0 (Week 8 delivery)",
+        "OpenAPI spec with example responses",
+        "Test environment with 5 sample servers (3 healthy, 1 degraded, 1 down)",
+        "Integration test script (validates mcp-gateway implementation)",
+        "On-call support during integration week (<2h response time)"
+      ],
+      "for_ecosystem": [
+        "Production-grade health monitoring implementation",
+        "Reusable patterns for other MCP servers",
+        "Documentation of health API integration",
+        "Lessons learned for ecosystem coordination"
+      ]
+    },
+    "current_status": {
+      "project": "mcp-orchestration",
+      "wave": "Wave 2.0 (HTTP/SSE Transport Foundation)",
+      "test_status": {
+        "passing": 120,
+        "failing": 37,
+        "pass_rate": "77%",
+        "coverage": "35%"
+      },
+      "quality_gates": {
+        "target_pass_rate": "100%",
+        "target_coverage": "85%",
+        "estimated_completion": "6 days (1 week sprint)"
+      },
+      "chora_base_adoption": {
+        "saps_installed": "18/18 (100%)",
+        "adoption_date": "2025-10-31",
+        "test_coverage": "86.25%",
+        "quality_record": "0 defects introduced"
+      }
+    },
+    "value_proposition": {
+      "for_w3": "Critical integration point - upstream from mcp-gateway, provides health data for health-aware routing",
+      "for_ecosystem": "Validates coordination protocol with real cross-repo dependencies",
+      "for_mcp_orchestration": "Dependency tracking eliminates email threads, event traceability enables fast debugging"
+    }
+  }
+}

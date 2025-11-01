@@ -1,0 +1,54 @@
+{
+  "type": "coordination_request",
+  "from_repo": "mcp-orchestration",
+  "to_repo": "ecosystem-manifest",
+  "priority": "high",
+  "trace_id": "ecosystem-w3-health-monitoring",
+  "description": "Clarifying questions about server registry timeline and schema for W3 Health Monitoring integration",
+  "capabilities_required": [
+    "server-registry",
+    "health-specifications",
+    "integration-testing-support"
+  ],
+  "deadline": "2025-11-22",
+  "context": {
+    "background": "mcp-orchestration is implementing W3 Health Monitoring (Week 5-8) and needs ecosystem-manifest server registry for auto-discovery feature",
+    "blocker_status": "P1 - Critical blocker for W3 implementation",
+    "questions": [
+      {
+        "category": "timeline",
+        "question": "When will ecosystem-manifest repository be created? Is Week 4 delivery realistic for server registry v1.0?",
+        "importance": "Critical - determines W3 Go/NoGo decision (Nov 15)",
+        "impact_if_delayed": "Blocks auto-discovery, forces hardcoded server list (technical debt)"
+      },
+      {
+        "category": "schema",
+        "question": "What health check fields will registry include? (status, uptime, response_time?) What schema versioning strategy?",
+        "importance": "High - affects our integration implementation",
+        "need_by": "Week 4 (for Week 5 implementation start)"
+      },
+      {
+        "category": "integration",
+        "question": "Can we get sample registry file for early integration testing? OpenAPI spec for registry API?",
+        "importance": "Medium - would accelerate integration, reduce risk",
+        "workaround": "Can mock registry structure if unavailable"
+      }
+    ],
+    "our_timeline": {
+      "go_decision": "2025-11-15",
+      "implementation_start": "Week 5 (2025-11-25)",
+      "need_registry_by": "Week 4 (2025-11-22)",
+      "integration_complete": "Week 8 (2025-12-20)"
+    },
+    "workaround_plan": {
+      "if_registry_delayed": "Implement with hardcoded server list initially",
+      "technical_debt": "Migrate to registry when available",
+      "impact": "Eliminates 15-20 min deployment time savings from auto-discovery"
+    },
+    "value_proposition": {
+      "for_ecosystem_manifest": "mcp-orchestration validates registry design with real integration",
+      "for_w3": "Auto-discovery eliminates manual server configuration",
+      "for_users": "15-20 min saved per deployment"
+    }
+  }
+}

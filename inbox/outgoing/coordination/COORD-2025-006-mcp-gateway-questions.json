@@ -1,0 +1,106 @@
+{
+  "type": "coordination_request",
+  "from_repo": "mcp-orchestration",
+  "to_repo": "mcp-gateway",
+  "priority": "medium",
+  "trace_id": "ecosystem-w3-health-monitoring",
+  "description": "Coordinate health status API integration and testing timeline for W3 Health Monitoring",
+  "capabilities_required": [
+    "health-aware-routing",
+    "integration-testing",
+    "api-consumption"
+  ],
+  "deadline": "2025-12-23",
+  "context": {
+    "background": "mcp-orchestration will provide health status API (Week 8 delivery) for mcp-gateway to consume for health-aware routing",
+    "relationship": "Downstream consumer - mcp-gateway depends on our health API",
+    "questions": [
+      {
+        "category": "api_requirements",
+        "question": "What response format do you expect for health status API? JSON schema, required fields?",
+        "importance": "High - affects our API design",
+        "need_by": "Week 5 (before implementation start)"
+      },
+      {
+        "category": "transport",
+        "question": "Real-time WebSocket or HTTP polling preference? Or both?",
+        "importance": "Medium - affects our transport implementation",
+        "our_capability": "Can provide both (Wave 2.0 supports HTTP/SSE and WebSocket)"
+      },
+      {
+        "category": "performance",
+        "question": "Performance budget for health queries? Our target: p95 <100ms, is that sufficient?",
+        "importance": "Medium - validates performance targets",
+        "our_target": "p95 <100ms per health query"
+      },
+      {
+        "category": "integration_timeline",
+        "question": "Ready for integration testing Week 9? Integration test environment available?",
+        "importance": "High - coordinates handoff",
+        "our_delivery": "Health status API v1.0 ready Week 8 (Dec 20)"
+      },
+      {
+        "category": "error_handling",
+        "question": "Error handling expectations if orchestration unavailable? Graceful degradation strategy?",
+        "importance": "Medium - affects fault tolerance design",
+        "our_approach": "Will return 503 with retry-after header if degraded"
+      },
+      {
+        "category": "testing",
+        "question": "Test data requirements? How many servers, what health states needed for testing?",
+        "importance": "Medium - helps us prepare test environment",
+        "our_offer": "Can provide 5 sample servers (3 healthy, 1 degraded, 1 down)"
+      },
+      {
+        "category": "acceptance",
+        "question": "Acceptance criteria for integration test? What validates 'success'?",
+        "importance": "High - defines done",
+        "our_proposal": "All test servers queryable, <100ms response, graceful degradation"
+      },
+      {
+        "category": "support",
+        "question": "On-call support needs during integration? Slack/GitHub, response SLA?",
+        "importance": "Low - logistics",
+        "our_offer": "<2h response time during integration week"
+      }
+    ],
+    "deliverables_we_provide": [
+      {
+        "item": "Health Status API v1.0",
+        "delivery_date": "Week 8 (2025-12-20)",
+        "details": "RESTful HTTP endpoints for querying server health"
+      },
+      {
+        "item": "OpenAPI spec with examples",
+        "delivery_date": "Week 8 (2025-12-20)",
+        "value": "15 min for mcp-gateway to understand API"
+      },
+      {
+        "item": "Test environment (5 sample servers)",
+        "delivery_date": "Week 8 (2025-12-20)",
+        "details": "3 healthy, 1 degraded, 1 down"
+      },
+      {
+        "item": "Integration test script",
+        "delivery_date": "Week 9 (2025-12-23)",
+        "value": "Validates mcp-gateway implementation"
+      },
+      {
+        "item": "On-call support",
+        "timeframe": "Week 9-12 (integration weeks)",
+        "commitment": "<2h response time on Slack/GitHub"
+      }
+    ],
+    "integration_timeline": {
+      "our_implementation": "Week 5-8 (Nov 25 - Dec 20)",
+      "api_ready": "Week 8 (Dec 20)",
+      "your_integration": "Week 9-12 (Dec 23 - Jan 17)",
+      "handoff_date": "2025-12-20"
+    },
+    "value_proposition": {
+      "for_mcp_gateway": "Reduces integration effort by ~40% (6h → 3.5h estimated)",
+      "for_users": "Health-aware routing improves reliability",
+      "for_ecosystem": "Validates health monitoring pattern for other MCP servers"
+    }
+  }
+}
