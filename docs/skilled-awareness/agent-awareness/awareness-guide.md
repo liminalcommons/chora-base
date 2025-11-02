@@ -1,9 +1,9 @@
 # Awareness Guide: Agent Awareness
 
-**SAP ID**: SAP-011
-**Version**: 1.0.1
+**SAP ID**: SAP-009
+**Version**: 1.1.0
 **Target Audience**: AI agents
-**Last Updated**: 2025-10-28
+**Last Updated**: 2025-10-31
 
 ---
 
@@ -368,7 +368,80 @@ For custom installation paths or options, see:
 
 ---
 
-## 7. Related Content
+## 7. Bidirectional Translation Layer Integration (v1.1.0)
+
+**For**: Generic agents (Claude, Cursor, etc.) and humans
+
+**Purpose**: Enable conversational interaction while executing procedurally through progressive formalization
+
+### 7.1 Discovery Workflow (3-Layer Progressive)
+
+**Layer 1: Root AGENTS.md** - Agent loads root AGENTS.md, discovers 4 bidirectional tools, sees common patterns
+
+**Layer 2: Domain AGENTS.md** - Agent navigates to domain, loads domain-specific user signal patterns
+
+**Layer 3: Pattern Database** - For complex queries, loads full `INTENT_PATTERNS.yaml` (24+ patterns)
+
+**Token Budget**: 15-35k tokens total (Layer 1: ~10k, Layer 2: ~5k, Layer 3: ~20k if needed)
+
+**See**: [protocol-spec.md Section 6](protocol-spec.md) for complete contracts and specifications
+
+### 7.2 Quick Integration for Generic Agents
+
+**Subprocess Invocation** (Recommended):
+```python
+import subprocess, json
+
+# Intent routing
+result = subprocess.run(['python', 'scripts/intent-router.py', user_input], capture_output=True, text=True)
+matches = json.loads(result.stdout)
+
+# Glossary search
+result = subprocess.run(['python', 'scripts/chora-search.py', query, '--fuzzy'], capture_output=True, text=True)
+results = json.loads(result.stdout)
+
+# Context-aware suggestions
+result = subprocess.run(['python', 'scripts/suggest-next.py', '--mode=reactive'], capture_output=True, text=True)
+suggestions = json.loads(result.stdout)
+```
+
+**Graceful Degradation**: If tools unavailable, fall back to documented patterns in AGENTS.md and INTENT_PATTERNS.yaml
+
+### 7.3 Progressive Formalization
+
+**Stage 1 (Week 1)**: User says "show inbox" → Agent translates and executes
+
+**Stage 2 (Week 2-4)**: User says "coordination request" → Agent recognizes formal term, teaches definition
+
+**Stage 3 (Month 2+)**: User says "run_inbox_status" → Agent executes directly, no translation
+
+**Stage 4 (Month 3+)**: User provides JSON → Agent validates and executes
+
+**Goal**: User learns systemic ontology at their own pace while system adapts to their style
+
+### 7.4 User Preferences
+
+**Configuration**: `.chora/user-preferences.yaml` (100+ options)
+
+**Categories**:
+- **Communication**: verbosity (concise|standard|verbose), formality (casual|standard|formal)
+- **Workflow**: require_confirmation (always|destructive|never), progressive_disclosure
+- **Learning**: capture_patterns, suggest_improvements, track_usage
+- **Expertise**: assume_knowledge (beginner|intermediate|expert)
+
+**Adaptation**: Agents load preferences and adapt response style, confirmation behavior, explanation depth
+
+### 7.5 Maintenance
+
+**Add Intent Pattern**: Edit `INTENT_PATTERNS.yaml`, test with `intent-router.py`, update domain AGENTS.md
+
+**Add Glossary Term**: Edit `GLOSSARY.md`, test with `chora-search.py`, reference in SAP docs
+
+**Update Suggestions**: Edit `suggest-next.py`, test with current project state, document new types
+
+---
+
+## 8. Related Content
 
 ### Within This SAP (skilled-awareness/agent-awareness/)
 
@@ -444,5 +517,6 @@ For custom installation paths or options, see:
 ---
 
 **Version History**:
-- **1.0.1** (2025-10-28): Fixed SAP ID (SAP-009 → SAP-011), added "When to Use" section, "Common Pitfalls" with Wave 2 learnings (5 scenarios: reading root vs domain files, skipping domain files, progressive loading, forgetting CLAUDE.md, protocol compliance), enhanced "Related Content" with 4-domain coverage (dev-docs/, project-docs/, user-docs/, skilled-awareness/)
+- **1.1.0** (2025-10-31): Added Section 7 (Bidirectional Translation Layer Integration) - discovery workflow, tool integration patterns, progressive formalization, user preferences, maintenance procedures; fixed SAP ID (SAP-011 → SAP-009)
+- **1.0.1** (2025-10-28): Fixed SAP ID (SAP-009 → SAP-011), added "When to Use" section, "Common Pitfalls" with Wave 2 learnings, enhanced "Related Content" with 4-domain coverage
 - **1.0.0** (2025-10-28): Initial awareness guide

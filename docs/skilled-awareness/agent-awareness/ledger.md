@@ -1,9 +1,9 @@
 # Traceability Ledger: Agent Awareness
 
 **SAP ID**: SAP-009
-**Current Version**: 1.0.0
+**Current Version**: 1.1.0
 **Status**: Draft (Phase 3)
-**Last Updated**: 2025-10-28
+**Last Updated**: 2025-10-31
 
 ---
 
@@ -21,6 +21,7 @@
 
 | Version | Release Date | Type | Changes |
 |---------|--------------|------|---------|
+| 1.1.0 | 2025-10-31 | MINOR | Bidirectional translation layer: intent routing, glossary search, context-aware suggestions, 5 domain AGENTS.md files (COORD-2025-004) |
 | 1.0.0 | 2025-10-28 | MAJOR | Initial SAP-009 release: AGENTS.md/CLAUDE.md patterns, nested awareness |
 
 ---
@@ -31,7 +32,7 @@
 
 | Project | Total Awareness Files | Coverage |
 |---------|----------------------|----------|
-| chora-base | 10 (root + 4 domains × 2) | ✅ Complete |
+| chora-base | 20 (root + 9 domains × 2) | ✅ Complete |
 | chora-compose | 2 (root only) | ⚠️ Partial |
 | mcp-n8n | 2 (root only) | ⚠️ Partial |
 
@@ -44,6 +45,12 @@
 | scripts/ | ✅ | ✅ | ~200 |
 | docker/ | ✅ | ✅ | ~200 |
 | .chora/memory/ | ✅ | ✅ | ~300 |
+| **SAP domains (v1.1.0)**: | | | |
+| inbox/ (SAP-001) | ✅ | ❌ | ~150 |
+| testing-framework/ (SAP-004) | ✅ | ❌ | ~180 |
+| agent-awareness/ (SAP-009) | ✅ | ❌ | ~240 |
+| development-lifecycle/ (SAP-012) | ✅ | ❌ | ~290 |
+| metrics-framework/ (SAP-013) | ✅ | ❌ | ~240 |
 
 ---
 
@@ -70,4 +77,5 @@
 ---
 
 **Version History**:
+- **1.1.0** (2025-10-31): Released bidirectional translation layer, updated version tracking, added 5 SAP domain AGENTS.md files
 - **1.0.0** (2025-10-28): Initial ledger

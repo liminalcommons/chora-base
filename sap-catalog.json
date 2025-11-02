@@ -1,8 +1,8 @@
 {
-  "version": "4.1.0",
-  "updated": "2025-10-30",
+  "version": "4.6.0",
+  "updated": "2025-11-01",
   "description": "Machine-readable catalog of all Skilled Awareness Packages in chora-base",
-  "total_saps": 19,
+  "total_saps": 26,
   "saps": [
     {
       "id": "SAP-000",
@@ -309,16 +309,21 @@
       "name": "agent-awareness",
       "full_name": "Agent Awareness System",
       "status": "active",
-      "version": "1.0.0",
+      "version": "1.1.0",
       "included_by_default": false,
-      "size_kb": 98,
-      "description": "AGENTS.md/CLAUDE.md patterns with nested awareness files and progressive context loading",
+      "size_kb": 125,
+      "description": "AGENTS.md/CLAUDE.md patterns with bidirectional translation layer, 5 domain AGENTS.md files, and inbox protocol integration",
       "capabilities": [
         "Dual-file pattern (AGENTS + CLAUDE)",
-        "Nested awareness hierarchy",
+        "Nested awareness hierarchy (5 domain AGENTS.md files)",
         "Nearest file wins",
         "Progressive context loading",
-        "200k token budget management"
+        "200k token budget management",
+        "Bidirectional translation (conversational ↔ formal)",
+        "Intent routing (confidence thresholds)",
+        "Glossary search (fuzzy matching)",
+        "Context-aware suggestions (reactive/proactive)",
+        "User preferences (100+ options)"
       ],
       "dependencies": ["SAP-000", "SAP-007"],
       "tags": ["agent-awareness", "ai-context", "documentation"],
@@ -658,6 +663,264 @@
       ],
       "phase": "Wave 3",
       "priority": "P1"
+    },
+    {
+      "id": "SAP-020",
+      "name": "react-foundation",
+      "full_name": "React Project Foundation",
+      "status": "active",
+      "version": "1.0.0",
+      "included_by_default": false,
+      "size_kb": 210,
+      "description": "Next.js 15 + TypeScript foundation stack with App Router, RSC, and modern React patterns reducing setup from 8-12h to 45min",
+      "capabilities": [
+        "Next.js 15 with App Router",
+        "TypeScript strict mode",
+        "Project structure (feature-based + layer-based)",
+        "Basic state management setup",
+        "8-12 starter templates"
+      ],
+      "dependencies": ["SAP-000", "SAP-003"],
+      "tags": ["react", "nextjs", "typescript", "foundation", "technology-specific"],
+      "author": "chora-base",
+      "location": "docs/skilled-awareness/react-foundation",
+      "artifacts": {
+        "capability_charter": true,
+        "protocol_spec": true,
+        "awareness_guide": true,
+        "adoption_blueprint": true,
+        "ledger": true
+      },
+      "system_files": [
+        "templates/react/nextjs-15-app-router/",
+        "templates/react/vite-react-spa/",
+        "templates/react/configs/"
+      ],
+      "phase": "Wave 4",
+      "priority": "P1"
+    },
+    {
+      "id": "SAP-021",
+      "name": "react-testing",
+      "full_name": "React Testing & Quality",
+      "status": "active",
+      "version": "1.0.0",
+      "included_by_default": false,
+      "size_kb": 135,
+      "description": "Vitest v4 + React Testing Library + MSW for comprehensive React testing with 80-90% coverage targets",
+      "capabilities": [
+        "Vitest v4 configuration",
+        "React Testing Library patterns",
+        "MSW v2 API mocking",
+        "Component + hook test templates",
+        "Integration testing patterns"
+      ],
+      "dependencies": ["SAP-000", "SAP-004", "SAP-020"],
+      "tags": ["react", "testing", "vitest", "rtl", "msw", "quality"],
+      "author": "chora-base",
+      "location": "docs/skilled-awareness/react-testing",
+      "artifacts": {
+        "capability_charter": true,
+        "protocol_spec": true,
+        "awareness_guide": true,
+        "adoption_blueprint": true,
+        "ledger": true
+      },
+      "system_files": [
+        "templates/react/testing/"
+      ],
+      "phase": "Wave 4",
+      "priority": "P1"
+    },
+    {
+      "id": "SAP-022",
+      "name": "react-linting",
+      "full_name": "React Linting & Formatting",
+      "status": "active",
+      "version": "1.0.0",
+      "included_by_default": false,
+      "size_kb": 268,
+      "description": "ESLint 9 flat config + Prettier 3 + pre-commit hooks for React 19 with 182x faster linting and 20-minute setup",
+      "capabilities": [
+        "ESLint 9 flat config (182x faster incremental builds)",
+        "Prettier 3.6.2 with community-validated settings",
+        "Pre-commit hooks (Husky + lint-staged)",
+        "VS Code integration (8 extensions + auto-fix on save)",
+        "TypeScript strict mode enforcement",
+        "React Hooks linting (Rules of Hooks)",
+        "Accessibility linting (WCAG 2.2 Level AA)",
+        "Next.js 15 and Vite 7 variants",
+        "8 templates + 5 documentation artifacts"
+      ],
+      "dependencies": ["SAP-000", "SAP-006", "SAP-020"],
+      "tags": ["react", "eslint", "prettier", "linting", "quality", "typescript", "accessibility"],
+      "author": "chora-base",
+      "location": "docs/skilled-awareness/react-linting",
+      "artifacts": {
+        "capability_charter": true,
+        "protocol_spec": true,
+        "awareness_guide": true,
+        "adoption_blueprint": true,
+        "ledger": true
+      },
+      "system_files": [
+        "templates/react/linting/nextjs/eslint.config.mjs",
+        "templates/react/linting/vite/eslint.config.mjs",
+        "templates/react/linting/shared/.prettierrc",
+        "templates/react/linting/shared/.prettierignore",
+        "templates/react/linting/shared/lint-staged.config.js",
+        "templates/react/linting/shared/.vscode/settings.json",
+        "templates/react/linting/shared/.vscode/extensions.json",
+        "templates/react/linting/shared/package.json.snippet",
+        "templates/react/linting/README.md"
+      ],
+      "phase": "Wave 4",
+      "priority": "P1"
+    },
+    {
+      "id": "SAP-023",
+      "name": "react-state-management",
+      "full_name": "React State Management Patterns",
+      "status": "active",
+      "version": "1.0.0",
+      "included_by_default": false,
+      "size_kb": 287,
+      "description": "Three-pillar state architecture (server/client/form) with TanStack Query v5 + Zustand v4 + React Hook Form v7 + Zod, reducing setup from 4-6h to 30min (85-90% savings)",
+      "capabilities": [
+        "TanStack Query v5.62.7 for server state (GET/POST/optimistic updates)",
+        "Zustand v4.5.2 for client state (zero-boilerplate stores)",
+        "React Hook Form v7.54.0 + Zod v3.24.1 (type-safe validation)",
+        "10 production templates (4 TanStack Query, 3 Zustand, 3 RHF)",
+        "SSR hydration patterns (Next.js 15)",
+        "Optimistic update patterns (instant UX)",
+        "localStorage persistence with migration",
+        "Decision trees and anti-patterns guide"
+      ],
+      "dependencies": ["SAP-000", "SAP-020"],
+      "tags": ["react", "state-management", "tanstack-query", "zustand", "forms", "zod", "typescript"],
+      "author": "chora-base",
+      "location": "docs/skilled-awareness/react-state-management",
+      "artifacts": {
+        "capability_charter": true,
+        "protocol_spec": true,
+        "awareness_guide": true,
+        "adoption_blueprint": true,
+        "ledger": true
+      },
+      "system_files": [
+        "templates/react/state-management/tanstack-query/query-client.ts",
+        "templates/react/state-management/tanstack-query/query-provider.tsx",
+        "templates/react/state-management/tanstack-query/use-query-example.ts",
+        "templates/react/state-management/tanstack-query/use-mutation-example.ts",
+        "templates/react/state-management/zustand/store-basic.ts",
+        "templates/react/state-management/zustand/store-slice-pattern.ts",
+        "templates/react/state-management/zustand/store-persist.ts",
+        "templates/react/state-management/react-hook-form/form-basic.tsx",
+        "templates/react/state-management/react-hook-form/form-zod-validation.tsx",
+        "templates/react/state-management/react-hook-form/form-complex.tsx",
+        "templates/react/state-management/README.md"
+      ],
+      "phase": "Wave 4",
+      "priority": "P1"
+    },
+    {
+      "id": "SAP-024",
+      "name": "react-styling",
+      "full_name": "React Styling Architecture",
+      "status": "active",
+      "version": "1.0.0",
+      "included_by_default": false,
+      "size_kb": 122,
+      "description": "Tailwind CSS v4 + shadcn/ui component library with RSC compatibility and responsive design patterns",
+      "capabilities": [
+        "Tailwind CSS v4 (CSS-first)",
+        "shadcn/ui installation + components",
+        "Component variant patterns (CVA)",
+        "Responsive design templates",
+        "CSS Modules escape hatch"
+      ],
+      "dependencies": ["SAP-000", "SAP-020"],
+      "tags": ["react", "styling", "tailwind", "shadcn", "css"],
+      "author": "chora-base",
+      "location": "docs/skilled-awareness/react-styling",
+      "artifacts": {
+        "capability_charter": true,
+        "protocol_spec": true,
+        "awareness_guide": true,
+        "adoption_blueprint": true,
+        "ledger": true
+      },
+      "system_files": [
+        "templates/react/styling/"
+      ],
+      "phase": "Wave 4",
+      "priority": "P2"
+    },
+    {
+      "id": "SAP-025",
+      "name": "react-performance",
+      "full_name": "React Performance Optimization",
+      "status": "active",
+      "version": "1.0.0",
+      "included_by_default": false,
+      "size_kb": 155,
+      "description": "Core Web Vitals optimization with RSC, code splitting, image/font optimization, and bundle size limits",
+      "capabilities": [
+        "Core Web Vitals targets (LCP, INP, CLS)",
+        "Code splitting patterns",
+        "Image optimization (AVIF)",
+        "Font optimization (WOFF2)",
+        "Lighthouse CI integration"
+      ],
+      "dependencies": ["SAP-000", "SAP-020"],
+      "tags": ["react", "performance", "web-vitals", "optimization"],
+      "author": "chora-base",
+      "location": "docs/skilled-awareness/react-performance",
+      "artifacts": {
+        "capability_charter": true,
+        "protocol_spec": true,
+        "awareness_guide": true,
+        "adoption_blueprint": true,
+        "ledger": true
+      },
+      "system_files": [
+        "templates/react/performance/"
+      ],
+      "phase": "Wave 4",
+      "priority": "P2"
+    },
+    {
+      "id": "SAP-026",
+      "name": "react-accessibility",
+      "full_name": "React Accessibility (WCAG 2.2)",
+      "status": "active",
+      "version": "1.0.0",
+      "included_by_default": false,
+      "size_kb": 138,
+      "description": "WCAG 2.2 Level AA compliance with eslint-plugin-jsx-a11y, Radix UI primitives, and axe-core testing",
+      "capabilities": [
+        "WCAG 2.2 Level AA compliance",
+        "eslint-plugin-jsx-a11y (85% coverage)",
+        "Radix UI accessible components",
+        "jest-axe/axe-core testing",
+        "Focus management patterns"
+      ],
+      "dependencies": ["SAP-000", "SAP-020", "SAP-021"],
+      "tags": ["react", "accessibility", "wcag", "a11y", "radix"],
+      "author": "chora-base",
+      "location": "docs/skilled-awareness/react-accessibility",
+      "artifacts": {
+        "capability_charter": true,
+        "protocol_spec": true,
+        "awareness_guide": true,
+        "adoption_blueprint": true,
+        "ledger": true
+      },
+      "system_files": [
+        "templates/react/accessibility/"
+      ],
+      "phase": "Wave 4",
+      "priority": "P2"
     }
   ],
   "dependency_graph": {
@@ -667,7 +930,9 @@
     "developer_experience": ["SAP-007", "SAP-008", "SAP-009"],
     "advanced_features": ["SAP-010", "SAP-011", "SAP-012"],
     "cross_repository": ["SAP-013"],
-    "technology_specific": ["SAP-014", "SAP-017", "SAP-018"]
+    "technology_specific": ["SAP-014", "SAP-017", "SAP-018"],
+    "react_foundation": ["SAP-020", "SAP-021", "SAP-022"],
+    "react_advanced": ["SAP-023", "SAP-024", "SAP-025", "SAP-026"]
   },
   "installation_order": [
     "SAP-000",
@@ -687,7 +952,15 @@
     "SAP-013",
     "SAP-014",
     "SAP-017",
-    "SAP-018"
+    "SAP-018",
+    "SAP-019",
+    "SAP-020",
+    "SAP-021",
+    "SAP-022",
+    "SAP-023",
+    "SAP-024",
+    "SAP-025",
+    "SAP-026"
   ],
 
   "sap_sets": {
@@ -862,6 +1135,47 @@
       ],
       "warnings": [],
       "tags": ["mcp", "fastmcp", "model-context-protocol", "claude"]
+    },
+
+    "react-development": {
+      "id": "react-development",
+      "name": "React Development Suite",
+      "version": "1.0.0",
+      "description": "Complete React development stack with Next.js 15, TypeScript, Vitest, and production best practices (Q4 2024 - Q1 2025)",
+      "saps": ["SAP-000", "SAP-003", "SAP-004", "SAP-020", "SAP-021", "SAP-022", "SAP-023", "SAP-024", "SAP-025", "SAP-026"],
+      "estimated_tokens": 75000,
+      "estimated_hours": "1-2 days",
+      "use_cases": [
+        "Building modern React applications with Next.js 15",
+        "Full-stack TypeScript development",
+        "Production-ready React projects",
+        "React Server Components architecture",
+        "Enterprise-grade front-end development"
+      ],
+      "included_capabilities": [
+        "SAP framework (SAP-000)",
+        "Project scaffolding (SAP-003)",
+        "Base testing framework (SAP-004)",
+        "React project foundation with Next.js 15 + TypeScript (SAP-020)",
+        "React testing with Vitest + RTL + MSW (SAP-021)",
+        "React linting with ESLint 9 + Prettier (SAP-022)",
+        "State management with TanStack Query + Zustand (SAP-023)",
+        "Styling with Tailwind v4 + shadcn/ui (SAP-024)",
+        "Performance optimization and Core Web Vitals (SAP-025)",
+        "WCAG 2.2 Level AA accessibility (SAP-026)"
+      ],
+      "next_steps": [
+        "Add CI/CD workflows (SAP-005) for React deployment pipelines",
+        "Add documentation framework (SAP-007) for component docs",
+        "Consider development lifecycle (SAP-012) for DDD/BDD/TDD workflows",
+        "Customize templates for your specific use case"
+      ],
+      "warnings": [
+        "React SAPs focus on Next.js 15 as primary framework - Vite/Remix alternatives provided",
+        "Requires Node.js 22.x LTS for optimal performance",
+        "Tailwind v4 is in beta - check compatibility before production use"
+      ],
+      "tags": ["react", "nextjs", "typescript", "frontend", "production", "enterprise"]
     }
   }
 }

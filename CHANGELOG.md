@@ -5,6 +5,85 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [4.1.3] - 2025-10-31
+
+### Added
+
+**Bidirectional Translation Layer (SAP-009 v1.1.0)** - Natural language to formal action translation for agent-human collaboration ✅
+
+**Core Documentation Enhancements**:
+- **SAP-009 protocol-spec.md Section 6** (~400 lines) - Technical contracts
+  - IntentMatch contract (confidence thresholds, parameter extraction)
+  - GlossaryEntry contract (fuzzy matching, related terms)
+  - Suggestion contract (reactive/proactive modes)
+  - UserPreferences contract (100+ configuration options)
+  - Progressive formalization stages (casual → semi-formal → formal → executable)
+  - Quality gates and anti-patterns
+- **SAP-009 awareness-guide.md Section 7** (~70 lines) - Integration patterns
+  - 3-layer progressive discovery workflow (AGENTS.md → domain AGENTS.md → INTENT_PATTERNS.yaml)
+  - Generic agent integration via subprocess invocation
+  - Token budgeting (15-35k total)
+  - "Nearest File Wins" pattern
+
+**Domain AGENTS.md Files Created** (1,100+ total lines):
+- `docs/skilled-awareness/inbox/AGENTS.md` (150 lines) - SAP-001 inbox protocol patterns
+  - User signal patterns for inbox operations (13 patterns)
+  - Coordination request workflows (Type 1/2/3 intake)
+  - Ecosystem status operations
+- `docs/skilled-awareness/testing-framework/AGENTS.md` (180 lines) - SAP-004 testing patterns
+  - Testing operations (pytest, coverage, fixtures)
+  - Coverage targets (85% minimum, 90% goal)
+  - Test debugging workflows
+- `docs/skilled-awareness/agent-awareness/AGENTS.md` (240 lines) - SAP-009 awareness patterns
+  - Agent discovery operations
+  - AGENTS.md maintenance workflows
+  - Bidirectional translation operations
+  - Progressive formalization examples
+- `docs/skilled-awareness/development-lifecycle/AGENTS.md` (290 lines) - SAP-012 workflow patterns
+  - 8-phase workflow operations (DDD→BDD→TDD)
+  - Sprint planning and release management
+  - Quality gates and validation
+- `docs/skilled-awareness/metrics-framework/AGENTS.md` (240 lines) - SAP-013 metrics patterns
+  - ROI calculation (Claude Code ROI calculator)
+  - Velocity and progress tracking
+  - Quality metrics and documentation coverage
+
+**Foundation Tool Enhancements**:
+- **scripts/suggest-next.py** - Inbox protocol integration
+  - New methods: `get_ecosystem_status()`, `get_coordination_requests()`, `get_blockers()`
+  - Enhanced workflow suggestions prioritize by: blockers → pending triage → accepted P1/P2
+  - Parses ECOSYSTEM_STATUS.yaml for rich context
+  - Fixed datetime timezone comparison bug
+  - Tested in reactive/proactive modes
+
+### Changed
+
+- **SAP-009 version**: 1.0.0 → 1.1.0 (MINOR enhancement, backward compatible)
+- **SAP-009 awareness-guide.md**: Fixed incorrect SAP ID (was SAP-011, corrected to SAP-009)
+- **Foundation tools lint clean**: Fixed 7 lint errors (unused imports, f-string prefixes)
+
+### Quality Gates
+
+- Foundation tools executable: ✅ (intent-router.py, chora-search.py, suggest-next.py)
+- Lint clean (ruff): ✅ (0 errors in foundation tools)
+- Documentation links: ✅ (0 broken links in new AGENTS.md files)
+
+### Documentation Impact
+
+**Total Lines Added**: ~1,570 lines
+- SAP-009 enhancements: 470 lines (protocol-spec + awareness-guide)
+- Domain AGENTS.md files: 1,100 lines (5 files)
+- suggest-next.py enhancements: ~70 lines (3 new methods)
+
+**Files Modified**: 8 files
+- 2 SAP-009 core files enhanced
+- 5 domain AGENTS.md files created
+- 1 foundation tool enhanced (suggest-next.py)
+
+**Coordination**: COORD-2025-004 (coord-2025-004-bidirectional)
+
+---
+
 ## [4.1.2] - 2025-10-31
 
 ### Added

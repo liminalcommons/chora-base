@@ -1,9 +1,9 @@
 # Protocol Specification: Agent Awareness
 
 **SAP ID**: SAP-009
-**Version**: 1.0.0
+**Version**: 1.1.0
 **Status**: Draft (Phase 3)
-**Last Updated**: 2025-10-28
+**Last Updated**: 2025-10-31
 
 ---
 
@@ -257,7 +257,407 @@ Load for complex refactoring:
 
 ---
 
-## 6. Related Documents
+## 6. Bidirectional Translation Layer (v1.1.0)
+
+### 6.1 Overview
+
+**Purpose**: Enable mutual ergonomics between conversational user input and procedural execution through progressive formalization.
+
+**Key Principle**: Tools are TRANSLATION aids, not AUTOMATION. LLM intelligence remains primary for generation, reasoning, and design tasks.
+
+### 6.2 Core Capabilities
+
+The bidirectional translation layer provides three core capabilities:
+
+1. **Intent Routing**: Natural language → Formal actions (`scripts/intent-router.py`)
+2. **Glossary Search**: Term discovery and ontology learning (`scripts/chora-search.py`)
+3. **Context Analysis**: Situation-aware next action suggestions (`scripts/suggest-next.py`)
+
+**Supporting Infrastructure**:
+- **Intent Patterns Database**: `docs/dev-docs/patterns/INTENT_PATTERNS.yaml` (24+ patterns)
+- **Ecosystem Glossary**: `docs/GLOSSARY.md` (75+ terms, 14 categories)
+- **User Preferences**: `.chora/user-preferences.yaml` (100+ configuration options)
+
+### 6.3 Intent Router Contract
+
+**Script**: `scripts/intent-router.py`
+
+**Purpose**: Route natural language input to formal actions with confidence scoring
+
+**Input**: Natural language user input (string)
+
+**Output**: List of `IntentMatch` objects, sorted by confidence descending
+
+**IntentMatch Structure**:
+```python
+class IntentMatch:
+    action: str              # Formal action identifier (e.g., "run_inbox_status")
+    confidence: float        # Match confidence 0.0-1.0
+    parameters: dict         # Extracted parameters from input
+    pattern_id: str          # Matching pattern identifier
+    clarification: str|None  # Clarification question if ambiguous
+```
+
+**Confidence Thresholds**:
+- **≥0.70**: Execute action automatically (high confidence)
+- **0.50-0.70**: Request clarification from user (medium confidence)
+- **<0.50**: Offer alternatives (low confidence)
+
+**Usage Pattern**:
+```python
+from scripts.intent_router import IntentRouter
+
+router = IntentRouter()
+matches = router.route("show inbox")
+
+if matches[0].confidence >= 0.70:
+    # High confidence: execute action
+    execute_action(matches[0].action, matches[0].parameters)
+elif matches[0].confidence >= 0.50:
+    # Medium confidence: ask for clarification
+    ask_clarification(matches[0].clarification, matches[0].alternatives)
+else:
+    # Low confidence: suggest alternatives
+    suggest_alternatives(matches[:3])
+```
+
+**Pattern Database**: `docs/dev-docs/patterns/INTENT_PATTERNS.yaml`
+
+**Pattern Structure**:
+```yaml
+- pattern_id: inbox_status
+  action: run_inbox_status
+  triggers:
+    - show inbox
+    - what's in the inbox
+    - inbox status
+    - check inbox
+  parameters: {}
+  description: Display inbox status dashboard
+  examples:
+    - "What's in the inbox?"
+    - "Show me pending coordination requests"
+  sap_reference: SAP-001
+```
+
+**Graceful Degradation**: If script not available, fall back to pattern matching in INTENT_PATTERNS.yaml
+
+### 6.4 Glossary Search Contract
+
+**Script**: `scripts/chora-search.py`
+
+**Purpose**: Search glossary for term discovery and ontology learning
+
+**Input**: Search query (string), optional fuzzy flag (bool)
+
+**Output**: List of `(GlossaryEntry, relevance_score)` tuples
+
+**GlossaryEntry Structure**:
+```python
+class GlossaryEntry:
+    term: str                # Canonical term
+    definition: str          # Term definition
+    category: str            # Category (e.g., "Intake & Coordination")
+    aliases: list[str]       # Alternative names
+    related: list[str]       # Related terms
+    sap_reference: str|None  # Related SAP ID
+    examples: list[str]      # Usage examples
+```
+
+**Search Modes**:
+1. **Exact match** (score 1.0): Query == term (case-insensitive)
+2. **Contains** (score 0.8): Query is substring of term
+3. **Fuzzy match** (score 0.4-0.7): Similarity ≥60% via SequenceMatcher
+
+**Usage Pattern**:
+```python
+from scripts.chora_search import GlossarySearch
+
+glossary = GlossarySearch()
+results = glossary.search("coordination", fuzzy=True)
+
+for entry, score in results[:3]:
+    print(f"{entry.term} (relevance: {score:.2f})")
+    print(f"  Definition: {entry.definition}")
+    print(f"  SAP: {entry.sap_reference}")
+    print(f"  Related: {', '.join(entry.related)}")
+```
+
+**Additional Methods**:
+- `reverse_search(definition_fragment)`: Find term by definition content
+- `get_related(term)`: Get related terms for exploration
+- `by_category(category)`: Get all terms in category
+- `by_sap(sap_id)`: Get all terms related to SAP
+
+**Glossary Structure**: `docs/GLOSSARY.md`
+
+**Entry Format**:
+```markdown
+### Coordination Request
+Type 2 intake for cross-repo dependencies or blocking work reviewed during sprint planning (every 2 weeks).
+
+**Aliases:** Type 2 intake, coord-NNN
+**Related:** Strategic Proposal, Implementation Task
+**SAP:** SAP-001
+**File:** inbox/incoming/coordination/
+**Example:** Coordinating testing improvements between chora-base and chora-compose
+```
+
+**Graceful Degradation**: If script not available, direct users to `docs/GLOSSARY.md`
+
+### 6.5 Suggestion Engine Contract
+
+**Script**: `scripts/suggest-next.py`
+
+**Purpose**: Generate context-aware next action suggestions based on project state
+
+**Input**: Project context (current state), mode ("reactive" | "proactive")
+
+**Output**: List of `Suggestion` objects, sorted by priority
+
+**Suggestion Structure**:
+```python
+class Suggestion:
+    action: str            # Suggested action description
+    rationale: str         # Why this suggestion makes sense
+    priority: str          # "high" | "medium" | "low"
+    category: str          # "workflow" | "quality" | "planning" | "learning"
+    estimated_effort: str  # Time estimate (e.g., "5-10 minutes")
+```
+
+**Suggestion Modes**:
+- **Reactive**: Return top 5 suggestions across all priorities (user asked "what should I do")
+- **Proactive**: Return only high-priority suggestions (user didn't ask, but should know)
+
+**Context Sources**:
+- **Inbox status**: Pending coordination requests, active blockers (from `ECOSYSTEM_STATUS.yaml`)
+- **Sprint phase**: Planning, development, testing, review (from sprint plan files)
+- **Quality metrics**: Test coverage, broken links, lint errors (from pytest/ruff output)
+- **Documentation state**: Missing files, outdated content (from file system analysis)
+
+**Usage Pattern**:
+```python
+from scripts.suggest_next import SuggestionEngine, ProjectContext
+
+context = ProjectContext.from_current_directory()
+engine = SuggestionEngine(context)
+suggestions = engine.suggest(mode="reactive")
+
+for suggestion in suggestions:
+    print(f"[{suggestion.priority}] {suggestion.action}")
+    print(f"  Why: {suggestion.rationale}")
+    print(f"  Effort: {suggestion.estimated_effort}")
+```
+
+**Integration Points**:
+- **Inbox protocol (SAP-001)**: Suggest reviewing pending requests when `status: pending_triage`
+- **Development lifecycle (SAP-012)**: Suggest next phase based on current sprint plan
+- **Testing framework (SAP-004)**: Suggest improving coverage if <85%
+- **Documentation framework (SAP-007)**: Suggest fixing broken links if validation fails
+
+**Graceful Degradation**: If script not available, agents rely on documented workflows
+
+### 6.6 User Preferences Contract
+
+**Configuration File**: `.chora/user-preferences.yaml`
+
+**Template**: `.chora/user-preferences.yaml.template` (100+ options)
+
+**Purpose**: Enable user-specific agent behavior adaptation
+
+**Configuration Categories**:
+
+**1. Communication** (verbosity, formality, output_format):
+```yaml
+communication:
+  verbosity: standard  # concise|standard|verbose
+  formality: standard  # casual|standard|formal
+  output_format: terminal  # terminal|markdown|json
+```
+
+**2. Workflow** (confirmation, automation, disclosure):
+```yaml
+workflow:
+  require_confirmation: destructive  # always|destructive|never
+  auto_commit: false
+  progressive_disclosure: true
+```
+
+**3. Learning** (pattern capture, suggestions, usage tracking):
+```yaml
+learning:
+  capture_patterns: true
+  suggest_improvements: true
+  track_usage: true
+```
+
+**4. Expertise** (assume_knowledge, explain_rationale, show_alternatives):
+```yaml
+expertise:
+  assume_knowledge: intermediate  # beginner|intermediate|expert
+  explain_rationale: true
+  show_alternatives: true
+```
+
+**Usage Pattern**:
+```python
+import yaml
+
+with open('.chora/user-preferences.yaml') as f:
+    prefs = yaml.safe_load(f)
+
+# Adapt verbosity
+if prefs['communication']['verbosity'] == 'verbose':
+    response += detailed_explanation()
+    response += examples()
+elif prefs['communication']['verbosity'] == 'concise':
+    response = summarize(response)
+
+# Adapt confirmation behavior
+if prefs['workflow']['require_confirmation'] == 'always':
+    confirm_before_action()
+elif prefs['workflow']['require_confirmation'] == 'destructive':
+    if action_is_destructive():
+        confirm_before_action()
+```
+
+**Graceful Degradation**: If preferences file missing, use defaults from template
+
+### 6.7 Integration with Existing SAP-009 Patterns
+
+**Bidirectional translation layer EXTENDS, not replaces, existing patterns**:
+
+**1. AGENTS.md/CLAUDE.md dual-file pattern** (Section 2):
+- Bidirectional tools discoverable via root AGENTS.md
+- Domain-specific user signals in nested AGENTS.md files
+- Progressive context loading remains primary mechanism
+
+**2. "Nearest File Wins"** (Section 3):
+- Domain AGENTS.md files can override root intent patterns
+- Allows domain-specific translations (e.g., testing → pytest-specific actions)
+
+**3. Progressive Context Loading** (Section 4):
+- **Phase 1 (Always Load)**: Root AGENTS.md includes tool discovery
+- **Phase 2 (Load on Demand)**: Domain AGENTS.md includes user signal patterns
+- **Phase 3 (Complex Only)**: Full pattern database (INTENT_PATTERNS.yaml)
+
+**4. Token Budgeting** (Section 4):
+- Intent router: ~5-10k tokens (patterns + script)
+- Glossary search: ~15-20k tokens (all terms)
+- Suggestion engine: ~10-15k tokens (context analysis)
+- **Total**: ~30-45k tokens (within 200k budget)
+
+### 6.8 User Signal Patterns (Domain AGENTS.md Integration)
+
+**Purpose**: Map conversational input to domain-specific formal actions
+
+**Pattern**: Each domain AGENTS.md file includes a "User Signal Patterns" section
+
+**Example Structure**:
+```markdown
+## User Signal Patterns
+
+### Inbox Operations (SAP-001)
+
+| User Says | Formal Action | Notes |
+|-----------|---------------|-------|
+| "show inbox" | run_inbox_status | Display dashboard |
+| "what's pending" | list_pending_coordination_requests | Filter by status |
+| "review coord-NNN" | open_coordination_request(id="coord-NNN") | Load specific request |
+```
+
+**Domain AGENTS.md Files Enhanced** (v1.1.0):
+1. `docs/skilled-awareness/inbox-protocol/AGENTS.md` (SAP-001)
+2. `docs/skilled-awareness/testing-framework/AGENTS.md` (SAP-004)
+3. `docs/skilled-awareness/agent-awareness/AGENTS.md` (SAP-009)
+4. `docs/skilled-awareness/development-lifecycle/AGENTS.md` (SAP-012)
+5. `docs/skilled-awareness/metrics-framework/AGENTS.md` (SAP-013)
+
+### 6.9 Progressive Formalization
+
+**Goal**: User gradually learns systemic ontology while system adapts to user style
+
+**Stage 1: Casual (Week 1)**
+```
+User: "show me the inbox"
+Agent: *executes run_inbox_status via intent routing*
+```
+
+**Stage 2: Semi-Formal (Week 2-4)**
+```
+User: "check coordination requests"
+Agent: *recognizes "coordination request" as formal term, shows definition*
+User: "ok, show pending coordination requests"
+Agent: *executes list_pending_coordination_requests*
+```
+
+**Stage 3: Formal (Month 2+)**
+```
+User: "run_inbox_status"
+Agent: *executes directly, no translation needed*
+User: "create coordination request for SAP-009 enhancement"
+Agent: *uses formal template, user knows schema*
+```
+
+**Stage 4: Executable (Month 3+)**
+```
+User provides JSON directly:
+{
+  "type": "coordination",
+  "request_id": "COORD-2025-005",
+  ...
+}
+Agent: *validates schema, creates request*
+```
+
+**Key**: User moves at their own pace; system supports all stages simultaneously
+
+### 6.10 Anti-Patterns
+
+**DO NOT**:
+1. Auto-load tools without documentation discovery (breaks generic agent compatibility)
+2. Automate LLM-intelligent tasks (generation, reasoning, design remain LLM primary)
+3. Auto-add patterns without review (manual curation maintains quality)
+4. Use tools as replacement for understanding systemic ontology (progressive formalization is goal)
+
+**DO**:
+1. Document tool discovery in AGENTS.md (3-layer: root → domain → patterns)
+2. Use tools for translation (natural language → formal actions)
+3. Gracefully degrade when tools unavailable (documented pattern fallback)
+4. Encourage progressive formalization (casual → semi-formal → formal → executable)
+
+### 6.11 Quality Gates
+
+**Intent Recognition**:
+- Accuracy ≥80% on test query set (30+ queries)
+- Handles typos and variations
+- Provides clear alternatives when ambiguous
+
+**Glossary Search**:
+- Exact match returns top result with score 1.0
+- Fuzzy matching handles typos (≥60% similarity)
+- Related terms discoverable via `get_related()`
+
+**Suggestion Engine**:
+- Context-aware recommendations relevant to project state
+- Reactive mode returns top 5, proactive only high priority
+- Estimated effort accurate ±50%
+
+**Test Coverage**: ≥85% for integration code
+
+**BDD Scenarios**: 61 scenarios covering all capabilities
+
+### 6.12 Versioning
+
+- **SAP-009 v1.0.0**: AGENTS.md/CLAUDE.md dual-file pattern, progressive loading
+- **SAP-009 v1.1.0**: Bidirectional translation layer (THIS ENHANCEMENT)
+- **Future**: v1.2.0 could add voice-to-text translation, visual workflow builder
+
+**Migration**: v1.0.0 → v1.1.0 is backward compatible (additive only, no breaking changes)
+
+---
+
+## 7. Related Documents
 
 **SAP-009 Artifacts**:
 - [capability-charter.md](capability-charter.md)
@@ -281,4 +681,5 @@ Load for complex refactoring:
 ---
 
 **Version History**:
+- **1.1.0** (2025-10-31): Added Section 6 (Bidirectional Translation Layer) - intent routing, glossary search, context-aware suggestions, user preferences, progressive formalization
 - **1.0.0** (2025-10-28): Initial protocol specification for agent-awareness

@@ -2,16 +2,16 @@
 
 **Purpose**: Central registry of all capabilities packaged as SAPs in chora-base.
 
-**Last Updated**: 2025-10-29
+**Last Updated**: 2025-11-01
 **Framework Version**: 1.0.0
 
 ---
 
 ## Overview
 
-This index tracks all **18 capabilities** identified for SAP packaging across 4 roadmap phases + Wave 2 + Wave 3.
+This index tracks all **26 capabilities** identified for SAP packaging across 4 roadmap phases + Wave 2 + Wave 3 + Wave 4 (React).
 
-**Current Coverage**: 18/18 SAPs (100%) - ALL PHASES COMPLETE! 🎉
+**Current Coverage**: 23/26 SAPs (88%) - Wave 4 in progress
 
 **Target Coverage**:
 - Phase 1: 3/14 (21%) ✅ Complete
@@ -24,7 +24,7 @@ This index tracks all **18 capabilities** identified for SAP packaging across 4 
 
 ## Active SAPs
 
-**Awareness Integration Status**: ✅ 18/18 PASS (100%) - Wave 2 Audit Complete (2025-10-29)
+**Awareness Integration Status**: ✅ 22/22 PASS (100%) - Wave 4 SAP-024 Added (2025-11-01)
 
 | SAP ID | Capability | Version | Status | Phase | Awareness | Location | Dependencies |
 |--------|------------|---------|--------|-------|-----------|----------|--------------|
@@ -37,7 +37,7 @@ This index tracks all **18 capabilities** identified for SAP packaging across 4 
 | SAP-006 | quality-gates | 1.0.0 | Draft | Phase 2 | ✅ 4/4 | [quality-gates/](quality-gates/) | SAP-000, SAP-004 |
 | SAP-007 | documentation-framework | 1.0.0 | Draft | Phase 3 | ✅ 4/4 | [documentation-framework/](documentation-framework/) | SAP-000 |
 | SAP-008 | automation-scripts | 1.0.0 | Draft | Phase 3 | ✅ 4/4 | [automation-scripts/](automation-scripts/) | SAP-000, SAP-012 |
-| SAP-009 | agent-awareness | 1.0.0 | Draft | Phase 3 | ✅ 4/4 | [agent-awareness/](agent-awareness/) | SAP-000, SAP-007 |
+| SAP-009 | agent-awareness | 1.1.0 | Draft | Phase 3 | ✅ 4/4 | [agent-awareness/](agent-awareness/) | SAP-000, SAP-007 |
 | SAP-010 | memory-system | 1.0.0 | Draft | Phase 3 | ✅ 4/4 | [memory-system/](memory-system/) | SAP-000 |
 | SAP-011 | docker-operations | 1.0.0 | Draft | Phase 3 | ✅ 4/4 | [docker-operations/](docker-operations/) | SAP-000 |
 | SAP-012 | development-lifecycle | 1.0.0 | Draft | Phase 3 | ✅ 4/4 | [development-lifecycle/](development-lifecycle/) | SAP-000 |
@@ -46,6 +46,14 @@ This index tracks all **18 capabilities** identified for SAP packaging across 4 
 | SAP-016 | link-validation-reference-management | 1.0.0 | Active | Wave 2 | ✅ 4/4 | [link-validation-reference-management/](link-validation-reference-management/) | None (foundational) |
 | SAP-017 | chora-compose-integration | 1.0.0 | Active | Wave 3 | ✅ 4/4 | [chora-compose-integration/](chora-compose-integration/) | SAP-003 |
 | SAP-018 | chora-compose-meta | 1.0.0 | Active | Wave 3 | ✅ 4/4 | [chora-compose-meta/](chora-compose-meta/) | SAP-017 |
+| SAP-019 | sap-self-evaluation | 1.0.0 | Active | Wave 3 | ✅ 4/4 | [sap-self-evaluation/](sap-self-evaluation/) | SAP-000 |
+| SAP-020 | react-foundation | 1.0.0 | Active | Wave 4 | ✅ 5/5 | [react-foundation/](react-foundation/) | SAP-000, SAP-003 |
+| SAP-021 | react-testing | 1.0.0 | Active | Wave 4 | ✅ 5/5 | [react-testing/](react-testing/) | SAP-000, SAP-004, SAP-020 |
+| SAP-022 | react-linting | 1.0.0 | Active | Wave 4 | ✅ 5/5 | [react-linting/](react-linting/) | SAP-000, SAP-006, SAP-020 |
+| SAP-023 | react-state-management | 1.0.0 | Active | Wave 4 | ✅ 5/5 | [react-state-management/](react-state-management/) | SAP-000, SAP-020 |
+| SAP-024 | react-styling | 1.0.0 | Active | Wave 4 | ✅ 5/5 | [react-styling/](react-styling/) | SAP-000, SAP-020 |
+| SAP-025 | react-performance | 1.0.0 | Planned | Wave 4 | - | [react-performance/](react-performance/) | SAP-000, SAP-020 |
+| SAP-026 | react-accessibility | 1.0.0 | Planned | Wave 4 | - | [react-accessibility/](react-accessibility/) | SAP-000, SAP-020, SAP-021 |
 
 **Awareness Score Legend**:
 - ✅ 4/4: All checks pass (post-install section, AGENTS.md mention, validation cmd, agent instructions)
@@ -230,11 +238,11 @@ SAP-016 (link-validation) [FOUNDATIONAL - WAVE 2]
 - **Key Features**: Idempotent scripts, justfile unified interface, safety contracts (error handling, rollback), 8 script categories
 
 #### SAP-009: agent-awareness
-- **Purpose**: AGENTS.md/CLAUDE.md patterns, nested awareness files
-- **Includes**: AGENTS.md.blueprint (~900 lines), CLAUDE.md.blueprint (~450 lines), nested patterns (4 domains)
-- **Status**: ✅ Draft (all 5 artifacts complete, Phase 3 Batch 1)
+- **Purpose**: AGENTS.md/CLAUDE.md patterns, nested awareness files, bidirectional translation layer
+- **Includes**: AGENTS.md.blueprint (~900 lines), CLAUDE.md.blueprint (~450 lines), 5 domain AGENTS.md files (~1,100 lines), 3 foundation tools (intent-router.py, chora-search.py, suggest-next.py with inbox integration)
+- **Status**: ✅ Draft (v1.1.0 complete - COORD-2025-004)
 - **Scope**: Implementation
-- **Key Features**: Dual-file pattern (AGENTS + CLAUDE), "Nearest File Wins", progressive context loading (200k tokens), token budgets
+- **Key Features**: Dual-file pattern (AGENTS + CLAUDE), "Nearest File Wins", progressive context loading (200k tokens), bidirectional translation (conversational ↔ formal), 3-layer discovery (root AGENTS.md → domain AGENTS.md → INTENT_PATTERNS.yaml), user preferences (100+ options)
 
 ### Advanced Features (3 capabilities)
 
@@ -402,6 +410,8 @@ SAP-016 (link-validation) [FOUNDATIONAL - WAVE 2]
 
 | Date | Change | Author |
 |------|--------|--------|
+| 2025-11-01 | Wave 4: SAP-022 (react-linting) complete - ESLint 9 + Prettier 3 + pre-commit hooks (81% coverage, 21/26 SAPs) | Claude Code |
+| 2025-10-31 | SAP-009 v1.1.0 complete: Bidirectional translation layer with 5 domain AGENTS.md files, inbox protocol integration (COORD-2025-004, v4.1.3) | Claude Code |
 | 2025-10-28 | Wave 2: SAP-016 (link-validation-reference-management) complete - Foundational QA capability | Claude Code |
 | 2025-10-28 | 🎉 100% COMPLETE! SAP-013 (metrics-tracking) completes Phase 4 - ALL 14 SAPs DONE! | Claude Code |
 | 2025-10-28 | Phase 3 Complete: SAP-011 (docker-operations) completes Phase 3 (93% coverage, 13/14 SAPs) | Claude Code |
