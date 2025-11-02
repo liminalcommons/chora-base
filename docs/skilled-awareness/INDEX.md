@@ -11,7 +11,7 @@
 
 This index tracks all **26 capabilities** identified for SAP packaging across 4 roadmap phases + Wave 2 + Wave 3 + Wave 4 (React).
 
-**Current Coverage**: 23/26 SAPs (88%) - Wave 4 in progress
+**Current Coverage**: 24/26 SAPs (92%) - Wave 4 in progress
 
 **Target Coverage**:
 - Phase 1: 3/14 (21%) ✅ Complete
@@ -24,7 +24,7 @@ This index tracks all **26 capabilities** identified for SAP packaging across 4 
 
 ## Active SAPs
 
-**Awareness Integration Status**: ✅ 22/22 PASS (100%) - Wave 4 SAP-024 Added (2025-11-01)
+**Awareness Integration Status**: ✅ 23/23 PASS (100%) - Wave 4 SAP-025 Added (2025-11-01)
 
 | SAP ID | Capability | Version | Status | Phase | Awareness | Location | Dependencies |
 |--------|------------|---------|--------|-------|-----------|----------|--------------|
@@ -52,7 +52,7 @@ This index tracks all **26 capabilities** identified for SAP packaging across 4 
 | SAP-022 | react-linting | 1.0.0 | Active | Wave 4 | ✅ 5/5 | [react-linting/](react-linting/) | SAP-000, SAP-006, SAP-020 |
 | SAP-023 | react-state-management | 1.0.0 | Active | Wave 4 | ✅ 5/5 | [react-state-management/](react-state-management/) | SAP-000, SAP-020 |
 | SAP-024 | react-styling | 1.0.0 | Active | Wave 4 | ✅ 5/5 | [react-styling/](react-styling/) | SAP-000, SAP-020 |
-| SAP-025 | react-performance | 1.0.0 | Planned | Wave 4 | - | [react-performance/](react-performance/) | SAP-000, SAP-020 |
+| SAP-025 | react-performance | 1.0.0 | Active | Wave 4 | ✅ 5/5 | [react-performance/](react-performance/) | SAP-000, SAP-020 |
 | SAP-026 | react-accessibility | 1.0.0 | Planned | Wave 4 | - | [react-accessibility/](react-accessibility/) | SAP-000, SAP-020, SAP-021 |
 
 **Awareness Score Legend**:
@@ -410,6 +410,7 @@ SAP-016 (link-validation) [FOUNDATIONAL - WAVE 2]
 
 | Date | Change | Author |
 |------|--------|--------|
+| 2025-11-01 | Wave 4: SAP-025 (react-performance) complete - Core Web Vitals optimization with Next.js 15 + Vite 7 templates (92% coverage, 24/26 SAPs) | Claude Code |
 | 2025-11-01 | Wave 4: SAP-022 (react-linting) complete - ESLint 9 + Prettier 3 + pre-commit hooks (81% coverage, 21/26 SAPs) | Claude Code |
 | 2025-10-31 | SAP-009 v1.1.0 complete: Bidirectional translation layer with 5 domain AGENTS.md files, inbox protocol integration (COORD-2025-004, v4.1.3) | Claude Code |
 | 2025-10-28 | Wave 2: SAP-016 (link-validation-reference-management) complete - Foundational QA capability | Claude Code |

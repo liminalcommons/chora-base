@@ -2,7 +2,7 @@
 
 **Purpose**: Machine-readable instructions for AI agents working on the chora-base template repository.
 
-**Last Updated**: 2025-10-22 (v1.9.3)
+**Last Updated**: 2025-11-02 (SAP-001 v1.1.0 inbox coordination integration)
 
 ---
 
@@ -727,6 +727,421 @@ Example gap:
 - **Prioritize P0 gaps**: These block other SAPs
 - **Be specific**: Reference exact commands, files, line numbers from reports
 - **Track progress**: Re-run evaluation after implementing improvements
+
+---
+
+## Bidirectional Translation Layer (Mutual Ergonomics)
+
+### Overview
+
+**Purpose**: Enable natural conversational interaction while executing procedurally within the ecosystem ontology.
+
+**Core Principle**: Meet users where they are. You adapt to their communication style; they don't need to memorize exact commands.
+
+### Tools Available
+
+#### 1. Intent Router (`scripts/intent-router.py`)
+
+Translates natural language to formal actions with confidence scoring.
+
+**Usage**:
+```python
+from intent_router import IntentRouter
+
+router = IntentRouter("docs/dev-docs/patterns/INTENT_PATTERNS.yaml")
+matches = router.route(user_input)
+
+if matches and matches[0].confidence >= 0.7:
+    # High confidence: execute
+    action = matches[0].action
+    execute_action(action, matches[0].parameters)
+elif matches and matches[0].confidence >= 0.5:
+    # Medium confidence: ask for clarification
+    clarify_with_user(matches[0])
+else:
+    # Low confidence: show alternatives
+    show_alternatives(matches[:3])
+```
+
+**Common Patterns**:
+- "show inbox" → `run_inbox_status`
+- "how are saps" → `run_sap_evaluator_quick`
+- "i want to suggest a big change" → `create_strategic_proposal`
+- "review coordination requests" → `review_coordination_requests`
+
+**Pattern Learning**: When user says something repeatedly that maps successfully, add it to triggers.
+
+#### 2. Glossary Search (`scripts/chora-search.py`)
+
+Enables terminology discovery and reverse lookup.
+
+**Usage**:
+```bash
+# Forward lookup: term → definition
+python scripts/chora-search.py "coordination request"
+
+# Reverse lookup: description → term
+python scripts/chora-search.py --reverse "I want to suggest a big change"
+# Returns: Strategic Proposal (95% confidence)
+
+# Fuzzy matching: handles typos
+python scripts/chora-search.py --fuzzy "coordenation"
+```
+
+**When to Use**:
+- User asks "What is X?"
+- User uses unfamiliar terminology
+- User describes concept without using correct term
+- User makes typos
+
+#### 3. User Preferences (`.chora/user-preferences.yaml`)
+
+Adapt behavior based on user working style.
+
+**Key Preferences**:
+- `verbosity`: concise | standard | verbose
+- `formality`: casual | standard | formal
+- `output_format`: terminal | markdown | json
+- `require_confirmation`: always | destructive | never
+- `progressive_disclosure`: true | false
+
+**Loading**:
+```python
+import yaml
+from pathlib import Path
+
+prefs_file = Path(".chora/user-preferences.yaml")
+if prefs_file.exists():
+    with open(prefs_file) as f:
+        prefs = yaml.safe_load(f)
+
+    # Adapt verbosity
+    if prefs["communication"]["verbosity"] == "concise":
+        return brief_summary()
+    elif prefs["communication"]["verbosity"] == "verbose":
+        return detailed_report()
+```
+
+#### 4. Suggestion Engine (`scripts/suggest-next.py`)
+
+Context-aware next action recommendations.
+
+**Usage**:
+```bash
+# When user asks "what next?" or "what should I do?"
+python scripts/suggest-next.py
+
+# Proactive mode (high-priority suggestions only)
+python scripts/suggest-next.py --mode proactive
+```
+
+**Context Signals**:
+- Recent events (last 24 hours)
+- Active work items (inbox/active/)
+- Current phase (DDD/BDD/TDD detection)
+- Quality metrics (coverage, tests, lint)
+- Inbox backlog
+
+### Communication Patterns
+
+#### Pattern 1: Natural Input → Execution → Result
+
+**Don't explain what you'll do, show what you did**:
+
+```
+❌ Bad:
+User: "Create coordination request for traceability"
+Agent: "To create a coordination request, you should:
+       1. Create JSON in inbox/incoming/coordination/
+       2. Use schema from inbox/schemas/
+       3. ..."
+
+✅ Good:
+User: "Create coordination request for traceability"
+Agent: ✅ Created coord-007-traceability-pilot.json
+       ✅ Logged event: coordination_request_created
+       Next: Submit for sprint planning (2025-11-15)?
+```
+
+#### Pattern 2: Progressive Formalization
+
+Move from casual → formal as needed:
+
+```
+"I want to add health monitoring" (casual)
+  → Strategic Proposal (semi-formal artifact)
+  → RFC (formal discussion)
+  → ADR (formal decision)
+  → Coordination Request (fully formal)
+  → Implementation (procedural)
+```
+
+#### Pattern 3: Adaptive Output
+
+Match user preferences:
+
+```python
+# Concise user
+"✅ 12 SAPs installed. Top gap: coverage 60%"
+
+# Verbose user
+"""
+SAP Adoption Status
+===================
+- 12/18 SAPs installed (67%)
+- Level 2: SAP-004, SAP-019
+- Top gap: Test coverage at 60% (need 85%)
+  Action: Add 45 tests, est. 4-6 hours
+"""
+```
+
+#### Pattern 4: Context Retention
+
+Remember conversation context:
+
+```
+User: "Show inbox"
+Agent: [Shows 3 coordination requests]
+
+User: "Review the first one"
+Agent: [Recognizes "first one" = coord-003]
+       [Shows coord-003 details]
+```
+
+### Anti-Patterns (Avoid These)
+
+❌ **Forcing Exact Syntax**: "Command not recognized" when user says "show me the inbox"
+❌ **Explaining Instead of Executing**: Long explanations of what to do instead of doing it
+❌ **Ignoring Preferences**: Always verbose output even when user wants concise
+❌ **No Context**: Asking "what do you mean by 'it'?" when referent is clear
+❌ **Static Patterns**: Never learning new phrases user repeats successfully
+
+### Learning & Adaptation
+
+**Pattern Learning**:
+- User says "what's cooking in the inbox?" 3+ times
+- Intent router matches to `inbox_status` successfully
+- Automatically add "what's cooking" to triggers
+- Future queries: instant recognition
+
+**Preference Evolution**:
+- User says "too much detail" → Update `verbosity: concise`
+- User repeatedly cancels confirmations → Suggest `require_confirmation: destructive`
+- Track which features user uses → Recommend relevant SAPs
+
+**Expertise Tracking**:
+- User has used coordination requests 10+ times
+- Next time: Brief reminder instead of full explanation
+- Adapt detail level as user gains expertise
+
+### Integration Points
+
+**See Also**:
+- [Bidirectional Communication Pattern Guide](docs/dev-docs/workflows/BIDIRECTIONAL_COMMUNICATION.md) - Complete pattern documentation
+- [Intent Patterns Database](docs/dev-docs/patterns/INTENT_PATTERNS.yaml) - All recognized patterns
+- [Glossary](docs/GLOSSARY.md) - Ecosystem terminology (75+ terms)
+- [User Preferences Template](.chora/user-preferences.yaml.template) - Configuration options
+
+---
+
+## Inbox Coordination (SAP-001 v1.1.0)
+
+### Session Startup Routine
+
+**Every new session, check inbox for coordination requests**:
+
+```bash
+# Visual status dashboard (recommended for human-readable overview)
+python scripts/inbox-status.py
+
+# Quick inbox count summary
+python scripts/inbox-query.py --count-by-status
+
+# View unacknowledged items (if any)
+python scripts/inbox-query.py --incoming --unacknowledged --format summary
+```
+
+**Expected Output**:
+```
+Inbox Status Counts:
+  Incoming Coordination: 12
+  Incoming Tasks: 0
+  Incoming Proposals: 0
+  Active: 3
+  Completed: 45
+  Unacknowledged: 12
+```
+
+### Daily Inbox Workflows
+
+#### Morning Routine (2-3 minutes)
+
+1. **Check for new items**:
+   ```bash
+   python scripts/inbox-query.py --incoming --unacknowledged
+   ```
+
+2. **Review high-priority items** (P0, blocks_sprint urgency):
+   ```bash
+   # View specific request
+   python scripts/inbox-query.py --request COORD-2025-XXX --format json
+   ```
+
+3. **Acknowledge within SLA** (1 business day, 4 hours for blocks_sprint):
+   ```bash
+   python scripts/respond-to-coordination.py \
+     --request COORD-2025-XXX \
+     --status acknowledged \
+     --notes "Reviewing - will respond by [date]"
+   ```
+
+#### Processing Coordination Requests
+
+**Accept and Start Work**:
+```bash
+python scripts/respond-to-coordination.py \
+  --request COORD-2025-XXX \
+  --status accepted \
+  --effort "8-12 hours" \
+  --timeline "Complete by 2025-11-15" \
+  --notes "Starting implementation in current sprint" \
+  --move-to-active
+```
+
+**Decline with Reason**:
+```bash
+python scripts/respond-to-coordination.py \
+  --request COORD-2025-XXX \
+  --status declined \
+  --reason "Outside current scope. Recommend proposing for Q1 2026 roadmap."
+```
+
+**Check Active Work**:
+```bash
+python scripts/inbox-query.py --status in_progress
+```
+
+### Creating Coordination Requests
+
+**Interactive Mode** (recommended for new users):
+```bash
+python scripts/generate-coordination-request.py --interactive
+```
+
+**Context File Mode** (for AI agents):
+```bash
+# Create context file
+cat > inbox/draft/my-request-context.json << 'EOF'
+{
+  "title": "Add Feature X to Repository Y",
+  "description": "Brief description of what needs to be done",
+  "background": "Why this is needed, current state",
+  "rationale": "Benefits and justification",
+  "priority": "P1",
+  "urgency": "next_sprint",
+  "from_repo": "github.com/liminalcommons/chora-base",
+  "to_repo": "github.com/liminalcommons/target-repo"
+}
+EOF
+
+# Generate request with AI-powered deliverables and acceptance criteria
+python scripts/generate-coordination-request.py \
+  --context inbox/draft/my-request-context.json \
+  --ai-model claude-sonnet-4-5-20250929 \
+  --output inbox/draft/my-request.json
+```
+
+**Quality**: Generator produces 94.9% quality deliverables and SMART acceptance criteria
+
+### Service Level Agreements (SLAs)
+
+**Response Times by Urgency**:
+
+| Urgency | Acknowledgment | Full Response | When to Use |
+|---------|---------------|---------------|-------------|
+| `blocks_sprint` | 4 hours | Same day | Blocking current sprint work |
+| `next_sprint` | 1 business day | 3 business days | Needed for next sprint |
+| `backlog` | 1 business day | 1 week | Non-urgent, future planning |
+
+**SLA Compliance**:
+- Check inbox at session startup
+- Prioritize `blocks_sprint` items immediately
+- Acknowledge all items within 1 business day
+- Provide full response within urgency-based timeline
+
+### Ecosystem Coordination
+
+**Repository Status**: Active participant in ecosystem coordination
+
+**Capabilities**:
+- **Provides**: Template generation, SAP framework, coordination protocol
+- **Receives**: Feature requests, bug reports, integration proposals
+
+**Ecosystem Dashboard**: [inbox/ecosystem/ECOSYSTEM_STATUS.yaml](inbox/ecosystem/ECOSYSTEM_STATUS.yaml)
+
+**Ecosystem Invitations**: See [inbox/ecosystem/invitations/](inbox/ecosystem/invitations/) for pending invitations
+
+### Inbox Status Dashboard
+
+**For generic agents and quick visual overview**:
+
+```bash
+# Full visual dashboard (recommended)
+python scripts/inbox-status.py
+
+# Detailed view with item listings
+python scripts/inbox-status.py --detailed
+
+# JSON export for programmatic access
+python scripts/inbox-status.py --format json
+
+# Markdown report for documentation
+python scripts/inbox-status.py --format markdown > inbox-report.md
+
+# Filter by priority
+python scripts/inbox-status.py --priority P0 --detailed
+
+# Recent activity (last 7 days)
+python scripts/inbox-status.py --last 7d
+```
+
+**Dashboard Output Includes**:
+- 📥 Incoming queue counts (coordination, tasks, context)
+- 🔄 Active work items with details
+- ⏱️ Recent activity timeline (last 20 events)
+- ✅ Recent completions (last 30 days)
+- 💡 Summary with actionable counts
+
+**Use Cases**:
+- Session startup: Get at-a-glance status
+- Generic agent queries: "inbox status" → run this tool
+- Status reports: Export markdown for weekly updates
+- Priority triage: Filter by P0/P1 for urgent items
+- Trace investigation: `--trace-id` to follow request chains
+
+### Troubleshooting
+
+**Issue: "Item not found"**
+- Use full filename as request ID: `COORD-2025-XXX-description` not just `COORD-2025-XXX`
+- Check file exists: `ls inbox/incoming/coordination/COORD-2025-XXX*`
+
+**Issue: "No items found"**
+- Verify working directory: Must run commands from project root
+- Check inbox path: `ls inbox/incoming/coordination/`
+
+**Issue: Post-processing error**
+- Skip post-processing: Remove `--post-process` flag
+- Use custom output: `--output inbox/draft/my-request.json`
+
+### Key Resources
+
+- **Protocol Spec**: [docs/skilled-awareness/inbox/protocol-spec.md](docs/skilled-awareness/inbox/protocol-spec.md) (SAP-001 v1.1.0)
+- **Onboarding Guide**: [docs/ECOSYSTEM_ONBOARDING.md](docs/ECOSYSTEM_ONBOARDING.md)
+- **Phase 1 Summary**: [docs/PHASE_1_COMPLETION_SUMMARY.md](docs/PHASE_1_COMPLETION_SUMMARY.md)
+- **Validation Report**: [docs/PHASE_1_VALIDATION_REPORT.md](docs/PHASE_1_VALIDATION_REPORT.md)
+- **v1.1.0 Announcement**: [inbox/ecosystem/announcements/SAP-001-v1.1.0-RELEASE.md](inbox/ecosystem/announcements/SAP-001-v1.1.0-RELEASE.md)
+
+---
 
 ## Questions & Support
 

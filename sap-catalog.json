@@ -1,5 +1,5 @@
 {
-  "version": "4.6.0",
+  "version": "4.7.0",
   "updated": "2025-11-01",
   "description": "Machine-readable catalog of all Skilled Awareness Packages in chora-base",
   "total_saps": 26,
@@ -39,19 +39,23 @@
       "id": "SAP-001",
       "name": "inbox",
       "full_name": "Inbox Coordination Protocol",
-      "status": "pilot",
-      "version": "1.0.0",
+      "status": "active",
+      "version": "1.1.0",
       "included_by_default": false,
-      "size_kb": 45,
-      "description": "Cross-repo coordination protocol using inbox directory for capability discovery and coordination requests",
+      "size_kb": 350,
+      "description": "Production-ready cross-repo coordination protocol with 5 CLI tools, AI-powered generation, and formalized SLAs reducing coordination effort by 90%",
       "capabilities": [
-        "Cross-repo coordination",
-        "Capability registry",
-        "Broadcast workflow",
-        "Async collaboration"
+        "Cross-repo coordination with event logging",
+        "One-command installation (5min setup)",
+        "AI-powered coordination generator (50% faster draft creation)",
+        "Query and filter tools (<100ms performance)",
+        "Response automation (<50ms, 94.9% quality)",
+        "Status dashboard with visual reporting",
+        "Formalized SLAs (48h default, 4h urgent)",
+        "Governance and long-term maintenance patterns"
       ],
       "dependencies": [],
-      "tags": ["meta", "coordination", "ecosystem"],
+      "tags": ["meta", "coordination", "ecosystem", "production-ready"],
       "author": "chora-base",
       "location": "docs/skilled-awareness/inbox",
       "artifacts": {
@@ -62,7 +66,12 @@
         "ledger": true
       },
       "system_files": [
-        "inbox/"
+        "inbox/",
+        "scripts/install-inbox-protocol.py",
+        "scripts/inbox-query.py",
+        "scripts/respond-to-coordination.py",
+        "scripts/generate-coordination-request.py",
+        "scripts/inbox-status.py"
       ],
       "phase": "Phase 1",
       "priority": "P0"
@@ -990,9 +999,7 @@
         "Upgrade to 'recommended' set for full productivity",
         "Customize AGENTS.md for your project"
       ],
-      "warnings": [
-        "SAP-001 (inbox-coordination) is in Pilot status and may undergo changes"
-      ],
+      "warnings": [],
       "tags": ["minimal", "entry", "ecosystem", "coordination"]
     },
 
@@ -1025,9 +1032,7 @@
         "Add technology-specific SAPs (SAP-014 MCP, etc.)",
         "Customize CI/CD workflows for your tech stack"
       ],
-      "warnings": [
-        "SAP-001 (inbox-coordination) is in Pilot status"
-      ],
+      "warnings": [],
       "tags": ["recommended", "foundation", "core", "productivity"]
     },
 
@@ -1066,7 +1071,6 @@
         "Consider contributing new SAPs back to chora-base"
       ],
       "warnings": [
-        "SAP-001 (inbox-coordination) is in Pilot status",
         "Large token footprint - consider progressive adoption"
       ],
       "tags": ["full", "complete", "comprehensive", "advanced"]
