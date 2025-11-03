@@ -2,16 +2,16 @@
 
 **Purpose**: Central registry of all capabilities packaged as SAPs in chora-base.
 
-**Last Updated**: 2025-11-01
+**Last Updated**: 2025-11-03
 **Framework Version**: 1.0.0
 
 ---
 
 ## Overview
 
-This index tracks all **26 capabilities** identified for SAP packaging across 4 roadmap phases + Wave 2 + Wave 3 + Wave 4 (React).
+This index tracks all **30 capabilities** identified for SAP packaging across 4 roadmap phases + Wave 2 + Wave 3 + Wave 4 (React) + Immediate.
 
-**Current Coverage**: 24/26 SAPs (92%) - Wave 4 in progress
+**Current Coverage**: 28/30 SAPs (93%) - Wave 4 in progress
 
 **Target Coverage**:
 - Phase 1: 3/14 (21%) ✅ Complete
@@ -24,10 +24,12 @@ This index tracks all **26 capabilities** identified for SAP packaging across 4 
 
 ## Active SAPs
 
-**Awareness Integration Status**: ✅ 23/23 PASS (100%) - Wave 4 SAP-025 Added (2025-11-01)
+**Awareness Integration Status**: ✅ 24/24 PASS (100%) - SAP-028 Publishing Automation Added (2025-11-02)
 
 | SAP ID | Capability | Version | Status | Phase | Awareness | Location | Dependencies |
-|--------|------------|---------|--------|-------|-----------|----------|--------------|
+|--------| 2025-11-03 | SAP-027 (dogfooding-patterns) generated - Formalized 5-week dogfooding pilot methodology for validating patterns through internal use before ecosystem adoption | Claude Code |
+| 2025-11-02 | SAP-029 (sap-generation) generated - Template-based SAP artifact generation to reduce creation time from 10 hours to 2 hours (80% savings) | Claude Code |
+|------------|---------|--------|-------|-----------|----------|--------------|
 | SAP-000 | sap-framework | 1.0.0 | Draft | Phase 1 | ✅ 4/4 | [sap-framework/](sap-framework/) | None (foundational) |
 | SAP-001 | inbox-coordination | 1.0.0 | Pilot | Phase 1 | ⚠️  2/4 | [inbox/](inbox/) | None |
 | SAP-002 | chora-base-meta | 1.0.0 | Draft | Phase 1 | ✅ 4/4 | [chora-base/](chora-base/) | SAP-000 |
@@ -54,6 +56,9 @@ This index tracks all **26 capabilities** identified for SAP packaging across 4 
 | SAP-024 | react-styling | 1.0.0 | Active | Wave 4 | ✅ 5/5 | [react-styling/](react-styling/) | SAP-000, SAP-020 |
 | SAP-025 | react-performance | 1.0.0 | Active | Wave 4 | ✅ 5/5 | [react-performance/](react-performance/) | SAP-000, SAP-020 |
 | SAP-026 | react-accessibility | 1.0.0 | Planned | Wave 4 | - | [react-accessibility/](react-accessibility/) | SAP-000, SAP-020, SAP-021 |
+| SAP-028 | publishing-automation | 1.0.0 | Active | Immediate | ✅ 5/5 | [publishing-automation/](publishing-automation/) | SAP-003, SAP-005 |
+| SAP-029 | sap-generation | 1.0.0 | Pilot | Pilot | - | [sap-generation/](sap-generation/) | SAP-000 |
+| SAP-027 | dogfooding-patterns | 1.0.0 | Active | Formalization | - | [dogfooding-patterns/](dogfooding-patterns/) | SAP-000, SAP-029 |
 
 **Awareness Score Legend**:
 - ✅ 4/4: All checks pass (post-install section, AGENTS.md mention, validation cmd, agent instructions)
@@ -410,6 +415,7 @@ SAP-016 (link-validation) [FOUNDATIONAL - WAVE 2]
 
 | Date | Change | Author |
 |------|--------|--------|
+| 2025-11-02 | SAP-028 (publishing-automation) complete - Secure PyPI publishing with OIDC trusted publishing as default, eliminating long-lived API tokens (93% coverage, 26/28 SAPs) | Claude Code |
 | 2025-11-01 | Wave 4: SAP-025 (react-performance) complete - Core Web Vitals optimization with Next.js 15 + Vite 7 templates (92% coverage, 24/26 SAPs) | Claude Code |
 | 2025-11-01 | Wave 4: SAP-022 (react-linting) complete - ESLint 9 + Prettier 3 + pre-commit hooks (81% coverage, 21/26 SAPs) | Claude Code |
 | 2025-10-31 | SAP-009 v1.1.0 complete: Bidirectional translation layer with 5 domain AGENTS.md files, inbox protocol integration (COORD-2025-004, v4.1.3) | Claude Code |

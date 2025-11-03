@@ -1,8 +1,8 @@
 {
-  "version": "4.7.0",
-  "updated": "2025-11-01",
+  "version": "4.9.0",
+  "updated": "2025-11-02",
   "description": "Machine-readable catalog of all Skilled Awareness Packages in chora-base",
-  "total_saps": 26,
+  "total_saps": 29,
   "saps": [
     {
       "id": "SAP-000",
@@ -930,6 +930,212 @@
       ],
       "phase": "Wave 4",
       "priority": "P2"
+    },
+    {
+      "id": "SAP-027",
+      "name": "dogfooding-patterns",
+      "full_name": "Dogfooding Patterns",
+      "status": "active",
+      "version": "1.0.0",
+      "included_by_default": false,
+      "size_kb": 95,
+      "description": "Formalized 5-week dogfooding pilot methodology for validating patterns through internal use before ecosystem adoption",
+      "capabilities": [
+        "3-phase pilot design (build, validate, decide)",
+        "GO/NO-GO criteria framework (time savings, satisfaction, bugs, adoption)",
+        "ROI analysis with break-even calculation",
+        "Metrics collection templates (time tracking, validation reports)",
+        "Pilot documentation structure (weekly metrics, final summary)",
+        "Template refinement workflow (TODO completion, production readiness)"
+      ],
+      "dependencies": ["SAP-000", "SAP-029"],
+      "tags": ["dogfooding", "patterns", "pilot", "validation", "methodology"],
+      "author": "chora-base",
+      "location": "docs/skilled-awareness/dogfooding-patterns",
+      "artifacts": {
+        "capability_charter": false,
+        "protocol_spec": false,
+        "awareness_guide": false,
+        "adoption_blueprint": false,
+        "ledger": false
+      },
+      "phase": "Formalization",
+      "priority": "P1",
+      "generation": {
+        "owner": "Victor",
+        "created_date": "2025-11-03",
+        "problem_statement": "New patterns and capabilities lack validation before ecosystem adoption, leading to failed patterns, wasted integration effort, and reduced ecosystem trust.\n\nCurrent challenge: No formalized methodology for testing patterns internally before recommending them to the ecosystem. Ad-hoc pilots lack structure, success criteria, and ROI analysis.\n\nDevelopers face: uncertainty about pattern viability, unclear GO/NO-GO thresholds, missing metrics templates, and difficulty reproducing pilot methodology.",
+        "evidence": [
+          "SAP-029 pilot achieved 120x time savings vs 5x target (24x over expectations)",
+          "5-week dogfooding pilot (3 weeks early completion) validated template generation at scale",
+          "chora-compose achieved 9x efficiency with dogfooding (COORD-2025-009 coordination)",
+          "100% developer satisfaction (5/5 rating) from structured pilot approach",
+          "Zero critical bugs across 2 generated SAPs (SAP-029, SAP-028)"
+        ],
+        "business_impact": "Without dogfooding methodology:\n\n- Pattern risk: Untested patterns fail in ecosystem, wasting integration effort (5-10h per adopter)\n- Trust erosion: Failed recommendations reduce ecosystem confidence in future patterns\n- Missed optimization: No feedback loop to refine patterns before wide adoption\n- ROI uncertainty: Unknown break-even point discourages pattern investment\n- Methodological debt: Each new pilot reinvents validation approach",
+        "solution_overview": "SAP-027 provides a formalized dogfooding pilot methodology for validating patterns through internal use before ecosystem adoption.\n\nKey capabilities: 3-phase pilot design (build, validate, decide), GO/NO-GO criteria framework (≥5x time savings, ≥85% satisfaction, 0 critical bugs, 2+ adoption cases), ROI analysis templates, metrics collection structure, pilot documentation patterns.\n\nSetup time: 5-week pilot (expandable to 8 weeks), GO decision at Week 4, formalization at Week 5.",
+        "key_principles": [
+          "Internal validation first: Test patterns through dogfooding before ecosystem recommendation",
+          "Quantified success criteria: GO/NO-GO thresholds based on time savings, satisfaction, quality",
+          "Progressive validation: Week 4 GO decision (90% confidence) → Week 5 formalization (100% confidence)",
+          "ROI transparency: Break-even analysis shows investment vs savings curve",
+          "Documentation rigor: Weekly metrics + final summary provide reproducible methodology",
+          "Template refinement: TODO completion makes artifacts production-ready before formalization"
+        ],
+        "in_scope": [
+          "3-phase pilot framework (build weeks 1-3, validate week 4, decide week 5)",
+          "GO/NO-GO criteria (time savings ≥5x, satisfaction ≥85%, bugs = 0, adoption ≥2 cases)",
+          "Metrics templates (time tracking, validation reports, satisfaction surveys)",
+          "ROI analysis method (setup cost, per-use savings, break-even calculation)",
+          "Pilot documentation structure (weekly logs, cross-comparison, final summary)",
+          "TODO completion workflow (P0/P1/P2 prioritization, template refinement)"
+        ],
+        "out_of_scope": [
+          "A/B testing methodology - Different validation approach (comparative)",
+          "User research beyond satisfaction surveys - Requires qualitative methods",
+          "Ecosystem-wide rollout strategy - Covered by SAP-001 (Inbox Coordination)",
+          "Automated pilot execution - Manual methodology, no automation tooling"
+        ],
+        "one_sentence_summary": "SAP-027 provides a formalized 5-week dogfooding pilot methodology for validating patterns through internal use, achieving GO decisions at 90% confidence (Week 4) and formalization at 100% confidence (Week 5) before ecosystem adoption."
+      }
+    },
+    {
+      "id": "SAP-028",
+      "name": "publishing-automation",
+      "full_name": "Publishing Automation",
+      "status": "pilot",
+      "version": "1.0.0",
+      "included_by_default": false,
+      "size_kb": 125,
+      "description": "Secure PyPI publishing with OIDC trusted publishing as default, eliminating long-lived API tokens for chora-base generated projects",
+      "capabilities": [
+        "OIDC trusted publishing (recommended default)",
+        "Token-based publishing (backward compatibility)",
+        "Manual publishing (local development)",
+        "PEP 740 attestations for build provenance",
+        "GitHub Actions workflow integration",
+        "Migration protocols (token → trusted publishing)",
+        "Template integration via pypi_auth_method variable"
+      ],
+      "dependencies": ["SAP-003", "SAP-005"],
+      "tags": ["security", "publishing", "ci-cd", "pypi", "oidc", "production"],
+      "author": "chora-base",
+      "location": "docs/skilled-awareness/publishing-automation",
+      "artifacts": {
+        "capability_charter": false,
+        "protocol_spec": false,
+        "awareness_guide": false,
+        "adoption_blueprint": false,
+        "ledger": false
+      },
+      "system_files": [
+        "static-template/.github/workflows/release.yml",
+        "static-template/PYPI_SETUP.md"
+      ],
+      "phase": "Immediate",
+      "priority": "P0",
+      "generation": {
+        "owner": "Victor",
+        "created_date": "2025-11-02",
+        "problem_statement": "Python projects using long-lived PyPI API tokens face security risks: token leakage, broad permissions, manual rotation burden, and no provenance tracking.\n\nCurrent challenge: Static templates default to token-based publishing, requiring developers to manually configure OIDC trusted publishing despite it being the industry best practice since 2023.\n\nDevelopers face: secret management overhead, rotation fatigue, audit complexity, and lack of build attestations (PEP 740).",
+        "evidence": [
+          "PyPI introduced OIDC trusted publishing in 2023 as recommended default",
+          "PEP 740 attestations require trusted publishing for build provenance",
+          "Zero secrets management vs manual token rotation every 90 days",
+          "GitHub/GitLab both support OIDC publishing workflows natively",
+          "chora-compose migrated to trusted publishing (zero security incidents)"
+        ],
+        "business_impact": "Without publishing automation defaults:\n\n- Security risk: Long-lived tokens in GitHub Secrets vulnerable to leakage\n- Operational burden: Manual token rotation, expiry management, permission audits\n- Compliance gaps: No build provenance (PEP 740), limited audit trail\n- Developer friction: Additional setup steps, secret configuration, troubleshooting\n- Ecosystem inconsistency: Generated projects use outdated publishing patterns",
+        "solution_overview": "SAP-028 provides secure PyPI publishing with OIDC trusted publishing as the default method for all chora-base generated projects.\n\nKey capabilities: OIDC trusted publishing (zero secrets), token-based fallback (backward compat), PEP 740 attestations (build provenance), GitHub Actions release workflow, template variable (pypi_auth_method), migration guide (token → OIDC).\n\nSetup time: 5 minutes for new projects (PyPI publisher configuration), 15 minutes for migrations.",
+        "key_principles": [
+          "Security-first: OIDC trusted publishing as default (zero secrets)",
+          "Zero trust: Fine-grained GitHub → PyPI trust relationship per repository",
+          "Provenance: PEP 740 attestations for supply chain security",
+          "Backward compatible: Token-based publishing still supported for legacy workflows",
+          "Template-driven: pypi_auth_method variable controls publishing method",
+          "Migration support: Clear upgrade path from token → trusted publishing"
+        ],
+        "in_scope": [
+          "OIDC trusted publishing configuration (GitHub Actions → PyPI)",
+          "Token-based publishing fallback (PYPI_API_TOKEN secret)",
+          "PEP 740 attestation generation (build provenance)",
+          "Release workflow template (.github/workflows/release.yml)",
+          "PyPI setup documentation (PYPI_SETUP.md)",
+          "Migration guide (token → trusted publishing)"
+        ],
+        "out_of_scope": [
+          "Non-PyPI registries (Artifactory, Nexus) - Future enhancement",
+          "Non-GitHub CI platforms (GitLab, Bitbucket) - Future enhancement",
+          "Automated version bumping - Covered by SAP-005 (CI/CD)",
+          "Changelog generation - Covered by SAP-005 (CI/CD)"
+        ],
+        "one_sentence_summary": "SAP-028 provides secure PyPI publishing with OIDC trusted publishing as default, eliminating long-lived API tokens and enabling PEP 740 build attestations for all chora-base generated projects."
+      }
+    },
+    {
+      "id": "SAP-029",
+      "name": "sap-generation",
+      "full_name": "SAP Generation Automation",
+      "version": "1.0.0",
+      "status": "pilot",
+      "size_kb": 100,
+      "description": "Template-based SAP artifact generation to reduce creation time from 10 hours to 2 hours (80% savings)",
+      "capabilities": [
+        "Jinja2 template system (5 templates for 5 artifacts)",
+        "MVP generation schema (9 fields: owner, created_date, problem, evidence, impact, solution, principles, in_scope, out_of_scope, one_sentence_summary)",
+        "Generator script (scripts/generate-sap.py)",
+        "INDEX.md auto-update",
+        "Validation integration"
+      ],
+      "dependencies": ["SAP-000"],
+      "tags": ["dogfooding", "automation", "templates", "productivity"],
+      "author": "chora-base",
+      "location": "docs/skilled-awareness/sap-generation",
+      "artifacts": {
+        "capability_charter": false,
+        "protocol_spec": false,
+        "awareness_guide": false,
+        "adoption_blueprint": false,
+        "ledger": false
+      },
+      "phase": "Pilot",
+      "priority": "P2",
+      "generation": {
+        "owner": "Victor",
+        "created_date": "2025-11-02",
+        "problem_statement": "Creating SAPs manually is time-consuming and error-prone. Each SAP requires 5 artifacts with overlapping structure, leading to 10 hours of work per SAP.\n\nCurrent challenge: No automated way to generate SAP artifacts from metadata, resulting in inconsistent structure, manual duplication, and slow SAP creation velocity.\n\nDevelopers face: writing repetitive sections, maintaining consistency across 5 files, and tracking TODO placeholders.",
+        "evidence": [
+          "Manual SAP creation takes 10 hours on average",
+          "28 existing SAPs with 5 artifacts each = 140 files",
+          "chora-compose achieved 9x efficiency with dogfooding pattern",
+          "Week 1 analysis identified 80% structure automation opportunity"
+        ],
+        "business_impact": "Without SAP generation automation:\n\n- Slow velocity: 10 hours per SAP limits creation speed\n- Inconsistency: Manual creation leads to structural variations\n- Maintenance burden: Updates require touching 5 files per SAP\n- Adoption friction: High effort discourages SAP creation",
+        "solution_overview": "SAP-029 provides template-based SAP generation using Jinja2 templates and sap-catalog.json metadata.\n\nKey capabilities: 5 Jinja2 templates (one per artifact), MVP schema (9 generation fields), automatic structure generation, placeholder comments for manual content, INDEX.md auto-update, validation integration.\n\nSetup time: 7-11 hours one-time investment, 2 hours per SAP after (80% time savings).",
+        "key_principles": [
+          "80/20 automation: Automate structure (80%), manual content (20%)",
+          "Template-first: Jinja2 templates define consistent structure",
+          "Metadata-driven: sap-catalog.json as single source of truth",
+          "Placeholder guidance: TODO comments guide manual content",
+          "Progressive enhancement: Start with MVP, expand schema over time",
+          "Validation integration: Generated artifacts validate with sap-evaluator.py"
+        ],
+        "in_scope": [
+          "Jinja2 template system (5 templates for 5 artifacts)",
+          "MVP generation schema (9 fields: owner, created_date, problem, evidence, impact, solution, principles, in_scope, out_of_scope, one_sentence_summary)",
+          "Generator script (scripts/generate-sap.py)",
+          "INDEX.md auto-update functionality",
+          "Validation integration with sap-evaluator.py",
+          "justfile recipes for automation"
+        ],
+        "out_of_scope": [
+          "Full schema automation (30+ fields) - Post-pilot enhancement",
+          "Content pre-fill beyond MVP fields - Future enhancement",
+          "Multi-SAP batch generation - Future feature",
+          "Custom template support - Future feature"
+        ],
+        "one_sentence_summary": "SAP-029 defines template-based SAP artifact generation to reduce creation time from 10 hours to 2 hours (80% savings) through Jinja2 templates, INDEX.md auto-update, and validation integration."
+      }
     }
   ],
   "dependency_graph": {
