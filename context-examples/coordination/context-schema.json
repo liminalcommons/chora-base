@@ -1,0 +1,244 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://github.com/liminalcommons/chora-base/schemas/coordination-request-context.json",
+  "title": "Coordination Request Context Schema",
+  "description": "Input context schema for generating coordination request artifacts via chora-compose. This schema defines the structure of user-provided context that will be transformed into SAP-001 compliant coordination request JSON.",
+  "type": "object",
+  "required": [
+    "request_type",
+    "from_repo",
+    "to_repo",
+    "priority",
+    "urgency",
+    "purpose",
+    "deliverables"
+  ],
+  "properties": {
+    "request_type": {
+      "type": "string",
+      "enum": ["exploratory", "prescriptive", "peer_review"],
+      "description": "Type of coordination request, influences which content blocks are emphasized"
+    },
+    "from_repo": {
+      "type": "string",
+      "pattern": "^github\\.com/[a-zA-Z0-9-_]+/[a-zA-Z0-9-_]+$",
+      "description": "Repository making the request (format: github.com/org/repo)",
+      "examples": ["github.com/liminalcommons/chora-base"]
+    },
+    "to_repo": {
+      "type": "string",
+      "pattern": "^github\\.com/[a-zA-Z0-9-_]+/[a-zA-Z0-9-_]+$",
+      "description": "Repository receiving the request (format: github.com/org/repo)",
+      "examples": ["github.com/liminalcommons/chora-compose"]
+    },
+    "title": {
+      "type": "string",
+      "minLength": 10,
+      "maxLength": 120,
+      "description": "Human-readable title for the request (50-80 chars recommended)",
+      "examples": ["Exploring chora-compose Integration for Inbox Automation"]
+    },
+    "priority": {
+      "type": "string",
+      "enum": ["P0", "P1", "P2"],
+      "description": "Priority level (P0=critical, P1=high, P2=normal)"
+    },
+    "urgency": {
+      "type": "string",
+      "enum": ["blocks_sprint", "next_sprint", "backlog"],
+      "description": "Time sensitivity (blocks_sprint=days, next_sprint=weeks, backlog=capacity-driven)"
+    },
+    "purpose": {
+      "type": "string",
+      "minLength": 50,
+      "maxLength": 1000,
+      "description": "High-level purpose of this request (1-3 sentences). Used to generate context.background and inform other fields."
+    },
+    "deliverables": {
+      "type": "array",
+      "minItems": 1,
+      "maxItems": 20,
+      "items": {
+        "type": "string",
+        "minLength": 10,
+        "maxLength": 200
+      },
+      "description": "Concrete outputs expected from this request"
+    },
+    "acceptance_criteria": {
+      "type": "array",
+      "minItems": 2,
+      "maxItems": 25,
+      "items": {
+        "type": "string",
+        "minLength": 15,
+        "maxLength": 250
+      },
+      "description": "Measurable conditions for completion. If not provided, will be generated from deliverables."
+    },
+    "trace_id": {
+      "type": "string",
+      "pattern": "^[a-z0-9-]+-\\d{4}$",
+      "description": "Optional trace ID for multi-phase projects (format: kebab-case-name-year)",
+      "examples": ["chora-compose-inbox-integration-2025"]
+    },
+    "estimated_effort": {
+      "type": "string",
+      "pattern": "^\\d+-\\d+ (hours|days|weeks)$",
+      "description": "Estimated effort range (format: N-M hours|days|weeks)",
+      "examples": ["12-18 hours", "3-5 days", "2-4 weeks"]
+    },
+    "timeline": {
+      "type": "string",
+      "minLength": 20,
+      "maxLength": 500,
+      "description": "Optional timeline, milestones, or deadline information"
+    },
+    "dependencies": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "minLength": 10,
+        "maxLength": 200
+      },
+      "description": "Prerequisites or blocking work (format: 'Description (status)')"
+    },
+    "related": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "minLength": 10,
+        "maxLength": 200
+      },
+      "description": "Related work that provides context but doesn't block"
+    },
+    "background": {
+      "type": "string",
+      "minLength": 100,
+      "maxLength": 1000,
+      "description": "Detailed background explaining current situation, problem, and why this request (2-4 paragraphs). If not provided, will be generated from purpose."
+    },
+    "rationale": {
+      "type": "string",
+      "minLength": 50,
+      "maxLength": 800,
+      "description": "Why this approach was chosen over alternatives. Recommended for exploratory and prescriptive requests."
+    },
+    "questions": {
+      "oneOf": [
+        {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "pattern": ".*\\?$"
+          },
+          "description": "Simple array of questions (for exploratory requests)"
+        },
+        {
+          "type": "object",
+          "patternProperties": {
+            "^.+$": {
+              "type": "array",
+              "items": {
+                "type": "string",
+                "pattern": ".*\\?$"
+              }
+            }
+          },
+          "description": "Questions grouped by topic/category"
+        }
+      ],
+      "description": "Specific questions to be answered (most common in exploratory requests)"
+    },
+    "collaboration_modes": {
+      "type": "array",
+      "minItems": 2,
+      "maxItems": 5,
+      "items": {
+        "type": "string",
+        "minLength": 50,
+        "maxLength": 500
+      },
+      "description": "Different engagement levels offered to recipient (exploratory external requests)"
+    },
+    "boundaries": {
+      "type": "string",
+      "minLength": 30,
+      "maxLength": 500,
+      "description": "What we are NOT requesting (clarifies scope, reduces anxiety). Also known as 'not_requesting' or 'scope_exclusions'."
+    },
+    "additional_context": {
+      "type": "object",
+      "description": "Freeform additional context that doesn't fit above fields. Will be incorporated into appropriate sections.",
+      "additionalProperties": true
+    }
+  },
+  "allOf": [
+    {
+      "if": {
+        "properties": { "request_type": { "const": "exploratory" } }
+      },
+      "then": {
+        "properties": {
+          "questions": {
+            "description": "Questions are highly recommended for exploratory requests"
+          },
+          "collaboration_modes": {
+            "description": "Collaboration modes recommended for exploratory external requests"
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": { "request_type": { "const": "prescriptive" } }
+      },
+      "then": {
+        "required": ["deliverables", "acceptance_criteria"],
+        "properties": {
+          "deliverables": {
+            "minItems": 3,
+            "description": "Prescriptive requests typically have 5-15 specific deliverables"
+          },
+          "acceptance_criteria": {
+            "minItems": 5,
+            "description": "Prescriptive requests typically have 8-15 measurable criteria"
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": { "request_type": { "const": "peer_review" } }
+      },
+      "then": {
+        "properties": {
+          "questions": {
+            "description": "Questions recommended for peer reviews (what to assess)"
+          },
+          "collaboration_modes": {
+            "description": "Review depth options recommended for peer reviews"
+          }
+        }
+      }
+    }
+  ],
+  "examples": [
+    {
+      "request_type": "exploratory",
+      "from_repo": "github.com/liminalcommons/chora-base",
+      "to_repo": "github.com/liminalcommons/chora-compose",
+      "title": "Exploring chora-compose Integration for Inbox Automation",
+      "priority": "P2",
+      "urgency": "backlog",
+      "purpose": "We want to explore whether chora-compose can automate our SAP-001 inbox artifact generation, reducing manual JSON creation time from 30-60 minutes to 5-10 minutes per request.",
+      "deliverables": [
+        "Feasibility assessment addressing technical compatibility",
+        "Integration options comparison with effort estimates",
+        "Recommendation on whether to proceed with pilot"
+      ],
+      "trace_id": "chora-compose-inbox-integration-2025",
+      "estimated_effort": "12-18 hours"
+    }
+  ]
+}

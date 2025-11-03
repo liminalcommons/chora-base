@@ -1,0 +1,83 @@
+{
+  "$schema": "./context-schema.json",
+  "request_type": "peer_review",
+  "from_repo": "github.com/liminalcommons/chora-workspace",
+  "to_repo": "github.com/liminalcommons/chora-base",
+  "title": "Peer Review: React Foundation SAPs - Ecosystem Alignment",
+  "priority": "P1",
+  "urgency": "backlog",
+  "estimated_effort": "4-8 hours",
+
+  "purpose": "Request peer review from chora-base maintainers for our React-focused SAPs (SAP-020 through SAP-025) to validate technical accuracy, assess ecosystem alignment, and identify gaps or anti-patterns before publishing to the broader chora ecosystem.",
+
+  "deliverables": [
+    "Technical review of React SAP architecture, component patterns, and state management approaches",
+    "Assessment of alignment with chora-base documentation standards and SAP conventions",
+    "Recommendations for improving clarity, completeness, and developer onboarding experience",
+    "Identification of potential gaps, edge cases, or anti-patterns we may have missed",
+    "Suggestions for ecosystem-wide patterns that could be extracted and shared across repos"
+  ],
+
+  "acceptance_criteria": [
+    "Technical review covers React SAP architecture, component patterns, and state management approaches",
+    "Alignment assessment compares against ≥3 existing chora-base SAPs for consistency",
+    "Recommendations include ≥5 specific, actionable improvement suggestions with examples",
+    "Edge case analysis identifies ≥3 potential issues with proposed mitigation strategies",
+    "Ecosystem pattern suggestions reference similar work in ≥2 other chora ecosystem repos",
+    "Review feedback is constructive and includes specific code/documentation examples (not just abstract feedback)",
+    "Review delivered within 2 weeks of request acceptance (flexible based on reviewer capacity)"
+  ],
+
+  "background": "chora-workspace has developed a comprehensive set of React-focused SAPs (SAP-020 through SAP-025) covering foundation patterns, state management, performance optimization, testing, styling, and linting. These SAPs are intended to serve as the definitive React guidance for the chora ecosystem, promoting consistency across projects.\n\nWe've invested significant effort in creating these SAPs, drawing from industry best practices and our team's React experience. However, as a relatively new member of the chora ecosystem, we want to ensure our SAPs align with chora-base's established documentation standards, SAP conventions, and ecosystem philosophy.\n\nWe're requesting a peer review from chora-base maintainers to validate technical accuracy, assess ecosystem alignment, and identify any gaps or anti-patterns we may have missed. Our goal is to produce SAPs that serve the broader ecosystem, not just our immediate project needs.",
+
+  "rationale": "We could have published these React SAPs immediately, relying on our team's React expertise and industry best practices. However, as newcomers to the chora ecosystem, we recognize that technical correctness alone isn't sufficient—we need to ensure alignment with chora-base's established SAP patterns, documentation philosophy, and ecosystem conventions.\n\nExternal peer review from chora-base maintainers offers several benefits: (1) validation against proven SAP structures we may not have internalized yet, (2) identification of ecosystem-specific patterns we might have missed, and (3) relationship building through collaborative review. We've budgeted 2 weeks for review feedback and iteration, which fits our timeline while allowing thorough evaluation.\n\nAlternative approaches—like internal review only, or publishing then iterating based on user feedback—would risk introducing patterns that diverge from ecosystem standards, potentially confusing developers and creating technical debt that's harder to fix post-publication.",
+
+  "questions": {
+    "Technical Review": [
+      "Are the React patterns we've documented (SAP-020 through SAP-025) current and aligned with industry best practices?",
+      "Have we missed any critical edge cases, anti-patterns, or performance pitfalls?",
+      "Do our component architecture recommendations align with chora-base's architectural philosophy?"
+    ],
+    "Documentation Quality": [
+      "Is the SAP structure (Explanation, How-To, Reference) clear and easy to follow?",
+      "Are our code examples sufficient, realistic, and properly explained?",
+      "What sections or topics would benefit from more depth, clarity, or examples?"
+    ],
+    "Ecosystem Alignment": [
+      "Do these React SAPs integrate well with existing chora-base SAPs (conventions, terminology, style)?",
+      "Are there any conflicting recommendations between our SAPs and established ecosystem patterns?",
+      "What patterns or content could be extracted for ecosystem-wide reuse (shared across repos)?",
+      "How can we better align our work with the broader chora ecosystem vision?"
+    ],
+    "Onboarding and Accessibility": [
+      "How accessible are these SAPs to developers new to React or the chora ecosystem?",
+      "What prerequisites or background knowledge should we document more clearly?",
+      "Are there gaps in our progressive disclosure (basic → intermediate → advanced patterns)?"
+    ]
+  },
+
+  "collaboration_modes": [
+    "Comprehensive Review: Detailed review of all 6 React SAPs (SAP-020 through SAP-025) with written feedback on technical accuracy, ecosystem alignment, documentation quality, and specific improvement suggestions. Estimated effort: 8-10 hours.",
+
+    "Focused Review: Select 2-3 SAPs that you feel are most critical or representative, provide detailed feedback on those, and high-level impressions on the remainder. Estimated effort: 4-6 hours.",
+
+    "High-Level Assessment: Read through all SAPs and provide general feedback on overall quality, major patterns or concerns, and ecosystem fit (without line-by-line review). Estimated effort: 2-3 hours.",
+
+    "Spot Check: Review one SAP of your choice (we suggest SAP-021 React State Management as it's central) and provide feedback that we can extrapolate to the others. Estimated effort: 1-2 hours."
+  ],
+
+  "boundaries": "To keep this review focused and manageable, we want to clarify what we are NOT requesting:\n\n**Not Line-by-Line Code Review**: We're seeking architectural and pattern-level feedback, not detailed code critique of every example. High-level assessment of whether examples are representative and clear is sufficient.\n\n**Not Comprehensive React Ecosystem Comparison**: Our SAPs intentionally focus on core React patterns applicable across ecosystem projects. We're not trying to cover every React library, framework, or edge case—just the foundational patterns teams need.\n\n**Not Asking You to Rewrite**: We're looking for feedback and recommendations that we (chora-workspace) can act on. We're not asking chora-base reviewers to rewrite documentation or provide ready-to-merge edits.\n\n**Not Rushing Timeline**: While we'd love feedback within 2-3 weeks, we understand peer review is a time-intensive gift. If you need more time, or can only provide partial review, that's completely acceptable and appreciated.",
+
+  "related": [
+    "SAP-020 React Foundation Patterns (under review)",
+    "SAP-021 React State Management (under review)",
+    "SAP-022 React Performance Optimization (under review)",
+    "SAP-023 React Testing Strategies (under review)",
+    "SAP-024 React Styling Approaches (under review)",
+    "SAP-025 React Linting and Code Quality (under review)",
+    "chora-base SAP catalog (standards and patterns for comparison)",
+    "SAP-001 inbox coordination protocol (example of well-structured SAP)"
+  ],
+
+  "timeline": "Preferred feedback by 2025-11-30 for Q4 publication target, but flexible if reviewer capacity requires more time. No hard blocker, but earlier completion enables broader ecosystem adoption in Q4."
+}

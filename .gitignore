@@ -48,3 +48,8 @@ htmlcov/
 *.log
 *.tmp
 .cache/
+
+# User preferences (keep template, ignore user-specific)
+.chora/user-preferences.yaml
+.chora/*.log
+.chora/cache/

@@ -1,0 +1,21 @@
+{
+  "type": "content",
+  "id": "content-block-estimated_effort",
+  "schemaRef": {
+    "uri": "file://schemas/content/v3.1/schema.json",
+    "version": "3.1"
+  },
+  "metadata": {
+    "type": "coordination",
+    "version": "1.0",
+    "title": "Estimated Effort Content Block"
+  },
+  "elements": [
+    {
+      "id": "estimated_effort_field",
+      "generation_pattern": "user_input",
+      "example_output": "8-12 hours",
+      "required": false
+    }
+  ]
+}

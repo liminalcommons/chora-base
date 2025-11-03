@@ -1,0 +1,36 @@
+{
+  "type": "coordination",
+  "request_id": "COORD-2025-006",
+  "title": "Test MCP Integration with chora-compose",
+  "from_repo": "github.com/liminalcommons/chora-base",
+  "to_repo": "github.com/liminalcommons/chora-workspace",
+  "priority": "P2",
+  "urgency": "next_sprint",
+  "deliverables": [
+    "Test chora-compose MCP server connection and verify all 24 tools are accessible",
+    "Generate sample coordination request using chora-compose to validate output quality",
+    "Measure generation time and token usage for inbox creation workflow",
+    "Document API endpoints and data formats required for MCP integration",
+    "Compare generated output quality against Week 4 pilot baseline (94.9%)",
+    "Create decision matrix comparing Path A/B vs Path C with effort estimates",
+    "Identify technical blockers or limitations in chora-compose capabilities",
+    "Produce implementation recommendation with selected path and justification"
+  ],
+  "acceptance_criteria": [
+    "MCP server connection establishes successfully within 30 seconds",
+    "≥5 chora-compose tools are tested with documented responses",
+    "Path A/B feasibility assessment covers ≥3 integration requirements",
+    "Path C standalone approach is evaluated with ≥2 complexity factors",
+    "Implementation time estimates differ by ≤20% from 8-16h vs 20-30h ranges",
+    "Decision matrix compares ≥4 criteria (time, quality, maintainability, risk)",
+    "Test results document ≥3 specific MCP capabilities for inbox generation",
+    "Recommendation includes concrete next steps with ≤2 hour time blocks",
+    "Quality threshold maintains ≥94% consistency with Week 4 pilot results"
+  ],
+  "created": "2025-11-02",
+  "context": {
+    "background": "Week 4 pilot complete (94.9% quality). Discovered production MCP server with 24 tools running in Docker on port 8000.",
+    "rationale": "Need to test MCP capabilities before deciding between Path A/B (8-16 hours with chora-compose) vs Path C (20-30 hours standalone)"
+  },
+  "estimated_effort": "1-2 hours"
+}

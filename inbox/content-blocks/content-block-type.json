@@ -1,0 +1,22 @@
+{
+  "type": "content",
+  "id": "content-block-type",
+  "schemaRef": {
+    "uri": "file://schemas/content/v3.1/schema.json",
+    "version": "3.1"
+  },
+  "metadata": {
+    "type": "coordination",
+    "version": "1.0",
+    "title": "Request Type Content Block",
+    "purpose": "Defines the type field for coordination requests"
+  },
+  "elements": [
+    {
+      "id": "type_field",
+      "generation_pattern": "literal",
+      "example_output": "coordination",
+      "required": true
+    }
+  ]
+}

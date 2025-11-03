@@ -1,0 +1,22 @@
+{
+  "type": "content",
+  "id": "content-block-title",
+  "schemaRef": {
+    "uri": "file://schemas/content/v3.1/schema.json",
+    "version": "3.1"
+  },
+  "metadata": {
+    "type": "coordination",
+    "version": "1.0",
+    "title": "Title Content Block",
+    "purpose": "Extracts title from user context"
+  },
+  "elements": [
+    {
+      "id": "title_field",
+      "generation_pattern": "user_input",
+      "example_output": "Update documentation with new features",
+      "required": true
+    }
+  ]
+}

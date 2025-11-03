@@ -1,0 +1,67 @@
+{
+  "$schema": "https://chora-compose.dev/schemas/content-config.json",
+  "name": "trace-id-format",
+  "version": "1.0.0",
+  "description": "Optional correlation identifier linking related work across ecosystem (trace_id)",
+  "priority": "MEDIUM",
+  "presence_frequency": "67%",
+
+  "content_element": {
+    "name": "trace-id-format",
+    "format": "json",
+    "example_output": {
+      "trace_id": "chora-compose-inbox-integration-2025"
+    }
+  },
+
+  "generation": {
+    "pattern": "template_fill",
+    "template_source": {
+      "type": "file",
+      "path": "docs/content-blocks/inbox-coordination/trace-id-format.md",
+      "section": "Naming Conventions"
+    },
+    "placeholders": {
+      "trace_id": {
+        "source": "user_input",
+        "path": "context.trace_id",
+        "optional": true,
+        "ai_suggestion": {
+          "enabled": true,
+          "input": ["context.purpose", "context.deliverables"],
+          "guidance": "Suggest kebab-case trace_id if this appears to be multi-phase project or part of larger initiative. Format: descriptive-project-name-YYYY. Examples: 'chora-compose-inbox-integration-2025', 'bidirectional-translation-sap009-2025', 'ecosystem-sap-standardization-2025'. Length: 30-60 chars. Only suggest if clear multi-phase or ecosystem coordination."
+        },
+        "constraints": {
+          "pattern": "^[a-z0-9-]+-\\d{4}$",
+          "minLength": 10,
+          "maxLength": 80
+        }
+      }
+    },
+    "conditional_inclusion": {
+      "include_if": "context.trace_id is defined",
+      "omit_if_null": true
+    }
+  },
+
+  "validation": {
+    "required_fields": [],
+    "field_constraints": {
+      "trace_id": {
+        "type": "string",
+        "pattern": "^[a-z0-9-]+-\\d{4}$",
+        "minLength": 10,
+        "maxLength": 80,
+        "error_message": "trace_id must be kebab-case ending with 4-digit year (e.g., project-name-2025)"
+      }
+    }
+  },
+
+  "metadata": {
+    "reusability": "universal",
+    "stability": "immutable",
+    "stability_note": "Never changes once set",
+    "related_blocks": ["core-metadata", "context-background", "related-work-template"],
+    "documentation": "docs/content-blocks/inbox-coordination/trace-id-format.md"
+  }
+}

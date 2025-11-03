@@ -52,7 +52,31 @@ chora-base includes comprehensive development workflow documentation (5,285 line
 
 ---
 
-## 2. Proposed Solution
+## 2. Stakeholders
+
+### Primary Users
+- **AI Agents** (Claude Code, Cursor Composer): Follow DDD→BDD→TDD workflow for systematic development
+- **Software engineers**: Execute 8-phase lifecycle for features and bug fixes
+- **Development teams**: Adopt proven workflow patterns for consistent quality
+
+### Secondary Users
+- **Tech leads**: Review phase outputs and ensure quality gates are met
+- **Product managers**: Use Vision & Strategy phase for roadmap planning
+- **QA engineers**: Leverage BDD scenarios for test planning
+
+### Decision Makers
+- **Engineering managers**: Evaluate lifecycle adoption impact on quality and velocity
+- **CTOs**: Assess methodology ROI (40-80% defect reduction)
+- **Process improvement teams**: Track adherence metrics and optimize workflows
+
+### Beneficiaries
+- **End users**: Higher quality software through systematic defect reduction
+- **New team members**: Faster onboarding with clear workflow documentation
+- **Project stakeholders**: Predictable delivery through template-based planning
+
+---
+
+## 3. Proposed Solution
 
 A **comprehensive SAP defining the 8-phase development lifecycle** (Vision → Planning → Requirements → Development → Testing → Review → Release → Monitoring) with DDD→BDD→TDD integration.
 
@@ -70,7 +94,7 @@ A **comprehensive SAP defining the 8-phase development lifecycle** (Vision → P
 
 ---
 
-## 3. Capability Definition
+## 4. Capability Definition
 
 ### What This SAP Includes
 
@@ -100,7 +124,7 @@ A **comprehensive SAP defining the 8-phase development lifecycle** (Vision → P
 
 ---
 
-## 4. Success Criteria
+## 5. Success Criteria
 
 ### Adoption Metrics
 
@@ -130,7 +154,7 @@ A **comprehensive SAP defining the 8-phase development lifecycle** (Vision → P
 
 ---
 
-## 5. Dependencies
+## 6. Dependencies
 
 ### Upstream Dependencies
 
@@ -150,7 +174,7 @@ A **comprehensive SAP defining the 8-phase development lifecycle** (Vision → P
 
 ---
 
-## 6. Risks & Mitigations
+## 7. Risks & Mitigations
 
 | Risk | Impact | Mitigation |
 |------|--------|------------|
@@ -161,7 +185,7 @@ A **comprehensive SAP defining the 8-phase development lifecycle** (Vision → P
 
 ---
 
-## 7. Open Questions
+## 8. Open Questions
 
 1. **Sprint duration**: 1-week vs 2-week sprints? (Currently: 2 weeks assumed)
 2. **BDD tooling**: pytest-bdd vs behave? (Currently: pytest-bdd assumed)
@@ -169,7 +193,7 @@ A **comprehensive SAP defining the 8-phase development lifecycle** (Vision → P
 
 ---
 
-## 8. Related Capabilities
+## 9. Related Capabilities
 
 - **SAP-000** (sap-framework): Meta-framework for all SAPs
 - **SAP-004** (testing-framework): pytest, coverage, fixtures used in TDD/BDD
@@ -181,7 +205,7 @@ A **comprehensive SAP defining the 8-phase development lifecycle** (Vision → P
 
 ---
 
-## 9. Approval & Sign-Off
+## 10. Approval & Sign-Off
 
 **Charter Author**: Claude Code
 **Date**: 2025-10-28

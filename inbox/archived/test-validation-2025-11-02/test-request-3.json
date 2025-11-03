@@ -1,0 +1,36 @@
+{
+  "type": "coordination",
+  "request_id": "PENDING",
+  "title": "Create Inbox Monitoring Automation",
+  "from_repo": "github.com/liminalcommons/chora-base",
+  "to_repo": "github.com/liminalcommons/chora-base",
+  "priority": "P1",
+  "urgency": "blocks_sprint",
+  "deliverables": [
+    "Automated monitoring script that checks inbox every 15 minutes for new items",
+    "Alert system that notifies agents within 5 minutes of blocks_sprint item arrival",
+    "Configuration file for customizable monitoring intervals and alert thresholds",
+    "Integration with session startup to trigger inbox-query.py automatically",
+    "Dashboard displaying inbox status, alert history, and SLA compliance metrics",
+    "Documentation for setup, configuration, and troubleshooting procedures",
+    "Test suite validating alert delivery within 5 minutes for priority items",
+    "Performance report showing response time improvements and SLA violation reduction"
+  ],
+  "acceptance_criteria": [
+    "Automated monitoring checks inbox every \u22645 minutes for new items",
+    "System detects and flags blocks_sprint urgency items within 30 seconds of arrival",
+    "Alert notifications are sent within 60 seconds of detecting high-priority items",
+    "Monitoring integrates with session startup and runs inbox-query.py automatically",
+    "Configuration allows customizable alert thresholds for \u22653 urgency levels",
+    "System logs all monitoring events with timestamps for audit trail",
+    "Monitoring service achieves \u226599% uptime over 24-hour test period",
+    "Alert system supports \u22652 notification channels (e.g., console, file)",
+    "Documentation includes setup instructions and configuration examples",
+    "System reduces average response time to blocks_sprint items by \u226550%"
+  ],
+  "created": "2025-11-02",
+  "context": {
+    "background": "Agents currently check inbox manually at session startup using inbox-query.py. There's no automated notification when high-priority items arrive. This could cause SLA violations for blocks_sprint urgency items.",
+    "rationale": "Reduce response time and improve SLA compliance. Enable proactive inbox monitoring rather than reactive checking. Support the 4-hour acknowledgment SLA for blocks_sprint items."
+  }
+}

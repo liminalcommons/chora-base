@@ -1,0 +1,80 @@
+{
+  "type": "coordination",
+  "request_id": "COORD-2025-004",
+  "title": "Exploring chora-compose for Inbox Artifact Generation",
+  "from_repo": "github.com/liminalcommons/chora-base",
+  "to_repo": "github.com/liminalcommons/chora-compose",
+  "priority": "P2",
+  "urgency": "backlog",
+  "deliverables": [
+    "Clarification of chora-compose v1.9.x artifact generation capabilities and current status",
+    "Assessment of inbox coordination request generation as a use case (vs SAP regeneration focus)",
+    "Guidance on using ConfigLoader and ArtifactComposer APIs if production-ready",
+    "Roadmap and timeline for production CLI and artifact generation features",
+    "Recommendations on integration approach: wait for chora-compose vs build interim solution"
+  ],
+  "acceptance_criteria": [
+    "Clear understanding of chora-compose v1.9.x production readiness (CLI availability, core features status)",
+    "Assessment addresses whether inbox artifact generation (minimal context → complete JSON) is supported or planned",
+    "If supported: Guidance includes working examples of ConfigLoader and ArtifactComposer usage",
+    "If not yet ready: Roadmap specifies target version and timeline (e.g., v2.0 in Q2 2025)",
+    "Recommendation provides clear path forward with risk assessment",
+    "Response addresses post-processing integration needs (ID allocation, event emission, file promotion)"
+  ],
+  "created": "2025-11-02",
+  "context": {
+    "background": "chora-base completed a 4-week pilot (Weeks 1-4) evaluating chora-compose for SAP-001 Inbox Coordination Protocol artifact generation. The pilot successfully validated the design approach, achieving 94.9% quality score (target: ≥80%) with complete validation infrastructure (post-processing scripts, quality evaluation, JSON schemas, BDD scenarios).\n\nWeek 5 investigation revealed: (1) chora-compose v1.9.1 is installed but CLI is not available, (2) archived documentation describes the architecture (ConfigLoader, ArtifactComposer) but appears to be implementation/development guides rather than user guides, (3) v1.9.0 release focuses on stigmergic context links and SAP regeneration rather than inbox artifact generation.\n\nWe designed 15 content configs and 1 artifact assembly config following patterns from chora-compose documentation. However, we need clarification on current production status and whether inbox artifact generation is a supported use case before proceeding with integration.",
+    "rationale": "We have three paths forward: (A) integrate with chora-compose as-is by building from source, (B) build interim solution and migrate to chora-compose when production-ready, or (C) build standalone generator and preserve future migration path. Path A assumes chora-compose is ready for our use case. Path B assumes clear timeline exists. Path C assumes chora-compose timeline is uncertain or use case unsupported.\n\nWithout clarity on chora-compose status and roadmap, we risk either (1) building on an unstable foundation if we integrate prematurely, or (2) building redundant infrastructure if chora-compose will support our use case within 3-6 months. This coordination request aims to gather information needed to make an informed path decision.",
+    "not_requesting": "We are NOT requesting chora-compose implement inbox artifact generation if it's not on the roadmap. We are NOT asking for priority treatment or urgent timeline changes. We are NOT expecting chora-compose to modify its architecture to fit our specific use case. This is purely exploratory to understand what's possible and what timeline to expect."
+  },
+  "trace_id": "chora-compose-inbox-integration-2025",
+  "estimated_effort": "2-4 hours",
+  "questions": {
+    "Production Readiness": [
+      "Is chora-compose v1.9.x considered production-ready for artifact generation use cases?",
+      "Why is the CLI (`chora-compose` command) not available despite package installation?",
+      "Are the archived user docs (ConfigLoader, ArtifactComposer API examples) accurate for v1.9.x?",
+      "What's the recommended way to use chora-compose: CLI, Python API, or MCP server?"
+    ],
+    "Use Case Fit": [
+      "Does chora-compose support generating artifacts from minimal context (5-10 input fields → 18-field JSON)?",
+      "Is the primary focus SAP regeneration (stigmergic links, freshness tracking) or also new artifact creation?",
+      "Can content configs specify AI-augmented generation (e.g., generate 200-400 word background from purpose field)?",
+      "Are conditional field inclusion rules supported (e.g., include 'questions' only if request_type == 'exploratory')?"
+    ],
+    "Post-Processing Integration": [
+      "Does chora-compose support post-generation hooks or plugins?",
+      "Can we integrate custom post-processing (ID allocation from sequence files, event emission to JSONL)?",
+      "Is there a validation framework for generated artifacts, or should we bring our own?",
+      "How does chora-compose handle artifact promotion from draft to final directories?"
+    ],
+    "Timeline and Roadmap": [
+      "What version will have production-ready CLI and artifact generation?",
+      "Is there a target release date for production artifact generation features?",
+      "Are there breaking changes expected between v1.9.x and v2.0?",
+      "Would you recommend waiting for chora-compose or building interim solution now?"
+    ]
+  },
+  "collaboration_modes": [
+    "Deep Exploration: Joint session reviewing chora-compose architecture, walking through our pilot configs, and determining integration feasibility. Includes working code examples and testing. Estimated effort: 3-4 hours.",
+    "Technical Consultation: Async discussion via GitHub issues or coordination channels addressing the questions above with specific guidance on API usage and roadmap. Estimated effort: 1.5-2 hours.",
+    "Quick Assessment: Brief review of our use case with high-level recommendation (integrate now, wait for vX.X, or build standalone). Estimated effort: 30-60 minutes."
+  ],
+  "related": [
+    {
+      "id": "COORD-2025-003",
+      "relationship": "relates_to",
+      "description": "v1.9.0 capabilities update focused on stigmergic context links for SAP regeneration"
+    },
+    {
+      "id": "chora-compose-pilot-week4-results",
+      "relationship": "informs",
+      "description": "Pilot results (94.9% quality) validating the design approach for inbox generation"
+    },
+    {
+      "id": "chora-compose-integration-decision",
+      "relationship": "depends_on",
+      "description": "Decision document awaiting chora-compose team input to finalize path choice"
+    }
+  ]
+}

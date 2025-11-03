@@ -1,0 +1,303 @@
+{
+  "$schema": "https://chora-compose.dev/schemas/artifact-config.json",
+  "artifact_type": "coordination-request",
+  "version": "1.0.0",
+  "description": "SAP-001 coordination request artifact assembly configuration",
+  "trace_id": "chora-compose-inbox-integration-2025",
+
+  "metadata": {
+    "sap_reference": "SAP-001 Inbox Coordination Protocol",
+    "schema_version": "1.0.0",
+    "output_format": "json",
+    "target_directory": "inbox/draft/"
+  },
+
+  "content_elements": [
+    {
+      "name": "core-metadata",
+      "config": "configs/content/coordination-request/core-metadata.json",
+      "required": true,
+      "priority": "HIGH",
+      "execution_order": 1,
+      "description": "Fundamental identifying fields (type, request_id, title, created)"
+    },
+    {
+      "name": "repository-fields",
+      "config": "configs/content/coordination-request/repository-fields.json",
+      "required": true,
+      "priority": "HIGH",
+      "execution_order": 2,
+      "description": "Source and destination repository identification"
+    },
+    {
+      "name": "priority-urgency",
+      "config": "configs/content/coordination-request/priority-urgency.json",
+      "required": true,
+      "priority": "HIGH",
+      "execution_order": 3,
+      "description": "Priority and urgency for scheduling"
+    },
+    {
+      "name": "deliverables-structure",
+      "config": "configs/content/coordination-request/deliverables-structure.json",
+      "required": true,
+      "priority": "HIGH",
+      "execution_order": 4,
+      "description": "Concrete outputs expected"
+    },
+    {
+      "name": "acceptance-criteria-patterns",
+      "config": "configs/content/coordination-request/acceptance-criteria-patterns.json",
+      "required": true,
+      "priority": "HIGH",
+      "execution_order": 5,
+      "description": "Measurable success conditions",
+      "dependencies": ["deliverables-structure"]
+    },
+    {
+      "name": "context-background",
+      "config": "configs/content/coordination-request/context-background.json",
+      "required": true,
+      "priority": "HIGH",
+      "execution_order": 6,
+      "description": "Situational context narrative"
+    },
+    {
+      "name": "trace-id-format",
+      "config": "configs/content/coordination-request/trace-id-format.json",
+      "required": false,
+      "priority": "MEDIUM",
+      "execution_order": 7,
+      "description": "Optional correlation identifier",
+      "conditional": {
+        "include_if": "context.trace_id is defined"
+      }
+    },
+    {
+      "name": "context-rationale",
+      "config": "configs/content/coordination-request/context-rationale.json",
+      "required": false,
+      "priority": "MEDIUM",
+      "execution_order": 8,
+      "description": "Decision reasoning",
+      "conditional": {
+        "include_if": "context.request_type in ['exploratory', 'prescriptive'] OR context.rationale is defined"
+      }
+    },
+    {
+      "name": "estimated-effort-guide",
+      "config": "configs/content/coordination-request/estimated-effort-guide.json",
+      "required": false,
+      "priority": "MEDIUM",
+      "execution_order": 9,
+      "description": "Effort estimation",
+      "conditional": {
+        "include_if": "context.estimated_effort is defined OR can be derived from deliverables"
+      }
+    },
+    {
+      "name": "timeline-patterns",
+      "config": "configs/content/coordination-request/timeline-patterns.json",
+      "required": false,
+      "priority": "MEDIUM",
+      "execution_order": 10,
+      "description": "Timeline, milestones, deadlines",
+      "conditional": {
+        "include_if": "context.timeline is defined"
+      }
+    },
+    {
+      "name": "dependencies-pattern",
+      "config": "configs/content/coordination-request/dependencies-pattern.json",
+      "required": false,
+      "priority": "MEDIUM",
+      "execution_order": 11,
+      "description": "Prerequisites or blocking work",
+      "conditional": {
+        "include_if": "context.dependencies is defined"
+      }
+    },
+    {
+      "name": "related-work-template",
+      "config": "configs/content/coordination-request/related-work-template.json",
+      "required": false,
+      "priority": "MEDIUM",
+      "execution_order": 12,
+      "description": "Related work providing context",
+      "conditional": {
+        "include_if": "context.related is defined OR can be inferred from background"
+      }
+    },
+    {
+      "name": "exploratory-questions",
+      "config": "configs/content/coordination-request/exploratory-questions.json",
+      "required": false,
+      "priority": "LOW",
+      "execution_order": 13,
+      "description": "Questions to be answered (exploratory requests)",
+      "conditional": {
+        "include_if": "context.request_type == 'exploratory' AND context.questions is defined"
+      }
+    },
+    {
+      "name": "collaboration-modes",
+      "config": "configs/content/coordination-request/collaboration-modes.json",
+      "required": false,
+      "priority": "LOW",
+      "execution_order": 14,
+      "description": "Engagement level options (exploratory external)",
+      "conditional": {
+        "include_if": "context.request_type == 'exploratory' AND context.from_repo != context.to_repo"
+      }
+    },
+    {
+      "name": "context-boundaries",
+      "config": "configs/content/coordination-request/context-boundaries.json",
+      "required": false,
+      "priority": "LOW",
+      "execution_order": 15,
+      "description": "Scope exclusions (exploratory external)",
+      "conditional": {
+        "include_if": "context.request_type == 'exploratory' AND context.from_repo != context.to_repo"
+      }
+    }
+  ],
+
+  "assembly": {
+    "strategy": "deep_merge",
+    "ordering": "by_execution_order",
+    "output_structure": {
+      "root_fields": [
+        "type",
+        "request_id",
+        "title",
+        "from_repo",
+        "to_repo",
+        "priority",
+        "urgency",
+        "deliverables",
+        "acceptance_criteria",
+        "created"
+      ],
+      "optional_root_fields": [
+        "trace_id",
+        "estimated_effort",
+        "timeline",
+        "dependencies",
+        "related",
+        "questions",
+        "collaboration_modes"
+      ],
+      "context_object": {
+        "fields": [
+          "background",
+          "rationale",
+          "not_requesting"
+        ]
+      }
+    },
+    "formatting": {
+      "indent": 2,
+      "trailing_newline": true,
+      "ensure_consistent_quotes": "double",
+      "sort_keys": false
+    }
+  },
+
+  "post_processing": {
+    "enabled": true,
+    "script": "scripts/process-generated-artifact.py",
+    "working_directory": "inbox/draft/",
+    "steps": [
+      {
+        "name": "validate_schema",
+        "description": "Validate against SAP-001 JSON schema",
+        "schema_path": "schemas/coordination-request.json",
+        "fail_on_error": true
+      },
+      {
+        "name": "allocate_id",
+        "description": "Allocate request_id from sequence",
+        "sequence_file": "inbox/.sequence-coordination",
+        "id_format": "COORD-{year}-{seq:03d}",
+        "update_field": "request_id"
+      },
+      {
+        "name": "emit_event",
+        "description": "Emit coordination_request_created event",
+        "event_file": "inbox/coordination/events.jsonl",
+        "event_type": "coordination_request_created",
+        "include_fields": [
+          "request_id",
+          "trace_id",
+          "from_repo",
+          "to_repo",
+          "priority",
+          "urgency"
+        ]
+      },
+      {
+        "name": "promote_file",
+        "description": "Move from draft to inbox/incoming/",
+        "target_directory": "inbox/incoming/coordination/",
+        "filename_pattern": "{request_id}.json",
+        "cleanup_draft": true
+      }
+    ],
+    "on_error": {
+      "action": "keep_draft",
+      "log_to": "inbox/draft/errors.log",
+      "notify": false
+    }
+  },
+
+  "validation": {
+    "pre_generation": {
+      "required_context_fields": [
+        "request_type",
+        "from_repo",
+        "to_repo",
+        "priority",
+        "urgency",
+        "purpose",
+        "deliverables"
+      ],
+      "validate_against_schema": "context-examples/coordination/context-schema.json"
+    },
+    "post_generation": {
+      "required_artifact_fields": [
+        "type",
+        "request_id",
+        "title",
+        "from_repo",
+        "to_repo",
+        "priority",
+        "urgency",
+        "deliverables",
+        "acceptance_criteria",
+        "created",
+        "context.background"
+      ],
+      "validate_against_schema": "schemas/coordination-request.json"
+    }
+  },
+
+  "quality_metrics": {
+    "target_generation_time": "5-10 minutes",
+    "target_quality_score": "≥80%",
+    "quality_rubric": "docs/pilots/quality-rubric.json",
+    "evaluation_script": "scripts/evaluate-pilot-quality.py"
+  },
+
+  "examples": {
+    "exploratory": "context-examples/coordination/example-exploratory.json",
+    "prescriptive": "context-examples/coordination/example-prescriptive.json",
+    "peer_review": "context-examples/coordination/example-peer-review.json"
+  },
+
+  "documentation": {
+    "change_request": "inbox/active/chora-compose-inbox-pilot/change-request.md",
+    "content_blocks": "docs/content-blocks/inbox-coordination/README.md",
+    "pilot_plan": "docs/exploration/chora-compose-inbox-integration-pilot-plan.md"
+  }
+}

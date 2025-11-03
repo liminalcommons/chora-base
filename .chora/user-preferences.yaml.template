@@ -1,0 +1,293 @@
+# Chora-base User Preferences
+#
+# Configure how agents interact with you to enable mutual ergonomics.
+# Copy this file to .chora/user-preferences.yaml and customize.
+#
+# These preferences adapt agent behavior to match your communication style,
+# working patterns, and expertise level.
+
+# =============================================================================
+# COMMUNICATION STYLE
+# =============================================================================
+
+communication:
+  # Verbosity: How much detail do you want in responses?
+  # - concise: Brief summaries, minimal explanation (1-2 sentences)
+  # - standard: Balanced detail with context (3-5 sentences)
+  # - verbose: Comprehensive explanations with examples (full paragraphs)
+  verbosity: standard
+
+  # Formality: What tone should agents use?
+  # - casual: Friendly, conversational tone ("Let's check the inbox!")
+  # - standard: Professional but approachable
+  # - formal: Technical, precise language
+  formality: standard
+
+  # Output Format: How should results be displayed?
+  # - terminal: Color-coded terminal output with emoji indicators
+  # - markdown: Structured markdown (committable, shareable)
+  # - json: Machine-readable JSON (for scripting/automation)
+  output_format: terminal
+
+  # Display Preferences
+  display:
+    use_emoji: true          # ✅❌⚠️ indicators
+    use_color: true          # ANSI color codes in terminal
+    show_timestamps: false   # Include timestamps in output
+    show_trace_ids: false    # Show CHORA_TRACE_ID in event outputs
+
+# =============================================================================
+# WORKFLOW PREFERENCES
+# =============================================================================
+
+workflow:
+  # Confirmation: When should agent ask for confirmation?
+  # - always: Confirm all actions before executing
+  # - destructive: Only confirm destructive operations (delete, force push)
+  # - never: Execute without confirmation (use with caution!)
+  require_confirmation: destructive
+
+  # Auto-commit: Should agent automatically commit changes?
+  # When true, commits after completing tasks (following git safety protocol)
+  # When false, agent stages changes but waits for user to commit
+  auto_commit: false
+
+  # Progressive Disclosure: How should complex information be presented?
+  # When true: Start with summary, offer "show more" for details
+  # When false: Show all information upfront
+  progressive_disclosure: true
+
+  # Context Retention: How long should conversation context be maintained?
+  # - session: Current session only (reset on new chat)
+  # - day: 24 hours
+  # - week: 7 days
+  # - unlimited: Retain indefinitely (uses more tokens)
+  context_retention: session
+
+  # DDD → BDD → TDD Adherence
+  development_lifecycle:
+    enforce_ddd: true      # Require docs-first (DDD Phase 3)
+    enforce_bdd: true      # Require scenarios before implementation
+    enforce_tdd: true      # Require tests before code
+    allow_prototype_mode: true  # Allow skipping for experiments
+
+# =============================================================================
+# LEARNING & ADAPTATION
+# =============================================================================
+
+learning:
+  # Capture Patterns: Should agent learn from your usage?
+  # Adds natural language variations to intent pattern database
+  capture_patterns: true
+
+  # Suggest Improvements: Should agent proactively suggest optimizations?
+  # Example: "I noticed you run 'pytest' manually. Want me to set up pre-commit hook?"
+  suggest_improvements: true
+
+  # Track Usage: Log usage data for ROI analysis and pattern learning
+  track_usage: true
+
+  # Feedback: How should agent request feedback?
+  # - never: Don't ask for feedback
+  # - completion: Ask after task completion
+  # - weekly: Weekly feedback prompt
+  request_feedback: completion
+
+# =============================================================================
+# EXPERTISE LEVEL
+# =============================================================================
+
+expertise:
+  # Overall Level: How familiar are you with chora-base ecosystem?
+  # - beginner: New to chora-base, show explanations and examples
+  # - intermediate: Familiar with basics, show key details
+  # - expert: Deep knowledge, minimal explanation needed
+  level: intermediate
+
+  # Domain Expertise: Fine-grained expertise by area
+  domains:
+    sap_framework: intermediate     # SAP-000 concepts
+    inbox_protocol: intermediate    # SAP-001 coordination
+    testing: intermediate          # SAP-004 pytest
+    documentation: intermediate    # SAP-007 Diátaxis
+    lifecycle: intermediate       # SAP-012 DDD/BDD/TDD
+    git_workflows: intermediate   # Version control
+
+  # Adaptation: Should explanations adapt as you learn?
+  # When true, agent tracks answered questions and reduces detail over time
+  adapt_over_time: true
+
+# =============================================================================
+# NOTIFICATION & ALERTS
+# =============================================================================
+
+notifications:
+  # Priority Thresholds: When to alert you about inbox items
+  alert_on_p0: true   # Critical blockers
+  alert_on_p1: false  # High priority (check during sprint planning)
+  alert_on_p2: false  # Medium priority
+
+  # Quality Gates: Alert on quality gate failures?
+  alert_on_test_failure: true
+  alert_on_coverage_drop: true  # Coverage drops below 85%
+  alert_on_lint_errors: true
+  alert_on_broken_links: true
+
+  # Events: Monitor event log for specific patterns?
+  monitor_events:
+    - event_type: coordination_request_created
+      trace_id: null  # null = all, or specify specific trace_id
+      action: notify
+
+# =============================================================================
+# TOOL PREFERENCES
+# =============================================================================
+
+tools:
+  # Preferred Test Runner
+  # - pytest: Python projects
+  # - jest: JavaScript projects
+  # - auto: Detect based on project
+  test_runner: auto
+
+  # Preferred Linter
+  # - ruff: Python (fast, modern)
+  # - pylint: Python (comprehensive)
+  # - auto: Detect from project config
+  linter: auto
+
+  # Editor: What editor do you use?
+  # Used for file path formatting and editor-specific hints
+  # - vscode: VSCode
+  # - cursor: Cursor
+  # - vim: Vim/Neovim
+  # - emacs: Emacs
+  # - other: Generic
+  editor: vscode
+
+# =============================================================================
+# CONTEXT LOADING
+# =============================================================================
+
+context:
+  # Token Budget: Target token allocation per task type
+  # (Claude-specific optimization from SAP-009)
+  token_budgets:
+    bug_fix: 10000       # 5-10k tokens
+    feature: 25000       # 15-30k tokens
+    refactor: 30000      # 20-40k tokens
+    strategic: 50000     # 40-60k tokens
+
+  # Progressive Loading: Load context in phases?
+  # Phase 1: Essential (0-10k tokens)
+  # Phase 2: Extended (10-50k tokens)
+  # Phase 3: Full (50-200k tokens)
+  progressive_loading: true
+
+  # AGENTS.md Discovery: How to find awareness files?
+  # - nearest: Read closest AGENTS.md (nested pattern)
+  # - all: Read all AGENTS.md files in hierarchy
+  # - root_only: Only read root AGENTS.md
+  agents_md_strategy: nearest
+
+# =============================================================================
+# METRICS & ROI
+# =============================================================================
+
+metrics:
+  # Track ROI: Use ClaudeROICalculator to measure time saved?
+  track_roi: true
+
+  # Metric Collection: What metrics to track?
+  collect:
+    time_saved: true
+    lines_generated: true
+    iterations_required: true
+    bugs_introduced: true
+    bugs_fixed: true
+    test_coverage: true
+    documentation_quality: true
+
+  # Reporting Frequency: How often to generate ROI reports?
+  # - never: Manual only
+  # - task: After each task
+  # - sprint: End of sprint
+  # - monthly: Monthly summary
+  report_frequency: sprint
+
+# =============================================================================
+# EXPERIMENTAL FEATURES
+# =============================================================================
+
+experimental:
+  # Intent Router: Use natural language intent recognition?
+  use_intent_router: true
+
+  # Suggestion Engine: Enable context-aware next action suggestions?
+  use_suggestion_engine: true
+
+  # Glossary Search: Enable terminology lookup during conversations?
+  use_glossary_search: true
+
+  # Traceability Enhancements: Use advanced traceability features?
+  # (Pending SAP-020 implementation)
+  use_traceability: false
+
+# =============================================================================
+# PRIVACY & DATA
+# =============================================================================
+
+privacy:
+  # Usage Logging: Log usage data locally for analysis?
+  log_usage: true
+
+  # Anonymize: Remove identifying information from logs?
+  anonymize_logs: false
+
+  # Retention: How long to keep usage logs?
+  # - 30d, 90d, 180d, unlimited
+  log_retention_days: 90
+
+  # Share: Contribute anonymized usage data to improve chora-base?
+  # (Not yet implemented - placeholder for future)
+  share_anonymized_data: false
+
+# =============================================================================
+# CUSTOM PATTERNS
+# =============================================================================
+
+custom:
+  # Project-Specific Terminology: Custom aliases for your project
+  # Example: "backend" → "coordination request for chora-base"
+  terminology_aliases: {}
+
+  # Custom Workflows: Project-specific workflow overrides
+  # Example: Skip BDD for prototype features
+  workflow_overrides: {}
+
+  # Team Conventions: Team-specific patterns
+  # Example: Always use "feat:" prefix in commit messages
+  team_conventions: {}
+
+# =============================================================================
+# NOTES
+# =============================================================================
+
+# This template provides defaults for balanced user experience.
+# Customize based on your preferences and working style.
+#
+# File location:
+#   - .chora/user-preferences.yaml (this file, gitignored by default)
+#   - .chora/user-preferences.yaml.template (template, committed)
+#
+# Loading order:
+#   1. System defaults (hardcoded in tools)
+#   2. This file (.chora/user-preferences.yaml)
+#   3. Environment variables (CHORA_* prefix overrides)
+#
+# Example environment variable override:
+#   export CHORA_VERBOSITY=verbose
+#   export CHORA_OUTPUT_FORMAT=json
+#
+# Validation:
+#   python scripts/validate-preferences.py .chora/user-preferences.yaml

@@ -1,0 +1,376 @@
+patterns:
+- pattern_id: inbox_status
+  action: run_inbox_status
+  triggers:
+  - show inbox
+  - what's in the inbox
+  - inbox status
+  - check inbox
+  - coordination queue
+  - what's pending
+  - show me pending work
+  - what needs review
+  parameters: {}
+  description: Display inbox status dashboard
+  examples:
+  - What's in the inbox?
+  - Show me pending coordination requests
+  - Check inbox status
+  sap_reference: SAP-001
+- pattern_id: coordination_review
+  action: review_coordination_requests
+  triggers:
+  - review coordination
+  - check coordination requests
+  - triage coordination
+  - what coordination requests
+  - coordination triage
+  - review incoming coordination
+  parameters: {}
+  description: Review incoming coordination requests for sprint planning
+  examples:
+  - Review coordination requests
+  - What coordination is pending?
+  - Triage coordination queue
+  sap_reference: SAP-001
+- pattern_id: create_proposal
+  action: create_strategic_proposal
+  triggers:
+  - create proposal
+  - suggest big change
+  - strategic proposal
+  - propose new direction
+  - i want to propose
+  - create strategic proposal
+  - type 1 intake
+  parameters:
+    type: strategic_proposal
+  description: Create strategic proposal (Type 1 intake - quarterly review)
+  examples:
+  - I want to propose a big change
+  - Create strategic proposal for health monitoring
+  - Suggest a new strategic direction
+  sap_reference: SAP-001
+- pattern_id: create_coordination_request
+  action: create_coordination_request
+  triggers:
+  - create coordination request
+  - coordinate with team
+  - cross-repo work
+  - type 2 intake
+  - coordination request
+  parameters:
+    type: coordination_request
+  description: Create coordination request (Type 2 intake - sprint planning)
+  examples:
+  - Create coordination request for testing improvements
+  - I need to coordinate with chora-compose
+  sap_reference: SAP-001
+- pattern_id: create_task
+  action: create_implementation_task
+  triggers:
+  - create task
+  - new task
+  - implementation task
+  - type 3 intake
+  parameters:
+    type: implementation_task
+  description: Create implementation task (Type 3 intake - continuous)
+  examples:
+  - Create task for bug fix
+  - New implementation task
+  sap_reference: SAP-001
+- pattern_id: start_task
+  action: start_implementation_task
+  triggers:
+  - start task
+  - work on task
+  - begin task
+  - start work on
+  - begin implementation
+  parameters: {}
+  description: Start implementation task (move to active/, create change-request.md)
+  examples:
+  - Start task-005
+  - Work on inbox/active/task-007
+  - Begin task-012
+  sap_reference: SAP-012
+- pattern_id: event_timeline
+  action: show_event_timeline
+  triggers:
+  - event timeline
+  - show events
+  - what happened
+  - trace events
+  - show history
+  - event log
+  - timeline for
+  parameters: {}
+  description: Display event timeline from events.jsonl log
+  examples:
+  - Show me what happened with task-005
+  - Event timeline for this sprint
+  - What happened with coord-003?
+  sap_reference: SAP-001
+- pattern_id: sap_quick_check
+  action: run_sap_evaluator_quick
+  triggers:
+  - how are saps
+  - sap status
+  - check saps
+  - sap adoption
+  - how's our sap adoption
+  - quick sap check
+  - sap health
+  parameters:
+    mode: quick
+  description: Quick SAP adoption status check (30 seconds)
+  examples:
+  - How's our SAP adoption?
+  - Quick SAP status check
+  - Check SAP health
+  sap_reference: SAP-019
+- pattern_id: sap_deep_dive
+  action: run_sap_evaluator_deep
+  triggers:
+  - deep dive sap
+  - analyze sap
+  - sap gaps
+  - how can we improve sap
+  - detailed sap analysis
+  - sap gap analysis
+  parameters:
+    mode: deep
+  description: Deep SAP analysis with gap identification (5 minutes)
+  examples:
+  - Deep dive on SAP-004
+  - How can we improve SAP testing?
+  - Analyze SAP-012 adoption
+  sap_reference: SAP-019
+- pattern_id: sap_strategic
+  action: run_sap_evaluator_strategic
+  triggers:
+  - sap roadmap
+  - strategic sap analysis
+  - generate sap roadmap
+  - quarterly sap review
+  - sap strategic planning
+  parameters:
+    mode: strategic
+  description: Strategic SAP analysis with roadmap generation (30 minutes)
+  examples:
+  - Generate SAP roadmap for Q1
+  - Strategic SAP planning
+  - Quarterly SAP review
+  sap_reference: SAP-019
+- pattern_id: ddd_workflow
+  action: start_ddd_phase
+  triggers:
+  - start ddd
+  - documentation driven design
+  - write docs first
+  - create change request
+  - phase 3
+  parameters:
+    phase: ddd
+  description: Start Documentation Driven Design (Phase 3)
+  examples:
+  - Start DDD for new feature
+  - Create change request for validation
+  - Begin Phase 3 documentation
+  sap_reference: SAP-012
+- pattern_id: bdd_workflow
+  action: start_bdd_phase
+  triggers:
+  - start bdd
+  - behavior driven development
+  - write scenarios
+  - gherkin scenarios
+  - create feature file
+  parameters:
+    phase: bdd
+  description: Start Behavior Driven Development (Phase 4a - scenarios)
+  examples:
+  - Start BDD scenarios
+  - Write Gherkin for validation feature
+  - Create .feature file
+  sap_reference: SAP-012
+- pattern_id: tdd_workflow
+  action: start_tdd_phase
+  triggers:
+  - start tdd
+  - test driven development
+  - red green refactor
+  - write tests first
+  parameters:
+    phase: tdd
+  description: Start Test Driven Development (Phase 4b - implementation)
+  examples:
+  - Start TDD for validation
+  - Begin red-green-refactor cycle
+  - Write tests first
+  sap_reference: SAP-012
+- pattern_id: run_tests
+  action: run_test_suite
+  triggers:
+  - run tests
+  - execute tests
+  - test suite
+  - check tests
+  - pytest
+  parameters: {}
+  description: Run pytest test suite with coverage
+  examples:
+  - Run tests
+  - Execute test suite
+  - Check if tests pass
+  sap_reference: SAP-004
+- pattern_id: check_coverage
+  action: check_test_coverage
+  triggers:
+  - test coverage
+  - coverage report
+  - check coverage
+  - how's coverage
+  parameters: {}
+  description: Generate test coverage report
+  examples:
+  - Check test coverage
+  - Show coverage report
+  - What's our coverage?
+  sap_reference: SAP-004
+- pattern_id: run_quality_gates
+  action: run_quality_checks
+  triggers:
+  - quality gates
+  - run quality checks
+  - pre-commit checks
+  - lint and type check
+  - quality validation
+  parameters: {}
+  description: Run all quality gates (lint, type check, coverage, security)
+  examples:
+  - Run quality gates
+  - Check quality
+  - Pre-commit validation
+  sap_reference: SAP-006
+- pattern_id: validate_links
+  action: run_link_validation
+  triggers:
+  - validate links
+  - check links
+  - broken links
+  - link validation
+  - check for broken links
+  parameters: {}
+  description: Validate all markdown links (internal and external)
+  examples:
+  - Validate links
+  - Check for broken links
+  - Run link validation
+  sap_reference: SAP-016
+- pattern_id: traceability_report
+  action: generate_traceability_report
+  triggers:
+  - traceability report
+  - cross-sap links
+  - domain coverage
+  - traceability gaps
+  parameters: {}
+  description: Generate traceability report showing cross-SAP and domain coverage
+  examples:
+  - Generate traceability report
+  - Show cross-SAP link coverage
+  - Traceability gaps analysis
+  sap_reference: SAP-016
+- pattern_id: impact_analysis
+  action: analyze_change_impact
+  triggers:
+  - impact analysis
+  - what breaks if
+  - change impact
+  - who links to
+  - reverse links
+  parameters: {}
+  description: Analyze impact of changing/moving a file (reverse link lookup)
+  examples:
+  - Impact analysis for protocol-spec.md
+  - What breaks if I move this file?
+  - Who links to SAP-004?
+  sap_reference: SAP-016
+- pattern_id: suggest_next
+  action: suggest_next_action
+  triggers:
+  - what next
+  - what should i do
+  - suggest next step
+  - recommend action
+  - what's next
+  - next step
+  parameters: {}
+  description: Context-aware next action suggestions based on project state
+  examples:
+  - What should I work on next?
+  - What's the next step?
+  - Recommend next action
+  sap_reference: null
+- pattern_id: search_terminology
+  action: search_glossary
+  triggers:
+  - what is
+  - what's a
+  - define
+  - explain term
+  - search glossary
+  - terminology
+  parameters: {}
+  description: Search ecosystem glossary for terminology and concepts
+  examples:
+  - What is a coordination request?
+  - Define strategic proposal
+  - Explain Type 1 intake
+  sap_reference: null
+- pattern_id: show_roadmap
+  action: display_roadmap
+  triggers:
+  - show roadmap
+  - what's the roadmap
+  - strategic plan
+  - vision
+  - future plans
+  parameters: {}
+  description: Display strategic roadmap and vision
+  examples:
+  - Show me the roadmap
+  - What's the strategic plan?
+  - Future vision for chora-base
+  sap_reference: null
+- pattern_id: sprint_status
+  action: show_sprint_status
+  triggers:
+  - sprint status
+  - current sprint
+  - sprint progress
+  - what's in this sprint
+  parameters: {}
+  description: Show current sprint status and progress
+  examples:
+  - Show sprint status
+  - What's in the current sprint?
+  - Sprint progress
+  sap_reference: SAP-012
+- pattern_id: help
+  action: show_help
+  triggers:
+  - help
+  - how do i
+  - guide
+  - tutorial
+  - show me how
+  parameters: {}
+  description: Show help and guidance for common operations
+  examples:
+  - Help with coordination requests
+  - How do I create a proposal?
+  - Guide for SAP adoption
+  sap_reference: null

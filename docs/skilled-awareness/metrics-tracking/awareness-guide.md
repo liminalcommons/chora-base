@@ -36,9 +36,116 @@ Track Claude effectiveness, process quality, and team velocity using ClaudeROICa
 
 ---
 
-## 2. Agent Workflows
+## 2. Tool Usage Patterns
 
-### 2.1 Track Claude Session
+### Overview
+This section shows how agents should use Claude Code tools (Read, Write, Edit, Bash) to implement metrics tracking.
+
+### 2.1 Installing Metrics Tracking
+
+**Step 1: Check if metrics utilities already exist**
+```
+Tool: Read
+File: utils/claude_metrics.py
+Purpose: Check if ClaudeMetric and ClaudeROICalculator already exist
+```
+
+**Step 2a: If file exists, verify it's complete**
+```
+Tool: Read
+File: utils/claude_metrics.py
+Action: Check for ClaudeMetric dataclass and ClaudeROICalculator class
+```
+
+**Step 2b: If file missing, create metrics utilities**
+```
+Tool: Write
+File: utils/claude_metrics.py
+Content: Copy from static-template/src/utils/claude_metrics.py
+```
+
+**Step 3: Create metrics directory structure**
+```
+Tool: Bash
+Command: mkdir -p project-docs/metrics
+Purpose: Ensure metrics directory exists
+```
+
+**Step 4: Validate installation**
+```
+Tool: Bash
+Command: python -c 'from utils.claude_metrics import ClaudeROICalculator'
+Expected: No errors (successful import)
+```
+
+### 2.2 Recording Metrics After Task Completion
+
+**Step 1: Read existing metrics file (if any)**
+```
+Tool: Read
+File: project-docs/metrics/claude_roi.json
+Purpose: Load existing metrics to append new session
+```
+
+**Step 2: Calculate metrics for current session**
+```
+Tool: Bash
+Command: python scripts/calculate-session-metrics.py --session-id <id>
+Purpose: Generate metric values for the session
+```
+
+**Step 3: Update metrics file**
+```
+Tool: Edit (if file exists) OR Write (if new file)
+File: project-docs/metrics/claude_roi.json
+Action: Add new session metric to JSON array
+```
+
+### 2.3 Updating Sprint Metrics
+
+**Step 1: Read current sprint document**
+```
+Tool: Read
+File: project-docs/sprints/sprint-N.md
+Purpose: Find the ## Metrics section
+```
+
+**Step 2: Calculate sprint metrics**
+```
+Tool: Bash
+Command: pytest --cov=src --cov-report=term | grep "TOTAL"
+Purpose: Get test coverage percentage
+```
+
+**Step 3: Update metrics section**
+```
+Tool: Edit
+File: project-docs/sprints/sprint-N.md
+Old: ## Metrics\n(empty or outdated values)
+New: ## Metrics\n- Velocity: 85%\n- Defect Rate: 2\n- Coverage: 91%
+```
+
+### 2.4 Generating ROI Reports
+
+**Step 1: Export metrics to CSV for analysis**
+```
+Tool: Bash
+Command: python -c "from utils.claude_metrics import ClaudeROICalculator; calc = ClaudeROICalculator.from_json('project-docs/metrics/claude_roi.json'); calc.export_to_csv('reports/roi.csv')"
+Purpose: Create human-readable report
+```
+
+**Step 2: Review generated report**
+```
+Tool: Read
+File: reports/roi.csv
+Purpose: Verify metrics exported correctly
+```
+
+---
+
+## 3. Agent Workflows
+
+### 3.1 Track Claude Session
 
 ```python
 from mypackage.utils.claude_metrics import ClaudeMetric, ClaudeROICalculator
@@ -61,7 +168,7 @@ calculator.add_metric(metric)
 calculator.export_to_json("project-docs/metrics/claude_roi.json")
 ```
 
-### 2.2 Update Sprint Metrics
+### 3.2 Update Sprint Metrics
 
 **At end of sprint**:
 1. Calculate velocity: `(completed_points / committed_points) * 100`
@@ -69,7 +176,7 @@ calculator.export_to_json("project-docs/metrics/claude_roi.json")
 3. Calculate DDD/BDD/TDD adherence
 4. Update `project-docs/sprints/sprint-N.md` metrics section
 
-### 2.3 Update Release Metrics
+### 3.3 Update Release Metrics
 
 **1 week post-release**:
 1. Collect PyPI downloads, Docker pulls
@@ -79,7 +186,7 @@ calculator.export_to_json("project-docs/metrics/claude_roi.json")
 
 ---
 
-## 3. Quick Reference
+## 4. Quick Reference
 
 **ClaudeROICalculator**:
 ```python
@@ -97,7 +204,7 @@ calculator.export_to_csv("metrics.csv")
 
 ---
 
-## 4. Common Pitfalls
+## 5. Common Pitfalls
 
 ### Pitfall 1: Not Tracking Time Saved Accurately
 
@@ -311,7 +418,7 @@ python scripts/generate_roi_report.py  # Should work with new path
 
 ---
 
-## 5. Installation
+## 6. Installation
 
 ### Quick Install
 
@@ -365,7 +472,7 @@ For custom installation paths or options, see:
 
 ---
 
-## 6. Related Content
+## 7. Related Content
 
 ### Within This SAP (skilled-awareness/metrics-tracking/)
 
@@ -444,5 +551,6 @@ For custom installation paths or options, see:
 ---
 
 **Version History**:
+- **1.0.2** (2025-11-02): Added "Tool Usage Patterns" section with explicit Read/Write/Edit/Bash tool instructions for installing, recording metrics, updating sprints, and generating reports (addresses SAP quality evaluation critical issue)
 - **1.0.1** (2025-10-28): Added "When to Use" section, "Common Pitfalls" with Wave 2 learnings (5 scenarios: time saved accuracy, bugs introduced tracking, task type comparisons, sprint metrics updates, metric exports), enhanced "Related Content" with 4-domain coverage (dev-docs/, project-docs/, user-docs/, skilled-awareness/)
 - **1.0.0** (2025-10-28): Initial awareness guide for metrics-tracking SAP

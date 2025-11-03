@@ -1,0 +1,10 @@
+{
+  "title": "Implement React State Management SAP",
+  "description": "Create a comprehensive SAP documenting React state management patterns for the chora-base ecosystem",
+  "background": "We are building out React-based capabilities and need standardized guidance on state management patterns. Currently, there is no formal documentation on when to use useState vs useReducer vs Context API vs external libraries like Zustand.",
+  "rationale": "Enable consistent React development across all ecosystem repositories. Reduce decision paralysis and ensure best practices are followed. Support AI agents in generating React code that follows our standards.",
+  "priority": "P1",
+  "urgency": "next_sprint",
+  "from_repo": "github.com/liminalcommons/chora-base",
+  "to_repo": "github.com/liminalcommons/chora-base"
+}

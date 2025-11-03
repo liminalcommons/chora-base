@@ -1,0 +1,96 @@
+{
+  "type": "coordination",
+  "request_id": "coord-005",
+  "from_repo": "chora-workspace",
+  "to_repo": "chora-base",
+  "title": "Peer Review: Ecosystem Coordination SAPs Proposal",
+  "priority": "P2",
+  "urgency": "next_sprint",
+  "deliverables": [
+    "Review prop-002-ecosystem-coordination-saps.md - Does SAP proposal structure serve ecosystem?",
+    "Review LIMINAL_COMMONS_CONTEXT.md - Does this capture Acropolis OS vision and our relationship to it accurately?",
+    "Review ECOSYSTEM_PHILOSOPHY.md - Does this resonate with our commons values? What's missing?",
+    "Provide guidance on SAP structure - New SAPs (014/015) vs modify existing (001/009/010) vs hybrid?",
+    "Review tone shift - Where does communication still read as 'recruitment' vs 'peer learning'?"
+  ],
+  "acceptance_criteria": [
+    "Philosophy docs (LIMINAL_COMMONS_CONTEXT, ECOSYSTEM_PHILOSOPHY) reviewed for accuracy, resonance, and completeness",
+    "SAP proposal structure feedback provided (new SAPs, modify existing, hybrid, or something else)",
+    "Tone audit identifies any remaining 'convincing' or 'braggadocious' language",
+    "Guidance on template integration (how coordination templates should relate to chora-base library)",
+    "Decision on whether to proceed with SAP formalization or alternative approach",
+    "Timeline for next steps if proceeding (or rationale if not)"
+  ],
+  "strategic_alignment": "Supports chora-base v4.0 ecosystem growth objective. Formalizes coordination patterns as SAPs (not just documentation). Models symbiotic human-AI collaboration in SAP evolution.",
+  "proposed_timeline": "2-week peer review period, then proceed based on feedback",
+  "trace_id": "ecosystem-coordination-saps-2025-10-31",
+  "context": {
+    "problem": "We evolved coordination patterns over 4 sprints (82-142% ROI, 0% defects) but they're not integrated into SAP framework. Need chora-base peer input on formalizing as SAPs.",
+    "what_emerged": "Three interconnected systems: Capability-based routing, event-driven traceability, progressive coordination. Plus philosophy: kin-based collaboration, bounded rationality, symbiotic intelligence.",
+    "why_now": "v4.0 ecosystem growth needs standardized coordination. W3 Health Monitoring (if approved) would benefit from SAPs. Liminal Commons expanding to more collaborators who need to understand HOW we work.",
+    "why_chora_base": "You define SAP framework, embody commons philosophy, understand template integration deeply. Your perspective is essential for SAP structure and values alignment.",
+    "not_asking": "Not asking you to accept our patterns as-is. Not claiming we have the right approach. Not prescribing implementation.",
+    "actually_asking": "Does integrating these as SAPs serve the ecosystem? What would you evolve? How should this fit with existing SAPs and v4.0 roadmap?"
+  },
+  "contribution_offered": {
+    "philosophy_docs": "LIMINAL_COMMONS_CONTEXT.md and ECOSYSTEM_PHILOSOPHY.md drafted (2,000 + 2,500 words) - starting point for discussion",
+    "sap_proposal": "prop-002-ecosystem-coordination-saps.md with 3 options (new SAPs, modify existing, hybrid) - flexible on implementation",
+    "evidence": "4 sprints of measured results (ROI reports, sprint retrospectives, 17 knowledge notes)",
+    "working_example": "chora-workspace as proof-of-concept demonstrating patterns in practice",
+    "reframed_communications": "Tone shift from 'recruitment' to 'peer learning' (can share reframed invitations if useful)"
+  },
+  "specific_questions": {
+    "philosophy": [
+      "Does LIMINAL_COMMONS_CONTEXT.md accurately represent Acropolis OS vision?",
+      "Does ECOSYSTEM_PHILOSOPHY.md capture our commons values? What core principles are missing?",
+      "How do we express 'kin-based collaboration' for future external readers without sounding strange?",
+      "Is bounded rationality acknowledgment adequate? Too much uncertainty or too little?"
+    ],
+    "sap_structure": [
+      "Should these be new SAPs (014: Coordination Patterns, 015: Commons Philosophy)?",
+      "Should we modify existing SAPs (extend 001/009/010)?",
+      "Should we use hybrid approach (new 014, extend 009 with philosophy)?",
+      "How do SAPs handle evolution as patterns are adopted and refined?"
+    ],
+    "template_integration": [
+      "How should coordination templates integrate with chora-base template library?",
+      "Should capability declarations be part of standard project template?",
+      "How do we version templates as they evolve through ecosystem use?",
+      "What's the relationship between SAP artifacts and chora-base templates?"
+    ],
+    "tone_and_communication": [
+      "Where does proposal or philosophy doc still sound 'braggadocious'?",
+      "Are ROI metrics presented humbly (observations) or do they feel like proof/sales pitch?",
+      "How do we offer evidence without implying 'proven truth' or 'best practices'?",
+      "Does symbiotic intelligence framing (human-AI as peers) make sense?"
+    ],
+    "v4_alignment": [
+      "Does this serve v4.0 ecosystem growth objective?",
+      "What's missing for ecosystem coordination at scale?",
+      "How does this relate to other v4.0 priorities?",
+      "Should we wait for more context or proceed with SAP formalization?"
+    ]
+  },
+  "review_format_options": [
+    "Formal coordination request response (JSON reply)",
+    "Comments on draft documents (GitHub PR or direct edits)",
+    "Knowledge note capturing your perspective (markdown in .chora/memory/knowledge/)",
+    "Discussion/meeting followed by summary (if synchronous conversation would serve)",
+    "Hybrid: Quick async feedback + deeper sync discussion if needed"
+  ],
+  "humble_acknowledgments": {
+    "our_bounded_rationality": "We evolved these patterns in our context (chora-workspace, 4 sprints, Victor + Claude collaboration). Your context and wisdom will reveal what we're missing.",
+    "not_prescriptive": "We're proposing SAP structure, but you define SAPs. If this doesn't fit, help us understand what would serve better.",
+    "learning_posture": "This is us offering what emerged, seeking your discernment on how it might integrate with chora-base and ecosystem.",
+    "peer_not_subordinate": "We're asking as aligned peers, not subordinates seeking approval. Your 'no' or 'let's evolve this differently' is as valuable as 'yes'."
+  },
+  "metadata": {
+    "created": "2025-10-31",
+    "created_by": "Victor Piper + Claude (symbiotic collaboration)",
+    "estimated_review_time": "2-4 hours (reading docs, providing feedback)",
+    "response_timeline": "2 weeks preferred, flexible if you need more time",
+    "next_steps_if_approved": "Week 3-4: SAP definition, Week 5-6: chora-workspace adoption + one peer repo",
+    "next_steps_if_not_approved": "Refine based on feedback, or keep as chora-workspace documentation only",
+    "how_this_models_philosophy": "Using coordination protocol to seek peer input on coordination SAPs. Practicing humble, kin-based collaboration we're proposing to formalize."
+  }
+}

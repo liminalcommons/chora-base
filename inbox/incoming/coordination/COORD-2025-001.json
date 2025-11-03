@@ -1,0 +1,58 @@
+{
+  "type": "coordination",
+  "request_id": "COORD-2025-001",
+  "title": "Exploring chora-compose Integration for Inbox Automation",
+  "from_repo": "github.com/liminalcommons/chora-base",
+  "to_repo": "github.com/liminalcommons/chora-compose",
+  "priority": "P2",
+  "urgency": "backlog",
+  "deliverables": [
+    "Feasibility assessment of chora-compose for coordination request generation",
+    "Comparison of template-based vs demonstration-based generation approaches",
+    "Analysis of content block decomposition strategies",
+    "Recommendations for integration architecture and post-processing pipeline",
+    "Pilot plan for 4-week evaluation with measurable success criteria"
+  ],
+  "acceptance_criteria": [
+    "Feasibility assessment addresses ≥3 key integration challenges (schema mapping, conditional inclusion, post-processing)",
+    "Comparison evaluates ≥2 generation approaches with concrete examples",
+    "Content block analysis identifies ≥12 reusable patterns",
+    "Architecture recommendations include specific component diagrams and data flow",
+    "Pilot plan defines ≥80% quality threshold with 10-criterion rubric"
+  ],
+  "created": "2025-11-02",
+  "context": {
+    "background": "chora-base uses SAP-001 Inbox Coordination Protocol with a 3-tier intake system (coordination, task, proposal). Creating coordination requests manually currently takes 30-60 minutes of focused effort. chora-compose is a content generation framework with 17 production generators and MCP integration, designed for template-based and AI-augmented content creation.\n\nThis exploration assesses whether chora-compose can reduce coordination request generation time to 5-10 minutes while maintaining ≥80% quality. The investigation will examine architectural compatibility, content block decomposition, generation patterns, and post-processing requirements.\n\nSuccess would enable significant productivity gains for chora-base contributors and provide a scalable foundation for task and proposal generation.",
+    "rationale": "We considered three approaches: (1) manual templates with copy-paste, (2) chora-compose integration with content blocks, (3) custom Python generator. Manual templates lack validation and consistency. Custom generators require ongoing maintenance. chora-compose offers reusable content blocks, MCP integration, active maintenance, and a proven track record with 17 production generators. We chose an exploratory approach to validate feasibility and measure quality before committing to full implementation.",
+    "not_requesting": "We are NOT asking chora-compose to modify its core architecture. We are NOT expecting you to implement our automation or maintain chora-base-specific tooling. This exploration does NOT commit us to adoption. We are NOT requesting urgent timeline or priority treatment."
+  },
+  "trace_id": "chora-compose-inbox-integration-2025",
+  "estimated_effort": "12-18 hours",
+  "questions": {
+    "Architecture and Compatibility": [
+      "Can chora-compose support SAP-001's 18 required fields with proper nesting?",
+      "How do ContentElements map to our artifact types (coordination, task, proposal)?",
+      "What's the recommended approach for conditional field inclusion based on request type?"
+    ],
+    "Generation Quality": [
+      "What quality level can we expect from template-based generation?",
+      "Can AI-augmented generation achieve ≥80% coherence for background narratives?",
+      "How does demonstration-based generation handle acceptance criteria derivation?"
+    ],
+    "Post-Processing Integration": [
+      "Can we integrate chora-base-specific validation (inbox-status.py) in the pipeline?",
+      "How should we handle ID allocation from sequence files?",
+      "What's the best approach for event emission to events.jsonl?"
+    ],
+    "Scalability and Reusability": [
+      "What percentage of content blocks can be reused for task/proposal generation?",
+      "How maintainable are content configs as SAP-001 evolves?"
+    ]
+  },
+  "collaboration_modes": [
+    "Deep Collaboration: Joint exploration of integration architecture with 2-3 sync meetings, co-development of content configs, and iterative pilot evaluation. Estimated effort: 15-20 hours total.",
+    "Expert Consultation: Async guidance via GitHub discussions on key technical decisions (schema mapping, generation patterns, validation). Regular reviews of draft content configs. Estimated effort: 8-12 hours.",
+    "Technical Review: Review of our proposed integration design with specific feedback on architecture and content block structure. Estimated effort: 4-6 hours.",
+    "High-Level Guidance: Quick assessment of feasibility with high-level recommendations on approach and potential challenges. Estimated effort: 1-2 hours."
+  ]
+}

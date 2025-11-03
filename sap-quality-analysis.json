@@ -1,0 +1,528 @@
+{
+  "analysis_date": "2025-11-02",
+  "sap_count": 19,
+  "reports": [
+    {
+      "sap_id": "SAP-000",
+      "sap_name": "sap-framework",
+      "overall_score": 89.3,
+      "completeness_score": 98.0,
+      "clarity_score": 100.0,
+      "examples_score": 50.0,
+      "structure_score": 100.0,
+      "issues": [
+        {
+          "severity": "info",
+          "category": "completeness",
+          "artifact": "adoption-blueprint.md",
+          "description": "No post-install awareness enablement section",
+          "location": null
+        }
+      ],
+      "strengths": [
+        "protocol-spec.md: Contains technical specifications",
+        "protocol-spec.md: Defines data models",
+        "protocol-spec.md: Includes validation guidance",
+        "awareness-guide.md: Clear tool usage instructions",
+        "awareness-guide.md: Detailed step-by-step instructions",
+        "adoption-blueprint.md: Lists prerequisites",
+        "adoption-blueprint.md: Detailed installation steps",
+        "ledger.md: Maintains version history",
+        "ledger.md: Tracks adoption",
+        "ledger.md: Uses structured table format"
+      ]
+    },
+    {
+      "sap_id": "SAP-001",
+      "sap_name": "inbox",
+      "overall_score": 90.0,
+      "completeness_score": 100.0,
+      "clarity_score": 100.0,
+      "examples_score": 50.0,
+      "structure_score": 100.0,
+      "issues": [],
+      "strengths": [
+        "protocol-spec.md: Contains technical specifications",
+        "protocol-spec.md: Defines data models",
+        "protocol-spec.md: Includes validation guidance",
+        "awareness-guide.md: Detailed step-by-step instructions",
+        "adoption-blueprint.md: Lists prerequisites",
+        "adoption-blueprint.md: Detailed installation steps",
+        "adoption-blueprint.md: Includes post-install awareness enablement",
+        "ledger.md: Maintains version history",
+        "ledger.md: Tracks adoption",
+        "ledger.md: Uses structured table format"
+      ]
+    },
+    {
+      "sap_id": "SAP-002",
+      "sap_name": "chora-base",
+      "overall_score": 90.0,
+      "completeness_score": 100.0,
+      "clarity_score": 100.0,
+      "examples_score": 50.0,
+      "structure_score": 100.0,
+      "issues": [],
+      "strengths": [
+        "protocol-spec.md: Contains technical specifications",
+        "protocol-spec.md: Defines data models",
+        "protocol-spec.md: Includes validation guidance",
+        "awareness-guide.md: Detailed step-by-step instructions",
+        "adoption-blueprint.md: Lists prerequisites",
+        "adoption-blueprint.md: Detailed installation steps",
+        "adoption-blueprint.md: Includes post-install awareness enablement",
+        "ledger.md: Maintains version history",
+        "ledger.md: Tracks adoption",
+        "ledger.md: Uses structured table format"
+      ]
+    },
+    {
+      "sap_id": "SAP-003",
+      "sap_name": "project-bootstrap",
+      "overall_score": 90.0,
+      "completeness_score": 100.0,
+      "clarity_score": 100.0,
+      "examples_score": 50.0,
+      "structure_score": 100.0,
+      "issues": [],
+      "strengths": [
+        "protocol-spec.md: Contains technical specifications",
+        "protocol-spec.md: Defines data models",
+        "protocol-spec.md: Includes validation guidance",
+        "awareness-guide.md: Detailed step-by-step instructions",
+        "adoption-blueprint.md: Lists prerequisites",
+        "adoption-blueprint.md: Detailed installation steps",
+        "adoption-blueprint.md: Includes post-install awareness enablement",
+        "ledger.md: Maintains version history",
+        "ledger.md: Tracks adoption",
+        "ledger.md: Uses structured table format"
+      ]
+    },
+    {
+      "sap_id": "SAP-004",
+      "sap_name": "testing-framework",
+      "overall_score": 90.0,
+      "completeness_score": 100.0,
+      "clarity_score": 100.0,
+      "examples_score": 50.0,
+      "structure_score": 100.0,
+      "issues": [],
+      "strengths": [
+        "protocol-spec.md: Contains technical specifications",
+        "protocol-spec.md: Defines data models",
+        "protocol-spec.md: Includes validation guidance",
+        "awareness-guide.md: Detailed step-by-step instructions",
+        "adoption-blueprint.md: Lists prerequisites",
+        "adoption-blueprint.md: Detailed installation steps",
+        "adoption-blueprint.md: Includes post-install awareness enablement",
+        "ledger.md: Maintains version history",
+        "ledger.md: Tracks adoption",
+        "ledger.md: Uses structured table format"
+      ]
+    },
+    {
+      "sap_id": "SAP-005",
+      "sap_name": "ci-cd-workflows",
+      "overall_score": 89.3,
+      "completeness_score": 98.0,
+      "clarity_score": 100.0,
+      "examples_score": 50.0,
+      "structure_score": 100.0,
+      "issues": [
+        {
+          "severity": "info",
+          "category": "completeness",
+          "artifact": "protocol-spec.md",
+          "description": "No explicit data models defined",
+          "location": null
+        }
+      ],
+      "strengths": [
+        "protocol-spec.md: Contains technical specifications",
+        "protocol-spec.md: Includes validation guidance",
+        "awareness-guide.md: Detailed step-by-step instructions",
+        "adoption-blueprint.md: Lists prerequisites",
+        "adoption-blueprint.md: Detailed installation steps",
+        "adoption-blueprint.md: Includes post-install awareness enablement",
+        "ledger.md: Maintains version history",
+        "ledger.md: Tracks adoption",
+        "ledger.md: Uses structured table format"
+      ]
+    },
+    {
+      "sap_id": "SAP-006",
+      "sap_name": "quality-gates",
+      "overall_score": 89.3,
+      "completeness_score": 98.0,
+      "clarity_score": 100.0,
+      "examples_score": 50.0,
+      "structure_score": 100.0,
+      "issues": [
+        {
+          "severity": "info",
+          "category": "completeness",
+          "artifact": "protocol-spec.md",
+          "description": "No explicit data models defined",
+          "location": null
+        }
+      ],
+      "strengths": [
+        "protocol-spec.md: Contains technical specifications",
+        "protocol-spec.md: Includes validation guidance",
+        "awareness-guide.md: Detailed step-by-step instructions",
+        "adoption-blueprint.md: Lists prerequisites",
+        "adoption-blueprint.md: Includes post-install awareness enablement",
+        "ledger.md: Maintains version history",
+        "ledger.md: Tracks adoption",
+        "ledger.md: Uses structured table format"
+      ]
+    },
+    {
+      "sap_id": "SAP-007",
+      "sap_name": "documentation-framework",
+      "overall_score": 90.0,
+      "completeness_score": 100.0,
+      "clarity_score": 100.0,
+      "examples_score": 50.0,
+      "structure_score": 100.0,
+      "issues": [],
+      "strengths": [
+        "protocol-spec.md: Contains technical specifications",
+        "protocol-spec.md: Defines data models",
+        "protocol-spec.md: Includes validation guidance",
+        "awareness-guide.md: Detailed step-by-step instructions",
+        "adoption-blueprint.md: Lists prerequisites",
+        "adoption-blueprint.md: Includes post-install awareness enablement",
+        "ledger.md: Maintains version history",
+        "ledger.md: Tracks adoption",
+        "ledger.md: Uses structured table format"
+      ]
+    },
+    {
+      "sap_id": "SAP-008",
+      "sap_name": "automation-scripts",
+      "overall_score": 91.0,
+      "completeness_score": 100.0,
+      "clarity_score": 100.0,
+      "examples_score": 55.0,
+      "structure_score": 100.0,
+      "issues": [],
+      "strengths": [
+        "capability-charter.md: Includes code examples",
+        "protocol-spec.md: Contains technical specifications",
+        "protocol-spec.md: Defines data models",
+        "protocol-spec.md: Includes validation guidance",
+        "awareness-guide.md: Clear tool usage instructions",
+        "awareness-guide.md: Detailed step-by-step instructions",
+        "adoption-blueprint.md: Lists prerequisites",
+        "adoption-blueprint.md: Includes post-install awareness enablement",
+        "ledger.md: Maintains version history",
+        "ledger.md: Tracks adoption",
+        "ledger.md: Uses structured table format"
+      ]
+    },
+    {
+      "sap_id": "SAP-009",
+      "sap_name": "agent-awareness",
+      "overall_score": 90.0,
+      "completeness_score": 100.0,
+      "clarity_score": 100.0,
+      "examples_score": 50.0,
+      "structure_score": 100.0,
+      "issues": [],
+      "strengths": [
+        "protocol-spec.md: Contains technical specifications",
+        "protocol-spec.md: Defines data models",
+        "protocol-spec.md: Includes validation guidance",
+        "awareness-guide.md: Detailed step-by-step instructions",
+        "adoption-blueprint.md: Lists prerequisites",
+        "adoption-blueprint.md: Detailed installation steps",
+        "adoption-blueprint.md: Includes post-install awareness enablement",
+        "ledger.md: Maintains version history",
+        "ledger.md: Tracks adoption",
+        "ledger.md: Uses structured table format"
+      ]
+    },
+    {
+      "sap_id": "SAP-010",
+      "sap_name": "memory-system",
+      "overall_score": 88.94999999999999,
+      "completeness_score": 97.0,
+      "clarity_score": 100.0,
+      "examples_score": 50.0,
+      "structure_score": 100.0,
+      "issues": [
+        {
+          "severity": "warning",
+          "category": "completeness",
+          "artifact": "capability-charter.md",
+          "description": "Missing or unclear stakeholder section",
+          "location": null
+        }
+      ],
+      "strengths": [
+        "protocol-spec.md: Contains technical specifications",
+        "protocol-spec.md: Defines data models",
+        "protocol-spec.md: Includes validation guidance",
+        "awareness-guide.md: Clear tool usage instructions",
+        "awareness-guide.md: Detailed step-by-step instructions",
+        "adoption-blueprint.md: Lists prerequisites",
+        "adoption-blueprint.md: Detailed installation steps",
+        "adoption-blueprint.md: Includes post-install awareness enablement",
+        "ledger.md: Maintains version history",
+        "ledger.md: Tracks adoption",
+        "ledger.md: Uses structured table format"
+      ]
+    },
+    {
+      "sap_id": "SAP-011",
+      "sap_name": "docker-operations",
+      "overall_score": 91.0,
+      "completeness_score": 100.0,
+      "clarity_score": 100.0,
+      "examples_score": 55.0,
+      "structure_score": 100.0,
+      "issues": [],
+      "strengths": [
+        "capability-charter.md: Includes code examples",
+        "protocol-spec.md: Contains technical specifications",
+        "protocol-spec.md: Defines data models",
+        "protocol-spec.md: Includes validation guidance",
+        "awareness-guide.md: Detailed step-by-step instructions",
+        "adoption-blueprint.md: Lists prerequisites",
+        "adoption-blueprint.md: Detailed installation steps",
+        "adoption-blueprint.md: Includes post-install awareness enablement",
+        "ledger.md: Maintains version history",
+        "ledger.md: Tracks adoption",
+        "ledger.md: Uses structured table format"
+      ]
+    },
+    {
+      "sap_id": "SAP-012",
+      "sap_name": "development-lifecycle",
+      "overall_score": 88.94999999999999,
+      "completeness_score": 97.0,
+      "clarity_score": 100.0,
+      "examples_score": 50.0,
+      "structure_score": 100.0,
+      "issues": [
+        {
+          "severity": "warning",
+          "category": "completeness",
+          "artifact": "capability-charter.md",
+          "description": "Missing or unclear stakeholder section",
+          "location": null
+        }
+      ],
+      "strengths": [
+        "protocol-spec.md: Contains technical specifications",
+        "protocol-spec.md: Defines data models",
+        "protocol-spec.md: Includes validation guidance",
+        "awareness-guide.md: Clear tool usage instructions",
+        "awareness-guide.md: Detailed step-by-step instructions",
+        "adoption-blueprint.md: Lists prerequisites",
+        "adoption-blueprint.md: Detailed installation steps",
+        "adoption-blueprint.md: Includes post-install awareness enablement",
+        "ledger.md: Maintains version history",
+        "ledger.md: Tracks adoption",
+        "ledger.md: Uses structured table format"
+      ]
+    },
+    {
+      "sap_id": "SAP-013",
+      "sap_name": "metrics-tracking",
+      "overall_score": 80.6,
+      "completeness_score": 91.0,
+      "clarity_score": 75.0,
+      "examples_score": 50.0,
+      "structure_score": 100.0,
+      "issues": [
+        {
+          "severity": "warning",
+          "category": "completeness",
+          "artifact": "capability-charter.md",
+          "description": "Missing or unclear stakeholder section",
+          "location": null
+        },
+        {
+          "severity": "critical",
+          "category": "clarity",
+          "artifact": "awareness-guide.md",
+          "description": "No tool usage instructions (Read, Write, Edit, etc.)",
+          "location": null
+        }
+      ],
+      "strengths": [
+        "protocol-spec.md: Contains technical specifications",
+        "protocol-spec.md: Defines data models",
+        "protocol-spec.md: Includes validation guidance",
+        "awareness-guide.md: Detailed step-by-step instructions",
+        "adoption-blueprint.md: Lists prerequisites",
+        "adoption-blueprint.md: Detailed installation steps",
+        "adoption-blueprint.md: Includes post-install awareness enablement",
+        "ledger.md: Maintains version history",
+        "ledger.md: Tracks adoption",
+        "ledger.md: Uses structured table format"
+      ]
+    },
+    {
+      "sap_id": "SAP-014",
+      "sap_name": "mcp-server-development",
+      "overall_score": 91.0,
+      "completeness_score": 100.0,
+      "clarity_score": 100.0,
+      "examples_score": 55.0,
+      "structure_score": 100.0,
+      "issues": [
+        {
+          "severity": "info",
+          "category": "clarity",
+          "artifact": "protocol-spec.md",
+          "description": "Very long content (5103 words) - consider splitting",
+          "location": null
+        }
+      ],
+      "strengths": [
+        "capability-charter.md: Includes code examples",
+        "protocol-spec.md: Contains technical specifications",
+        "protocol-spec.md: Defines data models",
+        "protocol-spec.md: Includes validation guidance",
+        "awareness-guide.md: Detailed step-by-step instructions",
+        "adoption-blueprint.md: Lists prerequisites",
+        "adoption-blueprint.md: Detailed installation steps",
+        "adoption-blueprint.md: Includes post-install awareness enablement",
+        "ledger.md: Maintains version history",
+        "ledger.md: Tracks adoption",
+        "ledger.md: Uses structured table format"
+      ]
+    },
+    {
+      "sap_id": "SAP-016",
+      "sap_name": "link-validation-reference-management",
+      "overall_score": 89.94999999999999,
+      "completeness_score": 97.0,
+      "clarity_score": 100.0,
+      "examples_score": 55.0,
+      "structure_score": 100.0,
+      "issues": [
+        {
+          "severity": "info",
+          "category": "completeness",
+          "artifact": "protocol-spec.md",
+          "description": "No explicit data models defined",
+          "location": null
+        },
+        {
+          "severity": "info",
+          "category": "structure",
+          "artifact": "ledger.md",
+          "description": "No markdown tables found",
+          "location": null
+        }
+      ],
+      "strengths": [
+        "capability-charter.md: Includes code examples",
+        "protocol-spec.md: Contains technical specifications",
+        "protocol-spec.md: Includes validation guidance",
+        "awareness-guide.md: Detailed step-by-step instructions",
+        "adoption-blueprint.md: Lists prerequisites",
+        "adoption-blueprint.md: Detailed installation steps",
+        "adoption-blueprint.md: Includes post-install awareness enablement",
+        "ledger.md: Maintains version history",
+        "ledger.md: Tracks adoption"
+      ]
+    },
+    {
+      "sap_id": "SAP-017",
+      "sap_name": "chora-compose-integration",
+      "overall_score": 89.94999999999999,
+      "completeness_score": 97.0,
+      "clarity_score": 100.0,
+      "examples_score": 55.0,
+      "structure_score": 100.0,
+      "issues": [
+        {
+          "severity": "warning",
+          "category": "completeness",
+          "artifact": "capability-charter.md",
+          "description": "Missing or unclear outcome section",
+          "location": null
+        }
+      ],
+      "strengths": [
+        "capability-charter.md: Includes code examples",
+        "protocol-spec.md: Contains technical specifications",
+        "protocol-spec.md: Defines data models",
+        "protocol-spec.md: Includes validation guidance",
+        "awareness-guide.md: Detailed step-by-step instructions",
+        "adoption-blueprint.md: Lists prerequisites",
+        "adoption-blueprint.md: Detailed installation steps",
+        "adoption-blueprint.md: Includes post-install awareness enablement",
+        "ledger.md: Maintains version history",
+        "ledger.md: Tracks adoption",
+        "ledger.md: Uses structured table format"
+      ]
+    },
+    {
+      "sap_id": "SAP-018",
+      "sap_name": "chora-compose-meta",
+      "overall_score": 88.94999999999999,
+      "completeness_score": 97.0,
+      "clarity_score": 100.0,
+      "examples_score": 50.0,
+      "structure_score": 100.0,
+      "issues": [
+        {
+          "severity": "warning",
+          "category": "completeness",
+          "artifact": "capability-charter.md",
+          "description": "Missing or unclear outcome section",
+          "location": null
+        }
+      ],
+      "strengths": [
+        "protocol-spec.md: Contains technical specifications",
+        "protocol-spec.md: Defines data models",
+        "protocol-spec.md: Includes validation guidance",
+        "awareness-guide.md: Detailed step-by-step instructions",
+        "adoption-blueprint.md: Lists prerequisites",
+        "adoption-blueprint.md: Detailed installation steps",
+        "adoption-blueprint.md: Includes post-install awareness enablement",
+        "ledger.md: Maintains version history",
+        "ledger.md: Tracks adoption",
+        "ledger.md: Uses structured table format"
+      ]
+    },
+    {
+      "sap_id": "SAP-019",
+      "sap_name": "sap-self-evaluation",
+      "overall_score": 90.3,
+      "completeness_score": 98.0,
+      "clarity_score": 100.0,
+      "examples_score": 55.0,
+      "structure_score": 100.0,
+      "issues": [
+        {
+          "severity": "info",
+          "category": "completeness",
+          "artifact": "adoption-blueprint.md",
+          "description": "No post-install awareness enablement section",
+          "location": null
+        }
+      ],
+      "strengths": [
+        "capability-charter.md: Includes code examples",
+        "protocol-spec.md: Contains technical specifications",
+        "protocol-spec.md: Defines data models",
+        "protocol-spec.md: Includes validation guidance",
+        "awareness-guide.md: Clear tool usage instructions",
+        "awareness-guide.md: Detailed step-by-step instructions",
+        "adoption-blueprint.md: Lists prerequisites",
+        "adoption-blueprint.md: Detailed installation steps",
+        "ledger.md: Maintains version history",
+        "ledger.md: Tracks adoption",
+        "ledger.md: Uses structured table format"
+      ]
+    }
+  ]
+}

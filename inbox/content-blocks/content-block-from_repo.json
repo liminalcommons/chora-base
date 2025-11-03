@@ -1,0 +1,22 @@
+{
+  "type": "content",
+  "id": "content-block-from_repo",
+  "schemaRef": {
+    "uri": "file://schemas/content/v3.1/schema.json",
+    "version": "3.1"
+  },
+  "metadata": {
+    "type": "coordination",
+    "version": "1.0",
+    "title": "From Repository Content Block",
+    "purpose": "Extracts from_repo from user context or uses default"
+  },
+  "elements": [
+    {
+      "id": "from_repo_field",
+      "generation_pattern": "user_input",
+      "example_output": "github.com/liminalcommons/chora-base",
+      "required": true
+    }
+  ]
+}

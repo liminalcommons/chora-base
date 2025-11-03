@@ -1,0 +1,36 @@
+{
+  "type": "coordination",
+  "request_id": "PENDING",
+  "title": "Implement React State Management SAP",
+  "from_repo": "github.com/liminalcommons/chora-base",
+  "to_repo": "github.com/liminalcommons/chora-base",
+  "priority": "P1",
+  "urgency": "next_sprint",
+  "deliverables": [
+    "Decision tree diagram for selecting useState vs useReducer vs Context API vs external libraries",
+    "Code examples demonstrating each state management pattern with real-world use cases",
+    "Performance benchmarks comparing state management approaches for common scenarios",
+    "Migration guide for converting between different state management patterns",
+    "Best practices checklist for state management implementation and testing",
+    "Integration guidelines for Zustand or other external state libraries",
+    "Anti-patterns documentation with explanations of what to avoid and why",
+    "Template repository with boilerplate code for each state management approach"
+  ],
+  "acceptance_criteria": [
+    "SAP document defines \u22654 distinct state management patterns with clear use cases",
+    "Decision tree or flowchart guides pattern selection based on \u22653 criteria",
+    "Each pattern includes \u22652 code examples demonstrating implementation",
+    "Performance guidelines specify thresholds for state complexity and re-render optimization",
+    "Integration examples demonstrate patterns in \u22653 chora-base repository contexts",
+    "Anti-patterns section identifies \u22655 common mistakes with corrections",
+    "Migration guide provides step-by-step instructions for \u22652 pattern transitions",
+    "Testing strategies include \u22653 approaches for each state management pattern",
+    "Document reviewed and approved by \u22652 React developers from ecosystem",
+    "AI agent validation confirms \u226590% code generation compliance with documented patterns"
+  ],
+  "created": "2025-11-02",
+  "context": {
+    "background": "We are building out React-based capabilities and need standardized guidance on state management patterns. Currently, there is no formal documentation on when to use useState vs useReducer vs Context API vs external libraries like Zustand.",
+    "rationale": "Enable consistent React development across all ecosystem repositories. Reduce decision paralysis and ensure best practices are followed. Support AI agents in generating React code that follows our standards."
+  }
+}

@@ -1,0 +1,56 @@
+{
+  "$schema": "https://chora-compose.dev/schemas/content-config.json",
+  "name": "exploratory-questions",
+  "version": "1.0.0",
+  "description": "Specific questions to be answered through coordination (exploratory requests)",
+  "priority": "LOW",
+  "presence_frequency": "33% overall, 80%+ exploratory",
+
+  "content_element": {
+    "name": "exploratory-questions",
+    "format": "json",
+    "example_output": {
+      "questions": {
+        "Architecture and Compatibility": [
+          "Can chora-compose support SAP-001's 18 required fields?",
+          "How do ContentElements map to our artifact types?"
+        ],
+        "Generation Quality": [
+          "What quality level can we expect from template-based generation?",
+          "Can we achieve ≥80% quality threshold?"
+        ]
+      }
+    }
+  },
+
+  "generation": {
+    "pattern": "ai_augmented",
+    "placeholders": {
+      "questions": {
+        "source": "ai_generation",
+        "input": ["context.questions", "context.deliverables", "context.purpose"],
+        "optional": true,
+        "guidance": "Generate 5-15 specific, answerable questions grouped by topic (3-5 topics). Each question should end with '?'. Focus on feasibility, quality, effort, and approach for exploratory requests. Only include if request_type == 'exploratory' OR user provided questions.",
+        "include_if": "request_type == 'exploratory' OR context.questions is defined"
+      }
+    }
+  },
+
+  "validation": {
+    "field_constraints": {
+      "questions": {
+        "oneOf": [
+          {"type": "array", "items": {"type": "string", "pattern": ".*\\?$"}},
+          {"type": "object"}
+        ]
+      }
+    }
+  },
+
+  "metadata": {
+    "reusability": "moderate",
+    "stability": "stable",
+    "related_blocks": ["deliverables-structure", "acceptance-criteria-patterns"],
+    "documentation": "docs/content-blocks/inbox-coordination/exploratory-questions.md"
+  }
+}

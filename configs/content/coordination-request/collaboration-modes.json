@@ -1,0 +1,51 @@
+{
+  "$schema": "https://chora-compose.dev/schemas/content-config.json",
+  "name": "collaboration-modes",
+  "version": "1.0.0",
+  "description": "Different engagement levels offered to recipient (exploratory external requests)",
+  "priority": "LOW",
+  "presence_frequency": "20-30% overall, 60-70% exploratory external",
+
+  "content_element": {
+    "name": "collaboration-modes",
+    "format": "json",
+    "example_output": {
+      "collaboration_modes": [
+        "Deep Collaboration: Joint exploration... Estimated effort: 15-20 hours",
+        "Expert Consultation: Guidance via async discussion... Estimated effort: 8-12 hours",
+        "High-Level Guidance: Quick assessment... Estimated effort: 1-2 hours"
+      ]
+    }
+  },
+
+  "generation": {
+    "pattern": "ai_augmented",
+    "placeholders": {
+      "collaboration_modes": {
+        "source": "ai_generation",
+        "input": ["context.deliverables", "context.estimated_effort"],
+        "optional": true,
+        "guidance": "Generate 3-5 engagement modes from high to low effort. Each mode: description + estimated effort. Respectful tone. Only include if request_type == 'exploratory' AND from_repo != to_repo.",
+        "include_if": "request_type == 'exploratory' AND from_repo != to_repo"
+      }
+    }
+  },
+
+  "validation": {
+    "field_constraints": {
+      "collaboration_modes": {
+        "type": "array",
+        "minItems": 2,
+        "maxItems": 5,
+        "items": {"type": "string", "minLength": 50, "maxLength": 500}
+      }
+    }
+  },
+
+  "metadata": {
+    "reusability": "moderate",
+    "stability": "stable",
+    "related_blocks": ["deliverables-structure", "estimated-effort-guide"],
+    "documentation": "docs/content-blocks/inbox-coordination/collaboration-modes.md"
+  }
+}

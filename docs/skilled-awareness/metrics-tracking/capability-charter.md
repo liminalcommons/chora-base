@@ -33,7 +33,31 @@ type: capability-charter
 
 ---
 
-## 2. Capability Definition
+## 2. Stakeholders
+
+### Primary Users
+- **AI Agents** (Claude Code, Cursor Composer): Track session effectiveness and ROI automatically
+- **Development teams**: Collect sprint velocity, coverage, and defect metrics
+- **Engineering managers**: Monitor process quality and team performance
+
+### Secondary Users
+- **Product managers**: Review release metrics (downloads, adoption rates)
+- **Tech leads**: Analyze DDD/BDD/TDD adherence trends
+- **Data analysts**: Extract metrics for business intelligence reporting
+
+### Decision Makers
+- **CTOs**: Evaluate AI-assisted development ROI ($109k+/year per developer)
+- **Finance teams**: Assess development cost savings and efficiency gains
+- **Executives**: Use metrics for board reporting and budget justification
+
+### Beneficiaries
+- **Stakeholders**: Evidence-based communication about development effectiveness
+- **Process improvement teams**: Data-driven insights for optimizing workflows
+- **Future teams**: Historical metrics inform capacity planning and estimation
+
+---
+
+## 3. Capability Definition
 
 ### Core Capability
 
@@ -50,7 +74,7 @@ Package **metrics tracking** as a SAP to provide:
 
 ---
 
-## 3. Business Value
+## 4. Business Value
 
 **ROI**: ~$109,200/year per developer (from reduced rework via DDD/BDD/TDD adherence tracking)
 
@@ -58,7 +82,7 @@ Package **metrics tracking** as a SAP to provide:
 
 ---
 
-## 4. Scope
+## 5. Scope
 
 **In Scope**:
 - ClaudeMetric dataclass + ClaudeROICalculator

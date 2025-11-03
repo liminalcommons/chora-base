@@ -1,0 +1,72 @@
+{
+  "$schema": "./context-schema.json",
+  "request_type": "prescriptive",
+  "from_repo": "github.com/liminalcommons/chora-base",
+  "to_repo": "github.com/liminalcommons/chora-base",
+  "title": "Bidirectional Translation Layer for SAP-009",
+  "priority": "P1",
+  "urgency": "next_sprint",
+  "trace_id": "bidirectional-translation-sap009-2025",
+  "estimated_effort": "40-59 hours",
+
+  "purpose": "Extend SAP-009 (Translation Layer) to v1.1.0 with bidirectional translation support, enabling both chora-base → external format and external format → chora-base translation. This unblocks ecosystem coordination with chora-workspace and ecosystem-manifest, which need to send coordination requests TO chora-base.",
+
+  "deliverables": [
+    "SAP-009 v1.1.0 protocol specification with bidirectional translation examples",
+    "Implementation in scripts/translate-bidirectional.py with ≥80% test coverage",
+    "Integration tests demonstrating chora-base ↔ external format translation",
+    "CHANGELOG.md entry documenting v1.1.0 changes and migration path",
+    "Updated docs/skilled-awareness/INDEX.md referencing SAP-009 v1.1.0",
+    "Example configurations in examples/translation/ for common scenarios",
+    "Performance benchmarks showing <100ms translation time for typical payloads",
+    "Error handling documentation for edge cases and malformed input",
+    "Versioning strategy document for future protocol evolution",
+    "Announcement in inbox/coordination/events.jsonl with trace_id"
+  ],
+
+  "acceptance_criteria": [
+    "SAP-009 v1.1.0 includes bidirectional translation protocol specification with examples for both directions",
+    "scripts/translate-bidirectional.py achieves ≥80% test coverage (measured via pytest)",
+    "Integration tests pass for chora-base → external format translation",
+    "Integration tests pass for external format → chora-base translation",
+    "Performance benchmarks demonstrate <100ms translation time for payloads ≤10KB",
+    "CHANGELOG.md documents v1.1.0 changes including breaking changes and migration path",
+    "docs/skilled-awareness/INDEX.md links to SAP-009 v1.1.0",
+    "inbox-status.py successfully validates all generated artifacts without errors",
+    "JSON schema validation passes for all example configurations",
+    "Error handling tests cover ≥5 edge cases (malformed input, version mismatch, missing fields, invalid types, boundary conditions)",
+    "Documentation clarity review achieves ≥85% score",
+    "events.jsonl includes implementation_completed event with correct trace_id"
+  ],
+
+  "background": "SAP-009 (Bidirectional Translation Layer) currently supports chora-base → external format translation, enabling our artifacts to be consumed by external tools. This unidirectional approach was appropriate for our initial ecosystem integrations (read-only consumption of our specs).\n\nHowever, we're now collaborating with chora-workspace and ecosystem-manifest, both of which need to send coordination requests TO chora-base (external format → chora-base). Our current SAP-009 v1.0.0 doesn't support inbound translation, creating a blocker for ecosystem coordination. We've committed to unblocking this in the current sprint (P1 priority, next_sprint urgency).\n\nThis request specifies the implementation requirements for SAP-009 v1.1.0, which extends the translation layer to support bidirectional flows. We've already designed the protocol extension and need implementation, testing, and documentation to complete the sprint deliverable.",
+
+  "rationale": "We initially designed SAP-009 v1.0.0 for unidirectional translation (chora-base → external) because our first ecosystem integrations only needed read access to our artifacts. This simplified the initial implementation and avoided bidirectional complexity.\n\nHowever, ecosystem collaboration has evolved: chora-workspace and ecosystem-manifest now need to send coordination requests TO chora-base. Without bidirectional translation, they must manually craft chora-base-format JSON or use separate tooling, creating friction and inconsistency.\n\nExtending SAP-009 to v1.1.0 with bidirectional support is the most maintainable approach. Alternative solutions—like maintaining separate inbound/outbound translators or asking ecosystem repos to adopt chora-base schemas directly—would fragment the ecosystem and increase long-term maintenance burden. By extending SAP-009, we maintain a single translation protocol with clear versioning and backward compatibility.",
+
+  "dependencies": [
+    "SAP-009 v1.0.0 (completed - unidirectional translation established)",
+    "chora-workspace coordination discussions (completed - bidirectional need confirmed)",
+    "ecosystem-manifest feedback (completed - external format requirements documented)"
+  ],
+
+  "related": [
+    "SAP-009 v1.0.0 (foundation being extended to v1.1.0)",
+    "chora-workspace coordination discussions (identified bidirectional need)",
+    "ecosystem-manifest integration requirements (external format specifications)",
+    "SAP-010 ecosystem coordination framework (will use bidirectional translation)",
+    "CORD-2025-002 chora-compose exploration (parallel automation effort)"
+  ],
+
+  "timeline": "Needed by 2025-11-15 for SAP-009 v1.1.0 release, which unblocks chora-workspace and ecosystem-manifest integration (blocked since 2025-10-20)",
+
+  "additional_context": {
+    "effort_breakdown": "Estimated effort breakdown:\n- SAP-009 v1.1.0 specification: 8-12 hours\n- Implementation (scripts/translate-bidirectional.py): 15-20 hours\n- Test suite (≥80% coverage): 10-15 hours\n- Documentation (CHANGELOG, INDEX, examples): 4-6 hours\n- Integration testing and validation: 3-5 hours\n- Review and iteration: 2-4 hours\n\nTotal: 42-62 hours (accounting for unknowns)",
+
+    "blocking_repos": [
+      "github.com/liminalcommons/chora-workspace (blocked since 2025-10-20)",
+      "github.com/liminalcommons/ecosystem-manifest (blocked since 2025-10-20)"
+    ],
+
+    "migration_notes": "SAP-009 v1.1.0 will be backward compatible with v1.0.0 for outbound translation. Inbound translation is a new capability. No breaking changes to existing v1.0.0 consumers."
+  }
+}

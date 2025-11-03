@@ -1,0 +1,82 @@
+{
+  "$schema": "https://chora-compose.dev/schemas/content-config.json",
+  "name": "priority-urgency",
+  "version": "1.0.0",
+  "description": "Priority (importance) and urgency (time sensitivity) dimensions for scheduling",
+  "priority": "HIGH",
+  "presence_frequency": "100%",
+
+  "content_element": {
+    "name": "priority-urgency",
+    "format": "json",
+    "example_output": {
+      "priority": "P2",
+      "urgency": "backlog"
+    }
+  },
+
+  "generation": {
+    "pattern": "template_fill",
+    "template_source": {
+      "type": "file",
+      "path": "docs/content-blocks/inbox-coordination/priority-urgency.md",
+      "section": "Template / Example"
+    },
+    "placeholders": {
+      "priority": {
+        "source": "user_input",
+        "path": "context.priority",
+        "default": "P2",
+        "guidance": "If not provided, default to P2 (normal priority). User can override based on impact assessment.",
+        "constraints": {
+          "enum": ["P0", "P1", "P2"]
+        }
+      },
+      "urgency": {
+        "source": "user_input",
+        "path": "context.urgency",
+        "default": "backlog",
+        "guidance": "If not provided, default to 'backlog'. User can override based on timeline needs.",
+        "constraints": {
+          "enum": ["blocks_sprint", "next_sprint", "backlog"]
+        }
+      }
+    }
+  },
+
+  "validation": {
+    "required_fields": ["priority", "urgency"],
+    "field_constraints": {
+      "priority": {
+        "type": "string",
+        "enum": ["P0", "P1", "P2"],
+        "error_message": "priority must be P0, P1, or P2"
+      },
+      "urgency": {
+        "type": "string",
+        "enum": ["blocks_sprint", "next_sprint", "backlog"],
+        "error_message": "urgency must be blocks_sprint, next_sprint, or backlog"
+      }
+    },
+    "cross_field_validation": {
+      "warn_on_mismatch": [
+        {
+          "condition": "priority == 'P2' AND urgency == 'blocks_sprint'",
+          "warning": "P2 + blocks_sprint is unusual (low priority but urgent). Consider P1."
+        },
+        {
+          "condition": "priority == 'P0' AND urgency == 'backlog'",
+          "warning": "P0 + backlog is contradictory (critical but no urgency)."
+        }
+      ]
+    }
+  },
+
+  "metadata": {
+    "reusability": "universal",
+    "stability": "semi-stable",
+    "stability_note": "May be escalated if context changes",
+    "related_blocks": ["timeline-patterns", "estimated-effort-guide"],
+    "documentation": "docs/content-blocks/inbox-coordination/priority-urgency.md"
+  }
+}

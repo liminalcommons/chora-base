@@ -1,0 +1,91 @@
+{
+  "$schema": "https://chora-compose.dev/schemas/content-config.json",
+  "name": "deliverables-structure",
+  "version": "1.0.0",
+  "description": "Concrete, actionable outputs expected from coordination request",
+  "priority": "HIGH",
+  "presence_frequency": "100%",
+
+  "content_element": {
+    "name": "deliverables-structure",
+    "format": "json",
+    "example_output": {
+      "deliverables": [
+        "Architectural analysis document comparing SAP-001 schemas to chora-compose structures",
+        "Feasibility assessment addressing technical, quality, and maintenance dimensions",
+        "Integration options comparison with effort estimates",
+        "Recommendation on whether to proceed with pilot"
+      ]
+    }
+  },
+
+  "generation": {
+    "pattern": "ai_augmented",
+    "template_source": {
+      "type": "file",
+      "path": "docs/content-blocks/inbox-coordination/deliverables-structure.md",
+      "section": "Variation Points"
+    },
+    "placeholders": {
+      "deliverables": {
+        "source": "ai_generation",
+        "input": ["context.deliverables", "context.purpose", "context.request_type"],
+        "guidance": "Transform user-provided deliverables into specific, measurable, actionable format. Each deliverable should:\n1. Be phrased as noun or noun phrase (not full sentence)\n2. Include specific artifacts or outcomes (not vague 'improve X')\n3. Use consistent terminology\n4. Order by priority or logical sequence\n\nRequest type patterns:\n- Exploratory (3-6 deliverables): Focus on analysis, assessment, comparison, recommendation\n- Prescriptive (5-15 deliverables): Specific files, versions, tests, documentation\n- Peer Review (4-8 deliverables): Review, assessment, recommendations, gap identification\n\nEnsure each deliverable is independently verifiable and contributes to request goal.",
+        "constraints": {
+          "minItems": 1,
+          "maxItems": 20,
+          "itemMinLength": 10,
+          "itemMaxLength": 200
+        },
+        "examples_by_type": {
+          "exploratory": [
+            "Feasibility assessment addressing technical compatibility",
+            "Integration options comparison with effort estimates"
+          ],
+          "prescriptive": [
+            "SAP-009 v1.1.0 with bidirectional translation protocol specification",
+            "Implementation in scripts/translate-bidirectional.py with ≥80% test coverage"
+          ],
+          "peer_review": [
+            "Technical review of React SAP architecture and patterns",
+            "Recommendations for improving clarity and developer experience"
+          ]
+        }
+      }
+    }
+  },
+
+  "validation": {
+    "required_fields": ["deliverables"],
+    "field_constraints": {
+      "deliverables": {
+        "type": "array",
+        "minItems": 1,
+        "maxItems": 20,
+        "items": {
+          "type": "string",
+          "minLength": 10,
+          "maxLength": 200
+        },
+        "error_message": "deliverables must be array of 1-20 strings, each 10-200 characters"
+      }
+    },
+    "quality_checks": {
+      "warn_if_vague": true,
+      "vague_patterns": ["improve", "better", "fix", "enhance"],
+      "warn_if_too_few": {
+        "exploratory": 2,
+        "prescriptive": 3,
+        "peer_review": 3
+      }
+    }
+  },
+
+  "metadata": {
+    "reusability": "universal",
+    "stability": "semi-stable",
+    "stability_note": "May evolve during discussion, frozen at acceptance",
+    "related_blocks": ["acceptance-criteria-patterns", "context-background", "estimated-effort-guide"],
+    "documentation": "docs/content-blocks/inbox-coordination/deliverables-structure.md"
+  }
+}

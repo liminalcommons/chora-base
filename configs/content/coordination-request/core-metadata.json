@@ -1,0 +1,96 @@
+{
+  "$schema": "https://chora-compose.dev/schemas/content-config.json",
+  "name": "core-metadata",
+  "version": "1.0.0",
+  "description": "Fundamental identifying fields for coordination requests (type, request_id, title, created)",
+  "priority": "HIGH",
+  "presence_frequency": "100%",
+
+  "content_element": {
+    "name": "core-metadata",
+    "format": "json",
+    "example_output": {
+      "type": "coordination",
+      "request_id": "COORD-2025-007",
+      "title": "Exploring chora-compose Integration for Inbox Automation",
+      "created": "2025-11-02"
+    }
+  },
+
+  "generation": {
+    "pattern": "template_fill",
+    "template_source": {
+      "type": "file",
+      "path": "docs/content-blocks/inbox-coordination/core-metadata.md",
+      "section": "Template / Example"
+    },
+    "placeholders": {
+      "type": {
+        "source": "literal",
+        "value": "coordination",
+        "note": "Always 'coordination' for this artifact type"
+      },
+      "request_id": {
+        "source": "post_processing",
+        "format": "COORD-YYYY-NNN",
+        "note": "Allocated during post-processing from sequence file. Uses format COORD-{year}-{sequence:03d}"
+      },
+      "title": {
+        "source": "ai_generation",
+        "input": ["context.purpose", "context.deliverables"],
+        "guidance": "Generate a concise, descriptive title (50-80 chars) from the request purpose and deliverables. Use title case. Capture essence of request. Avoid redundant prefixes like 'Coordination Request for...' or 'Request to...'. Examples: 'Exploring chora-compose Integration for Inbox Automation', 'Bidirectional Translation Layer for SAP-009', 'Peer Review: React Foundation SAPs'",
+        "constraints": {
+          "minLength": 10,
+          "maxLength": 120,
+          "preferredLength": "50-80"
+        }
+      },
+      "created": {
+        "source": "system_function",
+        "function": "current_date",
+        "format": "YYYY-MM-DD",
+        "note": "ISO 8601 date format, UTC timezone"
+      }
+    }
+  },
+
+  "validation": {
+    "required_fields": ["type", "request_id", "title", "created"],
+    "field_constraints": {
+      "type": {
+        "type": "string",
+        "enum": ["coordination"],
+        "error_message": "type must be exactly 'coordination'"
+      },
+      "request_id": {
+        "type": "string",
+        "pattern": "^(coord-\\d{3}|COORD-\\d{4}-\\d{3})$",
+        "error_message": "request_id must match format 'coord-NNN' or 'COORD-YYYY-NNN'"
+      },
+      "title": {
+        "type": "string",
+        "minLength": 10,
+        "maxLength": 120,
+        "error_message": "title must be 10-120 characters"
+      },
+      "created": {
+        "type": "string",
+        "pattern": "^\\d{4}-\\d{2}-\\d{2}$",
+        "error_message": "created must be ISO 8601 date format (YYYY-MM-DD)"
+      }
+    }
+  },
+
+  "metadata": {
+    "reusability": "universal",
+    "reusability_note": "Identical pattern for tasks and proposals (type field value changes)",
+    "stability": "stable",
+    "stability_note": "Fields never change after creation",
+    "related_blocks": [
+      "repository-fields",
+      "trace-id-format",
+      "priority-urgency"
+    ],
+    "documentation": "docs/content-blocks/inbox-coordination/core-metadata.md"
+  }
+}

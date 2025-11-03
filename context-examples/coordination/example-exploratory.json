@@ -1,0 +1,92 @@
+{
+  "$schema": "./context-schema.json",
+  "request_type": "exploratory",
+  "from_repo": "github.com/liminalcommons/chora-base",
+  "to_repo": "github.com/liminalcommons/chora-compose",
+  "title": "Exploring chora-compose Integration for Inbox Automation",
+  "priority": "P2",
+  "urgency": "backlog",
+  "trace_id": "chora-compose-inbox-integration-2025",
+  "estimated_effort": "12-18 hours",
+
+  "purpose": "We want to explore whether chora-compose can serve as the infrastructure layer for SAP-001 (Inbox Coordination Protocol) to automate artifact generation. Currently, creating inbox artifacts (coordination requests, tasks, proposals) is a manual process that takes 30-60 minutes per item and is error-prone. We've learned that chora-compose is a content generation framework with 17 production generators and MCP integration, which suggests it could automate our workflow. Before investing in integration work, we need to validate technical feasibility, understand effort required, and assess whether this approach aligns with both teams' goals.",
+
+  "deliverables": [
+    "Architectural analysis document comparing SAP-001 inbox schemas to chora-compose structures",
+    "Feasibility assessment addressing technical compatibility, quality potential, and maintenance burden",
+    "Integration options comparison (direct integration vs wrapper vs manual) with effort estimates",
+    "Recommendation on whether to proceed with pilot, including GO/NO-GO/DEFER criteria"
+  ],
+
+  "acceptance_criteria": [
+    "Architecture analysis covers all 3 inbox artifact types (coordination, task, proposal) and maps fields to chora-compose ContentElements",
+    "Feasibility assessment addresses technical alignment (how well SAP-001 maps to chora-compose), quality potential (can we achieve ≥80% threshold), and maintenance burden",
+    "Integration options comparison includes ≥2 approaches with effort estimates and pros/cons",
+    "Recommendation includes clear GO/NO-GO/DEFER criteria based on technical feasibility (≥80% = GO, <60% = NO-GO)",
+    "Documents follow Diátaxis framework with Explanation, How-To, and Reference sections",
+    "Analysis references ≥3 real coordination request examples from chora-base inbox",
+    "Exploration phase completes within 12-18 hours estimated effort"
+  ],
+
+  "background": "chora-base maintains SAP-001 (Inbox Coordination Protocol), which defines a 3-tier intake system for coordination requests, implementation tasks, and strategic proposals. Currently, creating these artifacts is a manual process: developers hand-craft JSON files with 15-20 required fields, ensuring schema compliance, consistent formatting, and proper event emission. While this works, it's time-intensive (30-60 minutes per coordination request) and error-prone.\n\nWe recently learned about chora-compose through ecosystem discussions and were intrigued by its approach to template-driven content generation. Our initial understanding was limited—we saw references in SAP-017/018 that suggested Docker orchestration, which didn't seem relevant. However, deeper research revealed that chora-compose is actually a content generation framework with 17 production generators and MCP integration, which could potentially automate our inbox artifact creation.\n\nBefore investing in integration work, we want to explore whether chora-compose is technically feasible and strategically aligned for inbox artifact automation. This request seeks your expertise in assessing compatibility between our SAP-001 schemas and your content generation architecture, understanding effort required, and determining whether a pilot makes sense for both teams.",
+
+  "rationale": "We considered three approaches to inbox artifact automation: (1) build custom tooling in chora-base, (2) adopt existing template engines like Jinja2 or Cookiecutter, or (3) integrate with chora-compose. Option 1 would give us full control but requires significant development and maintenance. Option 2 is simpler but lacks the MCP integration and ecosystem alignment we value.\n\nWe're pursuing Option 3 (chora-compose integration) because it offers the best balance of functionality, ecosystem synergy, and shared maintenance. chora-compose's 17 production generators demonstrate maturity, and MCP integration aligns with our vision for agent-assisted workflows. However, we need to validate technical feasibility before committing to this path.\n\nThis exploratory request will help us determine whether chora-compose's architecture can support our SAP-001 schemas, what effort is required, and whether integration makes sense for both teams. If feasibility is high (≥80%), we'll proceed to a 4-week pilot. If lower, we'll fall back to Option 2 (template engine) or Option 1 (custom tooling).",
+
+  "questions": {
+    "Architecture and Compatibility": [
+      "Can chora-compose's content config structure support SAP-001's 18 required fields for coordination requests?",
+      "How do ContentElements and GenerationPatterns map to our inbox artifact types (coordination, task, proposal)?",
+      "Does chora-compose support conditional content (e.g., optional fields that vary by request subtype)?",
+      "How would we handle complex nested structures like context.questions or deliverables arrays?"
+    ],
+    "Generation Quality and Patterns": [
+      "What quality level can we expect from template-based generation vs AI-augmented generation?",
+      "How do existing chora-compose generators handle structured JSON output with schema validation?",
+      "Can we achieve ≥80% quality threshold (SAP-004 rubric) for inbox artifacts?",
+      "What's the balance between deterministic templates and flexible AI generation?"
+    ],
+    "Effort and Integration": [
+      "What effort is required to create content configs for coordination requests (estimated 10-15 content blocks)?",
+      "How would chora-compose integration affect our existing inbox processing scripts (inbox-status.py, validation, events)?",
+      "What maintenance burden would we inherit (content block updates, version compatibility)?",
+      "Can we do a phased rollout (coordination requests first, then tasks and proposals)?"
+    ],
+    "MCP and Developer Experience": [
+      "How does MCP integration work in practice for structured content generation?",
+      "What developer experience improvements does chora-compose provide over manual JSON creation?",
+      "Are there examples of similar structured artifact generation (JSON with schemas) we can learn from?",
+      "How do we balance automation benefits vs learning curve for new contributors?"
+    ]
+  },
+
+  "collaboration_modes": [
+    "Deep Collaboration: Joint exploration where we work together to map SAP-001 schemas to chora-compose structures, prototype 2-3 content configs, and co-develop integration design. Your chora-compose architecture expertise would be invaluable for ensuring alignment. Estimated effort: 15-20 hours over 2-3 weeks (sync meetings + async work).",
+
+    "Expert Consultation: You provide architectural guidance and answer specific questions through async discussion (GitHub issues, PR reviews) or 1-2 video calls. We handle prototyping and implementation, coming to you for validation and course correction. Estimated effort: 8-12 hours over 2-3 weeks (mostly async).",
+
+    "Documentation-Driven: We study existing chora-compose documentation, examples, and generator code. You review our draft integration design document and provide written feedback on feasibility, architecture fit, and potential issues. Estimated effort: 4-6 hours (documentation review + written feedback).",
+
+    "High-Level Guidance: Quick assessment (30-60 min video call or detailed written response) on whether our inbox automation use case aligns with chora-compose's design intent, with pointers to relevant examples, documentation sections, or similar generators to study. Estimated effort: 1-2 hours.",
+
+    "Async Resource Sharing: You point us to relevant documentation, example generators, GitHub issues, or design documents that address similar structured artifact generation use cases. We proceed independently with self-directed research and report back our findings. Estimated effort: <1 hour (resource curation and brief guidance)."
+  ],
+
+  "boundaries": "We want to be very clear about what we are NOT requesting or assuming:\n\n**Not Requesting Architecture Changes**: We are NOT asking chora-compose to modify its core architecture, add chora-base-specific features, or accommodate our idiosyncrasies. If our SAP-001 schemas don't map well to chora-compose's structures, that's valuable information that would lead us to explore alternatives—not a request for you to change.\n\n**Not Expecting Implementation Work**: We are NOT asking the chora-compose team to implement our inbox automation. This exploration is about learning and feasibility assessment. If we proceed to pilot or full implementation, chora-base will own the development work: creating content configs, building integration scripts, maintaining our content block library, and troubleshooting our use case.\n\n**Not Committing to Adoption**: This exploration does NOT represent a commitment from chora-base to adopt chora-compose regardless of findings. We have a structured decision framework with clear GO/NO-GO criteria (≥80% technical feasibility, adequate team capacity, ≥80% quality threshold via SAP-004 rubric). If feasibility is medium or low, we'll pursue alternative approaches (custom tooling or existing template engines).\n\n**Not Demanding Immediate Action**: We are NOT asking for immediate response or rushed collaboration. Our exploration timeline is 1-2 weeks (ending Nov 8), but we understand you have your own priorities and timelines. If capacity constraints delay response, we can adjust our timeline or proceed with self-directed research using existing documentation. Quality guidance is more valuable than quick response.",
+
+  "dependencies": [
+    "SAP-001 v1.0.0 inbox protocol (completed - schemas and workflows established)",
+    "Initial chora-compose research (in progress - 70% complete, deep-dive underway)",
+    "SAP-004 pilot framework (planned - will be used for quality evaluation if pilot proceeds)"
+  ],
+
+  "related": [
+    "SAP-001 v1.0.0 inbox coordination protocol (schemas being considered for automation)",
+    "SAP-017 chora-compose documentation standards (initial understanding of chora-compose)",
+    "SAP-018 ecosystem integration patterns (integration best practices)",
+    "SAP-004 SAP generation pilot framework (quality evaluation approach if pilot proceeds)",
+    "GitHub Issue #234 inbox automation discussion (community feedback on manual process)",
+    "chora-workspace COORD-WS-012 SAP generation (similar use case, potential content block sharing)"
+  ],
+
+  "timeline": "Phase 1 (Exploration): 2025-11-01 to 2025-11-08\nGO/NO-GO decision: 2025-11-08\nPhase 2 (Pilot): 2025-11-09 to 2025-12-06 (if GO)\nPilot decision: 2025-12-06\nPhase 3 (Implementation): TBD based on pilot results"
+}

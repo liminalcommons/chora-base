@@ -1,0 +1,21 @@
+{
+  "type": "content",
+  "id": "content-block-context_rationale",
+  "schemaRef": {
+    "uri": "file://schemas/content/v3.1/schema.json",
+    "version": "3.1"
+  },
+  "metadata": {
+    "type": "coordination",
+    "version": "1.0",
+    "title": "Context Rationale Content Block"
+  },
+  "elements": [
+    {
+      "id": "context_rationale",
+      "generation_pattern": "user_input",
+      "example_output": "Updated documentation will reduce onboarding time and support questions",
+      "required": false
+    }
+  ]
+}

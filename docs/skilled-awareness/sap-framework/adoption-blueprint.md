@@ -390,7 +390,64 @@ Should show charter frontmatter with `sap_id: SAP-000`.
 
 ---
 
-## 7. Upgrade Path
+## 7. Post-Install: Enabling Agent Awareness
+
+After installing the SAP Framework, ensure agents can discover and use this capability:
+
+### Step 1: Update Root AGENTS.md
+
+Add reference to SAP-000 in your project's root AGENTS.md file:
+
+```markdown
+## Skilled Awareness Packages (SAPs)
+
+This project uses the SAP Framework (SAP-000) to package development capabilities.
+
+### Using SAPs
+
+1. **Browse available SAPs**: See `docs/skilled-awareness/INDEX.md`
+2. **Install a SAP**: `python scripts/install-sap.py SAP-XXX`
+3. **Read SAP documentation**: Each SAP has 5 artifacts (charter, protocol, awareness guide, adoption blueprint, ledger)
+
+### SAP Framework
+- **Documentation**: [docs/skilled-awareness/sap-framework/](docs/skilled-awareness/sap-framework/)
+- **Protocol**: [SKILLED_AWARENESS_PACKAGE_PROTOCOL.md](SKILLED_AWARENESS_PACKAGE_PROTOCOL.md)
+```
+
+### Step 2: Validate Awareness Integration
+
+Run the awareness integration checker:
+
+```bash
+bash scripts/check-sap-awareness-integration.sh SAP-000
+```
+
+**Expected result**: PASS with 4/4 checks:
+- ✅ Root AGENTS.md mentions SAP-000
+- ✅ SAP-000 adoption blueprint has post-install section
+- ✅ SAP-000 awareness guide exists
+- ✅ SAP-000 referenced in INDEX.md
+
+### Step 3: Test Agent Discovery
+
+Verify agents can find SAP Framework guidance:
+
+1. Open root AGENTS.md
+2. Search for "SAP" or "Skilled Awareness"
+3. Confirm link to SAP documentation works
+4. Verify INDEX.md lists all available SAPs
+
+### Success Criteria
+
+After completing post-install awareness:
+- ✅ Agents know where to find SAP documentation
+- ✅ SAP Framework discoverable via root AGENTS.md
+- ✅ Validation script passes all checks
+- ✅ Future SAPs will be automatically discoverable
+
+---
+
+## 8. Upgrade Path
 
 ### Future Versions
 
@@ -405,7 +462,7 @@ Should show charter frontmatter with `sap_id: SAP-000`.
 
 ---
 
-## 8. Troubleshooting
+## 9. Troubleshooting
 
 ### Problem: Directory already exists
 
@@ -470,7 +527,7 @@ SKILLED_AWARENESS_PACKAGE_PROTOCOL.md already exists
 
 ---
 
-## 9. Next Steps
+## 10. Next Steps
 
 After installing SAP Framework:
 
@@ -514,7 +571,7 @@ After installing SAP Framework:
 
 ---
 
-## 10. Support
+## 11. Support
 
 ### Getting Help
 
@@ -534,7 +591,7 @@ After installing SAP Framework:
 
 ---
 
-## 11. Related Documents
+## 12. Related Documents
 
 **SAP Framework**:
 - [capability-charter.md](capability-charter.md) - Framework overview

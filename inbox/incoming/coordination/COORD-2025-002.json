@@ -1,0 +1,95 @@
+{
+  "type": "coordination",
+  "request_id": "COORD-2025-002",
+  "title": "Implement Bidirectional Translation Layer for SAP-009",
+  "from_repo": "github.com/liminalcommons/chora-base",
+  "to_repo": "github.com/liminalcommons/chora-base",
+  "priority": "P1",
+  "urgency": "next_sprint",
+  "deliverables": [
+    "SAP-009 v1.1.0 with bidirectional translation protocol specification",
+    "Implementation in scripts/translate-bidirectional.py with ≥80% test coverage",
+    "Unit tests in tests/test_translate_bidirectional.py covering all translation modes",
+    "Integration tests validating round-trip translation accuracy",
+    "CHANGELOG.md entry documenting v1.1.0 changes and migration path",
+    "Documentation in docs/skilled-awareness/agent-awareness/bidirectional-translation.md",
+    "Performance benchmarks demonstrating <100ms translation time for typical artifacts",
+    "CLI tool supporting both directions: chora → standard, standard → chora",
+    "Updated AGENTS.md with bidirectional translation capabilities",
+    "Release notes and version tag (v1.1.0)"
+  ],
+  "acceptance_criteria": [
+    "SAP-009 v1.1.0 specification includes complete protocol for both translation directions",
+    "scripts/translate-bidirectional.py achieves ≥80% test coverage",
+    "Unit tests cover all 6 translation modes (3 directions × 2 formats)",
+    "Integration tests validate 100% round-trip accuracy for sample artifacts",
+    "CHANGELOG.md follows Keep a Changelog format with all breaking changes documented",
+    "Documentation clarity review achieves ≥85% score (5 reviewers)",
+    "Performance benchmarks show <100ms translation time for 95th percentile",
+    "CLI tool provides --help, --direction, --format flags with clear usage examples",
+    "AGENTS.md update reviewed and approved by ≥2 ecosystem contributors",
+    "Release v1.1.0 tagged and pushed to GitHub with complete release notes"
+  ],
+  "created": "2025-11-02",
+  "context": {
+    "background": "SAP-009 currently supports one-way translation from chora-specific delimiters to standard Jinja2 delimiters. Ecosystem feedback indicates strong need for bidirectional translation to enable agents to work with both chora-base templates and standard template libraries. This prescriptive request defines the complete implementation scope for SAP-009 v1.1.0, including specification updates, implementation, testing, documentation, and release.",
+    "rationale": "We considered three approaches: (1) extend existing translate.py with reverse mode, (2) create separate bidirectional script, (3) implement as independent package. Extending existing script creates confusion about translation direction. Independent package adds maintenance overhead. We chose a new bidirectional script with clear direction flags, enabling explicit control and better error messages while maintaining backward compatibility with existing one-way translation workflows."
+  },
+  "trace_id": "bidirectional-translation-sap009-2025",
+  "estimated_effort": "40-59 hours",
+  "timeline": {
+    "needed_by": "2025-11-15",
+    "milestones": [
+      {
+        "date": "2025-11-05",
+        "description": "SAP-009 v1.1.0 specification complete and reviewed"
+      },
+      {
+        "date": "2025-11-08",
+        "description": "Implementation complete with ≥80% test coverage"
+      },
+      {
+        "date": "2025-11-12",
+        "description": "Documentation and CLI complete, ready for review"
+      },
+      {
+        "date": "2025-11-15",
+        "description": "Release v1.1.0 with all acceptance criteria met"
+      }
+    ]
+  },
+  "dependencies": [
+    {
+      "description": "SAP-009 v1.0.0 baseline implementation (translate.py)",
+      "status": "completed",
+      "blocks": true
+    },
+    {
+      "description": "Test framework established in tests/ directory",
+      "status": "completed",
+      "blocks": true
+    },
+    {
+      "description": "Performance benchmark tooling (scripts/benchmark.py)",
+      "status": "in_progress",
+      "blocks": false
+    }
+  ],
+  "related": [
+    {
+      "id": "SAP-009",
+      "relationship": "extends",
+      "description": "Extends SAP-009 with bidirectional translation capability"
+    },
+    {
+      "id": "COORD-2025-001",
+      "relationship": "informs",
+      "description": "Ecosystem feedback identified bidirectional need"
+    },
+    {
+      "id": "SAP-001",
+      "relationship": "relates_to",
+      "description": "Coordination protocol for this implementation"
+    }
+  ]
+}

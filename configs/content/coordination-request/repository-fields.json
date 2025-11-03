@@ -1,0 +1,71 @@
+{
+  "$schema": "https://chora-compose.dev/schemas/content-config.json",
+  "name": "repository-fields",
+  "version": "1.0.0",
+  "description": "Source and destination repository identification (from_repo, to_repo)",
+  "priority": "HIGH",
+  "presence_frequency": "100%",
+
+  "content_element": {
+    "name": "repository-fields",
+    "format": "json",
+    "example_output": {
+      "from_repo": "github.com/liminalcommons/chora-base",
+      "to_repo": "github.com/liminalcommons/chora-compose"
+    }
+  },
+
+  "generation": {
+    "pattern": "template_fill",
+    "template_source": {
+      "type": "file",
+      "path": "docs/content-blocks/inbox-coordination/repository-fields.md",
+      "section": "Template / Example"
+    },
+    "placeholders": {
+      "from_repo": {
+        "source": "user_input",
+        "path": "context.from_repo",
+        "fallback": {
+          "source": "system_function",
+          "function": "git_remote_url",
+          "transform": "normalize_github_url"
+        },
+        "note": "If not provided by user, detect from git remote origin"
+      },
+      "to_repo": {
+        "source": "user_input",
+        "path": "context.to_repo",
+        "required": true,
+        "note": "Must be explicitly provided by user"
+      }
+    }
+  },
+
+  "validation": {
+    "required_fields": ["from_repo", "to_repo"],
+    "field_constraints": {
+      "from_repo": {
+        "type": "string",
+        "pattern": "^github\\.com/[a-zA-Z0-9-_]+/[a-zA-Z0-9-_]+$",
+        "error_message": "from_repo must match format 'github.com/org/repo' (no protocol, no .git suffix)"
+      },
+      "to_repo": {
+        "type": "string",
+        "pattern": "^github\\.com/[a-zA-Z0-9-_]+/[a-zA-Z0-9-_]+$",
+        "error_message": "to_repo must match format 'github.com/org/repo' (no protocol, no .git suffix)"
+      }
+    },
+    "cross_field_validation": {
+      "allow_same_repo": true,
+      "note": "from_repo == to_repo is valid for internal coordination"
+    }
+  },
+
+  "metadata": {
+    "reusability": "universal",
+    "stability": "stable",
+    "related_blocks": ["core-metadata", "context-background"],
+    "documentation": "docs/content-blocks/inbox-coordination/repository-fields.md"
+  }
+}

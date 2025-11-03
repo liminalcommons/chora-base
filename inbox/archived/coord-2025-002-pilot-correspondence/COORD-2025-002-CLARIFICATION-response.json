@@ -1,0 +1,1123 @@
+{
+  "id": "COORD-2025-002-CLARIFICATION-RESPONSE",
+  "in_response_to": "COORD-2025-002-CLARIFICATION",
+  "from_repo": "chora-compose",
+  "to_repo": "chora-base",
+  "responded_at": "2025-10-30T08:00:00Z",
+  "response_type": "technical_clarification",
+
+  "executive_summary": {
+    "assessment": "Strong foundation exists with some gaps. No blockers for pilot - missing features can be added incrementally during experimentation.",
+
+    "quick_answers": {
+      "Q1_caching": "Partial support - has versioned storage and session cache, but no 'force' flag for regeneration. Workaround: use existing patterns. Can add in ~4-6 hours if needed.",
+      "Q2_content_blocks": "Strong match - hybrid template slots + modular elements. ContentElement pattern aligns perfectly with your decomposition needs.",
+      "Q3_context": "Fully flexible - InputSource supports custom context with 6 source types, JSONPath selectors, full extensibility.",
+      "Q4_hybrid": "Partial support - can reference stored content via external_file, but no automatic orchestration. Manual hybrid works today, auto-decision ~2-4 hours.",
+      "Q5_storage": "Well-defined patterns - content blocks in chora-base, configs in both repos, generated artifacts in specified locations."
+    },
+
+    "pilot_recommendation": "Start with existing patterns. Structure works well for SAP decomposition. Add missing features incrementally if specific needs emerge during pilot.",
+
+    "architectural_alignment": "Your vision aligns well with chora-compose architecture. Multi-tier collections are feasible (artifact of artifacts). Gaps are additions, not conflicts."
+  },
+
+  "detailed_answers": {
+    "Q1_caching_and_freshness": {
+      "question": "Does chora-compose support both 'use cached artifact' and 'always regenerate fresh' modes?",
+
+      "short_answer": "Partial support. Has versioned ephemeral storage and session-level caching, but no explicit 'force' parameter for regeneration. We use 'force: bool' terminology (industry standard), not 'latest' vs 'fresh'.",
+
+      "what_exists_today": {
+        "ephemeral_storage": {
+          "description": "Versioned content storage with timestamp-based versions",
+          "location": "src/chora_compose/storage/ephemeral.py",
+          "storage_path": "ephemeral/{content_id}/{timestamp}.{format}",
+          "versioning": "ISO 8601 timestamps with microseconds (2025-10-30T15:30:45.123456+00:00)",
+          "retention": "Configurable retention_days (default 30), auto-cleanup optional",
+          "metadata": "Each version has .meta.json with generation_source, timestamp, version, review_status",
+
+          "code_example": {
+            "file": "src/chora_compose/storage/ephemeral.py:89",
+            "snippet": "def save(self, content_id: str, content: str, metadata: dict) -> str:\n    timestamp = datetime.now(timezone.utc).isoformat()\n    version_dir = self.base_path / content_id\n    content_file = version_dir / f\"{safe_timestamp}.{fmt}\"\n    return str(content_file)"
+          }
+        },
+
+        "context_resolver_cache": {
+          "description": "Session-level cache for resolved inputs (file contents, git refs, etc.)",
+          "location": "src/chora_compose/core/context_resolver.py:30",
+          "cache_key": "f\"{source.source_type}:{source.source_locator}\"",
+          "lifetime": "Process lifetime (in-memory only)",
+          "clear_method": "context_resolver.clear_cache()",
+
+          "code_example": {
+            "file": "src/chora_compose/core/context_resolver.py:42",
+            "snippet": "def resolve_source(self, source: InputSource) -> Any:\n    cache_key = f\"{source.source_type}:{source.source_locator}\"\n    if cache_key in self._cache:\n        return self._cache[cache_key]\n    # ... resolve and cache"
+          }
+        },
+
+        "retrieval_strategy_enum": {
+          "description": "Defined but not actively enforced in artifact composition",
+          "location": "src/chora_compose/core/models.py:451",
+          "values": ["latest", "all", "version", "approved_only"],
+          "status": "Defined on ContentChildReference but not checked in ArtifactComposer._generate_child_content()",
+
+          "code_example": {
+            "file": "src/chora_compose/core/models.py:451",
+            "snippet": "class RetrievalStrategy(str, Enum):\n    LATEST = \"latest\"          # Most recent version\n    ALL = \"all\"                # All versions chronologically\n    VERSION = \"version\"        # Specific semantic version\n    APPROVED_ONLY = \"approved_only\"  # Only approved versions"
+          }
+        },
+
+        "force_parameter": {
+          "description": "MCP tool generate_content has force parameter",
+          "location": "src/chora_compose/mcp/tools.py:156",
+          "behavior": "force=True bypasses retrieval, always generates fresh",
+          "status": "Works for MCP tools, not propagated through ArtifactComposer",
+
+          "code_example": {
+            "file": "src/chora_compose/mcp/tools.py:156",
+            "snippet": "async def generate_content(\n    content_config_id: str,\n    context: dict | str | None = None,\n    force: bool = False  # Force regeneration even if exists\n) -> GenerateContentResult"
+          }
+        }
+      },
+
+      "what_does_NOT_exist": {
+        "automatic_staleness_detection": "No TTL or timestamp comparison to detect if cached content is stale",
+        "dependency_based_invalidation": "Changes to input sources don't automatically trigger cache invalidation",
+        "artifact_level_force": "ArtifactComposer.assemble() doesn't have force parameter (always regenerates)",
+        "per_child_cache_control": "Can't configure which children to cache vs regenerate"
+      },
+
+      "cache_invalidation_triggers": {
+        "explicit_clear": "Call context_resolver.clear_cache() manually",
+        "process_restart": "In-memory cache lost on process exit",
+        "new_version_save": "ephemeral_storage.save() creates new version, doesn't invalidate cache",
+        "auto_cleanup": "Old versions removed based on retention_days, doesn't affect cache"
+      },
+
+      "workaround_for_pilot": {
+        "approach": "Use existing force parameter pattern from MCP tools",
+        "for_cached_behavior": "Just call generate_content(config_id) - uses session cache",
+        "for_fresh_behavior": "Call generate_content(config_id, force=True) - bypasses cache",
+        "limitation": "Works for individual content generation, not automatic at artifact assembly level"
+      },
+
+      "what_wed_need_to_add": {
+        "force_in_artifact_composer": {
+          "description": "Add force parameter to ArtifactComposer.assemble()",
+          "effort": "2-3 hours",
+          "changes": [
+            "Add force: bool = False parameter to assemble()",
+            "Propagate force to _generate_child_content()",
+            "Pass force to generator.generate() calls"
+          ]
+        },
+
+        "per_child_cache_control": {
+          "description": "Honor retrievalStrategy on ContentChildReference",
+          "effort": "3-4 hours",
+          "changes": [
+            "Read child.retrievalStrategy in _generate_child_content()",
+            "If strategy='approved_only', filter versions by review_status",
+            "If strategy='version:1.2.3', retrieve specific version from storage"
+          ]
+        },
+
+        "staleness_detection": {
+          "description": "Auto-regenerate if inputs changed since last generation",
+          "effort": "6-8 hours (more complex)",
+          "changes": [
+            "Track input source hashes in metadata",
+            "Compare current input hashes to cached metadata",
+            "Regenerate if mismatch"
+          ]
+        }
+      },
+
+      "recommendation_for_pilot": {
+        "start_simple": "Use existing patterns - force=False (default cached behavior) works for pilot",
+        "defer_complexity": "Don't build staleness detection until you know you need it",
+        "if_needed_during_pilot": "Adding force to ArtifactComposer is quick (2-3 hours) and pilot-friendly"
+      },
+
+      "terminology_clarification": {
+        "we_use_force": "chora-compose uses 'force: bool' (industry standard from git, npm, docker)",
+        "not_latest_fresh": "We don't use 'latest' vs 'fresh' - those are retrievalStrategy values",
+        "equivalent_mapping": {
+          "your_latest": "Our: force=False (default) - use cached if available",
+          "your_fresh": "Our: force=True - always regenerate, bypass cache"
+        }
+      }
+    },
+
+    "Q2_content_block_architecture": {
+      "question": "Which model does chora-compose use for constituent content blocks?",
+
+      "short_answer": "Hybrid - Template Slots + Modular Blocks. ContentElement provides structure, GenerationPattern provides assembly logic, ChildReference provides modularity. This aligns perfectly with SAP decomposition needs.",
+
+      "model_classification": "Hybrid (primarily Template Slots + Modular Elements, with plugin support for Semantic Composition via custom generators)",
+
+      "content_element_structure": {
+        "description": "ContentElement is the atomic unit representing a content block",
+        "location": "src/chora_compose/core/models.py:215",
+        "fields": {
+          "name": "Kebab-case identifier (e.g., 'problem-statement', 'pytest-setup')",
+          "description": "Human-readable description",
+          "prompt_guidance": "Hints for AI generation",
+          "format": "markdown | code | json | yaml | gherkin | section | text",
+          "example_output": "Actual content or example (the 'content block' itself)",
+          "generation_source": "ai | human | template | mixed | any",
+          "review_status": "pending | approved | needs_revision | rejected"
+        },
+
+        "code_example": {
+          "file": "src/chora_compose/core/models.py:215",
+          "snippet": "class ContentElement(BaseModel):\n    name: str\n    description: Optional[str] = None\n    prompt_guidance: Optional[str] = None\n    format: ElementFormat = ElementFormat.MARKDOWN\n    output_format: Optional[str] = None\n    example_output: Optional[str] = None\n    generation_source: Optional[GenerationSource] = None\n    review_status: ReviewStatus = ReviewStatus.PENDING"
+        }
+      },
+
+      "generation_pattern_structure": {
+        "description": "GenerationPattern defines how to assemble elements into final content",
+        "location": "src/chora_compose/core/models.py:276",
+        "fields": {
+          "id": "Pattern identifier",
+          "type": "Generator type (jinja2, demonstration, template_fill, etc.)",
+          "template": "Template string with placeholders (template slots approach)",
+          "variables": "Map template vars to element sources (modular approach)",
+          "generation_config": "Generator-specific configuration (context, filters, etc.)"
+        },
+
+        "template_slots_example": {
+          "file": "configs/content/simple-readme/simple-readme-content.json",
+          "pattern": {
+            "type": "demonstration",
+            "template": "{{ title }}\n\n{{ features }}\n\n{{ installation }}\n\n{{ usage }}",
+            "variables": [
+              {"name": "title", "source": "elements.title.example_output"},
+              {"name": "features", "source": "elements.features.example_output"}
+            ]
+          },
+          "explanation": "Fixed structure (title, features, installation, usage) with variable content slots"
+        },
+
+        "modular_blocks_example": {
+          "file": "configs/content/readme/readme-content.json:60",
+          "pattern": {
+            "type": "jinja2",
+            "template": "readme.j2",
+            "generation_config": {
+              "context": {
+                "readme": {"source": "file", "path": "configs/content/readme/readme-data.json"}
+              }
+            }
+          },
+          "children": [
+            {"id": "feature-examples", "path": "configs/content/feature-examples/feature-examples-content.json", "order": 2}
+          ],
+          "explanation": "Reusable blocks (feature-examples) referenced and assembled"
+        }
+      },
+
+      "child_reference_structure": {
+        "description": "ChildReference enables modular composition (content config referencing other content configs)",
+        "location": "src/chora_compose/core/models.py:246",
+        "fields": {
+          "id": "Child content config ID",
+          "path": "Path to child content config file",
+          "required": "Whether child must exist for assembly to succeed",
+          "order": "Assembly order (lower numbers first)",
+          "version": "Specific version to use (optional)",
+          "conditions": "Conditional inclusion logic (optional)"
+        },
+
+        "code_example": {
+          "file": "src/chora_compose/core/models.py:246",
+          "snippet": "class ChildReference(BaseModel):\n    id: str\n    path: str\n    required: bool = True\n    order: Optional[float] = None\n    version: Optional[str] = None\n    conditions: Optional[str] = None"
+        },
+
+        "usage_example": {
+          "file": "configs/content/readme/readme-content.json:60",
+          "snippet": "\"children\": [\n  {\n    \"id\": \"feature-examples\",\n    \"path\": \"configs/content/feature-examples/feature-examples-content.json\",\n    \"required\": true,\n    \"order\": 2\n  }\n]"
+        }
+      },
+
+      "composition_strategy": {
+        "description": "How multiple children are assembled into final artifact",
+        "location": "src/chora_compose/core/models.py:442",
+        "supported": {
+          "concat": "Join children with double newlines (\\n\\n) - ✅ Implemented"
+        },
+        "not_yet_implemented": {
+          "merge": "Intelligent merging (e.g., combine JSON objects)",
+          "template": "Template-based assembly with named slots",
+          "custom": "External tool-defined composition"
+        },
+
+        "code_example": {
+          "file": "src/chora_compose/core/composer.py:233",
+          "snippet": "if strategy == CompositionStrategy.CONCAT:\n    return \"\\n\\n\".join(child_contents)\nelse:\n    raise NotImplementedError(f\"Strategy {strategy} not implemented\")"
+        }
+      },
+
+      "granularity_recommendations": {
+        "element_level": {
+          "description": "Single logical unit within a content config",
+          "examples": ["problem-statement (paragraph)", "pytest-setup-code (code block)", "installation-section (section)"],
+          "when_to_use": "Smallest reusable unit that makes sense independently"
+        },
+
+        "content_config_level": {
+          "description": "Related elements that form a coherent piece",
+          "examples": ["SAP charter (5-7 elements)", "API endpoint documentation", "Test suite for one feature"],
+          "when_to_use": "When elements always appear together or form a complete thought"
+        },
+
+        "child_config_level": {
+          "description": "When content exceeds 5-7 elements OR needs reusability",
+          "examples": ["Shared pytest setup referenced by multiple test configs", "Common CI/CD patterns used across SAPs"],
+          "when_to_use": "Reusability needed OR single config gets too large (>10 elements)"
+        },
+
+        "artifact_level": {
+          "description": "Final assembly of multiple content configs",
+          "examples": ["Complete SAP (5 artifacts from 5 content configs)", "Documentation bundle (README + API + Tutorial)"],
+          "when_to_use": "When you need to produce multiple output files from multiple inputs"
+        }
+      },
+
+      "best_practices_from_codebase": {
+        "separation_of_concerns": "Keep domain content (elements.*.example_output) separate from assembly logic (generation.patterns.template)",
+        "incremental_complexity": "Start with simple elements, add child references when reusability emerges",
+        "explicit_ordering": "Use order field to control assembly sequence (increments of 10 leave room for insertions)",
+        "format_metadata": "Set element.format to enable format-specific processing (markdown linting, code validation, etc.)"
+      },
+
+      "how_content_blocks_reference_each_other": {
+        "via_child_reference": "Content config A includes child reference to content config B",
+        "via_input_source": "Content config references external files, git refs, or ephemeral outputs",
+        "via_generation_variables": "Template variables pull from elements.{name}.example_output",
+
+        "example_chain": {
+          "step_1": "sap-004-charter-content.json has elements: problem-statement, solution-approach",
+          "step_2": "sap-004-charter-content.json has child reference to shared-testing-patterns-content.json",
+          "step_3": "sap-004-testing-framework-artifact.json references sap-004-charter-content.json (and 4 other content configs)",
+          "result": "Hierarchical composition: Elements → Content Configs → Child Configs → Artifact"
+        }
+      },
+
+      "recommendation_for_sap_decomposition": {
+        "approach": "Use hybrid model - template slots for structure, modular blocks for reusability",
+
+        "suggested_structure": {
+          "tier_1_elements": "Decompose each artifact (charter, protocol, guide, blueprint, ledger) into 5-7 ContentElements",
+          "tier_2_content_configs": "One content config per artifact (e.g., sap-004-charter-content.json)",
+          "tier_3_shared_blocks": "Extract common patterns (pytest-setup, coverage-requirements) as separate content configs, reference via children",
+          "tier_4_artifact": "sap-004-testing-framework-artifact.json references 5 content configs"
+        },
+
+        "example_sap_004_charter_elements": [
+          {"name": "title", "format": "markdown", "example_output": "# SAP-004: Testing Framework"},
+          {"name": "problem-statement", "format": "section"},
+          {"name": "solution-approach", "format": "section"},
+          {"name": "key-capabilities", "format": "section"},
+          {"name": "adoption-prerequisites", "format": "section"}
+        ],
+
+        "reusable_shared_blocks": [
+          "shared-pytest-setup-content.json (referenced by multiple SAPs)",
+          "shared-ci-cd-patterns-content.json",
+          "shared-docker-integration-content.json"
+        ]
+      }
+    },
+
+    "Q3_context_schema": {
+      "question": "Can you share an example context schema from your framework?",
+
+      "short_answer": "Fully flexible custom context via InputSource. Supports 6 source types, JSONPath selectors, nested objects, custom fields. No predefined schema - users define exactly what they need.",
+
+      "input_source_types": {
+        "description": "6 built-in source types for loading context data",
+        "location": "src/chora_compose/core/models.py:51",
+
+        "types": {
+          "content_config": {
+            "description": "Load another content config as context",
+            "locator_format": "{content_id}",
+            "example": {"source_type": "content_config", "source_locator": "api-endpoints", "data_selector": "$.elements[*].example_output"}
+          },
+
+          "external_file": {
+            "description": "Load JSON, YAML, text file from filesystem",
+            "locator_format": "{file_path}",
+            "example": {"source_type": "external_file", "source_locator": "data/team-metadata.json", "data_selector": "$.members[0].role"}
+          },
+
+          "git_reference": {
+            "description": "Load file from git ref (commit, branch, tag)",
+            "locator_format": "{ref}:{path}",
+            "example": {"source_type": "git_reference", "source_locator": "main:README.md", "data_selector": "1-50"}
+          },
+
+          "ephemeral_output": {
+            "description": "Load previously generated content from ephemeral storage",
+            "locator_format": "{content_id}:{strategy}",
+            "example": {"source_type": "ephemeral_output", "source_locator": "sap-004-charter:latest"}
+          },
+
+          "inline_data": {
+            "description": "Embed JSON data directly in config",
+            "locator_format": "{json_string}",
+            "example": {"source_type": "inline_data", "source_locator": "{\"repo_role\": \"mcp-server\", \"verbosity\": \"concise\"}"}
+          },
+
+          "artifact_config": {
+            "description": "Load artifact config metadata as context",
+            "locator_format": "{artifact_id}",
+            "example": {"source_type": "artifact_config", "source_locator": "documentation-bundle"}
+          }
+        },
+
+        "code_example": {
+          "file": "src/chora_compose/core/models.py:51",
+          "snippet": "class SourceType(str, Enum):\n    CONTENT_CONFIG = \"content_config\"\n    ARTIFACT_CONFIG = \"artifact_config\"\n    EPHEMERAL_OUTPUT = \"ephemeral_output\"\n    EXTERNAL_FILE = \"external_file\"\n    GIT_REFERENCE = \"git_reference\"\n    INLINE_DATA = \"inline_data\"\n    REQUIREMENT_ID = \"requirement_id\"  # Stub"
+        }
+      },
+
+      "data_selectors": {
+        "description": "Extract portions of source data using various selector syntaxes",
+        "location": "src/chora_compose/core/data_selector.py",
+
+        "supported_syntaxes": {
+          "whole_content": {
+            "description": "Return entire content (default)",
+            "example": {"data_selector": null}
+          },
+
+          "jsonpath": {
+            "description": "JSONPath expressions for JSON/YAML data",
+            "syntax": "$.path.to.field",
+            "examples": [
+              "$.users[0].name",
+              "$.paths.*.get.summary",
+              "$..name"
+            ]
+          },
+
+          "line_range": {
+            "description": "Extract line ranges from text files",
+            "syntax": "start-end | :end | start:",
+            "examples": [
+              "10-20 (lines 10-20)",
+              ":50 (first 50 lines)",
+              "100: (from line 100 to end)"
+            ]
+          },
+
+          "markdown_section": {
+            "description": "Extract markdown sections by heading",
+            "syntax": "# Heading Name",
+            "examples": [
+              "# Installation",
+              "## Usage Examples"
+            ]
+          },
+
+          "code_element": {
+            "description": "Extract functions or classes from code",
+            "syntax": "function:name | class:name",
+            "examples": [
+              "function:calculate_total",
+              "class:UserManager"
+            ]
+          }
+        },
+
+        "code_example": {
+          "file": "src/chora_compose/core/data_selector.py:27",
+          "snippet": "def select(self, content: str, selector: Optional[str]) -> str:\n    if not selector or selector == \"whole_content\":\n        return content\n    elif selector.startswith(\"$\"):\n        return self._jsonpath_select(content, selector)\n    elif re.match(r\"^\\d+(-\\d+|:)?$\", selector):\n        return self._line_range_select(content, selector)\n    # ..."
+        }
+      },
+
+      "context_structure_flexibility": {
+        "no_predefined_schema": "chora-compose doesn't enforce a context schema - users define whatever they need",
+        "nested_objects": "Fully supported - context can be deeply nested objects",
+        "custom_fields": "Any field names allowed - repo_role, existing_capabilities, preferences, team_structure, etc.",
+        "type_system": "Python dict[str, Any] - values can be str, int, bool, list, dict, etc.",
+
+        "validation": {
+          "pydantic": "InputSource model validates source_type and structure",
+          "json_schema": "ContentConfig validates against JSON Schema",
+          "runtime": "No validation of context field names or structure - full flexibility"
+        }
+      },
+
+      "example_context_for_sap_generation": {
+        "config_file": "configs/content/sap-004-charter/sap-004-charter-content.json",
+
+        "inputs_section": {
+          "sources": [
+            {
+              "id": "repo_metadata",
+              "source_type": "external_file",
+              "source_locator": "target-repo/repo-metadata.json",
+              "data_selector": "$",
+              "required": true
+            },
+            {
+              "id": "existing_capabilities",
+              "source_type": "external_file",
+              "source_locator": "target-repo/sap-catalog.json",
+              "data_selector": "$.adopted_saps[*].id",
+              "required": false
+            },
+            {
+              "id": "user_preferences",
+              "source_type": "inline_data",
+              "source_locator": "{\"verbosity\": \"concise\", \"include_examples\": true, \"technical_depth\": \"intermediate\"}",
+              "required": false
+            }
+          ]
+        },
+
+        "resolved_context_structure": {
+          "repo_metadata": {
+            "repo_name": "my-mcp-server",
+            "repo_role": "mcp_server_developer",
+            "team_structure": "solo_developer",
+            "coordination_needs": false
+          },
+          "existing_capabilities": ["SAP-000", "SAP-001", "SAP-003"],
+          "user_preferences": {
+            "verbosity": "concise",
+            "include_examples": true,
+            "technical_depth": "intermediate"
+          }
+        },
+
+        "usage_in_template": {
+          "template": "templates/sap-charter.md.j2",
+          "jinja2_access": "{{ repo_metadata.repo_role }}, {{ user_preferences.verbosity }}, {% if 'SAP-003' in existing_capabilities %}..."
+        }
+      },
+
+      "generation_variable_type_system": {
+        "description": "Optional type hints for template variables",
+        "location": "src/chora_compose/core/models.py:264",
+
+        "types": {
+          "string": "Text value (default)",
+          "number": "Integer or float",
+          "boolean": "true/false",
+          "array": "List of values",
+          "object": "Nested dictionary"
+        },
+
+        "code_example": {
+          "file": "src/chora_compose/core/models.py:264",
+          "snippet": "class GenerationVariable(BaseModel):\n    name: str\n    variableType: Literal[\"string\", \"number\", \"boolean\", \"array\", \"object\"] = \"string\"\n    source: str\n    default: Optional[str] = None"
+        },
+
+        "usage_example": {
+          "variables": [
+            {"name": "repo_role", "variableType": "string", "source": "inputs.repo_metadata.repo_role"},
+            {"name": "include_examples", "variableType": "boolean", "source": "inputs.user_preferences.include_examples"},
+            {"name": "existing_saps", "variableType": "array", "source": "inputs.existing_capabilities"}
+          ]
+        }
+      },
+
+      "context_merging_behavior": {
+        "description": "How context from multiple sources is combined",
+        "location": "src/chora_compose/generators/jinja2.py:106",
+
+        "merge_order": [
+          "1. Pattern context (from generation_config.context)",
+          "2. Resolved inputs (from InputSource)",
+          "3. Runtime context (passed to generate() call)"
+        ],
+
+        "merge_strategy": "Later sources override earlier sources (dict.update() semantics)",
+
+        "code_example": {
+          "file": "src/chora_compose/generators/jinja2.py:106",
+          "snippet": "merged_context = {}\npattern_context = jinja2_pattern.generation_config.get(\"context\", {})\nmerged_context.update(pattern_context)\nif context:\n    merged_context.update(context)\nresolved_context = self._resolve_context_sources(merged_context)"
+        }
+      },
+
+      "recommendation_for_sap_context": {
+        "suggested_context_fields": {
+          "repo_metadata": {
+            "description": "Target repo characteristics",
+            "fields": ["repo_name", "repo_role", "primary_language", "team_structure"],
+            "source": "external_file from target repo metadata"
+          },
+
+          "existing_capabilities": {
+            "description": "SAPs already adopted",
+            "fields": ["adopted_saps (array of SAP IDs)", "capability_tags"],
+            "source": "external_file from target repo sap-catalog.json, selector: $.adopted_saps[*].id"
+          },
+
+          "user_preferences": {
+            "description": "Generation customization",
+            "fields": ["verbosity (concise|moderate|detailed)", "include_examples (bool)", "technical_depth (beginner|intermediate|advanced)"],
+            "source": "inline_data or external_file from user preferences"
+          },
+
+          "coordination_context": {
+            "description": "Multi-repo coordination needs",
+            "fields": ["coordinates_with (array)", "coordination_mode"],
+            "source": "optional, inline_data or external_file"
+          }
+        },
+
+        "storage_location": "Store context schemas in chora-base repo, reference via external_file source type",
+
+        "versioning": "Version context schemas alongside SAP versions (e.g., sap-004-context-v1.json)"
+      }
+    },
+
+    "Q4_hybrid_storage_generation": {
+      "question": "Can some artifacts be storage-based (canonical hand-written) while others are generation-based?",
+
+      "short_answer": "Yes, partial support via InputSource patterns. Can reference stored content (external_file, ephemeral_output) alongside generated content. Manual orchestration works today, automatic hybrid decision-making would need ~2-4 hours.",
+
+      "current_hybrid_support": {
+        "via_external_file": {
+          "description": "Reference hand-written canonical content from filesystem",
+          "use_case": "SAP-000 (foundational) stays hand-written, referenced by generated SAPs",
+
+          "example": {
+            "sap_004_charter_references_sap_000": {
+              "inputs": {
+                "sources": [
+                  {
+                    "id": "canonical_sap_framework",
+                    "source_type": "external_file",
+                    "source_locator": "chora-base-repo/docs/skilled-awareness/sap-framework/capability-charter.md",
+                    "data_selector": "# SAP Structure",
+                    "required": true
+                  }
+                ]
+              },
+              "generation": {
+                "patterns": [{
+                  "template": "This SAP follows the structure defined in SAP-000:\n\n{{ canonical_sap_framework }}\n\n## Specific to Testing Framework\n\n{{ generated_specific_content }}"
+                }]
+              }
+            }
+          }
+        },
+
+        "via_ephemeral_output": {
+          "description": "Reference previously generated content from ephemeral storage",
+          "use_case": "Some artifacts cached (stable), others regenerated (context-specific)",
+
+          "example": {
+            "hybrid_collection": {
+              "description": "Bronze collection uses stored SAP-000, generates customized SAP-004",
+              "artifact_children": [
+                {
+                  "id": "sap-000-stored",
+                  "path": "configs/content/sap-000-passthrough-content.json",
+                  "note": "passthrough content config that loads from external_file (stored)"
+                },
+                {
+                  "id": "sap-004-generated",
+                  "path": "configs/content/sap-004-charter-content.json",
+                  "note": "generated fresh based on target repo context"
+                }
+              ]
+            }
+          }
+        },
+
+        "via_demonstration_generator": {
+          "description": "Pass-through mode - generate() returns stored content unchanged",
+          "location": "src/chora_compose/generators/demonstration.py",
+
+          "example": {
+            "passthrough_config": {
+              "content_id": "sap-000-passthrough",
+              "generation": {
+                "patterns": [{
+                  "type": "demonstration",
+                  "template": "{{ stored_canonical_content }}",
+                  "variables": [
+                    {
+                      "name": "stored_canonical_content",
+                      "source": "inputs.canonical_sap_000"
+                    }
+                  ]
+                }]
+              },
+              "inputs": {
+                "sources": [
+                  {
+                    "id": "canonical_sap_000",
+                    "source_type": "external_file",
+                    "source_locator": "chora-base/docs/skilled-awareness/sap-framework/capability-charter.md"
+                  }
+                ]
+              }
+            }
+          }
+        }
+      },
+
+      "retrieval_strategy_status": {
+        "description": "retrievalStrategy defined but not enforced in composition",
+        "location": "src/chora_compose/core/models.py:528",
+
+        "defined_but_not_used": {
+          "model": "ContentChildReference has retrievalStrategy field",
+          "values": ["latest", "all", "version", "approved_only"],
+          "problem": "ArtifactComposer._generate_child_content() doesn't check this field",
+          "consequence": "Always regenerates children, never retrieves from ephemeral storage"
+        },
+
+        "code_example": {
+          "file": "src/chora_compose/core/models.py:528",
+          "snippet": "class ContentChildReference(BaseModel):\n    id: str\n    path: str\n    required: bool = True\n    order: Optional[float] = None\n    retrievalStrategy: RetrievalStrategy = RetrievalStrategy.LATEST  # ⚠️ Not enforced\n    conditions: Optional[str] = None"
+        },
+
+        "gap_in_composer": {
+          "file": "src/chora_compose/core/composer.py:180",
+          "current_behavior": "Always calls generator.generate(), never checks if content exists in storage",
+          "missing_logic": "if child.retrievalStrategy == 'latest': try ephemeral_storage.retrieve() first"
+        }
+      },
+
+      "what_wed_need_for_automatic_hybrid": {
+        "wire_retrieval_strategy": {
+          "description": "Make ArtifactComposer honor retrievalStrategy on children",
+          "effort": "2-3 hours",
+          "changes": [
+            "In _generate_child_content(), check child.retrievalStrategy",
+            "If 'latest', try ephemeral_storage.retrieve(child.id, 'latest')",
+            "If found, return stored content (don't regenerate)",
+            "If not found or strategy='fresh', generate as normal"
+          ],
+          "code_location": "src/chora_compose/core/composer.py:180"
+        },
+
+        "staleness_aware_hybrid": {
+          "description": "Automatically decide stored vs generated based on staleness",
+          "effort": "4-6 hours",
+          "changes": [
+            "Track input source hashes in ephemeral metadata",
+            "On retrieval, compare current input hashes to stored metadata hashes",
+            "If mismatch, regenerate (inputs changed)",
+            "If match, use stored (inputs unchanged)"
+          ],
+          "complexity": "Requires dependency tracking infrastructure"
+        },
+
+        "per_child_mode_control": {
+          "description": "Explicit 'stored' vs 'generated' mode on each child",
+          "effort": "1-2 hours",
+          "changes": [
+            "Add generationMode: Literal['stored', 'generated', 'auto'] to ContentChildReference",
+            "If 'stored', always retrieve from storage (error if missing)",
+            "If 'generated', always regenerate",
+            "If 'auto', use retrievalStrategy logic"
+          ]
+        }
+      },
+
+      "workaround_for_pilot": {
+        "manual_hybrid_orchestration": {
+          "approach": "Use external_file source type to reference stored canonical SAPs",
+          "steps": [
+            "1. Hand-written SAPs (SAP-000) stored in chora-base repo",
+            "2. Create passthrough content config that loads via external_file",
+            "3. Generated SAPs (SAP-004) use normal generation patterns",
+            "4. Artifact assembles mix of passthrough + generated children"
+          ],
+
+          "example_bronze_collection": {
+            "canonical_saps_stored": ["SAP-000 (framework)", "SAP-001 (inbox)"],
+            "generated_saps_fresh": ["SAP-004 (testing customized for repo)", "SAP-009 (awareness customized)"],
+            "assembly": "Artifact references 2 passthrough configs + 2 generated configs"
+          }
+        },
+
+        "benefits_of_manual": "Works with existing code, no new features needed, clear and explicit",
+        "limitations_of_manual": "Must create passthrough config for each stored SAP, no automatic decision-making"
+      },
+
+      "collections_as_hybrid": {
+        "description": "Collections (artifact of artifacts) naturally support hybrid",
+        "pattern": "Collection artifact references mix of canonical SAP artifacts + generated SAP artifacts",
+
+        "example_structure": {
+          "bronze_tier_collection": {
+            "type": "artifact",
+            "children": [
+              {"id": "sap-000-artifact", "path": "configs/artifacts/sap-000-canonical.json", "note": "references stored content"},
+              {"id": "sap-001-artifact", "path": "configs/artifacts/sap-001-canonical.json", "note": "references stored content"},
+              {"id": "sap-004-artifact", "path": "configs/artifacts/sap-004-generated.json", "note": "generates fresh for target repo"}
+            ]
+          }
+        }
+      },
+
+      "recommendation_for_pilot": {
+        "start_with_manual_hybrid": "Use external_file for canonical SAPs, generation for customized SAPs",
+        "if_needed_add_retrieval": "Wiring retrievalStrategy is 2-3 hours, pilot-friendly if you discover need",
+        "defer_automatic_decision": "Staleness-based auto-hybrid is complex (4-6 hours), likely not needed for pilot"
+      }
+    },
+
+    "Q5_content_block_storage_location": {
+      "question": "Where should content blocks live: chora-base repo, chora-compose repo, both, or user-defined?",
+
+      "short_answer": "Hybrid (Option C) - Domain content in chora-base, configs in both repos. chora-compose has clear patterns: configs/ for definitions, external_file source for content, ephemeral/ for generated outputs.",
+
+      "existing_storage_patterns": {
+        "content_configs": {
+          "location": "configs/content/{config-id}/{config-id}-content.json",
+          "example": "configs/content/my-feature/my-feature-content.json",
+          "documentation": "docs/how-to/configs/create-content-config.md:76",
+          "purpose": "Define what to generate and how"
+        },
+
+        "artifact_configs": {
+          "location": "configs/artifact/{artifact-id}/{artifact-id}-artifact.json",
+          "example": "configs/artifact/documentation-bundle/documentation-bundle-artifact.json",
+          "purpose": "Define how to assemble multiple content pieces"
+        },
+
+        "draft_configs": {
+          "location": "ephemeral/drafts/{type}/{draft-id}.json",
+          "example": "ephemeral/drafts/content/draft-20251030T153045-a1b2c3.json",
+          "purpose": "Temporary configs before persistence"
+        },
+
+        "generated_content": {
+          "location": "ephemeral/{content_id}/{timestamp}.{format}",
+          "example": "ephemeral/api-docs/2025-10-30T15:30:45.123456+00:00.md",
+          "fallback": "/tmp/chora-ephemeral/ or ${TMPDIR}/chora-ephemeral/",
+          "purpose": "Versioned generated content (cached)"
+        },
+
+        "final_artifacts": {
+          "location": "User-specified in ArtifactConfig.metadata.outputs[].file",
+          "examples": ["docs/MY_FEATURE.md", "README.md", "tests/test_feature.py"],
+          "purpose": "Final output files"
+        }
+      },
+
+      "recommended_hybrid_approach": {
+        "domain_content_in_chora_base": {
+          "what": "Actual content blocks (markdown files, reusable text)",
+          "where": "chora-base repo: docs/content-blocks/testing-framework/*.md",
+          "why": "Domain experts (chora-base maintainers) own and update content",
+          "version_control": "Git history tracks content evolution",
+
+          "examples": [
+            "docs/content-blocks/testing-framework/problem-statement.md",
+            "docs/content-blocks/testing-framework/pytest-setup.md",
+            "docs/content-blocks/testing-framework/coverage-requirements.md",
+            "docs/content-blocks/shared/ci-cd-patterns.md"
+          ]
+        },
+
+        "configs_in_both_repos": {
+          "chora_base_configs": {
+            "what": "Content configs that define SAP generation",
+            "where": "chora-base repo: configs/content/sap-004/*.json",
+            "why": "Chora-base owns SAP structure and content definitions",
+            "examples": [
+              "configs/content/sap-004-charter/sap-004-charter-content.json",
+              "configs/content/sap-004-protocol/sap-004-protocol-content.json"
+            ]
+          },
+
+          "chora_compose_templates": {
+            "what": "Jinja2 templates for SAP artifact structure",
+            "where": "chora-compose repo: templates/sap/*.j2 (if reusable across projects)",
+            "why": "Templates are generation logic, not domain content",
+            "examples": [
+              "templates/sap/charter.md.j2",
+              "templates/sap/protocol.md.j2"
+            ]
+          }
+        },
+
+        "reference_pattern": {
+          "description": "Content configs in chora-base reference content blocks via external_file",
+
+          "example": {
+            "config_location": "chora-base/configs/content/sap-004-charter/sap-004-charter-content.json",
+            "references_content": {
+              "inputs": {
+                "sources": [
+                  {
+                    "id": "problem_statement",
+                    "source_type": "external_file",
+                    "source_locator": "../../docs/content-blocks/testing-framework/problem-statement.md",
+                    "note": "Relative path from config to content block"
+                  },
+                  {
+                    "id": "pytest_setup",
+                    "source_type": "external_file",
+                    "source_locator": "../../docs/content-blocks/testing-framework/pytest-setup.md"
+                  }
+                ]
+              }
+            }
+          }
+        }
+      },
+
+      "remote_content_support": {
+        "git_references": {
+          "description": "Load content from git refs (commits, branches, tags)",
+          "location": "src/chora_compose/core/context_resolver.py:179",
+          "format": "{ref}:{path}",
+          "examples": [
+            "main:README.md (latest README from main branch)",
+            "v1.0.0:docs/charter.md (charter from v1.0.0 tag)",
+            "abc123:content-blocks/pytest.md (content from specific commit)"
+          ],
+
+          "code_example": {
+            "file": "src/chora_compose/core/context_resolver.py:179",
+            "snippet": "def _resolve_git_reference(self, locator: str) -> str:\n    ref, path = locator.split(\":\", 1)\n    result = subprocess.run(\n        [\"git\", \"show\", f\"{ref}:{path}\"],\n        capture_output=True, text=True, check=True\n    )\n    return result.stdout"
+          },
+
+          "use_case": "Reference content blocks from specific chora-base versions"
+        },
+
+        "http_urls_not_supported": {
+          "current_gap": "Cannot reference https://github.com/user/repo/raw/main/content.md",
+          "workaround": "Use git_reference if both repos local, or external_file after git clone",
+          "effort_to_add": "2-3 hours to add HTTP source type"
+        }
+      },
+
+      "version_control_patterns": {
+        "content_versioning": {
+          "approach": "Git history for content blocks in chora-base",
+          "benefits": "Track who changed what when, revert if needed, compare versions",
+          "example": "git log docs/content-blocks/testing-framework/pytest-setup.md"
+        },
+
+        "config_versioning": {
+          "approach": "Evolution metadata in configs + git history",
+          "location": "src/chora_compose/core/models.py:359",
+          "fields": ["stage (draft, review, approved)", "history (array of EvolutionEvent)"],
+
+          "code_example": {
+            "file": "src/chora_compose/core/models.py:359",
+            "snippet": "class Evolution(BaseModel):\n    stage: EvolutionStage = EvolutionStage.DRAFT\n    history: list[EvolutionEvent] = Field(default_factory=list)\n    is_latest: bool = True\n    deprecated_by: Optional[str] = None"
+          }
+        },
+
+        "generated_artifact_versioning": {
+          "approach": "Ephemeral storage with timestamp-based versions",
+          "benefits": "Compare regenerations, track changes over time, retrieve older versions",
+          "example": "ephemeral/sap-004-charter/ contains multiple timestamped versions"
+        }
+      },
+
+      "import_export_mechanisms": {
+        "persist_draft": {
+          "description": "Move config from ephemeral/drafts/ to configs/",
+          "location": "src/chora_compose/storage/ephemeral_config.py:313",
+          "usage": "Draft created via draft_config MCP tool → tested → saved via save_config tool",
+
+          "code_example": {
+            "file": "src/chora_compose/storage/ephemeral_config.py:313",
+            "snippet": "def persist_draft(self, draft_id: str, config_id: str) -> Path:\n    draft = self.get_draft(draft_id)\n    config_root = Path(\"configs\") / draft.config_type / config_id\n    config_filename = f\"{config_id}-{draft.config_type}.json\"\n    config_path = config_root / config_filename\n    # Atomic write with tempfile\n    return config_path"
+          }
+        },
+
+        "config_loader": {
+          "description": "Load configs from filesystem with validation",
+          "location": "src/chora_compose/core/config_loader.py",
+          "methods": ["load_config(path)", "load_content_config(id)", "load_artifact_config(id)"],
+          "validation": "JSON Schema validation + Pydantic model validation"
+        },
+
+        "no_bulk_import_export": {
+          "current_gap": "No tool to export all configs as package or import from external source",
+          "workaround": "Use git clone/submodule for cross-repo config sharing",
+          "use_case_for_sap": "chora-base repo contains SAP configs, target repos clone/reference"
+        }
+      },
+
+      "recommendation_for_sap_pilot": {
+        "content_block_storage": {
+          "location": "chora-base/docs/content-blocks/",
+          "structure": {
+            "sap_specific": "docs/content-blocks/testing-framework/*.md (SAP-004 specific)",
+            "shared": "docs/content-blocks/shared/*.md (reused across SAPs)",
+            "organized_by_sap": "docs/content-blocks/{sap-name}/ directories"
+          },
+          "ownership": "chora-base team (domain experts) maintains content",
+          "version_control": "Git history in chora-base tracks content evolution"
+        },
+
+        "config_storage": {
+          "content_configs": {
+            "location": "chora-base/configs/content/sap-004-*/",
+            "files": [
+              "sap-004-charter/sap-004-charter-content.json",
+              "sap-004-protocol/sap-004-protocol-content.json",
+              "sap-004-guide/sap-004-guide-content.json",
+              "sap-004-blueprint/sap-004-blueprint-content.json",
+              "sap-004-ledger/sap-004-ledger-content.json"
+            ]
+          },
+
+          "artifact_config": {
+            "location": "chora-base/configs/artifact/sap-004-testing-framework/",
+            "file": "sap-004-testing-framework-artifact.json",
+            "references": "5 content configs via child references"
+          },
+
+          "templates": {
+            "option_a_inline": "Templates embedded in content config generation.patterns.template field",
+            "option_b_external": "Templates in chora-base/templates/sap/*.j2, referenced via template_path",
+            "recommendation": "Start with inline (option A), extract to files if reuse emerges"
+          }
+        },
+
+        "cross_repo_reference": {
+          "scenario": "Target repo (e.g., my-mcp-server) wants to generate SAP-004",
+          "approach_1_git_submodule": "Add chora-base as git submodule, reference configs via relative path",
+          "approach_2_git_reference": "Use source_type: git_reference with chora-base repo URL",
+          "approach_3_copy_configs": "Copy configs from chora-base to target repo (loses upstream updates)",
+          "recommendation": "Approach 1 (submodule) for pilot - clean, version-controlled"
+        }
+      }
+    }
+  },
+
+  "pilot_execution_plan": {
+    "week_1_decomposition": {
+      "what_you_now_know": [
+        "Content block architecture: Use ContentElement with hybrid template slots + modular blocks",
+        "Context structure: Define custom fields via InputSource (repo_metadata, existing_capabilities, user_preferences)",
+        "Storage locations: Content blocks in chora-base/docs/content-blocks/, configs in chora-base/configs/",
+        "Hybrid approach: Reference stored content via external_file, generate customized content",
+        "Caching: Use existing patterns (force parameter), defer advanced caching to Phase 2"
+      ],
+
+      "decomposition_steps": [
+        "1. Select SAP-004 artifacts (charter, protocol, guide, blueprint, ledger)",
+        "2. Decompose each artifact into 5-7 ContentElements (problem-statement, solution-approach, etc.)",
+        "3. Extract shared/reusable blocks into separate markdown files (pytest-setup.md, coverage-requirements.md)",
+        "4. Create 5 content configs (one per artifact) in chora-base/configs/content/sap-004-*/",
+        "5. Create 1 artifact config that references 5 content configs",
+        "6. Define context schema (repo_metadata.json, user_preferences.json)"
+      ],
+
+      "expected_output": {
+        "content_blocks": "~10-15 markdown files in docs/content-blocks/testing-framework/",
+        "content_configs": "5 JSON files in configs/content/sap-004-*/",
+        "artifact_config": "1 JSON file in configs/artifact/sap-004-testing-framework/",
+        "context_schemas": "Example context files for testing"
+      }
+    },
+
+    "during_pilot_flexibility": {
+      "discovery_mode": "Experiment with patterns, adjust based on what works",
+      "iteration_expected": "Decomposition may require 2-3 rounds of refinement",
+      "feature_additions": "If you discover need for force parameter or retrievalStrategy wiring, we can add (2-4 hours)",
+      "no_commitment": "Pilot is exploration - if patterns don't work, we adjust or acknowledge misalignment"
+    }
+  },
+
+  "gaps_and_effort_estimates": {
+    "missing_features_summary": {
+      "force_in_artifact_composer": {
+        "status": "Missing",
+        "effort": "2-3 hours",
+        "priority": "Low for pilot (workaround exists)",
+        "description": "Add force parameter to ArtifactComposer.assemble() to control regeneration"
+      },
+
+      "retrieval_strategy_wiring": {
+        "status": "Partial (defined but not enforced)",
+        "effort": "2-4 hours",
+        "priority": "Medium if hybrid orchestration needed",
+        "description": "Make ArtifactComposer honor retrievalStrategy on ContentChildReference"
+      },
+
+      "staleness_detection": {
+        "status": "Missing",
+        "effort": "6-8 hours",
+        "priority": "Low (complex, likely not needed)",
+        "description": "Automatic regeneration when input sources change"
+      },
+
+      "http_url_sources": {
+        "status": "Missing",
+        "effort": "2-3 hours",
+        "priority": "Low (git_reference works for most cases)",
+        "description": "Support https:// URLs in source_locator"
+      }
+    },
+
+    "what_doesnt_need_building": {
+      "content_architecture": "✅ Exists and works well",
+      "context_flexibility": "✅ Fully flexible, no changes needed",
+      "storage_patterns": "✅ Clear patterns exist",
+      "hybrid_via_external_file": "✅ Works today",
+      "versioned_ephemeral_storage": "✅ Production-ready"
+    }
+  },
+
+  "architectural_alignment_assessment": {
+    "strong_alignment": [
+      "Multi-tier composition (elements → content → artifact → collection) matches your SAP → Collection → Collection-of-Collections vision",
+      "Hybrid storage + generation supported via InputSource patterns",
+      "Context-aware generation is core capability (Jinja2 + context)",
+      "Caching and versioning infrastructure exists (ephemeral storage)",
+      "Modular block reusability via child references"
+    ],
+
+    "minor_gaps": [
+      "Caching terminology and control (use 'force: bool', can enhance)",
+      "retrievalStrategy not wired (easy addition)",
+      "No automatic staleness detection (complex, likely not needed)"
+    ],
+
+    "no_architectural_conflicts": "Your vision fits within chora-compose architecture. Gaps are feature additions, not design conflicts."
+  },
+
+  "response_to_your_questions": {
+    "Q1_by_week_1": "Answered - Use existing force parameter pattern, defer advanced caching",
+    "Q2_by_week_1": "Answered - Hybrid template slots + modular blocks, ContentElement structure",
+    "Q3_during_pilot": "Answered - Fully flexible InputSource, define any context fields needed",
+    "Q4_during_pilot": "Answered - Hybrid via external_file works, retrievalStrategy wiring if needed (2-4 hours)",
+    "Q5_during_pilot": "Answered - Hybrid storage (content in chora-base, configs in both, generated in ephemeral)"
+  },
+
+  "next_steps": {
+    "your_side": [
+      "Begin SAP-004 decomposition using ContentElement pattern",
+      "Store content blocks in chora-base/docs/content-blocks/testing-framework/",
+      "Create content configs referencing blocks via external_file",
+      "Define context schemas (repo_metadata, user_preferences)",
+      "Share initial configs for review/iteration"
+    ],
+
+    "our_side": [
+      "Available for questions during decomposition",
+      "Review configs and provide feedback",
+      "Add missing features if specific needs emerge (2-4 hours as needed)",
+      "Iterate on patterns based on pilot learnings"
+    ],
+
+    "collaboration_mode": "Async via inbox protocol or GitHub issues, sync call if helpful"
+  },
+
+  "tone": "Transparent and technical. We've given you honest assessment of what exists, what doesn't, and effort estimates. No overselling - strong foundation with pilot-friendly gaps.",
+
+  "appreciation": "Thank you for the detailed architectural questions! This level of specificity helps ensure we're aligned on approach before decomposition begins. Looking forward to the pilot."
+}

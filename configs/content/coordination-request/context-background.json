@@ -1,0 +1,70 @@
+{
+  "$schema": "https://chora-compose.dev/schemas/content-config.json",
+  "name": "context-background",
+  "version": "1.0.0",
+  "description": "Situational context explaining why this coordination request exists (narrative foundation)",
+  "priority": "HIGH",
+  "presence_frequency": "100%",
+
+  "content_element": {
+    "name": "context-background",
+    "format": "json",
+    "example_output": {
+      "context": {
+        "background": "chora-base maintains SAP-001 (Inbox Coordination Protocol), which defines a 3-tier intake system for coordination requests, implementation tasks, and strategic proposals. Currently, creating these artifacts is a manual process: developers hand-craft JSON files with 15-20 required fields, ensuring schema compliance, consistent formatting, and proper event emission. While this works, it's time-intensive (30-60 minutes per coordination request) and error-prone.\n\nWe recently learned about chora-compose through ecosystem discussions and were intrigued by its approach to template-driven content generation. Our initial understanding was limited—we saw references in SAP-017/018 that suggested Docker orchestration, which didn't seem relevant. However, deeper research revealed that chora-compose is actually a content generation framework with 17 production generators and MCP integration, which could potentially automate our inbox artifact creation.\n\nBefore investing in integration work, we want to explore whether chora-compose is technically feasible and strategically aligned for inbox artifact automation. This request seeks your expertise in assessing compatibility between our SAP-001 schemas and your content generation architecture, understanding effort required, and determining whether a pilot makes sense for both teams."
+      }
+    }
+  },
+
+  "generation": {
+    "pattern": "ai_augmented",
+    "template_source": {
+      "type": "file",
+      "path": "docs/content-blocks/inbox-coordination/context-background.md",
+      "section": "Three-Paragraph Structure"
+    },
+    "placeholders": {
+      "context.background": {
+        "source": "ai_generation",
+        "input": ["context.purpose", "context.background", "context.deliverables", "context.from_repo", "context.to_repo"],
+        "guidance": "Generate a 2-4 paragraph narrative explaining:\n\nParagraph 1 (Current Situation):\n- What exists today in the requesting repository\n- Current capabilities and constraints\n- What the team has been doing\n\nParagraph 2 (Problem or Opportunity):\n- What changed or what was discovered\n- The gap between current state and desired state\n- Why the status quo is insufficient\n\nParagraph 3 (Why This Request):\n- How this coordination request addresses the gap\n- What is specifically being sought from the recipient\n- Expected outcome or next steps\n\nTone guidelines:\n- External repos (from_repo ≠ to_repo): Humble, collaborative, explain assumptions, acknowledge recipient expertise\n- Internal coordination (from_repo == to_repo): More direct and concise, shared context assumed\n- Accessible writing: Define acronyms, explain context, use concrete examples\n- Self-contained: Assume recipient has limited knowledge of requesting project\n\nTarget length: 200-400 words for exploratory, 150-300 words for prescriptive/peer review.\n\nIf user provided context.background, use it as-is. If user provided only context.purpose, expand purpose into full background narrative.",
+        "constraints": {
+          "minLength": 100,
+          "maxLength": 1000,
+          "preferredLength": "200-400"
+        },
+        "examples_by_type": {
+          "exploratory": "3 paragraphs: current manual process → discovery journey → request goal",
+          "prescriptive": "3 paragraphs: current limitation → blocker → implementation request",
+          "peer_review": "3 paragraphs: work completed → desire for validation → review request"
+        }
+      }
+    }
+  },
+
+  "validation": {
+    "required_fields": ["context.background"],
+    "field_constraints": {
+      "context.background": {
+        "type": "string",
+        "minLength": 100,
+        "maxLength": 1000,
+        "error_message": "context.background must be 100-1000 characters (narrative paragraphs)"
+      }
+    },
+    "quality_checks": {
+      "warn_if_too_short": 100,
+      "warn_if_too_long": 1000,
+      "check_structure": "Should be 2-4 paragraphs (separated by \\n\\n)"
+    }
+  },
+
+  "metadata": {
+    "reusability": "universal",
+    "reusability_note": "Pattern applies across artifact types, content varies by request",
+    "stability": "stable",
+    "stability_note": "Rarely changes after initial creation",
+    "related_blocks": ["context-rationale", "exploratory-questions", "context-boundaries"],
+    "documentation": "docs/content-blocks/inbox-coordination/context-background.md"
+  }
+}

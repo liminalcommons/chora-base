@@ -1,0 +1,34 @@
+{
+  "type": "coordination",
+  "request_id": "PENDING",
+  "title": "Add Ecosystem Discovery CLI Tool",
+  "from_repo": "github.com/liminalcommons/chora-base",
+  "to_repo": "github.com/liminalcommons/chora-base",
+  "priority": "P2",
+  "urgency": "planned",
+  "deliverables": [
+    "CLI tool that queries capability registry and returns matching repos by capability name",
+    "Service discovery API supporting fuzzy search across all registered SAP-001 capabilities",
+    "Automated registry validation ensuring all repos have valid capability declarations",
+    "Integration tests verifying discovery across minimum 3 test repositories",
+    "Documentation with usage examples for finding repos by capability type",
+    "Performance benchmark supporting sub-second queries across 50+ registered repos",
+    "GitHub Action workflow for automatic registry updates on capability changes",
+    "Migration guide for converting existing manual discovery workflows to automated CLI"
+  ],
+  "acceptance_criteria": [
+    "CLI tool discovers repos by querying \u22653 capability types from registry files",
+    "Discovery completes in <5 seconds for ecosystem of 20 repos",
+    "Tool outputs structured JSON with repo name, capabilities, and contact info",
+    "Command supports filtering by capability tags with \u226590% accuracy",
+    "Documentation includes 3+ usage examples for common discovery scenarios",
+    "Tool validates registry YAML format and reports errors with line numbers",
+    "Integration test suite covers \u22655 discovery scenarios with 100% pass rate",
+    "CLI returns helpful error messages for 404/network failures within 2 seconds"
+  ],
+  "created": "2025-11-02",
+  "context": {
+    "background": "Currently discovery is manual via capability registry YAML files. Repos must manually grep or search to find who provides specific capabilities. This doesn't scale beyond 5-10 repos.",
+    "rationale": "Enable seamless repo discovery for coordination. Support the vision of 20+ repo ecosystem where agents can automatically find the right repo to coordinate with. Reduce friction in cross-repo collaboration."
+  }
+}

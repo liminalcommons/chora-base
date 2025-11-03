@@ -1,0 +1,78 @@
+{
+  "type": "coordination",
+  "request_id": "COORD-2025-004",
+  "title": "Complete Bidirectional Translation Layer Integration (SAP-009 Enhancement)",
+  "created": "2025-10-31",
+  "from_repo": "chora-base",
+  "to_repo": "chora-base",
+  "priority": "P2",
+  "urgency": "next_sprint",
+  "requested_by": "Victor Piper + Claude Code",
+  "requested_delivery": "Sprint 5 or 6 (Q1 2026)",
+
+  "context": {
+    "background": "Foundation tools for bidirectional translation layer are complete (Phase 1 of BIDIRECTIONAL_COMMUNICATION.md): intent-router.py, chora-search.py, suggest-next.py, INTENT_PATTERNS.yaml, GLOSSARY.md, user-preferences.yaml.template. These tools enable mutual ergonomics between conversational input and procedural execution. However, integration work (Phase 2-4) remains incomplete - agents don't yet 'just know' how to use these tools as native and second nature. This coordination request establishes governance for completing the integration following proper DDD → BDD → TDD lifecycle.",
+
+    "related_sap": "SAP-009 (agent-awareness) v1.0.0 → v1.1.0",
+
+    "traceability_context": "Emerged from exploration of traceability applicability across SAPs. User requested dogfooding approach to prove value and integrate into repo vision/strategy/planning. After initial foundation work, user correctly noted we must 'use our process and including governance and administrative doc updates where appropriate' - hence this coordination request following proper intake protocol."
+  },
+
+  "deliverables": [
+    "Enhanced SAP-009 protocol-spec.md (Section 9: Bidirectional Translation Layer)",
+    "Enhanced SAP-009 awareness-guide.md (Integration patterns for generic agents)",
+    "Enhanced SAP-009 ledger.md (v1.1.0 adoption tracking)",
+    "Enhanced root AGENTS.md (tool discovery and usage patterns) - ALREADY COMPLETE",
+    "Enhanced domain AGENTS.md files (5 SAPs: 001, 004, 009, 012, 013) with user signal patterns",
+    "Integration of suggestion engine with inbox protocol (proactive context-aware suggestions)",
+    "BDD scenarios validating intent recognition, preference adaptation, pattern learning",
+    "Test coverage ≥85% for integration code",
+    "CHANGELOG.md entry for v4.1.3 release",
+    "SAP Index update (SAP-009 v1.0.0 → v1.1.0)",
+    "Event log entries with CHORA_TRACE_ID='coord-2025-004-bidirectional'"
+  ],
+
+  "acceptance_criteria": [
+    "Intent recognition accuracy ≥80% on test query set (30+ queries)",
+    "Generic agents (Claude, Cursor, etc.) can discover and use tools via documentation alone",
+    "Tools gracefully degrade (missing tool → fall back to documented patterns)",
+    "User preferences successfully adapt agent behavior across all 100+ config options",
+    "Pattern learning captures new variations without breaking existing patterns",
+    "Suggestion engine provides context-aware recommendations based on project state",
+    "All BDD scenarios pass (intent routing, glossary search, context analysis, preference loading)",
+    "Test coverage ≥85%",
+    "No lint/type errors",
+    "Documentation follows Diátaxis framework",
+    "SAP-009 enhancement properly versioned (v1.0.0 → v1.1.0)",
+    "CHANGELOG follows semantic versioning (v4.1.2 → v4.1.3 PATCH release)"
+  ],
+
+  "dependencies": [
+    "Foundation tools complete (DONE: Phase 1 of BIDIRECTIONAL_COMMUNICATION.md)",
+    "Root AGENTS.md updated with tool discovery patterns (DONE: +214 lines at 732-944)",
+    ".gitignore updated to exclude user-specific configs (DONE: +4 lines)"
+  ],
+
+  "estimated_effort": "16-24 hours over 1-2 sprints",
+
+  "trace_id": "coord-2025-004-bidirectional",
+
+  "related": {
+    "proposals": [],
+    "rfcs": [],
+    "issues": [],
+    "documentation": [
+      "docs/dev-docs/workflows/BIDIRECTIONAL_COMMUNICATION.md (implementation checklist)",
+      "docs/dev-docs/patterns/INTENT_PATTERNS.yaml (24 patterns)",
+      "docs/GLOSSARY.md (75+ terms, 14 categories)",
+      ".chora/user-preferences.yaml.template (100+ config options)"
+    ],
+    "saps": [
+      "SAP-001 (inbox-protocol) - suggestion engine integration",
+      "SAP-004 (testing-framework) - coverage validation",
+      "SAP-009 (agent-awareness) - PRIMARY enhancement target",
+      "SAP-012 (development-lifecycle) - DDD→BDD→TDD workflow",
+      "SAP-013 (documentation-framework) - Diátaxis adherence"
+    ]
+  }
+}

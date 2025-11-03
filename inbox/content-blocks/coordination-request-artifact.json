@@ -1,0 +1,103 @@
+{
+  "type": "artifact",
+  "id": "coordination-request-artifact",
+  "schemaRef": {
+    "uri": "file://schemas/artifact/v3.1/schema.json",
+    "version": "3.1"
+  },
+  "metadata": {
+    "type": "coordination",
+    "version": "1.0",
+    "title": "Coordination Request Artifact",
+    "purpose": "Assembles complete coordination request from content blocks",
+    "outputs": [
+      {
+        "file": "inbox/draft/coordination-request.json",
+        "format": "json"
+      }
+    ],
+    "compositionStrategy": "concat"
+  },
+  "content": {
+    "children": [
+      {
+        "id": "content-block-type",
+        "path": "inbox/content-blocks/content-block-type.json",
+        "required": true,
+        "order": 1
+      },
+      {
+        "id": "content-block-request_id",
+        "path": "inbox/content-blocks/content-block-request_id.json",
+        "required": true,
+        "order": 2
+      },
+      {
+        "id": "content-block-title",
+        "path": "inbox/content-blocks/content-block-title.json",
+        "required": true,
+        "order": 3
+      },
+      {
+        "id": "content-block-from_repo",
+        "path": "inbox/content-blocks/content-block-from_repo.json",
+        "required": true,
+        "order": 4
+      },
+      {
+        "id": "content-block-to_repo",
+        "path": "inbox/content-blocks/content-block-to_repo.json",
+        "required": true,
+        "order": 5
+      },
+      {
+        "id": "content-block-priority",
+        "path": "inbox/content-blocks/content-block-priority.json",
+        "required": true,
+        "order": 6
+      },
+      {
+        "id": "content-block-urgency",
+        "path": "inbox/content-blocks/content-block-urgency.json",
+        "required": true,
+        "order": 7
+      },
+      {
+        "id": "content-block-deliverables",
+        "path": "inbox/content-blocks/content-block-deliverables.json",
+        "required": true,
+        "order": 8
+      },
+      {
+        "id": "content-block-acceptance_criteria",
+        "path": "inbox/content-blocks/content-block-acceptance_criteria.json",
+        "required": true,
+        "order": 9
+      },
+      {
+        "id": "content-block-created",
+        "path": "inbox/content-blocks/content-block-created.json",
+        "required": true,
+        "order": 10
+      },
+      {
+        "id": "content-block-context_background",
+        "path": "inbox/content-blocks/content-block-context_background.json",
+        "required": true,
+        "order": 11
+      },
+      {
+        "id": "content-block-context_rationale",
+        "path": "inbox/content-blocks/content-block-context_rationale.json",
+        "required": false,
+        "order": 12
+      },
+      {
+        "id": "content-block-estimated_effort",
+        "path": "inbox/content-blocks/content-block-estimated_effort.json",
+        "required": false,
+        "order": 13
+      }
+    ]
+  }
+}

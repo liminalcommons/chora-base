@@ -1,0 +1,295 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://chora-base.dev/schemas/coordination-request.json",
+  "title": "SAP-001 Inbox Coordination Request",
+  "description": "Schema for coordination requests in the SAP-001 Inbox Coordination Protocol",
+  "type": "object",
+  "required": [
+    "type",
+    "request_id",
+    "title",
+    "from_repo",
+    "to_repo",
+    "priority",
+    "urgency",
+    "deliverables",
+    "acceptance_criteria",
+    "created",
+    "context"
+  ],
+  "properties": {
+    "type": {
+      "type": "string",
+      "const": "coordination",
+      "description": "Artifact type identifier"
+    },
+    "request_id": {
+      "type": "string",
+      "pattern": "^COORD-[0-9]{4}-[0-9]{3}$",
+      "description": "Unique request identifier (e.g., COORD-2025-003)"
+    },
+    "title": {
+      "type": "string",
+      "minLength": 10,
+      "maxLength": 120,
+      "description": "Concise, descriptive title (50-80 characters preferred)"
+    },
+    "from_repo": {
+      "type": "string",
+      "pattern": "^github\\.com/[a-zA-Z0-9_-]+/[a-zA-Z0-9_-]+$",
+      "description": "Source repository (e.g., github.com/liminalcommons/chora-base)"
+    },
+    "to_repo": {
+      "type": "string",
+      "pattern": "^github\\.com/[a-zA-Z0-9_-]+/[a-zA-Z0-9_-]+$",
+      "description": "Destination repository"
+    },
+    "priority": {
+      "type": "string",
+      "enum": ["P0", "P1", "P2"],
+      "description": "Priority level: P0 (critical), P1 (high), P2 (normal)"
+    },
+    "urgency": {
+      "type": "string",
+      "enum": ["blocks_sprint", "next_sprint", "backlog"],
+      "description": "Timeline urgency for scheduling"
+    },
+    "deliverables": {
+      "type": "array",
+      "minItems": 1,
+      "maxItems": 20,
+      "items": {
+        "type": "string",
+        "minLength": 10,
+        "maxLength": 500
+      },
+      "description": "Concrete outputs expected from this coordination"
+    },
+    "acceptance_criteria": {
+      "type": "array",
+      "minItems": 1,
+      "maxItems": 30,
+      "items": {
+        "type": "string",
+        "minLength": 10,
+        "maxLength": 500
+      },
+      "description": "Measurable success conditions"
+    },
+    "created": {
+      "type": "string",
+      "format": "date",
+      "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}$",
+      "description": "Creation date (YYYY-MM-DD)"
+    },
+    "context": {
+      "type": "object",
+      "required": ["background"],
+      "properties": {
+        "background": {
+          "type": "string",
+          "minLength": 50,
+          "maxLength": 5000,
+          "description": "Situational context narrative (200-400 words for exploratory, 100-200 for prescriptive)"
+        },
+        "rationale": {
+          "type": "string",
+          "minLength": 50,
+          "maxLength": 3000,
+          "description": "Decision reasoning (alternatives → chosen → criteria)"
+        },
+        "not_requesting": {
+          "type": "string",
+          "minLength": 30,
+          "maxLength": 500,
+          "description": "Scope boundaries - what we are NOT requesting"
+        }
+      },
+      "additionalProperties": false
+    },
+    "trace_id": {
+      "type": "string",
+      "pattern": "^[a-z0-9]+(-[a-z0-9]+)*-[0-9]{4}$",
+      "description": "Correlation identifier (kebab-case-name-YYYY)"
+    },
+    "estimated_effort": {
+      "type": "string",
+      "pattern": "^[0-9]+-[0-9]+ (hours|days|weeks)$",
+      "description": "Effort estimation (e.g., '12-18 hours', '2-3 days')"
+    },
+    "timeline": {
+      "oneOf": [
+        {
+          "type": "string",
+          "description": "Simple timeline description"
+        },
+        {
+          "type": "object",
+          "properties": {
+            "needed_by": {
+              "type": "string",
+              "format": "date",
+              "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}$"
+            },
+            "milestones": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "required": ["date", "description"],
+                "properties": {
+                  "date": {
+                    "type": "string",
+                    "format": "date"
+                  },
+                  "description": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          }
+        }
+      ],
+      "description": "Timeline, milestones, or deadlines"
+    },
+    "dependencies": {
+      "type": "array",
+      "items": {
+        "oneOf": [
+          {
+            "type": "string",
+            "description": "Simple dependency description"
+          },
+          {
+            "type": "object",
+            "required": ["description"],
+            "properties": {
+              "description": {
+                "type": "string"
+              },
+              "status": {
+                "type": "string",
+                "enum": ["completed", "in_progress", "pending"]
+              },
+              "blocks": {
+                "type": "boolean"
+              }
+            }
+          }
+        ]
+      },
+      "description": "Prerequisites or blocking work"
+    },
+    "related": {
+      "type": "array",
+      "items": {
+        "oneOf": [
+          {
+            "type": "string",
+            "description": "Simple related item reference"
+          },
+          {
+            "type": "object",
+            "required": ["id", "relationship"],
+            "properties": {
+              "id": {
+                "type": "string"
+              },
+              "relationship": {
+                "type": "string",
+                "enum": ["relates_to", "extends", "supersedes", "informs", "depends_on"]
+              },
+              "description": {
+                "type": "string"
+              }
+            }
+          }
+        ]
+      },
+      "description": "Related work providing context"
+    },
+    "questions": {
+      "oneOf": [
+        {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "pattern": ".*\\?$"
+          },
+          "description": "Flat array of questions ending with '?'"
+        },
+        {
+          "type": "object",
+          "patternProperties": {
+            "^.+$": {
+              "type": "array",
+              "items": {
+                "type": "string",
+                "pattern": ".*\\?$"
+              }
+            }
+          },
+          "description": "Questions grouped by topic"
+        }
+      ],
+      "description": "Questions to be answered (exploratory requests)"
+    },
+    "collaboration_modes": {
+      "type": "array",
+      "minItems": 2,
+      "maxItems": 5,
+      "items": {
+        "type": "string",
+        "minLength": 50,
+        "maxLength": 500
+      },
+      "description": "Engagement level options (exploratory external requests)"
+    }
+  },
+  "additionalProperties": false,
+  "examples": [
+    {
+      "type": "coordination",
+      "request_id": "COORD-2025-003",
+      "title": "Exploring chora-compose Integration for Inbox Automation",
+      "from_repo": "github.com/liminalcommons/chora-base",
+      "to_repo": "github.com/liminalcommons/chora-compose",
+      "priority": "P2",
+      "urgency": "backlog",
+      "deliverables": [
+        "Feasibility assessment of chora-compose for coordination request generation",
+        "Comparison of template-based vs demonstration-based generation approaches",
+        "Recommendations for integration architecture",
+        "Pilot plan for 4-week evaluation"
+      ],
+      "acceptance_criteria": [
+        "Feasibility assessment addresses ≥3 key integration challenges",
+        "Comparison evaluates ≥2 generation approaches with examples",
+        "Recommendations include specific architecture diagrams",
+        "Pilot plan defines measurable success criteria with ≥80% quality threshold"
+      ],
+      "created": "2025-11-02",
+      "context": {
+        "background": "chora-base uses SAP-001 Inbox Coordination Protocol with 3-tier intake (coordination, task, proposal). Creating coordination requests manually takes 30-60 minutes. chora-compose is a content generation framework with 17 production generators and MCP integration. This exploration assesses whether chora-compose can reduce coordination request generation time to 5-10 minutes while maintaining ≥80% quality.",
+        "rationale": "We considered three approaches: (1) manual templates, (2) chora-compose integration, (3) custom generator. chora-compose offers reusable content blocks, MCP integration, and active maintenance. We chose exploratory approach to validate feasibility before committing to implementation."
+      },
+      "trace_id": "chora-compose-inbox-integration-2025",
+      "estimated_effort": "12-18 hours",
+      "questions": {
+        "Architecture and Compatibility": [
+          "Can chora-compose support SAP-001's 18 required fields?",
+          "How do ContentElements map to our artifact types?"
+        ],
+        "Generation Quality": [
+          "What quality level can we expect from template-based generation?",
+          "Can we achieve ≥80% quality threshold?"
+        ]
+      },
+      "collaboration_modes": [
+        "Deep Collaboration: Joint exploration of integration architecture with regular sync meetings. Estimated effort: 15-20 hours.",
+        "Expert Consultation: Guidance via async discussion on key technical decisions. Estimated effort: 8-12 hours.",
+        "High-Level Guidance: Quick assessment of feasibility and high-level recommendations. Estimated effort: 1-2 hours."
+      ]
+    }
+  ]
+}

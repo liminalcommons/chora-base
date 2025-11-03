@@ -1,0 +1,184 @@
+# Lighthouse CI GitHub Actions Workflow
+#
+# SAP-025: React Performance Optimization
+#
+# This workflow runs Lighthouse CI on every pull request to ensure
+# performance budgets are met.
+#
+# Core Web Vitals targets:
+# - LCP (Largest Contentful Paint) ≤ 2.5s
+# - INP (Interaction to Next Paint) ≤ 200ms (via TBT proxy)
+# - CLS (Cumulative Layout Shift) ≤ 0.1
+#
+# @see https://github.com/GoogleChrome/lighthouse-ci/blob/main/docs/getting-started.md
+
+name: Lighthouse CI
+
+on:
+  pull_request:
+    branches: [main, develop]
+  push:
+    branches: [main]
+  # Allow manual triggering
+  workflow_dispatch:
+
+jobs:
+  lighthouse:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+
+    steps:
+      # ============================================
+      # 1. CHECKOUT CODE
+      # ============================================
+      - name: Checkout code
+        uses: actions/checkout@v5
+        with:
+          # Fetch full git history (for commit comparisons)
+          fetch-depth: 0
+
+      # ============================================
+      # 2. SETUP NODE.JS
+      # ============================================
+      - name: Setup Node.js
+        uses: actions/setup-node@v5
+        with:
+          node-version: '22'
+          # Cache npm dependencies for faster builds
+          cache: 'npm'
+
+      # ============================================
+      # 3. INSTALL DEPENDENCIES
+      # ============================================
+      - name: Install dependencies
+        run: npm ci
+
+      # ============================================
+      # 4. BUILD APPLICATION
+      # ============================================
+      - name: Build application
+        run: npm run build
+        env:
+          # Set production environment
+          NODE_ENV: production
+          # Disable analytics during CI (faster builds)
+          NEXT_TELEMETRY_DISABLED: 1
+
+      # ============================================
+      # 5. RUN LIGHTHOUSE CI
+      # ============================================
+      - name: Run Lighthouse CI
+        uses: treosh/lighthouse-ci-action@v12
+        with:
+          # URLs to test
+          urls: |
+            http://localhost:3000/
+            http://localhost:3000/dashboard
+            http://localhost:3000/about
+
+          # Budget path (performance budgets)
+          budgetPath: ./ci/lighthouse-budget.json
+
+          # Configuration file
+          configPath: ./ci/lighthouserc.json
+
+          # Upload artifacts (reports)
+          uploadArtifacts: true
+
+          # Temporary public storage (free, 7-day retention)
+          temporaryPublicStorage: true
+
+          # Number of runs (median of 3)
+          runs: 3
+
+        env:
+          # GitHub token for API access
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      # ============================================
+      # 6. UPLOAD LIGHTHOUSE REPORTS (OPTIONAL)
+      # ============================================
+      - name: Upload Lighthouse reports
+        uses: actions/upload-artifact@v5
+        if: always()
+        with:
+          name: lighthouse-reports
+          path: .lighthouseci
+          retention-days: 7
+
+      # ============================================
+      # 7. COMMENT ON PR (OPTIONAL)
+      # ============================================
+      - name: Comment Lighthouse results on PR
+        uses: actions/github-script@v7
+        if: github.event_name == 'pull_request'
+        with:
+          script: |
+            const fs = require('fs');
+            const results = JSON.parse(
+              fs.readFileSync('.lighthouseci/manifest.json', 'utf8')
+            );
+
+            const comment = `
+            ## 🚀 Lighthouse CI Results
+
+            | Metric | Score |
+            |--------|-------|
+            | Performance | ${results[0].summary.performance * 100}% |
+            | Accessibility | ${results[0].summary.accessibility * 100}% |
+            | Best Practices | ${results[0].summary['best-practices'] * 100}% |
+            | SEO | ${results[0].summary.seo * 100}% |
+
+            **Core Web Vitals:**
+            - LCP: ${results[0].jsonPath.audits['largest-contentful-paint'].displayValue}
+            - TBT: ${results[0].jsonPath.audits['total-blocking-time'].displayValue}
+            - CLS: ${results[0].jsonPath.audits['cumulative-layout-shift'].displayValue}
+
+            [View Full Report](${results[0].url})
+            `;
+
+            github.rest.issues.createComment({
+              issue_number: context.issue.number,
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              body: comment
+            });
+
+# ============================================
+# CONFIGURATION NOTES
+# ============================================
+
+# ENVIRONMENT VARIABLES:
+# - NODE_ENV: Set to 'production' for accurate results
+# - NEXT_TELEMETRY_DISABLED: Disable Next.js telemetry (faster builds)
+# - GITHUB_TOKEN: Automatically provided by GitHub Actions
+
+# PERFORMANCE BUDGETS:
+# Edit ci/lighthouse-budget.json to adjust budgets
+
+# LIGHTHOUSE CONFIG:
+# Edit ci/lighthouserc.json to adjust Lighthouse settings
+
+# SCHEDULE (OPTIONAL):
+# Run Lighthouse CI daily:
+# on:
+#   schedule:
+#     - cron: '0 0 * * *'  # Daily at midnight UTC
+
+# SLACK NOTIFICATIONS (OPTIONAL):
+# Send results to Slack:
+# - name: Notify Slack
+#   uses: 8398a7/action-slack@v3
+#   if: always()
+#   with:
+#     status: ${{ job.status }}
+#     webhook_url: ${{ secrets.SLACK_WEBHOOK }}
+
+# VERCEL DEPLOYMENT (OPTIONAL):
+# Test production deployment:
+# - name: Deploy to Vercel
+#   uses: amondnet/vercel-action@v25
+#   with:
+#     vercel-token: ${{ secrets.VERCEL_TOKEN }}
+#     vercel-org-id: ${{ secrets.VERCEL_ORG_ID }}
+#     vercel-project-id: ${{ secrets.VERCEL_PROJECT_ID }}

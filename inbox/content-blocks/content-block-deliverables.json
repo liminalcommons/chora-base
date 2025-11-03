@@ -1,0 +1,23 @@
+{
+  "type": "content",
+  "id": "content-block-deliverables",
+  "schemaRef": {
+    "uri": "file://schemas/content/v3.1/schema.json",
+    "version": "3.1"
+  },
+  "metadata": {
+    "type": "coordination",
+    "version": "1.0",
+    "title": "Deliverables Content Block",
+    "purpose": "Generates deliverables list using AI or user input"
+  },
+  "elements": [
+    {
+      "id": "deliverables_field",
+      "generation_pattern": "ai_augmented",
+      "prompt_template": "Based on this coordination request:\n\nTitle: {{title}}\n{% if description %}Description: {{description}}{% endif %}\n{% if background %}Background: {{background}}{% endif %}\n{% if rationale %}Rationale: {{rationale}}{% endif %}\n\nGenerate 5-8 specific, measurable deliverables as a JSON array of strings. Each deliverable should be:\n- Concrete and actionable\n- Measurable or verifiable\n- 10-200 characters\n- Start with an action verb\n\nExample format:\n[\n  \"Feasibility assessment of chora-compose for coordination request generation\",\n  \"Comparison of template-based vs demonstration-based generation approaches\",\n  \"Recommendations for integration architecture with diagrams\",\n  \"Pilot plan for 4-week evaluation with success criteria\"\n]\n\nReturn ONLY the JSON array of strings, no additional text or formatting.",
+      "example_output": "[\n  \"Update README.md with new features\",\n  \"Add API reference documentation\"\n]",
+      "required": true
+    }
+  ]
+}

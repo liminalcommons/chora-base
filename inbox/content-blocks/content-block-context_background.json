@@ -1,0 +1,21 @@
+{
+  "type": "content",
+  "id": "content-block-context_background",
+  "schemaRef": {
+    "uri": "file://schemas/content/v3.1/schema.json",
+    "version": "3.1"
+  },
+  "metadata": {
+    "type": "coordination",
+    "version": "1.0",
+    "title": "Context Background Content Block"
+  },
+  "elements": [
+    {
+      "id": "context_background",
+      "generation_pattern": "user_input",
+      "example_output": "Current documentation is outdated and missing new features",
+      "required": false
+    }
+  ]
+}

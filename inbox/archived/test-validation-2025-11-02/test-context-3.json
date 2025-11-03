@@ -1,0 +1,10 @@
+{
+  "title": "Create Inbox Monitoring Automation",
+  "description": "Implement automated inbox monitoring for AI agents with configurable alerts and session startup integration",
+  "background": "Agents currently check inbox manually at session startup using inbox-query.py. There's no automated notification when high-priority items arrive. This could cause SLA violations for blocks_sprint urgency items.",
+  "rationale": "Reduce response time and improve SLA compliance. Enable proactive inbox monitoring rather than reactive checking. Support the 4-hour acknowledgment SLA for blocks_sprint items.",
+  "priority": "P1",
+  "urgency": "blocks_sprint",
+  "from_repo": "github.com/liminalcommons/chora-base",
+  "to_repo": "github.com/liminalcommons/chora-base"
+}

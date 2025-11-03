@@ -1,0 +1,58 @@
+{
+  "trace_id": "CHORA-COORD-2025-003",
+  "type": "coordination",
+  "priority": "medium",
+  "source_repo": "chora-compose",
+  "target_repo": "chora-base",
+  "title": "Update chora-base documentation to reference chora-compose v1.9.0 capabilities",
+  "description": "chora-compose v1.9.0 introduces stigmergic context links and freshness tracking that enable efficient cross-repository coordination. This coordination request proposes updating chora-base documentation to leverage these new capabilities for SAP documentation maintenance and cross-repo workflows.\n\nKey changes in v1.9.0:\n- Stigmergic context links: 95% token reduction (20k→1k) for cross-repo operations\n- Freshness tracking: Automated staleness detection with check_freshness tool\n- Collections documentation: Complete reference for 3-tier content generation\n\nProposed updates to chora-base:\n1. Add stigmergic context links to AGENTS.md for SAP regeneration\n2. Document freshness tracking workflow for SAP maintenance\n3. Update cross-repo coordination examples in relevant SAPs\n4. Add CI/CD integration examples for automated freshness checks",
+  "requested_capabilities": [
+    "documentation_sync",
+    "sap_framework",
+    "cross_repo_coordination"
+  ],
+  "category": "documentation_sync",
+  "status": "pending",
+  "created": "2025-10-30T20:00:00Z",
+  "updated": "2025-10-30T20:00:00Z",
+  "expected_outcome": "chora-base documentation references chora-compose v1.9.0 capabilities, enabling efficient SAP regeneration and maintenance workflows via stigmergic context links and freshness tracking",
+  "acceptance_criteria": [
+    "chora-base AGENTS.md includes stigmergic context link examples (e.g., [@chora-compose/collection:sap-004-complete])",
+    "SAP maintenance workflow documented with freshness tracking integration",
+    "At least one CI/CD example showing automated freshness checks",
+    "Cross-references between chora-base and chora-compose documentation are bidirectional",
+    "Changes validated by generating at least one SAP using stigmergic context links"
+  ],
+  "context": {
+    "related_issues": [],
+    "related_prs": [],
+    "related_proposals": [],
+    "background": "chora-compose v1.9.0 was released on 2025-10-30 with major cross-repository coordination features (stigmergic context links, freshness tracking). These features were specifically designed to address token efficiency and maintenance challenges when chora-base needs to regenerate SAP documentation. The coordination request COORD-2025-002 (SAP generation via Collections) successfully demonstrated the technical feasibility. Now we need to update documentation to make these capabilities discoverable and usable."
+  },
+  "dependencies": [
+    {
+      "dependency": "chora-compose v1.9.0 released",
+      "status": "completed"
+    },
+    {
+      "dependency": "Documentation of stigmergic context links in chora-compose",
+      "status": "completed"
+    },
+    {
+      "dependency": "Documentation of freshness tracking in chora-compose",
+      "status": "completed"
+    }
+  ],
+  "estimated_effort": "2-4 hours",
+  "metadata": {
+    "tags": [
+      "documentation",
+      "cross-repo-coordination",
+      "stigmergic-links",
+      "freshness-tracking",
+      "v1.9.0"
+    ],
+    "sprint": "2025-W44",
+    "milestone": "cross-repo-integration-v1"
+  }
+}

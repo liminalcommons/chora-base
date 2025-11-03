@@ -1,0 +1,63 @@
+{
+  "$schema": "https://chora-compose.dev/schemas/content-config.json",
+  "name": "context-rationale",
+  "version": "1.0.0",
+  "description": "Explanation of why this approach was chosen over alternatives (decision reasoning)",
+  "priority": "MEDIUM",
+  "presence_frequency": "60-80%",
+
+  "content_element": {
+    "name": "context-rationale",
+    "format": "json",
+    "example_output": {
+      "context": {
+        "rationale": "We considered three approaches to inbox artifact automation: (1) build custom tooling in chora-base, (2) adopt existing template engines like Jinja2 or Cookiecutter, or (3) integrate with chora-compose. Option 1 would give us full control but requires significant development and maintenance. Option 2 is simpler but lacks the MCP integration and ecosystem alignment we value.\n\nWe're pursuing Option 3 (chora-compose integration) because it offers the best balance of functionality, ecosystem synergy, and shared maintenance. chora-compose's 17 production generators demonstrate maturity, and MCP integration aligns with our vision for agent-assisted workflows. However, we need to validate technical feasibility before committing to this path.\n\nThis exploratory request will help us determine whether chora-compose's architecture can support our SAP-001 schemas, what effort is required, and whether integration makes sense for both teams. If feasibility is high (≥80%), we'll proceed to a 4-week pilot. If lower, we'll fall back to Option 2 (template engine) or Option 1 (custom tooling)."
+      }
+    }
+  },
+
+  "generation": {
+    "pattern": "ai_augmented",
+    "template_source": {
+      "type": "file",
+      "path": "docs/content-blocks/inbox-coordination/context-rationale.md",
+      "section": "Structure Options"
+    },
+    "placeholders": {
+      "context.rationale": {
+        "source": "ai_generation",
+        "input": ["context.background", "context.deliverables", "context.request_type"],
+        "optional": true,
+        "guidance": "Generate 2-3 paragraph rationale explaining why this approach was chosen:\n\nParagraph 1: List alternatives considered with pros/cons\nParagraph 2: Explain chosen approach and why it's preferred\nParagraph 3: Describe decision criteria or next steps\n\nRequest type patterns:\n- Exploratory: Alternatives analysis, decision framework (≥80% threshold), fallback options\n- Prescriptive: Evolution narrative (v1.0 → v1.1), changed requirements, why this solution\n- Peer Review: Why external validation vs internal only, benefits of collaboration\n\nTarget length: 150-300 words. Tone: Thoughtful, not defensive. Only generate if rationale adds value beyond background.",
+        "constraints": {
+          "minLength": 50,
+          "maxLength": 800
+        },
+        "include_if": "request_type in ['exploratory', 'prescriptive'] OR user provided context.rationale"
+      }
+    },
+    "conditional_inclusion": {
+      "include_if": "request_type in ['exploratory', 'prescriptive'] OR context.rationale is defined",
+      "omit_if_redundant": "Don't include if background already covers reasoning sufficiently"
+    }
+  },
+
+  "validation": {
+    "required_fields": [],
+    "field_constraints": {
+      "context.rationale": {
+        "type": "string",
+        "minLength": 50,
+        "maxLength": 800,
+        "error_message": "context.rationale must be 50-800 characters if present"
+      }
+    }
+  },
+
+  "metadata": {
+    "reusability": "universal",
+    "stability": "stable",
+    "related_blocks": ["context-background", "context-boundaries", "deliverables-structure"],
+    "documentation": "docs/content-blocks/inbox-coordination/context-rationale.md"
+  }
+}

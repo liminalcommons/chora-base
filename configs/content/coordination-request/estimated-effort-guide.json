@@ -1,0 +1,48 @@
+{
+  "$schema": "https://chora-compose.dev/schemas/content-config.json",
+  "name": "estimated-effort-guide",
+  "version": "1.0.0",
+  "description": "Requester's estimate of effort required to address coordination request",
+  "priority": "MEDIUM",
+  "presence_frequency": "67%",
+
+  "content_element": {
+    "name": "estimated-effort-guide",
+    "format": "json",
+    "example_output": {
+      "estimated_effort": "12-18 hours"
+    }
+  },
+
+  "generation": {
+    "pattern": "ai_augmented",
+    "placeholders": {
+      "estimated_effort": {
+        "source": "ai_generation",
+        "input": ["context.deliverables", "context.estimated_effort"],
+        "optional": true,
+        "guidance": "Generate effort estimate in format 'N-M {hours|days|weeks}' based on deliverables complexity. Use hours for <40 hours, days for 40-200 hours, weeks for >200 hours. Range spread: 30-100% (narrow for well-scoped, wide for uncertain). If user provided estimate, validate format. Otherwise, derive from deliverables count and complexity.",
+        "constraints": {
+          "pattern": "^\\d+-\\d+ (hours|days|weeks)$"
+        }
+      }
+    }
+  },
+
+  "validation": {
+    "field_constraints": {
+      "estimated_effort": {
+        "type": "string",
+        "pattern": "^\\d+-\\d+ (hours|days|weeks)$",
+        "error_message": "estimated_effort must match format 'N-M hours|days|weeks'"
+      }
+    }
+  },
+
+  "metadata": {
+    "reusability": "universal",
+    "stability": "semi-stable",
+    "related_blocks": ["deliverables-structure", "timeline-patterns"],
+    "documentation": "docs/content-blocks/inbox-coordination/estimated-effort-guide.md"
+  }
+}

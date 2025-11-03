@@ -1,0 +1,8 @@
+# Cross-Repository Inbox Event Log
+# Format: JSONL (one JSON object per line)
+# Each event captures state transitions for traceability
+# Fields: timestamp, trace_id, event_type, source, target, metadata
+# See: docs/skilled-awareness/inbox/protocol-spec.md
+{"timestamp":"2025-10-30T07:30:00Z","trace_id":"COORD-2025-002","event_type":"coordination_accepted","source":"coordination","target":"outgoing/COORD-2025-002-response.json","metadata":{"priority":"medium","response_type":"positive_interest","collaboration_mode":"experiment_together","estimated_effort":"4-8h","from_repo":"chora-base","to_repo":"chora-compose","decision":"propose_pilot_project"}}
+{"timestamp":"2025-10-30T08:00:00Z","trace_id":"COORD-2025-002-CLARIFICATION","event_type":"clarification_answered","source":"coordination","target":"outgoing/COORD-2025-002-CLARIFICATION-response.json","metadata":{"questions_answered":5,"response_type":"technical_detailed","file_paths_provided":true,"code_examples_provided":true,"gaps_documented":true,"pilot_ready":true}}
+{"timestamp":"2025-10-30T12:30:00Z","trace_id":"COORD-2025-002","event_type":"pilot_confirmed","source":"coordination","target":"coordination","metadata":{"phase":"decomposition_week_1","start_date":"2025-11-06","chora_base_status":"ready","blockers":"none","quality_threshold":"80%","decision_date":"2025-11-19","our_posture":"reactive_support"}}

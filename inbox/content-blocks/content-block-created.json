@@ -1,0 +1,23 @@
+{
+  "type": "content",
+  "id": "content-block-created",
+  "schemaRef": {
+    "uri": "file://schemas/content/v3.1/schema.json",
+    "version": "3.1"
+  },
+  "metadata": {
+    "type": "coordination",
+    "version": "1.0",
+    "title": "Created Timestamp Content Block",
+    "purpose": "Generates ISO date for creation timestamp"
+  },
+  "elements": [
+    {
+      "id": "created_field",
+      "generation_pattern": "template_fill",
+      "template": "{% set now = metadata.get('today', '2025-11-02') %}{{ now }}",
+      "example_output": "2025-11-02",
+      "required": true
+    }
+  ]
+}

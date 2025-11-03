@@ -1,0 +1,48 @@
+{
+  "$schema": "https://chora-compose.dev/schemas/content-config.json",
+  "name": "context-boundaries",
+  "version": "1.0.0",
+  "description": "What we are NOT requesting (clarifies scope, reduces anxiety)",
+  "priority": "LOW",
+  "presence_frequency": "15-25% overall, 50-60% exploratory external",
+
+  "content_element": {
+    "name": "context-boundaries",
+    "format": "json",
+    "example_output": {
+      "context": {
+        "not_requesting": "We are NOT asking chora-compose to modify its architecture. We are NOT expecting you to implement our automation. This exploration does NOT commit us to adoption."
+      }
+    }
+  },
+
+  "generation": {
+    "pattern": "ai_augmented",
+    "placeholders": {
+      "context.not_requesting": {
+        "source": "ai_generation",
+        "input": ["context.deliverables", "context.background"],
+        "optional": true,
+        "guidance": "Generate 3-4 explicit 'NOT requesting' statements addressing potential concerns: architecture changes, implementation burden, forced adoption, rushed timeline. Reassuring tone. Only include if request_type == 'exploratory' AND from_repo != to_repo.",
+        "include_if": "request_type == 'exploratory' AND from_repo != to_repo"
+      }
+    }
+  },
+
+  "validation": {
+    "field_constraints": {
+      "context.not_requesting": {
+        "type": "string",
+        "minLength": 30,
+        "maxLength": 500
+      }
+    }
+  },
+
+  "metadata": {
+    "reusability": "moderate",
+    "stability": "stable",
+    "related_blocks": ["context-background", "context-rationale", "deliverables-structure"],
+    "documentation": "docs/content-blocks/inbox-coordination/context-boundaries.md"
+  }
+}

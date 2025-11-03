@@ -1,0 +1,88 @@
+{
+  "$schema": "https://chora-compose.dev/schemas/content-config.json",
+  "name": "acceptance-criteria-patterns",
+  "version": "1.0.0",
+  "description": "Measurable conditions that define when coordination request is successfully completed",
+  "priority": "HIGH",
+  "presence_frequency": "100%",
+
+  "content_element": {
+    "name": "acceptance-criteria-patterns",
+    "format": "json",
+    "example_output": {
+      "acceptance_criteria": [
+        "Architecture analysis covers all 3 inbox artifact types (coordination, task, proposal)",
+        "Feasibility assessment addresses technical alignment, quality potential, and maintenance burden",
+        "Integration options comparison includes ≥2 approaches with effort estimates",
+        "Recommendation includes clear GO/NO-GO/DEFER criteria based on ≥80% technical feasibility"
+      ]
+    }
+  },
+
+  "generation": {
+    "pattern": "ai_augmented",
+    "template_source": {
+      "type": "file",
+      "path": "docs/content-blocks/inbox-coordination/acceptance-criteria-patterns.md",
+      "section": "Variation Points"
+    },
+    "placeholders": {
+      "acceptance_criteria": {
+        "source": "ai_generation",
+        "input": ["context.deliverables", "context.acceptance_criteria", "context.request_type"],
+        "guidance": "Generate measurable acceptance criteria that verify deliverables are complete and high-quality. Each criterion should:\n1. Map to one or more deliverables (verify what was requested)\n2. Be objectively verifiable (tool-based or clear manual process)\n3. Include quantitative thresholds where applicable (≥80%, <100ms, ≥3 examples)\n4. Be phrased as positive condition ('X passes Y' not 'X doesn't fail Y')\n5. Be independently testable\n\nRequest type patterns:\n- Exploratory (4-10 criteria): Coverage (addresses X, includes Y), completeness (≥N examples), structure (follows framework)\n- Prescriptive (8-15 criteria): Tests pass (≥80% coverage), benchmarks (<100ms), validation (schema passes), documentation (≥85% clarity)\n- Peer Review (5-10 criteria): Review depth (≥3 comparisons), actionability (≥5 suggestions), constructiveness (specific examples)\n\nIf user provided acceptance_criteria, refine them to be measurable. If not provided, derive from deliverables.",
+        "constraints": {
+          "minItems": 2,
+          "maxItems": 25,
+          "itemMinLength": 15,
+          "itemMaxLength": 250
+        },
+        "examples_by_type": {
+          "exploratory": [
+            "Feasibility assessment addresses technical alignment, quality potential, and maintenance burden",
+            "Analysis references ≥3 real coordination request examples"
+          ],
+          "prescriptive": [
+            "scripts/translate-bidirectional.py achieves ≥80% test coverage (measured via pytest)",
+            "Performance benchmarks demonstrate <100ms translation time for payloads ≤10KB"
+          ],
+          "peer_review": [
+            "Alignment assessment compares against ≥3 existing chora-base SAPs for consistency",
+            "Recommendations include ≥5 specific, actionable improvement suggestions with examples"
+          ]
+        }
+      }
+    }
+  },
+
+  "validation": {
+    "required_fields": ["acceptance_criteria"],
+    "field_constraints": {
+      "acceptance_criteria": {
+        "type": "array",
+        "minItems": 2,
+        "maxItems": 25,
+        "items": {
+          "type": "string",
+          "minLength": 15,
+          "maxLength": 250
+        },
+        "error_message": "acceptance_criteria must be array of 2-25 strings, each 15-250 characters"
+      }
+    },
+    "quality_checks": {
+      "warn_if_subjective": true,
+      "subjective_patterns": ["good", "better", "clean", "nice"],
+      "warn_if_no_threshold": true,
+      "threshold_patterns": ["≥", "≤", "<", ">", "%", "number"]
+    }
+  },
+
+  "metadata": {
+    "reusability": "universal",
+    "stability": "semi-stable",
+    "stability_note": "May evolve during clarification, frozen at acceptance",
+    "related_blocks": ["deliverables-structure", "context-background", "priority-urgency"],
+    "documentation": "docs/content-blocks/inbox-coordination/acceptance-criteria-patterns.md"
+  }
+}

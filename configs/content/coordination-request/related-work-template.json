@@ -1,0 +1,50 @@
+{
+  "$schema": "https://chora-compose.dev/schemas/content-config.json",
+  "name": "related-work-template",
+  "version": "1.0.0",
+  "description": "Related work providing context but not blocking (informational connections)",
+  "priority": "MEDIUM",
+  "presence_frequency": "30-50%",
+
+  "content_element": {
+    "name": "related-work-template",
+    "format": "json",
+    "example_output": {
+      "related": [
+        "SAP-001 v1.0.0 inbox protocol (schemas being automated)",
+        "SAP-004 quality framework (evaluation criteria)",
+        "chora-workspace COORD-WS-012 (similar use case)"
+      ]
+    }
+  },
+
+  "generation": {
+    "pattern": "ai_augmented",
+    "placeholders": {
+      "related": {
+        "source": "ai_generation",
+        "input": ["context.related", "context.background", "context.deliverables"],
+        "optional": true,
+        "guidance": "Generate 3-7 related work items with brief relationship descriptions. Search sap-catalog.json and inbox/ for relevant references. Include SAPs, coordination requests, and external work. Format: 'Item (relationship)'."
+      }
+    }
+  },
+
+  "validation": {
+    "field_constraints": {
+      "related": {
+        "type": "array",
+        "minItems": 2,
+        "maxItems": 10,
+        "items": {"type": "string", "minLength": 10, "maxLength": 200}
+      }
+    }
+  },
+
+  "metadata": {
+    "reusability": "universal",
+    "stability": "stable",
+    "related_blocks": ["dependencies-pattern", "context-background"],
+    "documentation": "docs/content-blocks/inbox-coordination/related-work-template.md"
+  }
+}

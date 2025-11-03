@@ -1,0 +1,22 @@
+{
+  "type": "content",
+  "id": "content-block-urgency",
+  "schemaRef": {
+    "uri": "file://schemas/content/v3.1/schema.json",
+    "version": "3.1"
+  },
+  "metadata": {
+    "type": "coordination",
+    "version": "1.0",
+    "title": "Urgency Content Block",
+    "purpose": "Extracts urgency from user context"
+  },
+  "elements": [
+    {
+      "id": "urgency_field",
+      "generation_pattern": "user_input",
+      "example_output": "next_sprint",
+      "required": true
+    }
+  ]
+}

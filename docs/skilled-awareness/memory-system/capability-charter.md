@@ -57,7 +57,31 @@ chora-base includes the Agentic Memory (A-MEM) architecture in `.chora/memory/` 
 
 ---
 
-## 2. Proposed Solution
+## 2. Stakeholders
+
+### Primary Users
+- **AI Agents** (Claude Code, Cursor Composer): Use A-MEM for cross-session learning and context persistence
+- **Multi-session workflows**: Agents working on complex tasks across multiple sessions
+- **Knowledge workers**: Agents that accumulate domain knowledge over time
+
+### Secondary Users
+- **Project maintainers**: Review event logs and knowledge graphs for debugging
+- **System administrators**: Monitor memory system health and disk usage
+- **Documentation writers**: Extract knowledge notes for formal documentation
+
+### Decision Makers
+- **Technical leads**: Evaluating A-MEM adoption for agent-assisted development
+- **DevOps engineers**: Assessing infrastructure impact (storage, retention policies)
+- **Privacy officers**: Reviewing event sanitization and PII handling
+
+### Beneficiaries
+- **Development teams**: Better agent performance through accumulated learning
+- **Future maintainers**: Knowledge preserved in Zettelkasten graph
+- **Debugging workflows**: Trace correlation across multi-step operations
+
+---
+
+## 3. Proposed Solution
 
 A **comprehensive SAP defining the A-MEM architecture** with 4 memory types: Ephemeral Session Memory, Event Log, Knowledge Graph, and Agent Profiles.
 
@@ -75,7 +99,7 @@ A **comprehensive SAP defining the A-MEM architecture** with 4 memory types: Eph
 
 ---
 
-## 3. Capability Definition
+## 4. Capability Definition
 
 ### What This SAP Includes
 
@@ -122,7 +146,7 @@ A **comprehensive SAP defining the A-MEM architecture** with 4 memory types: Eph
 
 ---
 
-## 4. Success Criteria
+## 5. Success Criteria
 
 ### Adoption Metrics
 
@@ -154,7 +178,7 @@ A **comprehensive SAP defining the A-MEM architecture** with 4 memory types: Eph
 
 ---
 
-## 5. Dependencies
+## 6. Dependencies
 
 ### Upstream Dependencies
 
@@ -176,7 +200,7 @@ A **comprehensive SAP defining the A-MEM architecture** with 4 memory types: Eph
 
 ---
 
-## 6. Risks & Mitigations
+## 7. Risks & Mitigations
 
 | Risk | Impact | Mitigation |
 |------|--------|------------|
@@ -188,7 +212,7 @@ A **comprehensive SAP defining the A-MEM architecture** with 4 memory types: Eph
 
 ---
 
-## 7. Open Questions
+## 8. Open Questions
 
 1. **Event retention**: 6 months vs 1 year vs indefinite?
 2. **Knowledge note limit**: Max notes before archival/pruning?
@@ -197,7 +221,7 @@ A **comprehensive SAP defining the A-MEM architecture** with 4 memory types: Eph
 
 ---
 
-## 8. Related Capabilities
+## 9. Related Capabilities
 
 - **SAP-000** (sap-framework): Meta-framework for all SAPs
 - **SAP-009** (agent-awareness): Awareness files in `.chora/memory/` (AGENTS.md, CLAUDE.md)
@@ -205,7 +229,7 @@ A **comprehensive SAP defining the A-MEM architecture** with 4 memory types: Eph
 
 ---
 
-## 9. Approval & Sign-Off
+## 10. Approval & Sign-Off
 
 **Charter Author**: Claude Code
 **Date**: 2025-10-28

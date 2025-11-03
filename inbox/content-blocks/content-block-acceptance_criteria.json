@@ -1,0 +1,23 @@
+{
+  "type": "content",
+  "id": "content-block-acceptance_criteria",
+  "schemaRef": {
+    "uri": "file://schemas/content/v3.1/schema.json",
+    "version": "3.1"
+  },
+  "metadata": {
+    "type": "coordination",
+    "version": "1.0",
+    "title": "Acceptance Criteria Content Block",
+    "purpose": "Generates SMART acceptance criteria using AI"
+  },
+  "elements": [
+    {
+      "id": "acceptance_criteria_field",
+      "generation_pattern": "ai_augmented",
+      "prompt_template": "Based on this coordination request:\n\nTitle: {{title}}\n{% if description %}Description: {{description}}{% endif %}\n{% if background %}Background: {{background}}{% endif %}\n{% if rationale %}Rationale: {{rationale}}{% endif %}\n\nGenerate 5-10 SMART (Specific, Measurable, Achievable, Relevant, Time-bound) acceptance criteria as a JSON array of strings.\n\nEach criterion should:\n- Be measurable and verifiable (include numbers/thresholds where applicable)\n- Be specific enough to determine pass/fail\n- 10-200 characters\n- Use present tense verbs\n\nExample format:\n[\n  \"Feasibility assessment addresses ≥3 key integration challenges\",\n  \"Comparison evaluates ≥2 generation approaches with examples\",\n  \"Recommendations include specific architecture diagrams\",\n  \"Pilot plan defines measurable success criteria with ≥80% quality threshold\"\n]\n\nReturn ONLY the JSON array of strings, no additional text or formatting.",
+      "example_output": "[\n  \"Documentation is complete and accurate\",\n  \"All tests pass\"\n]",
+      "required": true
+    }
+  ]
+}

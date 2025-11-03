@@ -1,0 +1,22 @@
+{
+  "type": "content",
+  "id": "content-block-priority",
+  "schemaRef": {
+    "uri": "file://schemas/content/v3.1/schema.json",
+    "version": "3.1"
+  },
+  "metadata": {
+    "type": "coordination",
+    "version": "1.0",
+    "title": "Priority Content Block",
+    "purpose": "Extracts priority from user context"
+  },
+  "elements": [
+    {
+      "id": "priority_field",
+      "generation_pattern": "user_input",
+      "example_output": "P2",
+      "required": true
+    }
+  ]
+}

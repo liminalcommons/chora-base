@@ -1,0 +1,22 @@
+{
+  "type": "content",
+  "id": "content-block-description",
+  "schemaRef": {
+    "uri": "file://schemas/content/v3.1/schema.json",
+    "version": "3.1"
+  },
+  "metadata": {
+    "type": "coordination",
+    "version": "1.0",
+    "title": "Description Content Block",
+    "purpose": "Extracts description from user context"
+  },
+  "elements": [
+    {
+      "id": "description_field",
+      "generation_pattern": "user_input",
+      "example_output": "Update README and user documentation with new features added in v1.2.0",
+      "required": true
+    }
+  ]
+}

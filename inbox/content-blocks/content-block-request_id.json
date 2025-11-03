@@ -1,0 +1,22 @@
+{
+  "type": "content",
+  "id": "content-block-request_id",
+  "schemaRef": {
+    "uri": "file://schemas/content/v3.1/schema.json",
+    "version": "3.1"
+  },
+  "metadata": {
+    "type": "coordination",
+    "version": "1.0",
+    "title": "Request ID Content Block",
+    "purpose": "Generates request_id field (PENDING - replaced by post-processing)"
+  },
+  "elements": [
+    {
+      "id": "request_id_field",
+      "generation_pattern": "literal",
+      "example_output": "PENDING",
+      "required": true
+    }
+  ]
+}

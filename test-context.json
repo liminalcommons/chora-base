@@ -1,0 +1,11 @@
+{
+  "title": "Test MCP Integration with chora-compose",
+  "description": "Test chora-compose MCP server capabilities to determine Path A/B vs Path C for inbox generation implementation",
+  "from_repo": "github.com/liminalcommons/chora-base",
+  "to_repo": "github.com/liminalcommons/chora-workspace",
+  "priority": "P2",
+  "urgency": "next_sprint",
+  "background": "Week 4 pilot complete (94.9% quality). Discovered production MCP server with 24 tools running in Docker on port 8000.",
+  "rationale": "Need to test MCP capabilities before deciding between Path A/B (8-16 hours with chora-compose) vs Path C (20-30 hours standalone)",
+  "estimated_effort": "1-2 hours"
+}

@@ -1,0 +1,22 @@
+{
+  "type": "content",
+  "id": "content-block-to_repo",
+  "schemaRef": {
+    "uri": "file://schemas/content/v3.1/schema.json",
+    "version": "3.1"
+  },
+  "metadata": {
+    "type": "coordination",
+    "version": "1.0",
+    "title": "To Repository Content Block",
+    "purpose": "Extracts to_repo from user context"
+  },
+  "elements": [
+    {
+      "id": "to_repo_field",
+      "generation_pattern": "user_input",
+      "example_output": "github.com/liminalcommons/chora-workspace",
+      "required": true
+    }
+  ]
+}

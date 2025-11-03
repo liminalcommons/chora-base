@@ -1,0 +1,52 @@
+{
+  "$schema": "https://chora-compose.dev/schemas/content-config.json",
+  "name": "dependencies-pattern",
+  "version": "1.0.0",
+  "description": "Prerequisites or blocking work that must complete before request can proceed",
+  "priority": "MEDIUM",
+  "presence_frequency": "30-40%",
+
+  "content_element": {
+    "name": "dependencies-pattern",
+    "format": "json",
+    "example_output": {
+      "dependencies": [
+        "SAP-001 v1.0.0 inbox protocol (completed - schemas established)",
+        "Initial chora-compose research (in progress - 70% complete)",
+        "SAP-004 pilot framework (planned - for quality evaluation)"
+      ]
+    }
+  },
+
+  "generation": {
+    "pattern": "template_fill",
+    "placeholders": {
+      "dependencies": {
+        "source": "user_input",
+        "path": "context.dependencies",
+        "optional": true,
+        "guidance": "Format: 'Description (status)' where status is completed, in progress, blocked, or planned. Include brief context for each."
+      }
+    }
+  },
+
+  "validation": {
+    "field_constraints": {
+      "dependencies": {
+        "type": "array",
+        "items": {
+          "type": "string",
+          "minLength": 10,
+          "maxLength": 200
+        }
+      }
+    }
+  },
+
+  "metadata": {
+    "reusability": "universal",
+    "stability": "semi-stable",
+    "related_blocks": ["timeline-patterns", "related-work-template"],
+    "documentation": "docs/content-blocks/inbox-coordination/dependencies-pattern.md"
+  }
+}

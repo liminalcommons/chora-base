@@ -1,0 +1,9 @@
+{
+  "type": "coordination_response",
+  "request_id": "COORD-TEST-002-discovery-cli",
+  "responding_repo": "github.com/liminalcommons/chora-base",
+  "status": "declined",
+  "responded_at": "2025-11-02T12:36:39.112967",
+  "accepted": false,
+  "decline_reason": "Waiting for Phase 2 prioritization in Q1 2026. Current focus is Phase 1 tooling completion."
+}

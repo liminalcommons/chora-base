@@ -1,0 +1,111 @@
+{
+  "type": "coordination_request",
+  "from_repo": "mcp-orchestration",
+  "to_repo": "chora-base",
+  "priority": "medium",
+  "trace_id": "ecosystem-w3-health-monitoring",
+  "description": "Questions about W3 health check templates and Docker patterns for Health Monitoring implementation",
+  "capabilities_required": [
+    "docker-deployment-templates",
+    "health-check-patterns",
+    "template-support"
+  ],
+  "deadline": "2025-11-22",
+  "context": {
+    "background": "mcp-orchestration achieved 100% chora-base adoption (18/18 SAPs) and needs W3-specific health patterns for Health Monitoring implementation",
+    "relationship": "Template consumer - we want to use chora-base patterns rather than custom implementation",
+    "sap_adoption_status": {
+      "total_saps": "18/18 (100%)",
+      "relevant_saps": [
+        "SAP-011: Docker Operations (multi-stage builds, health checks)",
+        "SAP-012: Development Lifecycle (DDD→BDD→TDD workflows)",
+        "SAP-013: Metrics Tracking (ClaudeROICalculator, process metrics)"
+      ],
+      "adoption_date": "2025-10-31",
+      "test_coverage": "86.25%"
+    },
+    "questions": [
+      {
+        "category": "template_availability",
+        "question": "Are health check templates W3-ready? Current status?",
+        "importance": "High - determines whether we use templates or custom implementation",
+        "need_by": "Week 4 (before Week 5 implementation)"
+      },
+      {
+        "category": "docker_patterns",
+        "question": "Docker deployment template ready? Is it included in chora-base v4.1.0?",
+        "importance": "Medium - affects deployment approach",
+        "workaround": "Can use custom Docker setup if needed"
+      },
+      {
+        "category": "documentation",
+        "question": "Documentation completeness? Can we self-service or need guidance?",
+        "importance": "Medium - affects implementation speed",
+        "preference": "Self-service documentation"
+      },
+      {
+        "category": "best_practices",
+        "question": "What are best practices for health monitoring? (polling intervals, failure thresholds)",
+        "importance": "High - affects health check implementation quality",
+        "our_default": "30s polling, 3 consecutive failures = unhealthy"
+      },
+      {
+        "category": "auto_recovery",
+        "question": "Auto-recovery patterns? (restart strategies, exponential backoff)",
+        "importance": "Medium - affects fault tolerance design",
+        "our_approach": "Exponential backoff with max 5 min, circuit breaker pattern"
+      },
+      {
+        "category": "telemetry",
+        "question": "Telemetry integration for health status changes? Event logging patterns?",
+        "importance": "Medium - affects observability",
+        "our_current": "Already using telemetry (var/telemetry/events.jsonl)"
+      },
+      {
+        "category": "roi_validation",
+        "question": "Template usage examples? Other projects using successfully?",
+        "importance": "Low - validates value proposition",
+        "claimed_roi": "200-300% ROI (2-3h saved per use)"
+      },
+      {
+        "category": "evidence",
+        "question": "Measured ROI data? What's the evidence for 200-300% claim?",
+        "importance": "Low - informational",
+        "purpose": "Validate coordination hub invitation claim"
+      },
+      {
+        "category": "support",
+        "question": "Support available if templates don't fit our use case?",
+        "importance": "Low - backup plan",
+        "our_capability": "Can implement custom if needed"
+      }
+    ],
+    "decision_criteria": {
+      "use_templates_if": [
+        "Templates are W3-ready and documented",
+        "Save >2 hours vs custom implementation",
+        "Align with our health monitoring requirements"
+      ],
+      "custom_implementation_if": [
+        "Templates not W3-ready by Week 4",
+        "Templates don't fit our use case",
+        "Documentation insufficient for self-service"
+      ],
+      "impact": {
+        "with_templates": "~2 hours implementation (template adaptation + testing)",
+        "with_custom": "~5 hours implementation (Docker setup + health checks)",
+        "net_savings": "3 hours (60% time reduction)"
+      }
+    },
+    "timeline": {
+      "decision_needed": "Week 4 (2025-11-22)",
+      "implementation_start": "Week 5 (2025-11-25)",
+      "workaround_acceptable": "Can implement custom, migrate to templates later (1-2 day delay)"
+    },
+    "value_proposition": {
+      "for_chora_base": "Validates health check templates with production use case",
+      "for_mcp_orchestration": "60% time reduction if templates work (5h → 2h)",
+      "for_ecosystem": "Reusable health patterns for other MCP servers"
+    }
+  }
+}

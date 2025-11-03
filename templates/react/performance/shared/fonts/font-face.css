@@ -1,0 +1,350 @@
+/**
+ * Font Face Declarations (Vite / Non-Next.js)
+ *
+ * SAP-025: React Performance Optimization
+ *
+ * This CSS file provides @font-face declarations for self-hosted fonts.
+ * Use this for Vite, Create React App, or any non-Next.js React app.
+ *
+ * Benefits:
+ * - Self-hosted fonts (no external requests)
+ * - WOFF2 format (20-30% smaller than WOFF)
+ * - font-display: optional (prevents layout shift)
+ * - Preconnect hints (faster DNS resolution)
+ *
+ * IMPORTANT: Place font files in public/fonts directory.
+ *
+ * @see https://developer.mozilla.org/en-US/docs/Web/CSS/@font-face
+ */
+
+/* ============================================
+   INTER (SANS-SERIF)
+   ============================================ */
+
+/**
+ * Inter Regular (400)
+ *
+ * Modern, clean, highly readable.
+ * Use for body text, UI elements.
+ */
+@font-face {
+  font-family: 'Inter';
+  src: url('/fonts/inter-regular.woff2') format('woff2');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap; /* Prevents FOIT, minimal CLS */
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA,
+    U+02DC, U+2000-206F, U+2074, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215,
+    U+FEFF, U+FFFD; /* Latin subset */
+}
+
+/**
+ * Inter Medium (500)
+ */
+@font-face {
+  font-family: 'Inter';
+  src: url('/fonts/inter-medium.woff2') format('woff2');
+  font-weight: 500;
+  font-style: normal;
+  font-display: swap;
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA,
+    U+02DC, U+2000-206F, U+2074, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215,
+    U+FEFF, U+FFFD;
+}
+
+/**
+ * Inter Semibold (600)
+ */
+@font-face {
+  font-family: 'Inter';
+  src: url('/fonts/inter-semibold.woff2') format('woff2');
+  font-weight: 600;
+  font-style: normal;
+  font-display: swap;
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA,
+    U+02DC, U+2000-206F, U+2074, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215,
+    U+FEFF, U+FFFD;
+}
+
+/**
+ * Inter Bold (700)
+ */
+@font-face {
+  font-family: 'Inter';
+  src: url('/fonts/inter-bold.woff2') format('woff2');
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA,
+    U+02DC, U+2000-206F, U+2074, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215,
+    U+FEFF, U+FFFD;
+}
+
+/* ============================================
+   INTER VARIABLE (ALL WEIGHTS IN ONE FILE)
+   ============================================ */
+
+/**
+ * Inter Variable Font (100-900)
+ *
+ * Variable fonts support all weights (100-900) in a single file.
+ * This reduces HTTP requests and total file size.
+ *
+ * RECOMMENDED: Use variable fonts instead of multiple weight files.
+ */
+@font-face {
+  font-family: 'Inter Variable';
+  src: url('/fonts/inter-variable.woff2') format('woff2-variations');
+  font-weight: 100 900; /* Supports all weights */
+  font-style: normal;
+  font-display: swap;
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA,
+    U+02DC, U+2000-206F, U+2074, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215,
+    U+FEFF, U+FFFD;
+}
+
+/* ============================================
+   ROBOTO MONO (MONOSPACE)
+   ============================================ */
+
+/**
+ * Roboto Mono Regular (400)
+ *
+ * Monospace font for code blocks, technical content.
+ */
+@font-face {
+  font-family: 'Roboto Mono';
+  src: url('/fonts/roboto-mono-regular.woff2') format('woff2');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA,
+    U+02DC, U+2000-206F, U+2074, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215,
+    U+FEFF, U+FFFD;
+}
+
+/**
+ * Roboto Mono Bold (700)
+ */
+@font-face {
+  font-family: 'Roboto Mono';
+  src: url('/fonts/roboto-mono-bold.woff2') format('woff2');
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA,
+    U+02DC, U+2000-206F, U+2074, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215,
+    U+FEFF, U+FFFD;
+}
+
+/* ============================================
+   PLAYFAIR DISPLAY (SERIF)
+   ============================================ */
+
+/**
+ * Playfair Display Regular (400)
+ *
+ * Elegant serif font for headings, titles.
+ */
+@font-face {
+  font-family: 'Playfair Display';
+  src: url('/fonts/playfair-display-regular.woff2') format('woff2');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA,
+    U+02DC, U+2000-206F, U+2074, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215,
+    U+FEFF, U+FFFD;
+}
+
+/**
+ * Playfair Display Bold (700)
+ */
+@font-face {
+  font-family: 'Playfair Display';
+  src: url('/fonts/playfair-display-bold.woff2') format('woff2');
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA,
+    U+02DC, U+2000-206F, U+2074, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215,
+    U+FEFF, U+FFFD;
+}
+
+/* ============================================
+   CSS CUSTOM PROPERTIES (CSS VARIABLES)
+   ============================================ */
+
+/**
+ * Define font stacks as CSS variables
+ *
+ * Use these in your components for consistency.
+ */
+:root {
+  --font-sans: 'Inter Variable', 'Inter', system-ui, -apple-system,
+    BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+
+  --font-mono: 'Roboto Mono', ui-monospace, SFMono-Regular, Menlo, Monaco,
+    Consolas, 'Liberation Mono', 'Courier New', monospace;
+
+  --font-serif: 'Playfair Display', ui-serif, Georgia, Cambria,
+    'Times New Roman', Times, serif;
+}
+
+/**
+ * Apply default font to body
+ */
+body {
+  font-family: var(--font-sans);
+}
+
+/**
+ * Apply monospace font to code elements
+ */
+code,
+pre,
+kbd,
+samp {
+  font-family: var(--font-mono);
+}
+
+/* ============================================
+   FONT PRELOADING
+   ============================================ */
+
+/**
+ * FONT PRELOADING
+ *
+ * Add these <link> tags to your HTML <head> to preload fonts:
+ *
+ * ```html
+ * <!-- Preload Inter Variable (most important) -->
+ * <link
+ *   rel="preload"
+ *   href="/fonts/inter-variable.woff2"
+ *   as="font"
+ *   type="font/woff2"
+ *   crossorigin="anonymous"
+ * />
+ *
+ * <!-- Preload Roboto Mono (if used above fold) -->
+ * <link
+ *   rel="preload"
+ *   href="/fonts/roboto-mono-regular.woff2"
+ *   as="font"
+ *   type="font/woff2"
+ *   crossorigin="anonymous"
+ * />
+ * ```
+ *
+ * IMPORTANT:
+ * - Only preload fonts used above the fold (1-2 fonts max)
+ * - Preloading too many fonts can slow down FCP
+ * - Always include crossorigin="anonymous" (required for CORS)
+ */
+
+/* ============================================
+   USAGE IN TAILWIND CONFIG
+   ============================================ */
+
+/**
+ * USAGE IN TAILWIND CONFIG
+ *
+ * Add font families to your Tailwind config:
+ *
+ * ```javascript
+ * // tailwind.config.js
+ * module.exports = {
+ *   theme: {
+ *     extend: {
+ *       fontFamily: {
+ *         sans: ['var(--font-sans)'],
+ *         mono: ['var(--font-mono)'],
+ *         serif: ['var(--font-serif)'],
+ *       },
+ *     },
+ *   },
+ * }
+ * ```
+ *
+ * Then use in components:
+ *
+ * ```tsx
+ * <h1 className="font-serif">Heading</h1>
+ * <code className="font-mono">Code</code>
+ * ```
+ */
+
+/* ============================================
+   DOWNLOADING FONTS
+   ============================================ */
+
+/**
+ * DOWNLOADING FONTS
+ *
+ * 1. Download fonts from Google Fonts:
+ *    https://fonts.google.com/specimen/Inter
+ *
+ * 2. Or use google-webfonts-helper:
+ *    https://gwfh.mranftl.com/fonts/inter
+ *
+ * 3. Convert to WOFF2 (if not already):
+ *    https://cloudconvert.com/ttf-to-woff2
+ *
+ * 4. Place in public/fonts directory:
+ *    - public/fonts/inter-variable.woff2
+ *    - public/fonts/inter-regular.woff2
+ *    - public/fonts/inter-bold.woff2
+ *    - etc.
+ *
+ * 5. Import this CSS file in your app:
+ *    - Vite: import './fonts/font-face.css' in main.tsx
+ *    - CRA: import './fonts/font-face.css' in index.tsx
+ */
+
+/* ============================================
+   FONT SUBSETTING
+   ============================================ */
+
+/**
+ * FONT SUBSETTING
+ *
+ * Reduce font file size by including only characters you need.
+ *
+ * Tools:
+ * - subfont (CLI): https://github.com/Munter/subfont
+ * - glyphhanger (CLI): https://github.com/zachleat/glyphhanger
+ * - Font Squirrel (web): https://www.fontsquirrel.com/tools/webfont-generator
+ *
+ * Example with glyphhanger:
+ *
+ * ```bash
+ * # Install glyphhanger
+ * npm install -g glyphhanger
+ *
+ * # Subset font (include only Latin characters)
+ * glyphhanger --subset=inter-variable.woff2 --LATIN --formats=woff2
+ * ```
+ */
+
+/* ============================================
+   PERFORMANCE TIPS
+   ============================================ */
+
+/**
+ * PERFORMANCE TIPS:
+ *
+ * 1. Use variable fonts (1 file for all weights)
+ * 2. Subset fonts (only include characters you use)
+ * 3. Use WOFF2 format (20-30% smaller than WOFF)
+ * 4. Preload only above-the-fold fonts (1-2 fonts max)
+ * 5. Use font-display: swap or optional (prevents FOIT)
+ * 6. Self-host fonts (no external requests, faster)
+ * 7. Use unicode-range for subsetting (reduces file size)
+ * 8. Limit font weights (each weight = separate file for non-variable fonts)
+ *
+ * CORE WEB VITALS IMPACT:
+ * - FCP: Preloading + self-hosting → faster first paint
+ * - CLS: font-display: optional → prevents layout shift
+ * - LCP: Smaller font files → faster content rendering
+ */

@@ -994,6 +994,58 @@ Co-Authored-By: Claude <noreply@anthropic.com>"
 
 ## Post-Installation
 
+### Enabling Agent Awareness
+
+After installing SAP-019, ensure agents can discover and use the self-evaluation capability:
+
+**Step 1: Update Root AGENTS.md**
+
+Add reference to SAP-019 evaluation tools:
+
+```markdown
+## SAP Evaluation
+
+This project includes SAP Self-Evaluation (SAP-019) for assessing SAP adoption quality.
+
+### Running Evaluations
+
+**Quick Check** (30 seconds):
+```bash
+python scripts/sap-evaluator.py --quick [SAP-ID]
+```
+
+**Deep Dive** (5 minutes):
+```bash
+python scripts/sap-evaluator.py --deep SAP-XXX --output docs/adoption-reports/SAP-XXX-assessment.md
+```
+
+**Strategic Analysis** (30 minutes):
+```bash
+python scripts/sap-evaluator.py --strategic --output project-docs/sap-roadmap.yaml
+```
+
+See [docs/skilled-awareness/sap-self-evaluation/](docs/skilled-awareness/sap-self-evaluation/) for complete documentation.
+```
+
+**Step 2: Validate Awareness Integration**
+
+```bash
+bash scripts/check-sap-awareness-integration.sh SAP-019
+```
+
+**Expected result**: PASS with 4/4 checks
+
+**Step 3: Test Evaluation Tools**
+
+Verify the evaluation tools work:
+
+```bash
+# Quick check on SAP-000
+python scripts/sap-evaluator.py --quick SAP-000
+
+# Should show evaluation result with adoption level
+```
+
 ### Update Ledger
 
 **Record adoption in ledger.md**:
