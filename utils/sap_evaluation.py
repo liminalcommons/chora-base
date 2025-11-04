@@ -545,22 +545,32 @@ class SAPEvaluator:
 
         Process:
         1. Quick check all installed SAPs
-        2. Calculate aggregate metrics
-        3. Analyze timeline (if history available)
-        4. Identify cross-SAP dependencies
-        5. Prioritize gaps globally
-        6. Generate sprint breakdown
-        7. Project ROI
+        2. Run deep dive on key SAPs
+        3. Calculate aggregate metrics
+        4. Analyze timeline (from adoption-history.jsonl)
+        5. Identify cross-SAP dependencies
+        6. Prioritize gaps globally (impact × blocks)
+        7. Generate sprint breakdown
+        8. Project ROI
         """
         start_time = datetime.now()
 
         # 1. Quick check all SAPs
         all_results = self.quick_check_all()
-
-        # 2. Calculate aggregate metrics
         installed_results = [r for r in all_results if r.is_installed]
         total_installed = len(installed_results)
 
+        # 2. Deep dive on installed SAPs to get comprehensive gap analysis
+        all_gaps = []
+        for result in installed_results:
+            if result.current_level < 3:  # Only analyze SAPs not yet at L3
+                try:
+                    deep_result = self.deep_dive(result.sap_id)
+                    all_gaps.extend(deep_result.gaps)
+                except Exception as e:
+                    print(f"Warning: Failed to deep dive {result.sap_id}: {e}", file=sys.stderr)
+
+        # 3. Calculate aggregate metrics
         level_distribution = {
             "level_0": sum(1 for r in all_results if r.current_level == 0),
             "level_1": sum(1 for r in all_results if r.current_level == 1),
@@ -573,21 +583,208 @@ class SAPEvaluator:
             if total_installed > 0 else 0.0
         )
 
-        # 3. Build roadmap (basic version for Sprint 1)
+        # 4. Analyze timeline from adoption-history.jsonl
+        total_hours_invested = self.analyze_adoption_timeline()
+
+        # 5. Prioritize gaps globally
+        priority_gaps = self.prioritize_gaps_globally(all_gaps)
+
+        # 6. Generate sprint breakdown
+        this_sprint, next_sprint, future_sprints = self.generate_sprint_breakdown(priority_gaps)
+
+        # 7. Build comprehensive roadmap
         roadmap = AdoptionRoadmap(
             generated_at=start_time,
             target_quarter=self.calculate_next_quarter(),
+            next_review_date=self.calculate_next_review_date(),
             total_saps_installed=total_installed,
             adoption_distribution=level_distribution,
             average_adoption_level=avg_level,
-            total_hours_invested=0.0,  # Would track from events.jsonl
-            priority_gaps=[],  # Would populate from gap analysis
-            this_sprint=None,  # Would generate from prioritized gaps
-            next_sprint=None,
-            future_sprints=[]
+            total_hours_invested=total_hours_invested,
+            priority_gaps=priority_gaps[:20],  # Top 20 gaps
+            this_sprint=this_sprint,
+            next_sprint=next_sprint,
+            future_sprints=future_sprints
         )
 
         return roadmap
+
+    def analyze_adoption_timeline(self) -> float:
+        """Analyze adoption-history.jsonl for total hours invested"""
+        history_file = self.repo_root / "adoption-history.jsonl"
+        if not history_file.exists():
+            return 0.0
+
+        total_hours = 0.0
+        try:
+            with open(history_file) as f:
+                for line in f:
+                    event = json.loads(line)
+                    if "hours_invested" in event:
+                        total_hours += event.get("hours_invested", 0.0)
+                    elif "cumulative_hours" in event:
+                        # Use cumulative_hours from level_progression events
+                        total_hours = max(total_hours, event.get("cumulative_hours", 0.0))
+        except Exception as e:
+            print(f"Warning: Failed to read adoption history: {e}", file=sys.stderr)
+
+        return total_hours
+
+    def prioritize_gaps_globally(self, gaps: list[Gap]) -> list[PrioritizedGap]:
+        """
+        Prioritize gaps across all SAPs using multi-factor scoring
+
+        Factors:
+        - Impact (high=1.0, medium=0.6, low=0.3)
+        - Effort (low=1.0, medium=0.6, high=0.3) - inverse scoring
+        - Urgency (blocks_sprint=1.0, next_sprint=0.6, future=0.3)
+        - Blockers (gaps that block others get higher priority)
+        """
+        prioritized = []
+
+        # Calculate blocker impact
+        blocker_counts = {}
+        for gap in gaps:
+            for blocked_id in gap.blocks:
+                blocker_counts[gap.gap_id] = blocker_counts.get(gap.gap_id, 0) + 1
+
+        for gap in gaps:
+            # Extract SAP ID from gap_id (format: SAP-XXX-description)
+            sap_id = gap.gap_id.split("-")[:3]
+            if len(sap_id) >= 2:
+                sap_id = f"{sap_id[0]}-{sap_id[1]}"
+            else:
+                sap_id = gap.gap_id.split("-")[0] if "-" in gap.gap_id else "unknown"
+
+            # Impact score
+            impact_map = {"high": 1.0, "medium": 0.6, "low": 0.3}
+            impact_score = impact_map.get(gap.impact.lower(), 0.5)
+
+            # Effort score (inverse)
+            effort_map = {"low": 1.0, "medium": 0.6, "high": 0.3}
+            effort_score = effort_map.get(gap.effort.lower(), 0.5)
+
+            # Urgency score
+            urgency_map = {"blocks_sprint": 1.0, "next_sprint": 0.6, "future": 0.3}
+            urgency_score = urgency_map.get(gap.urgency, 0.5)
+
+            # Blocker bonus
+            blocker_bonus = min(blocker_counts.get(gap.gap_id, 0) * 0.2, 0.6)
+
+            # Combined priority score
+            priority_score = (
+                impact_score * 0.4 +
+                effort_score * 0.3 +
+                urgency_score * 0.2 +
+                blocker_bonus * 0.1
+            )
+
+            # Determine sprint assignment
+            if urgency_score >= 1.0 or priority_score >= 0.8:
+                sprint = "current"
+            elif urgency_score >= 0.6 or priority_score >= 0.6:
+                sprint = "next"
+            else:
+                sprint = "future"
+
+            prioritized.append(PrioritizedGap(
+                rank=0,  # Will be set after sorting
+                sap_id=sap_id,
+                gap=gap,
+                reason=f"Priority based on impact ({gap.impact}), effort ({gap.effort}), urgency ({gap.urgency})",
+                impact_score=impact_score,
+                effort_score=effort_score,
+                priority_score=priority_score,
+                sprint=sprint,
+                blocks=[b for b in gap.blocks]
+            ))
+
+        # Sort by priority score (descending)
+        prioritized.sort(key=lambda x: x.priority_score, reverse=True)
+
+        # Assign ranks
+        for rank, pgap in enumerate(prioritized, 1):
+            pgap.rank = rank
+
+        return prioritized
+
+    def generate_sprint_breakdown(self, priority_gaps: list[PrioritizedGap]) -> tuple[Optional[SprintPlan], Optional[SprintPlan], list[SprintPlan]]:
+        """Generate sprint plans from prioritized gaps"""
+        current_sprint_gaps = [g for g in priority_gaps if g.sprint == "current"]
+        next_sprint_gaps = [g for g in priority_gaps if g.sprint == "next"]
+        future_sprint_gaps = [g for g in priority_gaps if g.sprint == "future"]
+
+        # Current sprint
+        this_sprint = None
+        if current_sprint_gaps:
+            this_sprint = SprintPlan(
+                sprint_name="Current Sprint",
+                focus_saps=list(set(g.sap_id for g in current_sprint_gaps[:5])),
+                total_estimated_hours=sum(g.gap.estimated_hours for g in current_sprint_gaps[:5]),
+                tasks=[{
+                    "gap_id": g.gap.gap_id,
+                    "title": g.gap.title,
+                    "sap_id": g.sap_id,
+                    "estimated_hours": g.gap.estimated_hours,
+                    "priority": g.gap.priority
+                } for g in current_sprint_gaps[:5]]
+            )
+
+        # Next sprint
+        next_sprint = None
+        if next_sprint_gaps:
+            next_sprint = SprintPlan(
+                sprint_name="Next Sprint",
+                focus_saps=list(set(g.sap_id for g in next_sprint_gaps[:5])),
+                total_estimated_hours=sum(g.gap.estimated_hours for g in next_sprint_gaps[:5]),
+                tasks=[{
+                    "gap_id": g.gap.gap_id,
+                    "title": g.gap.title,
+                    "sap_id": g.sap_id,
+                    "estimated_hours": g.gap.estimated_hours,
+                    "priority": g.gap.priority
+                } for g in next_sprint_gaps[:5]]
+            )
+
+        # Future sprints (group by estimated effort)
+        future_sprints = []
+        if future_sprint_gaps:
+            future_sprints.append(SprintPlan(
+                sprint_name="Future Backlog",
+                focus_saps=list(set(g.sap_id for g in future_sprint_gaps)),
+                total_estimated_hours=sum(g.gap.estimated_hours for g in future_sprint_gaps),
+                tasks=[{
+                    "gap_id": g.gap.gap_id,
+                    "title": g.gap.title,
+                    "sap_id": g.sap_id,
+                    "estimated_hours": g.gap.estimated_hours,
+                    "priority": g.gap.priority
+                } for g in future_sprint_gaps]
+            ))
+
+        return this_sprint, next_sprint, future_sprints
+
+    def calculate_next_review_date(self) -> date:
+        """Calculate next quarterly review date"""
+        from datetime import timedelta
+        now = datetime.now()
+        quarter = (now.month - 1) // 3 + 1
+
+        # End of current quarter
+        if quarter == 1:
+            review = datetime(now.year, 3, 31)
+        elif quarter == 2:
+            review = datetime(now.year, 6, 30)
+        elif quarter == 3:
+            review = datetime(now.year, 9, 30)
+        else:
+            review = datetime(now.year, 12, 31)
+
+        # If we're past the review date, use next quarter
+        if now > review:
+            review = review + timedelta(days=90)
+
+        return review.date()
 
     def calculate_next_quarter(self) -> str:
         """Calculate next quarter identifier (e.g., Q1-2026)"""

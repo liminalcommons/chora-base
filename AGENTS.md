@@ -1143,6 +1143,157 @@ python scripts/inbox-status.py --last 7d
 
 ---
 
+## SAP Adoption Quarterly Review
+
+### Overview
+
+**When**: End of each quarter (Q1: March 31, Q2: June 30, Q3: September 30, Q4: December 31)
+
+**Purpose**: Systematically evaluate SAP adoption progress, identify gaps, and plan next quarter's adoption roadmap using SAP-019 (self-evaluation) tools.
+
+**Duration**: 30-60 minutes per quarter
+
+**Outputs**:
+- Strategic roadmap YAML (`project-docs/sap-roadmap-QX-YYYY.yaml`)
+- Quarterly review markdown (`docs/adoption-reports/QX-YYYY-review.md`)
+- Updated adoption history (`adoption-history.jsonl`)
+
+### Process
+
+**Step 1: Generate Strategic Roadmap** (5 minutes)
+
+```bash
+python scripts/sap-evaluator.py --strategic --output project-docs/sap-roadmap-Q{X}-{YEAR}.yaml
+```
+
+This analyzes all installed SAPs, identifies gaps, and creates a prioritized roadmap.
+
+**Step 2: Create Review Document** (10 minutes)
+
+```bash
+python scripts/sap-evaluator.py --strategic --format markdown --output docs/adoption-reports/Q{X}-{YEAR}-review.md
+```
+
+Or manually create review document with:
+- Progress since last quarter (SAPs installed, levels achieved)
+- Velocity metrics (SAPs/month, level progressions/month)
+- Successes and blockers
+- Top 5 priority gaps from roadmap
+
+**Step 3: Analyze Progress** (15 minutes)
+
+Compare to previous quarter:
+- How many SAPs progressed to higher levels?
+- What was the adoption velocity?
+- Which gaps were resolved?
+- Which gaps remain unresolved (blockers)?
+
+Calculate velocity:
+- SAPs adopted per month
+- Level progressions per month
+- Hours invested vs hours saved (ROI)
+
+**Step 4: Update Goals** (10 minutes)
+
+Based on roadmap and analysis:
+- Set targets for next quarter (# of SAPs to L2, # to L3)
+- Prioritize 3-5 focus SAPs from roadmap
+- Estimate ROI potential from priority gaps
+- Identify blockers to address
+
+**Step 5: Commit Review** (5 minutes)
+
+```bash
+git add project-docs/sap-roadmap-Q{X}-{YEAR}.yaml
+git add docs/adoption-reports/Q{X}-{YEAR}-review.md
+git add adoption-history.jsonl  # If manually updated
+git commit -m "docs(sap-019): Q{X}-{YEAR} adoption review
+
+- Strategic roadmap generated
+- Progress analysis completed
+- Next quarter goals set
+
+🤖 Generated with [Claude Code](https://claude.com/claude-code)
+
+Co-Authored-By: Claude <noreply@anthropic.com>"
+```
+
+### Example Review Document Structure
+
+```markdown
+# Q4-2025 SAP Adoption Review
+
+**Generated**: 2025-12-31
+**Review Period**: October 1 - December 31, 2025
+
+## Progress Summary
+
+### SAPs Adopted
+- Total SAPs: 8 (was 6 in Q3)
+- New adoptions: SAP-004, SAP-019
+
+### Level Progression
+- Level 2: 4 SAPs (was 2 in Q3)
+- Level 3: 1 SAP (was 0 in Q3)
+- Average level: 1.75 (was 1.33 in Q3)
+
+### Velocity
+- SAPs adopted: 0.67/month (2 in 3 months)
+- Level progressions: 1.0/month (3 in 3 months)
+- Hours invested: 12 hours this quarter
+
+## Successes
+
+1. **SAP-019 to L3**: Self-evaluation operational, strategic roadmaps generated
+2. **SAP-004 to L2**: Test coverage improved from 0% to 75%
+3. **SAP-013 integration**: ROI tracking now includes SAP adoption
+
+## Blockers
+
+1. **SAP-004 test coverage gap**: Still below 85% target, blocked by missing pytest fixtures
+2. **SAP-009 documentation**: No domain-specific AGENTS.md files created yet
+
+## Next Quarter Goals (Q1-2026)
+
+### Targets
+- Bring SAP-004 to L3 (complete test coverage to 85%+)
+- Adopt 2 new SAPs (SAP-014, SAP-016)
+- Achieve 2.0 average adoption level
+
+### Focus SAPs
+1. SAP-004 (testing-framework) - Priority P0, blocks sprint
+2. SAP-009 (agent-awareness) - Priority P1, improves documentation
+3. SAP-014 (mcp-server-development) - Priority P2, enables MCP development
+
+### Estimated ROI
+- Hours to invest: 8-10 hours
+- Hours to save: 15-20 hours/quarter
+- Expected ROI: 1.75x
+
+## Roadmap
+
+See [project-docs/sap-roadmap-Q1-2026.yaml](../project-docs/sap-roadmap-Q1-2026.yaml) for detailed sprint breakdown.
+```
+
+### Tips
+
+**Automate Data Collection**:
+- `adoption-history.jsonl` tracks all SAP events automatically
+- `python scripts/sap-evaluator.py --quick` shows current state
+- Compare git history: `git log --since="3 months ago" --grep="sap-"`
+
+**Focus on Value**:
+- Prioritize gaps with highest ROI (hours_saved / hours_invested)
+- Address blockers first (gaps blocking other gaps)
+- Celebrate wins (completed levels, new adoptions)
+
+**Keep It Short**:
+- 30-60 minutes maximum
+- Use tools to generate data
+- Focus on decisions, not documentation
+
+---
+
 ## Questions & Support
 
 ### Where to Find Information

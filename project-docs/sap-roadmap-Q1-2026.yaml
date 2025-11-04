@@ -1,0 +1,98 @@
+# SAP Adoption Roadmap
+# Generated: 2025-11-04T15:31:24.962158
+# Next Review: 2025-12-31
+
+metadata:
+  generated_at: 2025-11-04T15:31:24.962158
+  target_quarter: Q1-2026
+
+current_state:
+  total_saps_installed: 28
+  average_adoption_level: 1.00
+
+  distribution:
+    level_0: 2
+    level_1: 28
+    level_2: 0
+    level_3: 0
+
+priority_gaps:
+  - rank: 1
+    sap_id: SAP-004
+    gap_title: "Test coverage 0% < 85% target"
+    impact: high
+    effort: medium
+    priority_score: 0.80
+    sprint: current
+
+  - rank: 2
+    sap_id: SAP-009
+    gap_title: "No domain-specific AGENTS.md files"
+    impact: medium
+    effort: low
+    priority_score: 0.66
+    sprint: next
+
+  - rank: 3
+    sap_id: SAP-014
+    gap_title: "mcp-server-development not documented in AGENTS.md"
+    impact: low
+    effort: low
+    priority_score: 0.48
+    sprint: future
+
+  - rank: 4
+    sap_id: SAP-016
+    gap_title: "link-validation-reference-management not documented in AGENTS.md"
+    impact: low
+    effort: low
+    priority_score: 0.48
+    sprint: future
+
+  - rank: 5
+    sap_id: SAP-017
+    gap_title: "chora-compose-integration not documented in AGENTS.md"
+    impact: low
+    effort: low
+    priority_score: 0.48
+    sprint: future
+
+  - rank: 6
+    sap_id: SAP-018
+    gap_title: "chora-compose-meta not documented in AGENTS.md"
+    impact: low
+    effort: low
+    priority_score: 0.48
+    sprint: future
+
+  - rank: 7
+    sap_id: SAP-019
+    gap_title: "sap-self-evaluation not documented in AGENTS.md"
+    impact: low
+    effort: low
+    priority_score: 0.48
+    sprint: future
+
+  - rank: 8
+    sap_id: SAP-020
+    gap_title: "react-foundation not documented in AGENTS.md"
+    impact: low
+    effort: low
+    priority_score: 0.48
+    sprint: future
+
+  - rank: 9
+    sap_id: SAP-021
+    gap_title: "react-testing not documented in AGENTS.md"
+    impact: low
+    effort: low
+    priority_score: 0.48
+    sprint: future
+
+  - rank: 10
+    sap_id: SAP-022
+    gap_title: "react-linting not documented in AGENTS.md"
+    impact: low
+    effort: low
+    priority_score: 0.48
+    sprint: future

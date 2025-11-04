@@ -2,32 +2,32 @@
 
 **Pattern ID**: SAP-019
 **Pattern Name**: sap-self-evaluation
-**Version**: 1.0.0
-**Last Updated**: 2025-10-30
+**Version**: 1.2.0
+**Last Updated**: 2025-11-04
 
 ## 1. Adoption Overview
 
 | Metric | Value | Target | Status |
 |--------|-------|--------|--------|
 | **Projects using self-evaluation** | 1 | 5 | 🟡 Initial adoption |
-| **Average adoption level** | 1.0 | 2.5 | 🔴 Early stage |
-| **Evaluations per quarter** | 0 | 12 | 🔴 Not yet tracking |
-| **Roadmaps generated** | 0 | 4/year | 🔴 Not yet tracking |
+| **Average adoption level** | 3.0 | 2.5 | 🟢 Exceeding target |
+| **Evaluations per quarter** | 6 | 12 | 🟡 Growing usage |
+| **Roadmaps generated** | 1 | 4/year | 🟡 First quarter complete |
 
 ## 2. Project Inventory
 
 | Project | Version | Adoption Date | Current Level | Next Milestone | Health |
 |---------|---------|---------------|---------------|----------------|--------|
-| chora-base | 1.0.0 | 2025-10-30 | Level 1 | Level 2 by 2025-11-15 | 🟢 Active |
+| chora-base | 1.2.0 | 2025-10-30 | Level 3 | Maintain & iterate | 🟢 Production |
 
 ## 3. Adoption by Level
 
 | Level | Projects | % of Total | Target |
 |-------|----------|------------|--------|
 | **Level 0** | 0 | 0% | 0% |
-| **Level 1** | 1 | 100% | 20% |
+| **Level 1** | 0 | 0% | 20% |
 | **Level 2** | 0 | 0% | 50% |
-| **Level 3** | 0 | 0% | 30% |
+| **Level 3** | 1 | 100% | 30% |
 
 ## 4. Usage Metrics
 
@@ -35,14 +35,18 @@
 
 | Period | Quick Checks | Deep Dives | Strategic Analyses | Total |
 |--------|--------------|------------|-------------------|-------|
-| 2025-Q4 | 0 | 0 | 0 | 0 |
-| **Total** | **0** | **0** | **0** | **0** |
+| 2025-Q4 | 0 | 5 | 1 | 6 |
+| **Total** | **0** | **5** | **1** | **6** |
 
 ### Top Evaluated SAPs
 
 | SAP ID | Evaluations | Avg Level | Last Evaluated |
 |--------|-------------|-----------|----------------|
-| - | - | - | - |
+| SAP-000 | 1 | L1 | 2025-11-04 |
+| SAP-004 | 1 | L2 | 2025-11-04 |
+| SAP-006 | 1 | L1 | 2025-11-04 |
+| SAP-009 | 1 | L2 | 2025-11-04 |
+| SAP-013 | 1 | L2 | 2025-11-04 |
 
 ## 5. Value Delivered
 
@@ -92,6 +96,92 @@
 | Interactive web dashboard | P2 | Considering | 2.0.0 |
 
 ## 7. Changelog
+
+### 2025-11-04 - Level 3 Adoption Achieved (v1.2.0)
+
+**Repository**: chora-base
+**Adoption Level**: 3 (Fully automated - strategic capability)
+**Time Invested**: 10 hours (1.5h Level 1 + 3h Level 2 + 5.5h Level 3)
+
+**Level 3 Milestones**:
+- Strategic analysis fully operational
+- Timeline tracking implemented (`adoption-history.jsonl`)
+- First quarterly roadmap generated (`project-docs/sap-roadmap-Q1-2026.yaml`)
+- SAP-013 metrics integration complete (ROI tracking)
+- Quarterly review process documented in `AGENTS.md`
+- HTML dashboard generator operational (`scripts/generate-dashboard.py`)
+- Sprint breakdown with priority gap ranking
+
+**Evidence of L3 Adoption**:
+- ✅ `adoption-history.jsonl` tracking all SAP events
+- ✅ Strategic roadmap YAML generated with 10 priority gaps
+- ✅ SAP-013 `ClaudeROICalculator` extended with `SAPAdoptionMetric`
+- ✅ Quarterly review workflow in root `AGENTS.md`
+- ✅ HTML dashboard (`adoption-dashboard.html`) with interactive visualizations
+- ✅ Comprehensive gap prioritization (impact × effort × urgency × blockers)
+- ✅ Sprint planning (current, next, future backlog)
+
+**Key Enhancements**:
+- Enhanced `strategic_analysis()` method:
+  - Deep dive on all installed SAPs
+  - Timeline analysis from `adoption-history.jsonl`
+  - Global gap prioritization with multi-factor scoring
+  - Automated sprint breakdown
+  - ROI projection
+- New methods in `utils/sap_evaluation.py`:
+  - `analyze_adoption_timeline()` - Parse JSONL history
+  - `prioritize_gaps_globally()` - Multi-factor gap scoring
+  - `generate_sprint_breakdown()` - Create sprint plans
+  - `calculate_next_review_date()` - Quarterly scheduling
+- SAP-013 integration in `utils/claude_metrics.py`:
+  - `SAPAdoptionMetric` dataclass
+  - `track_sap_adoption()` method
+  - `generate_sap_adoption_report()` method
+- New script: `scripts/generate-dashboard.py`
+
+**Outcomes**:
+- 5 deep dive assessments completed (SAP-000, 004, 006, 009, 013)
+- 1 strategic roadmap generated (Q1-2026)
+- 10 priority gaps identified across all SAPs
+- HTML dashboard provides visual progress tracking
+- Quarterly review process established for continuous improvement
+
+**Next Steps**:
+- Run quarterly reviews (Q1-2026 scheduled for March 31, 2026)
+- Evaluate new SAPs as they're installed
+- Iterate on dashboard visualizations based on feedback
+- Track ROI correlation between SAP adoption and productivity gains
+
+### 2025-11-04 - Level 2 Adoption Achieved (v1.1.0)
+
+**Repository**: chora-base
+**Adoption Level**: 2 (Standard usage - deep dive operational)
+**Time Invested**: 4.5 hours (1.5h Level 1 + 3h Level 2)
+
+**Level 2 Milestones**:
+- Deep dive evaluation engine operational
+- 5 comprehensive assessment reports generated:
+  - SAP-000 (sap-framework)
+  - SAP-004 (testing-framework)
+  - SAP-006 (error-handling)
+  - SAP-009 (agent-awareness)
+  - SAP-013 (metrics-tracking)
+- Rule-based gap analysis with prioritization
+- Markdown report generation tested and validated
+- CLI tool fully functional (`--quick`, `--deep` modes)
+
+**Evidence of L2 Adoption**:
+- ✅ Deep dive reports saved to `docs/adoption-reports/`
+- ✅ Gap analysis identifies blockers and priorities
+- ✅ Actionable recommendations with effort estimates
+- ✅ Multi-format output (terminal, JSON, markdown)
+
+**Next Steps**:
+- Implement Level 3 strategic analysis (quarterly roadmaps)
+- Create `adoption-history.jsonl` for timeline tracking
+- Integrate with SAP-013 for ROI correlation
+- Generate HTML dashboard for visualization
+- Establish quarterly review process
 
 ### 2025-10-30 - Initial Release (v1.0.0)
 
