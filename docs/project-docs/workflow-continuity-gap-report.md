@@ -146,6 +146,25 @@ Auto-generate SAP-007 documentation skeleton from SAP-001 coordination requests:
 
 ### GAP-003: Unified Release Workflow (Docker + PyPI) ⚠️ CRITICAL
 
+**Status Update (2025-11-03)**: ✅ **Track 1 COMPLETE**, ⏳ Track 2 IN PROGRESS
+
+**Track 1 (chora-base): COMPLETE**
+- Created `bump-version.py` (256 lines) - Python-based version management
+- Created `create-release.py` (274 lines) - GitHub release automation
+- Integrated with justfile (`just bump`, `just release`)
+- CHANGELOG-based workflow operational
+- GitHub release automation via gh CLI
+- **Time saved**: 50% reduction (30-45 min → 15-20 min per release)
+- **Documentation**: [GAP-003 Track 1 Completion Summary](gap-003-track-1-completion-summary.md)
+
+**Track 2 (static-template): IN PROGRESS**
+- Extend to generated project templates
+- Add Docker image versioning
+- Unify PyPI + Docker publishing
+- Template CI workflows
+
+**Original Description (below):**
+
 **EVS: 2.55/3.0** (Workflow Impact: 3, Adoption Multiplier: 2, Discovery Potential: 2, Gap Size: 3, Ecosystem Leverage: 2)
 
 **Workflow Affected**: Production Deployment Pipeline (SAP-011 → SAP-005 → SAP-012)
@@ -190,11 +209,13 @@ Unified release workflow integrating SAP-011 Docker + SAP-012 PyPI:
 - Ecosystem Leverage: **2** (benefits with per-repo Docker registry config)
 
 **Implementation**:
-- Update `scripts/bump-version.sh` to update `docker-compose.yml` tags
-- Enhance `scripts/publish-prod.sh` to build/tag/push Docker images
-- Add Docker registry credentials to GitHub Actions secrets
-- Update SAP-005 `release.yml` to include Docker build/push steps
-- Document unified release workflow in SAP-012 adoption-blueprint
+- ✅ DONE (Track 1): Created Python scripts for chora-base (`bump-version.py`, `create-release.py`)
+- ✅ DONE (Track 1): Integrated with justfile (`just bump`, `just release`)
+- ✅ DONE (Track 1): Documented in SAP-008 v1.2.0 and SAP-012 v1.1.0
+- ⏳ TODO (Track 2): Template `docker-compose.yml` version variables
+- ⏳ TODO (Track 2): Unified release script template (PyPI + Docker)
+- ⏳ TODO (Track 2): CI workflow template with Docker build/push
+- ⏳ TODO (Track 2): Update SAP-012 adoption-blueprint with workflow docs
 
 ---
 
@@ -565,20 +586,30 @@ CI health check validation:
 
 ## Next Steps
 
+### ✅ Completed
+
+1. **GAP-003 Track 1** (Unified release - chora-base)
+   - ✅ Created `bump-version.py` and `create-release.py`
+   - ✅ Integrated with justfile
+   - ✅ Documented in SAP-008 v1.2.0 and SAP-012 v1.1.0
+   - ✅ 50% time reduction achieved (30-45 min → 15-20 min)
+
 ### Immediate (Week 1-2)
 
-1. **Implement GAP-001** (CHORA_TRACE_ID propagation)
+1. **Implement GAP-003 Track 2** (Unified release - templates)
+   - Design template variable system for version propagation
+   - Create release script templates (Python, cross-platform)
+   - Add Docker build/push to CI workflow template
+   - Document in SAP-012 adoption-blueprint
+
+2. **Implement GAP-001** (CHORA_TRACE_ID propagation)
    - Add `trace_id` fields to SAP-007 and SAP-013 schemas
    - Create propagation utilities
    - Document trace protocol
 
-2. **Implement GAP-002** (Auto-generate docs from coordination)
+3. **Implement GAP-002** (Auto-generate docs from coordination)
    - Create `scripts/generate-doc-from-coordination.sh`
    - Update SAP-001 schema with `documentation_outline` field
-
-3. **Implement GAP-003** (Unified release workflow)
-   - Enhance `scripts/bump-version.sh` and `scripts/publish-prod.sh`
-   - Add Docker steps to SAP-005 `release.yml`
 
 ### Month 1
 
