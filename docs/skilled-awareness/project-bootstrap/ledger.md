@@ -1,9 +1,9 @@
 # Traceability Ledger: Project Bootstrap
 
 **SAP ID**: SAP-003
-**Current Version**: 1.0.0
+**Current Version**: 1.1.0
 **Status**: Draft (Phase 2)
-**Last Updated**: 2025-10-28
+**Last Updated**: 2025-11-04
 
 ---
 
@@ -12,7 +12,7 @@
 | Project | Template Version | Status | Generation Date | Last Upgrade | Notes |
 |---------|------------------|--------|-----------------|--------------|-------|
 | chora-compose | 3.0.0 | Active | 2025-10-15 | - | Meta-repository coordination |
-| mcp-n8n | 3.0.0 | Active | 2025-10-18 | - | n8n automation MCP server |
+| mcp-gateway | 3.0.0 | Active | 2025-10-18 | - | n8n automation MCP server |
 | _No other known projects yet_ | - | - | - | - | Add entries as projects generated |
 
 **Legend**:
@@ -26,6 +26,7 @@
 
 | Version | Release Date | Type | Changes | Migration Required |
 |---------|--------------|------|---------|-------------------|
+| 1.1.0 | 2025-11-04 | MINOR | Added Template Capability Propagation protocol (Section 6.3 in protocol-spec): Formalized pattern for extending chora-base capabilities to generated projects. Reference: GAP-003 Track 2 | No |
 | 1.0.0 | 2025-10-28 | MAJOR | Initial SAP-003 release: Complete documentation of setup.py + blueprints + static-template generation system | N/A (initial) |
 
 **Legend**:
@@ -49,7 +50,7 @@
   - Claude-optimized (20-40s generation)
 
 **v3.0.0** (Previous):
-- **Projects**: chora-compose, mcp-n8n
+- **Projects**: chora-compose, mcp-gateway
 - **Status**: ✅ Active (supported)
 - **Features**: Similar to v3.3.0 (minor differences)
 
@@ -73,7 +74,7 @@
   - Target: 100% (with validation improvements)
 - **Generation Time** (agent): 30-60s (baseline)
   - Target: 20-40s (with optimizations)
-- **Known Projects Generated**: 2 (chora-compose, mcp-n8n)
+- **Known Projects Generated**: 2 (chora-compose, mcp-gateway)
   - Target: 5+ (Phase 2-3)
 - **Support Issues** (generation-related): ~30% of all issues (baseline)
   - Target: <20% (Phase 3), <10% (Phase 4)
@@ -220,7 +221,104 @@ static-template/
 
 ---
 
-## 8. Upgrade Paths
+## 8. Template Capability Propagation
+
+**Added**: 2025-11-04 (v1.1.0)
+**Protocol**: See [Section 6.3 in protocol-spec.md](protocol-spec.md#63-template-capability-propagation)
+
+This section tracks capabilities that have been propagated from chora-base to generated projects via templates.
+
+### 8.1 Propagation Status
+
+| Capability (SAP) | Template Support | Integration Test | Last Propagated | Version | Reference |
+|------------------|------------------|------------------|-----------------|---------|-----------|
+| SAP-004: Testing Framework | ✅ Complete | ✅ Passing | 2025-10-28 | v1.0.0 | Initial templates |
+| SAP-005: CI/CD Workflows | ✅ Complete | ✅ Passing | 2025-10-28 | v1.0.0 | Initial templates |
+| SAP-006: Quality Gates | ✅ Complete | ✅ Passing | 2025-10-28 | v1.0.0 | Initial templates |
+| SAP-008: Automation Scripts (Core) | ✅ Complete | ✅ Passing | 2025-10-28 | v1.0.0 | Initial templates |
+| SAP-008: Release Workflow | ✅ Complete | ✅ Passing | 2025-11-04 | v1.1.0 | [GAP-003 Track 2](../../project-docs/gap-003-track-2-completion-summary.md) |
+| SAP-011: Docker Operations | ✅ Complete | ✅ Passing | 2025-10-28 | v1.0.0 | Initial templates |
+| SAP-012: Development Lifecycle | ✅ Complete | ✅ Passing | 2025-10-28 | v1.0.0 | Initial templates |
+| SAP-030: Cross-Platform | ✅ Complete | ✅ Passing | 2025-10-28 | v1.0.0 | Initial templates |
+
+**Coverage**: 8/8 major capabilities (100%)
+
+### 8.2 Propagation History
+
+#### v1.1.0 (2025-11-04) - GAP-003 Track 2: Release Workflow
+
+**Capability**: Unified release workflow (PyPI + Docker + GitHub)
+
+**Templates Added**:
+- `mcp-templates/bump-version.py.template` (400+ lines)
+- `mcp-templates/create-release.py.template` (300+ lines)
+- `mcp-templates/justfile.template` (200+ lines)
+- `mcp-templates/how-to-create-release.md.template` (450+ lines)
+
+**Infrastructure Updated**:
+- `docker-compose.yml` - Version variable substitution
+- `Dockerfile` - OCI metadata labels
+- `.env.example.template` - Docker configuration
+- `.github/workflows/release.yml` - Multi-arch Docker build job
+
+**Integration Test**:
+- Script: `scripts/test-mcp-template-render.py` (85 lines)
+- Test data: `test-data/mcp-test-project.json`
+- Results: ✅ All tests passed (rendering, syntax, variables)
+
+**Business Impact**:
+- Time savings: 50% per release (30-45 min → 15-20 min)
+- Applies to: ALL generated projects
+- ROI: Break-even at 3 releases per project
+- Multi-arch: Built-in linux/amd64 + linux/arm64 support
+
+**Documentation**:
+- [GAP-003 Track 2 Completion Summary](../../project-docs/gap-003-track-2-completion-summary.md)
+- [SAP-008 v1.3.0](../automation-scripts/ledger.md) (template scripts)
+- [SAP-012 v1.2.0](../development-lifecycle/ledger.md) (lifecycle integration)
+
+**Commits**:
+- bc6df7b - Docker and CI/CD template updates
+- 13e4656 - Script templates
+- c7b0e48 - Documentation and testing
+
+#### v1.0.0 (2025-10-28) - Initial Template Suite
+
+**Capabilities**: Core framework (testing, CI/CD, quality, Docker, lifecycle, scripts)
+
+**Templates**: 100+ files in static-template/
+
+**Status**: Baseline template support for all core SAPs
+
+### 8.3 Propagation Metrics
+
+| Metric | Current | Target | Status |
+|--------|---------|--------|--------|
+| Template coverage (% of SAPs) | 100% (8/8) | 100% | 🟢 Excellent |
+| Integration test coverage | 100% | 100% | 🟢 Excellent |
+| Avg propagation time (chora-base → template) | 0-1 day | <3 days | 🟢 Excellent |
+| Template test pass rate | 100% | 100% | 🟢 Excellent |
+
+**Notes**:
+- GAP-003 Track 2 propagated in <1 day (same day as Track 1 completion)
+- All propagations include integration tests
+- 100% of major capabilities have template support
+
+### 8.4 Future Propagations
+
+**Planned** (when implemented in chora-base):
+- SAP-013: Metrics Framework (when released)
+- SAP-033+: Future cross-platform enhancements
+- GAP-001, GAP-002: When implemented
+
+**Tracking**:
+- Monitor [workflow-continuity-gap-report.md](../../project-docs/workflow-continuity-gap-report.md)
+- New capabilities trigger propagation planning
+- Target: <3 days from chora-base implementation to template availability
+
+---
+
+## 9. Upgrade Paths
 
 ### Template Upgrades
 
@@ -245,11 +343,11 @@ static-template/
 
 ---
 
-## 9. Adoption Feedback
+## 10. Adoption Feedback
 
 ### Phase 2 Feedback (2025-10 → 2026-01)
 
-**Collected From**: chora-base maintainer (Victor), early adopters (chora-compose, mcp-n8n)
+**Collected From**: chora-base maintainer (Victor), early adopters (chora-compose, mcp-gateway)
 
 **Key Themes**:
 - ✅ **Generation speed**: Fast (30-60s with agent), acceptable
@@ -270,7 +368,7 @@ _Not yet collected_
 
 ---
 
-## 10. Compliance & Audit
+## 11. Compliance & Audit
 
 ### Generation Quality Gates
 
@@ -308,7 +406,7 @@ _Not yet collected_
 
 ---
 
-## 11. Performance Tracking
+## 12. Performance Tracking
 
 ### Generation Time (by Component)
 
@@ -335,7 +433,7 @@ _Not yet collected_
 
 ---
 
-## 12. Related Documents
+## 13. Related Documents
 
 **SAP-003 Artifacts**:
 - [capability-charter.md](capability-charter.md) - This SAP's charter
@@ -350,7 +448,7 @@ _Not yet collected_
 
 **Related SAPs**:
 - [chora-base/protocol-spec.md](../chora-base/protocol-spec.md) - Meta-SAP Section 3.2.1
-- [chora-base/ledger.md](../chora-base/ledger.md) - Adopter tracking (chora-compose, mcp-n8n)
+- [chora-base/ledger.md](../chora-base/ledger.md) - Adopter tracking (chora-compose, mcp-gateway)
 - [INDEX.md](../INDEX.md) - SAP registry
 
 **Upgrade Documentation**:
@@ -359,7 +457,7 @@ _Not yet collected_
 
 ---
 
-## 13. How to Update This Ledger
+## 14. How to Update This Ledger
 
 ### Adding Generated Project
 

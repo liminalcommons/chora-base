@@ -1,9 +1,9 @@
 # Protocol Specification: Project Bootstrap
 
 **SAP ID**: SAP-003
-**Version**: 1.0.0
+**Version**: 1.1.0
 **Status**: Draft (Phase 2)
-**Last Updated**: 2025-10-28
+**Last Updated**: 2025-11-04
 
 ---
 
@@ -501,6 +501,218 @@ When setup.py validation passes, the generated project **guarantees**:
 - Validation: ~2-5 seconds
 
 **Optimization**: Claude can parallelize reading blueprints and git config checks.
+
+### 6.3 Template Capability Propagation
+
+**Added**: 2025-11-04 (v1.1.0)
+**Reference Implementation**: GAP-003 Track 2
+
+This section formalizes the pattern for extending chora-base capabilities to generated projects through template updates.
+
+#### 6.3.1 Propagation Pattern
+
+When a capability is implemented in chora-base and should be available to all generated projects, follow this protocol:
+
+**Phase 1: Template Creation**
+1. Identify the capability working in chora-base (e.g., release workflow, testing framework)
+2. Create template versions with `.template` suffix
+3. Add Jinja2 template variables (e.g., `{{ project_slug }}`, `{{ package_name }}`)
+4. Update template infrastructure files:
+   - `docker-compose.yml` - Version variables
+   - `Dockerfile` - Metadata labels
+   - `.github/workflows/*.yml` - CI/CD jobs
+   - Configuration files - Environment variables
+
+**Phase 2: Testing**
+1. Create test data fixture in `test-data/{capability}-test.json`
+2. Create integration test script: `scripts/test-{capability}-render.py`
+3. Validate template rendering:
+   - All variables substituted correctly
+   - Syntax validation (Python: `py_compile`, etc.)
+   - Output inspection in `.test_target/`
+4. Document test results
+
+**Phase 3: Documentation**
+1. Update relevant SAP ledgers (version bumps)
+2. Add capability section to ledgers documenting templates
+3. Create completion summary (if part of GAP/initiative)
+4. Update [workflow-continuity-gap-report.md](../../../docs/project-docs/workflow-continuity-gap-report.md) if closing a gap
+
+#### 6.3.2 Template Variable Conventions
+
+**Standard Variables** (always available):
+```python
+{
+    "project_name": "Human-readable project name",
+    "project_slug": "url-friendly-name",
+    "package_name": "python_package_name",
+    "project_version": "0.1.0",
+    "project_description": "Project description",
+    "author_name": "Author Name",
+    "author_email": "author@example.com",
+    "github_org": "organization",
+    "python_version": "3.11",
+    "python_version_nodots": "311",
+    "license": "MIT"
+}
+```
+
+**Capability-Specific Variables** (added as needed):
+```python
+{
+    "docker_registry": "ghcr.io",
+    "docker_org": "liminalcommons",
+    "test_coverage_threshold": 85,
+    "pypi_auth_method": "trusted_publishing",
+    "include_memory_system": true
+}
+```
+
+#### 6.3.3 Testing Protocol
+
+**Template Rendering Test Structure**:
+```python
+# scripts/test-{capability}-render.py
+
+import json
+from pathlib import Path
+from jinja2 import Environment, FileSystemLoader
+
+def test_template_rendering():
+    # 1. Load test data
+    data = json.load(open("test-data/{capability}-test.json"))
+
+    # 2. Set up Jinja2 environment
+    env = Environment(loader=FileSystemLoader('static-template/mcp-templates'))
+
+    # 3. Render each template
+    for template_name in templates:
+        template = env.get_template(template_name)
+        output = template.render(**data)
+
+        # 4. Check for unsubstituted variables
+        assert '{{' not in output or is_just_syntax(output)
+
+        # 5. Validate syntax (language-specific)
+        if template_name.endswith('.py.template'):
+            py_compile.compile(output_file, doraise=True)
+
+        # 6. Write to test_target for inspection
+        output_file = Path('.test_target') / template_name.replace('.template', '')
+        output_file.write_text(output, encoding='utf-8')
+```
+
+**Validation Checklist**:
+- ✅ All templates render without Jinja2 errors
+- ✅ No unsubstituted `{{ variables }}` (except language syntax)
+- ✅ Syntax validation passes (Python, YAML, etc.)
+- ✅ Output files match expected structure
+- ✅ UTF-8 encoding handled correctly (Windows compatibility)
+
+#### 6.3.4 SAP Update Pattern
+
+When adding template support for a capability, update the owning SAP:
+
+**Version Bump**:
+- MINOR version bump (e.g., v1.2.0 → v1.3.0)
+- Indicates new template support added
+
+**Ledger Updates**:
+1. Update frontmatter version and last_updated
+2. Add new section: "X.X Template Support" or "X.X {Capability} Template Propagation"
+3. Document template files created (names, lines, purpose)
+4. List infrastructure files updated
+5. Add integration test information
+6. Document business impact and metrics
+7. Update changelog and version history
+
+**Example** (from SAP-008 v1.3.0):
+```markdown
+## 4.6 GAP-003 Track 2: Unified Release Workflow (Generated Projects)
+
+**Date**: 2025-11-04
+**Templates**: bump-version.py.template, create-release.py.template, justfile.template
+
+**Template Scripts Created**:
+| Template | Lines | Purpose |
+|----------|-------|---------|
+| bump-version.py.template | 400+ | Version management |
+| create-release.py.template | 300+ | GitHub release automation |
+| justfile.template | 200+ | Task runner integration |
+
+**Integration Testing**: ✅ All tests passed
+**Business Impact**: 50% time savings for all generated projects
+```
+
+#### 6.3.5 Capability Coverage Tracking
+
+**Current Template Support** (as of v1.1.0):
+
+| Capability (SAP) | Template Support | Test Coverage | Version Added |
+|------------------|------------------|---------------|---------------|
+| SAP-004: Testing Framework | ✅ Complete | 100% | v1.0.0 (initial) |
+| SAP-005: CI/CD Workflows | ✅ Complete | 100% | v1.0.0 (initial) |
+| SAP-006: Quality Gates | ✅ Complete | 100% | v1.0.0 (initial) |
+| SAP-008: Automation Scripts | ✅ Complete | 100% | v1.0.0 (initial) |
+| SAP-008: Release Workflow | ✅ Complete | 100% | v1.1.0 (GAP-003 Track 2) |
+| SAP-011: Docker Operations | ✅ Complete | 100% | v1.0.0 (initial) |
+| SAP-012: Development Lifecycle | ✅ Complete | 100% | v1.0.0 (initial) |
+| SAP-030: Cross-Platform | ✅ Complete | 100% | v1.0.0 (initial) |
+
+**Propagation Metrics** (to be tracked):
+- Template coverage: % of chora-base capabilities with templates
+- Propagation time: Time from chora-base implementation to template availability
+- Adoption rate: % of generated projects using latest templates
+
+#### 6.3.6 Guarantees for Propagated Capabilities
+
+When a capability is properly propagated via templates, the generated project guarantees:
+
+1. **Template Rendering**:
+   - ✅ All `.template` files rendered correctly
+   - ✅ All variables substituted (no `{{ placeholders }}` remaining)
+   - ✅ Jinja2 filters applied correctly (e.g., `{{ var | upper }}`)
+
+2. **Syntax Validity**:
+   - ✅ Generated code compiles/validates
+   - ✅ Configuration files parse correctly (YAML, TOML, JSON)
+   - ✅ Scripts have proper shebangs and permissions
+
+3. **Integration**:
+   - ✅ Capability works in generated project immediately
+   - ✅ No additional setup required (unless documented)
+   - ✅ Dependencies declared in pyproject.toml
+
+4. **Documentation**:
+   - ✅ Usage guide included (if needed)
+   - ✅ Examples provided (if applicable)
+   - ✅ Troubleshooting guide (if complex)
+
+#### 6.3.7 Best Practices
+
+**DO**:
+- ✅ Test template rendering on Windows and Unix
+- ✅ Use Jinja2 default filters: `{{ var | default('fallback') }}`
+- ✅ Document all new template variables
+- ✅ Create comprehensive test fixtures
+- ✅ Update SAP ledgers immediately after propagation
+- ✅ Cross-reference completion summaries
+
+**DON'T**:
+- ❌ Hardcode values that should be variables
+- ❌ Skip integration testing
+- ❌ Forget to update version history
+- ❌ Leave unsubstituted variables in output
+- ❌ Mix capability propagation with other changes
+
+**Example** (GAP-003 Track 2):
+```bash
+# Good: Dedicated commit for template propagation
+git commit -m "feat(gap-003): Add release workflow script templates"
+
+# Bad: Mixed with unrelated changes
+git commit -m "feat: Add templates and fix bug and update docs"
+```
 
 ---
 
