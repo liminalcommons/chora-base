@@ -11,7 +11,7 @@
 
 | Project | Coverage | Status | Last Updated | Notes |
 |---------|----------|--------|--------------|-------|
-| chora-base | 85%+ | Active | 2025-10-28 | Template dogfooding, example tests in static-template |
+| chora-base | 49.7% | Improving | 2025-11-04 | Below 85% target - working toward compliance, example tests in static-template |
 | chora-compose | ~80% | Active | 2025-10-20 | Working toward 85% |
 | mcp-n8n | ~75% | Active | 2025-10-22 | Coverage improvement in progress |
 | _Other projects_ | - | - | - | Add as adopted |
@@ -44,15 +44,17 @@
 **Status**: ✅ On track
 
 **Coverage Metrics**:
-- **chora-base** (template): 85%+ (example tests in static-template/tests/)
+- **chora-base** (template): 49.7% (below 85% target)
   - utils/: 100% (test_validation.py, test_errors.py, test_responses.py, test_persistence.py)
-  - memory/: Not yet tested (future)
+  - scripts/: Minimal coverage (inbox tools, sap-evaluator not fully tested)
+  - memory/: Not yet tested (future - SAP-010 not implemented)
   - mcp/: Not yet tested (project-specific)
+  - **Gap**: Need to add tests for scripts/ and increase overall coverage to ≥85%
 - **chora-compose**: ~80% (working toward 85%)
 - **mcp-n8n**: ~75% (coverage improvement in progress)
 
 **Compliance**:
-- Projects at ≥85%: 1/3 (33%) - chora-base only
+- Projects at ≥85%: 0/3 (0%) - No projects meeting target yet
 - Target: 3/3 (100%) by end of Phase 2
 
 ### Phase 3 (2026-01 → 2026-03)
@@ -91,6 +93,14 @@
 ## 5. Known Issues
 
 ### Active Issues
+
+**Issue: chora-base coverage at 49.7%, below 85% target**
+- **Description**: chora-base itself has 49.7% coverage vs. 85% target documented in SAP-004
+- **Severity**: High (template doesn't dogfood own standards)
+- **Root Cause**: scripts/ directory has minimal test coverage (inbox tools, sap-evaluator)
+- **Workaround**: Focus on utils/ which has 100% coverage as reference examples
+- **Status**: Identified 2025-11-04
+- **Fix**: Planned for Phase 3 - add comprehensive tests for scripts/ to achieve 85%+
 
 **Issue: Async test patterns not in template examples**
 - **Description**: static-template includes utils tests only, no async MCP server tests

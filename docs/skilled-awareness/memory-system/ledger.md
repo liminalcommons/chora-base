@@ -2,7 +2,7 @@
 sap_id: SAP-010
 version: 1.0.0
 status: Draft
-last_updated: 2025-10-28
+last_updated: 2025-11-04
 type: ledger
 ---
 
@@ -11,7 +11,17 @@ type: ledger
 **SAP ID**: SAP-010
 **Capability Name**: memory-system (A-MEM)
 **Version**: 1.0.0
-**Last Updated**: 2025-10-28
+**Last Updated**: 2025-11-04
+
+> **⚠️ IMPLEMENTATION STATUS**: SAP-010 Memory System (A-MEM) is **NOT CURRENTLY IMPLEMENTED** in chora-base.
+>
+> - The `.chora/memory/` directory does not exist in chora-base
+> - No event logging, knowledge graph, agent profiles, or trace correlation is currently active
+> - This SAP is in **draft** status with complete documentation but zero implementation
+> - All metrics below show zero values, reflecting the lack of implementation
+> - **Action Required**: Implement `.chora/memory/` structure and A-MEM patterns to activate this capability
+>
+> See Section 8 (Known Issues) for details on implementation gap.
 
 ---
 
@@ -359,15 +369,58 @@ type: ledger
 
 ---
 
-## 10. Version History
+## 10. Known Issues
+
+### Active Issues
+
+**Issue: SAP-010 Memory System not implemented in chora-base**
+- **Description**: Despite having complete documentation (5 SAP artifacts), SAP-010 Memory System (A-MEM) has zero implementation in chora-base
+- **Severity**: High (documented capability with no implementation)
+- **Root Cause**: `.chora/memory/` directory structure does not exist, no event logging, knowledge graph, or agent profiles active
+- **Impact**:
+  - chora-base cannot dogfood memory patterns
+  - No adoption evidence for ecosystem projects
+  - ROI claims (5x at Level 3) are theoretical, not validated
+  - All ledger metrics show zero values
+- **Workaround**: None - capability is unavailable until implemented
+- **Status**: Identified 2025-11-04 during L3 maturity evaluation
+- **Fix**:
+  - **Priority**: P1 (High) - Required for L3 maturity on SAP-010
+  - **Effort**: Estimated 8-12 hours to implement full A-MEM structure
+  - **Plan**:
+    1. Create `.chora/memory/` directory with event-log/, knowledge/, profiles/, traces/ subdirectories
+    2. Implement event logging for key chora-base operations (template generation, inbox coordination, SAP evaluation)
+    3. Create initial knowledge notes for established patterns
+    4. Set up Claude agent profile with capabilities and preferences
+    5. Validate schema compliance with SAP-010 protocol-spec
+    6. Measure actual ROI after 3 months of dogfooding
+  - **Target**: Phase 3 (by 2026-03-31)
+
+---
+
+## 11. Version History
 
 | Version | Date | Changes | Author |
 |---------|------|---------|--------|
 | 1.0.0 | 2025-10-28 | Initial ledger for memory-system SAP | Claude Code |
+| 1.0.1 | 2025-11-04 | Added implementation gap warning and Known Issues section | Claude Code |
 
 ---
 
-## 11. Changelog
+## 12. Changelog
+
+### 2025-11-04 - Implementation Gap Documented (v1.0.1)
+
+**Updated**:
+- Added warning banner explaining SAP-010 is not implemented
+- Added Known Issues section documenting implementation gap
+- Updated "last_updated" metadata to 2025-11-04
+- Clarified that all zero metrics reflect lack of implementation, not lack of adoption
+
+**Action Required**:
+- Implement `.chora/memory/` structure (Priority: P1)
+- Validate ROI claims through dogfooding (estimated 8-12 hours setup + 3 months validation)
+- Re-evaluate maturity level after implementation
 
 ### 2025-10-28 - SAP-010 Initial Release (v1.0.0)
 
@@ -391,7 +444,7 @@ type: ledger
 
 ---
 
-## 12. Related Documents
+## 13. Related Documents
 
 **Memory Infrastructure**:
 - [.chora/memory/README.md](/static-template/.chora/memory/README.md) - A-MEM architecture

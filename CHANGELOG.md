@@ -5,6 +5,51 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [Unreleased]
+
+### Changed
+
+**SAP Maturity Assessment** (2025-11-04)
+
+Pre-release evaluation of chora-base's own SAP adoption revealed significant maturity gaps. Updated SAP statuses to reflect reality:
+
+- **Updated sap-catalog.json** (27 SAPs status changed):
+  - **Kept "active"** (L3 maturity): SAP-000 (sap-framework), SAP-006 (quality-gates)
+  - **Changed to "pilot"** (L2 maturity): SAP-001 (inbox), SAP-002 (chora-base-meta), SAP-004 (testing-framework), SAP-007 (documentation-framework), SAP-009 (agent-awareness), SAP-027 (dogfooding-patterns)
+  - **Changed to "draft"** (L1 maturity): SAP-003, SAP-005, SAP-008, SAP-010, SAP-011, SAP-012, SAP-013, SAP-014, SAP-016, SAP-017, SAP-018, SAP-019, SAP-020, SAP-021, SAP-022, SAP-023, SAP-024, SAP-025, SAP-026
+  - **Kept "pilot"** (correct): SAP-028 (publishing-automation), SAP-029 (sap-generation)
+
+- **Updated SAP-004 ledger** (testing-framework):
+  - Corrected chora-base coverage: 49.7% (was incorrectly claimed 85%+)
+  - Status: "Improving" (working toward 85% target)
+  - Added active issue documenting coverage gap
+  - Root cause: scripts/ directory has minimal test coverage
+
+- **Updated SAP-010 ledger** (memory-system):
+  - Added warning banner: **NOT CURRENTLY IMPLEMENTED**
+  - `.chora/memory/` directory does not exist
+  - All metrics show zero (reflects no implementation, not no adoption)
+  - Added Known Issues section with implementation plan (8-12h estimated effort)
+
+**Key Findings**:
+- Only 2/29 SAPs at true L3 maturity (7%)
+- 6/29 SAPs at L2 pilot maturity (21%)
+- 21/29 SAPs at L1 draft maturity (72%)
+- Critical gaps: SAP-004 coverage (49.7% vs 85%), SAP-010 not implemented, SAP-013 zero usage
+
+**Impact**:
+- Honest status representation enables realistic adoption planning
+- Identified priority improvements for Phase 3-4
+- Documented gaps with improvement plans and effort estimates
+- Release proceeds with transparent maturity assessment
+
+**Rationale**:
+- Transparency over premature claims of maturity
+- Incremental path to L3 better than blocking release
+- Documentation exists, implementation can follow
+
+See comprehensive maturity evaluation report for full details.
+
 ## [4.5.0] - 2025-11-04
 
 ### Added
