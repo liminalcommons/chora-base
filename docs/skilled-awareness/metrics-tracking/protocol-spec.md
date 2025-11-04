@@ -40,6 +40,7 @@ class ClaudeMetric:
     bugs_fixed: int
     documentation_quality_score: float  # 1-10
     test_coverage: float  # 0-1
+    trace_id: str | None = None  # CHORA_TRACE_ID from SAP-001 coordination (optional)
     metadata: dict[str, Any]
 
 class ClaudeROICalculator:
@@ -92,7 +93,8 @@ metric = ClaudeMetric(
     bugs_introduced=0,
     bugs_fixed=3,
     documentation_quality_score=8.5,
-    test_coverage=0.92
+    test_coverage=0.92,
+    trace_id="mcp-taskmgr-2025-003"  # From SAP-001 coordination request
 )
 calculator.add_metric(metric)
 

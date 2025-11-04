@@ -136,6 +136,13 @@
       "description": "Trace context ID for event correlation (CHORA_TRACE_ID)",
       "examples": ["ecosystem-w3-001", "cross-repo-health-monitoring"]
     },
+    "documentation_outline": {
+      "type": "string",
+      "description": "Optional markdown outline for auto-generating documentation (GAP-002). If provided, this content will be used as the main body of the generated documentation instead of default templates. Supports full markdown including headers, lists, code blocks.",
+      "examples": [
+        "## Prerequisites\n\n- Python 3.11+\n- Docker installed\n\n## Steps\n\n### Step 1: Install Dependencies\n\n```bash\npip install -r requirements.txt\n```\n\n### Step 2: Run Server\n\n```bash\npython src/server.py\n```"
+      ]
+    },
     "decision": {
       "type": "object",
       "description": "Triage decision (added during sprint planning)",

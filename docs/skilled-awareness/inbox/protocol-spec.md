@@ -568,12 +568,170 @@ python scripts/update-coordination-status.py \
 - Updated version from 1.0.0 to 1.1.0
 - Status changed from "Draft" to "Active (ecosystem adoption phase)"
 - Added last updated date
+- Added Section 13: CHORA_TRACE_ID Propagation Protocol (GAP-001 resolution)
 
 **Rationale**:
 - Opinionated tooling enables seamless ecosystem adoption
 - Formalized SLAs provide clear response expectations
 - Governance structure ensures long-term protocol health
 - Roadmap transparency helps adopters plan integration
+- End-to-end traceability enables lead time metrics and retrospectives
+
+---
+
+## 13. CHORA_TRACE_ID Propagation Protocol
+
+**Purpose**: Enable end-to-end traceability from coordination request → documentation → implementation → metrics → retrospectives.
+
+**Problem Statement** (GAP-001):
+- CHORA_TRACE_ID emitted by SAP-001 but not propagated to downstream SAPs (SAP-007 docs, SAP-013 metrics, SAP-004 tests, SAP-011 Docker, SAP-005 CI)
+- Manual handoffs lose context, preventing "lead time" analysis (idea → production)
+- Retrospectives require manual correlation across artifacts
+
+**Solution**: Standardized trace propagation protocol across 5 SAP touchpoints.
+
+### 13.1 Trace ID Format
+
+**Standard Format**: `{domain}-{yyyy}-{nnn}`
+
+**Examples**:
+- `mcp-taskmgr-2025-003` - MCP server for task management, 3rd request in 2025
+- `chora-base-2025-042` - chora-base improvement, 42nd request in 2025
+- `sap-synergy-2025-001` - SAP synergy work, 1st request in 2025
+
+**Components**:
+- `{domain}`: Project/feature domain (lowercase, hyphenated)
+- `{yyyy}`: 4-digit year
+- `{nnn}`: 3-digit sequential number (zero-padded)
+
+### 13.2 Propagation Workflow
+
+**Step 1: Coordination Request Creation** (SAP-001)
+```json
+{
+  "trace_id": "mcp-taskmgr-2025-003",
+  "title": "Create task management MCP server",
+  "type": "coordination_request",
+  "status": "active",
+  "created": "2025-11-03T10:00:00Z"
+}
+```
+
+**Step 2: Documentation** (SAP-007)
+```bash
+# Auto-propagate trace_id to documentation frontmatter
+./scripts/propagate-trace-id.sh mcp-taskmgr-2025-003 docs/user-docs/how-to/create-task.md
+```
+
+Result:
+```yaml
+---
+title: How to Create Tasks
+type: how-to
+status: current
+audience: all
+last_updated: 2025-11-03
+trace_id: mcp-taskmgr-2025-003
+---
+```
+
+**Step 3: Metrics Tracking** (SAP-013)
+```python
+metric = ClaudeMetric(
+    session_id="session-456",
+    timestamp=datetime.now(),
+    task_type="feature_implementation",
+    lines_generated=250,
+    time_saved_minutes=120,
+    trace_id="mcp-taskmgr-2025-003",  # Propagated from coordination
+    ...
+)
+calculator.add_metric(metric)
+```
+
+**Step 4: Commit Messages** (Best Practice)
+```bash
+git commit -m "feat: implement task creation endpoint [trace: mcp-taskmgr-2025-003]"
+```
+
+**Step 5: CI/CD Logs** (SAP-005)
+```yaml
+# .github/workflows/ci.yml
+- name: Run tests
+  env:
+    CHORA_TRACE_ID: ${{ github.event.inputs.trace_id || 'ci-auto' }}
+  run: pytest --trace-id="$CHORA_TRACE_ID"
+```
+
+### 13.3 Trace Propagation Tools
+
+**Script: `scripts/propagate-trace-id.sh`**
+
+Automatically adds trace_id to documentation frontmatter:
+```bash
+./scripts/propagate-trace-id.sh <trace_id> <doc_file>
+```
+
+**Features**:
+- Validates trace_id format
+- Inserts trace_id into YAML frontmatter after `last_updated`
+- Creates backup before modification
+- Provides guidance on next steps (metrics, commits, CI)
+
+**Example**:
+```bash
+./scripts/propagate-trace-id.sh mcp-taskmgr-2025-003 docs/user-docs/tutorials/01-first-task.md
+# SUCCESS: Added trace_id to docs/user-docs/tutorials/01-first-task.md
+# Next steps for end-to-end traceability:
+#   1. Add trace_id to SAP-013 metrics when tracking this work
+#   2. Reference trace_id in commit messages
+#   3. Query metrics by trace_id for lead time analysis
+```
+
+### 13.4 Lead Time Analysis
+
+**Query Metrics by Trace ID**:
+```bash
+# Find all metrics for a trace_id
+grep 'mcp-taskmgr-2025-003' metrics/*.csv
+
+# Calculate lead time (coordination → production)
+./scripts/calculate-lead-time.sh mcp-taskmgr-2025-003
+# Result: 14 days (from coordination request to deployment)
+```
+
+**Benefits**:
+- Identify bottlenecks in workflow
+- Measure time savings by development phase
+- Retrospectives with complete context
+- Evidence-based process improvements
+
+### 13.5 Adoption Guidance
+
+**For Repository Maintainers**:
+1. Add `trace_id` field to SAP-007 documentation frontmatter schema (optional)
+2. Add `trace_id` parameter to SAP-013 ClaudeMetric class (optional)
+3. Install `scripts/propagate-trace-id.sh` utility
+4. Document trace propagation in SAP-001 adoption-blueprint
+5. Train team on trace_id format and commit message conventions
+
+**For AI Agents**:
+1. Extract `trace_id` from coordination requests (SAP-001)
+2. Pass `trace_id` to documentation generation (SAP-007)
+3. Include `trace_id` in metrics tracking (SAP-013)
+4. Reference `trace_id` in commit messages
+5. Query metrics by `trace_id` for retrospectives
+
+**Compatibility**: Trace propagation is **optional** - repos can adopt incrementally without breaking existing workflows.
+
+### 13.6 Related Documents
+
+- [Workflow Continuity Gap Report](../../../project-docs/workflow-continuity-gap-report.md) - GAP-001 details
+- [Context Flow Diagram](../../../project-docs/context-flow-diagram.md) - CHORA_TRACE_ID flow visualization
+- [SAP-007 Documentation Framework](../documentation-framework/protocol-spec.md) - Frontmatter schema
+- [SAP-013 Metrics Tracking](../metrics-tracking/protocol-spec.md) - ClaudeMetric class
+
+---
 
 ### v1.0.0 (2025-10-25 - Initial Release)
 

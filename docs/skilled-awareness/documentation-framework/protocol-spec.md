@@ -116,6 +116,7 @@ type: Enum                 # Document type (required)
 status: Enum               # Document status (required)
 audience: Enum             # Target audience (required)
 last_updated: Date         # YYYY-MM-DD (required)
+trace_id: String           # CHORA_TRACE_ID from SAP-001 coordination (optional)
 version: SemVer            # Document version (optional)
 tags: [String]             # Keywords for search (optional)
 test_extraction: Boolean   # Enable test extraction (optional, How-Tos only)
@@ -151,6 +152,13 @@ related: [String]          # Related doc paths (optional)
 - `true` - Extract code blocks to pytest tests
 - `false` - Do not extract (default)
 - Only applicable to How-To guides
+
+**trace_id** (String):
+- CHORA_TRACE_ID from originating coordination request (SAP-001)
+- Format: `{domain}-{yyyy}-{nnn}` (e.g., `mcp-taskmgr-2025-003`)
+- Enables end-to-end traceability from coordination → documentation → implementation → metrics
+- Optional but recommended for all docs created from coordination workflow
+- See GAP-001 resolution for trace propagation protocol
 
 ---
 
