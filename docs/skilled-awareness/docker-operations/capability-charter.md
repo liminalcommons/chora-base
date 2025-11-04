@@ -316,79 +316,36 @@ Package **Docker operations** as a Skilled Awareness Package (SAP) to standardiz
 
 ---
 
-## 8. Alternatives Considered
+## 8. Design Trade-offs and Rationale
 
-### Alternative 1: No Docker (venv only)
+**Why multi-stage builds instead of single-stage?**
+- **Trade-off**: Dockerfile complexity vs. image size optimization
+- **Decision**: Multi-stage builds reduce production image size by 300% by excluding build tools and dev dependencies
+- **Alternative considered**: Single-stage Dockerfile → rejected due to unnecessarily large production images (~500MB vs ~150MB)
 
-**Pros**: Simpler, no Docker installation
-**Cons**: "Works on my machine" problems, no production parity
-**Decision**: Rejected - Docker critical for production deployments
+**Why wheel distribution instead of editable install for production?**
+- **Trade-off**: Development parity vs. import path safety
+- **Decision**: Wheel distribution prevents namespace conflicts (experienced in chora-compose) and ensures clean Python imports
+- **Alternative considered**: Editable install in production → rejected due to import path issues and larger container size
 
-### Alternative 2: Single-Stage Dockerfile
+**Why separate Dockerfile.test for CI/CD?**
+- **Trade-off**: Single Dockerfile vs. optimized CI experience
+- **Decision**: Test-specific Dockerfile enables GitHub Actions cache optimization (6x faster builds) and includes dev dependencies
+- **Alternative considered**: Use production Dockerfile for testing → rejected due to missing dev tools and slower build times
 
-**Pros**: Simpler Dockerfile structure
-**Cons**: 300% larger images, build tools in production
-**Decision**: Rejected - Multi-stage is industry standard
+**Why non-root user (UID 1000) instead of root?**
+- **Trade-off**: Setup simplicity vs. security
+- **Decision**: Non-root execution prevents privilege escalation attacks and follows container security best practices
+- **Alternative considered**: Run as root → rejected due to security vulnerabilities and production platform requirements
 
-### Alternative 3: Editable Install in Production
-
-**Pros**: Matches local development
-**Cons**: Import path conflicts, namespace issues (chora-compose experience)
-**Decision**: Rejected - Wheel distribution prevents conflicts
-
-### Alternative 4: Separate .dockerignore per Dockerfile
-
-**Pros**: Fine-grained control
-**Cons**: Maintenance burden, file duplication
-**Decision**: Rejected - Use COPY control in Dockerfile instead
-
----
-
-## 9. Roadmap
-
-### Phase 1: Core Artifacts (Week 1) ✅ Target
-
-**Deliverables**:
-- SAP artifacts (Charter, Protocol, Awareness, Adoption, Ledger)
-- Docker blueprints (Dockerfile, Dockerfile.test, docker-compose.yml, .dockerignore, DOCKER_BEST_PRACTICES.md)
-
-**Validation**:
-- Generate 2 test projects (MCP server, web service)
-- Verify builds succeed
-- Confirm image sizes ≤250MB
-
-### Phase 2: Documentation & Examples (Week 2-3)
-
-**Deliverables**:
-- Update chora-base README with Docker section
-- Add Docker examples to examples/ directory
-- Create troubleshooting guide
-
-**Validation**:
-- Beta test with 3 external adopters
-- Collect feedback on pain points
-
-### Phase 3: Integration & Automation (Week 4)
-
-**Deliverables**:
-- Update SAP-003 (project-bootstrap) to include Docker option
-- Add `just docker-*` commands to SAP-008 (automation-scripts)
-- Update INDEX.md with SAP-011
-
-**Validation**:
-- Generate 5 projects with Docker enabled
-- Verify end-to-end workflow (generate → build → test → deploy)
-
-### Phase 4: Adoption & Iteration (Month 2-6)
-
-**Activities**:
-- Monitor adoption metrics (target: 70% of new projects)
-- Collect user feedback
-- Iterate on patterns based on real-world usage
+**Why docker-compose instead of plain docker run?**
+- **Trade-off**: Simplicity (docker run) vs. orchestration features
+- **Decision**: docker-compose provides health checks, volume management, networking, and multi-service coordination with minimal overhead
+- **Alternative considered**: Shell scripts with docker run → rejected due to poor readability and difficult maintenance
 
 ---
 
-## 10. Related Documents
+## 9. Related Documents
 
 **This SAP (docker-operations)**:
 - [protocol-spec.md](protocol-spec.md) - Technical contracts
@@ -415,7 +372,7 @@ Package **Docker operations** as a Skilled Awareness Package (SAP) to standardiz
 
 ---
 
-## 11. Approval and Sign-off
+## 10. Approval and Sign-off
 
 **Charter Status**: Draft
 **Target Approval Date**: 2025-10-28

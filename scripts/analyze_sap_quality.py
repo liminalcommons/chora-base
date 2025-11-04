@@ -31,8 +31,10 @@ class SAPQualityReport:
     clarity_score: float  # 0-100
     examples_score: float  # 0-100
     structure_score: float  # 0-100
+    diataxis_score: float  # 0-100 - Diataxis framework compliance
     issues: list[QualityIssue]
     strengths: list[str]
+    diataxis_compliance: dict  # Per-artifact Diataxis assessment
 
     def to_dict(self):
         return {
@@ -111,11 +113,15 @@ class SAPQualityAnalyzer:
         examples_score = self._calculate_examples_score(sap_dir, issues, strengths)
         structure_score = self._calculate_structure_score(issues)
 
+        # Calculate Diataxis compliance score
+        diataxis_score, diataxis_compliance = self._calculate_diataxis_score(sap_dir, issues, strengths)
+
         overall_score = (
-            completeness_score * 0.35 +
-            clarity_score * 0.25 +
-            examples_score * 0.20 +
-            structure_score * 0.20
+            completeness_score * 0.30 +
+            clarity_score * 0.20 +
+            examples_score * 0.15 +
+            structure_score * 0.15 +
+            diataxis_score * 0.20
         )
 
         return SAPQualityReport(
@@ -126,8 +132,10 @@ class SAPQualityAnalyzer:
             clarity_score=clarity_score,
             examples_score=examples_score,
             structure_score=structure_score,
+            diataxis_score=diataxis_score,
             issues=issues,
-            strengths=strengths
+            strengths=strengths,
+            diataxis_compliance=diataxis_compliance
         )
 
     def _analyze_artifact(self, file_path: Path, artifact_type: str, filename: str):
@@ -460,6 +468,263 @@ class SAPQualityAnalyzer:
 
         return max(0, score)
 
+    def _calculate_diataxis_score(self, sap_dir: Path, issues: list, strengths: list) -> tuple[float, dict]:
+        """
+        Calculate Diataxis framework compliance score
+
+        Checks if each artifact adheres to its Diataxis category:
+        - capability-charter.md = Explanation (why, context, rationale)
+        - protocol-spec.md = Reference (specs, APIs, contracts)
+        - awareness-guide.md = How-To (task-oriented, problem-solving)
+        - adoption-blueprint.md = Tutorial (learning journey, step-by-step)
+        - ledger.md = Reference (factual records)
+        """
+        compliance = {}
+        artifact_scores = {}
+
+        # Charter - Explanation
+        charter_path = sap_dir / "capability-charter.md"
+        if charter_path.exists():
+            content = charter_path.read_text()
+            score = 100.0
+            charter_issues = []
+
+            # Should explain WHY (not just WHAT)
+            if not re.search(r'\b(why|rationale|motivation|problem|context|background)\b', content, re.IGNORECASE):
+                charter_issues.append("Missing WHY/rationale - doesn't explain context")
+                score -= 30
+
+            # Should discuss trade-offs or design decisions
+            if not re.search(r'\b(trade-?off|decision|choice|approach|alternative)\b', content, re.IGNORECASE):
+                charter_issues.append("Missing trade-offs or design decisions")
+                score -= 20
+
+            # Should NOT have step-by-step instructions (belongs in blueprint)
+            if re.search(r'step \d|1\.|2\.|3\.|first.*second.*third', content, re.IGNORECASE):
+                charter_issues.append("Contains tutorial content (belongs in adoption-blueprint)")
+                score -= 25
+
+            # Should NOT have API specs (belongs in protocol-spec)
+            if re.search(r'```(json|yaml|python|typescript)|interface \{|type \{', content):
+                charter_issues.append("Contains technical specs (belongs in protocol-spec)")
+                score -= 15
+
+            artifact_scores['charter'] = max(0, score)
+            compliance['capability-charter.md'] = {
+                'category': 'Explanation',
+                'score': artifact_scores['charter'],
+                'status': 'pass' if score >= 75 else ('partial' if score >= 50 else 'fail'),
+                'issues': charter_issues
+            }
+
+            if score >= 75:
+                strengths.append("capability-charter.md: Good Explanation adherence (context, rationale)")
+            elif charter_issues:
+                for issue in charter_issues:
+                    issues.append(QualityIssue(
+                        severity="warning" if score < 50 else "info",
+                        category="diataxis",
+                        artifact="capability-charter.md",
+                        description=f"Diataxis: {issue}"
+                    ))
+
+        # Protocol-spec - Reference
+        protocol_path = sap_dir / "protocol-spec.md"
+        if protocol_path.exists():
+            content = protocol_path.read_text()
+            score = 100.0
+            protocol_issues = []
+
+            # Should have technical specifications
+            if not re.search(r'```|schema|interface|api|contract|guarantee', content, re.IGNORECASE):
+                protocol_issues.append("Missing technical specifications")
+                score -= 30
+
+            # Should NOT have tutorial patterns
+            if re.search(r"let's|we'll|you'll learn|follow these steps", content, re.IGNORECASE):
+                protocol_issues.append("Contains tutorial language (belongs in adoption-blueprint)")
+                score -= 25
+
+            # Should NOT have problem-solving patterns
+            if re.search(r'problem:.*solution:|if you need to|to solve this', content, re.IGNORECASE):
+                protocol_issues.append("Contains how-to content (belongs in awareness-guide)")
+                score -= 15
+
+            artifact_scores['protocol'] = max(0, score)
+            compliance['protocol-spec.md'] = {
+                'category': 'Reference',
+                'score': artifact_scores['protocol'],
+                'status': 'pass' if score >= 75 else ('partial' if score >= 50 else 'fail'),
+                'issues': protocol_issues
+            }
+
+            if score >= 75:
+                strengths.append("protocol-spec.md: Good Reference adherence (technical specs)")
+            elif protocol_issues:
+                for issue in protocol_issues:
+                    issues.append(QualityIssue(
+                        severity="warning" if score < 50 else "info",
+                        category="diataxis",
+                        artifact="protocol-spec.md",
+                        description=f"Diataxis: {issue}"
+                    ))
+
+        # Awareness-guide - How-To
+        awareness_path = sap_dir / "awareness-guide.md"
+        if awareness_path.exists():
+            content = awareness_path.read_text()
+            score = 100.0
+            awareness_issues = []
+
+            # Should be task-oriented (problem → solution)
+            if not re.search(r'problem|task|workflow|how to|common|scenario|use case', content, re.IGNORECASE):
+                awareness_issues.append("Missing task-oriented content")
+                score -= 25
+
+            # Should have concrete examples
+            if not re.search(r'```|example|instance|case', content, re.IGNORECASE):
+                awareness_issues.append("Missing concrete examples")
+                score -= 20
+
+            # Should NOT teach fundamentals step-by-step (belongs in tutorial)
+            if re.search(r"what you'll learn|learning objective|lesson \d", content, re.IGNORECASE):
+                awareness_issues.append("Contains tutorial content (belongs in adoption-blueprint)")
+                score -= 20
+
+            # Should have cross-domain references (2+ domains)
+            domain_count = 0
+            if re.search(r'dev-docs/', content): domain_count += 1
+            if re.search(r'project-docs/', content): domain_count += 1
+            if re.search(r'user-docs/', content): domain_count += 1
+            if re.search(r'skilled-awareness/', content): domain_count += 1
+
+            if domain_count < 2:
+                awareness_issues.append("Weak cross-domain references (should reference 2+ domains)")
+                score -= 15
+
+            artifact_scores['awareness'] = max(0, score)
+            compliance['awareness-guide.md'] = {
+                'category': 'How-To Guide',
+                'score': artifact_scores['awareness'],
+                'status': 'pass' if score >= 75 else ('partial' if score >= 50 else 'fail'),
+                'issues': awareness_issues
+            }
+
+            if score >= 75:
+                strengths.append("awareness-guide.md: Good How-To adherence (task-oriented)")
+            elif awareness_issues:
+                for issue in awareness_issues:
+                    issues.append(QualityIssue(
+                        severity="warning" if score < 50 else "info",
+                        category="diataxis",
+                        artifact="awareness-guide.md",
+                        description=f"Diataxis: {issue}"
+                    ))
+
+        # Adoption-blueprint - Tutorial
+        blueprint_path = sap_dir / "adoption-blueprint.md"
+        if blueprint_path.exists():
+            content = blueprint_path.read_text()
+            score = 100.0
+            blueprint_issues = []
+
+            # Should be learning-oriented
+            if not re.search(r'step|install|setup|prerequisite|getting started', content, re.IGNORECASE):
+                blueprint_issues.append("Missing learning journey structure")
+                score -= 25
+
+            # Should have sequential steps
+            if not re.search(r'step \d|^\d+\.|first|next|then|finally', content, re.MULTILINE | re.IGNORECASE):
+                blueprint_issues.append("Missing sequential steps")
+                score -= 20
+
+            # Should have validation/checkpoints
+            if not re.search(r'validat|verif|check|confirm|expect|should see', content, re.IGNORECASE):
+                blueprint_issues.append("Missing validation checkpoints")
+                score -= 15
+
+            # Should NOT be problem-focused (that's how-to)
+            if re.search(r'problem:.*solution:|troubleshoot|fix|debug', content, re.IGNORECASE):
+                blueprint_issues.append("Contains how-to content (problem-solving belongs in awareness-guide)")
+                score -= 15
+
+            # Should NOT have detailed API specs (that's reference)
+            if re.search(r'```(json|yaml) schema|interface definition|api specification', content, re.IGNORECASE):
+                blueprint_issues.append("Contains reference content (specs belong in protocol-spec)")
+                score -= 10
+
+            artifact_scores['blueprint'] = max(0, score)
+            compliance['adoption-blueprint.md'] = {
+                'category': 'Tutorial',
+                'score': artifact_scores['blueprint'],
+                'status': 'pass' if score >= 75 else ('partial' if score >= 50 else 'fail'),
+                'issues': blueprint_issues
+            }
+
+            if score >= 75:
+                strengths.append("adoption-blueprint.md: Good Tutorial adherence (learning journey)")
+            elif blueprint_issues:
+                for issue in blueprint_issues:
+                    issues.append(QualityIssue(
+                        severity="warning" if score < 50 else "info",
+                        category="diataxis",
+                        artifact="adoption-blueprint.md",
+                        description=f"Diataxis: {issue}"
+                    ))
+
+        # Ledger - Reference (simple check)
+        ledger_path = sap_dir / "ledger.md"
+        if ledger_path.exists():
+            content = ledger_path.read_text()
+            score = 100.0
+            ledger_issues = []
+
+            # Should be factual records
+            if re.search(r'version|date|adopter|status', content, re.IGNORECASE):
+                pass  # Good
+            else:
+                ledger_issues.append("Missing factual records (version, dates, adopters)")
+                score -= 30
+
+            # Should NOT have explanatory content
+            if re.search(r"let's|we'll|you should|why|rationale", content, re.IGNORECASE):
+                ledger_issues.append("Contains explanatory content (should be purely factual)")
+                score -= 20
+
+            artifact_scores['ledger'] = max(0, score)
+            compliance['ledger.md'] = {
+                'category': 'Reference',
+                'score': artifact_scores['ledger'],
+                'status': 'pass' if score >= 75 else ('partial' if score >= 50 else 'fail'),
+                'issues': ledger_issues
+            }
+
+            if score >= 75:
+                strengths.append("ledger.md: Good Reference adherence (factual records)")
+            elif ledger_issues:
+                for issue in ledger_issues:
+                    issues.append(QualityIssue(
+                        severity="info",
+                        category="diataxis",
+                        artifact="ledger.md",
+                        description=f"Diataxis: {issue}"
+                    ))
+
+        # Calculate overall Diataxis score
+        if artifact_scores:
+            overall_diataxis = sum(artifact_scores.values()) / len(artifact_scores)
+        else:
+            overall_diataxis = 0.0
+
+        # Add summary to compliance dict
+        compliance['summary'] = {
+            'overall_score': overall_diataxis,
+            'artifacts_passing': sum(1 for v in compliance.values() if isinstance(v, dict) and v.get('status') == 'pass'),
+            'artifacts_total': len([k for k in compliance.keys() if k != 'summary'])
+        }
+
+        return overall_diataxis, compliance
+
     def _create_missing_sap_report(self, sap_id: str, sap_name: str = "unknown") -> SAPQualityReport:
         """Create report for missing SAP"""
         return SAPQualityReport(
@@ -470,13 +735,15 @@ class SAPQualityAnalyzer:
             clarity_score=0.0,
             examples_score=0.0,
             structure_score=0.0,
+            diataxis_score=0.0,
             issues=[QualityIssue(
                 severity="critical",
                 category="completeness",
                 artifact="N/A",
                 description="SAP not found or not installed"
             )],
-            strengths=[]
+            strengths=[],
+            diataxis_compliance={}
         )
 
 
@@ -514,7 +781,9 @@ def main():
     print("="*60)
 
     avg_score = sum(r.overall_score for r in reports) / len(reports)
-    print(f"\nAverage Overall Score: {avg_score:.1f}/100")
+    avg_diataxis = sum(r.diataxis_score for r in reports) / len(reports)
+    print(f"\nAverage Overall Score:   {avg_score:.1f}/100")
+    print(f"Average Diataxis Score:  {avg_diataxis:.1f}/100")
 
     # Group by score ranges
     excellent = [r for r in reports if r.overall_score >= 90]
@@ -540,6 +809,49 @@ def main():
         print(f"\nℹ️  SAPs with room for improvement (score 60-74):")
         for r in sorted(fair, key=lambda x: x.overall_score):
             print(f"  - {r.sap_id} ({r.sap_name}): {r.overall_score:.1f}/100")
+
+    # Diataxis compliance summary
+    print("\n" + "="*60)
+    print("DIATAXIS COMPLIANCE")
+    print("="*60)
+
+    diataxis_passing = []
+    diataxis_partial = []
+    diataxis_failing = []
+
+    for r in reports:
+        if r.diataxis_compliance and 'summary' in r.diataxis_compliance:
+            summary = r.diataxis_compliance['summary']
+            artifacts_passing = summary.get('artifacts_passing', 0)
+            artifacts_total = summary.get('artifacts_total', 5)
+
+            if artifacts_passing >= 5:
+                diataxis_passing.append((r.sap_id, r.sap_name, artifacts_passing))
+            elif artifacts_passing >= 3:
+                diataxis_partial.append((r.sap_id, r.sap_name, artifacts_passing))
+            else:
+                diataxis_failing.append((r.sap_id, r.sap_name, artifacts_passing))
+
+    print(f"\nFull Compliance (5/5 artifacts):   {len(diataxis_passing)} SAPs")
+    print(f"Partial Compliance (3-4/5):        {len(diataxis_partial)} SAPs")
+    print(f"Needs Improvement (<3/5):          {len(diataxis_failing)} SAPs")
+
+    if diataxis_failing:
+        print(f"\n⚠️  SAPs with Diataxis issues:")
+        for sap_id, sap_name, passing in diataxis_failing:
+            print(f"  - {sap_id} ({sap_name}): {passing}/5 artifacts compliant")
+
+    # Common Diataxis issues
+    diataxis_issues = [i for r in reports for i in r.issues if i.category == "diataxis"]
+    if diataxis_issues:
+        issue_counts = {}
+        for issue in diataxis_issues:
+            key = issue.description
+            issue_counts[key] = issue_counts.get(key, 0) + 1
+
+        print(f"\nMost Common Diataxis Issues:")
+        for issue, count in sorted(issue_counts.items(), key=lambda x: -x[1])[:5]:
+            print(f"  • {issue} ({count} SAPs)")
 
 
 if __name__ == "__main__":

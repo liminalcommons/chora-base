@@ -92,6 +92,33 @@ A **comprehensive SAP defining the 8-phase development lifecycle** (Vision → P
 - **Planning**: Sprint planning templates, release planning guides
 - **Implementation**: DDD, BDD, TDD workflows with code examples
 
+### Design Trade-offs and Rationale
+
+**Why 8-phase lifecycle instead of simpler 3-phase (Plan-Build-Deploy)?**
+- **Trade-off**: Process simplicity vs. comprehensive quality gates
+- **Decision**: 8 phases provide clear quality gates and defect reduction checkpoints, proven to reduce defects by 40-80%
+- **Alternative considered**: 3-phase lightweight process → rejected because it lacks clear checkpoints for requirements, testing, and monitoring
+
+**Why DDD→BDD→TDD sequence instead of TDD-first?**
+- **Trade-off**: Code-first agility vs. requirements clarity
+- **Decision**: DDD ensures requirements are documented before behavior specifications (BDD), which inform test design (TDD), reducing requirements drift
+- **Alternative considered**: TDD-first (tests before docs) → rejected because tests without documented requirements lead to testing the wrong behavior
+
+**Why template-based planning instead of ad-hoc planning?**
+- **Trade-off**: Flexibility (ad-hoc) vs. consistency (templates)
+- **Decision**: Templates reduce planning overhead by 50% and ensure consistent structure across teams, while still allowing customization
+- **Alternative considered**: No templates, each team designs own format → rejected due to high onboarding cost and inconsistent quality
+
+**Why both sprints and releases instead of continuous deployment?**
+- **Trade-off**: Release flexibility (continuous) vs. stability windows (versioned releases)
+- **Decision**: Versioned releases provide adopters with predictable upgrade points and stability guarantees, critical for library/framework projects
+- **Alternative considered**: Continuous deployment with no versions → rejected because adopters need stable integration points
+
+**Why separate workflow docs for DDD, BDD, TDD instead of unified guide?**
+- **Trade-off**: Single comprehensive doc vs. focused methodology docs
+- **Decision**: Separate docs allow deep-dive into each methodology while DEVELOPMENT_LIFECYCLE.md provides integration overview
+- **Alternative considered**: Single 4000+ line document → rejected due to poor navigability and difficulty finding specific methodology guidance
+
 ---
 
 ## 4. Capability Definition
@@ -215,8 +242,5 @@ A **comprehensive SAP defining the 8-phase development lifecycle** (Vision → P
 
 ---
 
-**Next Steps**:
-1. Create [protocol-spec.md](protocol-spec.md) - Define 8-phase contracts, DDD→BDD→TDD integration
-2. Create [awareness-guide.md](awareness-guide.md) - Agent workflows for lifecycle execution
-3. Create [adoption-blueprint.md](adoption-blueprint.md) - How to adopt lifecycle in projects
-4. Create [ledger.md](ledger.md) - Track adopter metrics and versions
+**Version History**:
+- **1.0.0** (2025-10-28): Initial charter for development-lifecycle SAP

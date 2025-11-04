@@ -73,6 +73,33 @@ A **comprehensive SAP describing chora-base itself** using the SAP framework (do
 4. **Agent-First**: Optimized for AI agent consumption
 5. **Maintainable**: Updates flow through structured SAP governance
 
+### Design Trade-offs and Rationale
+
+**Why create a meta-SAP instead of improving existing docs (README, AGENTS.md)?**
+- **Trade-off**: Incremental improvement (existing docs) vs. structured framework (meta-SAP)
+- **Decision**: Meta-SAP provides single source of truth with explicit contracts, whereas existing docs are fragmented and informal
+- **Alternative considered**: Enhance README/AGENTS.md → rejected because they lack structured governance and machine-readable contracts
+
+**Why document all 14 capabilities in one meta-SAP instead of 14 separate SAPs?**
+- **Trade-off**: Single comprehensive doc vs. distributed capability SAPs
+- **Decision**: Meta-SAP provides unified overview for new adopters, while individual SAPs provide detailed implementation (best of both)
+- **Alternative considered**: Only individual SAPs → rejected because adopters need cohesive introduction to chora-base, not 14 separate documents
+
+**Why keep Protocol Spec under 15k tokens instead of comprehensive documentation?**
+- **Trade-off**: Complete detail vs. agent efficiency
+- **Decision**: Brief overview in meta-SAP with links to detailed SAPs balances discoverability with token budget
+- **Alternative considered**: Comprehensive Protocol Spec → rejected because it would exceed agent context windows and slow processing
+
+**Why dogfood SAP framework for chora-base itself instead of traditional docs?**
+- **Trade-off**: Proven traditional docs vs. experimental SAP approach
+- **Decision**: Dogfooding validates SAP framework works, builds confidence for adopters, and reveals framework gaps early
+- **Alternative considered**: Keep traditional docs, only use SAPs for capabilities → rejected because it doesn't prove SAP framework quality
+
+**Why include both Vision & Strategy and Implementation scopes instead of Implementation only?**
+- **Trade-off**: Focused implementation docs vs. comprehensive multi-level guidance
+- **Decision**: Multiple scope levels serve different stakeholders (CTOs need vision, developers need implementation), increasing adoption
+- **Alternative considered**: Implementation-only docs → rejected because strategic decision-makers need higher-level context
+
 ---
 
 ## 3. Scope
@@ -306,60 +333,7 @@ A **comprehensive SAP describing chora-base itself** using the SAP framework (do
 
 ---
 
-## 9. Lifecycle
-
-### Phase 1: Meta-SAP Creation (2025-10 → 2025-11)
-
-**Goal**: Create complete chora-base meta-SAP
-
-**Deliverables**:
-- ✅ Capability Charter (this document)
-- 🔄 Protocol Specification (all 14 capabilities overview)
-- 🔄 Awareness Guide (agent workflows)
-- 🔄 Adoption Blueprint (project generation, upgrade)
-- 🔄 Traceability Ledger (adopter tracking)
-
-**Success**: Meta-SAP complete, Phase 1 complete (3/3 SAPs)
-
-### Phase 2: Core Capability SAPs (2025-11 → 2026-01)
-
-**Goal**: Create SAPs for 4 core capabilities
-
-**Deliverables**:
-- SAP-003 (project-bootstrap)
-- SAP-004 (testing-framework)
-- SAP-005 (ci-cd-workflows)
-- SAP-006 (quality-gates)
-- Update meta-SAP Protocol with links to new SAPs
-
-**Success**: 7/14 SAPs complete (50% coverage)
-
-### Phase 3: Extended Capability SAPs (2026-01 → 2026-03)
-
-**Goal**: Create SAPs for 6 extended capabilities
-
-**Deliverables**:
-- SAP-007 through SAP-012
-- Update meta-SAP Protocol with links
-- Consistency validation
-
-**Success**: 13/14 SAPs complete (93% coverage)
-
-### Phase 4: Optimization & Automation (2026-03 → 2026-05)
-
-**Goal**: Automate maintenance, optimize workflows
-
-**Deliverables**:
-- SAP-013 (metrics-tracking)
-- Automated consistency checks
-- Meta-SAP dashboard
-- ROI validation
-
-**Success**: 14/14 SAPs complete (100% coverage), meta-SAP validation automated
-
----
-
-## 10. Related Documents
+## 9. Related Documents
 
 **SAP Framework**:
 - [SKILLED_AWARENESS_PACKAGE_PROTOCOL.md](/SKILLED_AWARENESS_PACKAGE_PROTOCOL.md) - Root protocol
@@ -383,7 +357,7 @@ A **comprehensive SAP describing chora-base itself** using the SAP framework (do
 
 ---
 
-## 11. Approval
+## 10. Approval
 
 **Sponsor**: Victor (chora-base owner)
 **Approval Date**: 2025-10-27
@@ -395,3 +369,4 @@ A **comprehensive SAP describing chora-base itself** using the SAP framework (do
 
 **Version History**:
 - **1.0.0** (2025-10-27): Initial charter for chora-base meta-SAP
+- **1.0.1** (2025-11-02): Added trade-offs section, removed tutorial lifecycle content

@@ -56,6 +56,28 @@ This SAP documents:
 4. **Fast Feedback** - Ruff 200x faster than alternatives
 5. **Correct Order** - ruff-check before ruff-format (critical)
 
+### Design Trade-offs and Rationale
+
+**Why ruff instead of flake8 + isort + black?**
+- **Trade-off**: Mature ecosystem (flake8, isort, black) vs. modern performance (ruff)
+- **Decision**: Ruff provides 200x performance improvement and consolidates 3 tools into 1, reducing config complexity
+- **Alternative considered**: Keep legacy tools (flake8+isort+black) → rejected due to slow performance causing developer friction
+
+**Why strict mypy mode (disallow_untyped_defs)?**
+- **Trade-off**: Gradual typing flexibility vs. type safety guarantees
+- **Decision**: Strict mode catches more bugs early and ensures codebase maintains high type coverage from the start
+- **Alternative considered**: Lenient mypy (allow untyped) → rejected because it allows type debt to accumulate
+
+**Why pre-commit hooks instead of only CI checks?**
+- **Trade-off**: Developer freedom vs. fast feedback
+- **Decision**: Pre-commit provides immediate feedback (seconds) vs. CI feedback (minutes), preventing broken commits
+- **Alternative considered**: CI-only enforcement → rejected due to slow feedback loop and cluttered commit history
+
+**Why ruff-check before ruff-format in hook order?**
+- **Trade-off**: Any order vs. correct order
+- **Decision**: Running checks before formatting prevents formatters from masking logical issues (like unused imports)
+- **Alternative considered**: Format-first approach → rejected because it can hide code issues that should be fixed, not formatted
+
 ---
 
 ## 3. Scope

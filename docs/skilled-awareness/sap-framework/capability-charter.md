@@ -78,6 +78,28 @@ A **standardized capability packaging system** that provides:
 5. **Version-Aware**: Sequential upgrades, clear migration paths
 6. **Cross-Repository**: SAPs work across chora-base ecosystem
 
+### Design Trade-offs and Rationale
+
+**Why 5 artifacts instead of 1-2 comprehensive documents?**
+- **Trade-off**: More files to maintain vs. clear separation of concerns
+- **Decision**: Separate artifacts ensure each serves a distinct Diataxis category (explanation, reference, tutorial, how-to), making documentation easier to navigate and maintain
+- **Alternative considered**: Single "capability.md" with all content → rejected due to mixing concerns and poor navigability
+
+**Why blueprint-based installation instead of shell scripts?**
+- **Trade-off**: Agent-parseable instructions vs. immediate executability
+- **Decision**: Blueprints provide structured, validated steps that agents can reason about, rather than opaque bash scripts
+- **Alternative considered**: Traditional install.sh scripts → rejected due to lack of visibility into what's happening and difficulty troubleshooting failures
+
+**Why mandatory ledger tracking?**
+- **Trade-off**: Privacy concerns vs. adoption visibility
+- **Decision**: Ledger provides critical feedback loop for capability evolution and helps maintainers understand usage patterns
+- **Alternative considered**: Optional tracking → rejected because it would lead to blind spots in capability adoption
+
+**Why contract-first protocol specification?**
+- **Trade-off**: Upfront design effort vs. implementation-driven evolution
+- **Decision**: Defining contracts before implementation prevents breaking changes and ensures adopters can rely on stable APIs
+- **Alternative considered**: Document-as-you-go approach → rejected due to resulting inconsistencies and unclear guarantees
+
 ---
 
 ## 3. Scope

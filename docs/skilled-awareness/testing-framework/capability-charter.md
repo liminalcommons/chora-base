@@ -77,6 +77,33 @@ This SAP documents:
 4. **Pattern-Driven** - Reusable fixtures, clear test organization
 5. **CI-Integrated** - Tests run automatically, coverage reported
 
+### Design Trade-offs and Rationale
+
+**Why pytest instead of unittest or nose?**
+- **Trade-off**: Standard library unittest (no dependencies) vs. pytest (external dependency)
+- **Decision**: pytest provides better fixture management, parametrized tests, and plugin ecosystem (pytest-asyncio, pytest-cov) critical for MCP testing
+- **Alternative considered**: unittest (standard library) → rejected due to verbose syntax and lack of async/fixture features
+
+**Why 85% coverage threshold instead of 100% or 70%?**
+- **Trade-off**: Lower threshold (70%, easier to achieve) vs. higher threshold (100%, comprehensive but costly)
+- **Decision**: 85% represents industry best practice sweet spot - catches most bugs without excessive test maintenance burden
+- **Alternative considered**: 100% coverage → rejected because diminishing returns above 85% and forces testing of error handling edge cases that may never occur
+
+**Why async-first testing instead of sync-only?**
+- **Trade-off**: Simpler sync tests vs. async test complexity
+- **Decision**: MCP servers are inherently async, sync-only tests would miss async-specific bugs (race conditions, deadlocks)
+- **Alternative considered**: Sync tests with threading → rejected because threading doesn't test actual async behavior
+
+**Why pattern-driven testing instead of free-form?**
+- **Trade-off**: Developer freedom (write any tests) vs. consistency (follow patterns)
+- **Decision**: Documented patterns (fixtures, parametrized tests) enable test code reuse and faster test writing by agents
+- **Alternative considered**: No prescribed patterns → rejected due to inconsistent test quality and duplicated fixture code
+
+**Why CI-integrated coverage enforcement instead of manual checks?**
+- **Trade-off**: Developer discretion (manual checks) vs. automated enforcement (CI gates)
+- **Decision**: Automated enforcement prevents coverage regressions and provides immediate feedback, reducing review burden
+- **Alternative considered**: Manual coverage reviews → rejected due to review overhead and human error in catching regressions
+
 ---
 
 ## 3. Scope
@@ -290,48 +317,7 @@ This SAP documents:
 
 ---
 
-## 9. Lifecycle
-
-### Phase 2: Core Capability SAPs (2025-11 → 2026-01)
-
-**Goal**: Create SAP-004 (testing-framework) second in dependency chain
-
-**Deliverables**:
-- ✅ Capability Charter (this document)
-- 🔄 Protocol Specification (test structure, patterns, contracts)
-- 🔄 Awareness Guide (agent workflows for writing tests)
-- 🔄 Adoption Blueprint (how to use testing framework)
-- 🔄 Traceability Ledger (coverage tracking)
-
-**Success**: SAP-004 complete, foundational for SAP-005/006
-
-### Phase 3: Extended Coverage (2026-01 → 2026-03)
-
-**Goal**: Enhance SAP-004 with advanced patterns
-
-**Deliverables**:
-- Advanced test patterns (property-based, mutation)
-- Performance testing integration
-- Test quality metrics
-- Coverage improvement workflows
-
-**Success**: SAP-004 covers advanced testing scenarios
-
-### Phase 4: Automation & Optimization (2026-03 → 2026-05)
-
-**Goal**: Automate test quality validation
-
-**Deliverables**:
-- Automated pattern validation
-- Test quality dashboard
-- Coverage tracking across projects
-- Test performance optimization
-
-**Success**: SAP-004 validation automated, metrics tracked
-
----
-
-## 10. Related Documents
+## 9. Related Documents
 
 **SAP Framework**:
 - [SKILLED_AWARENESS_PACKAGE_PROTOCOL.md](/SKILLED_AWARENESS_PACKAGE_PROTOCOL.md) - Root protocol
@@ -360,7 +346,7 @@ This SAP documents:
 
 ---
 
-## 11. Approval
+## 10. Approval
 
 **Sponsor**: Victor (chora-base owner)
 **Approval Date**: 2025-10-28

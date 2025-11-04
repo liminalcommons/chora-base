@@ -358,6 +358,255 @@ grep "Skilled Awareness Packages" AGENTS.md && echo "✅ AGENTS.md updated"
 
 ---
 
+### Step 4.6: Diataxis Compliance Check (15-20 minutes)
+
+**Objective**: Verify each artifact adheres to its Diataxis documentation category
+
+**Why This Matters**:
+- SAP structure is explicitly designed around the [Diataxis framework](https://diataxis.fr/)
+- Each artifact serves a specific documentation purpose (Tutorial, How-To, Reference, Explanation)
+- Mixed content types reduce documentation effectiveness
+- Ensures "completeness" means all 4 Diataxis quadrants are adequately covered
+
+**SAP Artifact → Diataxis Mapping**:
+
+| SAP Artifact | Diataxis Category | Primary Purpose |
+|--------------|-------------------|-----------------|
+| **capability-charter.md** | **Explanation** | WHY this capability exists, context, rationale, design decisions |
+| **protocol-spec.md** | **Reference** | Technical specifications, APIs, data models, contracts |
+| **awareness-guide.md** | **How-To Guide** | Solve specific problems, task-oriented workflows |
+| **adoption-blueprint.md** | **Tutorial** | Step-by-step learning journey, installation, getting started |
+| **ledger.md** | **Reference** | Adoption tracking, version history, factual records |
+
+**Tasks**:
+
+1. **Capability-Charter (Explanation) Validation**:
+
+   **Check for Explanation patterns**:
+   - [ ] Explains **WHY** this capability exists (not just WHAT it does)
+   - [ ] Provides context and background (problem space, motivation)
+   - [ ] Discusses trade-offs and design decisions
+   - [ ] References research, evidence, or rationale
+   - [ ] Avoids step-by-step instructions (belongs in blueprint)
+   - [ ] Avoids API specifications (belongs in protocol-spec)
+
+   **Anti-patterns to flag**:
+   - ❌ Installation steps in charter (move to blueprint)
+   - ❌ Technical API specs (move to protocol-spec)
+   - ❌ Task-solving workflows (move to awareness-guide)
+   - ❌ Generic problem statements without context
+
+2. **Protocol-Spec (Reference) Validation**:
+
+   **Check for Reference patterns**:
+   - [ ] Factual, comprehensive, structured information
+   - [ ] API/schema/data model specifications
+   - [ ] Inputs, outputs, guarantees clearly defined
+   - [ ] Constraints and error cases documented
+   - [ ] No learning journey or progressive teaching (belongs in tutorial)
+   - [ ] No task-solving patterns (belongs in how-to)
+   - [ ] No design rationale explanations (belongs in charter)
+
+   **Anti-patterns to flag**:
+   - ❌ Tutorial-style "First, do X, then Y" (move to blueprint)
+   - ❌ Problem-solution pairs (move to awareness-guide)
+   - ❌ "Why we chose this approach" explanations (move to charter)
+
+3. **Awareness-Guide (How-To) Validation**:
+
+   **Check for How-To patterns**:
+   - [ ] Solves **specific problems** (not general learning)
+   - [ ] Task-oriented (goal → solution structure)
+   - [ ] Assumes some knowledge (not teaching fundamentals)
+   - [ ] Includes concrete examples for each task
+   - [ ] Cross-references to related content (2+ domains)
+   - [ ] Common pitfalls or troubleshooting included
+
+   **Anti-patterns to flag**:
+   - ❌ Teaching fundamentals step-by-step (move to blueprint)
+   - ❌ Pure technical reference without context (move to protocol-spec)
+   - ❌ Design rationale without actionable tasks (move to charter)
+   - ❌ Hypothetical examples (replace with concrete)
+
+4. **Adoption-Blueprint (Tutorial) Validation**:
+
+   **Check for Tutorial patterns**:
+   - [ ] Learning-oriented (teaches while doing)
+   - [ ] Sequential steps with expected outcomes at each stage
+   - [ ] Safe to experiment (clear validation points)
+   - [ ] Beginner-friendly (no assumed knowledge beyond prerequisites)
+   - [ ] Progressive skill building (simple → complex)
+   - [ ] Avoids problem-solving patterns (belongs in how-to)
+   - [ ] Avoids detailed specifications (belongs in protocol-spec)
+
+   **Anti-patterns to flag**:
+   - ❌ Task-oriented problem solving (move to awareness-guide)
+   - ❌ API reference material (move to protocol-spec)
+   - ❌ Design explanations (move to charter)
+   - ❌ Assumes advanced knowledge without prerequisites
+
+5. **Ledger (Reference) Validation**:
+
+   **Check for Reference patterns**:
+   - [ ] Factual adoption records (who, when, version)
+   - [ ] Version history with dates
+   - [ ] Feedback mechanism documented
+   - [ ] No explanatory content (just facts)
+   - [ ] No tutorial content
+
+**Diataxis Compliance Scorecard**:
+
+Create a scorecard for each artifact:
+
+```markdown
+## Diataxis Compliance Assessment
+
+| Artifact | Category | Compliance | Issues Found |
+|----------|----------|------------|--------------|
+| capability-charter.md | Explanation | ✅ Pass / ⚠️ Partial / ❌ Fail | [List issues] |
+| protocol-spec.md | Reference | ✅ Pass / ⚠️ Partial / ❌ Fail | [List issues] |
+| awareness-guide.md | How-To | ✅ Pass / ⚠️ Partial / ❌ Fail | [List issues] |
+| adoption-blueprint.md | Tutorial | ✅ Pass / ⚠️ Partial / ❌ Fail | [List issues] |
+| ledger.md | Reference | ✅ Pass / ⚠️ Partial / ❌ Fail | [List issues] |
+
+**Overall Diataxis Coverage**: X/5 artifacts compliant
+
+**Critical Findings**:
+- [Any major category misalignment]
+- [Missing Diataxis quadrants]
+- [Mixed content types requiring reorganization]
+```
+
+**Compliance Criteria**:
+
+- **✅ Pass**: Artifact clearly follows its Diataxis category, minimal content type mixing
+- **⚠️ Partial**: Mostly correct but has some content that belongs in other artifacts
+- **❌ Fail**: Significant category misalignment or missing core Diataxis elements
+
+**Gap Categorization for Diataxis Issues**:
+
+| Finding | Priority | Action |
+|---------|----------|--------|
+| Charter has no "why" or rationale | **Critical** | Add explanation of context and design decisions |
+| Protocol-spec teaches instead of specifies | **Critical** | Move tutorial content to blueprint |
+| Awareness-guide has no concrete examples | **High** | Replace hypotheticals with real examples |
+| Blueprint assumes knowledge without prerequisites | **High** | Add prerequisites or move to awareness-guide |
+| Mixed content types (e.g., tutorial in reference) | **High** | Reorganize content to correct artifact |
+| Weak cross-domain references in how-to | **Medium** | Add related content section |
+
+**Reference Examples**:
+
+**Good Explanation (Charter)**:
+```markdown
+### Why This Capability Exists
+
+The inbox coordination protocol emerged from a critical gap in existing
+project management systems: they optimize for human decision-making but
+lack machine-readable coordination primitives. This creates friction when
+AI agents need to understand project priorities, dependencies, and status.
+
+**Design Trade-offs**:
+- JSONL format over database: Chosen for git-friendliness and human readability
+- Event-driven over state-based: Enables append-only audit trail
+- Schema-first over ad-hoc: Ensures machine parsability
+```
+
+**Bad Explanation (Avoid)**:
+```markdown
+### Installation
+
+1. Copy inbox/ directory to your project
+2. Run `npm install inbox-validator`
+3. Test with `npm test`
+```
+(This is tutorial content, not explanation)
+
+**Good Reference (Protocol-Spec)**:
+```markdown
+### Input Schema
+
+```yaml
+coordination_request:
+  trace_id: string (UUID v4)
+  priority: enum ["critical", "high", "medium", "low"]
+  dependencies: array<string> (trace_ids)
+  status: enum ["pending", "in_progress", "completed"]
+```
+
+**Guarantees**:
+- Events are immutable (append-only)
+- Trace IDs are globally unique
+- Status transitions follow: pending → in_progress → completed
+```
+
+**Good How-To (Awareness-Guide)**:
+```markdown
+### Solving Common Problems
+
+**Problem**: Agent needs to find highest-priority pending task
+
+**Solution**:
+1. Parse `inbox/coordination/events.jsonl`
+2. Filter by `status: "pending"`
+3. Sort by `priority` field (critical > high > medium > low)
+4. Return first result
+
+**Example**:
+```bash
+jq -r 'select(.status=="pending") | [.priority, .title] | @tsv' \
+  inbox/coordination/events.jsonl | sort | head -1
+```
+```
+
+**Good Tutorial (Adoption-Blueprint)**:
+```markdown
+### Step 1: Set Up Inbox Directory
+
+Let's create the inbox structure in your project.
+
+**What you'll learn**: How to set up the basic coordination infrastructure
+
+**Steps**:
+1. Create inbox directory:
+   ```bash
+   mkdir -p inbox/coordination
+   ```
+
+2. Verify the directory exists:
+   ```bash
+   ls -la inbox/
+   # Expected output: coordination/
+   ```
+
+3. Create your first event file:
+   ```bash
+   touch inbox/coordination/events.jsonl
+   ```
+
+**Checkpoint**: You should now have `inbox/coordination/events.jsonl` in your project.
+
+**Next**: We'll add your first coordination event.
+```
+
+**Deliverable**:
+- Diataxis compliance scorecard (pass/partial/fail per artifact)
+- List of content reorganization needs (if any)
+- Gaps added to gap report with priority
+- Updated content completeness checklist with Diataxis dimension
+
+**Time Management**:
+- 3-4 minutes per artifact (15-20 min total)
+- Focus on major category misalignments, not minor issues
+- Document findings for remediation in Step 5 or Phase 5
+
+**Integration with Step 4**:
+- Diataxis check supplements content completeness check
+- Both assess artifact quality from different angles:
+  - Step 4: "Is the content there?"
+  - Step 4.6: "Is the content in the right place?"
+
+---
+
 ### Step 5: Create Critical Content (1-2 hours)
 
 **Objective**: Fill gaps that block SAP usage or significantly reduce value
@@ -564,6 +813,8 @@ Update the Wave 2 tracking matrix with:
 - [ ] Examples are concrete (not hypothetical)
 - [ ] All 5 artifacts have actionable content
 - [ ] **Adoption blueprint includes post-install awareness enablement with validation commands**
+- [ ] **Diataxis compliance: 4/5 or 5/5 artifacts pass compliance check (Step 4.6)**
+- [ ] **No critical Diataxis category misalignments** (e.g., tutorials in reference docs)
 
 ---
 

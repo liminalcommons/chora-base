@@ -72,6 +72,33 @@ Package **metrics tracking** as a SAP to provide:
 - ✅ ROI demonstrable within 1 month
 - ✅ Data-driven process improvements
 
+### Design Trade-offs and Rationale
+
+**Why markdown-based dashboards instead of real-time analytics platforms?**
+- **Trade-off**: Real-time visualization (Grafana, Datadog) vs. simple markdown reports
+- **Decision**: Markdown dashboards are git-versionable, require no infrastructure, and provide sufficient visibility for development process metrics
+- **Alternative considered**: Real-time dashboard platform → rejected due to infrastructure overhead and cost for project-level metrics
+
+**Why ClaudeROICalculator instead of general time-tracking?**
+- **Trade-off**: General time tracking (Toggl, Jira) vs. AI-specific ROI measurement
+- **Decision**: ClaudeROICalculator focuses on AI-assisted development effectiveness, capturing unique metrics like defect reduction and rework savings
+- **Alternative considered**: Generic time tracking tools → rejected because they don't capture AI-specific value like automated test generation or documentation improvements
+
+**Why 4 metric categories (quality, velocity, adherence, adoption) instead of simpler quality-only?**
+- **Trade-off**: Simple quality metrics vs. comprehensive process view
+- **Decision**: 4 categories provide holistic view of development health, enabling root cause analysis (e.g., low velocity might be due to poor adherence)
+- **Alternative considered**: Quality metrics only (coverage, defects) → rejected because it doesn't explain why quality trends occur
+
+**Why sprint and release metrics instead of continuous tracking only?**
+- **Trade-off**: Continuous metrics (every commit) vs. time-boxed metrics (sprint/release)
+- **Decision**: Time-boxed metrics align with planning cycles and provide actionable retrospective data without overwhelming teams
+- **Alternative considered**: Continuous metrics only → rejected due to noise and difficulty identifying trends without time boundaries
+
+**Why agent-tracked metrics instead of manual reporting?**
+- **Trade-off**: Manual reporting (human-entered) vs. automated collection (agent-tracked)
+- **Decision**: Agent tracking reduces reporting overhead from 2+ hours to 15 minutes per week and ensures consistency
+- **Alternative considered**: Manual weekly reports → rejected due to high overhead and human error in metric collection
+
 ---
 
 ## 4. Business Value

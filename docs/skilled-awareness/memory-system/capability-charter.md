@@ -97,6 +97,28 @@ A **comprehensive SAP defining the A-MEM architecture** with 4 memory types: Eph
 - Query interfaces for cross-session context
 - Retention policies for long-term storage
 
+### Design Trade-offs and Rationale
+
+**Why append-only event log instead of relational database?**
+- **Trade-off**: Queryability (SQL database) vs. simplicity (JSONL files)
+- **Decision**: JSONL provides git-friendly storage, no database dependencies, and sufficient performance for agent memory needs
+- **Alternative considered**: SQLite database → rejected due to git merge conflicts and binary format limiting visibility
+
+**Why Zettelkasten methodology for knowledge graph?**
+- **Trade-off**: Full-featured knowledge base (Notion, Confluence) vs. markdown-based Zettelkasten
+- **Decision**: Zettelkasten ensures knowledge is git-versionable, portable, and compatible with existing tools (Obsidian, Foam)
+- **Alternative considered**: Structured database with relations → rejected due to vendor lock-in and migration complexity
+
+**Why per-agent profiles instead of unified agent config?**
+- **Trade-off**: Single config for all agents vs. per-agent profiles
+- **Decision**: Different agents (Claude Code, Cursor) have distinct capabilities and preferences that shouldn't be conflated
+- **Alternative considered**: Unified agent.json → rejected because it would force lowest-common-denominator configuration
+
+**Why trace_id correlation instead of session_id?**
+- **Trade-off**: Session-based grouping vs. trace-based correlation
+- **Decision**: Traces span multiple sessions for long-running workflows, providing better multi-step operation visibility
+- **Alternative considered**: Session-only tracking → rejected because it breaks correlation for multi-session workflows
+
 ---
 
 ## 4. Capability Definition
@@ -239,8 +261,5 @@ A **comprehensive SAP defining the A-MEM architecture** with 4 memory types: Eph
 
 ---
 
-**Next Steps**:
-1. Create [protocol-spec.md](protocol-spec.md) - Define event schema, knowledge note format, agent profile schema, query interfaces
-2. Create [awareness-guide.md](awareness-guide.md) - Agent workflows for memory usage
-3. Create [adoption-blueprint.md](adoption-blueprint.md) - How to adopt A-MEM in projects
-4. Create [ledger.md](ledger.md) - Track A-MEM adoption and metrics
+**Version History**:
+- **1.0.0** (2025-10-28): Initial charter for memory-system SAP
