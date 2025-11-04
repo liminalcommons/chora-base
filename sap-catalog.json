@@ -611,22 +611,27 @@
     {
       "id": "SAP-018",
       "name": "chora-compose-meta",
-      "full_name": "Chora-Compose Meta Package",
+      "full_name": "chora-compose Meta",
       "status": "active",
-      "version": "1.0.0",
+      "version": "2.0.0",
       "included_by_default": false,
-      "size_kb": 187,
-      "description": "Complete chora-compose architecture specification: 17 tools + 5 resources + 4 modalities",
+      "size_kb": 350,
+      "description": "Complete technical specification: 24 MCP tools, Collections architecture (3-tier model), 5 generators, context resolution (6 sources), event emission for advanced adoption",
       "capabilities": [
-        "17 MCP tools specification",
-        "5 resource families",
-        "4 access modalities",
-        "Complete architecture",
-        "Ecosystem positioning"
+        "24 MCP tools (7 categories)",
+        "3-tier Collections architecture",
+        "Context propagation (MERGE/OVERRIDE/ISOLATE)",
+        "SHA-256 caching (94%+ hit rate)",
+        "6 context source types",
+        "Event emission (OpenTelemetry)",
+        "JSON schemas v3.1/v1.0",
+        "Stigmergic context links",
+        "5 generators + BaseGenerator",
+        "Config lifecycle tools"
       ],
-      "dependencies": ["SAP-017"],
-      "tags": ["chora-compose", "meta", "architecture", "ecosystem"],
-      "author": "chora-base",
+      "dependencies": ["SAP-000", "SAP-017"],
+      "tags": ["mcp-tools", "content-generation", "collections-architecture", "caching", "context-resolution", "generators", "telemetry"],
+      "author": "Victor",
       "location": "docs/skilled-awareness/chora-compose-meta",
       "artifacts": {
         "capability_charter": true,
@@ -636,8 +641,8 @@
         "ledger": true
       },
       "system_files": [],
-      "phase": "Wave 3",
-      "priority": "P1"
+      "phase": "Active",
+      "priority": "P2"
     },
     {
       "id": "SAP-019",
