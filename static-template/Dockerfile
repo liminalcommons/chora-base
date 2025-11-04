@@ -4,7 +4,7 @@
 
 # === Builder Stage ===
 # Build wheel distribution to avoid import path conflicts
-# Inspired by mcp-n8n and chora-compose production deployments
+# Inspired by mcp-gateway and chora-compose production deployments
 FROM python:{{ python_version }}-slim as builder
 
 # Set working directory
@@ -60,8 +60,16 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 RUN useradd -m -u 1000 -s /bin/bash appuser && \
     chown -R appuser:appuser /app
 
+# Metadata labels for versioning and provenance
+LABEL version="{{ project_version }}" \
+      org.opencontainers.image.version="{{ project_version }}" \
+      org.opencontainers.image.title="{{ project_name }}" \
+      org.opencontainers.image.description="{{ project_description }}" \
+      org.opencontainers.image.source="https://github.com/{{ github_org | default('liminalcommons') }}/{{ project_slug }}" \
+      org.opencontainers.image.vendor="{{ author_name }}"
+
 # Install wheel from builder stage
-# Pattern from mcp-n8n: cleaner than copying site-packages
+# Pattern from mcp-gateway: cleaner than copying site-packages
 COPY --from=builder /dist/*.whl /tmp/
 RUN pip install --no-cache-dir /tmp/*.whl && \
     rm -rf /tmp/*.whl
