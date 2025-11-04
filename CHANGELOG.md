@@ -5,6 +5,49 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [4.4.0] - 2025-11-03
+
+### Added
+
+**GAP-003 Track 1: Unified Release Workflow** ✅
+
+- **Release Automation Scripts** (Python-based, cross-platform)
+  - `scripts/bump-version.py` - Automates version bumping, CHANGELOG updates, git tagging (313 lines)
+  - `scripts/create-release.py` - Automates GitHub release creation from CHANGELOG (271 lines)
+  - Both scripts support `--dry-run` mode for safe preview
+  - Unicode error handling for Windows console compatibility
+
+- **Just Task Runner Integration**
+  - 5 new tasks in `justfile`: `bump`, `bump-dry`, `release`, `release-dry`, `release-version`
+  - Developer-friendly interface: `just bump 4.4.0` → `just release`
+  - Delegates to Python scripts (separation of concerns)
+
+- **Release Documentation**
+  - `docs/user-docs/how-to/create-release.md` - Complete maintainer guide (427 lines)
+  - Step-by-step process with troubleshooting
+  - Windows-specific guidance (Unicode, gh CLI setup)
+  - Verification checklist and advanced usage
+
+- **Implementation Documentation**
+  - `docs/project-docs/gap-003-track-1-completion-summary.md` - Full implementation record
+  - Design decisions and rationale (Python-first, Just integration)
+  - Testing results and lessons learned
+  - Metrics: 22.5 min saved per release (30 min → 7.5 min)
+
+### Impact
+
+- **Time Savings**: 22.5 minutes per release, 4.5 hours/year (12 releases/year)
+- **Quality**: Consistent CHANGELOG format, eliminated manual extraction errors
+- **Cross-Platform**: Python-based, works on Windows/Mac/Linux
+- **Safety**: Dry-run modes prevent mistakes before execution
+
+### Related
+
+- Part of Workflow Continuity initiative (GAP-003)
+- Trace ID: `sap-synergy-2025-001`
+- Implements Python-first policy (SAP-030, v4.3.0 migration)
+
+---
 ## [4.3.0] - 2025-11-03
 
 ### Added
@@ -950,8 +993,8 @@ _No unreleased changes yet_
 - wave-2-link-validation-final-report.md - Final link validation report
 
 **Link Validation Infrastructure**:
-- scripts/validate-links.sh - Working link validation script
-- CI/CD ready, colorized output
+- scripts/validate-links.py - Cross-platform link validation script (migrated from .sh)
+- CI/CD ready, ASCII output for Windows compatibility
 - Validates file existence, anchors, URLs
 
 ### Achievement
@@ -1259,7 +1302,7 @@ _No unreleased changes yet_
 
 ### Notes
 
-- Based on real-world ecosystem learnings (mcp-n8n, mcp-orchestration)
+- Based on real-world ecosystem learnings (mcp-gateway, mcp-orchestration)
 - Implements findings from "Agentic Coding Best Practices Research.pdf"
 - Evidence-based approach (Microsoft Research, Google studies)
 - Designed for both human developers and AI agents
@@ -1642,7 +1685,7 @@ copier copy --force --trust --vcs-ref=v2.0.8 \
 - ✅ Uses standard Jinja2 delimiters (industry best practice)
 - ✅ NAMESPACES.md provides full namespace guidance for LLM agents
 - ✅ All shell/Python/TOML/YAML syntax preserved correctly
-- ✅ mcp-n8n team and all adopters can upgrade from v1.9.3
+- ✅ mcp-gateway team and all adopters can upgrade from v1.9.3
 
 **Why This Took 8 Releases:**
 
@@ -1672,7 +1715,7 @@ Thank you to the research document "The Delimiter Problem: Why Copier Templates 
 
 **ROOT CAUSE IDENTIFIED - Copier Delimiter Conflicts (THE ACTUAL ISSUE)**
 
-**Massive credit to the mcp-n8n team** for persistence through 7 failed releases and providing comprehensive research that identified the actual root cause.
+**Massive credit to the mcp-gateway team** for persistence through 7 failed releases and providing comprehensive research that identified the actual root cause.
 
 **The Real Problem:**
 
@@ -1744,7 +1787,7 @@ _envops:
 
 ### Acknowledgment
 
-**Thank you to the mcp-n8n team** for:
+**Thank you to the mcp-gateway team** for:
 - Testing ALL 7 releases (v2.0.0-v2.0.6)
 - Providing detailed verification reports after each failure
 - Researching Copier's actual behavior
@@ -1759,7 +1802,7 @@ Your persistence and thorough analysis made this fix possible.
 
 **ACTUAL ROOT CAUSE - Fix `.format()` Calls Outside `{% raw %}` Blocks**
 
-**Critical Acknowledgment**: Thank you to the mcp-n8n team for testing v2.0.5 and reporting that it STILL FAILED with the same error. Your verification testing revealed the true root cause.
+**Critical Acknowledgment**: Thank you to the mcp-gateway team for testing v2.0.5 and reporting that it STILL FAILED with the same error. Your verification testing revealed the true root cause.
 
 **What Was Wrong with v2.0.3-v2.0.5**:
 
@@ -1804,9 +1847,9 @@ Our verification was flawed:
 - ❌ Missed: `.format()` calls with `{}` outside `{% raw %}` blocks
 - ❌ Missed: Testing with actual `copier update` command
 
-**mcp-n8n team was right**: We should have tested the actual upgrade, not just file inspection.
+**mcp-gateway team was right**: We should have tested the actual upgrade, not just file inspection.
 
-**Apology**: We apologize for the incomplete fixes in v2.0.1-v2.0.5. v2.0.6 addresses the actual root cause identified by mcp-n8n's verification testing.
+**Apology**: We apologize for the incomplete fixes in v2.0.1-v2.0.5. v2.0.6 addresses the actual root cause identified by mcp-gateway's verification testing.
 
 ## [2.0.5] - 2025-10-22
 
@@ -1814,7 +1857,7 @@ Our verification was flawed:
 
 **COMPLETE F-String Audit - ALL Remaining Files**
 
-**Acknowledgment**: Thank you to the mcp-n8n team for the comprehensive bug report identifying that v2.0.4 still had 60+ unprotected f-strings across 7 additional files.
+**Acknowledgment**: Thank you to the mcp-gateway team for the comprehensive bug report identifying that v2.0.4 still had 60+ unprotected f-strings across 7 additional files.
 
 **Scope of v2.0.5**:
 - **v2.0.3**: Fixed scripts/extract_tests.py.jinja (16 f-strings)
@@ -1909,7 +1952,7 @@ f"Pattern: [a-z][a-z0-9]{{2,19}}"
 
 **Complete Resolution of Template Syntax Errors**
 
-**Apology**: v2.0.1 and v2.0.2 were both incomplete. The mcp-n8n team's analysis was correct.
+**Apology**: v2.0.1 and v2.0.2 were both incomplete. The mcp-gateway team's analysis was correct.
 
 **Root Cause**: ALL f-strings (not just multi-line) containing `{}` conflict with Jinja2's template syntax:
 - **v2.0.1**: Fixed 4 multi-line f-strings, **missed line 289 + all 11 single-line f-strings**
@@ -1941,7 +1984,7 @@ test_name = "test_{}_bash_example_{}".format(safe_title, idx)  # ← Wrapped in 
 
 **Verification**: ✅ `python3 -c "from jinja2 import Template; Template(open('template/scripts/extract_tests.py.jinja').read())"`
 
-**Thank you**: mcp-n8n team (@vlct0rs-github-acct) for persistence, detailed debugging, and patience
+**Thank you**: mcp-gateway team (@vlct0rs-github-acct) for persistence, detailed debugging, and patience
 
 ---
 
@@ -1951,7 +1994,7 @@ test_name = "test_{}_bash_example_{}".format(safe_title, idx)  # ← Wrapped in 
 
 **Complete Template Syntax Fix for extract_tests.py.jinja**
 
-- **Acknowledgment**: v2.0.1 fix was incomplete. The mcp-n8n team's bug report was correct - the error persisted.
+- **Acknowledgment**: v2.0.1 fix was incomplete. The mcp-gateway team's bug report was correct - the error persisted.
 - **Root Cause**: One additional unprotected f-string at line 425 in `_generate_bash_test_file()` method
 - **Complete Fix**: Wrapped all 5 f-string sections in `{% raw %}{% endraw %}` blocks:
   - Lines 176-204: Fixture + async test generation ✅ (v2.0.1)
@@ -1967,7 +2010,7 @@ test_name = "test_{}_bash_example_{}".format(safe_title, idx)  # ← Wrapped in 
 
 **Impact**: All adopters can now successfully run `copier update --vcs-ref v2.0.2`
 
-**Apology**: Thank you to the mcp-n8n team for the excellent bug report and patience. v2.0.2 contains the complete fix.
+**Apology**: Thank you to the mcp-gateway team for the excellent bug report and patience. v2.0.2 contains the complete fix.
 
 ---
 
@@ -1990,7 +2033,7 @@ test_name = "test_{}_bash_example_{}".format(safe_title, idx)  # ← Wrapped in 
 - Bash test generation (lines 291-313)
 - Header generation (lines 341-359)
 
-**Reported by**: mcp-n8n team - thank you for the bug report!
+**Reported by**: mcp-gateway team - thank you for the bug report!
 
 **Testing**: Template now generates successfully with all feature combinations.
 
@@ -2195,7 +2238,7 @@ Added Jinja comment block documenting the standard pattern for future feature se
 
 **Docker Enhancements - Production Patterns from Adopters**
 
-Based on comprehensive analysis of three production Docker implementations (coda-mcp, chora-compose, mcp-n8n), integrated battle-tested patterns that deliver significant improvements in image size, build speed, and operational reliability.
+Based on comprehensive analysis of three production Docker implementations (coda-mcp, chora-compose, mcp-gateway), integrated battle-tested patterns that deliver significant improvements in image size, build speed, and operational reliability.
 
 **Production Dockerfile Improvements (~100 lines changed):**
 
@@ -2265,7 +2308,7 @@ Based on comprehensive analysis of three production Docker implementations (coda
 
 **Dockerfile.test CI/CD Enhancements (~50 lines changed):**
 
-1. **GitHub Actions Cache Pattern** (from mcp-n8n)
+1. **GitHub Actions Cache Pattern** (from mcp-gateway)
    ```yaml
    cache-from: type=gha            # Read from cache
    cache-to: type=gha,mode=max     # Write all layers
@@ -2287,7 +2330,7 @@ Based on comprehensive analysis of three production Docker implementations (coda
 
 **.dockerignore Refinements:**
 
-1. **Glob Patterns** (from mcp-n8n)
+1. **Glob Patterns** (from mcp-gateway)
    - `**/__pycache__` catches nested caches
    - `**/*.egg-info/` catches all package metadata
 
@@ -2317,7 +2360,7 @@ All enhancements are **backward compatible** and **opt-in** via `include_docker:
 
 - **coda-mcp:** Multi-arch builds, registry workflows, health check patterns
 - **chora-compose:** Environment-based config, three-tier volumes, hot-reload
-- **mcp-n8n:** CI isolation, wheel builds, GHA caching, 100% test reliability
+- **mcp-gateway:** CI isolation, wheel builds, GHA caching, 100% test reliability
 
 ## [1.9.0] - 2025-10-21
 
@@ -2388,7 +2431,7 @@ Added Docker commands section (conditional on `include_docker`):
 
 **Benefits:**
 
-✅ **CI Isolation**: Eliminates system vs pip package conflicts (mcp-n8n's exact issue)
+✅ **CI Isolation**: Eliminates system vs pip package conflicts (mcp-gateway's exact issue)
 ✅ **Production Ready**: Multi-stage builds, security hardening, health checks
 ✅ **Microservices**: docker-compose orchestration for MCP gateway + backends
 ✅ **Developer Experience**: `just docker-*` commands for common workflows
@@ -2444,10 +2487,10 @@ Added Docker commands section (conditional on `include_docker`):
 - Can adopt via manual file creation or copier update
 - Upgrade guide provides step-by-step migration
 
-**mcp-n8n Team:**
+**mcp-gateway Team:**
 - Can immediately adopt Dockerfile.test to solve CI issue
 - Can migrate to production deployment with docker-compose
-- Patterns generalized from mcp-n8n's Phase 1 implementation
+- Patterns generalized from mcp-gateway's Phase 1 implementation
 
 **Ecosystem:**
 - Consistent Docker patterns across all chora-base projects
@@ -2456,7 +2499,7 @@ Added Docker commands section (conditional on `include_docker`):
 
 ### Inspiration
 
-- **mcp-n8n Docker Implementation Plan**: Phase 1-5 design (CI isolation, production deployment, microservices)
+- **mcp-gateway Docker Implementation Plan**: Phase 1-5 design (CI isolation, production deployment, microservices)
 - **FastMCP upstream**: Container deployment patterns for MCP servers
 - **Docker best practices**: Multi-stage builds, security hardening, health checks
 - **chora-compose production needs**: Real-world deployment requirements
@@ -2464,7 +2507,7 @@ Added Docker commands section (conditional on `include_docker`):
 ### References
 
 - [Docker Deployment Guide](docs/how-to/docker-deployment.md) - Comprehensive deployment guide
-- [mcp-n8n Docker Issue](https://github.com/liminalcommons/mcp-n8n) - Original CI isolation problem
+- [mcp-gateway Docker Issue](https://github.com/liminalcommons/mcp-gateway) - Original CI isolation problem
 - [Docker Best Practices](https://docs.docker.com/develop/dev-best-practices/) - Official Docker guidance
 
 ---
@@ -2641,7 +2684,7 @@ Complete implementation of standardized MCP tool/resource naming conventions for
    - Namespace registry (chora, coda, n8n reserved)
    - Validation patterns and helper functions
    - Versioning & evolution guidelines
-   - mcp-n8n gateway integration
+   - mcp-gateway gateway integration
    - Complete examples and FAQ
 
 2. **`docs/reference/mcp-naming-best-practices.md`** (~523 lines)
@@ -2649,7 +2692,7 @@ Complete implementation of standardized MCP tool/resource naming conventions for
    - When to use namespacing
    - Choosing good namespaces
    - Resource URI design patterns
-   - Common patterns from ecosystem (chora-compose, coda, mcp-n8n)
+   - Common patterns from ecosystem (chora-compose, coda, mcp-gateway)
    - Tool naming conventions (verbs, anti-patterns)
    - Validation patterns
    - Migration strategies
@@ -2682,7 +2725,7 @@ Complete implementation of standardized MCP tool/resource naming conventions for
 ### Benefits for Adopters
 
 **Ecosystem Integration:**
-- ✅ Seamless integration with mcp-n8n gateway
+- ✅ Seamless integration with mcp-gateway gateway
 - ✅ Namespace-based routing (e.g., `chora:*` → chora-compose backend)
 - ✅ Multi-server MCP client support
 - ✅ Collision avoidance across ecosystem
@@ -2722,7 +2765,7 @@ resource_uri ::= namespace://type/id      # e.g., myproject://templates/report.m
 ```
 
 **Integration Points:**
-- mcp-n8n gateway routing
+- mcp-gateway gateway routing
 - FastMCP tool/resource registration
 - Claude Desktop MCP client
 - Ecosystem namespace registry
@@ -2736,7 +2779,7 @@ resource_uri ::= namespace://type/id      # e.g., myproject://templates/report.m
 ### Ecosystem Alignment
 
 **Established Patterns:**
-- mcp-n8n: Tool routing via namespace prefixes
+- mcp-gateway: Tool routing via namespace prefixes
 - chora-compose: `chora:*` tool naming (`generate_content`, `assemble_artifact`)
 - mcp-server-coda: `coda:*` tool naming (`list_docs`, `create_doc`)
 
@@ -2759,17 +2802,17 @@ resource_uri ::= namespace://type/id      # e.g., myproject://templates/report.m
 
 ### Inspiration
 
-- **mcp-n8n:** Gateway routing architecture, namespace-based tool discovery
+- **mcp-gateway:** Gateway routing architecture, namespace-based tool discovery
 - **chora-compose:** Production MCP server patterns, tool naming conventions
 - **MCP Community:** Resource URI patterns, server-name disambiguation
-- **Ecosystem coordination:** mcp-n8n and chora-compose proposals synthesized
+- **Ecosystem coordination:** mcp-gateway and chora-compose proposals synthesized
 
 ### References
 
 - [Chora MCP Conventions v1.0](docs/standards/CHORA_MCP_CONVENTIONS_v1.0.md)
 - [MCP Naming Best Practices](docs/reference/mcp-naming-best-practices.md)
 - [v1.7 → v1.8 Upgrade Guide](docs/upgrades/v1.7-to-v1.8.md)
-- [mcp-n8n Gateway](https://github.com/liminalcommons/mcp-n8n)
+- [mcp-gateway Gateway](https://github.com/liminalcommons/mcp-gateway)
 - [chora-compose MCP Server](https://github.com/liminalcommons/chora-compose)
 
 ---
@@ -2888,7 +2931,7 @@ Complete Phase 4 implementation adding advanced documentation features for power
 ### Inspiration
 
 Based on:
-- mcp-n8n documentation-as-product practices
+- mcp-gateway documentation-as-product practices
 - chora-compose production patterns
 - Pytest best practices (fixtures, async, parameterized)
 - AI agent programmatic access requirements
@@ -2910,7 +2953,7 @@ Complete the upgrade documentation system with cumulative guide for multi-versio
   - Dependency analysis (critical path: v1.2.0 fixes required)
   - Comparison table (when to use each strategy)
   - Real upgrade transcript showing combined conflicts
-  - Priority: Original adopters (chora-compose, mcp-n8n teams) on v1.0.0
+  - Priority: Original adopters (chora-compose, mcp-gateway teams) on v1.0.0
 
 ### Changed
 
@@ -2982,7 +3025,7 @@ Backfill all remaining upgrade guides to provide **100% coverage** for adopters 
 
 **PyPI Publishing Setup for Generated Projects**
 
-Based on feedback from mcp-n8n team, eliminate friction when adopters publish their packages to PyPI:
+Based on feedback from mcp-gateway team, eliminate friction when adopters publish their packages to PyPI:
 
 - **New copier.yml prompt**: `pypi_auth_method` (choices: `token`, `trusted_publishing`)
   - Default: `token` (simpler, works with local scripts)
@@ -2992,7 +3035,7 @@ Based on feedback from mcp-n8n team, eliminate friction when adopters publish th
 - **Conditional GitHub Actions workflow** (`.github/workflows/release.yml.jinja`)
   - Token mode: Uses `PYPI_TOKEN` secret, clear setup instructions
   - Trusted publishing mode: Uses OIDC with `id-token: write`
-  - Eliminates mixed signals that confused mcp-n8n team
+  - Eliminates mixed signals that confused mcp-gateway team
 - **PYPI_SETUP.md guide** (~420 lines)
   - Step-by-step setup for chosen authentication method
   - TestPyPI workflow for safe testing
@@ -3050,7 +3093,7 @@ Make generated projects easier to work with for both human developers and AI age
 - ✅ Reduced onboarding time for new contributors
 - ✅ Better knowledge transfer between projects
 
-**Based On**: mcp-n8n team feedback (2025-10-19)
+**Based On**: mcp-gateway team feedback (2025-10-19)
 
 **Principles**: Adopter ergonomics, self-documenting interfaces, agent-friendly design, ecosystem consistency
 
@@ -3182,12 +3225,12 @@ Enable all chora-base adopters to document long-term evolutionary vision alongsi
 - Converted `template/src/{{package_name}}/memory/__init__.py` → `__init__.py.jinja`
 - Converted `template/src/{{package_name}}/memory/trace.py` → `trace.py.jinja`
 - Changed `from mcp_n8n.memory.*` → `from {{ package_name }}.memory.*`
-- Changed `source: str = "mcp-n8n"` → `source: str = "{{ project_slug }}"`
+- Changed `source: str = "mcp-gateway"` → `source: str = "{{ project_slug }}"`
 - **Impact:** Generated projects would have ImportError without this fix
 
 **Hardcoded Absolute Paths:**
 - Removed hardcoded `/Users/victorpiper/code/*` paths from 3 scripts
-- `check-env.sh.jinja`: Removed mcp-n8n-specific backend checks
+- `check-env.sh.jinja`: Removed mcp-gateway-specific backend checks
 - `mcp-tool.sh.jinja`: Use script directory detection instead of hardcoded path
 - `handoff.sh.jinja`: Generic `/path/to/` instead of absolute paths
 - **Impact:** Scripts would fail for all users except original developer
@@ -3207,12 +3250,12 @@ Enable all chora-base adopters to document long-term evolutionary vision alongsi
 #### HIGH Priority Generalization Issues (6 issues fixed)
 
 **.chora/memory/README.md.jinja Project References:**
-- Line 3: `working with mcp-n8n` → `working with {{ project_slug }}`
-- Line 62: `"source": "mcp-n8n"` → `"source": "{{ project_slug }}"`
+- Line 3: `working with mcp-gateway` → `working with {{ project_slug }}`
+- Line 62: `"source": "mcp-gateway"` → `"source": "{{ project_slug }}"`
 - Lines 64-65: `chora:*`/`chora-composer` → `example:*`/`example-backend`
 - Line 243: `"to": "chora-composer"` → `"to": "other-project"`
 - Lines 323-326: Handoff example made generic
-- Line 477: `between mcp-n8n and chora-composer` → `between {{ project_slug }} and other projects`
+- Line 477: `between mcp-gateway and chora-composer` → `between {{ project_slug }} and other projects`
 - Line 495: Removed Phase reference, made compatibility note generic
 - **Impact:** Memory system docs would confuse adopters
 
@@ -3237,7 +3280,7 @@ Enable all chora-base adopters to document long-term evolutionary vision alongsi
 **Breaking Changes:** None (all fixes improve generalization)
 
 **Testing:**
-- ✅ No hardcoded `mcp-n8n`, `chora-composer`, `mcp-server-coda`
+- ✅ No hardcoded `mcp-gateway`, `chora-composer`, `mcp-server-coda`
 - ✅ No hardcoded `/Users/victorpiper/code/*` paths
 - ✅ Python imports use template variables
 - ✅ Security email configurable
@@ -3310,7 +3353,7 @@ Enable all chora-base adopters to document long-term evolutionary vision alongsi
 ## [1.0.0] - 2025-10-17
 
 ### Added
-- Initial chora-base template extracted from mcp-n8n Phase 4.5/4.6
+- Initial chora-base template extracted from mcp-gateway Phase 4.5/4.6
 - Core infrastructure: project structure, dependency management, testing
 - AI Agent Features: AGENTS.md, memory system (event log, knowledge graph, trace context)
 - CLI Tools: chora-memory command for querying events and managing knowledge
