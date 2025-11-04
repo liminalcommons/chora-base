@@ -144,11 +144,11 @@ Auto-generate SAP-007 documentation skeleton from SAP-001 coordination requests:
 
 ---
 
-### GAP-003: Unified Release Workflow (Docker + PyPI) ⚠️ CRITICAL
+### GAP-003: Unified Release Workflow (Docker + PyPI) ✅ COMPLETE
 
-**Status Update (2025-11-03)**: ✅ **Track 1 COMPLETE**, ⏳ Track 2 IN PROGRESS
+**Status Update (2025-11-04)**: ✅ **Track 1 COMPLETE**, ✅ **Track 2 COMPLETE**
 
-**Track 1 (chora-base): COMPLETE**
+**Track 1 (chora-base): COMPLETE** (2025-11-03)
 - Created `bump-version.py` (256 lines) - Python-based version management
 - Created `create-release.py` (274 lines) - GitHub release automation
 - Integrated with justfile (`just bump`, `just release`)
@@ -157,11 +157,16 @@ Auto-generate SAP-007 documentation skeleton from SAP-001 coordination requests:
 - **Time saved**: 50% reduction (30-45 min → 15-20 min per release)
 - **Documentation**: [GAP-003 Track 1 Completion Summary](gap-003-track-1-completion-summary.md)
 
-**Track 2 (static-template): IN PROGRESS**
-- Extend to generated project templates
-- Add Docker image versioning
-- Unify PyPI + Docker publishing
-- Template CI workflows
+**Track 2 (static-template): COMPLETE** (2025-11-04)
+- ✅ Created 3 template scripts (bump-version, create-release, justfile)
+- ✅ Added Docker image versioning (docker-compose.yml, Dockerfile)
+- ✅ Unified PyPI + Docker + GitHub release publishing
+- ✅ Multi-arch Docker builds (linux/amd64, linux/arm64)
+- ✅ Templated CI workflows (.github/workflows/release.yml)
+- ✅ Complete release guide (how-to-create-release.md.template, 450+ lines)
+- **Time saved**: 50% reduction for ALL generated projects
+- **ROI**: Break-even at 3 releases per project
+- **Documentation**: [GAP-003 Track 2 Completion Summary](gap-003-track-2-completion-summary.md)
 
 **Original Description (below):**
 
@@ -212,10 +217,12 @@ Unified release workflow integrating SAP-011 Docker + SAP-012 PyPI:
 - ✅ DONE (Track 1): Created Python scripts for chora-base (`bump-version.py`, `create-release.py`)
 - ✅ DONE (Track 1): Integrated with justfile (`just bump`, `just release`)
 - ✅ DONE (Track 1): Documented in SAP-008 v1.2.0 and SAP-012 v1.1.0
-- ⏳ TODO (Track 2): Template `docker-compose.yml` version variables
-- ⏳ TODO (Track 2): Unified release script template (PyPI + Docker)
-- ⏳ TODO (Track 2): CI workflow template with Docker build/push
-- ⏳ TODO (Track 2): Update SAP-012 adoption-blueprint with workflow docs
+- ✅ DONE (Track 2): Template `docker-compose.yml` version variables (all 4 service types)
+- ✅ DONE (Track 2): Unified release script templates (3 templates: bump-version, create-release, justfile)
+- ✅ DONE (Track 2): CI workflow template with multi-arch Docker build/push
+- ✅ DONE (Track 2): Updated SAP-008 v1.3.0 and SAP-012 v1.2.0 with Track 2 completion
+- ✅ DONE (Track 2): Integration testing (test-mcp-template-render.py)
+- ✅ DONE (Track 2): Complete release guide template (450+ lines with troubleshooting)
 
 ---
 

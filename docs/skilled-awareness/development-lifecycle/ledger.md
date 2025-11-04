@@ -1,8 +1,8 @@
 ---
 sap_id: SAP-012
-version: 1.1.0
+version: 1.2.0
 status: Draft
-last_updated: 2025-11-03
+last_updated: 2025-11-04
 enhancement: unified-release-workflow
 ---
 
@@ -10,9 +10,9 @@ enhancement: unified-release-workflow
 
 **SAP ID**: SAP-012
 **Capability**: development-lifecycle
-**Version**: 1.1.0
-**Last Updated**: 2025-11-03
-**Enhancement**: Unified Release Workflow (GAP-003 Track 1)
+**Version**: 1.2.0
+**Last Updated**: 2025-11-04
+**Enhancement**: Unified Release Workflow (GAP-003 Tracks 1 & 2)
 
 ---
 
@@ -100,7 +100,7 @@ _(No adopters yet)_
 | Test coverage | 95% | 95% | ≥85% | 🟢 Excellent |
 | Code review time | TBD | TBD | <24h | 🔴 Not tracking yet |
 | Rework rate | TBD | TBD | <20% | 🔴 Not tracking yet |
-| Release time (minutes) | 30-45 | 15-20 | <20 | 🟢 Improved (GAP-003 Track 1) |
+| Release time (minutes) | 30-45 | 15-20 | <20 | 🟢 Improved (GAP-003 Tracks 1 & 2) |
 
 **Velocity Metrics** (TBD after Sprint 1-2):
 
@@ -128,7 +128,29 @@ _(No adopters yet)_
 
 ## 4. Version History
 
-### v1.1.0 (2025-11-03) - Release Workflow Integration
+### v1.2.0 (2025-11-04) - Template Release Workflow (Track 2)
+
+**Changes**:
+- ✅ Added Track 2 completion to Section 4.5 (template generation)
+- ✅ Documented template scripts for generated projects
+- ✅ Extended 50% time savings to all generated projects
+- ✅ Added multi-arch Docker build integration (Phase 7.4)
+
+**Business Impact**:
+- ALL generated projects inherit 50% release time reduction
+- Multi-arch Docker support (linux/amd64, linux/arm64) built-in
+- PyPI + Docker + GitHub release automation out-of-box
+- ROI break-even: 3 releases per generated project
+
+**Related Work**:
+- GAP-003 Track 2 implementation (3 template scripts + CI/CD workflows)
+- SAP-008 v1.3.0 (template scripts inventory)
+
+**Adopters**: 0 (templates ready for new projects)
+
+---
+
+### v1.1.0 (2025-11-03) - Release Workflow Integration (Track 1)
 
 **Changes**:
 - ✅ Added Section 4.5: Release Workflow Integration (GAP-003)
@@ -170,7 +192,7 @@ _(No adopters yet)_
 
 ## 4.5 Release Workflow Integration (GAP-003)
 
-**Status**: Track 1 Complete (chora-base), Track 2 Planned (templates)
+**Status**: ✅ Track 1 Complete (chora-base), ✅ Track 2 Complete (templates)
 
 ### Track 1: chora-base Unified Release (COMPLETE)
 
@@ -203,23 +225,61 @@ _(No adopters yet)_
 - GitHub release notes always match CHANGELOG
 - No human error in note extraction
 
-### Track 2: Template Generation (PLANNED)
+### Track 2: Template Generation (COMPLETE)
 
-**Scope**: Extend to static-template for generated projects
-**Goal**: Generated projects get unified release workflow out-of-box
-**Artifacts Planned**:
-- Template version variables in docker-compose.yml
-- Release script templates (Python, cross-platform)
-- CI workflow templates with Docker build/push
-- Documentation templates (how-to guides)
+**Implemented**: 2025-11-04
+**Templates**: `bump-version.py.template`, `create-release.py.template`, `justfile.template`
+**Scope**: Extended to static-template for generated projects
+**Goal**: Generated projects get unified PyPI + Docker + GitHub release workflow out-of-box
 
-**Target**: Q1 2025
+**Integration with SAP-012 Phase 7 (Release)** for generated projects:
+- **Phase 7.1: Version bump** → `just bump <version>`
+  - Updates 4 files: pyproject.toml, __init__.py, docker-compose.yml, CHANGELOG.md
+  - Creates git commit and annotated tag
+  - Same workflow as chora-base, but templated for any project
+- **Phase 7.2: Update CHANGELOG** → Manual editing (developer fills TODOs)
+  - Developer replaces placeholders with actual changes
+  - Structured format ensures consistency
+- **Phase 7.3: Create release** → `just release`
+  - Extracts notes from CHANGELOG.md
+  - Creates GitHub release with gh CLI
+  - CI/CD triggers automatically on tag push
+- **Phase 7.4: Publish packages** → Automated via GitHub Actions
+  - PyPI publishing via OIDC trusted publishing
+  - Multi-arch Docker builds (linux/amd64, linux/arm64)
+  - Images pushed to ghcr.io (GitHub Container Registry)
+  - Artifacts attached to GitHub release
+
+**Metrics (Projected for Generated Projects)**:
+- Release time: 30-45 min manual → 15-20 min automated (50% reduction, same as chora-base)
+- Multi-arch Docker: Built-in support (no manual setup)
+- PyPI + Docker + GitHub: All automated in one workflow
+- ROI break-even: 3 releases per project
+
+**Quality Impact**:
+- Every generated project inherits best practices
+- Consistent release workflow across all MCP projects
+- Multi-arch Docker support by default
+- No manual registry configuration needed
+
+**Templates Added**:
+- `bump-version.py.template` (400+ lines) - Version management
+- `create-release.py.template` (300+ lines) - GitHub release automation
+- `justfile.template` (200+ lines) - Task runner with release commands
+- `docker-compose.yml` updates - Version variable substitution
+- `Dockerfile` updates - OCI metadata labels
+- `.github/workflows/release.yml` - Multi-arch Docker build job
+- `how-to-create-release.md.template` (450+ lines) - Complete guide
+
+**Commits**:
+- `bc6df7b` - Docker and CI/CD template updates
+- `13e4656` - Script templates (bump-version, create-release, justfile)
 
 **Related Documents**:
-- [GAP-003 Implementation Plan](../../project-docs/gap-003-unified-release-implementation-plan.md)
+- [GAP-003 Track 2 Completion Summary](../../project-docs/gap-003-track-2-completion-summary.md)
 - [GAP-003 Track 1 Completion Summary](../../project-docs/gap-003-track-1-completion-summary.md)
 - [Workflow Continuity Gap Report](../../project-docs/workflow-continuity-gap-report.md)
-- [SAP-008 Automation Scripts Ledger](../automation-scripts/ledger.md) (documents scripts)
+- [SAP-008 v1.3.0 Automation Scripts Ledger](../automation-scripts/ledger.md)
 
 ---
 
