@@ -1,0 +1,420 @@
+#!/usr/bin/env python3
+"""Bump version for {{ project_name }}.
+
+Updates version in:
+- pyproject.toml
+- docker-compose.yml (image tags)
+- src/{{ package_name }}/__init__.py
+- CHANGELOG.md
+
+Part of GAP-003: Unified Release Workflow.
+
+Usage:
+    python scripts/bump-version.py 0.2.0
+    python scripts/bump-version.py 0.2.0 --dry-run
+    python scripts/bump-version.py --help
+
+Exit Codes:
+    0 - Success
+    1 - File operation error
+    2 - Invalid arguments or version format
+
+Examples:
+    # Bump to version 0.2.0
+    python scripts/bump-version.py 0.2.0
+
+    # Preview changes without modifying files
+    python scripts/bump-version.py 0.2.0 --dry-run
+
+    # Using Just task runner
+    just bump 0.2.0
+"""
+
+import argparse
+import re
+import subprocess
+import sys
+from datetime import date
+from pathlib import Path
+
+
+def validate_version(version: str) -> bool:
+    """Validate semantic version format (X.Y.Z).
+
+    Args:
+        version: Version string to validate
+
+    Returns:
+        True if valid semver, False otherwise
+    """
+    return bool(re.match(r'^\d+\.\d+\.\d+$', version))
+
+
+def update_pyproject_toml(version: str, dry_run: bool = False) -> bool:
+    """Update version in pyproject.toml.
+
+    Args:
+        version: Version to set
+        dry_run: If True, preview changes without modifying file
+
+    Returns:
+        True if successful, False otherwise
+    """
+    pyproject_path = Path("pyproject.toml")
+
+    if not pyproject_path.exists():
+        print("[FAIL] pyproject.toml not found in repository root")
+        return False
+
+    try:
+        content = pyproject_path.read_text(encoding='utf-8')
+    except (IOError, OSError) as e:
+        print(f"[FAIL] Error reading pyproject.toml: {e}")
+        return False
+
+    # Update version line
+    new_content = re.sub(
+        r'^version = "[^"]+"',
+        f'version = "{version}"',
+        content,
+        flags=re.MULTILINE
+    )
+
+    if new_content == content:
+        print("[WARN] No version field found in pyproject.toml")
+        return False
+
+    if dry_run:
+        print(f"[DRY RUN] Would update pyproject.toml: version = \"{version}\"")
+        return True
+
+    try:
+        pyproject_path.write_text(new_content, encoding='utf-8')
+        print(f"[OK] Updated pyproject.toml with version {version}")
+        return True
+    except (IOError, OSError) as e:
+        print(f"[FAIL] Error writing pyproject.toml: {e}")
+        return False
+
+
+def update_package_init(version: str, dry_run: bool = False) -> bool:
+    """Update __version__ in src/{{ package_name }}/__init__.py.
+
+    Args:
+        version: Version to set
+        dry_run: If True, preview changes without modifying file
+
+    Returns:
+        True if successful, False otherwise
+    """
+    init_path = Path("src/{{ package_name }}/__init__.py")
+
+    if not init_path.exists():
+        print(f"[WARN] {init_path} not found, skipping")
+        return True  # Not a failure, just not applicable
+
+    try:
+        content = init_path.read_text(encoding='utf-8')
+    except (IOError, OSError) as e:
+        print(f"[FAIL] Error reading {init_path}: {e}")
+        return False
+
+    # Update __version__ line
+    new_content = re.sub(
+        r'^__version__ = "[^"]+"',
+        f'__version__ = "{version}"',
+        content,
+        flags=re.MULTILINE
+    )
+
+    if new_content == content:
+        print(f"[WARN] No __version__ field found in {init_path}")
+        return False
+
+    if dry_run:
+        print(f"[DRY RUN] Would update {init_path}: __version__ = \"{version}\"")
+        return True
+
+    try:
+        init_path.write_text(new_content, encoding='utf-8')
+        print(f"[OK] Updated {init_path} with version {version}")
+        return True
+    except (IOError, OSError) as e:
+        print(f"[FAIL] Error writing {init_path}: {e}")
+        return False
+
+
+def update_docker_compose(version: str, dry_run: bool = False) -> bool:
+    """Update image tags in docker-compose.yml.
+
+    Args:
+        version: Version to set in image tags
+        dry_run: If True, preview changes without modifying file
+
+    Returns:
+        True if successful, False otherwise
+    """
+    compose_path = Path("docker-compose.yml")
+
+    if not compose_path.exists():
+        print("[WARN] docker-compose.yml not found, skipping")
+        return True  # Not a failure, just not applicable
+
+    try:
+        content = compose_path.read_text(encoding='utf-8')
+    except (IOError, OSError) as e:
+        print(f"[FAIL] Error reading docker-compose.yml: {e}")
+        return False
+
+    # Update image tags - replace version at end of image line
+    # Pattern: image: registry/org/project:VERSION or image: project:VERSION
+    new_content = re.sub(
+        r'(image:\s+[^:\s]+):(?:latest|\d+\.\d+\.\d+)',
+        rf'\1:{version}',
+        content
+    )
+
+    if new_content == content:
+        print("[WARN] No version tags found in docker-compose.yml")
+        # Still return True as this might not have versioned images yet
+
+    if dry_run:
+        print(f"[DRY RUN] Would update docker-compose.yml image tags to :{version}")
+        return True
+
+    try:
+        compose_path.write_text(new_content, encoding='utf-8')
+        print(f"[OK] Updated docker-compose.yml image tags")
+        return True
+    except (IOError, OSError) as e:
+        print(f"[FAIL] Error writing docker-compose.yml: {e}")
+        return False
+
+
+def update_changelog(version: str, dry_run: bool = False) -> bool:
+    """Update CHANGELOG.md with new version header.
+
+    Args:
+        version: Version to add to CHANGELOG
+        dry_run: If True, preview changes without modifying file
+
+    Returns:
+        True if successful, False otherwise
+    """
+    changelog_path = Path("CHANGELOG.md")
+
+    if not changelog_path.exists():
+        print("[FAIL] CHANGELOG.md not found in repository root")
+        return False
+
+    try:
+        content = changelog_path.read_text(encoding='utf-8')
+    except (IOError, OSError) as e:
+        print(f"[FAIL] Error reading CHANGELOG.md: {e}")
+        return False
+
+    # Prepare new version header with template
+    today = date.today().strftime('%Y-%m-%d')
+    new_section = f"""## [{version}] - {today}
+
+### Added
+- TODO: List new features
+
+### Changed
+- TODO: List changes
+
+### Fixed
+- TODO: List bug fixes
+
+---
+
+"""
+
+    # Find insertion point (after first ## [ header)
+    lines = content.split('\n')
+    insert_index = None
+
+    for i, line in enumerate(lines):
+        if line.startswith('## ['):
+            insert_index = i
+            break
+
+    if insert_index is None:
+        print("[FAIL] Could not find version header pattern '## [' in CHANGELOG.md")
+        return False
+
+    # Insert new section
+    lines.insert(insert_index, new_section.rstrip())
+    updated_content = '\n'.join(lines)
+
+    if dry_run:
+        print(f"[DRY RUN] Would insert the following into CHANGELOG.md at line {insert_index + 1}:")
+        print("---")
+        print(new_section)
+        print("---")
+        return True
+
+    # Write updated CHANGELOG
+    try:
+        changelog_path.write_text(updated_content, encoding='utf-8')
+        print(f"[OK] Updated CHANGELOG.md with version {version}")
+        return True
+    except (IOError, OSError) as e:
+        print(f"[FAIL] Error writing CHANGELOG.md: {e}")
+        return False
+
+
+def create_git_commit_and_tag(version: str, dry_run: bool = False) -> bool:
+    """Create git commit and annotated tag for version bump.
+
+    Args:
+        version: Version for commit message and tag
+        dry_run: If True, preview git operations without executing
+
+    Returns:
+        True if successful, False otherwise
+    """
+    commit_msg = f"chore(release): Bump version to v{version}"
+    tag_name = f"v{version}"
+    tag_msg = f"Release v{version}"
+
+    files_to_add = [
+        "pyproject.toml",
+        "src/{{ package_name }}/__init__.py",
+        "docker-compose.yml",
+        "CHANGELOG.md"
+    ]
+
+    if dry_run:
+        print(f"[DRY RUN] Would execute:")
+        print(f"  git add {' '.join(files_to_add)}")
+        print(f"  git commit -m '{commit_msg}'")
+        print(f"  git tag -a '{tag_name}' -m '{tag_msg}'")
+        return True
+
+    try:
+        # Stage files (only those that exist)
+        existing_files = [f for f in files_to_add if Path(f).exists()]
+        subprocess.run(['git', 'add'] + existing_files, check=True, capture_output=True)
+
+        # Commit
+        subprocess.run(
+            ['git', 'commit', '-m', commit_msg],
+            check=True,
+            capture_output=True,
+            text=True
+        )
+        print(f"[OK] Created git commit: {commit_msg}")
+
+        # Create annotated tag
+        subprocess.run(
+            ['git', 'tag', '-a', tag_name, '-m', tag_msg],
+            check=True,
+            capture_output=True
+        )
+        print(f"[OK] Created git tag: {tag_name}")
+
+        return True
+
+    except subprocess.CalledProcessError as e:
+        print(f"[FAIL] Git operation failed: {e}")
+        if e.stderr:
+            print(f"  Error: {e.stderr}")
+        return False
+    except FileNotFoundError:
+        print("[FAIL] git command not found. Ensure git is installed and in PATH.")
+        return False
+
+
+def show_next_steps(version: str):
+    """Display next steps after version bump.
+
+    Args:
+        version: Version that was bumped to
+    """
+    print("\n" + "=" * 70)
+    print("Next Steps:")
+    print("=" * 70)
+    print(f"1. Edit CHANGELOG.md and replace TODOs with actual changes for v{version}")
+    print("2. Amend the commit with your changes:")
+    print("     git add CHANGELOG.md")
+    print("     git commit --amend --no-edit")
+    print("3. Recreate the tag (if commit was amended):")
+    print(f"     git tag -d v{version}")
+    print(f"     git tag -a v{version} -m 'Release v{version}'")
+    print("4. Push the commit and tag to remote:")
+    print("     git push && git push --tags")
+    print("5. Create unified release (PyPI + Docker + GitHub):")
+    print("     just release")
+    print("     # or: python scripts/create-release.py")
+    print("=" * 70)
+
+
+def bump_version(version: str, dry_run: bool = False) -> int:
+    """Main function to bump version.
+
+    Args:
+        version: Version to bump to (e.g., "0.2.0")
+        dry_run: If True, preview changes without modifying anything
+
+    Returns:
+        Exit code (0 = success, 1 = error, 2 = invalid input)
+    """
+    # Validate version format
+    if not validate_version(version):
+        print(f"[FAIL] Invalid version format: {version}")
+        print("Expected: X.Y.Z (e.g., 0.2.0)")
+        return 2
+
+    print(f"Bumping {{ project_name }} version to {version}...")
+    if dry_run:
+        print("[DRY RUN MODE] No files will be modified\n")
+
+    # Update all version files
+    success = True
+    success = update_pyproject_toml(version, dry_run) and success
+    success = update_package_init(version, dry_run) and success
+    success = update_docker_compose(version, dry_run) and success
+    success = update_changelog(version, dry_run) and success
+
+    if not success:
+        print("\n[FAIL] Some operations failed")
+        return 1
+
+    # Create git commit and tag
+    if not create_git_commit_and_tag(version, dry_run):
+        return 1
+
+    # Show next steps
+    if not dry_run:
+        show_next_steps(version)
+    else:
+        print("\n[DRY RUN] All operations completed successfully (preview only)")
+
+    return 0
+
+
+def main():
+    """CLI entry point."""
+    parser = argparse.ArgumentParser(
+        description='Bump version for {{ project_name }}',
+        epilog='Part of GAP-003: Unified Release Workflow'
+    )
+    parser.add_argument(
+        'version',
+        help='Version to bump to (semantic version: X.Y.Z, e.g., 0.2.0)'
+    )
+    parser.add_argument(
+        '--dry-run',
+        action='store_true',
+        help='Preview changes without modifying files or creating git commits/tags'
+    )
+
+    args = parser.parse_args()
+
+    exit_code = bump_version(args.version, args.dry_run)
+    sys.exit(exit_code)
+
+
+if __name__ == '__main__':
+    main()
