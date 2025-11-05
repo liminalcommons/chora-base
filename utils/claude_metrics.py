@@ -134,6 +134,53 @@ class SAPAdoptionMetric:
             raise ValueError("estimated_hours_saved must be non-negative")
 
 
+@dataclass
+class TokenUsageMetric:
+    """Track token usage for agent awareness optimization (SAP-009).
+
+    Attributes:
+        session_id: Unique identifier for this session
+        timestamp: When this session occurred
+        tokens_used: Total tokens consumed in this session
+        tokens_available: Total tokens available (budget)
+        progressive_loading_phase: Which phase was used (1=minimal, 2=standard, 3=comprehensive)
+        context_items_loaded: Number of context items loaded
+        task_completed: Whether the task was completed successfully
+        metadata: Optional additional metadata
+    """
+    session_id: str
+    timestamp: datetime
+    tokens_used: int
+    tokens_available: int
+    progressive_loading_phase: int
+    context_items_loaded: int
+    task_completed: bool
+    metadata: dict[str, Any] = field(default_factory=dict)
+
+    def __post_init__(self) -> None:
+        """Validate metric values."""
+        if self.tokens_used < 0:
+            raise ValueError("tokens_used must be non-negative")
+        if self.tokens_available < 0:
+            raise ValueError("tokens_available must be non-negative")
+        if not 1 <= self.progressive_loading_phase <= 3:
+            raise ValueError("progressive_loading_phase must be 1, 2, or 3")
+        if self.context_items_loaded < 0:
+            raise ValueError("context_items_loaded must be non-negative")
+
+    @property
+    def token_utilization(self) -> float:
+        """Calculate token utilization percentage (0.0-1.0)."""
+        if self.tokens_available == 0:
+            return 0.0
+        return self.tokens_used / self.tokens_available
+
+    @property
+    def tokens_remaining(self) -> int:
+        """Calculate remaining tokens."""
+        return max(0, self.tokens_available - self.tokens_used)
+
+
 class ClaudeROICalculator:
     """Calculate return on investment for Claude usage.
 
@@ -160,6 +207,7 @@ class ClaudeROICalculator:
         self.hourly_rate = developer_hourly_rate
         self.metrics: list[ClaudeMetric] = []
         self.sap_adoption_metrics: list[SAPAdoptionMetric] = []
+        self.token_usage_metrics: list[TokenUsageMetric] = []
 
     def add_metric(self, metric: ClaudeMetric) -> None:
         """Add a metric to the calculator.
@@ -469,6 +517,67 @@ RECOMMENDATIONS
 
         for sap_id, sap_roi in sap_rois[:5]:
             report += f"- {sap_id}: {sap_roi:.2f}x\n"
+
+        return report
+
+    def track_token_usage(self, metric: TokenUsageMetric) -> None:
+        """Add token usage metric to ROI tracking.
+
+        Args:
+            metric: TokenUsageMetric to track
+        """
+        self.token_usage_metrics.append(metric)
+
+    def generate_token_usage_report(self) -> str:
+        """Generate token usage efficiency analysis.
+
+        Returns:
+            Formatted report string showing token usage efficiency
+        """
+        if not self.token_usage_metrics:
+            return "## Token Usage Efficiency\n\nNo token usage metrics tracked yet."
+
+        total_sessions = len(self.token_usage_metrics)
+        avg_tokens = sum(m.tokens_used for m in self.token_usage_metrics) / total_sessions
+        avg_utilization = sum(m.token_utilization for m in self.token_usage_metrics) / total_sessions
+
+        # Calculate progressive loading phase distribution
+        phase_counts = {1: 0, 2: 0, 3: 0}
+        for m in self.token_usage_metrics:
+            phase_counts[m.progressive_loading_phase] += 1
+
+        phase_percentages = {
+            phase: (count / total_sessions * 100)
+            for phase, count in phase_counts.items()
+        }
+
+        # Calculate completion rate
+        completed_sessions = sum(1 for m in self.token_usage_metrics if m.task_completed)
+        completion_rate = completed_sessions / total_sessions * 100 if total_sessions > 0 else 0
+
+        # Find peak and min usage
+        peak_tokens = max(m.tokens_used for m in self.token_usage_metrics)
+        min_tokens = min(m.tokens_used for m in self.token_usage_metrics)
+
+        report = f"""## Token Usage Efficiency (SAP-009)
+
+**Sessions Tracked**: {total_sessions}
+**Average Tokens**: {avg_tokens:.0f}
+**Average Utilization**: {avg_utilization*100:.1f}%
+**Completion Rate**: {completion_rate:.1f}%
+
+**Token Range**:
+- Peak usage: {peak_tokens:,} tokens
+- Minimum usage: {min_tokens:,} tokens
+
+**Progressive Loading Distribution**:
+- Phase 1 (minimal): {phase_counts[1]} sessions ({phase_percentages[1]:.1f}%)
+- Phase 2 (standard): {phase_counts[2]} sessions ({phase_percentages[2]:.1f}%)
+- Phase 3 (comprehensive): {phase_counts[3]} sessions ({phase_percentages[3]:.1f}%)
+
+**Target**: ≥90% sessions using Phase 1 (minimal loading)
+**Status**: {'🟢 Target met' if phase_percentages[1] >= 90 else f'🟡 {phase_percentages[1]:.1f}% using Phase 1'}
+"""
 
         return report
 
