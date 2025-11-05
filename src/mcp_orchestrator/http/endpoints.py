@@ -269,18 +269,22 @@ async def validate_config_endpoint(
     """
     builder_key = f"{client_id}/{profile}"
 
+    # If no draft exists, create empty builder for validation
     if builder_key not in _builders:
-        raise HTTPException(status_code=404, detail="No draft configuration found")
+        _builders[builder_key] = ConfigBuilder(client_id, profile, _server_registry)
 
     builder = _builders[builder_key]
 
     try:
         # Validate configuration
         # The builder automatically validates, so if build() succeeds, it's valid
-        builder.build()
+        payload = builder.build()
 
-        # Additional validation logic can be added here
+        # Check for empty configuration
         errors = []
+        if builder.count() == 0:
+            errors.append("Configuration is empty. Add at least one server.")
+            return ValidateConfigResponse(valid=False, errors=errors)
 
         return ValidateConfigResponse(valid=True, errors=errors)
     except Exception as e:
@@ -298,7 +302,10 @@ async def publish_config_endpoint(
     builder_key = f"{client_id}/{profile}"
 
     if builder_key not in _builders:
-        raise HTTPException(status_code=404, detail="No draft configuration found")
+        raise HTTPException(
+            status_code=400,
+            detail="No draft configuration found. Add servers to draft first.",
+        )
 
     builder = _builders[builder_key]
 
@@ -432,27 +439,34 @@ async def initialize_keys_endpoint() -> InitializeKeysResponse:
 
     Initialize cryptographic signing keys.
     """
+    from pathlib import Path
+
+    from mcp_orchestrator.crypto.signing import ArtifactSigner
+
+    # Define key paths
+    keys_dir = _store.base_path / "keys"
+    keys_dir.mkdir(parents=True, exist_ok=True)
+    private_key_path = keys_dir / "signing.key"
+    public_key_path = keys_dir / "signing.pub"
+
+    # Check if keys already exist
+    if private_key_path.exists() and public_key_path.exists():
+        raise HTTPException(status_code=400, detail="Signing keys already initialized")
+
     try:
-        from mcp_orchestrator.crypto.signing import SigningService
+        # Generate new signer
+        signer = ArtifactSigner.generate()
 
-        # Initialize signing service
-        signing_service = SigningService(keys_dir=str(_store.base_path / "keys"))
-
-        # Check if keys already exist
-        if signing_service.has_keys():
-            raise HTTPException(
-                status_code=400, detail="Signing keys already initialized"
-            )
-
-        # Generate keys
-        key_paths = signing_service.generate_keypair()
+        # Save keys
+        signer.save_private_key(str(private_key_path))
+        signer.save_public_key(str(public_key_path))
 
         return InitializeKeysResponse(
             success=True,
             message="Signing keys initialized successfully",
             keys={
-                "private_key": str(key_paths["private_key"]),
-                "public_key": str(key_paths["public_key"]),
+                "private_key": str(private_key_path),
+                "public_key": str(public_key_path),
             },
         )
     except FileExistsError:

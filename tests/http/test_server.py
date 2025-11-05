@@ -185,8 +185,14 @@ class TestHTTPEndpointExposure:
 
     @pytest.fixture
     def client(self):
-        """Create FastAPI test client."""
-        app = create_app()
+        """Create FastAPI test client with mock auth."""
+        from mcp_orchestrator.http.auth import AuthenticationService
+
+        # Create auth service with test token
+        auth_service = AuthenticationService()
+        auth_service._tokens.add("test_token_123")  # Register test token
+
+        app = create_app(auth_service=auth_service)
         return TestClient(app)
 
     @pytest.fixture
@@ -304,7 +310,11 @@ class TestOpenAPISchema:
     @pytest.fixture
     def client(self):
         """Create FastAPI test client."""
-        app = create_app()
+        from mcp_orchestrator.http.auth import AuthenticationService
+
+        # OpenAPI schema doesn't require auth, but use consistent setup
+        auth_service = AuthenticationService()
+        app = create_app(auth_service=auth_service)
         return TestClient(app)
 
     def test_openapi_json_endpoint(self, client):
@@ -429,8 +439,14 @@ class TestServerIntegration:
 
     @pytest.fixture
     def client(self):
-        """Create FastAPI test client."""
-        app = create_app()
+        """Create FastAPI test client with mock auth."""
+        from mcp_orchestrator.http.auth import AuthenticationService
+
+        # Create auth service with test token
+        auth_service = AuthenticationService()
+        auth_service._tokens.add("test_token_123")  # Register test token
+
+        app = create_app(auth_service=auth_service)
         return TestClient(app)
 
     @pytest.fixture
@@ -514,7 +530,11 @@ class TestCORSMiddleware:
     @pytest.fixture
     def client(self):
         """Create FastAPI test client."""
-        app = create_app()
+        from mcp_orchestrator.http.auth import AuthenticationService
+
+        # Create auth service for consistent setup
+        auth_service = AuthenticationService()
+        app = create_app(auth_service=auth_service)
         return TestClient(app)
 
     def test_cors_middleware_is_configured(self, client):

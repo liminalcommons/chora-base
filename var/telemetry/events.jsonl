@@ -1,2 +1,2 @@
-{"name": "manifest.validate", "ts": "2025-11-01T00:58:58.975579+00:00", "fields": {"file": "manifests/star.yaml", "result": "ok"}}
-{"name": "behavior.validate", "ts": "2025-11-01T00:58:58.977952+00:00", "fields": {"path": "project-docs/capabilities/behaviors", "result": "ok"}}
+{"name": "manifest.validate", "ts": "2025-11-01T06:05:55.121910+00:00", "fields": {"file": "manifests/star.yaml", "result": "ok"}}
+{"name": "behavior.validate", "ts": "2025-11-01T06:05:55.123117+00:00", "fields": {"path": "project-docs/capabilities/behaviors", "result": "ok"}}
