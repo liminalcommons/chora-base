@@ -1,0 +1,214 @@
+{
+  "name": "Scheduled Content Generation",
+  "nodes": [
+    {
+      "parameters": {
+        "rule": {
+          "interval": [
+            {
+              "field": "hours",
+              "hoursInterval": 6
+            }
+          ]
+        }
+      },
+      "id": "schedule-trigger",
+      "name": "Schedule Trigger",
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.1,
+      "position": [250, 300]
+    },
+    {
+      "parameters": {
+        "operation": "executeCommand",
+        "command": "docker",
+        "arguments": "run --rm -v $(pwd):/workspace ghcr.io/liminalcommons/chora-compose:latest generate content --config /workspace/configs/content/daily-metrics.yaml"
+      },
+      "id": "execute-generation",
+      "name": "Execute chora-compose Generation",
+      "type": "n8n-nodes-base.executeCommand",
+      "typeVersion": 1,
+      "position": [450, 300]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "string": [
+            {
+              "value1": "={{$json.exitCode}}",
+              "operation": "equals",
+              "value2": "0"
+            }
+          ]
+        }
+      },
+      "id": "check-success",
+      "name": "Check Generation Success",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 1,
+      "position": [650, 300]
+    },
+    {
+      "parameters": {
+        "filePath": "/workspace/output/metrics/daily-metrics.md"
+      },
+      "id": "read-output",
+      "name": "Read Generated Content",
+      "type": "n8n-nodes-base.readBinaryFile",
+      "typeVersion": 1,
+      "position": [850, 200]
+    },
+    {
+      "parameters": {
+        "authentication": "headerAuth",
+        "url": "https://api.slack.com/api/chat.postMessage",
+        "options": {},
+        "bodyParametersJson": "={\n  \"channel\": \"#daily-metrics\",\n  \"text\": \"Daily metrics generated successfully!\",\n  \"attachments\": [\n    {\n      \"text\": \"{{$node['Read Generated Content'].binary.data.toString('utf8')}}\",\n      \"color\": \"good\"\n    }\n  ]\n}"
+      },
+      "id": "notify-slack-success",
+      "name": "Notify Slack (Success)",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 3,
+      "position": [1050, 200],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "1",
+          "name": "Slack Bot Token"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "authentication": "headerAuth",
+        "url": "https://api.slack.com/api/chat.postMessage",
+        "options": {},
+        "bodyParametersJson": "={\n  \"channel\": \"#alerts\",\n  \"text\": \":warning: Daily metrics generation failed!\",\n  \"attachments\": [\n    {\n      \"text\": \"Exit code: {{$node['Execute chora-compose Generation'].json.exitCode}}\\n\\nError: {{$node['Execute chora-compose Generation'].json.stderr}}\",\n      \"color\": \"danger\"\n    }\n  ]\n}"
+      },
+      "id": "notify-slack-failure",
+      "name": "Notify Slack (Failure)",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 3,
+      "position": [850, 400],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "1",
+          "name": "Slack Bot Token"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "values": {
+          "string": [
+            {
+              "name": "workflow_name",
+              "value": "scheduled-content-generation"
+            },
+            {
+              "name": "execution_time",
+              "value": "={{$now.toISO()}}"
+            },
+            {
+              "name": "config_path",
+              "value": "configs/content/daily-metrics.yaml"
+            },
+            {
+              "name": "output_path",
+              "value": "output/metrics/daily-metrics.md"
+            }
+          ]
+        }
+      },
+      "id": "log-metadata",
+      "name": "Log Execution Metadata",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 1,
+      "position": [1250, 200]
+    }
+  ],
+  "connections": {
+    "Schedule Trigger": {
+      "main": [
+        [
+          {
+            "node": "Execute chora-compose Generation",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Execute chora-compose Generation": {
+      "main": [
+        [
+          {
+            "node": "Check Generation Success",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Check Generation Success": {
+      "main": [
+        [
+          {
+            "node": "Read Generated Content",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Notify Slack (Failure)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Read Generated Content": {
+      "main": [
+        [
+          {
+            "node": "Notify Slack (Success)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Notify Slack (Success)": {
+      "main": [
+        [
+          {
+            "node": "Log Execution Metadata",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "staticData": null,
+  "tags": [
+    {
+      "name": "chora-compose",
+      "createdAt": "2025-11-04T12:00:00.000Z",
+      "updatedAt": "2025-11-04T12:00:00.000Z",
+      "id": "1"
+    },
+    {
+      "name": "scheduled",
+      "createdAt": "2025-11-04T12:00:00.000Z",
+      "updatedAt": "2025-11-04T12:00:00.000Z",
+      "id": "2"
+    }
+  ],
+  "triggerCount": 0,
+  "updatedAt": "2025-11-04T12:00:00.000Z",
+  "versionId": "1"
+}

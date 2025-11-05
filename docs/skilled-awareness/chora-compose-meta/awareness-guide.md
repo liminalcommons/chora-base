@@ -654,6 +654,145 @@ Would you like me to trace the dependencies to show you where the cycle occurs?
 **Escalation Criteria**:
 - Escalate to user if: Cycle involves multiple artifacts requiring architectural decision, or user needs to choose which dependency to break
 
+### Error Interpretation Guide
+
+**Understanding Error Response Format**:
+
+All chora-compose MCP tools return errors in a consistent format:
+```json
+{
+  "success": false,
+  "error": {
+    "code": "error_code",
+    "message": "Human-readable description",
+    "details": {
+      /* Error-specific context */
+    }
+  }
+}
+```
+
+**Error Code Categories** (24 tools across 7 categories):
+
+1. **Core Generation Errors** (5 tools):
+   - `config_not_found` - Content/artifact config missing
+   - `generation_failed` - Template/generator execution failed
+   - `composition_failed` - Artifact assembly failed (missing content pieces)
+   - `write_failed` - Output file write permission/disk issues
+   - `invalid_context` - Context JSON parsing failed
+
+2. **Config Lifecycle Errors** (4 tools):
+   - `validation_error` - Config schema validation failed
+   - `draft_creation_failed` - Ephemeral storage issue
+   - `draft_not_found` - Draft ID doesn't exist
+   - `save_failed` - Config file already exists (need overwrite=true)
+   - `modification_failed` - Config update merge failed
+
+3. **Storage Management Errors** (2 tools):
+   - `invalid_retention` - Retention policy parameters invalid
+   - `storage_error` - File permission or path issues
+   - `content_not_found` - Content ID not in ephemeral storage
+   - `referenced_by_artifacts` - Can't delete content in use (force=true needed)
+
+4. **Discovery Errors** (6 tools):
+   - `invalid_input` - Parameter constraint violation (limit, sort)
+   - Note: Most discovery tools return empty lists instead of errors
+
+5. **Validation Errors** (2 tools):
+   - `validation_execution_failed` - Validation rule syntax error
+   - `manifest_not_found` - Collection not generated yet (freshness check)
+
+6. **Collection Operation Errors** (4 tools):
+   - `circular_reference` - Nested collection cycle detected
+   - `max_depth_exceeded` - Collection nesting > 10 levels
+
+7. **Utility Errors** (1 tool):
+   - None - `hello_world` always succeeds
+
+**Quick Error Recovery Table**:
+
+| Error Code | Quick Fix | Tool to Use |
+|------------|-----------|-------------|
+| `config_not_found` | List configs, verify ID | `list_content_configs` / `list_artifact_configs` |
+| `generation_failed` | Test with preview, check template | `preview_generation` |
+| `invalid_context` | Validate JSON, fix syntax | Retry with corrected context |
+| `composition_failed` | Check dependencies | `trace_dependencies` |
+| `circular_reference` | Trace deps, break cycle | `trace_dependencies` |
+| `draft_not_found` | List drafts | `list_content_configs` (ephemeral=true) |
+| `validation_error` | Check schema | `list_generators` for schema info |
+| `storage_error` | Check permissions | Verify file system access |
+| `referenced_by_artifacts` | Use force=true or remove refs | `trace_dependencies` |
+
+**Agent Error Handling Best Practices**:
+
+1. **Always check error.details first** - Contains specific context (file paths, IDs, constraints)
+2. **Use discovery tools for recovery** - list_* tools help identify correct IDs/configs
+3. **Preview before retrying** - Use `preview_generation` or `test_config` to validate fixes
+4. **Explain to user clearly** - Translate technical error codes to plain language
+5. **Offer actionable choices** - "Would you like me to: a) List configs, b) Create new config?"
+6. **Don't retry blindly** - Understand error cause before retrying same operation
+7. **Escalate when stuck** - If 2+ attempts fail with same error, ask user for guidance
+
+**Additional Important Errors**:
+
+### Error 5: composition_failed
+
+**Recognition**: Artifact assembly failed due to missing content pieces
+
+**Agent Response**:
+```
+"Artifact assembly failed because some content pieces are missing or failed to generate:
+{list missing content IDs from error.details}
+
+To resolve this:
+1. Use choracompose:trace_dependencies to see all required content
+2. Generate missing content pieces individually
+3. Retry artifact assembly
+"
+```
+
+**Remediation**: Call `trace_dependencies`, generate missing content, retry
+
+### Error 6: validation_error
+
+**Recognition**: Config doesn't match schema requirements
+
+**Agent Response**:
+```
+"Configuration validation failed: {error.details.issue}
+Field: {error.details.field}
+
+Common causes:
+1. Missing required field (e.g., generation.generator.type)
+2. Invalid value type (string vs number)
+3. Unknown generator type
+
+To resolve:
+1. Check generator schema with choracompose:list_generators
+2. Fix config structure
+3. Test with choracompose:test_config before saving
+"
+```
+
+**Remediation**: Use `list_generators` to show schema, guide user to fix config
+
+### Error 7: max_depth_exceeded
+
+**Recognition**: Collection nesting depth > 10
+
+**Agent Response**:
+```
+"Collection nesting is too deep (>10 levels). This usually indicates a design issue.
+
+To resolve:
+1. Flatten collection structure
+2. Consider splitting into multiple top-level collections
+3. Review nesting necessity - most use cases need ≤3 levels
+"
+```
+
+**Remediation**: Explain nesting limits, suggest architecture changes
+
 ---
 
 ## 5. Integration Patterns for Agents

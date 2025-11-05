@@ -408,6 +408,152 @@ python scripts/install-sap.py --set my-org-minimal --source /path/to/chora-base
 - [How to Create Custom SAP Sets](../../user-docs/how-to/create-custom-sap-sets.md)
 - [Standard SAP Sets Reference](../../user-docs/reference/standard-sap-sets.md)
 
+### 3.5 Supplemental Documentation (Optional)
+
+While the 5 core artifacts (capability-charter, protocol-spec, awareness-guide, adoption-blueprint, ledger) are mandatory for every SAP, some SAPs may benefit from **supplemental documentation** for architecture deep dives, integration patterns, design philosophy, or other specialized content that doesn't fit cleanly into the core structure.
+
+#### 3.5.1 When to Add Supplemental Documentation
+
+Create supplemental documentation when:
+
+**Size**: protocol-spec.md exceeds 3,000-4,000 lines
+- Complex architectures require detailed technical specifications beyond the core protocol
+- Splitting content improves readability and maintainability
+- Example: SAP-018 protocol-spec.md (4,006 lines) could have split MCP tool specifications into separate file
+
+**Architecture Deep Dives**: System architecture requires detailed diagrams and explanations
+- 3-tier architectures, data flow diagrams, component interactions
+- Visual explanations complement textual protocol specifications
+- Example: SAP-018 architecture-overview.md (830 lines) documents Collections 3-tier model, caching system, context resolution flow
+
+**Design Philosophy**: Design rationale and principles need dedicated space
+- Trade-off discussions, alternative approaches considered
+- Architectural decision records (ADRs)
+- Example: SAP-018 design-philosophy.md (840 lines) explains generator plugin architecture, caching strategy rationale
+
+**Integration Patterns**: Common integration scenarios span multiple systems
+- Cross-system workflows, API integration examples
+- Multi-tool orchestration patterns
+- Example: SAP-018 integration-patterns.md (884 lines) documents MCP client integration, observability system integration
+
+**Reference Materials**: Large catalogs, lookup tables, or reference data
+- Tool catalogs, error code references, configuration option tables
+- Content that users reference frequently but read selectively
+
+#### 3.5.2 Naming Convention
+
+Supplemental documentation files MUST follow these conventions:
+
+**File Naming**: Use kebab-case matching content focus
+- `architecture-overview.md` - System architecture deep dive
+- `design-philosophy.md` - Design principles and rationale
+- `integration-patterns.md` - Common integration scenarios
+- `error-catalog.md` - Comprehensive error reference
+- `performance-tuning.md` - Optimization guidance
+- `migration-guides.md` - Version migration details
+
+**Location**: Place in SAP directory alongside 5 core artifacts
+```
+docs/skilled-awareness/<capability-name>/
+├── capability-charter.md         # Core artifact 1
+├── protocol-spec.md              # Core artifact 2
+├── awareness-guide.md            # Core artifact 3
+├── adoption-blueprint.md         # Core artifact 4
+├── ledger.md                     # Core artifact 5
+├── architecture-overview.md      # Supplemental (optional)
+├── design-philosophy.md          # Supplemental (optional)
+└── integration-patterns.md       # Supplemental (optional)
+```
+
+**YAML Frontmatter**: Include metadata linking to parent SAP
+```yaml
+---
+sap_id: SAP-018
+artifact_type: supplemental
+artifact_name: architecture-overview
+version: 2.0.0
+status: active
+last_updated: 2025-11-04
+---
+```
+
+#### 3.5.3 Integration with Core Artifacts
+
+Supplemental documentation MUST be referenced from core artifacts:
+
+**From protocol-spec.md**: Link to architecture deep dives
+```markdown
+## 2. System Architecture
+
+For comprehensive architecture documentation including diagrams and data flow, see:
+- [Architecture Overview](architecture-overview.md) - 3-tier model, components, interactions
+- [Design Philosophy](design-philosophy.md) - Architectural decisions and trade-offs
+```
+
+**From awareness-guide.md**: Link to integration patterns
+```markdown
+## 5. Integration
+
+For detailed integration scenarios and examples, see:
+- [Integration Patterns](integration-patterns.md) - MCP clients, observability systems, CI/CD
+```
+
+**From adoption-blueprint.md**: Link to migration guides
+```markdown
+## 6. Upgrading
+
+For version-specific migration guidance, see:
+- [Migration Guides](migration-guides.md) - Detailed upgrade procedures for breaking changes
+```
+
+#### 3.5.4 Quality Standards
+
+Supplemental documentation MUST maintain same quality as core artifacts:
+
+**Required**:
+- ✅ YAML frontmatter with SAP ID, version, status
+- ✅ Referenced from at least one core artifact
+- ✅ Clear purpose statement at top of document
+- ✅ Maintained in sync with core artifact versions
+
+**Recommended**:
+- ⚠️ Table of contents for documents > 500 lines
+- ⚠️ Cross-references to related supplemental docs
+- ⚠️ Examples and diagrams where applicable
+
+#### 3.5.5 Examples
+
+**SAP-018 (chora-compose Meta)**: 3 supplemental documents beyond 5 core artifacts
+- `architecture-overview.md` (830 lines) - System architecture with diagrams
+- `design-philosophy.md` (840 lines) - Design principles, trade-offs
+- `integration-patterns.md` (884 lines) - Integration scenarios
+
+**SAP-019 (SAP Self-Evaluation)**: Schemas directory for JSON schemas
+- `schemas/evaluation-result.json` - EvaluationResult schema
+- `schemas/gap.json` - Gap model schema
+- `schemas/adoption-roadmap.json` - AdoptionRoadmap schema
+
+**Future Example**: SAP with error catalog
+- `error-catalog.md` - Comprehensive error code reference (500+ lines)
+- Referenced from protocol-spec.md troubleshooting section
+
+#### 3.5.6 Guarantees
+
+**Core Artifacts Take Precedence**: Supplemental docs are optional enhancements
+- Core 5 artifacts MUST be complete and self-contained
+- Readers MUST be able to understand SAP from core artifacts alone
+- Supplemental docs provide depth, not essential information
+
+**Versioning Alignment**: Supplemental docs MUST match core artifact versions
+- Same version number in YAML frontmatter
+- Updated in sync with core artifact changes
+- Archived when parent SAP reaches Archived status
+
+**No Duplication**: Supplemental docs MUST NOT duplicate core content
+- Provide additional detail, not repetition
+- Cross-reference core artifacts, don't restate
+- Extend core concepts, don't replace
+
 ---
 
 ## 4. Data Models
@@ -612,9 +758,401 @@ blueprint_step:
 
 ---
 
-## 6. Quality Gates
+## 6. Common SAP Patterns
 
-### 6.1 SAP Completeness
+This section documents recurring patterns across multiple SAPs that SAP authors can reuse to maintain consistency and quality.
+
+### 6.1 Pattern: Multiple Adoption Paths (Modality Selection)
+
+**When to use**: SAP supports multiple integration paths or deployment modalities (e.g., library vs. MCP server vs. CLI vs. Docker, or different workflow approaches).
+
+**Problem**: Users need guidance on which adoption path best fits their use case, team structure, or technical environment.
+
+**Solution**: Provide decision trees in awareness-guide.md and organize protocol-spec.md by modality.
+
+**How to implement**:
+
+1. **awareness-guide.md §2: Decision Trees**
+   - Add "Decision Trees" section early in awareness guide
+   - Create flowchart guiding users to appropriate modality
+   - Use questions based on user role, environment, or requirements
+
+**Example Decision Tree Format**:
+```markdown
+## 2. Decision Trees
+
+### Modality Selection
+
+**START** → What is your primary use case?
+
+├─ **Individual developer** → Do you have Python 3.12+?
+│   ├─ Yes → **Recommendation: pip (library) modality**
+│   └─ No → **Recommendation: CLI modality**
+│
+├─ **AI agent (Claude, etc.)** → **Recommendation: MCP server modality**
+│
+└─ **Team deployment** → Do you need workflow automation (n8n, etc.)?
+    ├─ Yes → **Recommendation: Docker modality**
+    └─ No → **Recommendation: MCP server modality**
+```
+
+2. **protocol-spec.md: Organize by Modality**
+   - Create separate sections for each modality (§3.1 pip, §3.2 MCP, §3.3 CLI, §3.4 Docker)
+   - Document interfaces, configuration, and examples per modality
+   - Include modality-specific trade-offs (performance, complexity, features)
+
+3. **adoption-blueprint.md: Separate Adoption Paths**
+   - Provide installation steps per modality
+   - Link to decision tree from Getting Started section
+   - Include validation commands specific to each path
+
+**Real-world example**: [SAP-017 (chora-compose Integration)](../chora-compose-integration/) - 4 modalities with decision trees guiding selection based on role (developer/AI agent/team lead/DevOps)
+
+**Benefits**:
+- Reduces time-to-decision (5-10 min → 1-2 min with interactive selector)
+- Prevents adoption of suboptimal modality for use case
+- Improves user confidence in choice
+
+### 6.2 Pattern: Performance Metrics Documentation
+
+**When to use**: SAP provides tooling with measurable performance characteristics (latency, throughput, cache hit rates, resource usage).
+
+**Problem**: Users lack objective performance data for capacity planning, optimization decisions, or modality selection.
+
+**Solution**: Document performance metrics in ledger.md with test environment details and interpretation guidance.
+
+**How to implement**:
+
+1. **ledger.md §4: Performance Metrics**
+   - Add "Performance Metrics" section to ledger
+   - Include metric table with values, measurement date, and notes
+   - Document test environment (hardware, software versions, configuration)
+   - Provide interpretation guidance (what metrics mean for users)
+
+**Example Metrics Table Format**:
+```markdown
+## 4. Performance Metrics
+
+### Measurement Environment
+
+- **Hardware**: M1 Mac, 16GB RAM, 8-core CPU
+- **Software**: Python 3.12, chora-compose v1.5.0
+- **Date**: 2025-11-04
+- **Methodology**: 100 iterations per operation, median + p95 reported
+
+### Metrics
+
+| Metric | Value | Notes |
+|--------|-------|-------|
+| **MCP Tool Invocation Latency** | < 50ms (p50), < 120ms (p95) | Async I/O, includes JSON parsing |
+| **Content Generation (simple)** | 100-500ms | Jinja2 template, 1KB context |
+| **Artifact Assembly (5 content)** | 500ms-2s | Sequential assembly, no caching |
+| **Collection Generation (10 members)** | 5-20s | Parallel execution (4 workers) |
+| **Cache Hit Rate** | 94%+ | SHA-256 deterministic caching |
+| **Throughput (batch generation)** | 50-80 content/min | Parallel execution, cached context |
+
+### Interpretation
+
+- **For single operations**: Use MCP tools directly, expect < 100ms latency
+- **For bulk generation**: Use Collections with parallel execution (4-8× speedup vs sequential)
+- **For repeated generation**: Caching provides 5-10× speedup (context resolution skipped)
+```
+
+2. **protocol-spec.md: Reference Metrics in Technical Specification**
+   - Link to ledger.md performance section from protocol-spec
+   - Use metrics to justify architectural decisions (e.g., "SHA-256 caching chosen for 94%+ hit rates")
+   - Include performance considerations in API/interface documentation
+
+3. **Optional: Benchmarking Script**
+   - Create `benchmarks/` directory with reproducible benchmark scripts
+   - Document how to run benchmarks in different environments
+   - Provide baseline comparisons (e.g., pip vs MCP vs CLI modality performance)
+
+**Real-world example**: [SAP-018 (chora-compose Meta)](../chora-compose-meta/ledger.md) §4 - Performance metrics for MCP tools, Collections, caching with test environment and interpretation
+
+**Benefits**:
+- Enables capacity planning and resource estimation
+- Provides objective basis for optimization decisions
+- Helps users select appropriate patterns for performance requirements
+
+### 6.3 Pattern: Tool/API Specification
+
+**When to use**: SAP documents MCP tools, REST APIs, CLI commands, or other programmatic interfaces.
+
+**Problem**: Users and AI agents need complete, unambiguous specifications for programmatic usage - parameter types, return values, error conditions.
+
+**Solution**: Organize tools by category in protocol-spec.md, provide comprehensive specifications for each tool including error examples.
+
+**How to implement**:
+
+1. **protocol-spec.md §2: Tools/API Specification**
+   - Organize tools by functional category (Core, Config, Storage, Discovery, etc.)
+   - For each tool, provide complete specification
+
+**Example Tool Specification Format**:
+```markdown
+### 2.3.1 generate_content
+
+**Purpose**: Generate content from template and context using specified generator.
+
+**Category**: Core Generation
+
+**Parameters**:
+
+| Parameter | Type | Required | Default | Description |
+|-----------|------|----------|---------|-------------|
+| `content_id` | string | Yes | - | Unique content identifier (matches config filename) |
+| `generator` | string | No | "jinja2" | Generator to use (jinja2, demonstration, etc.) |
+| `context` | object | No | {} | Additional context to merge with config context |
+| `force` | boolean | No | false | Force regeneration (skip cache) |
+| `output_path` | string | No | null | Custom output path (overrides config) |
+
+**Returns**:
+
+```json
+{
+  "success": true,
+  "content_id": "readme-intro",
+  "generator": "jinja2",
+  "output_path": "output/readme-intro.md",
+  "cached": false,
+  "generation_time_ms": 245
+}
+```
+
+**Error Codes**:
+
+| Code | Message | Resolution |
+|------|---------|------------|
+| `config_not_found` | Content config '{content_id}' not found | Check config ID spelling or create config first |
+| `invalid_context` | Context JSON parsing failed | Verify context is valid JSON object |
+| `generation_failed` | Template rendering failed | Check template syntax and context variables |
+| `write_failed` | Cannot write to output path | Check permissions and disk space |
+
+**Error Response Examples**:
+
+*Example 1: Config not found*
+```json
+{
+  "success": false,
+  "error": {
+    "code": "config_not_found",
+    "message": "Content config 'api-docs' not found in configs/content/",
+    "details": {
+      "searched_path": "/path/to/configs/content/api-docs.json",
+      "available_configs": ["readme-intro", "changelog"]
+    },
+    "resolution": "Check config ID spelling or create config with 'draft_config' first"
+  }
+}
+```
+
+*Example 2: Invalid context*
+```json
+{
+  "success": false,
+  "error": {
+    "code": "invalid_context",
+    "message": "Context JSON parsing failed",
+    "details": {
+      "parse_error": "Unexpected token } at position 42",
+      "provided_context": "{\"key\": \"value\"}"
+    },
+    "resolution": "Verify context is valid JSON object (use JSON validator)"
+  }
+}
+```
+
+**Example MCP Invocation**:
+
+```json
+{
+  "jsonrpc": "2.0",
+  "method": "tools/call",
+  "params": {
+    "name": "generate_content",
+    "arguments": {
+      "content_id": "readme-intro",
+      "generator": "jinja2",
+      "context": {"project_name": "chora-base", "version": "4.1.0"},
+      "force": false
+    }
+  },
+  "id": 1
+}
+```
+
+**Response**:
+
+```json
+{
+  "jsonrpc": "2.0",
+  "result": {
+    "success": true,
+    "content_id": "readme-intro",
+    "generator": "jinja2",
+    "output_path": "output/readme-intro.md",
+    "cached": false,
+    "generation_time_ms": 245
+  },
+  "id": 1
+}
+```
+```
+
+2. **awareness-guide.md: Tool Selection Flowchart**
+   - Create tool selection guide for common workflows
+   - Map use cases to appropriate tools
+   - Provide quick reference table (Tool → Purpose → Common Use Cases)
+
+3. **Error Response Examples (Critical for AI Agents)**
+   - For each tool, provide 2-3 error response examples
+   - Show complete error structure with resolution guidance
+   - Include edge cases (missing dependencies, permissions, etc.)
+
+**Real-world example**: [SAP-018 (chora-compose Meta)](../chora-compose-meta/protocol-spec.md) §2 - 24 MCP tools organized by 7 categories, each with parameters, returns, errors, and JSON-RPC examples
+
+**Benefits**:
+- Enables AI agents to use tools correctly without trial-and-error
+- Reduces support burden (errors are self-explanatory with resolution steps)
+- Provides contract-level specification for integration testing
+
+### 6.4 Pattern: Decision Tree Templates
+
+**Reusable decision tree format** for awareness-guide.md:
+
+```markdown
+## Decision Tree: [Choice Name]
+
+**Use Case**: [When to use this decision tree]
+
+**Decision Factors**:
+- Factor 1: [Question to ask]
+- Factor 2: [Question to ask]
+- Factor 3: [Question to ask]
+
+**Decision Flow**:
+
+```
+START
+  ├─ [Question 1]
+  │   ├─ [Answer A] → **Recommendation A**: [Brief description]
+  │   └─ [Answer B] → **Recommendation B**: [Brief description]
+  └─ [Question 2]
+      ├─ [Answer C] → **Recommendation C**: [Brief description]
+      └─ [Answer D] → **Recommendation D**: [Brief description]
+```
+
+**Recommendation Details**:
+
+**Recommendation A**: [Name]
+- **When to use**: [Specific use case]
+- **Pros**: [Benefits]
+- **Cons**: [Trade-offs]
+- **Getting started**: [Link to adoption-blueprint section]
+
+**Recommendation B**: [Name]
+- **When to use**: [Specific use case]
+- **Pros**: [Benefits]
+- **Cons**: [Trade-offs]
+- **Getting started**: [Link to adoption-blueprint section]
+```
+
+**Optional enhancement**: Create interactive Python script (e.g., `scripts/select-modality.py`) that asks questions and recommends path.
+
+### 6.5 Pattern: Identity and Scope Clarity
+
+**When to use**: Every SAP, especially when creating new SAPs or major version rewrites.
+
+**Problem**: SAPs may accidentally document wrong capabilities (identity crisis), leading to user confusion and mismatched expectations.
+
+**Solution**: Explicitly document both what the SAP **is** and what it **is not** in capability-charter.md scope section.
+
+**How to implement**:
+
+1. **capability-charter.md §3: Scope**
+   - In "In Scope" section: Be explicit and concrete about what SAP covers
+   - In "Out of Scope" section: Explicitly state what SAP does NOT cover
+   - Use contrasting examples to prevent confusion
+
+**Example Scope Format**:
+```markdown
+### In Scope
+
+SAP-017 (chora-compose Integration Guide) provides step-by-step integration for chora-compose content generation framework:
+
+- **4 Integration Modalities**: pip (Python library), MCP (Model Context Protocol server), CLI (command-line tool), Docker (containerized deployment)
+- **Installation Procedures**: Prerequisites, setup steps, validation commands per modality
+- **Project Integration Workflows**: Git workflows, team collaboration, CI/CD integration
+
+### Out of Scope
+
+SAP-017 focuses exclusively on chora-compose integration. The following topics are covered by related SAPs:
+
+**NOT Docker Compose orchestration** (covered by SAP-011: docker-operations):
+- SAP-017 documents **chora-compose** (content generation framework)
+- SAP-017 does NOT document **Docker Compose** (container orchestration)
+- Docker modality in SAP-017 uses Docker to deploy chora-compose, not general Docker Compose patterns
+
+**NOT chora-compose Architecture** (covered by SAP-018: chora-compose Meta):
+- MCP tool specifications, generator internals, caching architecture
+- Use SAP-018 for architecture understanding, SAP-017 for integration steps
+
+**NOT Usage Patterns** (covered by future SAP-031):
+- Template design best practices, context organization, performance optimization
+```
+
+2. **ledger.md: Version History with Identity Notes**
+   - Document identity crises in version history
+   - Explain what was wrong and how it was resolved
+   - Archive incorrect versions with clear explanation
+
+**Example Identity Crisis Documentation**:
+```markdown
+## Version History
+
+### v2.0.0 (2025-11-04): Complete Rewrite - CORRECT SCOPE
+**Changes**: Resolved identity crisis from v1.0.0
+- NOW DOCUMENTS: chora-compose integration (pip/MCP/CLI/Docker modalities)
+- NO LONGER DOCUMENTS: Docker Compose orchestration (moved to SAP-011 or future SAP-030)
+- Identity clarity: Added explicit "Out of Scope" contrasts in capability-charter
+
+### v1.0.0 (2025-10-29): ARCHIVED - Identity Crisis
+**Problem**: Documented Docker Compose orchestration instead of chora-compose integration
+- Mixed content: Docker Compose services, networking, volumes vs. chora-compose content generation
+- 3,500 lines of wrong tool documentation
+- Archived to `archives/sap-017-v1.0.0-docker-compose/`
+```
+
+**Real-world example**: Both [SAP-017](../chora-compose-integration/) and [SAP-018](../chora-compose-meta/) had v1.0.0 identity crises (documented Docker Compose instead of chora-compose), resolved in v2.0.0 rewrites with explicit scope clarity.
+
+**Benefits**:
+- Prevents 100% of identity crises (most common SAP quality issue)
+- Reduces user confusion about SAP purpose
+- Provides clear boundaries between related SAPs
+
+### 6.6 Using These Patterns
+
+**When creating a new SAP**:
+1. Review relevant patterns from this section
+2. Apply patterns matching SAP characteristics (e.g., if SAP has multiple modalities, use Pattern 6.1)
+3. Reference this section in SAP documentation (e.g., "This SAP follows Pattern 6.3: Tool/API Specification")
+
+**When reviewing existing SAPs**:
+1. Check if SAP could benefit from documented patterns
+2. Recommend pattern adoption in review feedback
+3. Update SAP to follow patterns as quality improvement
+
+**Pattern evolution**:
+- As new patterns emerge across SAPs, document them in this section
+- Submit proposals for new patterns via PR to SAP-000
+- Patterns become standard practice for all new SAPs
+
+---
+
+## 7. Quality Gates
+
+### 7.1 SAP Completeness
 
 **Required for `Pilot` status**:
 - ✅ All 5 artifacts present
@@ -629,7 +1167,7 @@ blueprint_step:
 - ✅ Ledger has pilot adopter records
 - ✅ No blocking issues
 
-### 6.2 Blueprint Quality
+### 7.2 Blueprint Quality
 
 **Required**:
 - ✅ Idempotent (safe to run multiple times)
@@ -642,7 +1180,7 @@ blueprint_step:
 - ⚠️ Includes troubleshooting section
 - ⚠️ Includes common pitfalls
 
-### 6.3 Documentation Quality
+### 7.3 Documentation Quality
 
 **Required**:
 - ✅ All sections present (per artifact schema)
@@ -657,9 +1195,9 @@ blueprint_step:
 
 ---
 
-## 7. Dependencies
+## 8. Dependencies
 
-### 7.1 Internal Dependencies
+### 8.1 Internal Dependencies
 
 **Framework Dependencies** (every SAP depends on):
 - SAP framework (this SAP)
@@ -672,7 +1210,7 @@ blueprint_step:
 - Tracked in Protocol (Section 7: Dependencies)
 - Enforced by blueprint prerequisites
 
-### 7.2 External Dependencies
+### 8.2 External Dependencies
 
 **Tooling**:
 - Git (versioning, collaboration)
@@ -685,11 +1223,93 @@ blueprint_step:
 - Diataxis documentation framework
 - JSON Schema (for infrastructure)
 
+### 8.3 External Dependency Review Cadence
+
+**Purpose**: Prevent dependency drift, security vulnerabilities, and incompatibility issues
+
+**Review Frequency**: Quarterly (every 3 months)
+
+**Review Checklist**:
+
+1. **Version Currency Check**:
+   - [ ] Are external tools/frameworks still actively maintained?
+   - [ ] Are we using deprecated versions?
+   - [ ] Are major versions behind latest stable?
+
+2. **Security Assessment**:
+   - [ ] Any known security vulnerabilities in dependencies?
+   - [ ] Security advisories published since last review?
+   - [ ] Recommended security updates available?
+
+3. **Compatibility Verification**:
+   - [ ] Still compatible with chora-base supported environments?
+   - [ ] Breaking changes in newer versions that affect us?
+   - [ ] Migration path clear if upgrade needed?
+
+4. **Alternative Evaluation**:
+   - [ ] New tools/standards emerged that might be better fit?
+   - [ ] Community consensus shifted to different approaches?
+   - [ ] Cost/benefit of switching vs. maintaining status quo?
+
+**Actions Based on Review**:
+
+| Finding | Priority | Action |
+|---------|----------|--------|
+| Security vulnerability in dependency | **Critical** | Update SAP immediately, notify adopters |
+| Dependency deprecated, replacement exists | **High** | Create migration blueprint, schedule update |
+| Major version behind, breaking changes | **Medium** | Evaluate upgrade, document decision |
+| Minor version drift | **Low** | Note for next scheduled update |
+| Alternative better suited | **Low** | Research, propose in next major version |
+
+**Documentation**:
+
+After each quarterly review, update SAP ledger with:
+
+```markdown
+## Dependency Review History
+
+### 2025-11-04 Q4 Review
+
+**Reviewer**: [Name/Team]
+**Date**: 2025-11-04
+
+**Findings**:
+- Git 2.42 → 2.45 available (MINOR: recommend update)
+- Markdown renderers: No changes
+- AI agents: Claude Sonnet 3.5 → 4.5 (performance improvements, recommend update)
+
+**Actions Taken**:
+- Updated protocol-spec.md §8.2 to reference Claude 4.5+
+- No breaking changes required
+- Notified adopters via ledger update
+
+**Next Review**: 2026-02-04 (Q1 2026)
+```
+
+**Anti-Patterns to Avoid**:
+- ❌ Never reviewing external dependencies (leads to security vulnerabilities)
+- ❌ Upgrading dependencies without testing (breaks adopter environments)
+- ❌ Not documenting dependency decisions (loses institutional knowledge)
+- ❌ Ignoring deprecation warnings (forces emergency migrations later)
+
+**Example from SAP-018**:
+
+SAP-018 (chora-compose Meta) has quarterly reviews for:
+- Python version requirements (currently 3.12+)
+- MCP protocol version (currently 1.0)
+- chora-compose framework version (currently 1.5.0+)
+
+**Trigger for Ad-Hoc Review** (outside quarterly schedule):
+- Critical security advisory published
+- External dependency announces deprecation
+- Adopter reports compatibility issue
+- Major ecosystem shift (e.g., new protocol version)
+
 ---
 
-## 8. Versioning
+## 9. Versioning
 
-### 8.1 SAP Framework Versioning
+### 9.1 SAP Framework Versioning
 
 SAP framework itself follows semantic versioning:
 
@@ -703,7 +1323,7 @@ SAP framework itself follows semantic versioning:
 - Framework upgrades documented in `sap-framework/upgrades/`
 - All existing SAPs updated when framework changes (MAJOR only)
 
-### 8.2 SAP Versioning
+### 9.2 SAP Versioning
 
 Individual SAPs follow semantic versioning:
 
@@ -722,9 +1342,9 @@ Individual SAPs follow semantic versioning:
 
 ---
 
-## 9. Security
+## 10. Security
 
-### 9.1 Blueprint Execution Security
+### 10.1 Blueprint Execution Security
 
 **Threats**:
 - Malicious blueprints executing harmful commands
@@ -742,7 +1362,7 @@ Individual SAPs follow semantic versioning:
 - Blueprints MUST NOT access sensitive data
 - Agents MUST show commands before execution
 
-### 9.2 Infrastructure Security
+### 10.2 Infrastructure Security
 
 **Schemas**:
 - JSON Schemas MUST NOT include sensitive defaults
@@ -754,9 +1374,9 @@ Individual SAPs follow semantic versioning:
 
 ---
 
-## 10. Examples
+## 11. Examples
 
-### 10.1 Complete SAP: inbox-coordination
+### 11.1 Complete SAP: inbox-coordination
 
 **Location**: [docs/skilled-awareness/inbox/](../inbox/)
 
@@ -774,7 +1394,7 @@ Individual SAPs follow semantic versioning:
 
 **Status**: Pilot (Phase 1)
 
-### 10.2 Blueprint Example
+### 11.2 Blueprint Example
 
 From [inbox adoption-blueprint.md](../inbox/adoption-blueprint.md):
 
@@ -802,7 +1422,7 @@ ls inbox/coordination/CAPABILITIES && echo "✅ Registry created"
 
 ---
 
-## 11. Related Documents
+## 12. Related Documents
 
 **Root Protocol**:
 - [SKILLED_AWARENESS_PACKAGE_PROTOCOL.md](/SKILLED_AWARENESS_PACKAGE_PROTOCOL.md)
