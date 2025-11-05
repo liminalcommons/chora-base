@@ -1285,4 +1285,107 @@ export function CreatePostForm() {
 
 ---
 
+## Self-Evaluation Criteria (SAP-009 Phase 4)
+
+This section documents self-evaluation criteria for SAP-020 awareness file completeness, enabling automated validation of equivalent support for generic agents and Claude Code.
+
+### Awareness File Requirements
+
+**Required Files**:
+- `AGENTS.md` - Generic AI agent workflows
+- `CLAUDE.md` - Claude Code-specific tool patterns
+
+**Validation Command**:
+```bash
+python scripts/sap-evaluator.py --deep react-foundation
+```
+
+### Expected Workflow Coverage
+
+**AGENTS.md**: 5 workflows
+1. Create Next.js 15 App Router Project (15-25 min) - Scaffold production-ready Next.js with TypeScript, App Router, RSC
+2. Create Vite + React Router SPA (10-15 min) - Scaffold fast SPA with Vite, React Router, TypeScript strict mode
+3. Apply Feature-Based Project Structure (10-20 min) - Implement scalable feature-based architecture for 10k+ line projects
+4. Configure TypeScript Strict Mode (5-10 min) - Enable strict mode with all type safety options
+5. Migrate from Create React App (30-60 min) - Migrate deprecated CRA to Vite or Next.js
+
+**CLAUDE.md**: 3 workflows
+1. Scaffolding Next.js 15 Project with Bash and Write - Check templates, copy files, install dependencies, start dev server
+2. Scaffolding Vite SPA with Bash and Write - Copy template, install dependencies, verify server running
+3. Applying Feature-Based Structure with Bash and Write - Create feature directories, generate module templates, update path aliases
+
+**Variance**: 3 workflows (CLAUDE.md) vs 5 workflows (AGENTS.md) = 40% difference
+**Acceptable**: Yes (within ±30-40% tolerance with documented rationale)
+
+**Rationale for Variance**: CLAUDE.md focuses on template-based scaffolding with tool-specific patterns (Bash for directory creation, Write for new files, Edit for modifications), consolidating multiple operations into single workflows. AGENTS.md provides granular step-by-step guidance for each React scaffolding operation including TypeScript configuration and CRA migration. Both provide equivalent coverage of Next.js scaffolding, Vite SPA creation, and feature-based structure through different organizational approaches optimized for their respective audiences.
+
+### User Signal Pattern Coverage
+
+**AGENTS.md**: 2 tables with 9 signals
+- Project Scaffolding Operations table (5 signals):
+  - "create React project" → scaffold_nextjs_project()
+  - "setup Next.js app" → scaffold_nextjs_project()
+  - "create SPA" → scaffold_vite_project()
+  - "migrate from CRA" → migrate_from_cra()
+  - "setup TypeScript React" → scaffold_with_typescript()
+- Project Structure Operations table (4 signals):
+  - "organize project structure" → apply_feature_based_structure()
+  - "setup folders" → apply_layer_based_structure()
+  - "add feature module" → create_feature_module(name)
+  - "setup path aliases" → configure_path_aliases()
+
+**CLAUDE.md**: Tool-specific patterns documented in 5 tips
+- Tip 1: Always check templates exist before scaffolding
+- Tip 2: Use Bash for fast directory creation
+- Tip 3: Use Write for config files, Edit for modifications
+- Tip 4: Start dev servers in background for verification
+- Tip 5: Use Read to check existing config before modifying
+
+**Coverage**: AGENTS.md provides user signal translation for React project operations, CLAUDE.md provides tool patterns for implementing those signals with Claude Code tools (Bash, Write, Edit, Read).
+
+### Validation Checkpoints
+
+**Structural Validation**:
+```bash
+# Check both awareness files exist
+ls docs/skilled-awareness/react-foundation/AGENTS.md
+ls docs/skilled-awareness/react-foundation/CLAUDE.md
+
+# Check YAML frontmatter present
+head -20 docs/skilled-awareness/react-foundation/AGENTS.md | grep "sap_id: SAP-020"
+head -20 docs/skilled-awareness/react-foundation/CLAUDE.md | grep "sap_id: SAP-020"
+```
+
+**Coverage Validation**:
+```bash
+# Count workflows in AGENTS.md (expect: 5)
+grep -c "^### Workflow [0-9]:" docs/skilled-awareness/react-foundation/AGENTS.md
+
+# Count workflows in CLAUDE.md (expect: 3)
+grep -c "^### Workflow [0-9]:" docs/skilled-awareness/react-foundation/CLAUDE.md
+
+# Check user signal tables exist in AGENTS.md
+grep -c "## User Signal Patterns" docs/skilled-awareness/react-foundation/AGENTS.md
+```
+
+**Expected Results**:
+- Both awareness files exist ✅
+- YAML frontmatter with progressive_loading ✅
+- AGENTS.md: 5 workflows, 2 user signal tables ✅
+- CLAUDE.md: 3 workflows, 5 tool-specific tips ✅
+- Workflow variance: 40% (acceptable with documented rationale) ✅
+
+### Integration with SAP-009
+
+**Phase 4 Criteria Met**:
+- ✅ AGENTS.md provides generic workflow guidance
+- ✅ CLAUDE.md provides Claude Code tool patterns
+- ✅ Workflow coverage within acceptable variance (40% with rationale)
+- ✅ Rationale documented for organizational differences
+- ✅ Self-evaluation criteria documented in protocol-spec.md
+
+**SAP-020 Awareness Status**: Phase 4 compliant (equivalent support for generic agents and Claude Code)
+
+---
+
 **End of Protocol Specification**
