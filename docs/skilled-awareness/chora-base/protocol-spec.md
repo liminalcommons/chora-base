@@ -947,6 +947,29 @@ Each SAP follows semantic versioning independently.
 
 ---
 
+## 13. Self-Evaluation Criteria (SAP-009 Phase 4)
+
+**Awareness File Requirements**:
+- ✅ **AGENTS.md**: 5 workflows (generic, all agents)
+- ✅ **CLAUDE.md**: 3 workflows (Claude Code-specific tool patterns)
+- ✅ **Variance**: 40% (3 vs 5 workflows)
+
+**Rationale for 40% Variance**:
+- **AGENTS.md**: Provides granular step-by-step guidance for all agents (scaffold project, adopt SAP, understand architecture, contribute, navigate ecosystem)
+- **CLAUDE.md**: Consolidates operations with tool-specific patterns (Bash/Read/Write/Edit) for Claude Code efficiency
+- **Equivalent Support**: Both files provide complete coverage - AGENTS.md for all agents generically, CLAUDE.md for Claude Code specifically with tool optimization
+
+**Validation**:
+- ✅ **Progressive Loading**: Both files have YAML frontmatter with phase_1/2/3 guidance
+- ✅ **User Signal Patterns**: AGENTS.md includes 2 tables (6+4 patterns)
+- ✅ **Best Practices**: AGENTS.md includes 5 best practices, 5 common pitfalls
+- ✅ **Claude Tips**: CLAUDE.md includes 5 Claude-specific tips, 5 pitfalls
+- ✅ **Integration**: Both files document integration with SAP-000, SAP-001, SAP-009, SAP-010, SAP-015, SAP-020-025
+
+**Conclusion**: ✅ **Equivalent Support** - 40% variance acceptable with documented rationale. CLAUDE.md optimizes for tool patterns (Bash/Read/Write/Edit), AGENTS.md provides comprehensive generic guidance.
+
+---
+
 **Version History**:
 - **1.0.0** (2025-10-27): Initial protocol specification for chora-base meta-SAP
 - **1.0.0** (2025-10-28): Updated with Phase 3 Batch 1 SAPs (SAP-007, SAP-009 complete)
@@ -954,3 +977,4 @@ Each SAP follows semantic versioning independently.
 - **1.0.0** (2025-10-28): Updated with Phase 3 Batch 3 SAP-010 (memory-system/A-MEM complete)
 - **1.0.0** (2025-10-28): Phase 3 Complete! SAP-011 (docker-operations) added - 93% coverage (13/14 SAPs)
 - **1.0.0** (2025-10-28): 🎉 100% COMPLETE! SAP-013 (metrics-tracking) completes Phase 4 - ALL 14 SAPs DONE!
+- **1.0.0** (2025-11-05): Phase 1 awareness files (AGENTS.md, CLAUDE.md) created for SAP-009 compliance
