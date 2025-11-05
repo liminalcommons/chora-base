@@ -49,11 +49,15 @@ jobs:
       - name: Check if DOCUMENTATION_MAP.md is up to date
         run: |
           if ! git diff --exit-code DOCUMENTATION_MAP.md; then
-            echo "❌ DOCUMENTATION_MAP.md is out of date!"
+            echo "❌ DOCUMENTATION_MAP.md is out to date!"
             echo "Run 'python scripts/generate_docs_map.py' and commit the changes."
             exit 1
           fi
           echo "✅ DOCUMENTATION_MAP.md is up to date"
+
+      - name: Validate documentation links
+        run: |
+          bash scripts/validate-links.sh .
 
 {% if documentation_advanced_features -%}
   generate-metrics:

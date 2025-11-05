@@ -565,7 +565,7 @@
       "id": "SAP-016",
       "name": "link-validation-reference-management",
       "full_name": "Link Validation & Reference Management",
-      "status": "draft",
+      "status": "active",
       "version": "1.0.0",
       "included_by_default": false,
       "size_kb": 62,
