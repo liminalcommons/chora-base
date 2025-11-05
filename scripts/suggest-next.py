@@ -72,6 +72,10 @@ class ProjectContext:
                     timestamp_str = event.get("timestamp", "")
                     # Parse ISO format with timezone
                     event_time = datetime.fromisoformat(timestamp_str.replace('Z', '+00:00'))
+                    # Ensure event_time is timezone-aware
+                    if event_time.tzinfo is None:
+                        from datetime import timezone
+                        event_time = event_time.replace(tzinfo=timezone.utc)
                     if event_time > cutoff:
                         recent.append(event)
                 except (json.JSONDecodeError, ValueError):
