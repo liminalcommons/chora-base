@@ -40,6 +40,7 @@ SAP-029 provides:
 ### Workflow 1: Generating a New SAP
 
 **Steps**:
+0. **Research phase** (Step 0): Gather evidence before defining SAP metadata
 1. Add SAP entry to `sap-catalog.json` (MVP schema: 9 fields)
 2. Run: `python scripts/generate-sap.py SAP-XXX`
 3. Review generated artifacts (5 files with TODO placeholders)
@@ -47,9 +48,20 @@ SAP-029 provides:
 5. Validate: `python scripts/sap-evaluator.py SAP-XXX`
 6. Update INDEX.md stats (auto-updated by generator)
 
-**Example (SAP-030 creation)**:
+**Example (SAP-030 creation with research)**:
 ```markdown
-Step 1: Edit sap-catalog.json
+Step 0: Research (15-30min)
+$ just research "database migration best practices for Python projects"
+# Generates: docs/research/database-migrations-research.md (15 pages)
+# Extract insights:
+#   - Problem (from anti-patterns): Manual migrations error-prone, state drift
+#   - Evidence (from case studies): Netflix saved 40% time with automated migrations
+#   - Solution (from Level A): Flyway-style migration framework with versioning
+#   - Principles (from Level A/B): Version control, rollback safety, state tracking
+#   - In-scope (from decision playbooks): SQL migrations, rollback scripts, state validation
+#   - Out-of-scope (from limitations): ORM integration (separate SAP), multi-DB (v2.0)
+
+Step 1: Edit sap-catalog.json (using research insights)
 {
   "id": "SAP-030",
   "name": "database-migrations",

@@ -13,8 +13,8 @@ This file provides **Claude Code-specific patterns** for generating SAPs using t
 ### First-Time SAP Generation
 
 1. Read [AGENTS.md](AGENTS.md) for generic SAP generation workflows
-2. Use this file for Claude Code tool integration (Bash, Write, Edit)
-3. Follow 4-step process: Add to catalog → Generate → Fill content → Validate
+2. Use this file for Claude Code tool integration (Bash, Write, Edit, WebSearch)
+3. Follow 5-step process: Research (Step 0) → Add to catalog → Generate → Fill content → Validate
 
 ### Session Resumption
 
@@ -32,9 +32,23 @@ This file provides **Claude Code-specific patterns** for generating SAPs using t
 ```markdown
 User: "Create SAP-030 for database migrations"
 
-Claude (Phase 1: Metadata - 0-5k tokens):
-1. Read sap-catalog.json (understand schema)
-2. Draft SAP-030 metadata (9 MVP fields):
+Claude (Phase 0: Research - 0-5k tokens):
+1. Execute research workflow:
+   Bash: just research "database migration best practices for Python projects"
+   # Uses WebSearch to generate research report (15-30min)
+2. Read research output:
+   Read: docs/research/database-migrations-research.md
+   # Extract principles, anti-patterns, decision playbooks
+3. Synthesize research for SAP metadata:
+   # Problem ← anti-patterns section
+   # Evidence ← case studies, metrics
+   # Solution ← decision playbooks
+   # Principles ← Level A evidence
+   # In-scope/out-scope ← trade-off tables
+
+Claude (Phase 1: Metadata - 5-10k tokens):
+4. Read sap-catalog.json (understand schema)
+5. Draft SAP-030 metadata (9 MVP fields, informed by research):
    {
      "id": "SAP-030",
      "name": "database-migrations",
@@ -49,33 +63,36 @@ Claude (Phase 1: Metadata - 0-5k tokens):
      "out_of_scope": ["ORM-specific migrations", "Multi-database vendor support", "Schema diffing tools"],
      "one_sentence_summary": "Standardized database migration framework with rollback support and state tracking"
    }
-3. Edit sap-catalog.json to add SAP-030 entry
+6. Edit sap-catalog.json to add SAP-030 entry
 
-Claude (Phase 2: Generation - 5-10k tokens):
-4. Run generation via Bash tool:
+Claude (Phase 2: Generation - 10-15k tokens):
+7. Run generation via Bash tool:
    Bash: python scripts/generate-sap.py SAP-030
-5. Verify output:
+8. Verify output:
    ✅ 5 artifacts created
    ✅ INDEX.md updated
 
-Claude (Phase 3: Review - 10-20k tokens):
-6. Read generated capability-charter.md
-7. Identify TODO comments (15-20 per artifact)
-8. Create plan: Fill critical TODOs (Core Contracts in protocol-spec.md, Level 1 adoption in adoption-blueprint.md)
+Claude (Phase 3: Review - 15-25k tokens):
+9. Read generated capability-charter.md
+10. Identify TODO comments (15-20 per artifact)
+11. Create plan: Fill critical TODOs (Core Contracts in protocol-spec.md, Level 1 adoption in adoption-blueprint.md)
+12. Cite research report in capability-charter.md evidence section
 
-Claude (Phase 4: Fill Content - 20-50k tokens):
-9. Edit protocol-spec.md:
+Claude (Phase 4: Fill Content - 25-55k tokens):
+13. Edit protocol-spec.md:
    - Fill Core Contracts section (migration file format, CLI API)
-10. Edit adoption-blueprint.md:
+   - Use research decision playbooks for integration patterns
+14. Edit adoption-blueprint.md:
     - Fill Level 1 installation steps (install CLI, create first migration)
-11. Edit awareness-guide.md:
+15. Edit awareness-guide.md:
     - Add common workflows (create migration, run migration, rollback)
+    - Include anti-patterns from research
 
-Claude (Phase 5: Validation - 50-55k tokens):
-12. Run validation via Bash tool:
+Claude (Phase 5: Validation - 55-60k tokens):
+16. Run validation via Bash tool:
     Bash: python scripts/sap-evaluator.py SAP-030
-13. Fix any validation errors (broken links, missing sections)
-14. Re-validate until PASS
+17. Fix any validation errors (broken links, missing sections)
+18. Re-validate until PASS
 
 Claude (response to user):
 "I've created SAP-030 (database-migrations) with 5 artifacts:
