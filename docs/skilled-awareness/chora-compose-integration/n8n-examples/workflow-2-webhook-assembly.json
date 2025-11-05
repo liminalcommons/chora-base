@@ -1,0 +1,345 @@
+{
+  "name": "Webhook-Triggered Artifact Assembly",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "chora-compose/assemble-docs",
+        "options": {}
+      },
+      "id": "webhook-trigger",
+      "name": "Webhook Trigger",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 1,
+      "position": [250, 300],
+      "webhookId": "chora-compose-assembly"
+    },
+    {
+      "parameters": {
+        "jsCode": "// Extract artifact config from webhook payload\nconst payload = $input.item.json;\n\n// Validate required fields\nif (!payload.artifact_id) {\n  throw new Error('Missing required field: artifact_id');\n}\n\nconst artifactId = payload.artifact_id;\nconst configPath = payload.config_path || `configs/artifacts/${artifactId}.yaml`;\nconst triggerSource = payload.trigger_source || 'webhook';\nconst metadata = payload.metadata || {};\n\nreturn {\n  artifact_id: artifactId,\n  config_path: configPath,\n  trigger_source: triggerSource,\n  metadata: metadata,\n  timestamp: new Date().toISOString()\n};"
+      },
+      "id": "parse-webhook",
+      "name": "Parse Webhook Payload",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [450, 300]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "string": [
+            {
+              "value1": "={{$json.trigger_source}}",
+              "operation": "equals",
+              "value2": "github_pr"
+            }
+          ]
+        }
+      },
+      "id": "check-trigger-type",
+      "name": "Check Trigger Type",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 1,
+      "position": [650, 300]
+    },
+    {
+      "parameters": {
+        "authentication": "headerAuth",
+        "url": "=https://api.github.com/repos/{{$json.metadata.repo}}/pulls/{{$json.metadata.pr_number}}",
+        "options": {}
+      },
+      "id": "fetch-pr-data",
+      "name": "Fetch PR Data (GitHub)",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 3,
+      "position": [850, 200],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "2",
+          "name": "GitHub Token"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "executeCommand",
+        "command": "docker",
+        "arguments": "=run --rm -v $(pwd):/workspace -e PR_TITLE=\"{{$node['Fetch PR Data (GitHub)'].json.title}}\" -e PR_AUTHOR=\"{{$node['Fetch PR Data (GitHub)'].json.user.login}}\" ghcr.io/liminalcommons/chora-compose:latest generate artifact --config /workspace/{{$json.config_path}}"
+      },
+      "id": "execute-assembly-with-pr",
+      "name": "Execute Assembly (with PR context)",
+      "type": "n8n-nodes-base.executeCommand",
+      "typeVersion": 1,
+      "position": [1050, 200]
+    },
+    {
+      "parameters": {
+        "operation": "executeCommand",
+        "command": "docker",
+        "arguments": "=run --rm -v $(pwd):/workspace ghcr.io/liminalcommons/chora-compose:latest generate artifact --config /workspace/{{$json.config_path}}"
+      },
+      "id": "execute-assembly-standard",
+      "name": "Execute Assembly (standard)",
+      "type": "n8n-nodes-base.executeCommand",
+      "typeVersion": 1,
+      "position": [850, 400]
+    },
+    {
+      "parameters": {
+        "mode": "combine",
+        "combineBy": "combineAll"
+      },
+      "id": "merge-branches",
+      "name": "Merge Execution Branches",
+      "type": "n8n-nodes-base.merge",
+      "typeVersion": 2.1,
+      "position": [1250, 300]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "string": [
+            {
+              "value1": "={{$json.exitCode}}",
+              "operation": "equals",
+              "value2": "0"
+            }
+          ]
+        }
+      },
+      "id": "check-assembly-success",
+      "name": "Check Assembly Success",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 1,
+      "position": [1450, 300]
+    },
+    {
+      "parameters": {
+        "jsCode": "// Extract artifact output path from chora-compose stdout\nconst stdout = $input.item.json.stdout;\nconst regex = /Generated artifact: (.+)/;\nconst match = stdout.match(regex);\n\nif (!match) {\n  throw new Error('Could not find output path in chora-compose output');\n}\n\nconst outputPath = match[1].trim();\nconst artifactId = $input.item.json.artifact_id;\n\nreturn {\n  artifact_id: artifactId,\n  output_path: outputPath,\n  full_path: `/workspace/${outputPath}`,\n  timestamp: new Date().toISOString()\n};"
+      },
+      "id": "extract-output-path",
+      "name": "Extract Artifact Output Path",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [1650, 200]
+    },
+    {
+      "parameters": {
+        "filePath": "={{$json.full_path}}"
+      },
+      "id": "read-artifact",
+      "name": "Read Generated Artifact",
+      "type": "n8n-nodes-base.readBinaryFile",
+      "typeVersion": 1,
+      "position": [1850, 200]
+    },
+    {
+      "parameters": {
+        "resource": "file",
+        "operation": "upload",
+        "binaryData": true,
+        "fileName": "={{$json.artifact_id}}.md",
+        "destinationPath": "/team-docs/generated/",
+        "options": {}
+      },
+      "id": "upload-to-storage",
+      "name": "Upload to Cloud Storage",
+      "type": "n8n-nodes-base.googleDrive",
+      "typeVersion": 3,
+      "position": [2050, 200],
+      "credentials": {
+        "googleDriveOAuth2Api": {
+          "id": "3",
+          "name": "Google Drive"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={\n  \"status\": \"success\",\n  \"artifact_id\": \"{{$node['Parse Webhook Payload'].json.artifact_id}}\",\n  \"output_path\": \"{{$node['Extract Artifact Output Path'].json.output_path}}\",\n  \"storage_url\": \"{{$json.webViewLink}}\",\n  \"timestamp\": \"{{$node['Extract Artifact Output Path'].json.timestamp}}\"\n}"
+      },
+      "id": "respond-success",
+      "name": "Respond Success",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1,
+      "position": [2250, 200]
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={\n  \"status\": \"error\",\n  \"artifact_id\": \"{{$node['Parse Webhook Payload'].json.artifact_id}}\",\n  \"error_message\": \"Artifact assembly failed\",\n  \"exit_code\": \"{{$json.exitCode}}\",\n  \"stderr\": \"{{$json.stderr}}\",\n  \"timestamp\": \"{{$now.toISO()}}\"\n}",
+        "responseCode": 500
+      },
+      "id": "respond-failure",
+      "name": "Respond Failure",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1,
+      "position": [1650, 400]
+    }
+  ],
+  "connections": {
+    "Webhook Trigger": {
+      "main": [
+        [
+          {
+            "node": "Parse Webhook Payload",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Parse Webhook Payload": {
+      "main": [
+        [
+          {
+            "node": "Check Trigger Type",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Check Trigger Type": {
+      "main": [
+        [
+          {
+            "node": "Fetch PR Data (GitHub)",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Execute Assembly (standard)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Fetch PR Data (GitHub)": {
+      "main": [
+        [
+          {
+            "node": "Execute Assembly (with PR context)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Execute Assembly (with PR context)": {
+      "main": [
+        [
+          {
+            "node": "Merge Execution Branches",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Execute Assembly (standard)": {
+      "main": [
+        [
+          {
+            "node": "Merge Execution Branches",
+            "type": "main",
+            "index": 1
+          }
+        ]
+      ]
+    },
+    "Merge Execution Branches": {
+      "main": [
+        [
+          {
+            "node": "Check Assembly Success",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Check Assembly Success": {
+      "main": [
+        [
+          {
+            "node": "Extract Artifact Output Path",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Respond Failure",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Extract Artifact Output Path": {
+      "main": [
+        [
+          {
+            "node": "Read Generated Artifact",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Read Generated Artifact": {
+      "main": [
+        [
+          {
+            "node": "Upload to Cloud Storage",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Upload to Cloud Storage": {
+      "main": [
+        [
+          {
+            "node": "Respond Success",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "staticData": null,
+  "tags": [
+    {
+      "name": "chora-compose",
+      "createdAt": "2025-11-04T12:00:00.000Z",
+      "updatedAt": "2025-11-04T12:00:00.000Z",
+      "id": "1"
+    },
+    {
+      "name": "webhook",
+      "createdAt": "2025-11-04T12:00:00.000Z",
+      "updatedAt": "2025-11-04T12:00:00.000Z",
+      "id": "3"
+    },
+    {
+      "name": "artifact-assembly",
+      "createdAt": "2025-11-04T12:00:00.000Z",
+      "updatedAt": "2025-11-04T12:00:00.000Z",
+      "id": "4"
+    }
+  ],
+  "triggerCount": 0,
+  "updatedAt": "2025-11-04T12:00:00.000Z",
+  "versionId": "1"
+}

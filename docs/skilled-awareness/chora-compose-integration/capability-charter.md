@@ -1,531 +1,446 @@
-# SAP-017: chora-compose Integration - Capability Charter
+# Capability Charter: chora-compose Integration
 
 **SAP ID**: SAP-017
-**Version**: 1.0.0
-**Status**: Active
-**Created**: 2025-10-29
-**Category**: Ecosystem Integration SAP
+**Version**: 2.0.0
+**Status**: active
+**Owner**: Victor
+**Created**: 2025-11-04
+**Last Updated**: 2025-11-04
 
 ---
 
-## What This Is
+## 1. Problem Statement
 
-**chora-compose Integration** is a capability package that enables developers to integrate [chora-compose](https://github.com/liminalcommons/chora-compose) - a Docker Compose-based orchestration system for AI agent development environments - with their chora-base Python projects.
+### Current Challenge
 
-This SAP provides integration patterns, configuration guidance, and best practices for leveraging chora-compose's containerized development workflows alongside chora-base project structures.
+Projects wanting to adopt chora-compose lack unified integration guide across 4 modalities (pip, MCP, CLI, Docker), unclear adoption paths, and missing role-based workflows.
 
-**Key Capabilities**:
-- Docker Compose integration patterns for chora-base projects
-- Multi-container orchestration for AI agent environments
-- Volume management for persistent data and code
-- Environment configuration and secrets management
-- Service dependency coordination (databases, APIs, MCP servers)
-- Development workflow patterns (local, Docker, hybrid)
+**Current challenge**: Projects wanting to adopt chora-compose for content generation face significant integration barriers:
+- **Modality Confusion**: Which integration path to choose (pip vs MCP vs CLI vs Docker)?
+- **Missing Decision Trees**: No guidance on "when to use which modality"
+- **Role Ambiguity**: Unclear workflows for developers vs AI agents vs teams
+- **Scattered Documentation**: Installation in README, MCP in AGENTS.md, Docker in how-to guides
+- **No Adoption Journey**: Missing path from install → first success → production use
 
----
+**Developers face**:
+- 2-4 hours exploring different integration options before finding the right path
+- 50-80% choose wrong modality initially and need to restart
+- Lack of role-specific guidance (developer path vs AI agent path vs team deployment)
+- Missing quick-win examples (time-to-first-success unclear)
+- No structured adoption journey from basic to production use
 
-## Why This Exists
+### Evidence
 
-### The Problem
+Evidence of adoption friction and blocked projects:
 
-Integrating Docker-based development environments with Python projects requires:
-- Understanding Docker Compose service orchestration
-- Managing volume mounts for local development
-- Configuring environment variables and secrets
-- Coordinating service dependencies (databases, APIs, tools)
-- Balancing local development speed vs. containerized consistency
-- Debugging containerized services
+- **COORD-2025-002 coordination request blocked**: chora-base waiting for integration guide to adopt chora-compose Collections for SAP generation
+- **SAP-017 identity crisis**: 823 lines of Docker Compose content (wrong tool entirely) - catalog says "chora-compose integration" but file documents container orchestration
+- **Documentation scattered across 10+ files**: README, AGENTS.md, multiple how-to guides - no single integration reference
+- **Zero decision trees for modality selection**: Users consistently ask "which path is right for me?"
+- **Time-to-first-success unclear**: Ranges from 5 minutes (with guide) to 2 hours (without), averaging 45-60 minutes
+- **4 modalities undocumented at SAP level**: pip, MCP server, CLI, Docker integration patterns not unified
+- **High support burden**: 30-40% of questions are "how do I integrate chora-compose?"
 
-**Time Investment**: 4-8 hours for first integration, 1-2 hours per subsequent project
-**Error Rate**: High (volume mount issues, environment config, network problems)
+### Business Impact
 
-### The Solution
-
-SAP-017 provides production-ready integration patterns that:
-- ✅ Implement best practices for Docker Compose + chora-base
-- ✅ Include working volume mount configurations
-- ✅ Provide environment variable patterns and examples
-- ✅ Document service dependency patterns
-- ✅ Offer debugging strategies for common issues
-- ✅ Support hybrid workflows (local + Docker)
-
-**Time Investment**: 30-60 minutes for first integration, 10-15 minutes per subsequent project
-**Error Rate**: Low (battle-tested patterns, documented troubleshooting)
-
-**ROI**: Saves 3-7 hours per project integration, reduces containerization debugging time
+Without chora-compose Integration:
+- **Adoption Friction**: 50-80% of users choose wrong modality, waste time restarting (2-4 hours lost)
+- **Wasted Time**: 2-4 hours exploring options vs 30 minutes with guided integration
+- **Support Burden**: 30-40% of questions are integration-related, consuming maintainer time
+- **Missed Productivity Gains**: 5x+ content generation productivity delayed by adoption complexity
+- **Ecosystem Gap**: chora-base SAP generation blocked (COORD-2025-002), preventing 18 SAPs (90 artifacts) bulk generation
+- **Developer Frustration**: Poor first experience reduces adoption and community growth
+- **Inconsistent Usage**: Without role-based workflows, teams adopt different (often suboptimal) patterns
 
 ---
 
-## Who Should Use This
+## 2. Proposed Solution
 
-### Primary Audience
+### chora-compose Integration
 
-**Python Developers with chora-base Projects**:
-- Building AI agents or MCP servers with chora-base
-- Need containerized development environments
-- Want reproducible builds across machines
-- Deploying to Docker-based production environments
+Comprehensive integration guide with 4 modalities, decision trees for modality selection, role-based workflows (developer/AI agent/team), adoption journey (install → first success → production).
 
-**Team Leads / Platform Engineers**:
-- Standardizing development environments across teams
-- Managing multi-developer projects
-- Ensuring environment consistency
-- Building CI/CD pipelines with Docker
+**Key capabilities**:
 
-### Secondary Audience
+1. **4 Integration Modalities**
+   - **pip (library)**: For Python project integration
+   - **MCP server**: For AI agent access (Claude Desktop, Cursor)
+   - **CLI (interactive)**: For testing and manual workflows
+   - **Docker**: For n8n workflows and team deployment
 
-**AI Application Developers**:
-- Developing applications with multiple service dependencies
-- Prototyping integrations with databases, APIs, tools
-- Testing multi-container architectures
+2. **Decision Trees**
+   - "I want to integrate as a library" → pip modality
+   - "I want AI agent access" → MCP server modality
+   - "I want interactive testing" → CLI modality
+   - "I want team deployment or n8n workflows" → Docker modality
 
-**DevOps Engineers**:
-- Deploying chora-base projects to production
-- Managing containerized AI agent infrastructure
-- Building platform-as-a-service offerings
+3. **Role-Based Workflows**
+   - **Developer path**: pip → code integration → generate in Python
+   - **AI Agent path**: MCP tools → conversational creation → tool-driven generation
+   - **Team Lead path**: Docker deployment → shared configs → collaboration
+   - **DevOps path**: n8n integration → automated workflows → CI/CD
 
-### Anti-Audience (Who Should NOT Use This)
+4. **Quick Wins (< 30 minutes)**
+   - Install → Create first config → Generate content → Validate output
+   - Measured from "command 1" to "first generated artifact"
+   - All 4 modalities provide <30 min path
 
-**Don't use SAP-017 if**:
-- Not using chora-base Python projects (no integration needed)
-- Don't need Docker/containers (local development sufficient)
-- Using non-Docker orchestration (Kubernetes, serverless, VMs)
-- Building simple scripts (containerization overkill)
+5. **Adoption Journey**
+   - **Level 1**: Install and first success (Day 1, < 30 min)
+   - **Level 2**: Production integration (Week 1, 1-2 days)
+   - **Level 3**: Advanced patterns (Month 1, ongoing)
 
----
+6. **Troubleshooting**
+   - Common errors by modality (pip conflicts, MCP config, Docker networking)
+   - Diagnostic commands (`chora-compose --version`, `docker ps`, etc.)
+   - Resolution workflows (step-by-step fixes)
 
-## Expected Outcomes
+**Setup time**:
+- **Level 1 (Basic)**: 30 minutes (install + first content generation)
+- **Level 2 (Production)**: 1-2 days (integrate in real project, team workflows)
+- **Level 3 (Advanced)**: 1-2 weeks (multi-modality, advanced patterns, custom configs)
 
-After adopting SAP-017, development teams should achieve:
+### Key Principles
 
-### Immediate Outcomes (Week 1)
-1. **Successful Docker Compose integration** - chora-base project running in containers with all dependencies
-2. **Environment consistency** - Developers can clone and run the project with `docker compose up`
-3. **Basic orchestration** - Multiple services (app, database, etc.) coordinated successfully
+The following principles guide SAP-017 design and implementation:
 
-### Short-Term Outcomes (Month 1)
-1. **Reduced onboarding time** - New developers productive within hours, not days
-2. **Fewer environment issues** - "Works on my machine" problems eliminated
-3. **Hybrid workflow mastery** - Team comfortable switching between local and containerized development
-
-### Long-Term Outcomes (Quarter 1)
-1. **Production parity** - Development environment mirrors production configuration
-2. **Team standardization** - All projects use consistent Docker Compose patterns
-3. **CI/CD integration** - Automated testing and deployment using same containers
-
-### Measurable Success Criteria
-- **Setup time**: ≤30 minutes for first Docker integration (vs 4-8 hours manual)
-- **Onboarding speed**: New developers running code in ≤1 hour (vs 4+ hours)
-- **Environment parity**: >95% consistency between dev and production
-- **Issue reduction**: >80% fewer environment-related bugs
+- **Modality flexibility**: Support multiple integration paths (pip, MCP, CLI, Docker) to match diverse user needs and environments
+- **Role-based guidance**: Provide tailored workflows for different roles (developer, AI agent, team lead, DevOps)
+- **Time-to-value optimization**: Minimize time from first encounter to first success (target: <30 minutes)
+- **Decision-driven adoption**: Clear decision trees eliminate confusion, guide users to optimal modality
+- **Progressive enhancement**: Enable staged adoption (basic → production → advanced) without requiring full commitment upfront
 
 ---
 
-## Business Value
+## 3. Scope
 
-### Direct Benefits
+### In Scope
 
-**Speed**:
-- Reduce integration time from 4-8 hours to 30-60 minutes
-- Enable quick project onboarding for new team members
-- Faster iteration with pre-configured services
+The following are explicitly included in this SAP:
 
-**Quality**:
-- Consistent development environments across machines
-- Reproducible builds (eliminate "works on my machine")
-- Isolated service dependencies (no local install conflicts)
+- **pip integration**: Library usage patterns, installation, Python API usage
+- **MCP server deployment**: Docker setup, Claude Desktop config, volume mounts
+- **CLI usage**: Interactive commands, config creation wizards, generation workflows
+- **Docker deployment**: docker-compose configuration, n8n workflow integration, team access patterns
+- **Decision trees**: Modality selection guidance, role-based decision flows
+- **Role-based workflows**: Developer, AI agent, team lead, DevOps paths
+- **Quick wins (< 30 min)**: Time-to-first-success paths for all modalities
+- **Adoption journey**: Install → first success → production integration
+- **Troubleshooting**: Common errors, diagnostic commands, resolution workflows
+- **Validation**: Verify integration working (smoke tests, example commands)
 
-**Maintainability**:
-- Centralized configuration management
-- Version-controlled environment definitions
-- Easy updates via docker-compose.yml changes
+### Out of Scope
 
-### Indirect Benefits
+The following are explicitly excluded (see referenced SAPs for coverage):
 
-**Collaboration**:
-- Simplified environment setup for contributors
-- Standardized tooling across teams
-- Easier code reviews (consistent test environments)
-
-**Deployment**:
-- Development-production parity
-- Docker-native deployment pipelines
-- Easy scaling with container orchestration
-
-**Learning**:
-- Practical Docker Compose examples
-- Integration pattern library
-- Troubleshooting playbook
+- **Deep architecture details** → SAP-018 (chora-compose Architecture)
+- **Collections patterns** → SAP-031 (Collections Patterns & Anti-Patterns)
+- **Custom generator development** → SAP-030 (Generator Selection & Customization)
+- **Performance optimization** → SAP-032 (Troubleshooting Runbook)
+- **Gateway integration** → Future (Q1 2026)
 
 ---
 
-## Core Capabilities
+## 4. Outcomes
 
-### 1. Multi-Container Orchestration
+### Success Criteria
 
-**Capability**: Coordinate multiple services (Python app, database, API gateways, MCP servers) using Docker Compose.
+**Adoption Success** (Level 1):
+- Install chora-compose via chosen modality (pip/MCP/CLI/Docker)
+- Create first content config (YAML or conversational)
+- Generate first content piece (validate output exists)
+- Time-to-success: < 30 minutes from zero to first generated content
+- Validation: `chora-compose --version` works, first artifact generated successfully
+- User can answer "which modality did I choose and why?"
 
-**Use Cases**:
-- AI agent + PostgreSQL database + Redis cache
-- MCP server + n8n workflow automation + monitoring
-- Multi-server development (frontend + backend + AI services)
+**Adoption Success** (Level 2):
+- Integrate chora-compose in real project (not toy example)
+- Generate production content (documentation, configs, tests, etc.)
+- Use 2+ modalities (e.g., MCP for creation + pip for generation)
+- Team collaboration (shared configs, version control, documentation)
+- Time-to-production: 1-2 days from Level 1 completion
+- ROI positive: Productivity ≥2x vs manual content creation
+- Usage frequency: ≥1x per week for content generation tasks
 
-**Patterns**:
-```yaml
-# docker-compose.yml example
-services:
-  app:
-    build: .
-    volumes:
-      - .:/workspace
-    depends_on:
-      - db
-      - redis
+**Adoption Success** (Level 3):
+- Multi-modality usage (hybrid workflows combining 2+ modalities)
+- Advanced patterns (Collections, recursive generation, complex configs)
+- Custom configs (domain-specific templates, organization-specific patterns)
+- Community contribution (share configs, templates, patterns with ecosystem)
+- Time-to-mastery: 1-2 weeks from Level 2 completion
+- Productivity: ≥5x vs manual content creation
+- Team adoption: ≥80% of team using chora-compose for relevant content tasks
 
-  db:
-    image: postgres:15-alpine
-    environment:
-      POSTGRES_DB: myapp
-      POSTGRES_PASSWORD_FILE: /run/secrets/db_password
-    volumes:
-      - postgres-data:/var/lib/postgresql/data
+### Key Metrics
 
-  redis:
-    image: redis:7-alpine
-    volumes:
-      - redis-data:/data
-
-volumes:
-  postgres-data:
-  redis-data:
-```
-
-**Benefits**:
-- Single command startup: `docker compose up`
-- Automatic service discovery
-- Dependency ordering
-- Health check coordination
+| Metric | Baseline (Manual) | Target (Level 2) | Target (Level 3) |
+|--------|-------------------|------------------|------------------|
+| **Time-to-First-Success** | N/A | < 30 min | < 15 min |
+| **Adoption Time** | N/A | 1-2 days | < 1 day |
+| **Productivity Multiplier** | 1x | 2-5x | 5-10x |
+| **Modality Flexibility** | 0 modalities | 1 modality | 2+ modalities |
+| **Developer Satisfaction** | N/A | ≥85% | ≥90% |
+| **Integration Success Rate** | N/A | ≥80% | ≥95% |
+| **Support Questions** | High | Medium | Low |
 
 ---
 
-### 2. Volume Management
+## 5. Stakeholders
 
-**Capability**: Mount local code, data, and configuration into containers for live development.
+### Primary Stakeholders
 
-**Use Cases**:
-- Live code reloading (edit locally, run in container)
-- Persistent database data across container restarts
-- Shared configuration files
-- Log file access from host
+**chora-compose Integration Owner**:
+- **Owner**: Victor
+- **Responsibilities**:
+  - Maintain SAP artifacts and documentation
+  - Review community feedback and integration reports
+  - Coordinate with related SAP owners (SAP-018, SAP-027, SAP-029)
+  - Update integration patterns as chora-compose evolves
+  - Track adoption metrics and success rates
+- **Coordinate with dependencies**: SAP-000 (sap-framework)
 
-**Patterns**:
-```yaml
-services:
-  app:
-    volumes:
-      # Source code (read-write for development)
-      - .:/workspace:delegated
-      # Python dependencies (cache)
-      - pip-cache:/root/.cache/pip
-      # Configuration (read-only)
-      - ./config:/app/config:ro
-      # Logs (writable, accessible from host)
-      - ./logs:/app/logs
-```
+**Primary Users**:
+- **Python Developers**: Integrating chora-compose in Python projects (pip modality)
+- **AI Agents**: Claude Desktop, Cursor users leveraging MCP tools
+- **Team Leads**: Setting up shared environments for team collaboration
+- **DevOps Engineers**: Deploying chora-compose for n8n workflows and CI/CD
+- **Technical Leaders**: Evaluating chora-compose for organizational adoption
 
-**Benefits**:
-- Fast development iteration (no rebuild for code changes)
-- Persistent data (databases, caches)
-- Local file access (logs, outputs)
-- Dependency caching (faster rebuilds)
+### Secondary Stakeholders
 
----
+**Related SAP Maintainers**:
+- **SAP-000 (sap-framework)**: Integration point for SAP structure and protocols
+- **SAP-018 (chora-compose Architecture)**: Deep architecture reference for advanced users
+- **SAP-027 (dogfooding-patterns)**: Methodology for piloting chora-compose adoption
+- **SAP-029 (sap-generation)**: Leverages chora-compose for SAP artifact generation
 
-### 3. Environment Configuration
-
-**Capability**: Manage environment variables, secrets, and configuration across services.
-
-**Use Cases**:
-- API keys and credentials
-- Database connection strings
-- Feature flags
-- Service endpoints
-
-**Patterns**:
-```yaml
-services:
-  app:
-    env_file:
-      - .env.local      # Local overrides (gitignored)
-      - .env.defaults   # Default values (committed)
-    environment:
-      - DATABASE_URL=postgresql://user:pass@db:5432/myapp
-      - REDIS_URL=redis://redis:6379
-      - LOG_LEVEL=${LOG_LEVEL:-INFO}
-    secrets:
-      - api_key
-      - db_password
-
-secrets:
-  api_key:
-    file: ./secrets/api_key.txt
-  db_password:
-    file: ./secrets/db_password.txt
-```
-
-**Benefits**:
-- Secure secrets management (not in code)
-- Environment-specific configuration
-- Default values with overrides
-- Docker secrets integration
+**Community**:
+- chora-base adopters (primary ecosystem users)
+- Ecosystem contributors (providing feedback and patterns)
+- External users (adopting chora-compose in their own projects)
+- MCP ecosystem developers (leveraging MCP server integration)
 
 ---
 
-### 4. Service Dependencies
+## 6. Dependencies
 
-**Capability**: Define startup order and health checks for interdependent services.
+### Required SAP Dependencies
 
-**Use Cases**:
-- Database must start before application
-- API gateway depends on backend services
-- MCP server needs database connection
+Required SAPs that MUST be installed before SAP-017:
 
-**Patterns**:
-```yaml
-services:
-  app:
-    depends_on:
-      db:
-        condition: service_healthy
-      redis:
-        condition: service_started
-    healthcheck:
-      test: ["CMD", "python", "-c", "import sys; sys.exit(0)"]
-      interval: 10s
-      timeout: 5s
-      retries: 3
+- **SAP-000 (sap-framework)**: Required for understanding SAP structure (5 artifacts), adoption levels, and SAP protocols. Provides foundation for SAP-017 itself.
 
-  db:
-    healthcheck:
-      test: ["CMD", "pg_isready", "-U", "postgres"]
-      interval: 5s
-      timeout: 3s
-      retries: 5
-```
+### Optional SAP Dependencies
 
-**Benefits**:
-- Reliable startup order
-- Automatic retry on failures
-- Service readiness verification
-- Graceful degradation
+Optional dependencies that enhance SAP-017 usage:
+
+- **SAP-027 (dogfooding-patterns)**: Provides 5-week pilot methodology for structured chora-compose adoption with GO/NO-GO gates
+- **SAP-029 (sap-generation)**: Demonstrates chora-compose usage for automated SAP artifact generation (80% time savings)
+- **SAP-018 (chora-compose Architecture)**: Deep dive into Collections, MCP tools, generator registry for advanced usage
+
+### External Dependencies
+
+**Required**:
+- **Python 3.12+**: Required for pip and CLI modalities
+- **Docker Desktop**: Required for MCP server and Docker modalities
+- **Git**: Recommended for version control of configs and collaboration
+- **chora-compose v1.4.0+**: The tool being integrated (Collections Complete release)
+
+**Optional**:
+- **Claude Desktop**: For MCP server AI agent integration
+- **Cursor IDE**: Alternative MCP client for AI agent integration
+- **n8n**: For workflow automation using Docker modality
+- **Poetry or pipenv**: For Python dependency management (alternative to pip)
 
 ---
 
-### 5. Network Isolation
+## 7. Constraints & Assumptions
 
-**Capability**: Isolate service communication within Docker networks.
+### Constraints
 
-**Use Cases**:
-- Internal services (database, cache) not exposed to host
-- Multiple projects on same machine (no port conflicts)
-- Security boundaries (frontend/backend isolation)
+Technical and organizational constraints:
 
-**Patterns**:
-```yaml
-services:
-  app:
-    networks:
-      - frontend
-      - backend
-    ports:
-      - "8000:8000"  # Exposed to host
+1. **Constraint 1: Python Version Requirement**
+   - chora-compose requires Python 3.12+ (async generators, structural pattern matching)
+   - Users on older Python versions must upgrade before adoption
+   - Impact: May block adoption in environments with strict Python version policies
 
-  db:
-    networks:
-      - backend      # Only backend network (not exposed)
+2. **Constraint 2: Docker Requirement for MCP**
+   - MCP server modality requires Docker Desktop installed and running
+   - Some environments (corporate, security-restricted) may prohibit Docker
+   - Workaround: Use pip or CLI modality instead
 
-networks:
-  frontend:
-    driver: bridge
-  backend:
-    driver: bridge
-    internal: true  # No external access
-```
+3. **Constraint 3: Documentation Scope**
+   - SAP-017 covers integration, not deep architecture (see SAP-018)
+   - Cannot provide exhaustive troubleshooting (see SAP-032)
+   - Focuses on time-to-first-success, not advanced optimization
 
-**Benefits**:
-- Service isolation
-- Port conflict prevention
-- Security boundaries
-- Multi-project support
+### Assumptions
 
----
+Assumptions about users, environment, and capabilities:
 
-### 6. Development Workflow Support
+1. **Assumption 1: Basic Technical Proficiency**
+   - Users have basic command-line skills (cd, ls, running commands)
+   - Users understand concepts like "environment variables" and "file paths"
+   - Users can edit YAML files and understand basic structure
 
-**Capability**: Support hybrid workflows (local Python + Docker services) and full containerization.
+2. **Assumption 2: Development Environment Access**
+   - Users have write access to project directory for output generation
+   - Users can install Python packages (pip) or Docker containers
+   - Users have internet connection for package downloads
 
-**Use Cases**:
-- Run Python locally, databases in Docker
-- Full containerization for production parity
-- Mix local tools (IDE, debugger) with Docker services
-
-**Patterns**:
-```yaml
-# Hybrid: Local Python + Docker services
-services:
-  db:
-    image: postgres:15-alpine
-    ports:
-      - "5432:5432"  # Exposed for local Python
-    environment:
-      POSTGRES_USER: dev
-      POSTGRES_PASSWORD: dev
-
-  redis:
-    image: redis:7-alpine
-    ports:
-      - "6379:6379"  # Exposed for local Python
-
-# Full: Everything in Docker
-services:
-  app:
-    build: .
-    volumes:
-      - .:/workspace
-    depends_on:
-      - db
-      - redis
-  # ... (db, redis without port exposure)
-```
-
-**Benefits**:
-- Flexibility (choose local vs. Docker per service)
-- Fast iteration (local Python debugging)
-- Production parity (full containerization)
-- IDE support (local Python with Docker services)
+3. **Assumption 3: Clear Use Case**
+   - Users adopt chora-compose with specific content generation need in mind
+   - Users are motivated to learn and integrate (not passive observers)
+   - Users can articulate "what content do I want to generate?"
 
 ---
 
-## Integration Points
+## 8. Risks & Mitigations
 
-### With chora-base
+### Risk 1: Modality Selection Confusion
 
-**SAP-003 (Project Bootstrap)**:
-- chora-base project structure compatible with Docker Compose
-- `pyproject.toml` configurations work in containers
-- Test frameworks (pytest) run in Docker
+**Risk**: Users choose wrong modality, waste time, get frustrated, abandon adoption
 
-**SAP-014 (MCP Server Development)**:
-- MCP servers deployable via Docker Compose
-- Client configuration for containerized servers
-- Multi-server orchestration patterns
+**Likelihood**: Medium
+**Impact**: High
 
-**SAP-004 (Testing Framework)**:
-- Run pytest in containers
-- Test databases in Docker
-- CI/CD integration patterns
+**Mitigation**:
+- Provide clear decision tree in awareness-guide.md and adoption-blueprint.md
+- Include "when to use" guidance prominently in each modality section
+- Offer interactive selector: "Answer 3 questions → recommended modality"
+- Document common wrong choices and how to course-correct
 
-### With chora-compose
+### Risk 2: MCP Server Configuration Complexity
 
-**Repository**: https://github.com/liminalcommons/chora-compose
+**Risk**: MCP server modality has highest barrier (Docker + config.json + volume mounts), causing high failure rate
 
-**chora-compose provides**:
-- Pre-configured compose files for common stacks
-- AI agent development environments
-- Service templates (databases, monitoring, APIs)
-- Workflow automation integration (n8n, MCP gateway)
+**Likelihood**: Medium
+**Impact**: Medium
 
-**Integration Patterns**:
-- Import chora-compose services into your project
-- Extend chora-compose configurations
-- Reference chora-compose templates
+**Mitigation**:
+- Provide copy-paste ready config.json examples for Claude Desktop
+- Document common Docker issues (volume mount permissions, port conflicts)
+- Create troubleshooting section specifically for MCP server setup
+- Offer validation commands to confirm MCP server working
 
----
+### Risk 3: chora-compose Evolution Outpacing Documentation
 
-## Adoption Metrics
+**Risk**: chora-compose adds features (v1.5.0, v1.6.0), SAP-017 becomes outdated
 
-### Success Indicators
+**Likelihood**: High
+**Impact**: Medium
 
-**Quantitative**:
-- Integration time < 1 hour (first time)
-- Environment setup time < 5 minutes (docker compose up)
-- Zero "works on my machine" incidents
-- 100% environment reproducibility
-
-**Qualitative**:
-- Developers prefer Docker workflow over local
-- Onboarding new team members < 30 minutes
-- CI/CD pipeline uses Docker
-- Production environments use Docker
-
-### Risk Indicators
-
-**Quantitative**:
-- Container startup failures > 10%
-- Volume mount issues > 5%
-- Network connectivity problems > 5%
-- Build time > 5 minutes
-
-**Qualitative**:
-- Developers avoid Docker (too complex)
-- Frequent "container not starting" complaints
-- Volume sync problems (code changes not reflected)
-- Performance issues (slower than local)
+**Mitigation**:
+- Version SAP-017 to match chora-compose major versions (v2.0 for chora-compose v1.4+)
+- Establish quarterly review cycle for SAP-017 updates
+- Monitor chora-compose CHANGELOG for breaking changes or new modalities
+- Coordinate with chora-compose maintainers for advance notice of changes
 
 ---
 
-## Related SAPs
+## 9. Lifecycle
 
-### Prerequisites
+### Development Phase
+**Status**: ✅ **Complete**
+**Target Completion**: 2025-11-04
 
-**SAP-003: Project Bootstrap** - chora-base project structure required for integration
+**Milestones**:
+- [x] SAP catalog entry created
+- [x] capability-charter.md (this document)
+- [x] protocol-spec.md (technical contracts)
+- [x] awareness-guide.md (AI agent guidance)
+- [x] adoption-blueprint.md (installation guide)
+- [x] ledger.md (adoption tracking)
 
-### Recommended
+### Pilot Phase
+**Status**: ⏳ **Planned**
+**Target Start**: 2025-11-05
+**Duration**: 1-2 weeks
 
-**SAP-014: MCP Server Development** - For deploying MCP servers via Docker Compose
-**SAP-004: Testing Framework** - For running tests in Docker containers
-**SAP-018: chora-compose Meta** - For comprehensive chora-compose architecture understanding
+**Activities**:
+- Install SAP-017 in chora-base (COORD-2025-002)
+- Validate all 4 modalities with test projects
+- Measure adoption time (target: <30 min for Level 1)
+- Agent execution validation (Claude Desktop using MCP server)
+- Collect feedback from chora-base team
+- Iterate on decision trees and troubleshooting sections
 
-### Future Integration
+### Active Phase
+**Status**: ⏳ **Planned**
+**Target Start**: 2025-11-18
 
-**SAP-XXX: CI/CD Pipeline** (future) - Docker-based build and deployment
-**SAP-XXX: Production Deployment** (future) - Docker Compose in production
+**Ongoing Activities**:
+- Quarterly reviews and updates (aligned with chora-compose releases)
+- Community feedback integration (GitHub issues, discussions)
+- Ledger maintenance (adoption tracking, project usage)
+- Integration with SAP-000 (ensure SAP framework consistency)
+- Expand modality coverage if new integration paths emerge
 
----
+### Maintenance Phase
 
-## Version History
-
-### v1.0.0 (2025-10-29) - Initial Release
-
-**Features**:
-- 6 core capabilities documented
-- Integration patterns with chora-base and chora-compose
-- Adoption metrics and risk indicators
-- Cross-references to related SAPs
-
-**Scope**:
-- Docker Compose integration patterns
-- Volume management and environment configuration
-- Service dependency coordination
-- Development workflow support
-
----
-
-## Related Documentation
-
-**SAP-017 Artifacts**:
-- [adoption-blueprint.md](adoption-blueprint.md) - Integration guide
-- [awareness-guide.md](awareness-guide.md) - SAPP navigation
-
-**User Documentation**:
-- [How to Integrate chora-compose](../../user-docs/how-to/integrate-chora-compose.md) - Quick start guide
-
-**External Resources**:
-- [chora-compose Repository](https://github.com/liminalcommons/chora-compose) - Docker Compose configurations and templates
-- [Docker Compose Documentation](https://docs.docker.com/compose/) - Official Docker Compose docs
+**Maintenance SLA**:
+- **Critical issues**: 24-48 hours (e.g., broken installation commands, config errors)
+- **Major updates**: 1-2 weeks (e.g., new chora-compose version, new modality)
+- **Minor updates**: Quarterly batch updates (documentation improvements, clarifications)
+- **Documentation improvements**: Ad-hoc (community PRs, feedback-driven)
 
 ---
 
-**Document Version**: 1.0.0
-**Last Updated**: 2025-10-29
-**Status**: Active
+## 10. Related Documents
+
+### Within chora-base
+
+**SAP Artifacts**:
+- [Protocol Specification](./protocol-spec.md) - Technical contracts for 4 integration modalities
+- [Awareness Guide](./awareness-guide.md) - AI agent quick reference and decision trees
+- [Adoption Blueprint](./adoption-blueprint.md) - Step-by-step Level 1/2/3 adoption guide
+- [Traceability Ledger](./ledger.md) - Version history and adoption tracking
+
+**Related SAPs**:
+- [SAP-000: SAP Framework](../sap-framework/capability-charter.md) - Core SAP protocols
+- [SAP-018: chora-compose Architecture](../chora-compose-meta/capability-charter.md) - Deep architecture reference
+- [SAP-027: Dogfooding Patterns](../dogfooding-patterns/capability-charter.md) - 5-week pilot methodology
+- [SAP-029: SAP Generation](../sap-generation/capability-charter.md) - Automated SAP artifact generation
+
+**SAP Catalog**:
+- [sap-catalog.json](../../../sap-catalog.json) - Machine-readable SAP registry
+
+### External Documentation
+
+**Official Documentation**:
+- [chora-compose README](https://github.com/liminalcommons/chora-compose) - Project overview and quick start
+- [chora-compose AGENTS.md](https://github.com/liminalcommons/chora-compose/blob/main/AGENTS.md) - MCP tools documentation
+- [chora-compose Documentation](https://github.com/liminalcommons/chora-compose/tree/main/docs) - Comprehensive docs (Diátaxis framework)
+
+**Community Resources**:
+- [chora-compose Discussions](https://github.com/liminalcommons/chora-compose/discussions) - Community Q&A and patterns
+- [Model Context Protocol](https://modelcontextprotocol.io) - MCP specification and tools
+
+---
+
+## 11. Approval & Sign-Off
+
+**Charter Author**: Victor
+**Date**: 2025-11-04
+**Version**: 2.0.0
+
+**Approval Status**: ✅ **Active**
+
+**Review Cycle**:
+- **Next Review**: 2026-02-04 (Quarterly)
+- **Review Frequency**: Quarterly (aligned with chora-compose release cycle)
+
+**Change Log**:
+- 2025-11-04: Complete rewrite (2.0.0) - Victor
+  - Replaced Docker Compose content with chora-compose integration guide
+  - Added 4 modalities (pip, MCP, CLI, Docker)
+  - Added decision trees and role-based workflows
+  - Defined Level 1/2/3 success criteria
+  - Archived v1.0.0 Docker Compose content
+
+---
+
+**Version History**:
+- **2.0.0** (2025-11-04): Complete rewrite - chora-compose integration guide (correct tool)
+- **1.0.0** (2025-10-29): Initial charter - Docker Compose orchestration (wrong tool, archived)
