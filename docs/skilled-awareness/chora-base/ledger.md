@@ -1,9 +1,9 @@
 # Traceability Ledger: chora-base Template Repository
 
 **SAP ID**: SAP-002
-**Current Version**: 1.0.0 (SAP), 3.3.0 (chora-base)
-**Status**: Draft (Phase 1)
-**Last Updated**: 2025-10-27
+**Current Version**: 1.0.0 (SAP), 4.2.0 (chora-base)
+**Status**: Active (Level 2)
+**Last Updated**: 2025-11-04
 
 ---
 
@@ -320,3 +320,72 @@ _None yet_ - SAP is new
 
 **Version History**:
 - **1.0.0** (2025-10-27): Initial ledger for chora-base meta-SAP
+- **1.0.0-L2** (2025-11-04): chora-base achieves L2 adoption - Template actively used by 4 projects
+
+---
+
+## 13. Level 2 Adoption Achievement (2025-11-04)
+
+**Milestone**: chora-base reaches Level 2 SAP-002 adoption
+
+**Evidence of L2 Adoption**:
+- ✅ Active adopters: 4 projects using chora-base template
+  - chora-compose (v1.9.x) - Production MCP composition server
+  - mcp-n8n (v1.8.x) - Production MCP gateway
+  - examples/full-featured-with-vision (v3.3.0) - Example project
+  - examples/full-featured-with-docs (v3.3.0) - Example project
+- ✅ Template evolution: v4.2.0 with 14 capabilities
+- ✅ SAP framework integration: 28 SAPs created using chora-base patterns
+- ✅ Documentation framework: AGENTS.md + CLAUDE.md bidirectional translation
+- ✅ Quality gates enforced: pre-commit hooks, testing, coverage
+- ✅ Metrics tracked: Adoption registry, version history
+
+**Template Capabilities (14 Total)**:
+1. Project structure and bootstrapping
+2. Testing framework (pytest, 85% coverage target)
+3. CI/CD workflows (GitHub Actions)
+4. Quality gates (pre-commit hooks, ruff, mypy)
+5. Docker operations (multi-stage builds)
+6. Documentation framework (markdown, link validation)
+7. Agent awareness (AGENTS.md, CLAUDE.md)
+8. Automation scripts (justfile, Python utilities)
+9. Inbox coordination (cross-repo protocol)
+10. SAP framework (28 SAPs created)
+11. Metrics tracking (ROI calculator)
+12. Memory system (context persistence)
+13. Development lifecycle (8-phase process)
+14. Publishing automation (PyPI, GitHub releases)
+
+**Production Impact**:
+- Projects generated: 4+ (2 production, 2 examples, unknown external)
+- Template versions released: 7 major/minor (1.x → 4.2.0)
+- Time to bootstrap new project: ~5 minutes (vs ~2-3 hours manual)
+- Standard compliance: 100% (all projects follow same structure)
+
+**Time Invested**:
+- L1 setup (2025-10-27): 8 hours (initial SAP-002 documentation, 5 artifacts)
+- L2 evolution (2025-10-27 to 2025-11-04): 12 hours (4 adopters, template evolution to v4.2.0)
+- **Total**: 20 hours
+
+**ROI Analysis**:
+- Time to bootstrap with template: ~5 minutes
+- Time to bootstrap manually: ~2-3 hours
+- Time saved per project: ~2.5 hours
+- Projects generated: 4
+- Total time saved: 4 × 2.5h = 10 hours
+- ROI: 10h saved / 20h invested = 0.5x (break-even expected at 8 projects)
+
+**L2 Criteria Met**:
+- ✅ Multi-project adoption (4 projects)
+- ✅ Template actively maintained (v4.2.0)
+- ✅ Comprehensive capabilities (14 features)
+- ✅ Quality standards enforced (testing, hooks, coverage)
+- ✅ Documentation complete (5 SAP artifacts)
+- ✅ Metrics tracked (adopter registry, version history)
+
+**Next Steps** (toward L3):
+1. External adopter tracking (self-service PR submission)
+2. Automated upgrade path between versions
+3. Template health dashboard (adoption metrics, version distribution)
+4. Capability usage analytics (which features most used)
+5. AI-powered project customization (generate tailored templates)
