@@ -81,9 +81,198 @@
 
 ---
 
-## 7. Reference Materials
+## 7. Coordination Request Schema Enhancements
+
+### 7.1 Relationship Metadata (v1.1.1+)
+
+**Purpose**: Enable graph-based curation and relationship tracking across coordination requests, tasks, and SAPs.
+
+**New Fields**:
+
+#### `relationships` Object (Optional)
+
+Structured relationships to other coordination requests and work items:
+
+```json
+{
+  "relationships": {
+    "blocks": ["COORD-2025-020"],
+    "blocked_by": [],
+    "related_to": ["COORD-2025-004", "task-abc123"],
+    "spawns_tasks": ["chora-base-def456"],
+    "supersedes": "COORD-2025-001",
+    "superseded_by": null
+  }
+}
+```
+
+**Field Definitions**:
+
+| Field | Type | Description |
+|-------|------|-------------|
+| `blocks` | array[string] | Work items blocked by this coordination request (COORD-YYYY-NNN or task IDs) |
+| `blocked_by` | array[string] | Work items blocking this coordination request |
+| `related_to` | array[string] | Related coordination requests or tasks (informational, no blocking) |
+| `spawns_tasks` | array[string] | Task IDs created from this coordination request (for beads/SAP-015 integration) |
+| `supersedes` | string | Coordination request ID that this request replaces/supersedes |
+| `superseded_by` | string | Coordination request ID that replaces/supersedes this request |
+
+**Use Cases**:
+
+1. **Dependency Tracking**: Identify what's blocking work or what work is blocked
+2. **Impact Analysis**: Find all coordination requests affected by a given request
+3. **Task Decomposition**: Link coordination requests to decomposed beads tasks (SAP-015)
+4. **Version Management**: Track superseded/superseding requests for continuity
+5. **Graph Visualization**: Build relationship graphs for project planning
+
+#### `affects_saps` Array (Optional)
+
+SAP IDs affected by this coordination request:
+
+```json
+{
+  "affects_saps": ["SAP-015", "SAP-009", "SAP-001"]
+}
+```
+
+**Benefits**:
+- SAP awareness: Know which SAPs are impacted by coordination work
+- Impact analysis: Find all coordination requests affecting a specific SAP
+- Adoption tracking: Correlate coordination with SAP adoption phases
+- Cross-SAP visibility: Understand dependencies between SAP implementations
+
+**Example Queries**:
+
+```bash
+# Find all coordination requests affecting SAP-015
+jq 'select(.affects_saps? // [] | contains(["SAP-015"]))' inbox/**/*.json
+
+# Count coordination requests by SAP
+jq -r '.affects_saps[]? // empty' inbox/**/*.json | sort | uniq -c
+```
+
+#### `affects_domains` Array (Optional)
+
+Documentation/code domains affected by this coordination request:
+
+```json
+{
+  "affects_domains": [
+    "docs/skilled-awareness/task-tracking",
+    "implementation",
+    "docs/user-docs",
+    "scripts"
+  ]
+}
+```
+
+**Standard Domains**:
+- `docs/skilled-awareness/*` - SAP documentation
+- `docs/user-docs/*` - User-facing documentation
+- `docs/dev-docs/*` - Developer documentation
+- `docs/project-docs/*` - Project management documentation
+- `implementation` - Source code
+- `scripts` - Automation scripts
+- `tests` - Test suites
+- `.chora/*` - Chora configuration
+
+**Benefits**:
+- File impact awareness: Know which domains will change
+- Cross-domain coordination: Identify work spanning multiple domains
+- Scope estimation: Understand breadth of coordination work
+- Curation: Filter coordination by affected domains
+
+**Example Queries**:
+
+```bash
+# Find coordination affecting documentation
+jq 'select(.affects_domains? // [] | any(. | startswith("docs/")))' inbox/**/*.json
+
+# Find coordination affecting multiple domains
+jq 'select((.affects_domains? // [] | length) > 2)' inbox/**/*.json
+```
+
+### 7.2 Integration with Other SAPs
+
+**SAP-015 (Task Tracking / Beads)**:
+- Use `relationships.spawns_tasks` to link coordination requests to beads tasks
+- Use `affects_saps` in beads metadata to correlate task work with SAPs
+- Example:
+  ```json
+  // Coordination request
+  {
+    "request_id": "COORD-2025-010",
+    "relationships": {
+      "spawns_tasks": ["chora-base-sap015-abc", "chora-base-sap015-def"]
+    }
+  }
+
+  // Beads task metadata
+  {
+    "metadata": {
+      "coord_request": "COORD-2025-010",
+      "affects_saps": ["SAP-015"]
+    }
+  }
+  ```
+
+**SAP-000 (SAP Framework)**:
+- Use `affects_saps` to track which SAPs are enhanced/modified
+- Use `affects_domains` to understand scope of SAP work
+- Correlate coordination requests with SAP adoption phases
+
+**SAP-009 (Agent Awareness)**:
+- Tag `affects_domains` with awareness file paths
+- Track AGENTS.md/CLAUDE.md updates via coordination
+- Enable awareness file graph navigation
+
+**SAP-010 (A-MEM)**:
+- Emit events with `coord_request` field for correlation
+- Use `affects_saps` tags for event categorization
+- Build event graphs linking coordination → implementation → completion
+
+### 7.3 Migration Guidance
+
+**For Existing Coordination Requests**:
+
+New fields are **optional** - existing coordination requests remain valid. To enhance existing requests:
+
+```bash
+# Add relationships to existing coordination request
+jq '. + {
+  "relationships": {
+    "blocks": [],
+    "blocked_by": [],
+    "related_to": [],
+    "spawns_tasks": [],
+    "supersedes": null,
+    "superseded_by": null
+  },
+  "affects_saps": ["SAP-001"],
+  "affects_domains": ["docs/skilled-awareness/inbox"]
+}' inbox/active/COORD-2025-010.json > temp.json && mv temp.json inbox/active/COORD-2025-010.json
+```
+
+**For New Coordination Requests**:
+
+Generators should include these fields by default:
+- `scripts/generate-coordination-request.py` updated to include relationship fields
+- Content blocks added for `affects_saps` and `affects_domains`
+- Default to empty arrays/null for relationships
+
+**Validation**:
+
+Schema validation remains backward-compatible:
+```bash
+# Validate enhanced coordination request
+python -m jsonschema -i inbox/active/COORD-2025-010.json schemas/coordination-request.json
+```
+
+---
+
+## 8. Reference Materials
 - **Schemas:**
-  - `schemas/coordination-request.json`
+  - `schemas/coordination-request.json` (v1.1.1+ with relationship metadata)
   - `schemas/implementation-task.json`
   - `schemas/strategic-proposal.json`
 - **Examples:**
@@ -96,11 +285,11 @@
 
 ---
 
-## 8. Opinionated Tooling & Reference Implementation
+## 9. Opinionated Tooling & Reference Implementation
 
 **Philosophy**: While the protocol itself remains tool-agnostic (pure Git + JSON/JSONL), this section documents the **recommended reference implementation** that provides excellent developer experience and AI agent ergonomics.
 
-### 8.1 Reference Implementation Components
+### 9.1 Reference Implementation Components
 
 **Core Tooling Stack**:
 - **Generator**: `scripts/generate-coordination-request.py` - AI-powered coordination request creation
@@ -114,7 +303,7 @@
 3. **Excellent DX** - 5-minute onboarding, one command per action
 4. **Ecosystem Scale** - Tools work identically across all adopting repositories
 
-### 8.2 Installation
+### 9.2 Installation
 
 **One-Command Setup**:
 ```bash
@@ -140,7 +329,7 @@ python scripts/install-inbox-protocol.py \
 
 **Time to Onboard**: <5 minutes for full setup
 
-### 8.3 Generator Architecture
+### 9.3 Generator Architecture
 
 **Four Generation Patterns**:
 
@@ -175,7 +364,7 @@ python scripts/generate-coordination-request.py \
 
 **Performance**: 10-15 seconds, ~$0.02-0.05 per request (Claude Sonnet 4.5)
 
-### 8.4 Agent Automation
+### 9.4 Agent Automation
 
 **Inbox Monitoring Workflow**:
 ```bash
@@ -203,7 +392,7 @@ python scripts/update-coordination-status.py \
 - Escalate blockers immediately
 - Emit events for all state transitions
 
-### 8.5 Discovery & Addressing
+### 9.5 Discovery & Addressing
 
 **Capability Registry** (`inbox/coordination/CAPABILITIES_<repo>.yaml`):
 ```yaml
@@ -241,7 +430,7 @@ status:
 - Query capability registry files to find providers
 - Future: `python scripts/discover-repos.py --capability mcp_server_hosting`
 
-### 8.6 Ecosystem Dashboard
+### 9.6 Ecosystem Dashboard
 
 **Status Tracking** (`inbox/coordination/ECOSYSTEM_STATUS.yaml`):
 - Updated weekly (every Sunday)
@@ -253,7 +442,7 @@ status:
 - Trace IDs link related work across repos (format: `kebab-case-name-YYYY`)
 - Example: W3 Health Monitoring traced 47 events across 4 repos
 
-### 8.7 Customization & Extension
+### 9.7 Customization & Extension
 
 **Adding Custom Content Blocks**:
 1. Create `inbox/content-blocks/content-block-YOUR_FIELD.json`
@@ -274,11 +463,11 @@ status:
 
 ---
 
-## 9. Service Level Agreements (SLAs)
+## 10. Service Level Agreements (SLAs)
 
 **Formalized Response Commitments**:
 
-### 9.1 Acknowledgment SLA
+### 10.1 Acknowledgment SLA
 
 **All repositories adopting SAP-001 commit to**:
 - **Acknowledgment Time**: Within **1 business day** of coordination item arrival
@@ -289,7 +478,7 @@ status:
 - If no acknowledgment within 1 business day → Escalate to GitHub issues
 - If no acknowledgment within 3 business days → Escalate to ecosystem coordinator
 
-### 9.2 Full Response SLA (Urgency-Based)
+### 10.2 Full Response SLA (Urgency-Based)
 
 | Urgency | Full Response Time | Definition |
 |---------|-------------------|------------|
@@ -303,7 +492,7 @@ status:
 - Timeline/milestones (if applicable)
 - Dependencies identified
 
-### 9.3 Status Update Cadence
+### 10.3 Status Update Cadence
 
 **For Active Coordination** (`inbox/active/`):
 - **Progress Updates**: Weekly (every Monday)
@@ -318,7 +507,7 @@ python scripts/update-coordination-status.py \
   --notes "Completed phase 1, starting phase 2. ETA: 4 days"
 ```
 
-### 9.4 Ecosystem Participation SLA
+### 10.4 Ecosystem Participation SLA
 
 **Weekly Broadcasts** (published every Sunday):
 - Review ecosystem status dashboard
@@ -330,7 +519,7 @@ python scripts/update-coordination-status.py \
 - Provide adoption feedback
 - Propose improvements via strategic proposals
 
-### 9.5 SLA Monitoring & Enforcement
+### 10.5 SLA Monitoring & Enforcement
 
 **Automated Tracking**:
 - `inbox/coordination/events.jsonl` timestamps all acknowledgments
@@ -350,9 +539,9 @@ python scripts/update-coordination-status.py \
 
 ---
 
-## 10. Adoption Strategy & Rollout
+## 11. Adoption Strategy & Rollout
 
-### 10.1 Current Adoption Status (as of 2025-11-02)
+### 11.1 Current Adoption Status (as of 2025-11-02)
 
 **Production Deployments**:
 - ✅ **chora-base** - 4 sprints of proven usage (70% acceptance rate, 82-142% ROI)
@@ -369,7 +558,7 @@ python scripts/update-coordination-status.py \
 3. **Observer Mode** (0 min commitment, receive broadcasts)
 4. **Decline** (no participation)
 
-### 10.2 Phased Rollout Plan
+### 11.2 Phased Rollout Plan
 
 **Phase 1: Foundation (Nov 2025 - Completed)**
 - ✅ SAP-001 v1.0.0 published
@@ -395,7 +584,7 @@ python scripts/update-coordination-status.py \
 - ⏳ Advanced routing and load balancing
 - ⏳ Governance formalization
 
-### 10.3 Ecosystem Invitation Process
+### 11.3 Ecosystem Invitation Process
 
 **For Repository Maintainers**:
 1. Receive invitation email/coordination request
@@ -413,7 +602,7 @@ python scripts/update-coordination-status.py \
 4. Practice with test coordination request
 5. Begin monitoring `inbox/incoming/coordination/`
 
-### 10.4 Success Metrics
+### 11.4 Success Metrics
 
 **Adoption Metrics**:
 - **Target**: ≥5 repositories by end of November 2025
@@ -432,9 +621,9 @@ python scripts/update-coordination-status.py \
 
 ---
 
-## 11. Governance & Long-Term Maintenance
+## 12. Governance & Long-Term Maintenance
 
-### 11.1 Protocol Evolution Process
+### 12.1 Protocol Evolution Process
 
 **Version Control**:
 - **Patch releases** (1.1.x): Documentation fixes, schema clarifications
@@ -448,7 +637,7 @@ python scripts/update-coordination-status.py \
 4. Migration guide published (for major changes)
 5. 30-day transition period before enforcement
 
-### 11.2 Capability Owner Responsibilities
+### 12.2 Capability Owner Responsibilities
 
 **Primary**: Victor Piper (as of 2025-11-02)
 - Quarterly review of protocol effectiveness
@@ -461,7 +650,7 @@ python scripts/update-coordination-status.py \
 - Nominate backup capability owner
 - Document handoff procedures
 
-### 11.3 Data Handling & Security
+### 12.3 Data Handling & Security
 
 **Current Policy** (v1.1.0):
 - **Assumption**: Trusted ecosystem of collaborators
@@ -474,7 +663,7 @@ python scripts/update-coordination-status.py \
 - Consider: Encryption for sensitive fields, access control, audit requirements
 - Regulatory compliance (if needed for specific ecosystems)
 
-### 11.4 Ecosystem Coordination Team
+### 12.4 Ecosystem Coordination Team
 
 **Composition** (Proposed):
 - 1 Capability Owner (Victor Piper)
@@ -494,9 +683,9 @@ python scripts/update-coordination-status.py \
 
 ---
 
-## 12. Future Enhancements (Roadmap)
+## 13. Future Enhancements (Roadmap)
 
-### 12.1 Planned for v1.2 (Q1 2026)
+### 13.1 Planned for v1.2 (Q1 2026)
 
 **Discovery & Registry**:
 - Centralized service registry (`inbox/ecosystem/REGISTRY.json`)
@@ -513,7 +702,7 @@ python scripts/update-coordination-status.py \
 - Health metrics visualization
 - Blocker tracking and alerts
 
-### 12.2 Considered for v2.0 (Q2 2026+)
+### 13.2 Considered for v2.0 (Q2 2026+)
 
 **Advanced Routing**:
 - Multi-recipient coordination with delivery modes (all/any/round_robin)
@@ -530,7 +719,7 @@ python scripts/update-coordination-status.py \
 - Cross-protocol event correlation
 - Federated ecosystem coordination
 
-### 12.3 Open Questions for Community Input
+### 13.3 Open Questions for Community Input
 
 1. **Should discovery be centralized or federated?**
    - Option A: Central registry in chora-base (simple, single point of failure)
@@ -579,7 +768,7 @@ python scripts/update-coordination-status.py \
 
 ---
 
-## 13. CHORA_TRACE_ID Propagation Protocol
+## 14. CHORA_TRACE_ID Propagation Protocol
 
 **Purpose**: Enable end-to-end traceability from coordination request → documentation → implementation → metrics → retrospectives.
 
@@ -590,7 +779,7 @@ python scripts/update-coordination-status.py \
 
 **Solution**: Standardized trace propagation protocol across 5 SAP touchpoints.
 
-### 13.1 Trace ID Format
+### 14.1 Trace ID Format
 
 **Standard Format**: `{domain}-{yyyy}-{nnn}`
 
@@ -604,7 +793,7 @@ python scripts/update-coordination-status.py \
 - `{yyyy}`: 4-digit year
 - `{nnn}`: 3-digit sequential number (zero-padded)
 
-### 13.2 Propagation Workflow
+### 14.2 Propagation Workflow
 
 **Step 1: Coordination Request Creation** (SAP-001)
 ```json
@@ -663,7 +852,7 @@ git commit -m "feat: implement task creation endpoint [trace: mcp-taskmgr-2025-0
   run: pytest --trace-id="$CHORA_TRACE_ID"
 ```
 
-### 13.3 Trace Propagation Tools
+### 14.3 Trace Propagation Tools
 
 **Script: `scripts/propagate-trace-id.sh`**
 
@@ -688,7 +877,7 @@ Automatically adds trace_id to documentation frontmatter:
 #   3. Query metrics by trace_id for lead time analysis
 ```
 
-### 13.4 Lead Time Analysis
+### 14.4 Lead Time Analysis
 
 **Query Metrics by Trace ID**:
 ```bash
@@ -706,7 +895,7 @@ grep 'mcp-taskmgr-2025-003' metrics/*.csv
 - Retrospectives with complete context
 - Evidence-based process improvements
 
-### 13.5 Adoption Guidance
+### 14.5 Adoption Guidance
 
 **For Repository Maintainers**:
 1. Add `trace_id` field to SAP-007 documentation frontmatter schema (optional)
@@ -730,6 +919,42 @@ grep 'mcp-taskmgr-2025-003' metrics/*.csv
 - [Context Flow Diagram](../../../project-docs/context-flow-diagram.md) - CHORA_TRACE_ID flow visualization
 - [SAP-007 Documentation Framework](../documentation-framework/protocol-spec.md) - Frontmatter schema
 - [SAP-013 Metrics Tracking](../metrics-tracking/protocol-spec.md) - ClaudeMetric class
+
+---
+
+## 13.7. Self-Evaluation Criteria
+
+### Awareness File Requirements (SAP-009 Phase 4)
+
+**Both AGENTS.md and CLAUDE.md Required** (Equivalent Support):
+- [ ] Both files exist in `docs/skilled-awareness/inbox/`
+- [ ] Both files have YAML frontmatter with progressive loading metadata
+- [ ] Workflow coverage equivalent (±30%): AGENTS.md ≈ CLAUDE.md workflows
+
+**Required Sections (Both Files)**:
+- [ ] Overview / Quick Start for Claude
+- [ ] User Signal Patterns / Common Workflows (AGENTS.md has pattern tables, CLAUDE.md has 3 workflows)
+- [ ] Best Practices / Claude-Specific Tips (5 each)
+- [ ] Common Pitfalls (5 each)
+- [ ] Integration / Support & Resources
+
+**Validation Commands**:
+```bash
+# Check both files exist
+test -f docs/skilled-awareness/inbox/AGENTS.md && \
+test -f docs/skilled-awareness/inbox/CLAUDE.md
+
+# Validate YAML frontmatter
+grep -A 10 "^---$" docs/skilled-awareness/inbox/CLAUDE.md | grep "progressive_loading:"
+
+# Run comprehensive evaluation
+python scripts/sap-evaluator.py --deep SAP-001
+```
+
+**Expected Workflow Coverage**:
+- AGENTS.md: User signal pattern tables (Inbox Operations, Coordination Requests, Ecosystem Status)
+- CLAUDE.md: 3 Claude Code workflows (Show Status with Read, Create Request with Write/Bash, Triage with Edit)
+- Rationale: AGENTS.md uses pattern tables for intent translation, CLAUDE.md focuses on Read/Write/Edit/Bash tool patterns
 
 ---
 
