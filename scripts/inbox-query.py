@@ -33,6 +33,12 @@ from datetime import datetime, timedelta
 from typing import List, Dict, Any, Optional
 import re
 
+# Add repo root to path for imports
+repo_root = Path(__file__).parent.parent
+sys.path.insert(0, str(repo_root / "scripts"))
+
+from usage_tracker import track_usage
+
 # Version
 VERSION = "1.0.0"
 
@@ -388,6 +394,7 @@ def format_output(items: List[Dict[str, Any]], output_format: str = "table") -> 
         return "\n".join(output)
 
 
+@track_usage
 def main():
     parser = argparse.ArgumentParser(
         description="Query inbox coordination items",

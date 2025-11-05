@@ -6,8 +6,22 @@
 
 ## 1. Capability Charter Template
 
-**Audience:** Maintainers, stakeholders, governance bodies  
+**Diataxis Category:** Explanation (Understanding-oriented)
+**Audience:** Maintainers, stakeholders, governance bodies
 **Goal:** Establish shared intent, scope, and success measures before protocols/blueprints are developed.
+
+**Diataxis Writing Guidelines**:
+- ✅ **DO**: Explain WHY this capability exists (problem context, motivation)
+- ✅ **DO**: Discuss design trade-offs and alternatives considered
+- ✅ **DO**: Provide rationale for key decisions
+- ✅ **DO**: Connect to broader strategic goals
+- ❌ **DON'T**: Include step-by-step installation instructions (belongs in adoption-blueprint)
+- ❌ **DON'T**: Document API specifications or schemas (belongs in protocol-spec)
+- ❌ **DON'T**: Describe specific task-solving workflows (belongs in awareness-guide)
+
+**Key Question**: "Why does this capability exist, and why did we design it this way?"
+
+See [SAP Diataxis Mapping](../../user-docs/reference/sap-diataxis-mapping.md#quadrant-4-explanation-understanding-oriented) for more guidance.
 
 ````markdown
 # Capability Charter: {{ capability_name }}
@@ -42,8 +56,22 @@
 
 ## 2. Protocol Specification Template
 
-**Audience:** Engineers, architects, tooling maintainers  
+**Diataxis Category:** Reference (Information-oriented)
+**Audience:** Engineers, architects, tooling maintainers
 **Goal:** Define the normative behavior, interfaces, and governance for the capability.
+
+**Diataxis Writing Guidelines**:
+- ✅ **DO**: Provide factual, comprehensive technical specifications
+- ✅ **DO**: Document data models, schemas, APIs, and interfaces
+- ✅ **DO**: Specify guarantees, constraints, and error cases
+- ✅ **DO**: Use consistent, predictable structure
+- ❌ **DON'T**: Use tutorial language ("Let's create...", "You'll learn...")
+- ❌ **DON'T**: Include problem-solving patterns (belongs in awareness-guide)
+- ❌ **DON'T**: Explain design rationale or why (belongs in capability-charter)
+
+**Key Question**: "What exactly does this capability do, and how is it technically specified?"
+
+See [SAP Diataxis Mapping](../../user-docs/reference/sap-diataxis-mapping.md#quadrant-3-reference-information-oriented) for more guidance.
 
 ````markdown
 # {{ capability_name }} Protocol Specification
@@ -90,8 +118,23 @@
 
 ## 3. Agent Awareness Guide Template
 
-**Audience:** AI agents (Claude, Codex, etc.) and human operators following playbooks  
+**Diataxis Category:** How-To Guide (Task-oriented)
+**Audience:** AI agents (Claude, Codex, etc.) and human operators following playbooks
 **Goal:** Translate the protocol into actionable behaviors, decision prompts, and context-loading strategies.
+
+**Diataxis Writing Guidelines**:
+- ✅ **DO**: Solve specific problems (task-oriented, goal → solution)
+- ✅ **DO**: Provide concrete examples for each workflow
+- ✅ **DO**: Assume reader understands basics (from adoption-blueprint)
+- ✅ **DO**: Include cross-domain references (dev-docs/, project-docs/, user-docs/)
+- ✅ **DO**: Document common pitfalls and troubleshooting
+- ❌ **DON'T**: Teach fundamentals step-by-step (belongs in adoption-blueprint)
+- ❌ **DON'T**: Provide pure technical specs without context (belongs in protocol-spec)
+- ❌ **DON'T**: Use hypothetical examples (use real, concrete ones)
+
+**Key Question**: "How do I use this capability to solve specific problems or complete specific tasks?"
+
+See [SAP Diataxis Mapping](../../user-docs/reference/sap-diataxis-mapping.md#quadrant-2-how-to-guides-task-oriented) for more guidance.
 
 ````markdown
 # {{ capability_name }} Awareness Guide
@@ -138,8 +181,24 @@
 
 ## 4. Adoption Blueprint Template
 
-**Audience:** Repository maintainers adopting the capability  
+**Diataxis Category:** Tutorial (Learning-oriented)
+**Audience:** Repository maintainers adopting the capability
 **Goal:** Provide a neutral installation/upgrade path that can be implemented via scripts, templates, or manual steps.
+
+**Diataxis Writing Guidelines**:
+- ✅ **DO**: Create a learning journey (teaches while doing)
+- ✅ **DO**: Provide sequential steps with expected outcomes at each stage
+- ✅ **DO**: Include validation checkpoints ("You should now have X")
+- ✅ **DO**: Make it beginner-friendly (minimal assumed knowledge beyond prerequisites)
+- ✅ **DO**: Ensure it's safe to experiment (clear rollback/validation)
+- ✅ **DO**: Include post-install awareness enablement (AGENTS.md updates)
+- ❌ **DON'T**: Focus on problem-solving or troubleshooting (belongs in awareness-guide)
+- ❌ **DON'T**: Include detailed API specifications (belongs in protocol-spec)
+- ❌ **DON'T**: Explain design rationale (belongs in capability-charter)
+
+**Key Question**: "How do I install and get started with this capability for the first time?"
+
+See [SAP Diataxis Mapping](../../user-docs/reference/sap-diataxis-mapping.md#quadrant-1-tutorials-learning-oriented) for more guidance.
 
 ````markdown
 # Adoption Blueprint: {{ capability_name }}
@@ -231,8 +290,22 @@ Update the SAP ledger to record your adoption:
 
 ## 5. Traceability Ledger Template
 
-**Audience:** Ecosystem coordinators, governance teams  
+**Diataxis Category:** Reference (Information-oriented)
+**Audience:** Ecosystem coordinators, governance teams
 **Goal:** Maintain a living record of adoption status, feedback, and lifecycle events across repositories.
+
+**Diataxis Writing Guidelines**:
+- ✅ **DO**: Record factual adoption data (who, when, version, status)
+- ✅ **DO**: Track version history with dates
+- ✅ **DO**: Use structured format (tables recommended)
+- ✅ **DO**: Keep it purely factual and objective
+- ❌ **DON'T**: Include tutorial or explanatory content
+- ❌ **DON'T**: Explain why or provide rationale (belongs in capability-charter)
+- ❌ **DON'T**: Include how-to or troubleshooting content (belongs in awareness-guide)
+
+**Key Question**: "What is the adoption status and version history of this capability?"
+
+See [SAP Diataxis Mapping](../../user-docs/reference/sap-diataxis-mapping.md#quadrant-3-reference-information-oriented) for more guidance.
 
 ````markdown
 # Skilled Awareness Package Ledger: {{ capability_name }}

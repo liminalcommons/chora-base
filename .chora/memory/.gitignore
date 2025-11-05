@@ -1,0 +1,17 @@
+# A-MEM (Agent Memory) - Exclude Sensitive Data
+#
+# This directory contains agent memory patterns for chora-base.
+# Some memory types may contain sensitive information and should not be committed.
+
+# Exclude sensitive memory types (uncomment if needed)
+# profiles/agents/*.json  # Agent profiles may contain API keys or credentials
+# traces/*/*.jsonl        # Trace data may contain sensitive execution details
+
+# Always include example files
+!*.example.jsonl
+!*.example.json
+!*.example.md
+
+# Include README files
+!README.md
+!*/README.md

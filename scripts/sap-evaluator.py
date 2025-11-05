@@ -45,6 +45,7 @@ from utils.sap_evaluation import (
     AdoptionRoadmap,
     format_quick_results
 )
+from usage_tracker import track_usage
 
 
 def print_quick_results_terminal(results: list[EvaluationResult] | EvaluationResult):
@@ -244,6 +245,7 @@ def save_yaml_roadmap(roadmap: AdoptionRoadmap, output_path: Path):
     print(f"✅ Roadmap saved to: {output_path}")
 
 
+@track_usage
 def main():
     parser = argparse.ArgumentParser(
         description="SAP Self-Evaluation Tool - Assess SAP adoption depth",

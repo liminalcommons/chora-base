@@ -34,6 +34,12 @@ import time
 from pathlib import Path
 from typing import Dict, List, Optional, Set, Tuple
 
+# Add repo root to path for imports
+repo_root = Path(__file__).parent.parent
+sys.path.insert(0, str(repo_root / "scripts"))
+
+from usage_tracker import track_usage
+
 try:
     import yaml
 except ImportError:
@@ -464,6 +470,7 @@ def print_summary(dry_run: bool) -> None:
 # Main
 #############################################################################
 
+@track_usage
 def main():
     """Main entry point"""
     parser = argparse.ArgumentParser(

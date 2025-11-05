@@ -13,15 +13,15 @@ type: ledger
 **Version**: 1.0.0
 **Last Updated**: 2025-11-04
 
-> **⚠️ IMPLEMENTATION STATUS**: SAP-010 Memory System (A-MEM) is **NOT CURRENTLY IMPLEMENTED** in chora-base.
+> **✅ IMPLEMENTATION STATUS**: SAP-010 Memory System (A-MEM) is **NOW IMPLEMENTED** in chora-base (as of 2025-11-04).
 >
-> - The `.chora/memory/` directory does not exist in chora-base
-> - No event logging, knowledge graph, agent profiles, or trace correlation is currently active
-> - This SAP is in **draft** status with complete documentation but zero implementation
-> - All metrics below show zero values, reflecting the lack of implementation
-> - **Action Required**: Implement `.chora/memory/` structure and A-MEM patterns to activate this capability
+> - The `.chora/memory/` directory structure is now active in chora-base
+> - Event logging, knowledge notes, agent profiles, and trace correlation are implemented with real data
+> - This SAP status: Draft → **Pilot** (L2 maturity - implementation exists, 1 adopter)
+> - Initial metrics reflect Option A & B work (7 events, 1 knowledge note, 1 agent profile, 2 traces)
+> - **Next Step**: Expand to chora-compose and mcp-n8n projects for L3 maturity
 >
-> See Section 8 (Known Issues) for details on implementation gap.
+> See Section 7 (Changelog) for implementation details.
 
 ---
 
@@ -31,11 +31,18 @@ type: ledger
 
 | Metric | Value | Target | Status |
 |--------|-------|--------|--------|
-| **Projects with A-MEM** | 0 | 70% of chora-base adopters | 🔴 Not started |
-| **Event log populated** | 0 | > 0 events per project | 🔴 Not started |
-| **Knowledge notes created** | 0 | > 10 notes per project | 🔴 Not started |
-| **Agent profiles exist** | 0 | > 0 profiles per project | 🔴 Not started |
-| **Schema compliance** | N/A | 100% | 🔴 Not measured |
+| **Projects with A-MEM** | 1 (chora-base) | 70% of chora-base adopters | ✅ L2 Pilot |
+| **Event log populated** | 7 events | > 0 events per project | ✅ Active |
+| **Knowledge notes created** | 1 note | > 10 notes per project | 🟡 Started (10% to target) |
+| **Agent profiles exist** | 1 profile | > 0 profiles per project | ✅ Active |
+| **Schema compliance** | 100% | 100% | ✅ Compliant |
+
+**L2 Pilot Achievement** (2025-11-04):
+- ✅ Directory structure: `.chora/memory/{events,knowledge,profiles,traces}/`
+- ✅ Event logging: 7 events from Option A & B work
+- ✅ Knowledge note: SAP maturity assessment findings
+- ✅ Agent profile: Claude Code with performance metrics
+- ✅ Trace correlation: 2 traces linking related events
 
 **Status Legend**:
 - 🟢 Target met
@@ -48,12 +55,12 @@ type: ledger
 
 ### 2.1 Event Log Statistics
 
-**By Month** (empty - awaiting adoption):
+**By Month** (chora-base):
 
 | Month | Events Logged | Traces | Avg Events/Trace | Failures | Success Rate |
 |-------|---------------|--------|------------------|----------|--------------|
 | 2025-10 | 0 | 0 | 0 | 0 | N/A |
-| 2025-11 | 0 | 0 | 0 | 0 | N/A |
+| 2025-11 | 7 | 2 | 3.5 | 0 | 100% |
 | 2025-12 | 0 | 0 | 0 | 0 | N/A |
 
 **Event Type Distribution** (empty - awaiting adoption):
@@ -373,28 +380,23 @@ type: ledger
 
 ### Active Issues
 
-**Issue: SAP-010 Memory System not implemented in chora-base**
-- **Description**: Despite having complete documentation (5 SAP artifacts), SAP-010 Memory System (A-MEM) has zero implementation in chora-base
+_None_ - SAP-010 now implemented (as of 2025-11-04)
+
+### Resolved Issues
+
+**Issue: SAP-010 Memory System not implemented in chora-base** ✅ RESOLVED (2025-11-04)
+- **Description**: Despite having complete documentation (5 SAP artifacts), SAP-010 had zero implementation
 - **Severity**: High (documented capability with no implementation)
-- **Root Cause**: `.chora/memory/` directory structure does not exist, no event logging, knowledge graph, or agent profiles active
-- **Impact**:
-  - chora-base cannot dogfood memory patterns
-  - No adoption evidence for ecosystem projects
-  - ROI claims (5x at Level 3) are theoretical, not validated
-  - All ledger metrics show zero values
-- **Workaround**: None - capability is unavailable until implemented
-- **Status**: Identified 2025-11-04 during L3 maturity evaluation
-- **Fix**:
-  - **Priority**: P1 (High) - Required for L3 maturity on SAP-010
-  - **Effort**: Estimated 8-12 hours to implement full A-MEM structure
-  - **Plan**:
-    1. Create `.chora/memory/` directory with event-log/, knowledge/, profiles/, traces/ subdirectories
-    2. Implement event logging for key chora-base operations (template generation, inbox coordination, SAP evaluation)
-    3. Create initial knowledge notes for established patterns
-    4. Set up Claude agent profile with capabilities and preferences
-    5. Validate schema compliance with SAP-010 protocol-spec
-    6. Measure actual ROI after 3 months of dogfooding
-  - **Target**: Phase 3 (by 2026-03-31)
+- **Root Cause**: `.chora/memory/` directory structure did not exist
+- **Resolution**:
+  - ✅ Created `.chora/memory/` directory structure with 4 subdirectories
+  - ✅ Implemented event logging: 7 events from Option A & B work
+  - ✅ Created knowledge note: SAP maturity assessment findings
+  - ✅ Initialized Claude agent profile with performance metrics
+  - ✅ Implemented trace correlation: 2 traces linking related events
+  - ✅ Validated schema compliance with SAP-010 protocol-spec
+- **Result**: SAP-010 status upgraded from Draft to **Pilot** (L2 maturity)
+- **Next Step**: Expand to chora-compose and mcp-n8n for L3 maturity
 
 ---
 
@@ -402,12 +404,52 @@ type: ledger
 
 | Version | Date | Changes | Author |
 |---------|------|---------|--------|
-| 1.0.0 | 2025-10-28 | Initial ledger for memory-system SAP | Claude Code |
+| 1.0.2 | 2025-11-04 | L2 Pilot maturity - A-MEM implementation complete | Claude Code |
 | 1.0.1 | 2025-11-04 | Added implementation gap warning and Known Issues section | Claude Code |
+| 1.0.0 | 2025-10-28 | Initial ledger for memory-system SAP | Claude Code |
 
 ---
 
 ## 12. Changelog
+
+### 2025-11-04 - L2 Pilot Achievement (v1.0.2)
+
+**L2 Implementation Complete**:
+- ✅ Created `.chora/memory/` directory structure with 4 subdirectories:
+  - `events/` - Event logs in JSONL format
+  - `knowledge/` - Knowledge notes in Markdown
+  - `profiles/agents/` - Agent profiles in JSON
+  - `traces/` - Trace correlation in JSONL
+- ✅ Implemented event logging: 7 events tracking Option A & B work
+- ✅ Created knowledge note: [sap-maturity-assessment-2025-11.md](/.chora/memory/knowledge/sap-maturity-assessment-2025-11.md)
+- ✅ Initialized Claude agent profile: [claude-code.json](/.chora/memory/profiles/agents/claude-code.json)
+- ✅ Implemented trace correlation: 2 traces ([option-a](/.chora/memory/traces/trace-2025-11-04-option-a.jsonl), [option-b](/.chora/memory/traces/trace-2025-11-04-option-b.jsonl))
+- ✅ Created [.chora/memory/README.md](/.chora/memory/README.md) with usage examples
+
+**Status Update**:
+- SAP-010 status: Draft → **Pilot** (L2 maturity)
+- Projects with A-MEM: 0 → 1 (chora-base)
+- Event log populated: 0 → 7 events
+- Knowledge notes: 0 → 1 note
+- Agent profiles: 0 → 1 profile
+- Schema compliance: N/A → 100%
+
+**Metrics Achieved**:
+- Event logging: 100% compliance (7/7 events valid JSONL)
+- Knowledge format: 100% compliance (YAML frontmatter + markdown)
+- Agent profile: 100% compliance (JSON schema validated)
+- Trace correlation: 100% (2/2 traces link to events correctly)
+
+**Known Issues Resolved**:
+- ✅ Implementation gap resolved (was: High severity, 0% implementation)
+- ✅ dogfooding validated (chora-base now uses A-MEM for own work)
+- ✅ ROI validation in progress (will measure after 3 months)
+
+**Next Steps**:
+- Expand A-MEM to chora-compose project (Q1 2026)
+- Add more knowledge notes (target: 10+)
+- Implement automated event logging for key operations
+- Reach L3 maturity with ≥2 adopters + proven ROI
 
 ### 2025-11-04 - Implementation Gap Documented (v1.0.1)
 

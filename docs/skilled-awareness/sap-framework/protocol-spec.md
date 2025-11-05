@@ -620,6 +620,7 @@ blueprint_step:
 - ✅ All 5 artifacts present
 - ✅ All required sections complete
 - ✅ YAML frontmatter valid
+- ✅ **Diataxis compliance: 4/5 artifacts pass category alignment check**
 - ✅ Blueprint tested by at least one agent
 - ✅ At least one adopter committed to pilot
 
@@ -627,6 +628,8 @@ blueprint_step:
 - ✅ Pilot feedback addressed
 - ✅ At least 2 successful pilot adoptions
 - ✅ Ledger has pilot adopter records
+- ✅ **Diataxis compliance: 5/5 artifacts fully aligned with their categories**
+- ✅ **No critical Diataxis category misalignments** (e.g., tutorials in reference docs)
 - ✅ No blocking issues
 
 ### 6.2 Blueprint Quality
@@ -654,6 +657,75 @@ blueprint_step:
 - ⚠️ Diagrams (state machines, workflows)
 - ⚠️ Cross-references to related docs
 - ⚠️ Evidence/research citations
+
+### 6.4 Diataxis Framework Compliance
+
+**Background**: SAP structure is explicitly designed around the [Diataxis framework](https://diataxis.fr/), which defines four distinct documentation types based on user intent. Each SAP artifact maps to a specific Diataxis category.
+
+**Artifact-to-Diataxis Mapping**:
+
+| SAP Artifact | Diataxis Category | Primary Purpose | Key Characteristics |
+|--------------|-------------------|-----------------|---------------------|
+| **capability-charter.md** | **Explanation** | Understanding-oriented | WHY it exists, context, rationale, trade-offs |
+| **protocol-spec.md** | **Reference** | Information-oriented | Technical specs, APIs, data models, contracts |
+| **awareness-guide.md** | **How-To Guide** | Task-oriented | Solve specific problems, workflows, patterns |
+| **adoption-blueprint.md** | **Tutorial** | Learning-oriented | Step-by-step installation, getting started |
+| **ledger.md** | **Reference** | Information-oriented | Factual records, version history, adoptions |
+
+**Required for Diataxis Compliance**:
+
+**Capability-Charter (Explanation)**:
+- ✅ Explains WHY capability exists (not just WHAT it does)
+- ✅ Provides context, background, motivation
+- ✅ Discusses trade-offs and design decisions
+- ❌ Avoids step-by-step instructions (belongs in blueprint)
+- ❌ Avoids API specifications (belongs in protocol-spec)
+
+**Protocol-Spec (Reference)**:
+- ✅ Factual, comprehensive, structured technical information
+- ✅ API/schema/data model specifications
+- ✅ Constraints, guarantees, error cases
+- ❌ Avoids learning journeys or progressive teaching (belongs in tutorial)
+- ❌ Avoids task-solving patterns (belongs in how-to)
+
+**Awareness-Guide (How-To)**:
+- ✅ Solves specific problems (task-oriented)
+- ✅ Assumes knowledge (not teaching fundamentals)
+- ✅ Concrete examples for each task
+- ✅ Cross-references to related content (2+ domains recommended)
+- ❌ Avoids teaching fundamentals step-by-step (belongs in blueprint)
+- ❌ Avoids pure specifications without context (belongs in protocol-spec)
+
+**Adoption-Blueprint (Tutorial)**:
+- ✅ Learning-oriented (teaches while doing)
+- ✅ Sequential steps with expected outcomes
+- ✅ Safe to experiment (clear validation points)
+- ✅ Beginner-friendly (no assumed knowledge beyond prerequisites)
+- ❌ Avoids problem-solving focus (belongs in how-to)
+- ❌ Avoids detailed specifications (belongs in protocol-spec)
+
+**Ledger (Reference)**:
+- ✅ Factual adoption records
+- ✅ Version history with dates
+- ❌ No explanatory or tutorial content
+
+**Validation Process**:
+- Follow [SAP Audit Workflow](../../dev-docs/workflows/SAP_AUDIT_WORKFLOW.md) Step 4.6
+- Use Diataxis compliance scorecard (pass/partial/fail per artifact)
+- Address critical category misalignments before Pilot status
+- Achieve full compliance before Active status
+
+**Common Anti-Patterns to Avoid**:
+- ❌ Tutorial content in reference docs (e.g., "First, do X, then Y" in protocol-spec)
+- ❌ API specifications in tutorials (e.g., schema definitions in adoption-blueprint)
+- ❌ Design rationale in how-to guides (e.g., "we chose this approach because..." in awareness-guide)
+- ❌ Problem-solving patterns in tutorials (e.g., "if you encounter error X, do Y" belongs in awareness-guide troubleshooting)
+- ❌ Generic problem statements without context in charters
+
+**Reference**:
+- [SAP Diataxis Decision Matrix](../../user-docs/reference/sap-diataxis-mapping.md) (to be created)
+- [Diataxis Framework Documentation](https://diataxis.fr/)
+- [SAP-007: Documentation Framework](../documentation-framework/) - Comprehensive Diataxis guidance
 
 ---
 

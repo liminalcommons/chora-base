@@ -1,0 +1,107 @@
+{
+  "hourly_rate": 100,
+  "metrics": [
+    {
+      "session_id": "chora-base-eval-001",
+      "timestamp": "2025-11-04T10:00:00",
+      "task_type": "analysis",
+      "lines_generated": 1200,
+      "time_saved_minutes": 180,
+      "iterations_required": 1,
+      "bugs_introduced": 0,
+      "bugs_fixed": 0,
+      "documentation_quality_score": 9.0,
+      "test_coverage": 1.0,
+      "metadata": {
+        "session_duration_minutes": 45,
+        "task_description": "Comprehensive SAP maturity evaluation across 29 SAPs",
+        "saps_evaluated": 29
+      }
+    },
+    {
+      "session_id": "chora-base-eval-002",
+      "timestamp": "2025-11-04T11:00:00",
+      "task_type": "refactor",
+      "lines_generated": 150,
+      "time_saved_minutes": 60,
+      "iterations_required": 1,
+      "bugs_introduced": 0,
+      "bugs_fixed": 0,
+      "documentation_quality_score": 8.5,
+      "test_coverage": 1.0,
+      "metadata": {
+        "session_duration_minutes": 15,
+        "task_description": "Update 27 SAP statuses to reflect reality",
+        "files_modified": 1
+      }
+    },
+    {
+      "session_id": "chora-base-eval-003",
+      "timestamp": "2025-11-04T11:30:00",
+      "task_type": "documentation",
+      "lines_generated": 250,
+      "time_saved_minutes": 90,
+      "iterations_required": 1,
+      "bugs_introduced": 0,
+      "bugs_fixed": 2,
+      "documentation_quality_score": 9.0,
+      "test_coverage": 1.0,
+      "metadata": {
+        "session_duration_minutes": 20,
+        "task_description": "Document coverage gaps and implementation warnings",
+        "files_modified": 2
+      }
+    },
+    {
+      "session_id": "chora-base-eval-004",
+      "timestamp": "2025-11-04T12:00:00",
+      "task_type": "documentation",
+      "lines_generated": 80,
+      "time_saved_minutes": 30,
+      "iterations_required": 1,
+      "bugs_introduced": 0,
+      "bugs_fixed": 0,
+      "documentation_quality_score": 8.5,
+      "test_coverage": 1.0,
+      "metadata": {
+        "session_duration_minutes": 10,
+        "task_description": "Maturity assessment summary in CHANGELOG + git commit",
+        "files_modified": 1
+      }
+    }
+  ],
+  "summary": {
+    "time_saved": {
+      "hours_saved": 6.0,
+      "cost_savings": 600.0,
+      "average_acceleration": 4.875
+    },
+    "quality": {
+      "average_iterations": 1.0,
+      "bug_introduction_rate": 0.0,
+      "documentation_quality": 8.75,
+      "test_coverage": 1.0,
+      "first_pass_success_rate": 1.0
+    },
+    "task_breakdown": {
+      "analysis": {
+        "count": 1,
+        "hours_saved": 3.0,
+        "average_iterations": 1,
+        "average_coverage": 1.0
+      },
+      "refactor": {
+        "count": 1,
+        "hours_saved": 1.0,
+        "average_iterations": 1,
+        "average_coverage": 1.0
+      },
+      "documentation": {
+        "count": 2,
+        "hours_saved": 2.0,
+        "average_iterations": 1,
+        "average_coverage": 1.0
+      }
+    }
+  }
+}

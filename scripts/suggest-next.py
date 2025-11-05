@@ -18,12 +18,19 @@ Usage:
 import argparse
 import json
 import subprocess
+import sys
 from dataclasses import dataclass, field
 from datetime import datetime, timedelta
 from pathlib import Path
 from typing import Optional
 
 import yaml
+
+# Add repo root to path for imports
+repo_root = Path(__file__).parent.parent
+sys.path.insert(0, str(repo_root / "scripts"))
+
+from usage_tracker import track_usage
 
 
 @dataclass
@@ -582,6 +589,7 @@ def display_suggestions(suggestions: list[Suggestion]) -> None:
         print()
 
 
+@track_usage
 def main():
     """CLI entry point."""
     parser = argparse.ArgumentParser(

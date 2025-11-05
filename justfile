@@ -9,7 +9,15 @@ default:
 generate-sap SAP_ID:
     python scripts/generate-sap.py {{SAP_ID}}
 
-# Validate SAP artifacts with quick check
+# Validate SAP structure (5 artifacts, frontmatter)
+validate-sap-structure SAP_PATH:
+    python scripts/sap-validate.py {{SAP_PATH}}
+
+# Validate all SAPs in docs/skilled-awareness/
+validate-all-saps:
+    python scripts/sap-validate.py --all
+
+# Validate SAP maturity with quick check
 validate-sap SAP_ID:
     python scripts/sap-evaluator.py --quick {{SAP_ID}}
 
