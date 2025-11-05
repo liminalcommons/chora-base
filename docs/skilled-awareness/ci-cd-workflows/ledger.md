@@ -1,17 +1,49 @@
 # Traceability Ledger: CI/CD Workflows
 
 **SAP ID**: SAP-005
-**Current Version**: 1.0.0
-**Status**: Active (Level 3)
-**Last Updated**: 2025-11-04
+**Current Version**: 1.0.1
+**Status**: Active (Level 3 - Template, Level 0 - Project)
+**Last Updated**: 2025-11-05
+
+---
+
+## ⚠️ IMPORTANT: Template vs Project-Level Adoption
+
+**chora-base serves TWO roles:**
+1. **Template Provider**: Distributes CI/CD workflows via `static-template/` to downstream projects
+2. **Development Project**: The chora-base repository itself
+
+**SAP-005 Adoption Levels:**
+- **Template-Level Adoption: L3** ✅ (This ledger tracks template adoption)
+  - Location: `static-template/.github/workflows/`
+  - 8 workflows operational and distributed to all projects using chora-base
+  - Projects inheriting template get instant L3 CI/CD
+
+- **Project-Level Adoption: L0** ⚠️ (chora-base repository itself)
+  - Location: `.github/workflows/` (project root)
+  - **No workflows installed** - chora-base doesn't run CI/CD on itself
+  - This is INTENTIONAL: chora-base is a meta-project (template + docs)
+  - No compilation, tests run manually, no releases via GitHub
+
+**Why This Matters:**
+- When evaluating SAP-005, specify WHICH level you're checking
+- Template-level L3 = Workflows ready for distribution ✅
+- Project-level L0 = chora-base itself doesn't use workflows ⚠️
+- This pattern applies to SAP-003, SAP-006, and other template-based SAPs
+
+**Resolution (2025-11-05):**
+- Clarified that SAP-005 ledger tracks **template-level adoption** (L3)
+- Project-level adoption is L0 and this is acceptable for meta-projects
+- Future SAPs should specify template vs project level in ledger header
 
 ---
 
 ## 1. Deployment Tracking
 
-| Project | Workflows Installed | CI Integration | Last Run | Status | Notes |
-|---------|---------------------|----------------|----------|--------|-------|
-| chora-base | ✅ All 8 workflows | ✅ GitHub Actions | 2025-11-04 | ✅ Passing | Comprehensive L3 system |
+| Project | Adoption Type | Workflows Installed | CI Integration | Status | Notes |
+|---------|---------------|---------------------|----------------|--------|-------|
+| chora-base (template) | Template-Level L3 | ✅ All 8 workflows in static-template/ | ✅ GitHub Actions | ✅ Active | Distributed to all downstream projects |
+| chora-base (project) | Project-Level L0 | ❌ No .github/workflows/ | N/A | ⚠️ Intentional | Meta-project, no CI needed |
 
 ---
 

@@ -1,17 +1,55 @@
 # Traceability Ledger: Testing Framework
 
 **SAP ID**: SAP-004
-**Current Version**: 1.0.0
-**Status**: Active (Level 3)
-**Last Updated**: 2025-11-04
+**Current Version**: 1.0.1
+**Status**: Active (Level 3 - Template, Level 1 - Project)
+**Last Updated**: 2025-11-05
+
+---
+
+## ⚠️ IMPORTANT: Template vs Project-Level Adoption
+
+**chora-base serves TWO roles:**
+1. **Template Provider**: Distributes testing framework via `static-template/` to downstream projects
+2. **Development Project**: The chora-base repository itself
+
+**SAP-004 Adoption Levels:**
+- **Template-Level Adoption: L3** ✅ (This ledger tracks template adoption)
+  - Location: `static-template/tests/`, `static-template/pytest.ini`, `static-template/.coveragerc`
+  - pytest 8.3.0, pytest-asyncio 0.24.0, pytest-cov 6.0.0
+  - 85% coverage threshold enforced in pytest.ini
+  - 6 test pattern templates available
+  - Projects inheriting template get instant L3 testing framework
+
+- **Project-Level Adoption: L1** ⚠️ (chora-base repository itself)
+  - Location: `tests/` (project root)
+  - 60 tests written, 100% pass rate
+  - **Coverage: 4%** (measured 2025-11-05)
+    - scripts/install-sap.py: 79% (well-tested)
+    - scripts/usage_tracker.py: 17% (minimal tests)
+    - All other scripts: 0% (no tests)
+  - **Gap**: 4% << 85% target (81 percentage points below target)
+  - **Why**: Most scripts (40+) lack tests, only install-sap.py is well-tested
+
+**Previous Ledger Claims**:
+- Line 14 claimed "85% coverage" - **OVER-REPORTED** (actually 4%)
+- Line 47 said "49.7% coverage" - **ALSO OVER-REPORTED** (actually 4%)
+- Ledger was written aspirationally, not based on actual measurement
+
+**Resolution (2025-11-05)**:
+- Clarified that SAP-004 ledger tracks **template-level adoption** (L3)
+- Project-level adoption downgraded to L1 (tests exist, but coverage is 4%)
+- Realistic project-level L3 would require 85% coverage (need +81 percentage points)
+- Estimated effort to reach project-level L3: ~20-30 hours (test 40+ scripts)
 
 ---
 
 ## 1. Projects Using Testing Framework
 
-| Project | Coverage | Status | Last Updated | Notes |
-|---------|----------|--------|--------------|-------|
-| chora-base | 85% | ✅ L3 Active | 2025-11-04 | **At target!** 60 tests, 100% pass rate, coverage threshold enforced in pytest.ini, test quality metrics documented in AGENTS.md |
+| Project | Adoption Type | Coverage | Status | Last Updated | Notes |
+|---------|---------------|----------|--------|--------------|-------|
+| chora-base (template) | Template-Level L3 | 85% (standard) | ✅ Active | 2025-11-05 | Pytest framework with 85% threshold distributed to all projects |
+| chora-base (project) | Project-Level L1 | 4% (actual) | ⚠️ Gap | 2025-11-05 | 60 tests exist, 100% pass, but only install-sap.py well-tested (79%). Need 81 more percentage points for L3. |
 | chora-compose | ~80% | Improving | 2025-10-20 | Working toward 85% |
 | mcp-n8n | ~75% | Active | 2025-10-22 | Coverage improvement in progress |
 | _Other projects_ | - | - | - | Add as adopted |
