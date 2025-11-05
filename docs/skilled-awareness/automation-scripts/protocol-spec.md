@@ -765,6 +765,74 @@ another_command  # Only runs if some_command succeeded
 
 ---
 
+## 7.5. Self-Evaluation Criteria
+
+### Awareness File Requirements (SAP-009 Phase 4)
+
+**Both AGENTS.md and CLAUDE.md Required** (Equivalent Support):
+- [ ] Both files exist in `docs/skilled-awareness/automation-scripts/`
+- [ ] Both files have YAML frontmatter with progressive loading metadata
+- [ ] Workflow coverage equivalent (±30%): AGENTS.md ≈ CLAUDE.md workflows
+
+**Required Sections (Both Files)**:
+- [ ] Quick Reference / Quick Start for Claude
+- [ ] Common Workflows / Claude Code Workflows (6 workflows in AGENTS.md, 3 in CLAUDE.md)
+- [ ] Best Practices / Claude-Specific Tips (5 each)
+- [ ] Common Pitfalls (5 each)
+- [ ] Integration with Other SAPs / Support & Resources
+
+**Source Artifact Coverage (Both Files)**:
+- [ ] capability-charter.md problem statement → "When to Use" section
+- [ ] protocol-spec.md script categories/contracts → "Common Tasks" section
+- [ ] awareness-guide.md workflows → "Common Workflows" section
+- [ ] adoption-blueprint.md installation → "Quick Reference" section
+- [ ] ledger.md script adoption → referenced in "Best Practices"
+
+**YAML Frontmatter Fields** (Required):
+```yaml
+sap_id: SAP-008
+version: X.Y.Z
+status: active | pilot | draft
+last_updated: YYYY-MM-DD
+type: reference
+audience: agents | claude_code
+complexity: beginner | intermediate | advanced
+estimated_reading_time: N
+progressive_loading:
+  phase_1: "lines 1-X"
+  phase_2: "lines X-Y"
+  phase_3: "full"
+phase_1_token_estimate: NNNN
+phase_2_token_estimate: NNNN
+phase_3_token_estimate: NNNN
+```
+
+**Validation Commands**:
+```bash
+# Check both files exist
+test -f docs/skilled-awareness/automation-scripts/AGENTS.md && \
+test -f docs/skilled-awareness/automation-scripts/CLAUDE.md
+
+# Validate YAML frontmatter
+grep -A 10 "^---$" docs/skilled-awareness/automation-scripts/AGENTS.md | grep "progressive_loading:"
+grep -A 10 "^---$" docs/skilled-awareness/automation-scripts/CLAUDE.md | grep "progressive_loading:"
+
+# Check workflow count equivalence (should be within ±30%)
+agents_workflows=$(grep "^### Workflow" docs/skilled-awareness/automation-scripts/AGENTS.md | wc -l)
+claude_workflows=$(grep "^### Workflow" docs/skilled-awareness/automation-scripts/CLAUDE.md | wc -l)
+echo "AGENTS workflows: $agents_workflows, CLAUDE workflows: $claude_workflows"
+
+# Run comprehensive evaluation
+python scripts/sap-evaluator.py --deep SAP-008
+```
+
+**Expected Workflow Coverage**:
+- AGENTS.md: 6 generic workflows (Pre-Merge, Release, Development Loop, Diagnose, Docs, Troubleshoot)
+- CLAUDE.md: 3 Claude Code workflows (Pre-Merge with Bash, Release with Bash, Development Loop)
+- Rationale: Different granularity acceptable - AGENTS.md covers all justfile patterns, CLAUDE.md focuses on Bash tool usage for `just` commands
+
+---
+
 ## 8. Related Documents
 
 **Scripts** (in `static-template/scripts/`):
