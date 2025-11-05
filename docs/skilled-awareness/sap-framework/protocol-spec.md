@@ -356,6 +356,94 @@ python scripts/install-sap.py --list-sets
 - Catalog MUST be valid JSON
 - Catalog version MUST match chora-base version
 
+**Standardized Relationship Fields**:
+
+All SAPs SHOULD use these standardized relationship fields in sap-catalog.json for consistent curation and dependency analysis:
+
+```json
+{
+  "id": "SAP-015",
+  "name": "task-tracking",
+  // ... other fields ...
+  "dependencies": ["SAP-000"],           // Hard dependencies (REQUIRED for installation)
+  "related_saps": {                      // Soft relationships (NOT required, but beneficial)
+    "integrates_with": ["SAP-001", "SAP-010"],  // Bi-directional integrations
+    "complements": ["SAP-009"],                  // Enhances but not required
+    "alternative_to": [],                        // Mutually exclusive options
+    "supersedes": [],                            // Replaces older SAP
+    "superseded_by": null                        // Deprecated, use this instead
+  },
+  "tags": ["task-tracking", "beads", "agent-memory"]  // Use vocabulary from .chora/conventions/tag-vocabulary.yaml
+}
+```
+
+**Relationship Field Definitions**:
+- `dependencies`: Hard dependencies. Installation MUST install these first. Installation MUST fail if dependencies cannot be satisfied.
+- `integrates_with`: Bi-directional soft integration. Both SAPs benefit when used together. Example: SAP-001 + SAP-015 (inbox decomposes into beads tasks).
+- `complements`: One-directional enhancement. This SAP enhances the referenced SAP. Example: SAP-009 complements all SAPs (provides awareness).
+- `alternative_to`: Mutually exclusive. Use one OR the other, not both. Example: SAP-X (zustand) alternative_to SAP-Y (redux).
+- `supersedes`: This SAP replaces an older SAP. Old SAP should be deprecated. Example: SAP-015 supersedes SAP-014 (if SAP-014 existed).
+- `superseded_by`: This SAP is deprecated. Use the referenced SAP instead. Status SHOULD be "deprecated".
+
+**Tag Vocabulary**:
+
+All SAPs MUST use tags from the standardized vocabulary defined in `.chora/conventions/tag-vocabulary.yaml`. This ensures consistent filtering, search, and curation.
+
+**Tag Usage Guidelines**:
+- Use 2-5 tags per SAP (optimize for discoverability)
+- Include at least one taxonomy parent tag (e.g., `meta`, `frontend`, `ci-cd`)
+- Use canonical tags, not aliases (e.g., `coordination` not `coord`)
+- Consult `.chora/conventions/tag-vocabulary.yaml` for complete vocabulary
+
+**File Touch Metadata**:
+
+All SAPs SHOULD document which files they create, modify, or read using the `affects_files` field. This enables impact analysis, conflict detection, and rollback planning.
+
+```json
+{
+  "id": "SAP-003",
+  "name": "project-bootstrap",
+  // ... other fields ...
+  "affects_files": {
+    "creates": [
+      "static-template/**",
+      "pyproject.toml",
+      "README.md"
+    ],
+    "modifies": [
+      ".gitignore",
+      "pyproject.toml"
+    ],
+    "reads": [
+      ".chora/config.yaml",
+      "sap-catalog.json"
+    ]
+  },
+  "affects_domains": [
+    "implementation",
+    "docs/user-docs"
+  ]
+}
+```
+
+**Field Definitions**:
+- `affects_files.creates`: File patterns created by this SAP during adoption. Use glob patterns (e.g., `**/*.py` for all Python files).
+- `affects_files.modifies`: File patterns modified by this SAP. May overlap with `creates` if SAP creates then modifies.
+- `affects_files.reads`: File patterns read by this SAP (dependencies, configs). Useful for understanding SAP's environmental requirements.
+- `affects_domains`: Documentation domains affected (e.g., `docs/skilled-awareness`, `docs/dev-docs`, `implementation` for source code).
+
+**Use Cases**:
+- **Impact Analysis**: "Which SAPs will be affected if I change `pyproject.toml`?"
+- **Conflict Detection**: "Do SAP-003 and SAP-011 both modify `.gitignore`?"
+- **Rollback Planning**: "Which files should I remove to uninstall SAP-003?"
+- **Curation**: "Show me all SAPs that create configuration files"
+
+**Glob Pattern Guidelines**:
+- Use `**` for recursive directory matching (e.g., `src/**/*.py`)
+- Use `*` for single-level wildcard (e.g., `*.md`)
+- Be specific where possible (e.g., `pyproject.toml` not `*.toml`)
+- Group related files (e.g., `static-template/**` instead of listing 50 individual files)
+
 #### 3.4.3 SAP Sets
 
 **SAP Sets** are curated bundles of SAPs for specific use cases.

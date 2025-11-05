@@ -43,6 +43,17 @@ SAP-005 provides:
 
 **Context**: You have a new Python project and want to add GitHub Actions workflows for testing, linting, and security
 
+**Research First** (Optional but recommended):
+```bash
+# Research CI/CD best practices before setup
+just research "CI/CD best practices: GitHub Actions, trunk-based development, DORA metrics"
+
+# Use research to inform workflow design:
+# - DORA metrics → add deployment frequency tracking
+# - Decision playbooks → choose between matrix vs separate jobs
+# - Anti-patterns → avoid flaky tests, excessive builds
+```
+
 **Steps**:
 1. Copy workflow files from static-template/.github/workflows/ to project:
    - test.yml (matrix testing, coverage)

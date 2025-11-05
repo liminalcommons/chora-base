@@ -516,11 +516,35 @@ static-template/tests/conftest.py  # No variables, copy as-is
 
 ### DO
 
+- ✅ Research tech stack choices before bootstrap (use research template for framework comparison)
 - ✅ Read SAP-003 Protocol before generating (understand contracts)
 - ✅ Validate after generation (pytest --collect-only)
 - ✅ Check for unreplaced placeholders (grep "{{")
 - ✅ Use derived variables (project_slug from project_name)
 - ✅ Test generation with edge cases (special characters, long names)
+
+### Tech Stack Research Pattern
+
+**Before bootstrapping a new project**, research tech stack choices:
+
+```bash
+# Example: Evaluating React frameworks for frontend
+just research "React SSR frameworks comparison: Next.js 15, Remix, Vite SSR"
+
+# Example: Evaluating Python web frameworks
+just research "Python web frameworks 2025: FastAPI, Django, Flask comparison"
+```
+
+**Use research to inform bootstrap decisions**:
+- Framework choice (Next.js vs Remix vs Vite)
+- Testing strategy (pytest vs unittest, Vitest vs Jest)
+- CI/CD platform (GitHub Actions vs GitLab CI)
+- Deployment target (Vercel vs self-hosted)
+
+**Cite research in project docs**:
+- Add research report link to README.md "Why we chose X"
+- Reference decision playbooks in architecture docs
+- Include anti-patterns from research in contributing guidelines
 
 ### DON'T
 

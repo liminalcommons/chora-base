@@ -113,6 +113,22 @@ This ledger tracks adoption of SAP-015 (Agent Task Tracking with Beads) across t
 
 *No entries yet (pilot phase just started)*
 
+### Research Validation Notes
+
+**Note (2025-11-04)**: SAP-015 was adopted based on prior research and industry validation (beads tool selection). Future SAPs should use the research template (`docs/templates/research-prompt-template.md`) **before** technology selection to:
+
+- **Validate evidence levels**: Ensure ≥30% Level A (standards, peer-reviewed), ≥40% Level B (case studies)
+- **Compare alternatives**: Beads vs TaskWarrior vs Linear vs Jira (CLI-based task tracking)
+- **Document trade-offs**: Why beads over alternatives (git-committed JSONL, cross-session persistence, Claude Code integration)
+- **Extract anti-patterns**: From case studies of failed task tracking adoption
+
+**Retrospective**: If SAP-015 were created today, Week 0 would use:
+```bash
+just research "CLI-based task tracking for AI agents: persistent memory across sessions"
+```
+
+This pattern is now formalized in SAP-027 (dogfooding-patterns) and SAP-029 (sap-generation) as of 2025-11-04.
+
 ---
 
 ## Usage Metrics
