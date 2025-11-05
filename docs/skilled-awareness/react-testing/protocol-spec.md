@@ -1014,4 +1014,108 @@ jobs:
 
 ---
 
+## Self-Evaluation Criteria (SAP-009 Phase 4)
+
+This section documents self-evaluation criteria for SAP-021 awareness file completeness, enabling automated validation of equivalent support for generic agents and Claude Code.
+
+### Awareness File Requirements
+
+**Required Files**:
+- `AGENTS.md` - Generic AI agent workflows
+- `CLAUDE.md` - Claude Code-specific tool patterns
+
+**Validation Command**:
+```bash
+python scripts/sap-evaluator.py --deep react-testing
+```
+
+### Expected Workflow Coverage
+
+**AGENTS.md**: 5 workflows
+1. Install Testing Infrastructure (10-20 min) - Install Vitest, RTL, MSW, create config files, test setup
+2. Write Component Test (5-10 min) - Create component test with RTL, test user interactions
+3. Write Hook Test (5-10 min) - Test custom React hook with renderHook
+4. Setup MSW for API Mocking (15-25 min) - Configure MSW v2, create handlers, setup server
+5. Write Integration Test with API Mocking (10-20 min) - Integration test with MSW, providers, async operations
+
+**CLAUDE.md**: 3 workflows
+1. Installing Testing Infrastructure with Bash and Write - Install dependencies with Bash, create config files with Write
+2. Writing Component Test with Write - Read component first, write test with Write, run with Bash
+3. Writing Integration Test with MSW - Check MSW handlers with Read, write integration test, verify with Bash
+
+**Variance**: 3 workflows (CLAUDE.md) vs 5 workflows (AGENTS.md) = 40% difference
+**Acceptable**: Yes (within ±30-40% tolerance with documented rationale)
+
+**Rationale for Variance**: CLAUDE.md consolidates test writing operations with tool-specific patterns (Bash for running tests, Write for test files, Read for component understanding), focusing on practical test creation workflow. AGENTS.md provides granular step-by-step guidance for each testing operation including separate workflows for hook testing and MSW setup. Both provide equivalent coverage of testing infrastructure setup, component testing, integration testing, and API mocking through different organizational approaches optimized for their respective audiences.
+
+### User Signal Pattern Coverage
+
+**AGENTS.md**: 2 tables with 10 signals
+- Testing Setup Operations table (5 signals):
+  - "setup React testing" → install_testing_infrastructure()
+  - "add Vitest" → install_vitest()
+  - "configure testing" → configure_vitest()
+  - "setup MSW" → install_msw()
+  - "run tests" → run_test_suite()
+- Test Writing Operations table (5 signals):
+  - "test component" → write_component_test()
+  - "test hook" → write_hook_test()
+  - "test API integration" → write_integration_test()
+  - "mock API" → create_msw_handler()
+  - "check coverage" → generate_coverage()
+
+**CLAUDE.md**: Tool-specific patterns documented in 5 tips
+- Tip 1: Always read component before writing test
+- Tip 2: Use Bash to run tests immediately after writing
+- Tip 3: Check for existing MSW handlers before adding
+- Tip 4: Use Write for new tests, Edit for updating
+- Tip 5: Run coverage to verify test completeness
+
+**Coverage**: AGENTS.md provides user signal translation for React testing operations, CLAUDE.md provides tool patterns for implementing those signals with Claude Code tools (Bash, Write, Read, Edit).
+
+### Validation Checkpoints
+
+**Structural Validation**:
+```bash
+# Check both awareness files exist
+ls docs/skilled-awareness/react-testing/AGENTS.md
+ls docs/skilled-awareness/react-testing/CLAUDE.md
+
+# Check YAML frontmatter present
+head -20 docs/skilled-awareness/react-testing/AGENTS.md | grep "sap_id: SAP-021"
+head -20 docs/skilled-awareness/react-testing/CLAUDE.md | grep "sap_id: SAP-021"
+```
+
+**Coverage Validation**:
+```bash
+# Count workflows in AGENTS.md (expect: 5)
+grep -c "^### Workflow [0-9]:" docs/skilled-awareness/react-testing/AGENTS.md
+
+# Count workflows in CLAUDE.md (expect: 3)
+grep -c "^### Workflow [0-9]:" docs/skilled-awareness/react-testing/CLAUDE.md
+
+# Check user signal tables exist in AGENTS.md
+grep -c "## User Signal Patterns" docs/skilled-awareness/react-testing/AGENTS.md
+```
+
+**Expected Results**:
+- Both awareness files exist ✅
+- YAML frontmatter with progressive_loading ✅
+- AGENTS.md: 5 workflows, 2 user signal tables ✅
+- CLAUDE.md: 3 workflows, 5 tool-specific tips ✅
+- Workflow variance: 40% (acceptable with documented rationale) ✅
+
+### Integration with SAP-009
+
+**Phase 4 Criteria Met**:
+- ✅ AGENTS.md provides generic workflow guidance
+- ✅ CLAUDE.md provides Claude Code tool patterns
+- ✅ Workflow coverage within acceptable variance (40% with rationale)
+- ✅ Rationale documented for organizational differences
+- ✅ Self-evaluation criteria documented in protocol-spec.md
+
+**SAP-021 Awareness Status**: Phase 4 compliant (equivalent support for generic agents and Claude Code)
+
+---
+
 **End of Protocol Specification**
