@@ -940,6 +940,124 @@ blueprint_step:
 
 ---
 
+## 6.5 Template vs Project-Level Adoption Pattern
+
+**Background**: Some projects serve dual roles as both **template providers** (distributing infrastructure to downstream projects) and **development projects** (the repository itself). This pattern applies to meta-projects like chora-base.
+
+**Adoption Levels by Role**:
+
+**Template-Level Adoption**:
+- Infrastructure location: `static-template/` or similar distribution directory
+- Infrastructure is ready for downstream consumption
+- Level reflects capability of distributed template
+- Example: `static-template/.github/workflows/` with 8 workflows → Template-Level L3
+
+**Project-Level Adoption**:
+- Infrastructure location: Project root (`.github/workflows/`, `pytest.ini`, etc.)
+- Infrastructure actively used by the meta-project itself
+- Level reflects actual usage within the repository
+- Example: No `.github/workflows/` in root → Project-Level L0
+
+**When to Use This Pattern**:
+
+Use this pattern when:
+- ✅ Project distributes templates or blueprints to other projects
+- ✅ Project's own needs differ from template capabilities
+- ✅ Infrastructure exists in `static-template/` or similar
+- ✅ Meta-project (primarily documentation + templates, minimal code)
+
+Do NOT use this pattern when:
+- ❌ Project is a regular application/library (not a template provider)
+- ❌ Infrastructure only exists in project root
+- ❌ Project uses all capabilities it distributes
+
+**Ledger Documentation**:
+
+When using this pattern, ledgers MUST document both levels:
+
+**Header Format**:
+```markdown
+**Status**: Active (Level X - Template, Level Y - Project)
+```
+
+**Example** (from SAP-005 CI/CD Workflows):
+```markdown
+**Status**: Active (Level 3 - Template, Level 0 - Project)
+```
+
+**Required Section** (add to ledger immediately after header):
+```markdown
+## ⚠️ IMPORTANT: Template vs Project-Level Adoption
+
+**SAP-XXX Adoption Levels:**
+- **Template-Level Adoption: LX** ✅ (This ledger tracks template adoption)
+  - Location: `static-template/[infrastructure-path]`
+  - [Description of distributed infrastructure]
+  - [Projects inheriting template get capability]
+
+- **Project-Level Adoption: LY** ⚠️ ([project-name] repository itself)
+  - Location: `[infrastructure-path]` (project root)
+  - [Description of project-level usage or intentional non-usage]
+  - [Explanation if L0: why meta-project doesn't need this capability]
+
+**Why This Matters**:
+- Template-level LX = Infrastructure ready for distribution ✅
+- Project-level LY = [project-name] itself [does/doesn't] use [capability] ⚠️
+- This pattern applies to [other SAPs using this pattern]
+```
+
+**Deployment Tracking Table**:
+
+Ledgers using this pattern MUST track both adoption types:
+
+```markdown
+| Project | Adoption Type | Infrastructure Installed | Status | Notes |
+|---------|---------------|--------------------------|--------|-------|
+| [project] (template) | Template-Level LX | ✅ [details] | ✅ Active | Distributed to downstream projects |
+| [project] (project) | Project-Level LY | [✅/❌] [details] | [✅/⚠️] [status] | [Explanation] |
+```
+
+**Validation**:
+
+Infrastructure validation scripts MUST:
+- Check both template-level and project-level infrastructure
+- Accept L0 project-level for template providers (intentional gap acceptable)
+- Validate template infrastructure matches claimed template-level
+- Flag over-reports (claimed L3 template but no infrastructure in `static-template/`)
+
+**Examples**:
+
+**SAP-003 (project-bootstrap)**:
+- Template-Level L3: Complete `static-template/` with all project files ✅
+- Project-Level L0: chora-base already bootstrapped, doesn't re-bootstrap itself ⚠️
+
+**SAP-004 (testing-framework)**:
+- Template-Level L3: `static-template/pytest.ini` with 85% threshold ✅
+- Project-Level L1: Tests exist (60 tests, 100% pass), but only 4% coverage ⚠️
+
+**SAP-005 (ci-cd-workflows)**:
+- Template-Level L3: `static-template/.github/workflows/` with 8 workflows ✅
+- Project-Level L0: No `.github/workflows/` in root (meta-project, no CI needed) ⚠️
+
+**SAP-006 (quality-gates)**:
+- Template-Level L3: `static-template/.pre-commit-config.yaml` with 7 hooks ✅
+- Project-Level L0: No `.pre-commit-config.yaml` in root (meta-project, manual QA) ⚠️
+
+**Guarantees**:
+- Ledgers using this pattern MUST document both levels in header
+- Ledgers MUST include explanatory section immediately after header
+- Deployment tables MUST track both template and project adoption
+- L0 project-level is ACCEPTABLE for template providers (not a failure)
+- Infrastructure validators MUST accept intentional L0 gaps for meta-projects
+
+**References**:
+- SAP-004 ledger: [docs/skilled-awareness/testing-framework/ledger.md](../testing-framework/ledger.md)
+- SAP-005 ledger: [docs/skilled-awareness/ci-cd-workflows/ledger.md](../ci-cd-workflows/ledger.md)
+- SAP-006 ledger: [docs/skilled-awareness/quality-gates/ledger.md](../quality-gates/ledger.md)
+- Infrastructure validation script: [scripts/validate-sap-infrastructure.py](../../../scripts/validate-sap-infrastructure.py)
+
+---
+
 ## 7. Dependencies
 
 ### 7.1 Internal Dependencies

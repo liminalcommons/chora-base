@@ -1,17 +1,49 @@
 # Traceability Ledger: Quality Gates
 
 **SAP ID**: SAP-006
-**Current Version**: 1.0.0
-**Status**: Active (Level 3)
-**Last Updated**: 2025-11-04
+**Current Version**: 1.0.1
+**Status**: Active (Level 3 - Template, Level 0 - Project)
+**Last Updated**: 2025-11-05
+
+---
+
+## ⚠️ IMPORTANT: Template vs Project-Level Adoption
+
+**chora-base serves TWO roles:**
+1. **Template Provider**: Distributes quality gates via `static-template/` to downstream projects
+2. **Development Project**: The chora-base repository itself
+
+**SAP-006 Adoption Levels:**
+- **Template-Level Adoption: L3** ✅ (This ledger tracks template adoption)
+  - Location: `static-template/.pre-commit-config.yaml`
+  - 7 hooks configured (check-yaml, trailing-whitespace, ruff check, ruff-format, mypy, etc.)
+  - Hook framework: pre-commit 4.0.1
+  - Projects inheriting template get instant L3 quality gates
+
+- **Project-Level Adoption: L0** ⚠️ (chora-base repository itself)
+  - Location: `.pre-commit-config.yaml` (project root)
+  - **No hooks installed** - chora-base doesn't use pre-commit hooks itself
+  - This is ACCEPTABLE for meta-projects (template + docs, no compiled code)
+  - Quality enforced manually during development
+
+**Why This Matters**:
+- Template-level L3 = Hooks ready for distribution ✅
+- Project-level L0 = chora-base itself doesn't use hooks ⚠️
+- This pattern applies to SAP-003, SAP-004, SAP-005, and other template-based SAPs
+
+**Resolution (2025-11-05)**:
+- Clarified that SAP-006 ledger tracks **template-level adoption** (L3)
+- Project-level adoption is L0 and this is acceptable for meta-projects
+- Future SAPs should specify template vs project level in ledger header
 
 ---
 
 ## 1. Projects Using Quality Gates
 
-| Project | Hooks Installed | Pre-commit Pass Rate | Last Updated |
-|---------|-----------------|----------------------|--------------|
-| chora-base | ✅ All 7 hooks | ~98% | 2025-10-28 |
+| Project | Adoption Type | Hooks Installed | Pre-commit Pass Rate | Last Updated |
+|---------|---------------|-----------------|----------------------|--------------|
+| chora-base (template) | Template-Level L3 | ✅ All 7 hooks in static-template/ | N/A | 2025-11-05 |
+| chora-base (project) | Project-Level L0 | ❌ No .pre-commit-config.yaml | N/A | 2025-11-05 |
 | chora-compose | ✅ All 7 hooks | ~95% | 2025-10-20 |
 | mcp-n8n | ✅ All 7 hooks | ~93% | 2025-10-22 |
 

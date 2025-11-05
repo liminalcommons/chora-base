@@ -1,0 +1,152 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "description": "Templates for creating adoption events in adoption-history.jsonl",
+  "templates": {
+    "sap_installed": {
+      "description": "SAP reaches Level 1 - Basic infrastructure operational",
+      "template": {
+        "event_type": "sap_installed",
+        "sap_id": "SAP-XXX",
+        "sap_name": "sap-name-here",
+        "timestamp": "YYYY-MM-DDTHH:MM:SSZ",
+        "adoption_level": 1,
+        "project": "chora-base",
+        "hours_invested": 0.0,
+        "notes": "Brief description of L1 infrastructure: key files, scripts, configs installed"
+      },
+      "example": {
+        "event_type": "sap_installed",
+        "sap_id": "SAP-010",
+        "sap_name": "memory-system",
+        "timestamp": "2025-11-04T14:45:00Z",
+        "adoption_level": 1,
+        "project": "chora-base",
+        "hours_invested": 3.0,
+        "notes": "A-MEM system installed: .chora/memory/ directory with 4 memory types, 3 event logs operational"
+      }
+    },
+    "level_progression_L1_to_L2": {
+      "description": "SAP progresses from Level 1 to Level 2 - Production usage with metrics",
+      "template": {
+        "event_type": "level_progression",
+        "sap_id": "SAP-XXX",
+        "sap_name": "sap-name-here",
+        "timestamp": "YYYY-MM-DDTHH:MM:SSZ",
+        "from_level": 1,
+        "to_level": 2,
+        "project": "chora-base",
+        "hours_invested": 0.0,
+        "cumulative_hours": 0.0,
+        "evidence": "Specific evidence of L2 adoption: metrics, production usage, baseline established",
+        "notes": "Brief summary of L2 achievements and ROI"
+      },
+      "example": {
+        "event_type": "level_progression",
+        "sap_id": "SAP-016",
+        "sap_name": "link-validation",
+        "timestamp": "2025-11-04T00:00:00Z",
+        "from_level": 1,
+        "to_level": 2,
+        "project": "chora-base",
+        "hours_invested": 1.0,
+        "cumulative_hours": 3.0,
+        "evidence": "Baseline established: 150+ files, 1,200+ links, 4 broken (0.3%), <5s scan time",
+        "notes": "Production testing completed, broken links identified for remediation"
+      }
+    },
+    "level_progression_L2_to_L3": {
+      "description": "SAP progresses from Level 2 to Level 3 - Full automation and strategic impact",
+      "template": {
+        "event_type": "level_progression",
+        "sap_id": "SAP-XXX",
+        "sap_name": "sap-name-here",
+        "timestamp": "YYYY-MM-DDTHH:MM:SSZ",
+        "from_level": 2,
+        "to_level": 3,
+        "project": "chora-base",
+        "hours_invested": 0.0,
+        "cumulative_hours": 0.0,
+        "evidence": "Specific evidence of L3 adoption: CI/CD integration, automation, template propagation, high ROI",
+        "notes": "Brief summary of L3 achievements, ROI calculation (e.g., 16-23x), strategic impact"
+      },
+      "example": {
+        "event_type": "level_progression",
+        "sap_id": "SAP-005",
+        "sap_name": "ci-cd-workflows",
+        "timestamp": "2025-11-04T00:00:00Z",
+        "from_level": 2,
+        "to_level": 3,
+        "project": "chora-base",
+        "hours_invested": 3.0,
+        "cumulative_hours": 15.0,
+        "evidence": "Complete CI/CD lifecycle: release.yml (OIDC publishing), docs-quality.yml (SAP-016), 8 workflows, template propagation",
+        "notes": "Full automation operational, 16-23x ROI (16h saved/month conservative, 23h optimistic)"
+      }
+    },
+    "awareness_files_created": {
+      "description": "Phase 1 awareness files created for a SAP (AGENTS.md, CLAUDE.md)",
+      "template": {
+        "event_type": "awareness_files_created",
+        "sap_id": "SAP-XXX",
+        "sap_name": "sap-name-here",
+        "timestamp": "YYYY-MM-DDTHH:MM:SSZ",
+        "phase": 1,
+        "project": "chora-base",
+        "files_created": ["AGENTS.md", "CLAUDE.md"],
+        "agents_workflows": 0,
+        "claude_workflows": 0,
+        "total_lines": 0,
+        "hours_invested": 0.0,
+        "notes": "Phase 1 awareness files for SAP (brief description of capability)"
+      },
+      "example": {
+        "event_type": "awareness_files_created",
+        "sap_id": "SAP-007",
+        "sap_name": "documentation-framework",
+        "timestamp": "2025-11-05T10:45:00Z",
+        "phase": 1,
+        "project": "chora-base",
+        "files_created": ["AGENTS.md", "CLAUDE.md"],
+        "agents_workflows": 5,
+        "claude_workflows": 3,
+        "total_lines": 2124,
+        "hours_invested": 1.5,
+        "notes": "Phase 1 awareness files for documentation framework (Diataxis, frontmatter, test extraction)"
+      }
+    },
+    "milestone": {
+      "description": "Project-wide milestone achievement",
+      "template": {
+        "event_type": "milestone",
+        "milestone": "milestone_name_here",
+        "timestamp": "YYYY-MM-DDTHH:MM:SSZ",
+        "project": "chora-base",
+        "coverage": "X/Y",
+        "percentage": 0,
+        "notes": "Description of milestone achievement and impact"
+      },
+      "example": {
+        "event_type": "milestone",
+        "milestone": "100_percent_sap_awareness_coverage",
+        "timestamp": "2025-11-05T11:30:00Z",
+        "project": "chora-base",
+        "coverage": "29/29",
+        "percentage": 100,
+        "notes": "Achieved 100% SAP awareness coverage - all 29 SAPs now have Phase 1 awareness files (AGENTS.md + CLAUDE.md)"
+      }
+    }
+  },
+  "usage_instructions": {
+    "sap_installed": "1. Copy template, 2. Replace SAP-XXX with actual SAP ID, 3. Set sap_name, 4. Set timestamp (use `date -u +\"%Y-%m-%dT%H:%M:%SZ\"`), 5. Set hours_invested, 6. Write descriptive notes about L1 infrastructure",
+    "level_progression_L1_to_L2": "1. Copy template, 2. Replace SAP-XXX, 3. Set timestamp, 4. Set hours_invested (incremental) and cumulative_hours (total), 5. Provide specific evidence of L2 (metrics, production usage), 6. Calculate ROI if applicable",
+    "level_progression_L2_to_L3": "1. Copy template, 2. Replace SAP-XXX, 3. Set timestamp, 4. Set hours_invested and cumulative_hours, 5. Provide L3 evidence (automation, CI/CD), 6. Calculate ROI (X hours saved/month / Y hours maintenance)",
+    "awareness_files_created": "1. Copy template, 2. Replace SAP-XXX, 3. Set timestamp, 4. Set files_created (typically [\"AGENTS.md\", \"CLAUDE.md\"]), 5. Count workflows and lines, 6. Estimate hours (typically 1-2h per SAP)",
+    "milestone": "1. Copy template, 2. Set milestone name (use snake_case), 3. Set timestamp, 4. Set coverage (e.g., \"29/29\"), 5. Calculate percentage, 6. Describe achievement"
+  },
+  "time_savings": {
+    "before": "12 minutes per adoption event (manual JSON writing, format checking)",
+    "after": "2 minutes per adoption event (copy template, fill placeholders)",
+    "savings": "10 minutes per event (83% faster)",
+    "roi": "For 50 adoption events: 500 minutes saved (8.3 hours)"
+  }
+}
