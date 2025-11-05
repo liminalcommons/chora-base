@@ -407,12 +407,15 @@ type: ledger
 - Improved workflow coverage: 8 agent workflows + 3 Claude Code workflows documented
 - Better error prevention: 5 common pitfalls documented with fixes
 
-**Validation TODO** (before finalizing):
-- [ ] Verify AGENTS.md follows SAP-009 user signal pattern table format
-- [ ] Verify CLAUDE.md follows progressive token usage phase structure
-- [ ] Verify both files have YAML frontmatter with progressive_loading metadata
-- [ ] Verify links to related SAPs (SAP-005, SAP-008, SAP-010) are correct
-- [ ] Test progressive loading: Read Phase 1 only, verify workflows are actionable
+**Validation Checklist**:
+- [x] Verify AGENTS.md follows SAP-009 user signal pattern table format (✅ complete)
+- [x] Verify CLAUDE.md follows progressive token usage phase structure (✅ complete)
+- [x] Verify both files have YAML frontmatter with progressive_loading metadata (✅ complete - added 2025-11-04)
+- [x] Verify links to related SAPs (SAP-005, SAP-008, SAP-010) are correct (✅ verified)
+- [ ] Test progressive loading: Read Phase 1 only, verify workflows are actionable (pending)
+- [x] Add Section 9.5 (Self-Evaluation Criteria) to protocol-spec.md (✅ complete - added 2025-11-04)
+- [x] Integrate awareness file validation into SAP evaluator (✅ complete - utils/awareness_validation.py created 2025-11-04)
+- [x] Run `python scripts/sap-evaluator.py --deep SAP-011` validation (✅ complete - 2 quality gaps identified, expected)
 
 ---
 

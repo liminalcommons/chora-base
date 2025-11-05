@@ -1,3 +1,21 @@
+---
+sap_id: SAP-011
+version: 1.0.0
+status: active
+last_updated: 2025-11-04
+type: reference
+audience: claude_code
+complexity: intermediate
+estimated_reading_time: 12
+progressive_loading:
+  phase_1: "lines 1-110"    # Quick Start + Containerize Workflow
+  phase_2: "lines 111-200"  # docker-compose + Debugging Workflows
+  phase_3: "full"           # Complete including tips and pitfalls
+phase_1_token_estimate: 3500
+phase_2_token_estimate: 7000
+phase_3_token_estimate: 12000
+---
+
 # Docker Operations (SAP-011) - Claude-Specific Awareness
 
 **SAP ID**: SAP-011

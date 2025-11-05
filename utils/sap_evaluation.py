@@ -20,6 +20,9 @@ from pathlib import Path
 from typing import Optional, Any
 import sys
 
+# Import awareness file validator
+from utils.awareness_validation import AwarenessFileValidator
+
 
 @dataclass
 class Action:
@@ -156,6 +159,7 @@ class SAPEvaluator:
     def __init__(self, repo_root: Path):
         self.repo_root = repo_root
         self.catalog = self.load_catalog()
+        self.awareness_validator = AwarenessFileValidator(repo_root)
 
     def load_catalog(self) -> dict:
         """Load SAP catalog from sap-catalog.json"""
@@ -427,6 +431,105 @@ class SAPEvaluator:
 
         return gaps
 
+    def analyze_awareness_files(self, sap_id: str) -> list[Gap]:
+        """
+        Analyze AGENTS.md and CLAUDE.md awareness files for any SAP.
+        Validates presence, structure, equivalence, and source coverage.
+        """
+        gaps = []
+
+        sap = self.get_sap_metadata(sap_id)
+        if not sap:
+            return gaps
+
+        location = sap.get("location")
+        if not location:
+            return gaps
+
+        # Run awareness file validation
+        issues = self.awareness_validator.validate_awareness_files(sap_id, location)
+
+        # Convert issues to gaps
+        for issue in issues:
+            severity = issue["severity"]
+            category = issue["category"]
+            message = issue["message"]
+
+            # Map severity/category to gap parameters
+            if severity == "error" and category == "presence":
+                # Missing awareness files (high priority)
+                gap = Gap(
+                    gap_id=f"{sap_id}-{category}-error",
+                    gap_type="integration",
+                    title=message,
+                    description=f"SAP-009 Phase 4 requires both AGENTS.md and CLAUDE.md for equivalent support",
+                    impact="high" if "CLAUDE.md" in message else "medium",
+                    effort="medium",
+                    priority="P1",
+                    urgency="next_sprint",
+                    current_state="Awareness file missing",
+                    desired_state="Both AGENTS.md and CLAUDE.md present with SAP-009 structure",
+                    estimated_hours=3.0 if "AGENTS.md" in message else 2.0,
+                    validation=f"test -f {location}/AGENTS.md && test -f {location}/CLAUDE.md"
+                )
+                gaps.append(gap)
+
+            elif severity == "warning" and category == "structure":
+                # YAML frontmatter issues
+                gap = Gap(
+                    gap_id=f"{sap_id}-{category}-warning",
+                    gap_type="quality",
+                    title=message,
+                    description="SAP-009 v1.1.0 requires YAML frontmatter with progressive loading metadata",
+                    impact="medium",
+                    effort="low",
+                    priority="P1",
+                    urgency="next_sprint",
+                    current_state="Missing or incomplete YAML frontmatter",
+                    desired_state="Valid YAML frontmatter with progressive_loading fields",
+                    estimated_hours=0.5,
+                    validation=f"grep -A 10 '^---$' {location}/AGENTS.md | grep 'progressive_loading:'"
+                )
+                gaps.append(gap)
+
+            elif severity == "warning" and category == "equivalence":
+                # Workflow/section mismatch between AGENTS.md and CLAUDE.md
+                gap = Gap(
+                    gap_id=f"{sap_id}-{category}-mismatch",
+                    gap_type="quality",
+                    title=message,
+                    description="AGENTS.md and CLAUDE.md should provide equivalent coverage with parallel workflows",
+                    impact="medium",
+                    effort="medium",
+                    priority="P2",
+                    urgency="future",
+                    current_state="Workflow/section coverage mismatch",
+                    desired_state="Parallel coverage: same workflows, different tool patterns",
+                    estimated_hours=2.0,
+                    validation=f"Compare workflow counts in AGENTS.md vs CLAUDE.md"
+                )
+                gaps.append(gap)
+
+            elif category == "coverage":
+                # Source artifact not referenced (info level)
+                gap = Gap(
+                    gap_id=f"{sap_id}-{category}-source",
+                    gap_type="quality",
+                    title=message,
+                    description="Awareness files should reference SAP source artifacts (charter, protocol, guide, blueprint, ledger)",
+                    impact="low",
+                    effort="low",
+                    priority="P2",
+                    urgency="future",
+                    current_state="Source artifact not referenced in awareness files",
+                    desired_state="All SAP artifacts inform both AGENTS.md and CLAUDE.md content",
+                    estimated_hours=0.5,
+                    validation=f"Check if awareness files reference source artifacts"
+                )
+                gaps.append(gap)
+
+        return gaps
+
     def analyze_sap_generic(self, sap_id: str, sap_name: str) -> list[Gap]:
         """Generic gap analysis for any SAP"""
         gaps = []
@@ -487,6 +590,9 @@ class SAPEvaluator:
             gaps.extend(self.analyze_sap_009_awareness(sap_id))
         elif sap_id == "SAP-013":
             gaps.extend(self.analyze_sap_013_metrics(sap_id))
+
+        # Always run awareness file analysis (SAP-009 Phase 4)
+        gaps.extend(self.analyze_awareness_files(sap_id))
 
         # Always run generic analysis
         gaps.extend(self.analyze_sap_generic(sap_id, sap_name))

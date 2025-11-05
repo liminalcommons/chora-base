@@ -812,6 +812,74 @@ docker tag myproject:v1.2.3 myproject:v1
 
 ---
 
+## 9.5. Self-Evaluation Criteria
+
+### Awareness File Requirements (SAP-009 Phase 4)
+
+**Both AGENTS.md and CLAUDE.md Required** (Equivalent Support):
+- [ ] Both files exist in `docs/skilled-awareness/docker-operations/`
+- [ ] Both files have YAML frontmatter with progressive loading metadata
+- [ ] Workflow coverage equivalent (±30%): AGENTS.md ≈ CLAUDE.md workflows
+
+**Required Sections (Both Files)**:
+- [ ] Quick Start / Quick Start for Claude
+- [ ] Common Workflows / Claude Code Workflows
+- [ ] Best Practices / Claude-Specific Tips
+- [ ] Common Pitfalls / Troubleshooting
+- [ ] Related Content / Support & Resources
+
+**Source Artifact Coverage (Both Files)**:
+- [ ] capability-charter.md problem statement → "When to Use" section
+- [ ] protocol-spec.md technical contracts → "Technical Patterns" (AGENTS) / "Tool Usage" (CLAUDE)
+- [ ] awareness-guide.md workflows → "Common Workflows" section
+- [ ] adoption-blueprint.md installation → "Quick Start" section
+- [ ] ledger.md metrics → referenced in "Evidence of Use"
+
+**YAML Frontmatter Fields** (Required):
+```yaml
+sap_id: SAP-011
+version: X.Y.Z
+status: active | pilot | draft
+last_updated: YYYY-MM-DD
+type: reference
+audience: agents | claude_code
+complexity: beginner | intermediate | advanced
+estimated_reading_time: N
+progressive_loading:
+  phase_1: "lines 1-X"
+  phase_2: "lines X-Y"
+  phase_3: "full"
+phase_1_token_estimate: NNNN
+phase_2_token_estimate: NNNN
+phase_3_token_estimate: NNNN
+```
+
+**Validation Commands**:
+```bash
+# Check both files exist
+test -f docs/skilled-awareness/docker-operations/AGENTS.md && \
+test -f docs/skilled-awareness/docker-operations/CLAUDE.md
+
+# Validate YAML frontmatter
+grep -A 10 "^---$" docs/skilled-awareness/docker-operations/AGENTS.md | grep "progressive_loading:"
+grep -A 10 "^---$" docs/skilled-awareness/docker-operations/CLAUDE.md | grep "progressive_loading:"
+
+# Check workflow count equivalence (should be within ±30%)
+agents_workflows=$(grep "^### Workflow" docs/skilled-awareness/docker-operations/AGENTS.md | wc -l)
+claude_workflows=$(grep "^### Workflow" docs/skilled-awareness/docker-operations/CLAUDE.md | wc -l)
+echo "AGENTS workflows: $agents_workflows, CLAUDE workflows: $claude_workflows"
+
+# Run comprehensive evaluation
+python scripts/sap-evaluator.py --deep SAP-011
+```
+
+**Expected Workflow Coverage**:
+- AGENTS.md: 8 generic agent workflows (Build, Test, docker-compose, Optimize, Debug, Multi-arch, CI cache, Volumes)
+- CLAUDE.md: 3 Claude Code workflows (Containerize, docker-compose setup, Debugging)
+- Rationale: Different granularity acceptable - AGENTS.md is comprehensive, CLAUDE.md focuses on high-level tool patterns
+
+---
+
 ## 10. Testing and Validation
 
 ### 10.1 Image Validation

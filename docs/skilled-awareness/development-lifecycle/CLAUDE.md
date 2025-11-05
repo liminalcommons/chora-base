@@ -1,3 +1,21 @@
+---
+sap_id: SAP-012
+version: 1.0.0
+status: active
+last_updated: 2025-11-04
+type: reference
+audience: claude_code
+complexity: intermediate
+estimated_reading_time: 13
+progressive_loading:
+  phase_1: "lines 1-100"    # Quick Start + Sprint Workflow
+  phase_2: "lines 101-260"  # DDD + BDD Workflows
+  phase_3: "full"           # Complete including tips and pitfalls
+phase_1_token_estimate: 3000
+phase_2_token_estimate: 7500
+phase_3_token_estimate: 11000
+---
+
 # Development Lifecycle (SAP-012) - Claude-Specific Awareness
 
 **SAP ID**: SAP-012
