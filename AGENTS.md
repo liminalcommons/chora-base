@@ -1467,6 +1467,74 @@ See [project-docs/sap-roadmap-Q1-2026.yaml](../project-docs/sap-roadmap-Q1-2026.
 
 ---
 
+## Task Tracking with Beads (SAP-015)
+
+### Overview
+
+SAP-015 provides persistent task tracking for AI agents using [beads](https://github.com/steveyegge/beads), a git-backed issue tracker designed for agent memory across sessions.
+
+**When to use**:
+- ✅ Complex features (5+ steps spanning multiple sessions)
+- ✅ Tasks with dependencies (what blocks what)
+- ✅ Multi-agent coordination
+- ✅ Feature decomposition (epics → subtasks)
+
+**Don't use for**:
+- ❌ Cross-repo coordination (use SAP-001 inbox)
+- ❌ Event history (use SAP-010 A-MEM)
+- ❌ Simple single-step tasks
+
+### Quick Reference
+
+**Session Start**:
+```bash
+bd ready --json                                    # Find unblocked work
+bd update {id} --status in_progress --assignee {agent}  # Claim task
+bd show {id} --json                                # Get task context
+```
+
+**During Work**:
+```bash
+bd create "Task title" --priority 0                # Add discovered subtask
+bd dep add {blocked} {blocker}                     # Link dependency
+bd update {parent} --status open                   # Parent now blocked
+```
+
+**Session End**:
+```bash
+bd close {id} --reason "Completed X"               # Mark done
+bd ready --json                                    # Check newly-unblocked work
+```
+
+**Status Check**:
+```bash
+bd list --status in_progress --json                # Active tasks
+bd dep tree {id}                                   # Visualize dependencies
+bd status                                          # Database overview
+```
+
+### Integration with Other SAPs
+
+**SAP-001 (Inbox)**:
+- Decompose coordination requests into beads tasks
+- Create epic for coordination, link subtasks
+- See [Pattern H](docs/skilled-awareness/task-tracking/awareness-guide.md#pattern-h-integration-with-inbox-sap-001)
+
+**SAP-010 (A-MEM)**:
+- Correlate beads tasks with event traces
+- Include trace_id in task description
+- Log task events in A-MEM event log
+- See [Pattern I](docs/skilled-awareness/task-tracking/awareness-guide.md#pattern-i-integration-with-a-mem-sap-010)
+
+### Full Documentation
+
+- **Adoption Blueprint**: [docs/skilled-awareness/task-tracking/adoption-blueprint.md](docs/skilled-awareness/task-tracking/adoption-blueprint.md)
+- **Awareness Guide**: [docs/skilled-awareness/task-tracking/awareness-guide.md](docs/skilled-awareness/task-tracking/awareness-guide.md)
+- **Protocol Spec**: [docs/skilled-awareness/task-tracking/protocol-spec.md](docs/skilled-awareness/task-tracking/protocol-spec.md)
+- **Capability Charter**: [docs/skilled-awareness/task-tracking/capability-charter.md](docs/skilled-awareness/task-tracking/capability-charter.md)
+
+---
+
 ## Questions & Support
 
 ### Where to Find Information

@@ -527,22 +527,39 @@
     },
     {
       "id": "SAP-015",
-      "name": "unused",
-      "full_name": "Reserved for Future Use",
-      "status": "reserved",
-      "version": "0.0.0",
+      "name": "task-tracking",
+      "full_name": "Agent Task Tracking (Beads Integration)",
+      "status": "pilot",
+      "version": "1.0.0",
       "included_by_default": false,
-      "size_kb": 0,
-      "description": "Reserved SAP ID for future technology-specific capability",
-      "capabilities": [],
-      "dependencies": [],
-      "tags": ["reserved"],
+      "size_kb": 125,
+      "description": "Git-backed persistent task tracking for AI agents using beads, providing cross-session memory with dependency management and multi-agent coordination",
+      "capabilities": [
+        "Persistent task memory across agent sessions",
+        "Dependency-aware task management (blocks, related, parent-child)",
+        "Automatic ready-work detection (no blockers)",
+        "Multi-agent coordination via git-backed storage",
+        "Git-native JSONL format with SQLite cache",
+        "CLI-first design with JSON output for agents",
+        "Integration with inbox (SAP-001) and A-MEM (SAP-010)",
+        "Hash-based collision-resistant IDs (v0.20.1+)"
+      ],
+      "dependencies": ["SAP-000"],
+      "tags": ["task-tracking", "beads", "agent-memory", "git-native", "optional"],
       "author": "chora-base",
-      "location": null,
-      "artifacts": {},
-      "system_files": [],
-      "phase": null,
-      "priority": null
+      "location": "docs/skilled-awareness/task-tracking",
+      "artifacts": {
+        "capability_charter": true,
+        "protocol_spec": true,
+        "awareness_guide": true,
+        "adoption_blueprint": true,
+        "ledger": true
+      },
+      "system_files": [
+        ".beads/"
+      ],
+      "phase": "Phase 1 (Pilot)",
+      "priority": "P2"
     },
     {
       "id": "SAP-016",

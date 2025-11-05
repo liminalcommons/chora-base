@@ -45,6 +45,7 @@ This index tracks all **30 capabilities** identified for SAP packaging across 4 
 | SAP-012 | development-lifecycle | 1.0.0 | Draft | Phase 3 | ✅ 4/4 | [development-lifecycle/](development-lifecycle/) | SAP-000 |
 | SAP-013 | metrics-tracking | 1.0.0 | Draft | Phase 4 | ✅ 4/4 | [metrics-tracking/](metrics-tracking/) | SAP-000 |
 | SAP-014 | mcp-server-development | 1.0.0 | Active | Wave 3 | ✅ 4/4 | [mcp-server-development/](mcp-server-development/) | SAP-000, SAP-003, SAP-004, SAP-012 |
+| SAP-015 | task-tracking | 1.0.0 | Pilot | Phase 1 | - | [task-tracking/](task-tracking/) | SAP-000 |
 | SAP-016 | link-validation-reference-management | 1.0.0 | Active | Wave 2 | ✅ 4/4 | [link-validation-reference-management/](link-validation-reference-management/) | None (foundational) |
 | SAP-017 | chora-compose-integration | 1.0.0 | Active | Wave 3 | ✅ 4/4 | [chora-compose-integration/](chora-compose-integration/) | SAP-003 |
 | SAP-018 | chora-compose-meta | 1.0.0 | Active | Wave 3 | ✅ 4/4 | [chora-compose-meta/](chora-compose-meta/) | SAP-017 |

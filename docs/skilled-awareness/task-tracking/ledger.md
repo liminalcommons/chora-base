@@ -1,0 +1,307 @@
+# SAP-015 Traceability Ledger
+## Agent Task Tracking with Beads
+
+**SAP ID**: SAP-015
+**Version**: 1.0.0
+**Status**: Pilot (Phase 1)
+**Owner**: Victor Piper
+**Created**: 2025-11-04
+**Last Updated**: 2025-11-04
+
+---
+
+## Purpose
+
+This ledger tracks adoption of SAP-015 (Agent Task Tracking with Beads) across the chora-base ecosystem, capturing:
+
+- **Adoption Milestones**: Repositories installing beads
+- **Usage Metrics**: Time savings, task counts, workflow improvements
+- **Feedback**: Issues, successes, improvement suggestions
+- **Version History**: SAP-015 evolution and breaking changes
+
+---
+
+## Adoption Status
+
+### Current Adoption: 1 Repository (10%)
+
+| Repository | Version | Status | Adopted Date | Team Size | Notes |
+|------------|---------|--------|--------------|-----------|-------|
+| chora-base | 1.0.0   | Pilot  | 2025-11-04   | 1 (Victor) | Dogfooding phase, reference implementation |
+
+### Target Adoption
+
+**Phase 1 (Pilot)**: 1-3 repos (10-30%) by 2026-02-04
+**Phase 2 (Validation)**: 3-5 repos (30-50%) by 2026-05-04
+**Phase 3 (Production)**: 5-8 repos (50-80%) by 2026-08-04
+
+---
+
+## Detailed Adoption Entries
+
+### Entry 1: chora-base (Reference Implementation)
+
+**Repository**: [chora-base](https://github.com/liminalcommons/chora-base)
+**Adopter**: Victor Piper
+**Date**: 2025-11-04
+**SAP-015 Version**: 1.0.0
+**Beads Version**: 0.21.6
+**Installation Time**: 30 minutes (includes SAP artifact creation)
+**Phase**: Pilot (Dogfooding)
+
+**Motivation**:
+- Validate beads integration before ecosystem recommendation
+- Establish reference implementation for other adopters
+- Test agent workflows with real chora-base development
+- Evaluate time savings and workflow improvements over 2-3 months
+
+**Configuration**:
+- Prefix: `chora-base`
+- Branch: `main` (default)
+- Git hooks: Enabled
+- Auto-sync: Enabled (5s debounce)
+- Integrations: SAP-001 (inbox), SAP-010 (A-MEM), SAP-009 (AGENTS.md)
+
+**Initial Tasks Created**:
+1. `chora-base-{hash}`: Complete SAP-015 adoption (epic)
+   - Subtask: Create capability-charter.md (done)
+   - Subtask: Create protocol-spec.md (done)
+   - Subtask: Create awareness-guide.md (done)
+   - Subtask: Create adoption-blueprint.md (done)
+   - Subtask: Create ledger.md (in progress)
+   - Subtask: Update AGENTS.md
+   - Subtask: Update sap-catalog.json
+   - Subtask: Commit and document
+
+**Metrics (Baseline)**:
+- Tasks created: 8
+- Dependencies added: 7
+- Session context re-establishment time: 10-15 min (estimated)
+- Manual task list maintenance: 10 min/session (estimated)
+
+**Feedback** (to be updated monthly):
+- **Month 1 (Nov 2025)**: [To be filled after 30 days]
+- **Month 2 (Dec 2025)**: [To be filled after 60 days]
+- **Month 3 (Jan 2026)**: [To be filled after 90 days, GO/NO-GO decision]
+
+**Success Criteria** (Phase 1 Pilot):
+- ✅ SAP-015 artifacts complete (5 documents)
+- 🔄 Dogfooding for 2-3 months
+- ⏳ Time savings ≥20% on context re-establishment
+- ⏳ Manual task maintenance reduction ≥50%
+- ⏳ Zero critical bugs in beads integration
+
+**Next Steps**:
+1. Complete SAP-015 adoption in chora-base
+2. Use beads for next 2-3 feature developments
+3. Collect metrics monthly
+4. GO/NO-GO decision by 2026-02-04
+
+---
+
+## Feedback Summary
+
+### Positive Feedback
+
+*No entries yet (pilot phase just started)*
+
+### Issues & Challenges
+
+*No entries yet (pilot phase just started)*
+
+### Feature Requests
+
+*No entries yet (pilot phase just started)*
+
+---
+
+## Usage Metrics
+
+### Aggregate Metrics (All Adopters)
+
+| Metric | Baseline | Current | Target | Status |
+|--------|----------|---------|--------|--------|
+| Adopting Repos | 0/10 (0%) | 1/10 (10%) | 3/10 (30%) | 🟡 In Progress |
+| Avg Session Context Time | 10-20 min | TBD | <5 min | ⏳ Pending |
+| Manual Task Maintenance | 10-20 min | TBD | <3 min | ⏳ Pending |
+| Forgotten Subtasks Rate | 30-40% | TBD | <10% | ⏳ Pending |
+| Developer Satisfaction | N/A | TBD | 80%+ | ⏳ Pending |
+
+*Metrics to be updated monthly as adoption grows*
+
+### Per-Repository Metrics
+
+#### chora-base
+
+| Month | Tasks Created | Tasks Closed | Avg Completion Time | Context Time | Satisfaction | Notes |
+|-------|---------------|--------------|---------------------|--------------|--------------|-------|
+| Nov 2025 | 8 | 0 | TBD | 10-15 min (baseline) | TBD | Pilot start |
+| Dec 2025 | TBD | TBD | TBD | TBD | TBD | Month 1 |
+| Jan 2026 | TBD | TBD | TBD | TBD | TBD | Month 2, GO/NO-GO |
+
+---
+
+## Version History
+
+### SAP-015 v1.0.0 (2025-11-04)
+
+**Changes**:
+- ✅ Initial release: Capability charter, protocol spec, awareness guide, adoption blueprint, ledger
+- ✅ Beads v0.21.6 integration
+- ✅ AGENTS.md patterns documented
+- ✅ Integration with SAP-001 (inbox), SAP-010 (A-MEM) specified
+- ✅ Pilot adoption in chora-base
+
+**Breaking Changes**: None (initial version)
+
+**Deprecations**: None
+
+**Migration Notes**: N/A (new SAP)
+
+---
+
+## Future Roadmap
+
+### Phase 1: Pilot (Nov 2025 - Jan 2026)
+
+**Goals**:
+- Dogfood in chora-base (1 repo)
+- Validate beads integration patterns
+- Collect baseline metrics
+- Document common workflows
+- Identify friction points
+
+**Deliverables**:
+- ✅ SAP-015 artifacts complete
+- 🔄 3 months dogfooding data
+- ⏳ GO/NO-GO decision by 2026-02-04
+
+### Phase 2: Validation (Feb 2026 - Apr 2026)
+
+**Goals** (if Phase 1 GO):
+- Expand to 2-3 additional repos
+- Refine workflows based on feedback
+- Measure time savings and satisfaction
+- Create integration templates
+
+**Deliverables**:
+- Updated SAP-015 artifacts (v1.1.0)
+- Integration templates (inbox, A-MEM)
+- Pilot case studies
+- Metrics dashboard
+
+### Phase 3: Production (May 2026 - Jul 2026)
+
+**Goals** (if Phase 2 successful):
+- Expand to 5-8 repos (50-80% adoption)
+- Stabilize beads integration
+- Establish best practices
+- Community contributions
+
+**Deliverables**:
+- SAP-015 v1.2.0 (stable)
+- Best practices guide
+- Community feedback loop
+- Ecosystem-wide metrics
+
+---
+
+## Decision Points
+
+### GO/NO-GO Decision (2026-02-04)
+
+**GO Criteria** (must meet ≥80%):
+- ✅ Time savings ≥20% on context re-establishment
+- ✅ Manual task maintenance reduction ≥50%
+- ✅ Zero critical bugs
+- ✅ Developer satisfaction ≥70%
+- ✅ Positive feedback from dogfooding
+
+**If GO**: Proceed to Phase 2 (expand to 2-3 repos)
+
+**If NO-GO**:
+- Document learnings
+- Deprecate SAP-015
+- Recommend alternative approaches (SAP-001 only, manual tracking)
+- Archive beads integration
+
+---
+
+## Contact & Contributions
+
+**SAP Owner**: Victor Piper ([@liminalcommons](https://github.com/liminalcommons))
+
+**How to Report Adoption**:
+1. Open PR against this ledger
+2. Add entry to "Detailed Adoption Entries" section
+3. Update "Adoption Status" table
+4. Include: repo name, date, version, team size, configuration, metrics
+
+**How to Provide Feedback**:
+1. Open issue in chora-base: [New Issue](https://github.com/liminalcommons/chora-base/issues/new)
+2. Tag with `sap-015` label
+3. Include: feedback type (positive/issue/feature request), context, impact
+
+**How to Contribute**:
+1. Improvements to SAP-015 artifacts welcome via PR
+2. Integration patterns with other SAPs
+3. Agent workflow improvements
+4. Troubleshooting guides
+
+---
+
+## Related SAPs
+
+- [SAP-000: SAP Framework](../sap-framework/ledger.md) - Framework foundation
+- [SAP-001: Inbox Coordination](../inbox/ledger.md) - Cross-repo coordination
+- [SAP-009: Agent Awareness](../agent-awareness/ledger.md) - AGENTS.md patterns
+- [SAP-010: Memory System](../memory-system/ledger.md) - A-MEM event history
+
+---
+
+## Appendix
+
+### Template: New Adoption Entry
+
+```markdown
+### Entry N: {repository-name}
+
+**Repository**: [{repo-name}]({repo-url})
+**Adopter**: {name}
+**Date**: YYYY-MM-DD
+**SAP-015 Version**: X.Y.Z
+**Beads Version**: X.Y.Z
+**Installation Time**: {minutes}
+**Phase**: Pilot/Production
+
+**Motivation**:
+- {reason 1}
+- {reason 2}
+
+**Configuration**:
+- Prefix: `{prefix}`
+- Branch: `{branch}`
+- Git hooks: Enabled/Disabled
+- Auto-sync: Enabled/Disabled
+- Integrations: {SAP-001, SAP-010, etc.}
+
+**Initial Tasks Created**: {count}
+
+**Metrics (Baseline)**:
+- Session context time: {X} min
+- Manual task maintenance: {Y} min/session
+
+**Feedback** (monthly updates):
+- **Month 1**: {feedback}
+- **Month 2**: {feedback}
+- **Month 3**: {feedback}
+
+**Success Criteria**:
+- {criterion 1}
+- {criterion 2}
+```
+
+---
+
+**Version History**:
+- **1.0.0** (2025-11-04): Initial ledger for beads task tracking adoption

@@ -239,6 +239,12 @@ class MyApp(StatefulObject):
   - Quality metrics (bug rate, coverage, iterations)
   - Executive summary generation
 - 🔧 **CLI Tools** - Query events, manage knowledge, track learning
+- 📋 **Task Tracking** (NEW v4.9.0 - SAP-015) - Persistent agent memory with beads
+  - Git-backed JSONL task storage
+  - Dependency-aware task management (blocks, related, parent-child)
+  - Automatic ready-work detection
+  - Multi-agent coordination support
+  - Integration with inbox (SAP-001) and A-MEM (SAP-010)
 
 ### Project Types Supported
 
