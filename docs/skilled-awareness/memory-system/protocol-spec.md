@@ -98,10 +98,129 @@ This protocol defines the **Agentic Memory (A-MEM) architecture** with 4 memory 
 
 **Optional Fields**:
 - `metadata` (object): Event-specific data (varies by event_type)
+- `metadata.tags` (array of strings): Taxonomy tags for event categorization and search (see Section 3.2)
+- `metadata.priority` (enum): Event priority (`critical` | `high` | `normal` | `low`)
 
 ---
 
-### 3.2 Event Types
+### 3.2 Event Tag Taxonomy
+
+**Purpose**: Structured vocabulary for consistent event categorization, enabling powerful search and analysis.
+
+**Taxonomy File**: [schemas/event-tag-taxonomy.yaml](../../../schemas/event-tag-taxonomy.yaml)
+
+#### 3.2.1 Tag Domains
+
+The taxonomy organizes tags into **7 major domains**:
+
+| Domain | Description | Example Tags |
+|--------|-------------|--------------|
+| **development** | Software development activities | `code-generation`, `doc-generation`, `test-execution` |
+| **sap** | SAP framework operations | `sap-evaluation`, `sap-generation`, `catalog-update` |
+| **automation** | Scripts and CI/CD | `script-invocation`, `ci-pipeline`, `deployment` |
+| **coordination** | Cross-repo/agent coordination | `coord-request`, `context-handoff`, `multi-agent` |
+| **memory** | A-MEM memory operations | `event-recorded`, `knowledge-learned`, `profile-updated` |
+| **infrastructure** | System infrastructure | `gateway-started`, `backend-failed`, `tool-executed` |
+| **errors** | Error handling and debugging | `error-encountered`, `retry-attempted`, `trace-analysis` |
+
+**Cross-Cutting Tags**:
+- **status**: `success`, `failure`, `pending`, `timeout`
+- **priority**: `critical`, `high`, `normal`, `low`
+- **impact**: `breaking-change`, `security`, `data-loss`, `performance-impact`
+
+#### 3.2.2 Tag Usage Guidelines
+
+**Best Practices**:
+1. **Tag Count**: Use 1-5 tags per event (recommended: 2-3)
+2. **Tag Selection**:
+   - Always include domain tag (e.g., `sap`, `automation`)
+   - Add status tag from event.status field
+   - Add specific tags as needed
+   - Avoid redundant tags
+3. **Tag Naming**: Use lowercase kebab-case (e.g., `sap-evaluation`, `script-success`)
+
+**Example Event with Tags**:
+```json
+{
+  "timestamp": "2025-11-05T12:00:00Z",
+  "trace_id": "trace-eval-001",
+  "status": "success",
+  "schema_version": "1.0",
+  "event_type": "sap.evaluation",
+  "source": "chora-base",
+  "metadata": {
+    "tags": ["sap-evaluation", "adoption-analysis"],
+    "sap_id": "SAP-015",
+    "evaluation_type": "deep",
+    "duration_ms": 2400
+  }
+}
+```
+
+#### 3.2.3 Common Tag Patterns
+
+**Pattern 1: SAP Evaluation Workflow**
+- Tags: `["sap-evaluation", "adoption-analysis"]`
+- Use: Running sap-evaluator.py to assess SAP maturity
+
+**Pattern 2: Successful Script Execution**
+- Tags: `["script-invocation", "script-success"]`
+- Use: Automation scripts completing successfully
+
+**Pattern 3: Learning from Trace**
+- Tags: `["knowledge-learned", "trace-end"]`
+- Use: Creating knowledge note after resolving issue in trace
+
+**Pattern 4: Coordination Decomposition**
+- Tags: `["coord-request", "coord-decomposition"]`
+- Use: Breaking down coordination request into tasks (SAP-001 + SAP-015)
+
+**Pattern 5: Error Recovery**
+- Tags: `["error-encountered", "retry-attempted", "recovery-successful"]`
+- Use: Error with successful recovery (e.g., backend timeout → retry → success)
+
+#### 3.2.4 Querying Events by Tags
+
+**Find all SAP evaluation events**:
+```bash
+cat .chora/memory/events/**/*.jsonl | \
+  jq 'select(.metadata.tags? // [] | contains(["sap-evaluation"]))'
+```
+
+**Find recent failed scripts (last 7 days)**:
+```bash
+find .chora/memory/events -name "*.jsonl" -mtime -7 -exec \
+  jq 'select(.status == "failure" and (.metadata.tags? // [] | contains(["script-failure"])))' {} \;
+```
+
+**Count events by tag**:
+```bash
+cat .chora/memory/events/**/*.jsonl | \
+  jq -r '.metadata.tags? // [] | .[]' | \
+  sort | uniq -c | sort -rn
+```
+
+**Find knowledge notes created from traces**:
+```bash
+cat .chora/memory/events/**/*.jsonl | \
+  jq 'select((.metadata.tags? // [] | contains(["knowledge-learned", "trace-end"])))'
+```
+
+#### 3.2.5 Tag Evolution and Maintenance
+
+**Review Policy**: Quarterly tag usage review
+- **Deprecate**: Tags with < 10 events in 6 months
+- **Add**: New tags when patterns emerge (> 20 events without suitable tag)
+- **Version**: Bump taxonomy version on breaking changes
+
+**Backward Compatibility**:
+- Tags are optional in event schema (default: `[]`)
+- Existing events without tags remain valid
+- Scripts must handle missing tags gracefully
+
+---
+
+### 3.4 Event Types
 
 #### Gateway Events
 
@@ -134,7 +253,7 @@ This protocol defines the **Agentic Memory (A-MEM) architecture** with 4 memory 
 
 ---
 
-### 3.3 Trace Correlation
+### 3.5 Trace Correlation
 
 **Concept**: All events in a multi-step workflow share the same `trace_id`
 
@@ -164,7 +283,7 @@ cat .chora/memory/events/2025-01/traces/abc123.jsonl
 
 ---
 
-### 3.4 Event Log Retention
+### 3.6 Event Log Retention
 
 **Policy**: Archive events older than 6 months
 
@@ -740,6 +859,74 @@ def migrate_profile_v1_to_v2(profile_v1):
 **Wrong**: Inconsistent tags ("backend", "Backend", "backend-issues")
 **Correct**: Use tag index, normalize tags (lowercase, hyphenated)
 **Why**: Search fragmentation, tags lose value
+
+---
+
+## 10.5. Self-Evaluation Criteria
+
+### Awareness File Requirements (SAP-009 Phase 4)
+
+**Both AGENTS.md and CLAUDE.md Required** (Equivalent Support):
+- [ ] Both files exist in `docs/skilled-awareness/memory-system/`
+- [ ] Both files have YAML frontmatter with progressive loading metadata
+- [ ] Workflow coverage equivalent (±30%): AGENTS.md ≈ CLAUDE.md workflows
+
+**Required Sections (Both Files)**:
+- [ ] Quick Reference / Quick Start for Claude
+- [ ] Common Workflows / Claude Code Workflows (6 workflows in AGENTS.md, 4 in CLAUDE.md)
+- [ ] Best Practices / Claude-Specific Tips (5 each)
+- [ ] Common Pitfalls (5 each)
+- [ ] Integration with Other SAPs / Support & Resources
+
+**Source Artifact Coverage (Both Files)**:
+- [ ] capability-charter.md A-MEM architecture → "Memory Architecture" section
+- [ ] protocol-spec.md event schema/retention → "Memory Types" section
+- [ ] awareness-guide.md workflows → "Common Workflows" section
+- [ ] adoption-blueprint.md installation → "Quick Reference" section
+- [ ] ledger.md adoption tracking → referenced in "Best Practices"
+
+**YAML Frontmatter Fields** (Required):
+```yaml
+sap_id: SAP-010
+version: X.Y.Z
+status: active | pilot | draft
+last_updated: YYYY-MM-DD
+type: reference
+audience: agents | claude_code
+complexity: beginner | intermediate | advanced
+estimated_reading_time: N
+progressive_loading:
+  phase_1: "lines 1-X"
+  phase_2: "lines X-Y"
+  phase_3: "full"
+phase_1_token_estimate: NNNN
+phase_2_token_estimate: NNNN
+phase_3_token_estimate: NNNN
+```
+
+**Validation Commands**:
+```bash
+# Check both files exist
+test -f docs/skilled-awareness/memory-system/AGENTS.md && \
+test -f docs/skilled-awareness/memory-system/CLAUDE.md
+
+# Validate YAML frontmatter
+grep -A 10 "^---$" docs/skilled-awareness/memory-system/AGENTS.md | grep "progressive_loading:"
+grep -A 10 "^---$" docs/skilled-awareness/memory-system/CLAUDE.md | grep "progressive_loading:"
+
+# Check workflow count equivalence (should be within ±30%)
+agents_workflows=$(grep "^### Workflow" docs/skilled-awareness/memory-system/AGENTS.md | wc -l)
+claude_workflows=$(grep "^### Workflow" docs/skilled-awareness/memory-system/CLAUDE.md | wc -l)
+echo "AGENTS workflows: $agents_workflows, CLAUDE workflows: $claude_workflows"
+
+# Run comprehensive evaluation
+python scripts/sap-evaluator.py --deep SAP-010
+```
+
+**Expected Workflow Coverage**:
+- AGENTS.md: 6 generic workflows (Learn from Failures, Trace Workflow, Preserve Preferences, Query Knowledge, Log Events, Query by Tag)
+- CLAUDE.md: 4 Claude Code workflows (Learn with Read, Trace with Bash/Grep, Preserve with Edit, Query with Grep)
+- Rationale: Different granularity acceptable - AGENTS.md covers all memory operations, CLAUDE.md focuses on Claude Code tool patterns (Read, Bash, Grep, Edit)
 
 ---
 
