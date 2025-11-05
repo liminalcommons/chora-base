@@ -208,6 +208,69 @@
       },
       "description": "Related work providing context"
     },
+    "relationships": {
+      "type": "object",
+      "description": "Structured relationships to other coordination requests, tasks, and work items for building relationship graphs",
+      "properties": {
+        "blocks": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "pattern": "^(COORD-[0-9]{4}-[0-9]{3}|[a-z0-9-]+-[a-z0-9]+)$"
+          },
+          "description": "Work items blocked by this coordination request (COORD-YYYY-NNN or task IDs)"
+        },
+        "blocked_by": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "pattern": "^(COORD-[0-9]{4}-[0-9]{3}|[a-z0-9-]+-[a-z0-9]+)$"
+          },
+          "description": "Work items blocking this coordination request"
+        },
+        "related_to": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "pattern": "^(COORD-[0-9]{4}-[0-9]{3}|[a-z0-9-]+-[a-z0-9]+)$"
+          },
+          "description": "Related coordination requests or tasks (informational, no blocking)"
+        },
+        "spawns_tasks": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "Task IDs created from this coordination request (for beads/SAP-015 integration)"
+        },
+        "supersedes": {
+          "type": "string",
+          "pattern": "^COORD-[0-9]{4}-[0-9]{3}$",
+          "description": "Coordination request ID that this request replaces/supersedes"
+        },
+        "superseded_by": {
+          "type": "string",
+          "pattern": "^COORD-[0-9]{4}-[0-9]{3}$",
+          "description": "Coordination request ID that replaces/supersedes this request"
+        }
+      },
+      "additionalProperties": false
+    },
+    "affects_saps": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "pattern": "^SAP-[0-9]{3}$"
+      },
+      "description": "SAP IDs affected by this coordination request (for SAP awareness and impact analysis)"
+    },
+    "affects_domains": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "Documentation/code domains affected (e.g., 'docs/skilled-awareness', 'implementation', 'docs/user-docs')"
+    },
     "questions": {
       "oneOf": [
         {
@@ -289,7 +352,17 @@
         "Deep Collaboration: Joint exploration of integration architecture with regular sync meetings. Estimated effort: 15-20 hours.",
         "Expert Consultation: Guidance via async discussion on key technical decisions. Estimated effort: 8-12 hours.",
         "High-Level Guidance: Quick assessment of feasibility and high-level recommendations. Estimated effort: 1-2 hours."
-      ]
+      ],
+      "relationships": {
+        "blocks": [],
+        "blocked_by": [],
+        "related_to": ["COORD-2025-001", "COORD-2025-002"],
+        "spawns_tasks": [],
+        "supersedes": null,
+        "superseded_by": null
+      },
+      "affects_saps": ["SAP-001", "SAP-029"],
+      "affects_domains": ["docs/skilled-awareness/inbox", "scripts"]
     }
   ]
 }

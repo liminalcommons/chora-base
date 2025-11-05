@@ -1,0 +1,771 @@
+{
+  "metadata": {
+    "generated": "2025-11-05T05:01:50.691810+00:00",
+    "extraction_enabled": true,
+    "paths_scanned": [
+      "."
+    ],
+    "exclude_patterns": []
+  },
+  "statistics": {
+    "total_files": 37,
+    "agents_files": 20,
+    "claude_files": 17,
+    "total_token_estimate": 153402,
+    "by_category": {
+      "root": 2,
+      "domain": 8,
+      "capability": 16,
+      "feature": 0,
+      "component": 0,
+      "unknown": 11
+    }
+  },
+  "files": [
+    {
+      "path": "./AGENTS.md",
+      "type": "agents",
+      "category": "root",
+      "heading": "AGENTS.md - chora-base Template Repository",
+      "token_estimate": 12954
+    },
+    {
+      "path": "./CLAUDE.md",
+      "type": "claude",
+      "category": "root",
+      "heading": "Chora-Base: Claude Agent Awareness (Root)",
+      "token_estimate": 4945
+    },
+    {
+      "path": "./docs/dev-docs/AGENTS.md",
+      "type": "agents",
+      "category": "domain",
+      "heading": "Developer Documentation - Agent Awareness",
+      "token_estimate": 2986
+    },
+    {
+      "path": "./docs/dev-docs/CLAUDE.md",
+      "type": "claude",
+      "category": "domain",
+      "heading": "Developer Documentation - Claude-Specific Awareness",
+      "token_estimate": 2915
+    },
+    {
+      "path": "./docs/project-docs/AGENTS.md",
+      "type": "agents",
+      "category": "domain",
+      "heading": "Project Documentation - Agent Awareness",
+      "token_estimate": 3662
+    },
+    {
+      "path": "./docs/project-docs/CLAUDE.md",
+      "type": "claude",
+      "category": "domain",
+      "heading": "Project Documentation - Claude-Specific Awareness",
+      "token_estimate": 3004
+    },
+    {
+      "path": "./docs/skilled-awareness/AGENTS.md",
+      "type": "agents",
+      "category": "domain",
+      "heading": "Skilled Awareness (SAP Registry) - Agent Awareness",
+      "token_estimate": 4160
+    },
+    {
+      "path": "./docs/skilled-awareness/CLAUDE.md",
+      "type": "claude",
+      "category": "domain",
+      "heading": "Skilled Awareness (SAP Registry) - Claude-Specific Awareness",
+      "token_estimate": 3661
+    },
+    {
+      "path": "./docs/skilled-awareness/agent-awareness/AGENTS.md",
+      "type": "agents",
+      "category": "capability",
+      "heading": "AGENTS.md - Agent Awareness (SAP-009)",
+      "token_estimate": 3427
+    },
+    {
+      "path": "./docs/skilled-awareness/ci-cd-workflows/AGENTS.md",
+      "type": "agents",
+      "category": "capability",
+      "heading": "CI/CD Workflows (SAP-005) - Agent Awareness",
+      "token_estimate": 5518
+    },
+    {
+      "path": "./docs/skilled-awareness/ci-cd-workflows/CLAUDE.md",
+      "type": "claude",
+      "category": "capability",
+      "heading": "CI/CD Workflows (SAP-005) - Claude-Specific Awareness",
+      "token_estimate": 4466
+    },
+    {
+      "path": "./docs/skilled-awareness/development-lifecycle/AGENTS.md",
+      "type": "agents",
+      "category": "capability",
+      "heading": "AGENTS.md - Development Lifecycle (SAP-012)",
+      "token_estimate": 4368
+    },
+    {
+      "path": "./docs/skilled-awareness/dogfooding-patterns/AGENTS.md",
+      "type": "agents",
+      "category": "capability",
+      "heading": "Dogfooding Patterns (SAP-027) - Agent Awareness",
+      "token_estimate": 3515
+    },
+    {
+      "path": "./docs/skilled-awareness/dogfooding-patterns/CLAUDE.md",
+      "type": "claude",
+      "category": "capability",
+      "heading": "Dogfooding Patterns (SAP-027) - Claude-Specific Awareness",
+      "token_estimate": 3395
+    },
+    {
+      "path": "./docs/skilled-awareness/inbox/AGENTS.md",
+      "type": "agents",
+      "category": "capability",
+      "heading": "AGENTS.md - Inbox Protocol (SAP-001)",
+      "token_estimate": 1739
+    },
+    {
+      "path": "./docs/skilled-awareness/metrics-framework/AGENTS.md",
+      "type": "agents",
+      "category": "capability",
+      "heading": "AGENTS.md - Metrics Framework (SAP-013)",
+      "token_estimate": 3762
+    },
+    {
+      "path": "./docs/skilled-awareness/publishing-automation/AGENTS.md",
+      "type": "agents",
+      "category": "capability",
+      "heading": "Publishing Automation (SAP-028) - Agent Awareness",
+      "token_estimate": 3655
+    },
+    {
+      "path": "./docs/skilled-awareness/publishing-automation/CLAUDE.md",
+      "type": "claude",
+      "category": "capability",
+      "heading": "Publishing Automation (SAP-028) - Claude-Specific Awareness",
+      "token_estimate": 3899
+    },
+    {
+      "path": "./docs/skilled-awareness/sap-generation/AGENTS.md",
+      "type": "agents",
+      "category": "capability",
+      "heading": "SAP Generation Automation (SAP-029) - Agent Awareness",
+      "token_estimate": 3718
+    },
+    {
+      "path": "./docs/skilled-awareness/sap-generation/CLAUDE.md",
+      "type": "claude",
+      "category": "capability",
+      "heading": "SAP Generation Automation (SAP-029) - Claude-Specific Awareness",
+      "token_estimate": 5239
+    },
+    {
+      "path": "./docs/skilled-awareness/task-tracking/AGENTS.md",
+      "type": "agents",
+      "category": "capability",
+      "heading": "Agent Task Tracking (SAP-015) - Agent Awareness",
+      "token_estimate": 4877,
+      "metadata": {
+        "sap_id": "SAP-015",
+        "version": "2.0.0",
+        "status": "pilot",
+        "last_updated": "2025-11-04",
+        "type": "reference",
+        "audience": "agents",
+        "complexity": "intermediate",
+        "estimated_reading_time": 12,
+        "progressive_loading": {
+          "phase_1": "lines 1-100",
+          "phase_2": "lines 101-250",
+          "phase_3": "full"
+        },
+        "phase_1_token_estimate": 2500,
+        "phase_2_token_estimate": 5000,
+        "phase_3_token_estimate": 8500
+      },
+      "progressive_loading": {
+        "phase_1": "lines 1-100",
+        "phase_2": "lines 101-250",
+        "phase_3": "full"
+      },
+      "sap_id": "SAP-015",
+      "complexity": "intermediate"
+    },
+    {
+      "path": "./docs/skilled-awareness/task-tracking/CLAUDE.md",
+      "type": "claude",
+      "category": "capability",
+      "heading": "Agent Task Tracking (SAP-015) - Claude-Specific Awareness",
+      "token_estimate": 4047
+    },
+    {
+      "path": "./docs/skilled-awareness/testing-framework/AGENTS.md",
+      "type": "agents",
+      "category": "capability",
+      "heading": "Testing Framework (SAP-004) - Agent Awareness Guide",
+      "token_estimate": 4694
+    },
+    {
+      "path": "./docs/skilled-awareness/testing-framework/CLAUDE.md",
+      "type": "claude",
+      "category": "capability",
+      "heading": "Testing Framework (SAP-004) - Claude-Specific Awareness",
+      "token_estimate": 5105
+    },
+    {
+      "path": "./docs/user-docs/AGENTS.md",
+      "type": "agents",
+      "category": "domain",
+      "heading": "User Documentation - Agent Awareness",
+      "token_estimate": 3300
+    },
+    {
+      "path": "./docs/user-docs/CLAUDE.md",
+      "type": "claude",
+      "category": "domain",
+      "heading": "User Documentation - Claude-Specific Awareness",
+      "token_estimate": 2597
+    },
+    {
+      "path": "./examples/full-featured-with-vision/AGENTS.md",
+      "type": "agents",
+      "category": "unknown",
+      "heading": "AGENTS.md",
+      "token_estimate": 9712
+    },
+    {
+      "path": "./inbox/CLAUDE.md",
+      "type": "claude",
+      "category": "unknown",
+      "heading": "Claude Code Patterns: Cross-Repository Inbox Management",
+      "token_estimate": 5338
+    },
+    {
+      "path": "./static-template/.chora/memory/AGENTS.md",
+      "type": "agents",
+      "category": "unknown",
+      "heading": "Memory System Guide for {{ project_name }}",
+      "token_estimate": 8211
+    },
+    {
+      "path": "./static-template/.chora/memory/CLAUDE.md",
+      "type": "claude",
+      "category": "unknown",
+      "heading": "Claude Memory Integration Patterns",
+      "token_estimate": 3215
+    },
+    {
+      "path": "./static-template/CLAUDE.md",
+      "type": "claude",
+      "category": "unknown",
+      "heading": "CLAUDE.md - Example Template",
+      "token_estimate": 1740
+    },
+    {
+      "path": "./static-template/docker/AGENTS.md",
+      "type": "agents",
+      "category": "unknown",
+      "heading": "Docker Operations for {{ project_name }}",
+      "token_estimate": 1039
+    },
+    {
+      "path": "./static-template/docker/CLAUDE.md",
+      "type": "claude",
+      "category": "unknown",
+      "heading": "Claude Docker Assistance Patterns",
+      "token_estimate": 3254
+    },
+    {
+      "path": "./static-template/scripts/AGENTS.md",
+      "type": "agents",
+      "category": "unknown",
+      "heading": "Automation Scripts for {{ project_name }}",
+      "token_estimate": 1963
+    },
+    {
+      "path": "./static-template/scripts/CLAUDE.md",
+      "type": "claude",
+      "category": "unknown",
+      "heading": "Claude Automation Script Patterns",
+      "token_estimate": 3603
+    },
+    {
+      "path": "./static-template/tests/AGENTS.md",
+      "type": "agents",
+      "category": "unknown",
+      "heading": "Testing Guide for {{ project_name }}",
+      "token_estimate": 2640
+    },
+    {
+      "path": "./static-template/tests/CLAUDE.md",
+      "type": "claude",
+      "category": "unknown",
+      "heading": "Claude Test Generation Patterns",
+      "token_estimate": 3079
+    }
+  ],
+  "hierarchy": {
+    "root": [
+      "./AGENTS.md",
+      "./CLAUDE.md"
+    ],
+    "domain": [
+      "./docs/dev-docs/AGENTS.md",
+      "./docs/dev-docs/CLAUDE.md",
+      "./docs/project-docs/AGENTS.md",
+      "./docs/project-docs/CLAUDE.md",
+      "./docs/skilled-awareness/AGENTS.md",
+      "./docs/skilled-awareness/CLAUDE.md",
+      "./docs/user-docs/AGENTS.md",
+      "./docs/user-docs/CLAUDE.md"
+    ],
+    "capability": [
+      "./docs/skilled-awareness/agent-awareness/AGENTS.md",
+      "./docs/skilled-awareness/ci-cd-workflows/AGENTS.md",
+      "./docs/skilled-awareness/ci-cd-workflows/CLAUDE.md",
+      "./docs/skilled-awareness/development-lifecycle/AGENTS.md",
+      "./docs/skilled-awareness/dogfooding-patterns/AGENTS.md",
+      "./docs/skilled-awareness/dogfooding-patterns/CLAUDE.md",
+      "./docs/skilled-awareness/inbox/AGENTS.md",
+      "./docs/skilled-awareness/metrics-framework/AGENTS.md",
+      "./docs/skilled-awareness/publishing-automation/AGENTS.md",
+      "./docs/skilled-awareness/publishing-automation/CLAUDE.md",
+      "./docs/skilled-awareness/sap-generation/AGENTS.md",
+      "./docs/skilled-awareness/sap-generation/CLAUDE.md",
+      "./docs/skilled-awareness/task-tracking/AGENTS.md",
+      "./docs/skilled-awareness/task-tracking/CLAUDE.md",
+      "./docs/skilled-awareness/testing-framework/AGENTS.md",
+      "./docs/skilled-awareness/testing-framework/CLAUDE.md"
+    ],
+    "feature": [],
+    "component": [],
+    "unknown": [
+      "./examples/full-featured-with-vision/AGENTS.md",
+      "./inbox/CLAUDE.md",
+      "./static-template/.chora/memory/AGENTS.md",
+      "./static-template/.chora/memory/CLAUDE.md",
+      "./static-template/CLAUDE.md",
+      "./static-template/docker/AGENTS.md",
+      "./static-template/docker/CLAUDE.md",
+      "./static-template/scripts/AGENTS.md",
+      "./static-template/scripts/CLAUDE.md",
+      "./static-template/tests/AGENTS.md",
+      "./static-template/tests/CLAUDE.md"
+    ]
+  },
+  "navigation_tree": {
+    "AGENTS.md": {
+      "path": "./AGENTS.md",
+      "type": "agents",
+      "category": "root",
+      "heading": "AGENTS.md - chora-base Template Repository",
+      "token_estimate": 12954
+    },
+    "CLAUDE.md": {
+      "path": "./CLAUDE.md",
+      "type": "claude",
+      "category": "root",
+      "heading": "Chora-Base: Claude Agent Awareness (Root)",
+      "token_estimate": 4945
+    },
+    "docs": {
+      "_files": [],
+      "_children": {
+        "dev-docs": {
+          "_files": [],
+          "_children": {
+            "AGENTS.md": {
+              "path": "./docs/dev-docs/AGENTS.md",
+              "type": "agents",
+              "category": "domain",
+              "heading": "Developer Documentation - Agent Awareness",
+              "token_estimate": 2986
+            },
+            "CLAUDE.md": {
+              "path": "./docs/dev-docs/CLAUDE.md",
+              "type": "claude",
+              "category": "domain",
+              "heading": "Developer Documentation - Claude-Specific Awareness",
+              "token_estimate": 2915
+            }
+          }
+        },
+        "project-docs": {
+          "_files": [],
+          "_children": {
+            "AGENTS.md": {
+              "path": "./docs/project-docs/AGENTS.md",
+              "type": "agents",
+              "category": "domain",
+              "heading": "Project Documentation - Agent Awareness",
+              "token_estimate": 3662
+            },
+            "CLAUDE.md": {
+              "path": "./docs/project-docs/CLAUDE.md",
+              "type": "claude",
+              "category": "domain",
+              "heading": "Project Documentation - Claude-Specific Awareness",
+              "token_estimate": 3004
+            }
+          }
+        },
+        "skilled-awareness": {
+          "_files": [],
+          "_children": {
+            "AGENTS.md": {
+              "path": "./docs/skilled-awareness/AGENTS.md",
+              "type": "agents",
+              "category": "domain",
+              "heading": "Skilled Awareness (SAP Registry) - Agent Awareness",
+              "token_estimate": 4160
+            },
+            "CLAUDE.md": {
+              "path": "./docs/skilled-awareness/CLAUDE.md",
+              "type": "claude",
+              "category": "domain",
+              "heading": "Skilled Awareness (SAP Registry) - Claude-Specific Awareness",
+              "token_estimate": 3661
+            },
+            "agent-awareness": {
+              "_files": [],
+              "_children": {
+                "AGENTS.md": {
+                  "path": "./docs/skilled-awareness/agent-awareness/AGENTS.md",
+                  "type": "agents",
+                  "category": "capability",
+                  "heading": "AGENTS.md - Agent Awareness (SAP-009)",
+                  "token_estimate": 3427
+                }
+              }
+            },
+            "ci-cd-workflows": {
+              "_files": [],
+              "_children": {
+                "AGENTS.md": {
+                  "path": "./docs/skilled-awareness/ci-cd-workflows/AGENTS.md",
+                  "type": "agents",
+                  "category": "capability",
+                  "heading": "CI/CD Workflows (SAP-005) - Agent Awareness",
+                  "token_estimate": 5518
+                },
+                "CLAUDE.md": {
+                  "path": "./docs/skilled-awareness/ci-cd-workflows/CLAUDE.md",
+                  "type": "claude",
+                  "category": "capability",
+                  "heading": "CI/CD Workflows (SAP-005) - Claude-Specific Awareness",
+                  "token_estimate": 4466
+                }
+              }
+            },
+            "development-lifecycle": {
+              "_files": [],
+              "_children": {
+                "AGENTS.md": {
+                  "path": "./docs/skilled-awareness/development-lifecycle/AGENTS.md",
+                  "type": "agents",
+                  "category": "capability",
+                  "heading": "AGENTS.md - Development Lifecycle (SAP-012)",
+                  "token_estimate": 4368
+                }
+              }
+            },
+            "dogfooding-patterns": {
+              "_files": [],
+              "_children": {
+                "AGENTS.md": {
+                  "path": "./docs/skilled-awareness/dogfooding-patterns/AGENTS.md",
+                  "type": "agents",
+                  "category": "capability",
+                  "heading": "Dogfooding Patterns (SAP-027) - Agent Awareness",
+                  "token_estimate": 3515
+                },
+                "CLAUDE.md": {
+                  "path": "./docs/skilled-awareness/dogfooding-patterns/CLAUDE.md",
+                  "type": "claude",
+                  "category": "capability",
+                  "heading": "Dogfooding Patterns (SAP-027) - Claude-Specific Awareness",
+                  "token_estimate": 3395
+                }
+              }
+            },
+            "inbox": {
+              "_files": [],
+              "_children": {
+                "AGENTS.md": {
+                  "path": "./docs/skilled-awareness/inbox/AGENTS.md",
+                  "type": "agents",
+                  "category": "capability",
+                  "heading": "AGENTS.md - Inbox Protocol (SAP-001)",
+                  "token_estimate": 1739
+                }
+              }
+            },
+            "metrics-framework": {
+              "_files": [],
+              "_children": {
+                "AGENTS.md": {
+                  "path": "./docs/skilled-awareness/metrics-framework/AGENTS.md",
+                  "type": "agents",
+                  "category": "capability",
+                  "heading": "AGENTS.md - Metrics Framework (SAP-013)",
+                  "token_estimate": 3762
+                }
+              }
+            },
+            "publishing-automation": {
+              "_files": [],
+              "_children": {
+                "AGENTS.md": {
+                  "path": "./docs/skilled-awareness/publishing-automation/AGENTS.md",
+                  "type": "agents",
+                  "category": "capability",
+                  "heading": "Publishing Automation (SAP-028) - Agent Awareness",
+                  "token_estimate": 3655
+                },
+                "CLAUDE.md": {
+                  "path": "./docs/skilled-awareness/publishing-automation/CLAUDE.md",
+                  "type": "claude",
+                  "category": "capability",
+                  "heading": "Publishing Automation (SAP-028) - Claude-Specific Awareness",
+                  "token_estimate": 3899
+                }
+              }
+            },
+            "sap-generation": {
+              "_files": [],
+              "_children": {
+                "AGENTS.md": {
+                  "path": "./docs/skilled-awareness/sap-generation/AGENTS.md",
+                  "type": "agents",
+                  "category": "capability",
+                  "heading": "SAP Generation Automation (SAP-029) - Agent Awareness",
+                  "token_estimate": 3718
+                },
+                "CLAUDE.md": {
+                  "path": "./docs/skilled-awareness/sap-generation/CLAUDE.md",
+                  "type": "claude",
+                  "category": "capability",
+                  "heading": "SAP Generation Automation (SAP-029) - Claude-Specific Awareness",
+                  "token_estimate": 5239
+                }
+              }
+            },
+            "task-tracking": {
+              "_files": [],
+              "_children": {
+                "AGENTS.md": {
+                  "path": "./docs/skilled-awareness/task-tracking/AGENTS.md",
+                  "type": "agents",
+                  "category": "capability",
+                  "heading": "Agent Task Tracking (SAP-015) - Agent Awareness",
+                  "token_estimate": 4877,
+                  "metadata": {
+                    "sap_id": "SAP-015",
+                    "version": "2.0.0",
+                    "status": "pilot",
+                    "last_updated": "2025-11-04",
+                    "type": "reference",
+                    "audience": "agents",
+                    "complexity": "intermediate",
+                    "estimated_reading_time": 12,
+                    "progressive_loading": {
+                      "phase_1": "lines 1-100",
+                      "phase_2": "lines 101-250",
+                      "phase_3": "full"
+                    },
+                    "phase_1_token_estimate": 2500,
+                    "phase_2_token_estimate": 5000,
+                    "phase_3_token_estimate": 8500
+                  },
+                  "progressive_loading": {
+                    "phase_1": "lines 1-100",
+                    "phase_2": "lines 101-250",
+                    "phase_3": "full"
+                  },
+                  "sap_id": "SAP-015",
+                  "complexity": "intermediate"
+                },
+                "CLAUDE.md": {
+                  "path": "./docs/skilled-awareness/task-tracking/CLAUDE.md",
+                  "type": "claude",
+                  "category": "capability",
+                  "heading": "Agent Task Tracking (SAP-015) - Claude-Specific Awareness",
+                  "token_estimate": 4047
+                }
+              }
+            },
+            "testing-framework": {
+              "_files": [],
+              "_children": {
+                "AGENTS.md": {
+                  "path": "./docs/skilled-awareness/testing-framework/AGENTS.md",
+                  "type": "agents",
+                  "category": "capability",
+                  "heading": "Testing Framework (SAP-004) - Agent Awareness Guide",
+                  "token_estimate": 4694
+                },
+                "CLAUDE.md": {
+                  "path": "./docs/skilled-awareness/testing-framework/CLAUDE.md",
+                  "type": "claude",
+                  "category": "capability",
+                  "heading": "Testing Framework (SAP-004) - Claude-Specific Awareness",
+                  "token_estimate": 5105
+                }
+              }
+            }
+          }
+        },
+        "user-docs": {
+          "_files": [],
+          "_children": {
+            "AGENTS.md": {
+              "path": "./docs/user-docs/AGENTS.md",
+              "type": "agents",
+              "category": "domain",
+              "heading": "User Documentation - Agent Awareness",
+              "token_estimate": 3300
+            },
+            "CLAUDE.md": {
+              "path": "./docs/user-docs/CLAUDE.md",
+              "type": "claude",
+              "category": "domain",
+              "heading": "User Documentation - Claude-Specific Awareness",
+              "token_estimate": 2597
+            }
+          }
+        }
+      }
+    },
+    "examples": {
+      "_files": [],
+      "_children": {
+        "full-featured-with-vision": {
+          "_files": [],
+          "_children": {
+            "AGENTS.md": {
+              "path": "./examples/full-featured-with-vision/AGENTS.md",
+              "type": "agents",
+              "category": "unknown",
+              "heading": "AGENTS.md",
+              "token_estimate": 9712
+            }
+          }
+        }
+      }
+    },
+    "inbox": {
+      "_files": [],
+      "_children": {
+        "CLAUDE.md": {
+          "path": "./inbox/CLAUDE.md",
+          "type": "claude",
+          "category": "unknown",
+          "heading": "Claude Code Patterns: Cross-Repository Inbox Management",
+          "token_estimate": 5338
+        }
+      }
+    },
+    "static-template": {
+      "_files": [],
+      "_children": {
+        ".chora": {
+          "_files": [],
+          "_children": {
+            "memory": {
+              "_files": [],
+              "_children": {
+                "AGENTS.md": {
+                  "path": "./static-template/.chora/memory/AGENTS.md",
+                  "type": "agents",
+                  "category": "unknown",
+                  "heading": "Memory System Guide for {{ project_name }}",
+                  "token_estimate": 8211
+                },
+                "CLAUDE.md": {
+                  "path": "./static-template/.chora/memory/CLAUDE.md",
+                  "type": "claude",
+                  "category": "unknown",
+                  "heading": "Claude Memory Integration Patterns",
+                  "token_estimate": 3215
+                }
+              }
+            }
+          }
+        },
+        "CLAUDE.md": {
+          "path": "./static-template/CLAUDE.md",
+          "type": "claude",
+          "category": "unknown",
+          "heading": "CLAUDE.md - Example Template",
+          "token_estimate": 1740
+        },
+        "docker": {
+          "_files": [],
+          "_children": {
+            "AGENTS.md": {
+              "path": "./static-template/docker/AGENTS.md",
+              "type": "agents",
+              "category": "unknown",
+              "heading": "Docker Operations for {{ project_name }}",
+              "token_estimate": 1039
+            },
+            "CLAUDE.md": {
+              "path": "./static-template/docker/CLAUDE.md",
+              "type": "claude",
+              "category": "unknown",
+              "heading": "Claude Docker Assistance Patterns",
+              "token_estimate": 3254
+            }
+          }
+        },
+        "scripts": {
+          "_files": [],
+          "_children": {
+            "AGENTS.md": {
+              "path": "./static-template/scripts/AGENTS.md",
+              "type": "agents",
+              "category": "unknown",
+              "heading": "Automation Scripts for {{ project_name }}",
+              "token_estimate": 1963
+            },
+            "CLAUDE.md": {
+              "path": "./static-template/scripts/CLAUDE.md",
+              "type": "claude",
+              "category": "unknown",
+              "heading": "Claude Automation Script Patterns",
+              "token_estimate": 3603
+            }
+          }
+        },
+        "tests": {
+          "_files": [],
+          "_children": {
+            "AGENTS.md": {
+              "path": "./static-template/tests/AGENTS.md",
+              "type": "agents",
+              "category": "unknown",
+              "heading": "Testing Guide for {{ project_name }}",
+              "token_estimate": 2640
+            },
+            "CLAUDE.md": {
+              "path": "./static-template/tests/CLAUDE.md",
+              "type": "claude",
+              "category": "unknown",
+              "heading": "Claude Test Generation Patterns",
+              "token_estimate": 3079
+            }
+          }
+        }
+      }
+    }
+  },
+  "progressive_loading_files": [
+    "./docs/skilled-awareness/task-tracking/AGENTS.md"
+  ],
+  "complexity_breakdown": {
+    "intermediate": 1
+  }
+}

@@ -116,7 +116,24 @@ cat > inbox/incoming/coordination/COORD-2025-NNN.json << 'EOF'
   "request_id": "COORD-2025-NNN",
   "title": "Brief title",
   "created": "YYYY-MM-DD",
-  ...
+  "description": "Detailed description",
+  "priority": "high",
+  "requesting_repo": "chora-base",
+  "target_repos": ["other-repo"],
+
+  # NEW: Relationship metadata (optional, for graph-based curation)
+  "relationships": {
+    "blocks": ["COORD-2025-001"],           # This request blocks others
+    "blocked_by": ["COORD-2025-002"],       # Blocked by other requests
+    "related_to": ["COORD-2025-003"],       # Related work
+    "spawns_tasks": ["task-123"]            # Spawned implementation tasks
+  },
+
+  # NEW: SAP correlation (optional, track which SAPs are affected)
+  "affects_saps": ["SAP-001", "SAP-015"],
+
+  # NEW: Domain impact (optional, track domain scope)
+  "affects_domains": ["skilled-awareness", "dev-docs"]
 }
 EOF
 
@@ -126,6 +143,8 @@ echo '{"event_type": "coordination_request_created", ...}' >> inbox/coordination
 # 3. Update ECOSYSTEM_STATUS.yaml
 # Add to coordination.active_requests
 ```
+
+**Note**: The `relationships`, `affects_saps`, and `affects_domains` fields are **optional** but enable graph-based curation and cross-SAP analysis. See [protocol-spec.md Section 7](protocol-spec.md#7-coordination-request-schema-enhancements) for details.
 
 **Triage Coordination Request**:
 ```bash

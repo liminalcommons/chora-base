@@ -121,7 +121,13 @@
   ],
   "metadata": {
     "trace_id": "sap-015-pilot",
-    "epic": "SAP-015-implementation"
+    "epic": "SAP-015-implementation",
+    "affects_saps": ["SAP-015", "SAP-009"],
+    "affects_artifacts": [
+      "/docs/skilled-awareness/task-tracking/CLAUDE.md",
+      "/docs/skilled-awareness/task-tracking/protocol-spec.md"
+    ],
+    "sap_adoption_phase": "Phase 2"
   }
 }
 ```
@@ -141,6 +147,37 @@
 | `updated_at` | datetime | ✅ Yes (auto) | now | ISO 8601 timestamp |
 | `closed_at` | datetime | ❌ No | `null` | ISO 8601 timestamp when closed |
 | `dependencies` | array | ❌ No | `[]` | Dependency relationships |
+| `metadata` | object | ❌ No | `{}` | Flexible metadata for context (see Metadata Fields below) |
+
+### Metadata Fields (SAP Correlation)
+
+The `metadata` object supports flexible key-value pairs. The following fields are **recommended** for SAP-related tasks to enable curation and progress tracking:
+
+| Field | Type | Required | Description | Example |
+|-------|------|----------|-------------|---------|
+| `affects_saps` | array | ❌ No | SAP IDs affected by this task | `["SAP-015", "SAP-009"]` |
+| `affects_artifacts` | array | ❌ No | File paths created/modified by this task | `["/docs/skilled-awareness/task-tracking/CLAUDE.md"]` |
+| `sap_adoption_phase` | string | ❌ No | Adoption phase from SAP plan (e.g., "Phase 2") | `"Phase 2"` |
+| `epic` | string | ❌ No | Parent epic ID or name | `"SAP-015-implementation"` |
+| `trace_id` | string | ❌ No | A-MEM trace correlation ID | `"sap-015-pilot"` |
+
+**Use Cases**:
+- **SAP Progress Tracking**: Query tasks by `affects_saps` to see adoption progress
+- **Impact Analysis**: Find all tasks touching specific artifacts
+- **Epic Rollup**: Group tasks by `epic` for project planning
+- **A-MEM Correlation**: Link tasks to event traces via `trace_id`
+
+**Example Queries**:
+```bash
+# Find all tasks related to SAP-015
+bd list --json | jq '.[] | select(.metadata.affects_saps[]? == "SAP-015")'
+
+# Find tasks in Phase 2
+bd list --json | jq '.[] | select(.metadata.sap_adoption_phase == "Phase 2")'
+
+# Find tasks affecting specific file
+bd list --json | jq '.[] | select(.metadata.affects_artifacts[]? | contains("CLAUDE.md"))'
+```
 
 ### Dependency Types
 

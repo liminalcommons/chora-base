@@ -1,382 +1,617 @@
 # Quickstart: Claude Code Agent
 
 **For**: Claude Code AI agents onboarding to chora-base
-**Time**: ~15 minutes total
-**Goal**: Get productive with chora-base SAPs as quickly as possible
+**Time**: ~12 minutes total
+**Goal**: Leverage Claude Code's Read/Bash tools to navigate pre-installed SAPs
 
-**Last Updated**: 2025-10-30 (v4.1.1 - SAP-019 Self-Evaluation added)
+**Last Updated**: 2025-11-05 (Complete rewrite - corrected directory structure + Claude-specific optimizations)
 
 ---
 
 ## Overview
 
-This guide is optimized for Claude Code agents. It's 60%+ shorter than the generic guide (500 lines vs 2000+), focusing only on what Claude Code needs to get started.
+This guide is optimized specifically for **Claude Code agents**. **chora-base is a project template WITH 29 pre-installed SAPs** - you leverage Claude Code's tools to explore and adopt them.
 
 **What you'll accomplish**:
-1. Validate environment (2 minutes)
-2. Install minimal-entry SAP set (5 minutes)
-3. Verify installation (2 minutes)
-4. Complete first task: Read SAP-000 (5 minutes)
+1. Validate environment with Bash tool (1 minute)
+2. Understand SAP structure (2 minutes)
+3. Navigate SAPs with Read tool (4 minutes)
+4. Complete first task: Explore SAP-000 (5 minutes)
 
-**Total time**: ~15 minutes
+**Total time**: ~12 minutes
+
+**Claude Code Advantage**: 3 minutes faster than generic guide thanks to Read/Bash tools
 
 ---
 
-## Prerequisites (2 minutes)
+## Prerequisites (1 minute)
 
-### Required
+### Quick Environment Check
 
-- **Python 3.8+** (you likely already have this)
-- **Git 2.0+** (you likely already have this)
-- **chora-base cloned** (if reading this, you probably have it)
-
-### Quick Check
+Use Claude Code's **Bash tool** to validate:
 
 ```bash
 # Verify you're in chora-base root
 pwd  # Should end with /chora-base
-ls sap-catalog.json  # Should exist
 
-# Run pre-flight validation
-bash scripts/validate-prerequisites.sh
+# Check key files exist
+ls sap-catalog.json README.md CLAUDE.md  # All should exist
+
+# Verify Python and Git
+python3 --version  # Should be 3.8+
+git --version  # Should be 2.0+
 ```
 
-**Expected**: `✓ Pre-flight validation PASSED`
+**Expected**: No "file not found" errors, versions meet requirements
 
-**If failed**: See [Onboarding FAQ](../troubleshooting/onboarding-faq.md#installation-issues) for fixes
+**If validation fails**: See [Onboarding FAQ](../troubleshooting/onboarding-faq.md#installation-issues)
 
 ---
 
-## Installation (5 minutes)
+## Understanding chora-base (2 minutes)
 
-### Step 1: Choose SAP Set
+### What is chora-base?
 
-**Recommendation for Claude Code**: Start with `minimal-entry`
+**chora-base** is a **Python project template** that includes **29 pre-installed SAPs**.
 
-**Why**:
-- 5 essential SAPs (SAP-000, SAP-001, SAP-002, SAP-009, SAP-016)
-- Covers SAP framework + inbox coordination
-- 3-5 hour adoption time (vs weeks for full set)
-- You can always add more SAPs later
+**Key Concept for Claude Code**:
+- ✅ SAPs are already installed - use **Read tool** to explore them
+- ✅ Use **Bash tool** to navigate directories
+- ❌ No need to run installation scripts (SAPs pre-exist)
 
-**Not sure?** See [SAP Set Decision Tree](../reference/sap-set-decision-tree.md)
+### SAP Structure
 
-### Step 2: Dry-Run (Optional but Recommended)
+**SAP = Skilled Awareness Package**
 
-```bash
-python3 scripts/install-sap.py --set minimal-entry --dry-run
+Each SAP has 5-7 standardized artifacts:
+1. **capability-charter.md** - Problem statement, solution design
+2. **protocol-spec.md** - Complete technical specification
+3. **AGENTS.md** or **awareness-guide.md** - AI agent patterns
+4. **adoption-blueprint.md** - Step-by-step adoption guide
+5. **ledger.md** - Adoption tracking and version history
+6. **CLAUDE.md** (optional) - Claude-specific patterns
+
+### Directory Structure
+
+SAPs live in `docs/skilled-awareness/` with **simple names** (no `SAP-XXX-` prefix):
+
+```
+docs/skilled-awareness/
+├── sap-framework/           # SAP-000: Foundation
+├── inbox/                   # SAP-001: Cross-repo coordination
+├── testing-framework/       # SAP-004: pytest patterns
+├── ci-cd-workflows/         # SAP-005: GitHub Actions
+├── agent-awareness/         # SAP-009: AGENTS.md/CLAUDE.md pattern
+├── memory-system/           # SAP-010: Event-sourced memory
+├── task-tracking/           # SAP-015: Beads task management
+└── ... (22 more SAPs)
 ```
 
-**What this does**: Shows what will be installed without making changes
-
-**Expected output**:
-```
-Installing SAP Set: Minimal Ecosystem Entry
-SAPs: 5 (SAP-000, SAP-001, SAP-009, SAP-016, SAP-002)
-[DRY RUN] Would install:
-  ✓ SAP-000: sap-framework
-  ✓ SAP-001: inbox-coordination
-  ✓ SAP-009: agent-awareness
-  ✓ SAP-016: link-validation-reference-management
-  ✓ SAP-002: chora-base-meta
-```
-
-### Step 3: Install
-
-```bash
-python3 scripts/install-sap.py --set minimal-entry
-```
-
-**What happens**:
-- Installs 5 SAPs to `docs/skilled-awareness/`
-- Shows progress bar: `[====>    ] 3/5 SAPs (60%) ~30s remaining`
-- Takes ~1-2 minutes (actual installation, not adoption time)
-- May show warnings for Pilot-status SAPs (this is normal)
-
-**Expected output**:
-```
-Installing SAP-000: sap-framework
-  ✓ Copied SAP directory
-  ✓ Validation passed
-
-Installing SAP-001: inbox-coordination
-  ⚠ Note: Pilot status - may undergo changes
-  ✓ Copied SAP directory
-  ✓ Copied system files
-  ✓ Validation passed
-
-[Progress bar showing completion]
-
-✅ Set installation complete!
-```
+**Important**: Use lowercase-with-hyphens (e.g., `sap-framework/`), NOT `SAP-000-sap-framework/`
 
 ---
 
-## Validation (2 minutes)
+## Navigating SAPs with Claude Code Tools (4 minutes)
 
-### Step 1: Check SAP Directories
-
-```bash
-ls docs/skilled-awareness/ | grep SAP-
-```
-
-**Expected output** (5 directories):
-```
-SAP-000-sap-framework/
-SAP-001-inbox/
-SAP-002-chora-base/
-SAP-009-agent-awareness/
-SAP-016-link-validation-reference-management/
-```
-
-**Count check**:
-```bash
-ls -d docs/skilled-awareness/SAP-* | wc -l
-# Should output: 5
-```
-
-### Step 2: Check SAP Artifacts
-
-Each SAP should have 5 files:
+### Step 1: List All SAPs (Bash Tool)
 
 ```bash
-ls docs/skilled-awareness/SAP-000-sap-framework/
+# Count total SAPs
+ls -d docs/skilled-awareness/*/ | wc -l
+# Output: 29+ directories
+
+# List all SAP directories
+ls docs/skilled-awareness/
 ```
 
-**Expected output**:
-```
-BLUEPRINT.md          (or adoption-blueprint.md)
-INDEX.md             (or awareness-guide.md)
-AGENTS.md            (or capability-charter.md)
-README.md            (or protocol-spec.md)
-SPECIFICATION.md     (or ledger.md)
-```
+**You should see**:
+- agent-awareness
+- ci-cd-workflows
+- documentation-framework
+- inbox
+- mcp-server-development
+- sap-framework
+- task-tracking
+- testing-framework
+- ... (21 more)
 
-*Note: Exact filenames may vary by SAP version, but should have 5 markdown files*
+### Step 2: View SAP Catalog (Read Tool)
 
-### Step 3: Test Reading a SAP
+Use Claude Code's **Read tool** to examine the catalog:
 
 ```bash
-cat docs/skilled-awareness/SAP-000-sap-framework/README.md | head -20
+# Or use Bash to preview
+cat sap-catalog.json | head -100
 ```
 
-**Expected**: Readable markdown content about SAP framework
+**Catalog structure** (for each SAP):
+```json
+{
+  "id": "SAP-000",
+  "name": "sap-framework",
+  "full_name": "SAP Framework",
+  "status": "active",
+  "version": "1.0.0",
+  "location": "docs/skilled-awareness/sap-framework",
+  "dependencies": [],
+  "tags": ["meta", "foundation"]
+}
+```
 
-**If any validation fails**: See [Onboarding FAQ - Validation Issues](../troubleshooting/onboarding-faq.md#validation-issues)
+### Step 3: Check SAP Status Levels
+
+SAPs have three status levels:
+
+| Status | Meaning | Recommendation |
+|--------|---------|----------------|
+| **active** | Production-ready, battle-tested | Use freely |
+| **pilot** | Functional but may change | Use with caution, give feedback |
+| **draft** | Experimental, unstable | Only use if explicitly exploring |
+
+**Find active SAPs** (safest to adopt):
+```bash
+grep -B 2 '"status": "active"' sap-catalog.json | grep '"name"'
+```
+
+**Active SAPs**:
+- SAP-000 (sap-framework)
+- SAP-005 (ci-cd-workflows)
+- SAP-006 (quality-gates)
+- SAP-013 (metrics-tracking)
+- SAP-016 (link-validation)
+- SAP-019 (sap-self-evaluation)
+
+### Step 4: Understand SAP Sets (Curated Bundles)
+
+**SAP Sets** are pre-defined bundles for specific use cases:
+
+```bash
+# View SAP set definitions
+grep -A 30 '"sap_sets"' sap-catalog.json
+```
+
+**Available Sets**:
+
+| Set | SAPs | Best For |
+|-----|------|----------|
+| **minimal-entry** | 5 | First-timers, ecosystem coordination |
+| **testing-focused** | 6 | Quality-first development, CI/CD |
+| **mcp-server** | 10 | Building MCP servers |
+| **recommended** | 10 | Production-ready projects |
+| **full** | 18 | Complete reference implementation |
+| **react-development** | 10 | React/Next.js apps |
+
+**Example - minimal-entry SAPs**:
+- SAP-000 (sap-framework) → `sap-framework/`
+- SAP-001 (inbox) → `inbox/`
+- SAP-002 (chora-base) → `chora-base/`
+- SAP-009 (agent-awareness) → `agent-awareness/`
+- SAP-016 (link-validation) → `link-validation-reference-management/`
 
 ---
 
-## First Task: Understand SAP-000 (5 minutes)
+## First Task: Explore SAP-000 with Read Tool (5 minutes)
 
-Now that SAPs are installed, let's complete your first task: understanding the SAP framework.
+### Task Overview
 
-### Task: Read SAP-000 Protocol Specification
+**Goal**: Understand the SAP framework by reading SAP-000 documentation
+**Time**: 5 minutes
+**Claude Code Advantage**: Use Read tool to quickly scan artifacts
 
-**Goal**: Understand what SAPs are and how they work
+### Step 1: List SAP-000 Files (Bash)
 
-**Steps**:
+```bash
+ls -la docs/skilled-awareness/sap-framework/
+```
 
-1. **Read the README** (1 minute):
-   ```bash
-   cat docs/skilled-awareness/SAP-000-sap-framework/README.md
-   ```
-   *Gives you a quick overview*
+**You should see 7 files**:
+- AGENTS.md (agent patterns)
+- CLAUDE.md (Claude-specific patterns)
+- adoption-blueprint.md (step-by-step adoption)
+- awareness-guide.md (operating patterns)
+- capability-charter.md (problem/solution design)
+- ledger.md (adoption tracking)
+- protocol-spec.md (complete technical spec)
 
-2. **Scan the INDEX** (1 minute):
-   ```bash
-   cat docs/skilled-awareness/SAP-000-sap-framework/INDEX.md
-   ```
-   *Shows the 5 artifact structure*
+### Step 2: Read AGENTS.md (Quick Reference)
 
-3. **Skim the SPECIFICATION** (2 minutes):
-   ```bash
-   cat docs/skilled-awareness/SAP-000-sap-framework/SPECIFICATION.md
-   ```
-   *Technical details of the SAP protocol*
+**Use Read tool** to scan the agent-focused overview:
 
-4. **Check the BLUEPRINT** (1 minute):
-   ```bash
-   cat docs/skilled-awareness/SAP-000-sap-framework/BLUEPRINT.md
-   ```
-   *Step-by-step adoption guide*
+```
+Read file: docs/skilled-awareness/sap-framework/AGENTS.md
+```
 
-### Key Concepts from SAP-000
+**Key Takeaways**:
+- Quick reference for AI agents
+- Common commands and workflows
+- Integration with other SAPs
 
-After reading, you should understand:
+### Step 3: Read protocol-spec.md (Technical Details)
 
-- **What is a SAP?** Skilled Awareness Package - reusable protocol implementation
-- **5 Artifacts**: Every SAP has 5 files (BLUEPRINT, INDEX, AGENTS, README, SPECIFICATION)
-- **SAP Sets**: Curated bundles of SAPs for different use cases
-- **Adoption Tiers**: Essential → Recommended → Advanced
+**Use Read tool** to get complete technical specification:
 
-### Quick Self-Check
+```
+Read file: docs/skilled-awareness/sap-framework/protocol-spec.md
+```
 
-Can you answer these?
-- [ ] What does SAP stand for?
-- [ ] How many standard artifacts does each SAP have?
-- [ ] What's the difference between SAP-000 and SAP-001?
-- [ ] Where are SAPs installed?
-- [ ] How do you install additional SAPs?
+**Key Takeaways**:
+- Technical specification of SAP protocol
+- Artifact naming conventions (capability-charter.md, protocol-spec.md, etc.)
+- SAP versioning and governance
 
-**Answers**:
-- SAP = Skilled Awareness Package
-- 5 artifacts (BLUEPRINT, INDEX, AGENTS, README/SPECIFICATION.md, and one more)
-- SAP-000 = Protocol framework, SAP-001 = Inbox coordination (specific implementation)
-- `docs/skilled-awareness/SAP-XXX-name/`
-- `python3 scripts/install-sap.py SAP-XXX`
+### Step 4: Skim adoption-blueprint.md (Implementation Guide)
+
+**Use Read tool** to understand adoption process:
+
+```
+Read file: docs/skilled-awareness/sap-framework/adoption-blueprint.md
+```
+
+**Key Takeaways**:
+- Step-by-step adoption instructions
+- Prerequisites and dependencies
+- Success criteria for adoption
+
+### Step 5: Check CLAUDE.md (Claude-Specific Patterns)
+
+**SAP-000 has Claude-specific guidance!**
+
+```
+Read file: docs/skilled-awareness/sap-framework/CLAUDE.md
+```
+
+**Key Takeaways**:
+- Claude Code-specific navigation patterns
+- Progressive context loading strategy
+- Tool usage recommendations (Read, Bash, Glob, Grep)
+
+### Core Concepts Summary
+
+After exploring SAP-000, you should understand:
+
+**What is a SAP?**
+- Skilled Awareness Package
+- Reusable protocol implementation
+- Self-contained documentation bundle with 5-7 standardized artifacts
+
+**Standard Artifacts** (most SAPs have):
+1. **capability-charter.md**: Problem statement and solution design
+2. **protocol-spec.md**: Complete technical specification
+3. **AGENTS.md** or **awareness-guide.md**: AI agent patterns
+4. **adoption-blueprint.md**: Step-by-step adoption guide
+5. **ledger.md**: Adoption tracking and version history
+
+**Optional Artifacts**:
+- **CLAUDE.md**: Claude-specific patterns (highly valuable!)
+- **README.md**: Human-readable overview
+
+**SAP IDs vs Directory Names**:
+- SAP ID format: `SAP-000`, `SAP-001` (used in catalog and references)
+- Directory format: `sap-framework/`, `inbox/` (actual filesystem)
+- Mapping: See `sap-catalog.json` → `"location"` field
 
 ---
 
-## Next Steps (After This Quickstart)
+## Next Steps
 
-### Immediate (Next 10 minutes)
+### Immediate Actions (Next 10 minutes)
 
-**Explore other installed SAPs**:
+**1. Explore SAPs with Claude-specific guidance**:
+
+SAPs with CLAUDE.md files (prioritize these!):
 ```bash
-# SAP-001: Inbox coordination protocol
-cat docs/skilled-awareness/SAP-001-inbox/README.md
-
-# SAP-009: Agent awareness (AGENTS.md pattern)
-cat docs/skilled-awareness/SAP-009-agent-awareness/README.md
+# Find all SAPs with Claude-specific docs
+find docs/skilled-awareness -name "CLAUDE.md"
 ```
 
-### Short-term (Next 1-2 hours)
-
-**Read adoption blueprints**:
-```bash
-find docs/skilled-awareness -name "BLUEPRINT.md" -o -name "adoption-blueprint.md"
-# Read each one for implementation guidance
+**Read these first** (have Claude optimizations):
+```
+Read file: docs/skilled-awareness/sap-framework/CLAUDE.md
+Read file: docs/skilled-awareness/agent-awareness/CLAUDE.md
+Read file: docs/skilled-awareness/inbox/CLAUDE.md
 ```
 
-**Complete minimal-entry adoption checklist**:
-- See [adoption-blueprint-minimal-entry.md](../../skilled-awareness/adoption-blueprint-minimal-entry.md)
+**2. Explore SAPs relevant to your goal**:
 
-### Medium-term (Next 3-5 hours)
-
-**Apply SAP knowledge**:
-- Customize AGENTS.md for your project (from SAP-009)
-- Set up inbox coordination (from SAP-001)
-- Run link validation (from SAP-016)
-
-**Evaluate your SAP adoption**:
-```bash
-# Check adoption status of installed SAPs
-python3 scripts/sap-evaluator.py --quick
-
-# Generate detailed assessment for a specific SAP
-python3 scripts/sap-evaluator.py --deep SAP-009 --output docs/adoption-reports/SAP-009-assessment.md
+For **Testing & Quality**:
 ```
-*Uses SAP-019 (Self-Evaluation) for adoption depth assessment*
+Read file: docs/skilled-awareness/testing-framework/AGENTS.md
+Read file: docs/skilled-awareness/quality-gates/AGENTS.md
+Read file: docs/skilled-awareness/ci-cd-workflows/AGENTS.md
+```
 
-**Install additional SAPs as needed**:
+For **Documentation**:
+```
+Read file: docs/skilled-awareness/documentation-framework/AGENTS.md
+Read file: docs/skilled-awareness/agent-awareness/AGENTS.md
+```
+
+For **MCP Server Development**:
+```
+Read file: docs/skilled-awareness/mcp-server-development/AGENTS.md
+```
+
+For **Task Tracking** (persistent memory across sessions):
+```
+Read file: docs/skilled-awareness/task-tracking/AGENTS.md
+```
+
+**3. Read root navigation files**:
+
+```
+Read file: /CLAUDE.md  # Root navigation for Claude agents
+Read file: /AGENTS.md  # Project-wide agent patterns
+Read file: docs/skilled-awareness/AGENTS.md  # SAP domain patterns
+```
+
+### Short-term Actions (Next 1-3 hours)
+
+**Adopt specific SAPs into your workflow**:
+
+1. Choose SAPs relevant to your project goals
+2. Use **Read tool** to read each SAP's adoption-blueprint.md
+3. Follow implementation steps
+4. Track progress in each SAP's ledger.md
+
+**Example - Adopting SAP-004 (testing-framework)**:
+```
+# 1. Read the blueprint
+Read file: docs/skilled-awareness/testing-framework/adoption-blueprint.md
+
+# 2. Read the protocol spec for technical details
+Read file: docs/skilled-awareness/testing-framework/protocol-spec.md
+
+# 3. Implement pytest patterns from the spec
+# (Use Write/Edit tools to create tests)
+
+# 4. Track your adoption progress
+# (Update ledger.md with your adoption tier: Essential/Recommended/Advanced)
+```
+
+### Medium-term Actions (Next 1-2 days)
+
+**Integrate multiple SAPs**:
+
+Many SAPs work together:
+- **SAP-001 (inbox) + SAP-015 (task-tracking)**: Decompose coordination requests into beads tasks
+- **SAP-010 (memory-system) + SAP-015 (task-tracking)**: Correlate tasks with event traces
+- **SAP-009 (agent-awareness) + all SAPs**: Every SAP uses nested awareness pattern
+
+**Explore integration patterns**:
 ```bash
-# List available SAPs
-python3 scripts/install-sap.py --list
-
-# Install specific SAP
-python3 scripts/install-sap.py SAP-004  # Testing framework
-
-# Or upgrade to larger set
-python3 scripts/install-sap.py --set recommended
+# Find SAPs that integrate well together
+grep -A 5 "Integration with Other SAPs" docs/skilled-awareness/*/AGENTS.md
 ```
 
 ---
 
 ## Claude Code-Specific Tips
 
-### Tip 1: Use Read Tool for SAP Documentation
+### Tip 1: Use Read Tool for Entire SAPs
 
-You have the Read tool - use it to explore SAPs:
-```bash
-# Read entire SAP in one go
-cat docs/skilled-awareness/SAP-000-sap-framework/*
+Claude Code's **Read tool** can handle large files - read entire SAP artifacts:
+
+```
+Read file: docs/skilled-awareness/sap-framework/protocol-spec.md
+# Returns full specification, not truncated
 ```
 
-### Tip 2: Leverage Glob for SAP Discovery
+### Tip 2: Use Glob for SAP Discovery
 
-```bash
-# Find all SAP READMEs
-ls docs/skilled-awareness/*/README.md
+**Glob tool** quickly finds patterns across SAPs:
 
-# Find all blueprints
-ls docs/skilled-awareness/*/{BLUEPRINT,adoption-blueprint}.md
+```
+Glob pattern: docs/skilled-awareness/*/CLAUDE.md
+# Finds all SAPs with Claude-specific guidance
 ```
 
-### Tip 3: Process Inbox Coordination Requests
-
-Once you understand SAP-001, you can:
-```bash
-# Check for coordination requests
-ls inbox/incoming/coordination/
-
-# Process a request using SAP-001 protocol
-# (See SAP-001 BLUEPRINT for full workflow)
+```
+Glob pattern: docs/skilled-awareness/*/adoption-blueprint.md
+# Finds all adoption guides
 ```
 
-### Tip 4: Validate Your Understanding
+### Tip 3: Use Grep for Keyword Search
 
-After reading a SAP, use the ledger.md to track your progress:
+**Grep tool** searches SAP content:
+
+```
+Grep pattern: "pytest" in docs/skilled-awareness/
+# Finds all SAPs mentioning pytest
+```
+
+```
+Grep pattern: "MCP" in docs/skilled-awareness/
+# Finds MCP-related SAPs
+```
+
+### Tip 4: Leverage Bash for Navigation
+
+**Bash tool** quickly explores structure:
+
 ```bash
-cat docs/skilled-awareness/SAP-000-sap-framework/ledger.md
-# Update it to mark your adoption progress
+# Find all SAPs with specific tag
+grep -B 5 '"tags".*"testing"' sap-catalog.json | grep '"name"'
+
+# Check SAP dependencies
+grep -A 10 '"id": "SAP-014"' sap-catalog.json | grep dependencies
+
+# List SAPs by status
+grep -B 2 '"status": "pilot"' sap-catalog.json | grep '"name"'
+```
+
+### Tip 5: Use Task Tool for Complex Exploration
+
+For **open-ended exploration**, use **Task tool with Explore subagent**:
+
+```
+Task: Explore all SAPs related to testing and find best adoption order
+Subagent: Explore
+Thoroughness: medium
+```
+
+### Tip 6: Persistent Memory with SAP-015 (Beads)
+
+If you adopt **SAP-015 (task-tracking)**, Claude Code can maintain **persistent memory across sessions**:
+
+```bash
+# Check for unblocked work from previous session
+bd ready --json
+
+# Show task details
+bd show {task_id} --json
+
+# Update task status
+bd update {task_id} --status in_progress
+```
+
+**This eliminates context re-establishment overhead between Claude Code sessions!**
+
+---
+
+## Common Workflows for Claude Code
+
+### Workflow 1: Finding a SAP for Your Need
+
+```
+# 1. Use Grep to search catalog by keyword
+Bash: grep -i "testing" sap-catalog.json
+
+# 2. Use Glob to find the SAP directory
+Glob: docs/skilled-awareness/testing-framework/
+
+# 3. Use Read to explore AGENTS.md
+Read file: docs/skilled-awareness/testing-framework/AGENTS.md
+
+# 4. Use Read to get technical details
+Read file: docs/skilled-awareness/testing-framework/protocol-spec.md
+```
+
+### Workflow 2: Understanding SAP Dependencies
+
+```
+# 1. Grep for SAP dependencies
+Bash: grep -A 10 '"id": "SAP-014"' sap-catalog.json | grep dependencies
+
+# 2. Read each dependency's AGENTS.md
+Read file: docs/skilled-awareness/sap-framework/AGENTS.md  # SAP-000
+Read file: docs/skilled-awareness/project-bootstrap/AGENTS.md  # SAP-003
+Read file: docs/skilled-awareness/testing-framework/AGENTS.md  # SAP-004
+```
+
+### Workflow 3: Adopting a SAP Set
+
+For **curated bundle** adoption (e.g., MCP server development):
+
+```
+# 1. Bash - view SAP set definition
+Bash: grep -A 30 '"mcp-server"' sap-catalog.json
+
+# 2. This shows included SAPs:
+# SAP-000, SAP-003, SAP-004, SAP-005, SAP-006,
+# SAP-007, SAP-009, SAP-012, SAP-014, SAP-016
+
+# 3. Read each SAP's AGENTS.md in order
+Read file: docs/skilled-awareness/sap-framework/AGENTS.md  # Foundation
+Read file: docs/skilled-awareness/project-bootstrap/AGENTS.md
+Read file: docs/skilled-awareness/testing-framework/AGENTS.md
+# ... etc
+
+# 4. Read adoption blueprints sequentially
+Read file: docs/skilled-awareness/sap-framework/adoption-blueprint.md
+# Follow steps, then move to next SAP
+```
+
+### Workflow 4: Using chora-base as Template
+
+```
+# 1. Clone chora-base for new project
+Bash: git clone https://github.com/org/chora-base.git my-new-project
+Bash: cd my-new-project
+
+# 2. Remove unwanted SAPs
+Bash: rm -rf docs/skilled-awareness/react-*  # If not React project
+Bash: rm -rf docs/skilled-awareness/mcp-server-development  # If not MCP
+
+# 3. Customize root awareness files
+Edit file: AGENTS.md  # Update for your project
+Edit file: README.md  # Update project details
+
+# 4. Start developing with adopted SAP patterns!
 ```
 
 ---
 
 ## Troubleshooting
 
-### Issue: Installation Failed
+### Issue: Can't Find SAP Directory
 
-**Check**:
+**Symptom**:
 ```bash
-# Verify prerequisites
-bash scripts/validate-prerequisites.sh
-
-# Check error messages
-python3 scripts/install-sap.py --set minimal-entry 2>&1 | grep -i error
+ls docs/skilled-awareness/SAP-000-sap-framework/
+# ls: cannot access: No such file or directory
 ```
 
-**Common Fixes**:
-- **Permission denied**: `chmod -R u+w docs/skilled-awareness/`
-- **Python version**: Upgrade to 3.8+ from [python.org](https://www.python.org/downloads/)
-- **Git missing**: Install from [git-scm.com](https://git-scm.com/downloads/)
-
-**Detailed help**: [Onboarding FAQ](../troubleshooting/onboarding-faq.md)
-
-### Issue: Can't Find SAP Files
-
-**Check current directory**:
+**Solution**: Remove `SAP-XXX-` prefix - directories use simple names:
 ```bash
-pwd  # Should be chora-base root
-ls sap-catalog.json  # Should exist
+ls docs/skilled-awareness/sap-framework/  # Correct!
 ```
 
-**If in wrong directory**:
+**Explanation**: SAP IDs (SAP-000) are for catalog/references. Directory names are lowercase-with-hyphens.
+
+### Issue: Understanding SAP ID vs Directory Name
+
+**Mapping**:
+- SAP-000 → `sap-framework/`
+- SAP-001 → `inbox/`
+- SAP-004 → `testing-framework/`
+- SAP-009 → `agent-awareness/`
+- SAP-014 → `mcp-server-development/`
+- SAP-015 → `task-tracking/`
+
+**To find mapping for any SAP**:
 ```bash
-cd /path/to/chora-base  # Go to root
-python3 scripts/install-sap.py --set minimal-entry  # Re-run
+grep -A 5 '"id": "SAP-015"' sap-catalog.json | grep location
+# Output: "location": "docs/skilled-awareness/task-tracking"
 ```
 
-### Issue: Unsure Which SAP Set to Install
+### Issue: SAP Status Confusion
 
-**See visual decision tree**:
-- [SAP Set Decision Tree](../reference/sap-set-decision-tree.md) - 3 questions → recommendation
+**Question**: "Should I use this SAP?"
 
-**Default recommendation**: Start with `minimal-entry`, add more later
+**Answer**: Check status in sap-catalog.json:
+```bash
+grep -A 3 '"id": "SAP-015"' sap-catalog.json | grep status
+```
 
----
+- **active**: Yes, production-ready
+- **pilot**: Yes, but expect changes and give feedback
+- **draft**: Only if explicitly exploring experimental features
 
-## Comparison: Claude vs Generic Guide
+### Issue: Read Tool Returns Too Much Content
 
-| Aspect | Claude Quickstart | Generic Guide |
-|--------|------------------|---------------|
-| **Length** | ~400 lines | 2000+ lines |
-| **Time** | ~15 minutes | 2-4 hours |
-| **Focus** | Fastest path to productivity | Comprehensive coverage |
-| **Commands** | Copy-paste ready | Explanatory |
-| **Validation** | Built-in checks | Manual verification |
+**Solution**: Use Bash with `head` or `tail` for previews:
+```bash
+# Preview first 50 lines
+cat docs/skilled-awareness/sap-framework/protocol-spec.md | head -50
 
-**When to use generic guide**: Deep exploration, custom workflows, non-Claude agents
+# Preview last 50 lines
+cat docs/skilled-awareness/sap-framework/ledger.md | tail -50
+```
+
+Or use Read tool with line limits (if supported).
+
+### Issue: Need to Search Across All SAPs
+
+**Solution**: Use Grep tool:
+```
+Grep pattern: "adoption tier"
+Path: docs/skilled-awareness/
+Output mode: files_with_matches
+```
+
+This finds all SAPs documenting adoption tiers.
+
+**More Help**: See [Onboarding FAQ](../troubleshooting/onboarding-faq.md) for 10+ common issues
 
 ---
 
@@ -384,31 +619,92 @@ python3 scripts/install-sap.py --set minimal-entry  # Re-run
 
 After completing this quickstart, you should be able to:
 
-- [ ] Install a SAP set (`minimal-entry` or others)
-- [ ] Validate installation succeeded
-- [ ] Read SAP documentation (5 artifacts per SAP)
-- [ ] Understand SAP-000 protocol framework
-- [ ] Know where to find additional SAPs
-- [ ] Know how to add more SAPs later
+- [ ] Navigate to chora-base root and verify environment with Bash tool
+- [ ] Understand chora-base is a template WITH pre-installed SAPs
+- [ ] List all 29+ SAP directories with Bash tool
+- [ ] Map SAP IDs (SAP-000) to directory names (sap-framework/)
+- [ ] Check SAP status (active/pilot/draft) in sap-catalog.json
+- [ ] Use Read tool to explore AGENTS.md files
+- [ ] Use Read tool to read protocol-spec.md for technical details
+- [ ] Use Read tool to read adoption-blueprint.md for implementation
+- [ ] Find SAPs with Claude-specific CLAUDE.md files
+- [ ] Know where to find help and resources
 
-**Time to completion**: If you completed all steps in ~15 minutes, you're ready to adopt SAPs! ✅
+**Time Check**: If you completed all steps in ~12 minutes, you're ready to adopt SAPs! ✅
+
+**Claude Code Advantage**: 3 minutes faster than generic guide thanks to Read/Bash/Glob tools
+
+---
+
+## Comparison: Claude Code vs Generic Guide
+
+| Feature | Claude Code Guide | Generic Guide |
+|---------|------------------|---------------|
+| **Time** | ~12 minutes | ~15 minutes |
+| **Tool Leverage** | Read/Bash/Glob/Grep | Manual commands |
+| **SAP Discovery** | Glob for CLAUDE.md files | Manual search |
+| **Content Reading** | Read tool (fast) | cat/less (slower) |
+| **Validation** | Built-in tools | Manual verification |
+| **Focus** | Claude-specific patterns | Generic patterns |
+| **CLAUDE.md Priority** | Highlighted | Not mentioned |
+
+**When to use generic guide**: If you're not Claude Code, or need non-Claude-specific patterns
 
 ---
 
 ## Related Resources
 
-**For Claude Code Agents**:
-- [Onboarding FAQ](../troubleshooting/onboarding-faq.md) - Troubleshooting guide
-- [SAP Set Decision Tree](../reference/sap-set-decision-tree.md) - Visual flowchart
-- [SAP Index](../../skilled-awareness/INDEX.md) - Complete SAP catalog
+**Essential Guides**:
+- [Onboarding FAQ](../troubleshooting/onboarding-faq.md) - Common issues and solutions
+- [Understanding SAPs](../explanation/understanding-saps.md) - Conceptual deep-dive
+- [SAP Framework Protocol](../../skilled-awareness/sap-framework/protocol-spec.md) - Complete specification
 
-**For Deeper Learning**:
-- [Install SAP Set (Full Guide)](install-sap-set.md) - Comprehensive 535-line guide
-- [Agent Onboarding Guide](../guides/agent-onboarding-chora-base.md) - Complete walkthrough
-- [Create Custom SAP Sets](create-custom-sap-sets.md) - Organization-specific sets
+**Navigation Guides (Claude-Optimized)**:
+- [Root CLAUDE.md](/CLAUDE.md) - Progressive context loading strategy for Claude
+- [Root AGENTS.md](/AGENTS.md) - Agent patterns for chora-base
+- [SAP Domain CLAUDE.md](../../skilled-awareness/CLAUDE.md) - SAP-specific Claude patterns
+- [SAP Domain AGENTS.md](../../skilled-awareness/AGENTS.md) - SAP-specific agent patterns
+
+**SAP Catalog**:
+- [sap-catalog.json](/sap-catalog.json) - Machine-readable SAP registry (29 SAPs)
+- [SAP Index](../../skilled-awareness/INDEX.md) - Human-readable catalog
+
+**SAPs with Claude-Specific Guidance** (prioritize these!):
+```bash
+# Find all CLAUDE.md files
+find docs/skilled-awareness -name "CLAUDE.md"
+```
+
+**Adoption Blueprints**:
+- Browse individual SAPs in `docs/skilled-awareness/*/adoption-blueprint.md`
+- Follow step-by-step adoption instructions per SAP
 
 ---
 
-**Prepared by**: COORD-003 Sprint 2 - Agent-Specific Quickstarts
-**Target**: 30%+ onboarding time reduction for Claude Code agents
-**Feedback**: Open an issue at https://github.com/org/chora-base/issues
+## Feedback & Support
+
+**Found an Issue?**
+- Open an issue: https://github.com/org/chora-base/issues
+- Include: OS, Python version, Claude Code version, error messages, steps to reproduce
+
+**Have Suggestions?**
+- This quickstart was completely rewritten (2025-11-05) to fix broken paths
+- Previous version assumed non-existent directory structure
+- Now optimized for Claude Code's Read/Bash/Glob/Grep tools
+- We welcome improvements and clarifications
+
+**Need Help?**
+- Check [Onboarding FAQ](../troubleshooting/onboarding-faq.md) first
+- Search existing issues
+- Review SAP-specific AGENTS.md files
+- Read root CLAUDE.md for navigation strategy
+- Look for CLAUDE.md files in individual SAPs (contain Claude-specific tips)
+
+---
+
+**Version**: 2.0.0 (Complete rewrite)
+**Last Updated**: 2025-11-05
+**Changes**: Fixed all directory paths, removed broken installation workflow, clarified chora-base as template with pre-installed SAPs, optimized for Claude Code tools (Read/Bash/Glob/Grep)
+**Target Audience**: Claude Code AI agents specifically
+**Goal**: Accurate, working quickstart in ~12 minutes leveraging Claude Code's tool advantages
+**Claude Code Optimizations**: Read tool priority, Glob/Grep discovery, Bash navigation, CLAUDE.md file highlighting, Task tool integration for complex exploration

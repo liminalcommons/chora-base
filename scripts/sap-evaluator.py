@@ -17,6 +17,11 @@ Usage:
     python scripts/sap-evaluator.py --strategic
     python scripts/sap-evaluator.py --strategic --output roadmap.yaml
 
+    # Export evaluation history
+    python scripts/sap-evaluator.py --export-history
+    python scripts/sap-evaluator.py --export-history --sap SAP-004
+    python scripts/sap-evaluator.py --export-history --format json --output history.json
+
 Examples:
     # Check all installed SAPs
     python scripts/sap-evaluator.py --quick
@@ -26,13 +31,17 @@ Examples:
 
     # Generate quarterly roadmap
     python scripts/sap-evaluator.py --strategic --output project-docs/sap-roadmap.yaml
+
+    # View evaluation history for trend analysis
+    python scripts/sap-evaluator.py --export-history --days 30
 """
 
 import argparse
 import json
 import sys
+from collections import defaultdict
 from dataclasses import asdict
-from datetime import datetime
+from datetime import datetime, timezone, timedelta
 from pathlib import Path
 
 # Add repo root to path for imports
@@ -245,6 +254,281 @@ def save_yaml_roadmap(roadmap: AdoptionRoadmap, output_path: Path):
     print(f"✅ Roadmap saved to: {output_path}")
 
 
+def save_evaluation_to_history(result: EvaluationResult | AdoptionRoadmap, evaluation_type: str):
+    """
+    Save evaluation result to history file for trend analysis.
+
+    History file: .chora/memory/events/sap-evaluations.jsonl
+    """
+    history_dir = repo_root / ".chora" / "memory" / "events"
+    history_file = history_dir / "sap-evaluations.jsonl"
+
+    # Create directory if it doesn't exist
+    history_dir.mkdir(parents=True, exist_ok=True)
+
+    # Prepare history entry
+    if isinstance(result, EvaluationResult):
+        history_entry = {
+            "timestamp": result.timestamp.isoformat(),
+            "evaluation_type": evaluation_type,
+            "sap_id": result.sap_id,
+            "sap_name": result.sap_name,
+            "current_level": result.current_level,
+            "completion_percent": result.completion_percent,
+            "is_installed": result.is_installed,
+            "gap_count": len(result.gaps),
+            "blocker_count": len(result.blockers),
+            "estimated_effort_hours": result.estimated_effort_hours,
+            "duration_seconds": result.duration_seconds,
+            "confidence": result.confidence
+        }
+    else:  # AdoptionRoadmap
+        history_entry = {
+            "timestamp": result.generated_at.isoformat(),
+            "evaluation_type": "strategic",
+            "total_saps_installed": result.total_saps_installed,
+            "average_adoption_level": result.average_adoption_level,
+            "adoption_distribution": result.adoption_distribution,
+            "priority_gap_count": len(result.priority_gaps) if result.priority_gaps else 0,
+            "target_quarter": result.target_quarter
+        }
+
+    # Append to history file (JSONL format)
+    with open(history_file, "a") as f:
+        f.write(json.dumps(history_entry, default=str) + "\n")
+
+
+def load_evaluation_history(
+    history_file: Path = None,
+    sap_id: str = None,
+    days: int = None,
+    evaluation_type: str = None
+) -> list[dict]:
+    """
+    Load evaluation history from JSONL file with optional filters.
+
+    Args:
+        history_file: Path to history file (default: .chora/memory/events/sap-evaluations.jsonl)
+        sap_id: Filter by SAP ID
+        days: Only include evaluations from last N days
+        evaluation_type: Filter by evaluation type (quick, deep, strategic)
+
+    Returns:
+        List of evaluation history entries
+    """
+    if history_file is None:
+        history_file = repo_root / ".chora" / "memory" / "events" / "sap-evaluations.jsonl"
+
+    if not history_file.exists():
+        return []
+
+    history = []
+    cutoff_date = None
+    if days:
+        cutoff_date = datetime.now(timezone.utc) - timedelta(days=days)
+
+    with open(history_file, "r") as f:
+        for line in f:
+            try:
+                entry = json.loads(line.strip())
+
+                # Apply filters
+                if sap_id and entry.get("sap_id") != sap_id:
+                    continue
+
+                if evaluation_type and entry.get("evaluation_type") != evaluation_type:
+                    continue
+
+                if days:
+                    entry_date = datetime.fromisoformat(entry["timestamp"].replace('Z', '+00:00'))
+                    if entry_date < cutoff_date:
+                        continue
+
+                history.append(entry)
+            except json.JSONDecodeError:
+                continue
+
+    return history
+
+
+def analyze_evaluation_trends(history: list[dict]) -> dict:
+    """
+    Analyze evaluation history to identify trends.
+
+    Returns:
+        Dict with trend analysis:
+        - level_changes: SAPs that changed levels
+        - gap_trends: Gap count trends
+        - effort_trends: Effort estimate trends
+    """
+    # Group by SAP ID
+    sap_history = defaultdict(list)
+    for entry in history:
+        if "sap_id" in entry:
+            sap_history[entry["sap_id"]].append(entry)
+
+    # Sort each SAP's history by timestamp
+    for sap_id in sap_history:
+        sap_history[sap_id].sort(key=lambda x: x["timestamp"])
+
+    # Analyze trends
+    level_changes = []
+    gap_trends = []
+    effort_trends = []
+
+    for sap_id, entries in sap_history.items():
+        if len(entries) < 2:
+            continue
+
+        # Level changes
+        first_level = entries[0].get("current_level", 0)
+        last_level = entries[-1].get("current_level", 0)
+        if first_level != last_level:
+            level_changes.append({
+                "sap_id": sap_id,
+                "from_level": first_level,
+                "to_level": last_level,
+                "change": last_level - first_level,
+                "evaluations": len(entries)
+            })
+
+        # Gap trends
+        gap_counts = [e.get("gap_count", 0) for e in entries]
+        if gap_counts:
+            gap_trends.append({
+                "sap_id": sap_id,
+                "first_gaps": gap_counts[0],
+                "last_gaps": gap_counts[-1],
+                "change": gap_counts[-1] - gap_counts[0],
+                "trend": "improving" if gap_counts[-1] < gap_counts[0] else "declining" if gap_counts[-1] > gap_counts[0] else "stable"
+            })
+
+        # Effort trends
+        effort_hours = [e.get("estimated_effort_hours", 0.0) for e in entries if "estimated_effort_hours" in e]
+        if len(effort_hours) >= 2:
+            effort_trends.append({
+                "sap_id": sap_id,
+                "first_effort": effort_hours[0],
+                "last_effort": effort_hours[-1],
+                "change": effort_hours[-1] - effort_hours[0]
+            })
+
+    return {
+        "level_changes": sorted(level_changes, key=lambda x: -abs(x["change"])),
+        "gap_trends": sorted(gap_trends, key=lambda x: x["change"]),
+        "effort_trends": sorted(effort_trends, key=lambda x: -abs(x["change"]))
+    }
+
+
+def print_evaluation_history(history: list[dict], trends: dict = None):
+    """Print evaluation history to terminal."""
+    if not history:
+        print("No evaluation history found.")
+        return
+
+    # Group by SAP
+    sap_history = defaultdict(list)
+    strategic_history = []
+
+    for entry in history:
+        if entry.get("evaluation_type") == "strategic":
+            strategic_history.append(entry)
+        elif "sap_id" in entry:
+            sap_history[entry["sap_id"]].append(entry)
+
+    # Print SAP-specific history
+    if sap_history:
+        print(f"\n📊 Evaluation History ({len(history)} evaluations)")
+        print("=" * 80)
+
+        for sap_id in sorted(sap_history.keys()):
+            entries = sorted(sap_history[sap_id], key=lambda x: x["timestamp"])
+            print(f"\n### {sap_id} ({len(entries)} evaluations)")
+
+            for entry in entries:
+                timestamp = entry["timestamp"][:19].replace('T', ' ')
+                eval_type = entry.get("evaluation_type", "unknown")
+                level = entry.get("current_level", "?")
+                gaps = entry.get("gap_count", 0)
+                effort = entry.get("estimated_effort_hours", 0.0)
+
+                print(f"  {timestamp} | {eval_type:8s} | L{level} | {gaps} gaps | {effort:.1f}h effort")
+
+    # Print strategic history
+    if strategic_history:
+        print(f"\n### Strategic Evaluations ({len(strategic_history)})")
+        for entry in sorted(strategic_history, key=lambda x: x["timestamp"]):
+            timestamp = entry["timestamp"][:19].replace('T', ' ')
+            total_saps = entry.get("total_saps_installed", 0)
+            avg_level = entry.get("average_adoption_level", 0.0)
+            priority_gaps = entry.get("priority_gap_count", 0)
+
+            print(f"  {timestamp} | {total_saps} SAPs | avg L{avg_level:.1f} | {priority_gaps} priority gaps")
+
+    # Print trends
+    if trends:
+        print("\n## Trend Analysis")
+        print("=" * 80)
+
+        if trends["level_changes"]:
+            print("\n### Level Changes")
+            for change in trends["level_changes"][:5]:
+                arrow = "↑" if change["change"] > 0 else "↓"
+                print(f"  {arrow} {change['sap_id']}: L{change['from_level']} → L{change['to_level']} ({change['change']:+d} levels, {change['evaluations']} evals)")
+
+        if trends["gap_trends"]:
+            print("\n### Gap Trends (Top 5 Improving)")
+            for trend in [t for t in trends["gap_trends"] if t["trend"] == "improving"][:5]:
+                print(f"  ✅ {trend['sap_id']}: {trend['first_gaps']} → {trend['last_gaps']} gaps ({trend['change']:+d})")
+
+            print("\n### Gap Trends (Top 5 Declining)")
+            for trend in [t for t in trends["gap_trends"] if t["trend"] == "declining"][:5]:
+                print(f"  ⚠️  {trend['sap_id']}: {trend['first_gaps']} → {trend['last_gaps']} gaps ({trend['change']:+d})")
+
+
+def export_evaluation_history(
+    sap_id: str = None,
+    days: int = None,
+    evaluation_type: str = None,
+    output_path: Path = None,
+    format: str = "terminal"
+):
+    """Export evaluation history with optional filters."""
+    history = load_evaluation_history(sap_id=sap_id, days=days, evaluation_type=evaluation_type)
+
+    if not history:
+        print("No evaluation history found matching filters.")
+        return
+
+    trends = analyze_evaluation_trends(history)
+
+    if format == "json":
+        data = {
+            "metadata": {
+                "exported_at": datetime.now(timezone.utc).isoformat(),
+                "filters": {
+                    "sap_id": sap_id,
+                    "days": days,
+                    "evaluation_type": evaluation_type
+                },
+                "total_evaluations": len(history)
+            },
+            "history": history,
+            "trends": trends
+        }
+
+        if output_path:
+            output_path.parent.mkdir(parents=True, exist_ok=True)
+            with open(output_path, "w") as f:
+                json.dump(data, f, indent=2, default=str)
+            print(f"✅ History exported to: {output_path}")
+        else:
+            print(json.dumps(data, indent=2, default=str))
+
+    else:  # terminal
+        print_evaluation_history(history, trends)
+
+
 @track_usage
 def main():
     parser = argparse.ArgumentParser(
@@ -272,6 +556,11 @@ def main():
         action="store_true",
         help="Strategic analysis (30min) - generate quarterly roadmap"
     )
+    mode.add_argument(
+        "--export-history",
+        action="store_true",
+        help="Export evaluation history for trend analysis"
+    )
 
     # Output options
     parser.add_argument(
@@ -286,18 +575,52 @@ def main():
         help="Output format (default: terminal)"
     )
 
+    # History export options
+    parser.add_argument(
+        "--sap",
+        metavar="SAP-ID",
+        help="Filter history by SAP ID (for --export-history)"
+    )
+    parser.add_argument(
+        "--days",
+        type=int,
+        help="Only include evaluations from last N days (for --export-history)"
+    )
+    parser.add_argument(
+        "--evaluation-type",
+        choices=["quick", "deep", "strategic"],
+        help="Filter history by evaluation type (for --export-history)"
+    )
+
     args = parser.parse_args()
 
     # Initialize evaluator
     evaluator = SAPEvaluator(repo_root=repo_root)
 
     try:
-        if args.quick:
+        if args.export_history:
+            # Export evaluation history mode
+            export_evaluation_history(
+                sap_id=args.sap,
+                days=args.days,
+                evaluation_type=args.evaluation_type,
+                output_path=args.output,
+                format=args.format
+            )
+
+        elif args.quick:
             # Quick check mode
             if args.quick == "all":
                 results = evaluator.quick_check_all()
             else:
                 results = evaluator.quick_check(args.quick)
+
+            # Save to history
+            if isinstance(results, list):
+                for result in results:
+                    save_evaluation_to_history(result, "quick")
+            else:
+                save_evaluation_to_history(results, "quick")
 
             # Output
             if args.format == "json":
@@ -317,6 +640,9 @@ def main():
             # Deep dive mode
             result = evaluator.deep_dive(args.deep)
 
+            # Save to history
+            save_evaluation_to_history(result, "deep")
+
             # Output
             if args.format == "json":
                 data = asdict(result)
@@ -332,6 +658,9 @@ def main():
         elif args.strategic:
             # Strategic analysis mode
             roadmap = evaluator.strategic_analysis()
+
+            # Save to history
+            save_evaluation_to_history(roadmap, "strategic")
 
             # Output
             if args.format == "json":

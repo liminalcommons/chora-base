@@ -1,0 +1,382 @@
+# Chora-Base Tag Vocabulary
+# Version: 1.0.0
+# Last Updated: 2025-11-04
+# Purpose: Standardized tag vocabulary for consistent tagging across all SAPs, docs, and artifacts
+
+# =============================================================================
+# STANDARD TAGS
+# =============================================================================
+# Use these canonical tags for consistency. See 'tag_aliases' below for deprecated variations.
+
+standard_tags:
+  # Meta & Ecosystem
+  - meta                     # SAPs about SAPs (framework, generation, evaluation)
+  - coordination             # Cross-repo, multi-project coordination
+  - ecosystem                # Ecosystem-wide patterns and tools
+  - foundation               # Core infrastructure SAPs (required/recommended first)
+  - foundational             # Alias for foundation (kept for compatibility)
+  - production-ready         # Battle-tested, safe for production use
+  - technology-specific      # Language/framework-specific SAPs
+
+  # Development Lifecycle
+  - scaffolding              # Project initialization and setup
+  - generation               # Code/artifact generation
+  - setup                    # Initial configuration
+  - lifecycle                # Full development lifecycle patterns
+  - automation               # Automated workflows and scripts
+  - tooling                  # Developer tools and utilities
+
+  # Quality & Testing
+  - testing                  # Testing frameworks and patterns
+  - quality                  # Quality assurance and standards
+  - validation               # Validation tools and processes
+  - linting                  # Code linting and formatting
+  - type-checking            # Static type analysis
+  - coverage                 # Test/doc coverage tracking
+  - qa                       # Quality assurance processes
+
+  # CI/CD & Deployment
+  - ci-cd                    # Continuous integration/deployment
+  - github-actions           # GitHub Actions workflows
+  - deployment               # Deployment strategies
+  - docker                   # Docker and containerization
+  - containers               # Container orchestration
+  - security                 # Security practices
+  - publishing               # Package publishing
+
+  # Documentation
+  - documentation            # Documentation frameworks
+  - diataxis                 # Diataxis documentation methodology
+  - standards                # Documentation standards
+  - agent-awareness          # Agent-readable awareness files
+  - ai-context               # AI/LLM context optimization
+
+  # Agent & Memory
+  - agent-memory             # Agent memory systems
+  - a-mem                    # A-MEM specific (event log + knowledge graph)
+  - memory                   # General memory/persistence
+  - learning                 # Learning patterns and knowledge capture
+  - zettelkasten             # Zettelkasten-style knowledge management
+  - task-tracking            # Task and issue tracking
+  - beads                    # Beads task tracking system
+  - git-native               # Git-based data storage
+
+  # Architecture & Design
+  - ddd                      # Domain-driven design
+  - bdd                      # Behavior-driven development
+  - tdd                      # Test-driven development
+  - process                  # Process and methodology
+  - architecture             # Architectural patterns
+  - patterns                 # Design patterns
+
+  # Frontend (React Ecosystem)
+  - react                    # React framework
+  - nextjs                   # Next.js framework
+  - typescript               # TypeScript
+  - frontend                 # Frontend development
+  - enterprise               # Enterprise-grade patterns
+  - state-management         # State management patterns
+  - tanstack-query           # TanStack Query (React Query)
+  - zustand                  # Zustand state management
+  - forms                    # Form handling
+  - zod                      # Zod validation
+  - styling                  # CSS/styling
+  - tailwind                 # Tailwind CSS
+  - shadcn                   # shadcn/ui component library
+  - css                      # CSS
+  - performance              # Performance optimization
+  - web-vitals               # Core Web Vitals
+  - optimization             # Performance optimization
+  - accessibility            # Accessibility (a11y)
+  - wcag                     # WCAG compliance
+  - a11y                     # Accessibility abbreviation
+  - radix                    # Radix UI primitives
+  - eslint                   # ESLint
+  - prettier                 # Prettier formatting
+  - vitest                   # Vitest testing framework
+  - rtl                      # React Testing Library
+  - msw                      # Mock Service Worker
+
+  # Python Ecosystem
+  - python                   # Python language
+  - pytest                   # Pytest testing framework
+  - ruff                     # Ruff linter
+  - mypy                     # Mypy type checker
+  - pypi                     # PyPI publishing
+  - oidc                     # OpenID Connect (for publishing)
+
+  # MCP (Model Context Protocol)
+  - mcp                      # Model Context Protocol
+  - fastmcp                  # FastMCP framework
+  - server-development       # MCP server development
+  - model-context-protocol   # Full MCP name
+  - claude                   # Claude-specific patterns
+
+  # Chora Ecosystem
+  - chora-compose            # Chora-compose tool
+  - content-generation       # Content generation capabilities
+
+  # Dogfooding & Validation
+  - dogfooding               # Dogfooding patterns
+  - pilot                    # Pilot phase
+  - validation               # Validation methodology
+  - methodology              # Process methodology
+  - evaluation               # Evaluation and assessment
+  - assessment               # Assessment tools
+  - roadmap                  # Roadmap planning
+  - planning                 # Planning tools
+
+  # Productivity & DX
+  - productivity             # Developer productivity
+  - recommended              # Recommended SAPs
+  - core                     # Core SAPs
+  - justfile                 # Justfile command runner
+  - scripts                  # Automation scripts
+
+  # Scope/Complexity Indicators
+  - minimal                  # Minimal scope SAP
+  - entry                    # Entry-point SAP
+  - full                     # Full-featured SAP
+  - complete                 # Complete implementation
+  - comprehensive            # Comprehensive coverage
+  - advanced                 # Advanced patterns
+  - optional                 # Optional capability
+  - required                 # Required SAP
+
+  # Content Types
+  - reference                # Reference documentation
+  - example                  # Example/demo SAP
+  - templates                # Templates and scaffolding
+  - metrics                  # Metrics and tracking
+  - roi                      # Return on investment
+  - tracking                 # Tracking tools
+  - analytics                # Analytics tools
+
+# =============================================================================
+# TAG ALIASES
+# =============================================================================
+# Deprecated tags → canonical tags
+# When encountering these variations, normalize to the canonical form
+
+tag_aliases:
+  # Meta variations
+  metadata: meta
+  metatags: meta
+
+  # Agent variations
+  ai-agents: agent-awareness
+  agents: agent-awareness
+  agent: agent-awareness
+
+  # Coordination variations
+  coord: coordination
+  sync: coordination
+  cross-repo: ecosystem
+  multi-repo: ecosystem
+  multi-project: ecosystem
+
+  # Production variations
+  production: production-ready
+  prod: production-ready
+
+  # Quality variations
+  qa: quality
+
+  # Testing variations
+  test: testing
+  tests: testing
+
+  # CI/CD variations
+  ci: ci-cd
+  cd: ci-cd
+  cicd: ci-cd
+
+  # Documentation variations
+  docs: documentation
+  doc: documentation
+
+  # Architecture variations
+  arch: architecture
+
+  # Frontend variations
+  js: typescript
+  javascript: typescript
+  next: nextjs
+
+  # Accessibility variations
+  accessibility: a11y
+
+  # Other common variations
+  optimization: performance
+  optimize: performance
+  perf: performance
+
+# =============================================================================
+# TAG TAXONOMY (Hierarchical Categories)
+# =============================================================================
+# Organize tags by domain for better curation
+
+taxonomy:
+  meta_ecosystem:
+    description: Meta-level SAPs about the framework itself
+    tags: [meta, coordination, ecosystem, foundation, foundational, production-ready]
+    children: []
+
+  development_lifecycle:
+    description: Development process and workflow SAPs
+    tags: [scaffolding, generation, setup, lifecycle, automation, tooling]
+    children: [quality_testing, ci_cd_deployment]
+
+  quality_testing:
+    description: Quality assurance and testing SAPs
+    tags: [testing, quality, validation, linting, type-checking, coverage, qa]
+    children: []
+
+  ci_cd_deployment:
+    description: CI/CD and deployment SAPs
+    tags: [ci-cd, github-actions, deployment, docker, containers, security, publishing]
+    children: []
+
+  documentation:
+    description: Documentation and awareness SAPs
+    tags: [documentation, diataxis, standards, agent-awareness, ai-context]
+    children: []
+
+  agent_memory:
+    description: Agent memory and task tracking SAPs
+    tags: [agent-memory, a-mem, memory, learning, zettelkasten, task-tracking, beads, git-native]
+    children: []
+
+  architecture_design:
+    description: Architecture and design methodology SAPs
+    tags: [ddd, bdd, tdd, process, architecture, patterns]
+    children: []
+
+  frontend_react:
+    description: Frontend and React ecosystem SAPs
+    tags: [react, nextjs, typescript, frontend, enterprise, state-management, styling, performance, accessibility]
+    children: [react_state, react_styling, react_testing, react_performance, react_accessibility]
+
+  react_state:
+    description: React state management
+    tags: [state-management, tanstack-query, zustand, forms, zod]
+    children: []
+
+  react_styling:
+    description: React styling and UI
+    tags: [styling, tailwind, shadcn, css, radix]
+    children: []
+
+  react_testing:
+    description: React testing
+    tags: [testing, vitest, rtl, msw]
+    children: []
+
+  react_performance:
+    description: React performance optimization
+    tags: [performance, web-vitals, optimization]
+    children: []
+
+  react_accessibility:
+    description: React accessibility
+    tags: [accessibility, wcag, a11y, radix]
+    children: []
+
+  python_ecosystem:
+    description: Python-specific SAPs
+    tags: [python, pytest, ruff, mypy, pypi, oidc]
+    children: []
+
+  mcp_ecosystem:
+    description: Model Context Protocol SAPs
+    tags: [mcp, fastmcp, server-development, model-context-protocol, claude]
+    children: []
+
+  chora_ecosystem:
+    description: Chora-specific tools
+    tags: [chora-compose, content-generation]
+    children: []
+
+  dogfooding_validation:
+    description: Validation and dogfooding SAPs
+    tags: [dogfooding, pilot, validation, methodology, evaluation, assessment, roadmap, planning]
+    children: []
+
+  productivity_dx:
+    description: Developer experience and productivity
+    tags: [productivity, recommended, core, justfile, scripts]
+    children: []
+
+# =============================================================================
+# TAG USAGE GUIDELINES
+# =============================================================================
+
+usage_guidelines:
+  - "Use 2-5 tags per SAP (optimize for discoverability without over-tagging)"
+  - "Always include at least one taxonomy parent tag (e.g., 'meta_ecosystem', 'frontend_react')"
+  - "Use technology-specific tags only when SAP is tightly coupled to that technology"
+  - "Use 'production-ready' only for SAPs with ≥2 successful adoptions and 0 critical bugs"
+  - "Use 'foundation' or 'recommended' only for SAPs in critical path (SAP-000, SAP-001, SAP-009)"
+  - "Prefer canonical tags over aliases (normalize during validation)"
+  - "When in doubt, consult taxonomy hierarchy (use parent tag if specific tag unclear)"
+
+# =============================================================================
+# TAG VALIDATION
+# =============================================================================
+
+validation_rules:
+  - name: "No unknown tags"
+    description: "All tags must appear in standard_tags or tag_aliases"
+    severity: error
+
+  - name: "Consistent casing"
+    description: "All tags must be lowercase with hyphens (kebab-case)"
+    severity: error
+
+  - name: "No duplicates"
+    description: "No duplicate tags within a single artifact"
+    severity: warning
+
+  - name: "Reasonable tag count"
+    description: "2-5 tags per artifact (1 allowed for minimal SAPs, 6+ triggers warning)"
+    severity: warning
+
+  - name: "Taxonomy coverage"
+    description: "At least one taxonomy parent tag recommended"
+    severity: info
+
+# =============================================================================
+# INTEGRATION WITH OTHER SAPS
+# =============================================================================
+
+integration:
+  sap-000:
+    description: "SAP Framework - sap-catalog.json uses these tags"
+    usage: "All SAPs must use tags from this vocabulary in sap-catalog.json"
+
+  sap-007:
+    description: "Documentation Framework - frontmatter uses these tags"
+    usage: "All docs should use tags from this vocabulary in YAML frontmatter"
+
+  sap-010:
+    description: "Memory System (A-MEM) - events use these tags"
+    usage: "Event logs should use tags from this vocabulary for consistency"
+
+  sap-019:
+    description: "SAP Self-Evaluation - evaluates tag consistency"
+    usage: "sap-evaluator.py validates tags against this vocabulary"
+
+# =============================================================================
+# VERSION HISTORY
+# =============================================================================
+
+version_history:
+  - version: "1.0.0"
+    date: "2025-11-04"
+    changes:
+      - "Initial tag vocabulary extracted from sap-catalog.json"
+      - "Defined 100+ canonical tags across 15 taxonomies"
+      - "Created tag aliases for common variations"
+      - "Established validation rules and usage guidelines"
+    author: "Victor Piper"
+    notes: "Foundation for Phase 1.1 of curatorial enhancements"

@@ -1,0 +1,525 @@
+# Event Tag Taxonomy for A-MEM (SAP-010)
+#
+# This taxonomy provides a structured vocabulary for tagging events in the
+# Agentic Memory (A-MEM) system to enable consistent categorization, search,
+# and analysis of event logs.
+#
+# Version: 1.0.0
+# Last Updated: 2025-11-05
+# SAP Integration: SAP-010 (memory-system)
+
+version: "1.0.0"
+schema_version: "1.0"
+
+# Tag Hierarchy Structure:
+# - domain (top-level category)
+#   - category (sub-category)
+#     - tags (specific tags)
+#       - description
+#       - usage_notes
+#       - examples
+
+taxonomy:
+  # ============================================================================
+  # Domain: Development Lifecycle
+  # ============================================================================
+  development:
+    description: "Events related to software development activities"
+    categories:
+      code_generation:
+        tags:
+          - name: "code-generation"
+            description: "AI-generated code or content"
+            usage_notes: "Use for events where agents write code"
+            examples: ["agent writes new function", "agent refactors class"]
+
+          - name: "code-review"
+            description: "Code review and quality checks"
+            usage_notes: "Use for automated or manual code reviews"
+            examples: ["linter check", "security scan", "peer review"]
+
+          - name: "code-refactoring"
+            description: "Code refactoring and restructuring"
+            usage_notes: "Use when modifying existing code structure"
+            examples: ["extract method", "rename variable", "optimize algorithm"]
+
+      documentation:
+        tags:
+          - name: "doc-generation"
+            description: "Documentation generation or updates"
+            usage_notes: "Use for markdown, API docs, README updates"
+            examples: ["generate README", "update API docs", "write tutorial"]
+
+          - name: "doc-validation"
+            description: "Documentation validation (broken links, formatting)"
+            usage_notes: "Use for link checking, spell checking, format validation"
+            examples: ["validate markdown links", "check code examples"]
+
+      testing:
+        tags:
+          - name: "test-execution"
+            description: "Running tests (unit, integration, e2e)"
+            usage_notes: "Use for all test run events"
+            examples: ["pytest run", "jest run", "e2e test suite"]
+
+          - name: "test-generation"
+            description: "Generating new test cases"
+            usage_notes: "Use when agents create tests"
+            examples: ["generate unit test", "create integration test"]
+
+          - name: "test-failure"
+            description: "Test failure analysis"
+            usage_notes: "Use for failed tests requiring investigation"
+            examples: ["flaky test detected", "regression failure"]
+
+  # ============================================================================
+  # Domain: SAP Framework
+  # ============================================================================
+  sap:
+    description: "Events related to Skilled Awareness Packages (SAPs)"
+    categories:
+      lifecycle:
+        tags:
+          - name: "sap-generation"
+            description: "Creating new SAP artifacts"
+            usage_notes: "Use when generating SAP documentation"
+            examples: ["generate SAP-030", "scaffold new capability"]
+
+          - name: "sap-evaluation"
+            description: "Evaluating SAP adoption and maturity"
+            usage_notes: "Use for sap-evaluator.py runs"
+            examples: ["quick evaluation", "deep SAP assessment"]
+
+          - name: "sap-update"
+            description: "Updating existing SAP artifacts"
+            usage_notes: "Use when modifying SAP docs or metadata"
+            examples: ["update ledger", "revise protocol-spec"]
+
+      catalog:
+        tags:
+          - name: "catalog-update"
+            description: "Changes to sap-catalog.json"
+            usage_notes: "Use when catalog metadata is modified"
+            examples: ["add new SAP", "update SAP status", "deprecate SAP"]
+
+          - name: "catalog-validation"
+            description: "Validating catalog integrity"
+            usage_notes: "Use for schema validation checks"
+            examples: ["validate JSON schema", "check SAP IDs"]
+
+      adoption:
+        tags:
+          - name: "adoption-analysis"
+            description: "Analyzing SAP adoption metrics"
+            usage_notes: "Use for adoption tracking and reporting"
+            examples: ["generate adoption report", "calculate coverage metrics"]
+
+          - name: "dogfooding"
+            description: "Dogfooding SAPs in chora-base"
+            usage_notes: "Use when validating SAPs through self-use (SAP-027)"
+            examples: ["validate SAP-015 usage", "test beads workflow"]
+
+  # ============================================================================
+  # Domain: Automation & Scripts
+  # ============================================================================
+  automation:
+    description: "Events from automation scripts and workflows"
+    categories:
+      script_execution:
+        tags:
+          - name: "script-invocation"
+            description: "Script execution (any script)"
+            usage_notes: "Use for all script runs"
+            examples: ["python scripts/export-catalog.py", "bash validate-links.sh"]
+
+          - name: "script-success"
+            description: "Successful script completion"
+            usage_notes: "Tag successful script runs for metrics"
+            examples: ["export completed", "validation passed"]
+
+          - name: "script-failure"
+            description: "Failed script execution"
+            usage_notes: "Tag failures for debugging and monitoring"
+            examples: ["export failed", "validation errors"]
+
+      ci_cd:
+        tags:
+          - name: "ci-pipeline"
+            description: "CI/CD pipeline execution"
+            usage_notes: "Use for GitHub Actions, GitLab CI, etc."
+            examples: ["GitHub Actions workflow", "pre-commit hook"]
+
+          - name: "deployment"
+            description: "Deployment events"
+            usage_notes: "Use for production or staging deployments"
+            examples: ["deploy to staging", "release v1.2.0"]
+
+      scheduled_tasks:
+        tags:
+          - name: "cron-job"
+            description: "Scheduled task execution"
+            usage_notes: "Use for periodic automation"
+            examples: ["nightly backup", "weekly report generation"]
+
+  # ============================================================================
+  # Domain: Coordination & Communication
+  # ============================================================================
+  coordination:
+    description: "Events related to cross-repo/cross-agent coordination"
+    categories:
+      inbox:
+        tags:
+          - name: "coord-request"
+            description: "Coordination request created or updated"
+            usage_notes: "Use for SAP-001 inbox events"
+            examples: ["create COORD-2025-001", "update request status"]
+
+          - name: "coord-response"
+            description: "Response to coordination request"
+            usage_notes: "Use when responding to inbox items"
+            examples: ["accept request", "provide status update"]
+
+          - name: "coord-decomposition"
+            description: "Decomposing coordination request into tasks"
+            usage_notes: "Use when breaking down requests (SAP-001 + SAP-015)"
+            examples: ["spawn beads tasks from COORD-2025-001"]
+
+      handoff:
+        tags:
+          - name: "context-handoff"
+            description: "Context handoff between agents or sessions"
+            usage_notes: "Use for cross-session context transfer"
+            examples: ["save session state", "resume from checkpoint"]
+
+          - name: "multi-agent"
+            description: "Multi-agent collaboration"
+            usage_notes: "Use for events involving multiple agents"
+            examples: ["agent-1 delegates to agent-2"]
+
+  # ============================================================================
+  # Domain: Memory & Knowledge
+  # ============================================================================
+  memory:
+    description: "Events related to A-MEM memory system operations"
+    categories:
+      event_log:
+        tags:
+          - name: "event-recorded"
+            description: "Event successfully recorded to event log"
+            usage_notes: "Meta-event for event log writes"
+            examples: ["append to events.jsonl"]
+
+          - name: "trace-start"
+            description: "Start of a new trace (multi-step workflow)"
+            usage_notes: "Use when initiating trace_id"
+            examples: ["start trace abc123"]
+
+          - name: "trace-end"
+            description: "End of a trace"
+            usage_notes: "Use when completing trace_id workflow"
+            examples: ["complete trace abc123"]
+
+      knowledge_graph:
+        tags:
+          - name: "knowledge-learned"
+            description: "New knowledge note created"
+            usage_notes: "Use when agent creates Zettelkasten note"
+            examples: ["create backend-timeout-fix note"]
+
+          - name: "knowledge-updated"
+            description: "Existing knowledge note modified"
+            usage_notes: "Use when updating note content or metadata"
+            examples: ["update confidence level", "add related trace"]
+
+          - name: "knowledge-linked"
+            description: "Links created between knowledge notes"
+            usage_notes: "Use when establishing note relationships"
+            examples: ["link note A to note B"]
+
+          - name: "knowledge-deprecated"
+            description: "Knowledge note marked as deprecated"
+            usage_notes: "Use when retiring outdated patterns"
+            examples: ["deprecate old-pattern note"]
+
+      agent_profile:
+        tags:
+          - name: "profile-updated"
+            description: "Agent profile modified"
+            usage_notes: "Use when updating agent capabilities or preferences"
+            examples: ["update skill level", "save preference"]
+
+          - name: "capability-learned"
+            description: "Agent learned new capability"
+            usage_notes: "Use when agent skill level increases"
+            examples: ["novice → intermediate", "first successful operation"]
+
+  # ============================================================================
+  # Domain: Infrastructure & Operations
+  # ============================================================================
+  infrastructure:
+    description: "Events related to system infrastructure"
+    categories:
+      gateway:
+        tags:
+          - name: "gateway-started"
+            description: "Gateway server started"
+            usage_notes: "Use for MCP gateway startup"
+            examples: ["gateway listening on port 8080"]
+
+          - name: "gateway-stopped"
+            description: "Gateway server stopped"
+            usage_notes: "Use for graceful or unexpected shutdown"
+            examples: ["gateway shutdown after 3h uptime"]
+
+          - name: "backend-registered"
+            description: "Backend registered with gateway"
+            usage_notes: "Use when backend joins gateway"
+            examples: ["chora-backend registered"]
+
+      backend:
+        tags:
+          - name: "backend-started"
+            description: "Backend process started"
+            usage_notes: "Use for backend subprocess startup"
+            examples: ["n8n backend started"]
+
+          - name: "backend-failed"
+            description: "Backend startup or operation failed"
+            usage_notes: "Use for backend errors"
+            examples: ["backend timeout", "backend crash"]
+
+          - name: "tool-executed"
+            description: "Tool executed by backend"
+            usage_notes: "Use for MCP tool calls"
+            examples: ["chora:generate_content", "chora:assemble_artifact"]
+
+      performance:
+        tags:
+          - name: "slow-operation"
+            description: "Operation exceeded performance threshold"
+            usage_notes: "Use for performance monitoring"
+            examples: ["request took >5s"]
+
+          - name: "timeout"
+            description: "Operation timed out"
+            usage_notes: "Use for timeout failures"
+            examples: ["backend timeout 30s", "API timeout"]
+
+  # ============================================================================
+  # Domain: Error Handling & Debugging
+  # ============================================================================
+  errors:
+    description: "Events related to errors, failures, and recovery"
+    categories:
+      failures:
+        tags:
+          - name: "error-encountered"
+            description: "Generic error encountered"
+            usage_notes: "Use for unexpected errors"
+            examples: ["file not found", "permission denied"]
+
+          - name: "validation-error"
+            description: "Data validation failure"
+            usage_notes: "Use for schema or constraint violations"
+            examples: ["invalid JSON schema", "missing required field"]
+
+          - name: "integration-error"
+            description: "Error in cross-system integration"
+            usage_notes: "Use for API failures, backend communication issues"
+            examples: ["API 500 error", "backend unreachable"]
+
+      recovery:
+        tags:
+          - name: "retry-attempted"
+            description: "Retry attempted after failure"
+            usage_notes: "Use for automatic retry logic"
+            examples: ["retry 1 of 3", "exponential backoff"]
+
+          - name: "recovery-successful"
+            description: "Recovery from error succeeded"
+            usage_notes: "Use when retry or fallback works"
+            examples: ["retry succeeded", "fallback applied"]
+
+          - name: "recovery-failed"
+            description: "Recovery from error failed"
+            usage_notes: "Use when all retries exhausted"
+            examples: ["all retries failed", "no fallback available"]
+
+      debugging:
+        tags:
+          - name: "debug-session"
+            description: "Debugging session started"
+            usage_notes: "Use for interactive debugging"
+            examples: ["attach debugger", "enable verbose logging"]
+
+          - name: "trace-analysis"
+            description: "Analyzing trace for debugging"
+            usage_notes: "Use when investigating trace_id events"
+            examples: ["analyze failed trace abc123"]
+
+# ============================================================================
+# Cross-Cutting Tags (apply to multiple domains)
+# ============================================================================
+cross_cutting:
+  status:
+    tags:
+      - name: "success"
+        description: "Operation completed successfully"
+
+      - name: "failure"
+        description: "Operation failed"
+
+      - name: "pending"
+        description: "Operation in progress"
+
+      - name: "timeout"
+        description: "Operation timed out"
+
+  priority:
+    tags:
+      - name: "critical"
+        description: "Critical priority event"
+
+      - name: "high"
+        description: "High priority event"
+
+      - name: "normal"
+        description: "Normal priority event"
+
+      - name: "low"
+        description: "Low priority event"
+
+  impact:
+    tags:
+      - name: "breaking-change"
+        description: "Breaking change to API or behavior"
+
+      - name: "security"
+        description: "Security-related event"
+
+      - name: "data-loss"
+        description: "Potential or actual data loss"
+
+      - name: "performance-impact"
+        description: "Event with performance implications"
+
+# ============================================================================
+# Tag Combination Patterns (common tag pairs)
+# ============================================================================
+patterns:
+  - pattern: ["sap-evaluation", "adoption-analysis"]
+    description: "SAP adoption evaluation workflow"
+    example: "Running sap-evaluator.py to assess maturity"
+
+  - pattern: ["script-invocation", "script-success"]
+    description: "Successful automation script execution"
+    example: "export-catalog.py completed successfully"
+
+  - pattern: ["knowledge-learned", "trace-end"]
+    description: "Learning from completed trace"
+    example: "Create knowledge note after resolving issue in trace abc123"
+
+  - pattern: ["coord-request", "coord-decomposition"]
+    description: "Breaking down coordination request"
+    example: "Decompose COORD-2025-001 into beads tasks"
+
+  - pattern: ["error-encountered", "retry-attempted", "recovery-successful"]
+    description: "Error with successful recovery"
+    example: "Backend timeout → retry → success"
+
+  - pattern: ["backend-started", "tool-executed", "backend-failed"]
+    description: "Backend lifecycle with failure"
+    example: "Backend starts, executes tool, then crashes"
+
+# ============================================================================
+# Tag Usage Guidelines
+# ============================================================================
+usage_guidelines:
+  tag_naming_conventions:
+    - "Use lowercase with hyphens (kebab-case)"
+    - "Be specific but not overly granular"
+    - "Prefer nouns over verbs for states, verbs for actions"
+    - "Avoid abbreviations unless widely understood"
+
+  tag_selection:
+    - "Events should have 1-5 tags (recommended 2-3)"
+    - "Always include domain tag (development, sap, automation, etc.)"
+    - "Add status tag (success, failure, pending, timeout)"
+    - "Add category-specific tags as needed"
+    - "Avoid redundant tags"
+
+  tag_evolution:
+    - "Review tag usage quarterly"
+    - "Deprecate unused tags (< 10 events in 6 months)"
+    - "Add new tags when patterns emerge (> 20 events without suitable tag)"
+    - "Version taxonomy when breaking changes occur"
+
+# ============================================================================
+# Integration with Event Schema
+# ============================================================================
+event_schema_integration:
+  description: |
+    Tags are stored in the event metadata field:
+
+    {
+      "timestamp": "2025-11-05T12:00:00Z",
+      "trace_id": "abc123",
+      "status": "success",
+      "event_type": "sap.evaluation",
+      "source": "chora-base",
+      "metadata": {
+        "tags": ["sap-evaluation", "adoption-analysis"],
+        "sap_id": "SAP-015",
+        "evaluation_type": "quick"
+      }
+    }
+
+  required_fields:
+    - "status (enum): Use cross_cutting.status tags"
+
+  optional_fields:
+    - "metadata.tags (array): Array of tag names from this taxonomy"
+    - "metadata.priority (string): Use cross_cutting.priority tags"
+
+  backward_compatibility:
+    - "Tags are optional for events (default: [])"
+    - "Existing events without tags remain valid"
+    - "Scripts should handle missing tags gracefully"
+
+# ============================================================================
+# Query Examples
+# ============================================================================
+query_examples:
+  # Find all SAP evaluation events
+  sap_evaluations: |
+    cat .chora/memory/events/**/*.jsonl | \
+      jq 'select(.metadata.tags? // [] | contains(["sap-evaluation"]))'
+
+  # Find all failed automation scripts in last 7 days
+  recent_script_failures: |
+    find .chora/memory/events -name "*.jsonl" -mtime -7 -exec \
+      jq 'select(.status == "failure" and (.metadata.tags? // [] | contains(["script-failure"])))' {} \;
+
+  # Find all knowledge notes created from traces
+  knowledge_from_traces: |
+    cat .chora/memory/events/**/*.jsonl | \
+      jq 'select((.metadata.tags? // [] | contains(["knowledge-learned", "trace-end"])))'
+
+  # Count events by tag
+  count_by_tag: |
+    cat .chora/memory/events/**/*.jsonl | \
+      jq -r '.metadata.tags? // [] | .[]' | \
+      sort | uniq -c | sort -rn
+
+# ============================================================================
+# Version History
+# ============================================================================
+version_history:
+  - version: "1.0.0"
+    date: "2025-11-05"
+    changes:
+      - "Initial tag taxonomy for A-MEM (SAP-010)"
+      - "6 domains: development, sap, automation, coordination, memory, infrastructure, errors"
+      - "50+ specific tags across categories"
+      - "Cross-cutting tags for status, priority, impact"
+      - "Tag combination patterns and usage guidelines"

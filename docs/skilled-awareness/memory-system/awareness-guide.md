@@ -40,6 +40,29 @@ audience: ai-agents
 | **Knowledge Graph** | Save learned patterns | Indefinite (until deprecated) |
 | **Agent Profiles** | Store preferences + capabilities | Indefinite (versioned) |
 
+### Event Tag Taxonomy
+
+**NEW (2025-11-04)**: A-MEM now supports structured event tagging for consistent categorization and querying.
+
+**Taxonomy File**: [schemas/event-tag-taxonomy.yaml](../../../schemas/event-tag-taxonomy.yaml)
+
+**Why Use Tags**: Enable filtering, counting, and trend analysis across event logs (e.g., "find all SAP evaluation events", "count script failures by tag").
+
+**Tag Domains**: 7 major categories covering the entire ecosystem:
+- `development` - Code generation, testing, documentation
+- `sap` - SAP lifecycle events (evaluation, generation, updates)
+- `automation` - Script execution, CI/CD pipelines
+- `coordination` - Cross-repo/agent coordination
+- `memory` - A-MEM operations (events, knowledge, profiles)
+- `infrastructure` - Gateway, backends, performance
+- `errors` - Error handling, recovery, debugging
+
+**Query Tool**: Use `python scripts/query-events-by-tag.py --tags <tag1> <tag2>` to filter events.
+
+**See Also**: [protocol-spec.md Section 3.2](protocol-spec.md#32-event-tag-taxonomy) for complete tag reference.
+
+---
+
 ### Common Workflows
 
 | User Request | Workflow |
@@ -48,6 +71,7 @@ audience: ai-agents
 | "Debug multi-step workflow" | [3.2 Trace Workflow](#32-trace-multi-step-workflow) |
 | "Remember my preferences" | [3.3 Preserve Preferences](#33-preserve-agent-preferences) |
 | "What did we learn about X?" | [3.4 Query Knowledge](#34-query-knowledge-notes) |
+| "Query events by tag" | Use `query-events-by-tag.py` with tag filters |
 
 ---
 
@@ -344,7 +368,26 @@ Found 3 knowledge notes about "backend timeout":
   "event_type": "namespace.action",
   "source": "project-name",
   "metadata": {
+    "tags": ["tag1", "tag2"],
     "... event-specific data ..."
+  }
+}
+```
+
+**NEW**: The `metadata.tags` field is optional but enables powerful event filtering and analysis using the event tag taxonomy. Tags should follow the taxonomy in [schemas/event-tag-taxonomy.yaml](../../../schemas/event-tag-taxonomy.yaml).
+
+**Example with Tags**:
+```json
+{
+  "timestamp": "2025-11-04T12:00:00Z",
+  "trace_id": "abc123",
+  "status": "success",
+  "event_type": "sap.evaluation",
+  "source": "chora-base",
+  "metadata": {
+    "tags": ["sap-evaluation", "adoption-analysis"],
+    "sap_id": "SAP-015",
+    "evaluation_type": "quick"
   }
 }
 ```

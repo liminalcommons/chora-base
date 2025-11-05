@@ -1,3 +1,21 @@
+---
+sap_id: SAP-015
+version: 2.0.0
+status: pilot
+last_updated: 2025-11-04
+type: reference
+audience: agents
+complexity: intermediate
+estimated_reading_time: 12
+progressive_loading:
+  phase_1: "lines 1-100"    # Quick Reference + Common Workflows
+  phase_2: "lines 101-250"  # Integration Patterns + CLI Reference
+  phase_3: "full"           # Complete including troubleshooting
+phase_1_token_estimate: 2500
+phase_2_token_estimate: 5000
+phase_3_token_estimate: 8500
+---
+
 # Agent Task Tracking (SAP-015) - Agent Awareness
 
 **SAP ID**: SAP-015

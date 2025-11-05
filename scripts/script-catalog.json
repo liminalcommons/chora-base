@@ -1,0 +1,903 @@
+{
+  "version": "1.0.0",
+  "generated": "2025-11-05T05:14:27.944935+00:00",
+  "total_scripts": 39,
+  "scripts": [
+    {
+      "path": "scripts/analyze-coverage-gaps.py",
+      "name": "analyze-coverage-gaps.py",
+      "base_name": "analyze-coverage-gaps",
+      "purpose": "Analyze SAP coverage gaps and generate detailed reports.",
+      "description": "Analyze SAP coverage gaps and generate detailed reports.\nPhase 2: SAP Coverage Mapping",
+      "sap": null,
+      "justfile_recipe": null,
+      "command": "python scripts/analyze-coverage-gaps.py",
+      "params": [],
+      "safety": "read_only",
+      "categories": [
+        "validation",
+        "generation",
+        "sap"
+      ],
+      "affects_files": {
+        "reads": [],
+        "modifies": [],
+        "creates": []
+      },
+      "related_scripts": []
+    },
+    {
+      "path": "scripts/analyze_sap_quality.py",
+      "name": "analyze_sap_quality.py",
+      "base_name": "analyze_sap_quality",
+      "purpose": "Analyze intrinsic SAP documentation quality.",
+      "description": "Analyze intrinsic SAP documentation quality.\n\nFocus on documentation completeness, clarity, and structural quality\nrather than adoption metrics.",
+      "sap": null,
+      "justfile_recipe": null,
+      "command": "python scripts/analyze_sap_quality.py",
+      "params": [],
+      "safety": "read_only",
+      "categories": [
+        "validation",
+        "sap",
+        "documentation"
+      ],
+      "affects_files": {
+        "reads": [
+          "sap-catalog.json"
+        ],
+        "modifies": [],
+        "creates": []
+      },
+      "related_scripts": []
+    },
+    {
+      "path": "scripts/bump-version.py",
+      "name": "bump-version.py",
+      "base_name": "bump-version",
+      "purpose": "Updates CHANGELOG.md with new version header and creates git tag.",
+      "description": "Updates CHANGELOG.md with new version header and creates git tag.\nPart of GAP-003: Unified Release Workflow implementation.\n\nUsage:\npython scripts/bump-version.py 4.4.0\npython scripts/bump-version.py 4.4.0 --dry-run\npython scripts/bump-version.py --help\n\nExit Codes:\n0 - Success\n1 - File operation error\n2 - Invalid arguments or version format\n\nExamples:\n# Bump to version 4.4.0\npython scripts/bump-version.py 4.4.0\n\n# Preview changes without modifying files\npython scripts/bump-version.py 4.4.0 --dry-run\n\n# Using Just task runner\njust bump 4.4.0",
+      "sap": null,
+      "justfile_recipe": "bump",
+      "command": "python scripts/bump-version.py {{VERSION}}",
+      "params": [
+        "VERSION"
+      ],
+      "safety": "modifying",
+      "categories": [
+        "generation",
+        "release"
+      ],
+      "affects_files": {
+        "reads": [],
+        "modifies": [
+          "pyproject.toml",
+          "package.json"
+        ],
+        "creates": []
+      },
+      "related_scripts": []
+    },
+    {
+      "path": "scripts/check-sap-awareness-integration.sh",
+      "name": "check-sap-awareness-integration.sh",
+      "base_name": "check-sap-awareness-integration",
+      "purpose": "Quick pattern detection for AGENTS.md/CLAUDE.md integration in SAP adoption blueprints",
+      "description": "SAP Awareness Integration Checker\n\nPurpose: Quick pattern detection for AGENTS.md/CLAUDE.md integration in SAP adoption blueprints\nScope: SIMPLE checks only - complex validation requires LLM-based audit (SAP_AWARENESS_INTEGRATION_CHECKLIST.md)\n\nUsage:\n./scripts/check-sap-awareness-integration.sh <sap-directory>\n./scripts/check-sap-awareness-integration.sh docs/skilled-awareness/testing-framework\n\nExit codes:\n0 - All basic patterns found (still requires full LLM audit for quality)\n1 - Missing critical patterns\n2 - Invalid usage\nColors for output\nUsage",
+      "sap": null,
+      "justfile_recipe": null,
+      "command": "bash scripts/check-sap-awareness-integration.sh",
+      "params": [],
+      "safety": "read_only",
+      "categories": [
+        "validation",
+        "sap"
+      ],
+      "affects_files": {
+        "reads": [
+          "sap-catalog.json"
+        ],
+        "modifies": [],
+        "creates": []
+      },
+      "related_scripts": []
+    },
+    {
+      "path": "scripts/chora-search.py",
+      "name": "chora-search.py",
+      "base_name": "chora-search",
+      "purpose": "Chora-base Glossary Search Tool",
+      "description": "Chora-base Glossary Search Tool\n\nSearch ecosystem terminology, find concepts, and discover related patterns.\nSupports forward lookup (term \u2192 definition) and reverse lookup (description \u2192 term).\n\nUsage:\npython scripts/chora-search.py \"coordination request\"\npython scripts/chora-search.py --reverse \"I want to suggest a big change\"\npython scripts/chora-search.py --related SAP-001\npython scripts/chora-search.py --fuzzy \"coordenation\"  # Handles typos",
+      "sap": "SAP-001",
+      "justfile_recipe": null,
+      "command": "python scripts/chora-search.py",
+      "params": [],
+      "safety": "read_only",
+      "categories": [
+        "other"
+      ],
+      "affects_files": {
+        "reads": [],
+        "modifies": [],
+        "creates": []
+      },
+      "related_scripts": []
+    },
+    {
+      "path": "scripts/create-release.py",
+      "name": "create-release.py",
+      "base_name": "create-release",
+      "purpose": "Extracts version notes from CHANGELOG.md and creates GitHub release using gh CLI.",
+      "description": "Extracts version notes from CHANGELOG.md and creates GitHub release using gh CLI.\nPart of GAP-003: Unified Release Workflow implementation.\n\nUsage:\npython scripts/create-release.py\npython scripts/create-release.py --version 4.4.0\npython scripts/create-release.py --dry-run\npython scripts/create-release.py --help\n\nExit Codes:\n0 - Success\n1 - File operation or gh CLI error\n2 - Invalid arguments or missing git tag\n\nExamples:\n# Create release for current git tag\npython scripts/create-release.py\n\n# Create release for specific version\npython scripts/create-release.py --version 4.4.0\n\n# Preview release creation\npython scripts/create-release.py --dry-run\n\n# Using Just task runner\njust release",
+      "sap": null,
+      "justfile_recipe": "release",
+      "command": "python scripts/create-release.py",
+      "params": [],
+      "safety": "modifying",
+      "categories": [
+        "generation",
+        "release"
+      ],
+      "affects_files": {
+        "reads": [],
+        "modifies": [
+          "pyproject.toml",
+          "package.json"
+        ],
+        "creates": []
+      },
+      "related_scripts": []
+    },
+    {
+      "path": "scripts/demo_roi_calculator.py",
+      "name": "demo_roi_calculator.py",
+      "base_name": "demo_roi_calculator",
+      "purpose": "This script demonstrates SAP-013 metrics tracking by calculating ROI",
+      "description": "This script demonstrates SAP-013 metrics tracking by calculating ROI\nfor recent Claude-assisted work on chora-base SAP maturity assessment.",
+      "sap": "SAP-013",
+      "justfile_recipe": null,
+      "command": "python scripts/demo_roi_calculator.py",
+      "params": [],
+      "safety": "read_only",
+      "categories": [
+        "sap"
+      ],
+      "affects_files": {
+        "reads": [],
+        "modifies": [],
+        "creates": []
+      },
+      "related_scripts": []
+    },
+    {
+      "path": "scripts/evaluate-pilot-quality.py",
+      "name": "evaluate-pilot-quality.py",
+      "base_name": "evaluate-pilot-quality",
+      "purpose": "Quality evaluation script for chora-compose pilot.",
+      "description": "Quality evaluation script for chora-compose pilot.\n\nEvaluates generated coordination requests against 10-criterion rubric:\n1. Structure Match (10%)\n2. Technical Accuracy (20%)\n3. Coherence (15%)\n4. Completeness (15%)\n5. JSON Schema Validation (10%)\n6. inbox-status.py Validation (10%)\n7. Time Reduction (5%)\n8. Maintainability (5%)\n9. Flexibility (5%)\n10. Scalability (5%)\n\nPass threshold: \u226580% weighted score\n\nUsage:\npython scripts/evaluate-pilot-quality.py --generated <file> --reference <file>\npython scripts/evaluate-pilot-quality.py --generated inbox/incoming/coordination/COORD-2025-003.json --reference context-examples/coordination/example-exploratory.json",
+      "sap": null,
+      "justfile_recipe": null,
+      "command": "python scripts/evaluate-pilot-quality.py",
+      "params": [],
+      "safety": "read_only",
+      "categories": [
+        "validation"
+      ],
+      "affects_files": {
+        "reads": [],
+        "modifies": [],
+        "creates": []
+      },
+      "related_scripts": []
+    },
+    {
+      "path": "scripts/export-awareness-index.py",
+      "name": "export-awareness-index.py",
+      "base_name": "export-awareness-index",
+      "purpose": "Export Awareness Index",
+      "description": "Export Awareness Index\n\nGenerates a machine-readable index of all AGENTS.md and CLAUDE.md files\nacross the repository for agent navigation and progressive context loading.\n\nPart of Phase 3: Machine-Readable Exports (Curatorial Enhancements)\nSAP Integration: SAP-009 (agent-awareness)\n\nUsage:\npython scripts/export-awareness-index.py                    # Export to scripts/awareness-index.json\npython scripts/export-awareness-index.py --output custom.json  # Custom output path\npython scripts/export-awareness-index.py --format yaml      # Export as YAML\npython scripts/export-awareness-index.py --extract-metadata # Extract frontmatter metadata",
+      "sap": "SAP-009",
+      "justfile_recipe": null,
+      "command": "python scripts/export-awareness-index.py",
+      "params": [],
+      "safety": "read_only",
+      "categories": [
+        "documentation"
+      ],
+      "affects_files": {
+        "reads": [
+          "docs/**/*.md"
+        ],
+        "modifies": [],
+        "creates": []
+      },
+      "related_scripts": []
+    },
+    {
+      "path": "scripts/export-link-graph.py",
+      "name": "export-link-graph.py",
+      "base_name": "export-link-graph",
+      "purpose": "Export Link Graph",
+      "description": "Export Link Graph\n\nGenerates a machine-readable graph of all markdown links in the repository\nfor link validation, broken link detection, and document relationship mapping.\n\nPart of Phase 3: Machine-Readable Exports (Curatorial Enhancements)\nSAP Integration: SAP-016 (link-validation)\n\nUsage:\npython scripts/export-link-graph.py                    # Export to scripts/link-graph.json\npython scripts/export-link-graph.py --output custom.json  # Custom output path\npython scripts/export-link-graph.py --format yaml      # Export as YAML\npython scripts/export-link-graph.py --validate         # Include broken link detection",
+      "sap": "SAP-016",
+      "justfile_recipe": null,
+      "command": "python scripts/export-link-graph.py",
+      "params": [],
+      "safety": "read_only",
+      "categories": [
+        "other"
+      ],
+      "affects_files": {
+        "reads": [
+          "**/*.md"
+        ],
+        "modifies": [],
+        "creates": []
+      },
+      "related_scripts": []
+    },
+    {
+      "path": "scripts/export-script-catalog.py",
+      "name": "export-script-catalog.py",
+      "base_name": "export-script-catalog",
+      "purpose": "Export Script Catalog",
+      "description": "Export Script Catalog\n\nGenerates a machine-readable catalog of all automation scripts in scripts/\nwith metadata extracted from justfile and script headers.\n\nPart of Phase 1.5: Curatorial Enhancements\nSAP Integration: SAP-008 (automation-scripts)\n\nUsage:\npython scripts/export-script-catalog.py                    # Export to scripts/script-catalog.json\npython scripts/export-script-catalog.py --output custom.json  # Custom output path\npython scripts/export-script-catalog.py --format yaml      # Export as YAML",
+      "sap": "SAP-008",
+      "justfile_recipe": null,
+      "command": "python scripts/export-script-catalog.py",
+      "params": [],
+      "safety": "read_only",
+      "categories": [
+        "other"
+      ],
+      "affects_files": {
+        "reads": [],
+        "modifies": [],
+        "creates": []
+      },
+      "related_scripts": []
+    },
+    {
+      "path": "scripts/fix-shell-syntax.sh",
+      "name": "fix-shell-syntax.sh",
+      "base_name": "fix-shell-syntax",
+      "purpose": "Fix shell syntax that was incorrectly converted by delimiter migration",
+      "description": "Fix shell syntax that was incorrectly converted by delimiter migration\nThis script restores shell constructs that got converted to Jinja2 syntax\nFix heredocs: {{EOF \u2192 <<EOF, {{'EOF' \u2192 <<'EOF'\nFix shell test expressions: if {{ condition }} \u2192 if [[ condition ]]\nFix while loops: while {{ condition }} \u2192 while [[ condition ]]\nFix array access: arr{{i}} \u2192 arr[i]  (but not Jinja2 variables)\nThis is tricky - only fix in .sh.jinja files where array syntax is common",
+      "sap": null,
+      "justfile_recipe": "fix-shell-syntax",
+      "command": "python scripts/fix-shell-syntax.py",
+      "params": [],
+      "safety": "read_only",
+      "categories": [
+        "other"
+      ],
+      "affects_files": {
+        "reads": [],
+        "modifies": [],
+        "creates": []
+      },
+      "related_scripts": []
+    },
+    {
+      "path": "scripts/generate-coordination-request.py",
+      "name": "generate-coordination-request.py",
+      "base_name": "generate-coordination-request",
+      "purpose": "Generate Coordination Request - CLI tool for inbox artifact generation",
+      "description": "Generate Coordination Request - CLI tool for inbox artifact generation\n\nPart of SAP-001 Inbox Coordination Protocol implementation.\nWeek 5: Standalone generator (Path C).\n\nUsage:\npython3 scripts/generate-coordination-request.py \\\\\n--title \"Update documentation\" \\\\\n--description \"Update README with new features\" \\\\\n--to-repo \"chora-workspace\" \\\\\n--priority P2 \\\\\n--urgency next_sprint\n\n# Or with context file:\npython3 scripts/generate-coordination-request.py --context context.json\n\n# Preview only (no file written):\npython3 scripts/generate-coordination-request.py --context context.json --preview",
+      "sap": "SAP-001",
+      "justfile_recipe": null,
+      "command": "python scripts/generate-coordination-request.py",
+      "params": [],
+      "safety": "modifying",
+      "categories": [
+        "generation",
+        "inbox"
+      ],
+      "affects_files": {
+        "reads": [
+          "inbox/coordination/*.jsonl"
+        ],
+        "modifies": [
+          "inbox/coordination/*.jsonl"
+        ],
+        "creates": []
+      },
+      "related_scripts": []
+    },
+    {
+      "path": "scripts/generate-dashboard.py",
+      "name": "generate-dashboard.py",
+      "base_name": "generate-dashboard",
+      "purpose": "Generate HTML Adoption Dashboard",
+      "description": "Generate HTML Adoption Dashboard\n\nCreates an interactive HTML dashboard visualizing SAP adoption progress.\n\nUsage:\npython scripts/generate-dashboard.py --output adoption-dashboard.html\npython scripts/generate-dashboard.py --roadmap project-docs/sap-roadmap-Q1-2026.yaml --output dashboard.html",
+      "sap": null,
+      "justfile_recipe": null,
+      "command": "python scripts/generate-dashboard.py",
+      "params": [],
+      "safety": "modifying",
+      "categories": [
+        "generation"
+      ],
+      "affects_files": {
+        "reads": [],
+        "modifies": [],
+        "creates": []
+      },
+      "related_scripts": []
+    },
+    {
+      "path": "scripts/generate-doc-from-coordination.sh",
+      "name": "generate-doc-from-coordination.sh",
+      "base_name": "generate-doc-from-coordination",
+      "purpose": "Auto-generate documentation skeleton from SAP-001 coordination requests",
+      "description": "Script: generate-doc-from-coordination.sh\nPurpose: Auto-generate documentation skeleton from SAP-001 coordination requests\nUsage: ./scripts/generate-doc-from-coordination.sh <coordination_file> <output_doc>\nExample: ./scripts/generate-doc-from-coordination.sh inbox/incoming/coordination/COORD-2025-042.json docs/user-docs/how-to/create-task.md\n\nPart of GAP-002 resolution: Manual Coordination \u2192 Documentation Handoff\nSee: docs/project-docs/workflow-continuity-gap-report.md (GAP-002)\nColors for output\nFunction to print colored messages\nValidate arguments",
+      "sap": "SAP-001",
+      "justfile_recipe": null,
+      "command": "bash scripts/generate-doc-from-coordination.sh",
+      "params": [],
+      "safety": "modifying",
+      "categories": [
+        "generation",
+        "sap",
+        "inbox",
+        "documentation"
+      ],
+      "affects_files": {
+        "reads": [
+          "inbox/coordination/*.jsonl",
+          "docs/**/*.md"
+        ],
+        "modifies": [
+          "inbox/coordination/*.jsonl",
+          "docs/**/*.md"
+        ],
+        "creates": []
+      },
+      "related_scripts": []
+    },
+    {
+      "path": "scripts/inbox-query.py",
+      "name": "inbox-query.py",
+      "base_name": "inbox-query",
+      "purpose": "Inbox Query Tool - Agent-friendly inbox management interface",
+      "description": "Inbox Query Tool - Agent-friendly inbox management interface\n\nProvides structured queries for inbox items with filtering, sorting, and formatting.\nOptimized for AI agent invocation with clear commands and machine-readable output.\n\nUsage:\n# Check for new unacknowledged items\npython scripts/inbox-query.py --incoming --unacknowledged\n\n# View specific coordination request\npython scripts/inbox-query.py --request COORD-2025-006\n\n# List all items with specific status\npython scripts/inbox-query.py --status in_progress\n\n# Show items older than 3 days\npython scripts/inbox-query.py --incoming --age \">3d\"\n\n# JSON output for parsing\npython scripts/inbox-query.py --incoming --format json\n\n# Count items by status\npython scripts/inbox-query.py --count-by-status",
+      "sap": null,
+      "justfile_recipe": null,
+      "command": "python scripts/inbox-query.py",
+      "params": [],
+      "safety": "read_only",
+      "categories": [
+        "inbox"
+      ],
+      "affects_files": {
+        "reads": [
+          "inbox/coordination/*.jsonl"
+        ],
+        "modifies": [],
+        "creates": []
+      },
+      "related_scripts": []
+    },
+    {
+      "path": "scripts/inbox-status.py",
+      "name": "inbox-status.py",
+      "base_name": "inbox-status",
+      "purpose": "Display current status of inbox protocol workflow",
+      "description": "Purpose: Display current status of inbox protocol workflow\nUsage:\n# Quick overview\npython scripts/inbox-status.py\n\n# Detailed view with filters\npython scripts/inbox-status.py --detailed --priority P0 --last 7d\n\n# Export formats\npython scripts/inbox-status.py --format json\npython scripts/inbox-status.py --format markdown > STATUS.md\n\nExit codes:\n0 - Success\n1 - Error",
+      "sap": null,
+      "justfile_recipe": null,
+      "command": "python scripts/inbox-status.py",
+      "params": [],
+      "safety": "read_only",
+      "categories": [
+        "inbox",
+        "development"
+      ],
+      "affects_files": {
+        "reads": [
+          "inbox/coordination/*.jsonl"
+        ],
+        "modifies": [],
+        "creates": []
+      },
+      "related_scripts": []
+    },
+    {
+      "path": "scripts/install-inbox-protocol.py",
+      "name": "install-inbox-protocol.py",
+      "base_name": "install-inbox-protocol",
+      "purpose": "Ecosystem Onboarding Installer - One-command inbox protocol setup",
+      "description": "Ecosystem Onboarding Installer - One-command inbox protocol setup\n\nInstalls SAP-001 Inbox Coordination Protocol into any repository with:\n- Directory structure (incoming/, active/, completed/, etc.)\n- Generator scripts and content configs\n- Capability registry template\n- Agent automation playbook\n- Event log initialization\n- Ecosystem registration\n\nUsage:\n# Full installation (recommended)\npython scripts/install-inbox-protocol.py \\\\\n--repo github.com/liminalcommons/mcp-orchestration \\\\\n--mode full\n\n# Minimal installation (protocol only, no tooling)\npython scripts/install-inbox-protocol.py \\\\\n--repo github.com/liminalcommons/target-repo \\\\\n--mode minimal\n\n# Interactive mode (prompts for configuration)\npython scripts/install-inbox-protocol.py --interactive",
+      "sap": "SAP-001",
+      "justfile_recipe": null,
+      "command": "python scripts/install-inbox-protocol.py",
+      "params": [],
+      "safety": "modifying",
+      "categories": [
+        "inbox",
+        "setup"
+      ],
+      "affects_files": {
+        "reads": [
+          "inbox/coordination/*.jsonl"
+        ],
+        "modifies": [],
+        "creates": []
+      },
+      "related_scripts": []
+    },
+    {
+      "path": "scripts/install-sap.py",
+      "name": "install-sap.py",
+      "base_name": "install-sap",
+      "purpose": "Automated installation of Skilled Awareness Packages with dependency resolution",
+      "description": "Purpose: Automated installation of Skilled Awareness Packages with dependency resolution\n\nUsage:\n# Install individual SAP\npython scripts/install-sap.py SAP-004\npython scripts/install-sap.py SAP-004 --source /path/to/chora-base\n\n# Install SAP set\npython scripts/install-sap.py --set minimal-entry\npython scripts/install-sap.py --set recommended\n\n# List options\npython scripts/install-sap.py --list\npython scripts/install-sap.py --list-sets\n\n# Dry run\npython scripts/install-sap.py SAP-004 --dry-run\npython scripts/install-sap.py --set minimal-entry --dry-run\n\nExit codes:\n0 - Success\n1 - Error (validation, installation failure)\n2 - Invalid usage",
+      "sap": "SAP-004",
+      "justfile_recipe": null,
+      "command": "python scripts/install-sap.py",
+      "params": [],
+      "safety": "modifying",
+      "categories": [
+        "sap",
+        "setup"
+      ],
+      "affects_files": {
+        "reads": [
+          "sap-catalog.json"
+        ],
+        "modifies": [],
+        "creates": []
+      },
+      "related_scripts": []
+    },
+    {
+      "path": "scripts/intent-router.py",
+      "name": "intent-router.py",
+      "base_name": "intent-router",
+      "purpose": "Conversational Intent Router for chora-base",
+      "description": "Conversational Intent Router for chora-base\n\nTranslates natural language user input into structured ecosystem actions.\nEnables mutual ergonomics: user speaks naturally, system executes procedurally.\n\nUsage:\npython scripts/intent-router.py \"show me what's in the inbox\"\npython scripts/intent-router.py --interactive\npython scripts/intent-router.py --learn \"new phrase\" --action inbox_status\n\nCore Capabilities:\n- Semantic pattern matching (natural language \u2192 formal actions)\n- Confidence scoring for disambiguation\n- Clarification prompts when ambiguous\n- Pattern learning from usage",
+      "sap": null,
+      "justfile_recipe": null,
+      "command": "python scripts/intent-router.py",
+      "params": [],
+      "safety": "read_only",
+      "categories": [
+        "other"
+      ],
+      "affects_files": {
+        "reads": [],
+        "modifies": [],
+        "creates": []
+      },
+      "related_scripts": []
+    },
+    {
+      "path": "scripts/inventory-chora-base.py",
+      "name": "inventory-chora-base.py",
+      "base_name": "inventory-chora-base",
+      "purpose": "Comprehensive file inventory script for chora-base.",
+      "description": "Comprehensive file inventory script for chora-base.\n\nThis script catalogs every file in chora-base, categorizes it by type,\nidentifies which SAP (if any) it relates to, and generates detailed reports.\n\nUsage:\npython scripts/inventory-chora-base.py\n\nOutputs:\n- docs/inventory/file-inventory.csv\n- docs/inventory/directory-structure.md",
+      "sap": null,
+      "justfile_recipe": null,
+      "command": "python scripts/inventory-chora-base.py",
+      "params": [],
+      "safety": "read_only",
+      "categories": [
+        "other"
+      ],
+      "affects_files": {
+        "reads": [],
+        "modifies": [],
+        "creates": []
+      },
+      "related_scripts": []
+    },
+    {
+      "path": "scripts/merge-agents-md.py",
+      "name": "merge-agents-md.py",
+      "base_name": "merge-agents-md",
+      "purpose": "Merge Strategy: section-by-section",
+      "description": "Merge Strategy: section-by-section\n\nPreserves project-specific sections while updating structural sections from upstream.\n\nUsage:\npython scripts/merge-agents-md.py [--dry-run] [--output PATH]\n\nAlgorithm:\n1. Parse both current and upstream AGENTS.md into sections\n2. Identify section types using markers from .chorabase\n3. Keep preserve_sections from current (project-specific)\n4. Take merge_sections from upstream (structural updates)\n5. Merge while maintaining section order",
+      "sap": null,
+      "justfile_recipe": null,
+      "command": "python scripts/merge-agents-md.py",
+      "params": [],
+      "safety": "modifying",
+      "categories": [
+        "other"
+      ],
+      "affects_files": {
+        "reads": [],
+        "modifies": [],
+        "creates": []
+      },
+      "related_scripts": []
+    },
+    {
+      "path": "scripts/merge-index-md.py",
+      "name": "merge-index-md.py",
+      "base_name": "merge-index-md",
+      "purpose": "Merge Strategy: table-rows",
+      "description": "Merge Strategy: table-rows\n\nMerges SAP index tables by rows, preserving project-specific SAP entries while\nupdating framework SAPs from upstream.\n\nUsage:\npython scripts/merge-index-md.py [--dry-run] [--output PATH]\n\nAlgorithm:\n1. Parse both current and upstream INDEX.md tables\n2. Identify framework SAPs (SAP-000) - merge from upstream\n3. Identify project SAPs (SAP-001+) - preserve from current\n4. Merge tables maintaining proper formatting",
+      "sap": "SAP-000",
+      "justfile_recipe": null,
+      "command": "python scripts/merge-index-md.py",
+      "params": [],
+      "safety": "modifying",
+      "categories": [
+        "documentation"
+      ],
+      "affects_files": {
+        "reads": [
+          "docs/**/*.md"
+        ],
+        "modifies": [
+          "docs/**/*.md"
+        ],
+        "creates": []
+      },
+      "related_scripts": []
+    },
+    {
+      "path": "scripts/merge-readme-md.py",
+      "name": "merge-readme-md.py",
+      "base_name": "merge-readme-md",
+      "purpose": "Merge Strategy: template-variables",
+      "description": "Merge Strategy: template-variables\n\nUpdates structural README sections while preserving project-specific variables.\n\nUsage:\npython scripts/merge-readme-md.py [--dry-run] [--output PATH]\n\nAlgorithm:\n1. Parse template variables from current README.md\n2. Get upstream README.md template\n3. Replace template placeholders with project values\n4. Preserve specified sections from current",
+      "sap": null,
+      "justfile_recipe": null,
+      "command": "python scripts/merge-readme-md.py",
+      "params": [],
+      "safety": "modifying",
+      "categories": [
+        "documentation"
+      ],
+      "affects_files": {
+        "reads": [
+          "docs/**/*.md"
+        ],
+        "modifies": [
+          "docs/**/*.md"
+        ],
+        "creates": []
+      },
+      "related_scripts": []
+    },
+    {
+      "path": "scripts/merge-upstream-structure.py",
+      "name": "merge-upstream-structure.py",
+      "base_name": "merge-upstream-structure",
+      "purpose": "Safely merge structure-only files from chora-base upstream while preserving project content",
+      "description": "Purpose: Safely merge structure-only files from chora-base upstream while preserving project content\nUsage: python scripts/merge-upstream-structure.py [--dry-run] [--no-backup]\n\nThis script:\n1. Reads .chorabase metadata to identify structure-only files\n2. Fetches latest from upstream chora-base\n3. Merges structure-only files using git checkout\n4. Identifies hybrid files requiring manual merge\n5. Creates backup and provides rollback mechanism\n\nExit codes:\n0 - Success\n1 - Error (configuration, git operation, etc.)\n2 - Invalid usage",
+      "sap": null,
+      "justfile_recipe": "merge-upstream",
+      "command": "python scripts/merge-upstream-structure.py",
+      "params": [],
+      "safety": "modifying",
+      "categories": [
+        "migration"
+      ],
+      "affects_files": {
+        "reads": [],
+        "modifies": [],
+        "creates": []
+      },
+      "related_scripts": []
+    },
+    {
+      "path": "scripts/merge-upstream-structure.sh",
+      "name": "merge-upstream-structure.sh",
+      "base_name": "merge-upstream-structure",
+      "purpose": "Safely merge structure-only files from chora-base upstream while preserving project content",
+      "description": "merge-upstream-structure.sh - Merge structural updates from chora-base upstream\n\nPurpose: Safely merge structure-only files from chora-base upstream while preserving project content\nUsage: ./scripts/merge-upstream-structure.sh [--dry-run] [--no-backup]\n\nThis script:\n1. Reads .chorabase metadata to identify structure-only files\n2. Fetches latest from upstream chora-base\n3. Merges structure-only files using git checkout\n4. Identifies hybrid files requiring manual merge\n5. Creates backup and provides rollback mechanism\n\nExit codes:\n0 - Success\n1 - Error (configuration, git operation, etc.)\n2 - Invalid usage\nColors\nConfiguration",
+      "sap": null,
+      "justfile_recipe": null,
+      "command": "bash scripts/merge-upstream-structure.sh",
+      "params": [],
+      "safety": "modifying",
+      "categories": [
+        "migration"
+      ],
+      "affects_files": {
+        "reads": [],
+        "modifies": [],
+        "creates": []
+      },
+      "related_scripts": []
+    },
+    {
+      "path": "scripts/process-generated-artifact.py",
+      "name": "process-generated-artifact.py",
+      "base_name": "process-generated-artifact",
+      "purpose": "Post-processing wrapper for chora-compose generated artifacts.",
+      "description": "Post-processing wrapper for chora-compose generated artifacts.\n\nThis script implements the 4-step pipeline:\n1. Validate against JSON schema\n2. Allocate request_id from sequence file\n3. Emit event to events.jsonl\n4. Promote file from draft/ to inbox/incoming/\n\nUsage:\npython scripts/process-generated-artifact.py <draft_file_path>\npython scripts/process-generated-artifact.py inbox/draft/coordination-request.json\n\nExit codes:\n0: Success\n1: Validation error\n2: File system error\n3: Configuration error",
+      "sap": null,
+      "justfile_recipe": null,
+      "command": "python scripts/process-generated-artifact.py",
+      "params": [],
+      "safety": "modifying",
+      "categories": [
+        "generation"
+      ],
+      "affects_files": {
+        "reads": [],
+        "modifies": [],
+        "creates": []
+      },
+      "related_scripts": []
+    },
+    {
+      "path": "scripts/propagate-trace-id.sh",
+      "name": "propagate-trace-id.sh",
+      "base_name": "propagate-trace-id",
+      "purpose": "Propagate CHORA_TRACE_ID from coordination request to documentation and metrics",
+      "description": "Script: propagate-trace-id.sh\nPurpose: Propagate CHORA_TRACE_ID from coordination request to documentation and metrics\nUsage: ./scripts/propagate-trace-id.sh <trace_id> <doc_file>\nExample: ./scripts/propagate-trace-id.sh mcp-taskmgr-2025-003 docs/user-docs/how-to/create-task.md\n\nPart of GAP-001 resolution: End-to-end CHORA_TRACE_ID propagation\nSee: docs/project-docs/workflow-continuity-gap-report.md (GAP-001)\nColors for output\nFunction to print colored messages\nValidate arguments",
+      "sap": null,
+      "justfile_recipe": null,
+      "command": "bash scripts/propagate-trace-id.sh",
+      "params": [],
+      "safety": "modifying",
+      "categories": [
+        "inbox",
+        "documentation"
+      ],
+      "affects_files": {
+        "reads": [],
+        "modifies": [],
+        "creates": []
+      },
+      "related_scripts": []
+    },
+    {
+      "path": "scripts/query-events-by-tag.py",
+      "name": "query-events-by-tag.py",
+      "base_name": "query-events-by-tag",
+      "purpose": "Query Events by Tag",
+      "description": "Query Events by Tag\n\nQuery A-MEM event logs using the event tag taxonomy for filtering,\ncounting, and analyzing events across traces, domains, and time periods.\n\nPart of Phase 3: Machine-Readable Exports (Curatorial Enhancements)\nSAP Integration: SAP-010 (memory-system)\n\nUsage:\npython scripts/query-events-by-tag.py --tags sap-evaluation           # Find all SAP evaluation events\npython scripts/query-events-by-tag.py --tags script-failure --days 7  # Recent script failures\npython scripts/query-events-by-tag.py --count-by-tag                  # Count events by tag\npython scripts/query-events-by-tag.py --list-tags                     # List all tags in use\npython scripts/query-events-by-tag.py --validate-tags                 # Validate tags against taxonomy",
+      "sap": "SAP-010",
+      "justfile_recipe": null,
+      "command": "python scripts/query-events-by-tag.py",
+      "params": [],
+      "safety": "read_only",
+      "categories": [
+        "other"
+      ],
+      "affects_files": {
+        "reads": [],
+        "modifies": [],
+        "creates": []
+      },
+      "related_scripts": []
+    },
+    {
+      "path": "scripts/respond-to-coordination.py",
+      "name": "respond-to-coordination.py",
+      "base_name": "respond-to-coordination",
+      "purpose": "Respond to Coordination Request - Generate structured responses",
+      "description": "Respond to Coordination Request - Generate structured responses\n\nCreates formatted responses to coordination requests with status updates,\neffort estimates, and acceptance/decline decisions.\n\nUsage:\n# Accept coordination request\npython scripts/respond-to-coordination.py \\\\\n--request COORD-2025-006 \\\\\n--status accepted \\\\\n--effort \"8-12 hours\" \\\\\n--notes \"Starting implementation, ETA 3 days\"\n\n# Decline coordination request\npython scripts/respond-to-coordination.py \\\\\n--request COORD-2025-006 \\\\\n--status declined \\\\\n--reason \"Resource constraints, suggest deferring to Q2\"\n\n# Acknowledge receipt (initial response)\npython scripts/respond-to-coordination.py \\\\\n--request COORD-2025-006 \\\\\n--status acknowledged \\\\\n--notes \"Reviewing requirements, will respond within 2 days\"",
+      "sap": null,
+      "justfile_recipe": null,
+      "command": "python scripts/respond-to-coordination.py",
+      "params": [],
+      "safety": "read_only",
+      "categories": [
+        "generation",
+        "inbox"
+      ],
+      "affects_files": {
+        "reads": [
+          "inbox/coordination/*.jsonl"
+        ],
+        "modifies": [
+          "inbox/coordination/*.jsonl"
+        ],
+        "creates": []
+      },
+      "related_scripts": []
+    },
+    {
+      "path": "scripts/rollback-migration.sh",
+      "name": "rollback-migration.sh",
+      "base_name": "rollback-migration",
+      "purpose": "Rollback migration to angle brackets (restore from backups)",
+      "description": "Rollback migration to angle brackets (restore from backups)\nRestore all backups",
+      "sap": null,
+      "justfile_recipe": "rollback-migration",
+      "command": "python scripts/rollback-migration.py",
+      "params": [],
+      "safety": "destructive",
+      "categories": [
+        "migration"
+      ],
+      "affects_files": {
+        "reads": [],
+        "modifies": [],
+        "creates": []
+      },
+      "related_scripts": []
+    },
+    {
+      "path": "scripts/sap-evaluator.py",
+      "name": "sap-evaluator.py",
+      "base_name": "sap-evaluator",
+      "purpose": "SAP Self-Evaluation CLI Tool",
+      "description": "SAP Self-Evaluation CLI Tool\n\nEvaluate SAP adoption depth and generate improvement roadmaps.\n\nUsage:\n# Quick check (30 seconds)\npython scripts/sap-evaluator.py --quick\npython scripts/sap-evaluator.py --quick SAP-004\n\n# Deep dive (5 minutes)\npython scripts/sap-evaluator.py --deep SAP-004\npython scripts/sap-evaluator.py --deep SAP-004 --output report.md\n\n# Strategic analysis (30 minutes)\npython scripts/sap-evaluator.py --strategic\npython scripts/sap-evaluator.py --strategic --output roadmap.yaml\n\n# Export evaluation history\npython scripts/sap-evaluator.py --export-history\npython scripts/sap-evaluator.py --export-history --sap SAP-004\npython scripts/sap-evaluator.py --export-history --format json --output history.json\n\nExamples:\n# Check all installed SAPs\npython scripts/sap-evaluator.py --quick\n\n# Detailed assessment of testing framework\npython scripts/sap-evaluator.py --deep SAP-004 --output docs/adoption-reports/SAP-004-assessment.md",
+      "sap": "SAP-004",
+      "justfile_recipe": "validate-sap",
+      "command": "python scripts/sap-evaluator.py --quick {{SAP_ID}}",
+      "params": [
+        "SAP_ID"
+      ],
+      "safety": "read_only",
+      "categories": [
+        "sap"
+      ],
+      "affects_files": {
+        "reads": [
+          "sap-catalog.json"
+        ],
+        "modifies": [],
+        "creates": []
+      },
+      "related_scripts": []
+    },
+    {
+      "path": "scripts/sap-validate.py",
+      "name": "sap-validate.py",
+      "base_name": "sap-validate",
+      "purpose": "SAP Structure Validator",
+      "description": "SAP Structure Validator\n\nValidates that a SAP directory contains all required artifacts with proper frontmatter.\n\nUsage:\npython scripts/sap-validate.py <sap-directory>\npython scripts/sap-validate.py docs/skilled-awareness/testing-framework\npython scripts/sap-validate.py --all  # Validate all SAPs\n\nRequirements (Level 3):\n- 5 core artifacts (charter, protocol, awareness, blueprint, ledger)\n- Valid frontmatter in each artifact\n- Proper SAP ID format (SAP-###)\n- Version follows semver\n\nExit Codes:\n0 - All validations passed\n1 - Validation failures found\n2 - Usage error or missing directory",
+      "sap": null,
+      "justfile_recipe": "validate-sap-structure",
+      "command": "python scripts/sap-validate.py {{SAP_PATH}}",
+      "params": [
+        "SAP_PATH"
+      ],
+      "safety": "read_only",
+      "categories": [
+        "validation",
+        "sap"
+      ],
+      "affects_files": {
+        "reads": [
+          "sap-catalog.json",
+          "docs/skilled-awareness/**/*.md"
+        ],
+        "modifies": [],
+        "creates": []
+      },
+      "related_scripts": []
+    },
+    {
+      "path": "scripts/suggest-next.py",
+      "name": "suggest-next.py",
+      "base_name": "suggest-next",
+      "purpose": "Context-Aware Suggestion Engine for chora-base",
+      "description": "Context-Aware Suggestion Engine for chora-base\n\nAnalyzes project state and suggests next actions based on:\n- Recent activity (event log)\n- Current phase (DDD/BDD/TDD)\n- Outstanding gaps (SAP evaluation)\n- Upcoming deadlines (sprint planning)\n- Quality metrics\n\nUsage:\npython scripts/suggest-next.py\npython scripts/suggest-next.py --context task-005\npython scripts/suggest-next.py --mode proactive  # Check without being asked",
+      "sap": null,
+      "justfile_recipe": null,
+      "command": "python scripts/suggest-next.py",
+      "params": [],
+      "safety": "read_only",
+      "categories": [
+        "other"
+      ],
+      "affects_files": {
+        "reads": [],
+        "modifies": [],
+        "creates": []
+      },
+      "related_scripts": []
+    },
+    {
+      "path": "scripts/test-mcp-template-render.py",
+      "name": "test-mcp-template-render.py",
+      "base_name": "test-mcp-template-render",
+      "purpose": "Tests the GAP-003 Track 2 script templates:",
+      "description": "Tests the GAP-003 Track 2 script templates:\n- bump-version.py.template\n- create-release.py.template\n- justfile.template",
+      "sap": null,
+      "justfile_recipe": null,
+      "command": "python scripts/test-mcp-template-render.py",
+      "params": [],
+      "safety": "read_only",
+      "categories": [
+        "mcp"
+      ],
+      "affects_files": {
+        "reads": [],
+        "modifies": [],
+        "creates": []
+      },
+      "related_scripts": []
+    },
+    {
+      "path": "scripts/usage_tracker.py",
+      "name": "usage_tracker.py",
+      "base_name": "usage_tracker",
+      "purpose": "This module provides simple usage tracking for chora-base automation scripts",
+      "description": "This module provides simple usage tracking for chora-base automation scripts\nto demonstrate SAP-008 adoption and enable metrics analysis.\n\nUsage:\nfrom usage_tracker import track_usage\n\n@track_usage\ndef main():\n# Your script logic here\npass\n\nif __name__ == \"__main__\":\nmain()",
+      "sap": "SAP-008",
+      "justfile_recipe": null,
+      "command": "python scripts/usage_tracker.py",
+      "params": [],
+      "safety": "read_only",
+      "categories": [
+        "development"
+      ],
+      "affects_files": {
+        "reads": [],
+        "modifies": [],
+        "creates": []
+      },
+      "related_scripts": []
+    },
+    {
+      "path": "scripts/validate-links.sh",
+      "name": "validate-links.sh",
+      "base_name": "validate-links",
+      "purpose": "Link Validation Script v1.0-mvp",
+      "description": "Link Validation Script v1.0-mvp\nPart of SAP-016: Link Validation & Reference Management\n\nSimplified MVP focusing on internal markdown link validation\nUsage: ./scripts/validate-links-simple.sh [PATH]\nCounters\nColors\nFunction to validate a single file",
+      "sap": "SAP-016",
+      "justfile_recipe": "validate-links",
+      "command": "python scripts/validate-links.py {{PATH}}",
+      "params": [
+        "PATH"
+      ],
+      "safety": "read_only",
+      "categories": [
+        "validation"
+      ],
+      "affects_files": {
+        "reads": [
+          "**/*.md"
+        ],
+        "modifies": [],
+        "creates": []
+      },
+      "related_scripts": []
+    },
+    {
+      "path": "scripts/validate-prerequisites.sh",
+      "name": "validate-prerequisites.sh",
+      "base_name": "validate-prerequisites",
+      "purpose": "Catch prerequisite issues before install-sap.py runs",
+      "description": "validate-prerequisites.sh - Pre-flight validation for chora-base onboarding\n\nPurpose: Catch prerequisite issues before install-sap.py runs\nExit codes: 0 = PASS, 1 = FAIL\n\nUsage:\nbash scripts/validate-prerequisites.sh\n\nBased on: COORD-003 Sprint 1 requirements\nTarget: Catch 90%+ of prerequisite issues before installation failure\n\nColors and Output Helpers",
+      "sap": null,
+      "justfile_recipe": "validate-prerequisites",
+      "command": "python scripts/validate-prerequisites.py",
+      "params": [],
+      "safety": "read_only",
+      "categories": [
+        "validation",
+        "setup"
+      ],
+      "affects_files": {
+        "reads": [],
+        "modifies": [],
+        "creates": []
+      },
+      "related_scripts": []
+    },
+    {
+      "path": "scripts/wave2-audit.py",
+      "name": "wave2-audit.py",
+      "base_name": "wave2-audit",
+      "purpose": "import os",
+      "description": "import os\nimport glob\n\nsaps = [\n\"sap-framework\", \"inbox\", \"chora-base\", \"project-bootstrap\",\n\"testing-framework\", \"ci-cd-workflows\", \"quality-gates\",\n\"documentation-framework\", \"automation-scripts\", \"agent-awareness\",\n\"memory-system\", \"docker-operations\", \"development-lifecycle\",\n\"metrics-tracking\", \"link-validation-reference-management\",\n\"mcp-server-development\", \"chora-compose-integration\", \"chora-compose-meta\"\n]\n\nprint(\"4-Domain Cross-Reference Audit\")\nprint(\"=\"*60)\n\nfor sap in saps:\npath = f\"docs/skilled-awareness/{sap}\"\nif not os.path.exists(path):\nprint(f\"{sap:40} MISSING\")\ncontinue\n\ncount = 0\nfor md_file in glob.glob(f\"{path}/*.md\"):\nwith open(md_file, 'r') as f:\ncontent = f.read()\ncount += content.count(\"dev-docs/\")\ncount += content.count(\"user-docs/\")",
+      "sap": null,
+      "justfile_recipe": null,
+      "command": "python scripts/wave2-audit.py",
+      "params": [],
+      "safety": "read_only",
+      "categories": [
+        "other"
+      ],
+      "affects_files": {
+        "reads": [],
+        "modifies": [],
+        "creates": []
+      },
+      "related_scripts": []
+    }
+  ]
+}
