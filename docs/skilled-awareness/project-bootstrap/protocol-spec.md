@@ -893,6 +893,74 @@ pytest                 # Run tests
 
 ---
 
+## 10.5. Self-Evaluation Criteria
+
+### Awareness File Requirements (SAP-009 Phase 4)
+
+**Both AGENTS.md and CLAUDE.md Required** (Equivalent Support):
+- [ ] Both files exist in `docs/skilled-awareness/project-bootstrap/`
+- [ ] Both files have YAML frontmatter with progressive loading metadata
+- [ ] Workflow coverage equivalent (±30%): AGENTS.md ≈ CLAUDE.md workflows
+
+**Required Sections (Both Files)**:
+- [ ] Quick Reference / Quick Start for Claude
+- [ ] Common Workflows / Claude Code Workflows (5 workflows in AGENTS.md, 3 in CLAUDE.md)
+- [ ] Best Practices / Claude-Specific Tips (5 each)
+- [ ] Common Pitfalls (5 each)
+- [ ] Integration with Other SAPs / Support & Resources
+
+**Source Artifact Coverage (Both Files)**:
+- [ ] capability-charter.md problem statement → "When to Use" section
+- [ ] protocol-spec.md generation flow/contracts → "Core Files" section
+- [ ] awareness-guide.md workflows → "Common Workflows" section
+- [ ] adoption-blueprint.md installation → "Quick Reference" section
+- [ ] ledger.md project tracking → referenced in "Best Practices"
+
+**YAML Frontmatter Fields** (Required):
+```yaml
+sap_id: SAP-003
+version: X.Y.Z
+status: active | pilot | draft
+last_updated: YYYY-MM-DD
+type: reference
+audience: agents | claude_code
+complexity: beginner | intermediate | advanced
+estimated_reading_time: N
+progressive_loading:
+  phase_1: "lines 1-X"
+  phase_2: "lines X-Y"
+  phase_3: "full"
+phase_1_token_estimate: NNNN
+phase_2_token_estimate: NNNN
+phase_3_token_estimate: NNNN
+```
+
+**Validation Commands**:
+```bash
+# Check both files exist
+test -f docs/skilled-awareness/project-bootstrap/AGENTS.md && \
+test -f docs/skilled-awareness/project-bootstrap/CLAUDE.md
+
+# Validate YAML frontmatter
+grep -A 10 "^---$" docs/skilled-awareness/project-bootstrap/AGENTS.md | grep "progressive_loading:"
+grep -A 10 "^---$" docs/skilled-awareness/project-bootstrap/CLAUDE.md | grep "progressive_loading:"
+
+# Check workflow count equivalence (should be within ±30%)
+agents_workflows=$(grep "^### Workflow" docs/skilled-awareness/project-bootstrap/AGENTS.md | wc -l)
+claude_workflows=$(grep "^### Workflow" docs/skilled-awareness/project-bootstrap/CLAUDE.md | wc -l)
+echo "AGENTS workflows: $agents_workflows, CLAUDE workflows: $claude_workflows"
+
+# Run comprehensive evaluation
+python scripts/sap-evaluator.py --deep SAP-003
+```
+
+**Expected Workflow Coverage**:
+- AGENTS.md: 5 generic agent workflows (Generate, Validate, Customize, Troubleshoot, Adopt)
+- CLAUDE.md: 3 Claude Code workflows (Generate with Bash, Validate with Read, Troubleshoot with Edit)
+- Rationale: Different granularity acceptable - AGENTS.md covers all generation scenarios, CLAUDE.md focuses on high-level Claude Code tool patterns
+
+---
+
 ## 11. Best Practices
 
 ### 11.1 For Template Maintainers
