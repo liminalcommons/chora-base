@@ -653,5 +653,106 @@ CHORA_TRACE=true chora-compose generate ...
 
 ---
 
+## 12. Self-Evaluation Criteria (SAP-009 Phase 4)
+
+This section documents self-evaluation criteria for SAP-018 awareness file completeness, enabling automated validation of equivalent support for generic agents and Claude Code.
+
+### 12.1 Awareness File Requirements
+
+**Required Files**:
+- `AGENTS.md` - Generic AI agent workflows
+- `CLAUDE.md` - Claude Code-specific tool patterns
+
+**Validation Command**:
+```bash
+python scripts/sap-evaluator.py --deep chora-compose-meta
+```
+
+### 12.2 Expected Workflow Coverage
+
+**AGENTS.md**: 5 workflows
+1. Understanding Architecture (10-15 min) - Read architecture overview, component breakdown, integration points
+2. Design Philosophy and Trade-offs (5-10 min) - Read design rationale, trade-off examples, design influences
+3. MCP Tools Catalog (5 min) - List all 17 MCP tools across 4 categories, resource URI families
+4. Ecosystem Positioning (10 min) - Compare to Kubernetes/Tilt/Skaffold, decision criteria, migration paths
+5. Contributing to chora-compose (15-20 min) - Extension points, contribution workflow, testing requirements
+
+**CLAUDE.md**: 4 workflows
+1. Understanding Architecture with Read - Read protocol-spec.md, extract components, explain to user
+2. Understanding Design Trade-offs with Read - Read capability-charter.md, find trade-off documentation, explain rationale
+3. Exploring MCP Tools Catalog with Read and Bash - Read MCP tools catalog, launch MCP inspector, list tools interactively
+4. Comparing to Alternatives with Read and Grep - Read ecosystem comparison, search comparison matrix, present decision criteria
+
+**Variance**: 4 workflows (CLAUDE.md) vs 5 workflows (AGENTS.md) = 20% difference
+**Acceptable**: Yes (within ±30% tolerance)
+
+**Rationale for Variance**: CLAUDE.md consolidates workflows around Read tool for documentation exploration, while AGENTS.md provides granular step-by-step guidance for each meta-documentation operation. Both provide equivalent coverage of chora-compose architecture understanding, design philosophy, MCP tools, and ecosystem positioning through different organizational approaches.
+
+### 12.3 User Signal Pattern Coverage
+
+**AGENTS.md**: 1 table with 6 signals
+- Meta-Documentation Operations table
+  - "explain chora-compose architecture" → show_architecture()
+  - "why chora-compose" → show_design_philosophy()
+  - "compare to Kubernetes" → show_ecosystem_positioning()
+  - "how to extend" → show_contribution_guide()
+  - "MCP tools available" → list_mcp_tools()
+  - "chora-compose vs Tilt" → compare_alternatives()
+
+**CLAUDE.md**: Tool-specific patterns documented in 5 tips
+- Tip 1: Read protocol-spec.md before technology decisions
+- Tip 2: Use Bash to launch MCP inspector
+- Tip 3: Use Grep to find design decisions
+- Tip 4: Read capability-charter.md for philosophy
+- Tip 5: Use Read for progressive loading
+
+**Coverage**: AGENTS.md provides user signal translation, CLAUDE.md provides tool patterns for implementing those signals with Claude Code tools (Read, Bash, Grep).
+
+### 12.4 Validation Checkpoints
+
+**Structural Validation**:
+```bash
+# Check both awareness files exist
+ls docs/skilled-awareness/chora-compose-meta/AGENTS.md
+ls docs/skilled-awareness/chora-compose-meta/CLAUDE.md
+
+# Check YAML frontmatter present
+head -20 docs/skilled-awareness/chora-compose-meta/AGENTS.md | grep "sap_id: SAP-018"
+head -20 docs/skilled-awareness/chora-compose-meta/CLAUDE.md | grep "sap_id: SAP-018"
+```
+
+**Coverage Validation**:
+```bash
+# Count workflows in AGENTS.md (expect: 5)
+grep -c "^### Workflow [0-9]:" docs/skilled-awareness/chora-compose-meta/AGENTS.md
+
+# Count workflows in CLAUDE.md (expect: 4)
+grep -c "^### Workflow [0-9]:" docs/skilled-awareness/chora-compose-meta/CLAUDE.md
+
+# Check user signal table exists in AGENTS.md
+grep -c "## User Signal Patterns" docs/skilled-awareness/chora-compose-meta/AGENTS.md
+```
+
+**Expected Results**:
+- Both awareness files exist ✅
+- YAML frontmatter with progressive_loading ✅
+- AGENTS.md: 5 workflows, 1 user signal table ✅
+- CLAUDE.md: 4 workflows, 5 tool-specific tips ✅
+- Workflow variance: 20% (acceptable) ✅
+
+### 12.5 Integration with SAP-009
+
+**Phase 4 Criteria Met**:
+- ✅ AGENTS.md provides generic workflow guidance
+- ✅ CLAUDE.md provides Claude Code tool patterns
+- ✅ Workflow coverage within acceptable variance (20% < 30%)
+- ✅ Rationale documented for organizational differences
+- ✅ Self-evaluation criteria documented in protocol-spec.md
+
+**SAP-018 Awareness Status**: Phase 4 compliant (equivalent support for generic agents and Claude Code)
+
+---
+
 **Protocol Version History**:
 - **1.0.0** (2025-10-29): Initial complete protocol specification for chora-compose v1.2.0
+- **1.0.1** (2025-11-05): Added Section 12: Self-Evaluation Criteria (SAP-009 Phase 4 compliance)
