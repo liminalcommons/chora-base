@@ -244,7 +244,103 @@ Load for complex refactoring:
 
 **Awareness files are documentation**:
 - Follow Diataxis principles (AGENTS.md = Reference + How-To)
-- Include frontmatter (optional but recommended)
+- Include YAML frontmatter with progressive loading hints (recommended)
+
+**Frontmatter Schema for Awareness Files** (Phase 2.4):
+
+All AGENTS.md and CLAUDE.md files SHOULD include YAML frontmatter for better agent discoverability and progressive loading:
+
+```yaml
+---
+sap_id: SAP-015                         # SAP ID if file is SAP-specific
+version: 2.0.0                          # File version (track updates)
+status: pilot                           # Status: draft | pilot | active
+last_updated: 2025-11-04                # Last modification date
+type: reference                         # Document type (usually "reference")
+audience: agents                        # Primary audience (agents | developers | both)
+complexity: intermediate                # Skill level: beginner | intermediate | advanced
+estimated_reading_time: 12              # Minutes to read completely
+
+# Progressive Loading Hints
+progressive_loading:
+  phase_1: "lines 1-100"                # Quick reference (0-10k tokens)
+  phase_2: "lines 101-250"              # Implementation details (10-50k tokens)
+  phase_3: "full"                       # Deep dive (50k+ tokens)
+
+# Token Estimates (helps agents decide what to load)
+phase_1_token_estimate: 2500            # Estimated tokens for phase 1
+phase_2_token_estimate: 5000            # Estimated tokens for phase 2
+phase_3_token_estimate: 8500            # Estimated tokens for full file
+---
+```
+
+**Progressive Loading Strategy**:
+
+Agents should load awareness files in phases based on current context needs:
+
+**Phase 1 (0-10k token budget)**:
+- Load: Quick Reference section only
+- Purpose: Orient to capability, check if relevant
+- Example: Lines 1-100 (What is X? When to use? Key commands)
+
+**Phase 2 (10-50k token budget)**:
+- Load: Phase 1 + Common Workflows + Integration Patterns
+- Purpose: Understand implementation details
+- Example: Lines 1-250 (Workflows, CLI reference, integrations)
+
+**Phase 3 (50k+ token budget)**:
+- Load: Complete file
+- Purpose: Deep understanding, troubleshooting, edge cases
+- Example: Full file (including troubleshooting, advanced patterns)
+
+**Example AGENTS.md with Frontmatter**:
+
+```markdown
+---
+sap_id: SAP-015
+version: 2.0.0
+status: pilot
+last_updated: 2025-11-04
+type: reference
+audience: agents
+complexity: intermediate
+estimated_reading_time: 12
+progressive_loading:
+  phase_1: "lines 1-100"
+  phase_2: "lines 101-250"
+  phase_3: "full"
+phase_1_token_estimate: 2500
+phase_2_token_estimate: 5000
+phase_3_token_estimate: 8500
+---
+
+# Agent Task Tracking (SAP-015) - Agent Awareness
+
+## Quick Reference  <!-- Phase 1 starts here -->
+
+### What is Agent Task Tracking?
+
+...
+
+## Common Workflows  <!-- Phase 1 continues -->
+
+...
+
+## Integration Patterns  <!-- Phase 2 starts here (line 101+) -->
+
+...
+
+## Troubleshooting  <!-- Phase 3 includes this -->
+
+...
+```
+
+**Benefits of Progressive Loading**:
+
+1. **Reduced Token Usage**: Agents load only what they need (30-70% savings)
+2. **Faster Context Loading**: Agents orient quickly with Phase 1
+3. **Better Navigation**: Clear boundaries for partial reads
+4. **Measurable Efficiency**: Token estimates help agents plan
 - Link to related docs (user-docs/, dev-docs/)
 
 ### 5.2 With Development Lifecycle (SAP-012)
@@ -654,6 +750,75 @@ Agent: *validates schema, creates request*
 - **Future**: v1.2.0 could add voice-to-text translation, visual workflow builder
 
 **Migration**: v1.0.0 → v1.1.0 is backward compatible (additive only, no breaking changes)
+
+---
+
+## 6.5. Self-Evaluation Criteria
+
+### Awareness File Requirements (SAP-009 Phase 4)
+
+**Both AGENTS.md and CLAUDE.md Required** (Equivalent Support):
+- [ ] Both files exist in `docs/skilled-awareness/agent-awareness/`
+- [ ] Both files have YAML frontmatter with progressive loading metadata
+- [ ] Workflow coverage equivalent (±30%): AGENTS.md ≈ CLAUDE.md workflows
+
+**Required Sections (Both Files)**:
+- [ ] Overview / Quick Start for Claude
+- [ ] User Signal Patterns / Common Workflows (AGENTS.md has pattern tables, CLAUDE.md has 4 workflows)
+- [ ] Best Practices / Claude-Specific Tips (5 each)
+- [ ] Common Pitfalls (5 each)
+- [ ] Integration Patterns / Support & Resources
+
+**Source Artifact Coverage (Both Files)**:
+- [ ] capability-charter.md design principles → "Overview" section
+- [ ] protocol-spec.md file structure/nearest-wins → "Nearest File Wins Pattern" section
+- [ ] awareness-guide.md workflows → "Common Workflows" section
+- [ ] adoption-blueprint.md installation → "Quick Reference" section
+- [ ] ledger.md adoption tracking → referenced in "Best Practices"
+
+**YAML Frontmatter Fields** (Required):
+```yaml
+sap_id: SAP-009
+version: X.Y.Z
+status: active | pilot | draft
+last_updated: YYYY-MM-DD
+type: reference
+audience: agents | claude_code
+complexity: beginner | intermediate | advanced
+estimated_reading_time: N
+progressive_loading:
+  phase_1: "lines 1-X"
+  phase_2: "lines X-Y"
+  phase_3: "full"
+phase_1_token_estimate: NNNN
+phase_2_token_estimate: NNNN
+phase_3_token_estimate: NNNN
+```
+
+**Validation Commands**:
+```bash
+# Check both files exist
+test -f docs/skilled-awareness/agent-awareness/AGENTS.md && \
+test -f docs/skilled-awareness/agent-awareness/CLAUDE.md
+
+# Validate YAML frontmatter
+grep -A 10 "^---$" docs/skilled-awareness/agent-awareness/AGENTS.md | grep "sap_id: SAP-009"
+grep -A 10 "^---$" docs/skilled-awareness/agent-awareness/CLAUDE.md | grep "progressive_loading:"
+
+# Check workflow count equivalence (should be within ±30%)
+# Note: AGENTS.md uses user signal pattern tables, CLAUDE.md uses explicit workflows
+agents_sections=$(grep -E "^### " docs/skilled-awareness/agent-awareness/AGENTS.md | wc -l)
+claude_workflows=$(grep "^### Workflow" docs/skilled-awareness/agent-awareness/CLAUDE.md | wc -l)
+echo "AGENTS sections: $agents_sections, CLAUDE workflows: $claude_workflows"
+
+# Run comprehensive evaluation
+python scripts/sap-evaluator.py --deep SAP-009
+```
+
+**Expected Workflow Coverage**:
+- AGENTS.md: User signal pattern tables (Agent Discovery, Maintenance, Translation, Progressive Formalization)
+- CLAUDE.md: 4 Claude Code workflows (Discover with Read, Progressive Loading, Create with Write, Optimize Token Usage)
+- Rationale: Different organization acceptable - AGENTS.md uses pattern tables for quick lookup, CLAUDE.md uses detailed workflows showing Read/Write/Bash tool usage
 
 ---
 
