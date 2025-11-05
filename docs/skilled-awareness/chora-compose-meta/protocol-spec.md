@@ -120,6 +120,149 @@ This accommodates Claude Desktop's behavior of serializing JSON objects as strin
 - `invalid_context`: Context data is not valid JSON object
 - `storage_failed`: Failed to write to ephemeral storage
 
+**Error Response Examples**:
+
+<details>
+<summary><b>config_not_found</b>: Content config file does not exist</summary>
+
+**Trigger**: Requesting generation for non-existent content config
+
+```json
+{
+  "success": false,
+  "error": {
+    "code": "config_not_found",
+    "message": "Content config 'welcome-message' not found",
+    "details": {
+      "content_config_id": "welcome-message",
+      "searched_paths": [
+        "configs/content/welcome-message.json",
+        "configs/content/welcome-message/welcome-message-content.json"
+      ]
+    }
+  }
+}
+```
+
+**Recovery**:
+1. List available configs: `choracompose:list_content_configs`
+2. Verify spelling of config_id (case-sensitive)
+3. Create missing config: `choracompose:draft_config` → `choracompose:save_config`
+
+</details>
+
+<details>
+<summary><b>generator_not_found</b>: Generator type not available</summary>
+
+**Trigger**: Config specifies generator type not in registry
+
+```json
+{
+  "success": false,
+  "error": {
+    "code": "generator_not_found",
+    "message": "Generator 'custom_markdown' not found in registry",
+    "details": {
+      "generator_type": "custom_markdown",
+      "available_generators": ["demonstration", "jinja2", "template_fill", "bdd_scenario", "code_generation"]
+    }
+  }
+}
+```
+
+**Recovery**:
+1. Check available generators: `choracompose:list_generators`
+2. Fix config: Change `generator.type` to valid generator (e.g., "jinja2")
+3. OR: Implement custom generator (see [Custom Generator Tutorial](./custom-generator-tutorial.md))
+
+</details>
+
+<details>
+<summary><b>generation_failed</b>: Generator execution error</summary>
+
+**Trigger**: Jinja2 template syntax error or AI generation failure
+
+```json
+{
+  "success": false,
+  "error": {
+    "code": "generation_failed",
+    "message": "Jinja2 template rendering failed: undefined variable 'user_name'",
+    "details": {
+      "generator_type": "jinja2",
+      "error_type": "UndefinedError",
+      "template_line": 12,
+      "missing_variable": "user_name",
+      "available_context": ["user"]
+    }
+  }
+}
+```
+
+**Recovery**:
+1. Check template variables: Verify all `{{ variable }}` exist in context
+2. Fix context: Add missing variable to `context` parameter or config
+3. Test template: Use `choracompose:preview_generation` with `show_metadata: true`
+4. Debug: Enable verbose logging (`CHORA_LOG_LEVEL=DEBUG`)
+
+</details>
+
+<details>
+<summary><b>invalid_context</b>: Context parameter not valid JSON</summary>
+
+**Trigger**: Passing malformed JSON string as context
+
+```json
+{
+  "success": false,
+  "error": {
+    "code": "invalid_context",
+    "message": "Context must be a JSON object or valid JSON string",
+    "details": {
+      "received_type": "string",
+      "parse_error": "Expecting property name enclosed in double quotes: line 1 column 2 (char 1)",
+      "hint": "Use {\"key\": \"value\"} format, not {'key': 'value'}"
+    }
+  }
+}
+```
+
+**Recovery**:
+1. Fix JSON syntax: Use double quotes for keys and string values
+2. Validate JSON: Use online validator or `json.loads()` in Python
+3. Pass object directly: `{"context": {"key": "value"}}` (not stringified)
+
+</details>
+
+<details>
+<summary><b>storage_failed</b>: Cannot write to ephemeral storage</summary>
+
+**Trigger**: Disk full, permission denied, or directory missing
+
+```json
+{
+  "success": false,
+  "error": {
+    "code": "storage_failed",
+    "message": "Failed to write content to ephemeral storage",
+    "details": {
+      "storage_path": "ephemeral/content/welcome-message/v1/",
+      "error_type": "PermissionError",
+      "errno": 13
+    }
+  }
+}
+```
+
+**Recovery**:
+1. Check disk space: `df -h`
+2. Verify permissions: `ls -la ephemeral/`
+3. Create directory: `mkdir -p ephemeral/content/`
+4. Fix permissions: `chmod 755 ephemeral/`
+5. Check filesystem: Ensure not read-only
+
+</details>
+
 **Example**:
 
 ```json
@@ -179,6 +322,123 @@ This accommodates Claude Desktop's behavior of serializing JSON objects as strin
 - `missing_content`: Required content pieces not found in storage
 - `composition_failed`: Failed to assemble artifact
 - `write_failed`: Failed to write artifact to filesystem
+
+**Error Response Examples**:
+
+<details>
+<summary><b>config_not_found</b>: Artifact config file does not exist</summary>
+
+**Trigger**: Requesting assembly for non-existent artifact config
+
+```json
+{
+  "success": false,
+  "error": {
+    "code": "config_not_found",
+    "message": "Artifact config 'readme' not found",
+    "details": {
+      "artifact_config_id": "readme",
+      "searched_paths": [
+        "configs/artifacts/readme.json",
+        "configs/artifacts/readme/readme-artifact.json"
+      ]
+    }
+  }
+}
+```
+
+**Recovery**:
+1. List available artifacts: `choracompose:list_artifact_configs`
+2. Verify spelling of artifact_config_id (case-sensitive)
+3. Create missing config: `choracompose:draft_config` (type: "artifact") → `choracompose:save_config`
+
+</details>
+
+<details>
+<summary><b>missing_content</b>: Required content pieces not found</summary>
+
+**Trigger**: Artifact references content IDs that don't exist in ephemeral storage
+
+```json
+{
+  "success": false,
+  "error": {
+    "code": "missing_content",
+    "message": "Missing 2 required content pieces for artifact assembly",
+    "details": {
+      "missing_content_ids": ["intro-section", "conclusion-section"],
+      "available_content_ids": ["main-section", "examples-section"],
+      "hint": "Generate missing content first using choracompose:generate_content"
+    }
+  }
+}
+```
+
+**Recovery**:
+1. Generate missing content: `choracompose:generate_content` for each missing ID
+2. Check content availability: `choracompose:list_content` (filter by artifact)
+3. Verify config: Ensure content_ids in artifact config match actual content configs
+4. Use `force: true` to regenerate all content before assembly
+
+</details>
+
+<details>
+<summary><b>composition_failed</b>: Artifact assembly error</summary>
+
+**Trigger**: Composition strategy fails (e.g., JSON merge error, template substitution failure)
+
+```json
+{
+  "success": false,
+  "error": {
+    "code": "composition_failed",
+    "message": "Failed to merge JSON content pieces: incompatible schemas",
+    "details": {
+      "composition_strategy": "json_merge",
+      "error_type": "TypeError",
+      "content_pieces": ["config-base", "config-overrides"],
+      "conflict_path": "$.metadata.version"
+    }
+  }
+}
+```
+
+**Recovery**:
+1. Check content compatibility: Verify content pieces match composition strategy
+2. Review composition strategy: Switch from "json_merge" to "concat" if needed
+3. Inspect content: Use `choracompose:list_content` with `show_metadata: true`
+4. Fix content schemas: Ensure JSON content has compatible structures
+
+</details>
+
+<details>
+<summary><b>write_failed</b>: Cannot write artifact to filesystem</summary>
+
+**Trigger**: Permission denied or invalid output path
+
+```json
+{
+  "success": false,
+  "error": {
+    "code": "write_failed",
+    "message": "Failed to write artifact to filesystem",
+    "details": {
+      "output_path": "/protected/docs/README.md",
+      "error_type": "PermissionError",
+      "errno": 13
+    }
+  }
+}
+```
+
+**Recovery**:
+1. Check output path: Ensure directory exists and is writable
+2. Verify permissions: `ls -la $(dirname /protected/docs/README.md)`
+3. Use relative paths: Prefer `output/docs/README.md` over absolute paths
+4. Create parent directory: `mkdir -p output/docs/`
+5. Fix permissions: `chmod 755 output/`
+
+</details>
 - `invalid_context`: Context parameter not valid JSON
 
 **Example**:
@@ -249,6 +509,14 @@ This accommodates Claude Desktop's behavior of serializing JSON objects as strin
 - `generation_failed`: Generator failed
 - `invalid_context`: Context not valid JSON
 
+**Error Response Examples**: <details><summary>config_not_found</summary>```json
+{"success": false, "error": {"code": "config_not_found", "message": "Content config 'api-docs' not found", "details": {"content_config_id": "api-docs"}}}
+```
+**Recovery**: Use `choracompose:list_content_configs` to find available configs</details><details><summary>generation_failed</summary>```json
+{"success": false, "error": {"code": "generation_failed", "message": "Generator failed during regeneration", "details": {"generator_type": "jinja2", "error_type": "TemplateError"}}}
+```
+**Recovery**: Check template syntax, verify context variables</details>
+
 **Example**:
 
 ```json
@@ -306,6 +574,14 @@ This accommodates Claude Desktop's behavior of serializing JSON objects as strin
 - `config_not_found`: content_config_id does not exist
 - `generation_failed`: Preview generation failed
 - `invalid_context`: Context not valid JSON
+
+**Error Response Examples**: <details><summary>config_not_found</summary>```json
+{"success": false, "error": {"code": "config_not_found", "message": "Content config not found for preview", "details": {"content_config_id": "test"}}}
+```
+**Recovery**: Verify config exists with `list_content_configs`</details><details><summary>preview_failed</summary>```json
+{"success": false, "error": {"code": "preview_failed", "message": "Failed to generate preview", "details": {"generator_type": "jinja2"}}}
+```
+**Recovery**: Check template syntax and context variables</details>
 
 **Example**:
 
@@ -372,6 +648,14 @@ This accommodates Claude Desktop's behavior of serializing JSON objects as strin
 - `invalid_input`: content_ids empty or invalid
 - `invalid_context`: Context parameters not valid JSON
 
+**Error Response Examples**: <details><summary>invalid_input</summary>```json
+{"success": false, "error": {"code": "invalid_input", "message": "content_ids must be non-empty array", "details": {"received": "null"}}}
+```
+**Recovery**: Provide array of content IDs: `["id1", "id2"]`</details><details><summary>partial_failure</summary>```json
+{"success": true, "total": 5, "successful": 3, "failed": 2, "results": [{"content_id": "item1", "success": false, "error": "config_not_found"}]}
+```
+**Recovery**: Check failed items individually, fix configs, retry</details>
+
 **Example**:
 
 ```json
@@ -426,6 +710,14 @@ This accommodates Claude Desktop's behavior of serializing JSON objects as strin
 **Errors**:
 - `validation_error`: Schema validation failed
 - `draft_creation_failed`: Failed to create draft
+
+**Error Response Examples**: <details><summary>validation_error</summary>```json
+{"success": false, "error": {"code": "validation_error", "message": "Config schema validation failed", "details": {"field": "generation.generator.type", "issue": "required field missing"}}}
+```
+**Recovery**: Check schema at `choracompose:list_generators`, fix config_data</details><details><summary>draft_creation_failed</summary>```json
+{"success": false, "error": {"code": "draft_creation_failed", "message": "Failed to write draft to ephemeral storage", "details": {"reason": "disk_full"}}}
+```
+**Recovery**: Check disk space, cleanup with `cleanup_ephemeral`</details>
 
 **Example**:
 
@@ -485,6 +777,14 @@ This accommodates Claude Desktop's behavior of serializing JSON objects as strin
 - `test_failed`: Test configuration failed
 - `test_execution_failed`: Test execution error
 
+**Error Response Examples**: <details><summary>draft_not_found</summary>```json
+{"success": false, "error": {"code": "draft_not_found", "message": "Draft config not found", "details": {"draft_id": "draft-abc123"}}}
+```
+**Recovery**: List drafts with `list_content_configs` (ephemeral=true)</details><details><summary>test_execution_failed</summary>```json
+{"success": false, "error": {"code": "test_execution_failed", "message": "Test generation failed", "details": {"generator": "jinja2", "error": "TemplateNotFound"}}}
+```
+**Recovery**: Check generator config, verify template paths</details>
+
 **Example**:
 
 ```json
@@ -537,6 +837,14 @@ This accommodates Claude Desktop's behavior of serializing JSON objects as strin
 - `config_not_found`: config_id does not exist
 - `modification_failed`: Update failed
 - `not_implemented`: Modifying persisted configs not yet implemented
+
+**Error Response Examples**: <details><summary>config_not_found</summary>```json
+{"success": false, "error": {"code": "config_not_found", "message": "Config not found for modification", "details": {"config_id": "draft-xyz"}}}
+```
+**Recovery**: Verify config_id exists with `list_content_configs`</details><details><summary>modification_failed</summary>```json
+{"success": false, "error": {"code": "modification_failed", "message": "Failed to apply updates", "details": {"reason": "invalid_merge", "field": "generation.generator"}}}
+```
+**Recovery**: Check updates structure, ensure valid JSON merge</details>
 
 **Example**:
 
@@ -591,6 +899,14 @@ This accommodates Claude Desktop's behavior of serializing JSON objects as strin
 - `draft_not_found`: draft_id does not exist
 - `save_failed`: Config already exists (set overwrite=true)
 - `save_execution_failed`: Save operation failed
+
+**Error Response Examples**: <details><summary>draft_not_found</summary>```json
+{"success": false, "error": {"code": "draft_not_found", "message": "Draft not found", "details": {"draft_id": "draft-abc123"}}}
+```
+**Recovery**: List drafts with `list_content_configs` (ephemeral=true)</details><details><summary>save_failed</summary>```json
+{"success": false, "error": {"code": "save_failed", "message": "Config already exists", "details": {"config_path": "configs/content/meeting-themes.yaml"}}}
+```
+**Recovery**: Set overwrite=true or use different config_id</details>
 
 **Example**:
 
@@ -662,6 +978,14 @@ This accommodates Claude Desktop's behavior of serializing JSON objects as strin
 - `invalid_retention`: Invalid retention policy parameters
 - `storage_error`: Failed to access ephemeral storage
 
+**Error Response Examples**: <details><summary>invalid_retention</summary>```json
+{"success": false, "error": {"code": "invalid_retention", "message": "Invalid retention policy", "details": {"field": "keep_versions", "value": -1, "constraint": "must be >= 0"}}}
+```
+**Recovery**: Check retention parameters, use valid values</details><details><summary>storage_error</summary>```json
+{"success": false, "error": {"code": "storage_error", "message": "Failed to access ephemeral storage", "details": {"reason": "permission_denied", "path": ".ephemeral/"}}}
+```
+**Recovery**: Check file permissions, verify storage path exists</details>
+
 **Example**:
 
 ```json
@@ -713,6 +1037,14 @@ This accommodates Claude Desktop's behavior of serializing JSON objects as strin
 - `content_not_found`: Content not found in ephemeral storage
 - `referenced_by_artifacts`: Content is referenced (use force=true)
 - `deletion_failed`: Delete operation failed
+
+**Error Response Examples**: <details><summary>content_not_found</summary>```json
+{"success": false, "error": {"code": "content_not_found", "message": "Content not found in ephemeral storage", "details": {"content_id": "old-content"}}}
+```
+**Recovery**: Verify content_id with `list_content` (storage_type="ephemeral")</details><details><summary>referenced_by_artifacts</summary>```json
+{"success": false, "error": {"code": "referenced_by_artifacts", "message": "Content is referenced by artifacts", "details": {"artifact_ids": ["doc1", "doc2"]}}}
+```
+**Recovery**: Use force=true to delete anyway, or remove from artifacts first</details>
 
 **Example**:
 
@@ -769,6 +1101,8 @@ This accommodates Claude Desktop's behavior of serializing JSON objects as strin
 
 **Errors**:
 - None (returns empty list if no generators found)
+
+**Error Response Examples**: None - this tool always succeeds with empty list if no generators found
 
 **Example**:
 
@@ -833,6 +1167,11 @@ This accommodates Claude Desktop's behavior of serializing JSON objects as strin
 **Errors**:
 - `invalid_input`: Invalid sort or limit parameter
 
+**Error Response Examples**: <details><summary>invalid_input</summary>```json
+{"success": false, "error": {"code": "invalid_input", "message": "Invalid parameter value", "details": {"field": "limit", "value": 1000, "constraint": "must be 1-500"}}}
+```
+**Recovery**: Check parameter constraints, use valid values</details>
+
 **Example**:
 
 ```json
@@ -895,6 +1234,11 @@ This accommodates Claude Desktop's behavior of serializing JSON objects as strin
 
 **Errors**:
 - `invalid_input`: Invalid sort or limit parameter
+
+**Error Response Examples**: <details><summary>invalid_input</summary>```json
+{"success": false, "error": {"code": "invalid_input", "message": "Invalid parameter value", "details": {"field": "sort", "value": "invalid", "allowed": ["id", "title", "assembled", "modified"]}}}
+```
+**Recovery**: Use valid sort value from allowed list</details>
 
 **Example**:
 
@@ -959,6 +1303,14 @@ This accommodates Claude Desktop's behavior of serializing JSON objects as strin
 - `config_not_found`: artifact_config_id does not exist
 - `invalid_config`: Artifact config malformed
 
+**Error Response Examples**: <details><summary>config_not_found</summary>```json
+{"success": false, "error": {"code": "config_not_found", "message": "Artifact config not found", "details": {"artifact_config_id": "docs"}}}
+```
+**Recovery**: Verify artifact_config_id with `list_artifact_configs`</details><details><summary>invalid_config</summary>```json
+{"success": false, "error": {"code": "invalid_config", "message": "Artifact config is malformed", "details": {"field": "composition", "issue": "missing required field"}}}
+```
+**Recovery**: Validate config with `validate_collection_config` or check schema</details>
+
 **Example**:
 
 ```json
@@ -1013,6 +1365,8 @@ This accommodates Claude Desktop's behavior of serializing JSON objects as strin
 **Errors**:
 - None (returns empty list if no configs found)
 
+**Error Response Examples**: None - this tool always succeeds with empty list if no configs found
+
 **Example**:
 
 ```json
@@ -1064,6 +1418,8 @@ This accommodates Claude Desktop's behavior of serializing JSON objects as strin
 
 **Errors**:
 - None (returns empty list if no configs found)
+
+**Error Response Examples**: None - this tool always succeeds with empty list if no configs found
 
 **Example**:
 
@@ -1126,6 +1482,14 @@ This accommodates Claude Desktop's behavior of serializing JSON objects as strin
 **Errors**:
 - `config_not_found`: content_or_config_id does not exist
 - `validation_execution_failed`: Validation failed to run
+
+**Error Response Examples**: <details><summary>config_not_found</summary>```json
+{"success": false, "error": {"code": "config_not_found", "message": "Content or config not found", "details": {"content_or_config_id": "api-docs"}}}
+```
+**Recovery**: Verify ID with `list_content` or `list_content_configs`</details><details><summary>validation_execution_failed</summary>```json
+{"success": false, "error": {"code": "validation_execution_failed", "message": "Validation failed to execute", "details": {"rule_type": "custom_regex", "error": "Invalid regex pattern"}}}
+```
+**Recovery**: Check validation_rules syntax, simplify rules</details>
 
 **Example**:
 
@@ -1195,6 +1559,14 @@ This accommodates Claude Desktop's behavior of serializing JSON objects as strin
 - `config_not_found`: Collection config not found
 - `invalid_config_id`: Path traversal attempt
 - `manifest_not_found`: Collection not generated yet
+
+**Error Response Examples**: <details><summary>config_not_found</summary>```json
+{"success": false, "error": {"code": "config_not_found", "message": "Collection config not found", "details": {"config_path": "sap-004-complete"}}}
+```
+**Recovery**: Verify path with `list_content_configs` or check file system</details><details><summary>manifest_not_found</summary>```json
+{"success": false, "error": {"code": "manifest_not_found", "message": "Collection not generated yet", "details": {"collection_id": "sap-004-complete"}}}
+```
+**Recovery**: Generate collection first with `generate_collection`</details>
 
 **Example**:
 
@@ -1270,6 +1642,14 @@ This accommodates Claude Desktop's behavior of serializing JSON objects as strin
 - `circular_reference`: Circular nesting detected
 - `max_depth_exceeded`: Nesting depth > 10
 
+**Error Response Examples**: <details><summary>config_not_found</summary>```json
+{"success": false, "error": {"code": "config_not_found", "message": "Collection config not found", "details": {"config_path": "sap-004-testing-framework"}}}
+```
+**Recovery**: Verify path, check file exists in configs/collection/</details><details><summary>circular_reference</summary>```json
+{"success": false, "error": {"code": "circular_reference", "message": "Circular nesting detected", "details": {"cycle": ["collection-a", "collection-b", "collection-a"]}}}
+```
+**Recovery**: Review member references, remove circular dependencies</details>
+
 **Example**:
 
 ```json
@@ -1331,6 +1711,14 @@ This accommodates Claude Desktop's behavior of serializing JSON objects as strin
 - `config_not_found`: Collection config not found
 - `validation_failed`: Schema validation failed
 
+**Error Response Examples**: <details><summary>config_not_found</summary>```json
+{"success": false, "error": {"code": "config_not_found", "message": "Collection config not found", "details": {"config_path": "sap-004-testing-framework"}}}
+```
+**Recovery**: Verify config path exists</details><details><summary>validation_failed</summary>```json
+{"success": true, "valid": false, "issues": [{"severity": "error", "code": "missing_field", "message": "Required field 'members' is missing"}]}
+```
+**Recovery**: Fix config issues listed in response, check schema</details>
+
 **Example**:
 
 ```json
@@ -1390,6 +1778,11 @@ This accommodates Claude Desktop's behavior of serializing JSON objects as strin
 **Errors**:
 - `config_not_found`: Collection config not found
 
+**Error Response Examples**: <details><summary>config_not_found</summary>```json
+{"success": false, "error": {"code": "config_not_found", "message": "Collection config not found", "details": {"config_path": "sap-004-testing-framework"}}}
+```
+**Recovery**: Verify config path exists</details>
+
 **Example**:
 
 ```json
@@ -1446,6 +1839,11 @@ This accommodates Claude Desktop's behavior of serializing JSON objects as strin
 **Errors**:
 - `config_not_found`: Collection config not found
 
+**Error Response Examples**: <details><summary>config_not_found</summary>```json
+{"success": false, "error": {"code": "config_not_found", "message": "Collection config not found", "details": {"config_path": "sap-004-testing-framework"}}}
+```
+**Recovery**: Verify config path exists</details>
+
 **Example**:
 
 ```json
@@ -1493,6 +1891,8 @@ This accommodates Claude Desktop's behavior of serializing JSON objects as strin
 
 **Errors**:
 - None (simple test tool always succeeds)
+
+**Error Response Examples**: None - this tool always succeeds
 
 **Example**:
 
@@ -2728,6 +3128,18 @@ project-root/
 
 This section documents common workflows for using chora-compose MCP tools and configurations.
 
+**Visual Diagrams**: See [workflow-diagrams.md](./workflow-diagrams.md) for comprehensive visual workflow diagrams including:
+- Basic Content Generation (with caching)
+- Artifact Assembly
+- Collection Generation (3-tier architecture)
+- Interactive Config Creation (draft → test → save)
+- Freshness Validation
+- Error Recovery paths
+- Cache Resolution logic
+- Context Propagation (MERGE/OVERRIDE/ISOLATE modes)
+- Tool Selection decision tree
+- Parallel vs Sequential performance comparison
+
 ### 6.1. Basic Content Generation Workflow
 
 **Purpose**: Generate a single content piece from a configured template
@@ -2784,6 +3196,8 @@ This section documents common workflows for using chora-compose MCP tools and co
   "duration_ms": 234
 }
 ```
+
+**Visual Workflow**: See [workflow-diagrams.md §1](./workflow-diagrams.md#1-basic-content-generation-workflow) for complete flow diagram including cache resolution and error handling.
 
 ---
 
@@ -2853,6 +3267,8 @@ This section documents common workflows for using chora-compose MCP tools and co
   "duration_ms": 456
 }
 ```
+
+**Visual Workflow**: See [workflow-diagrams.md §2](./workflow-diagrams.md#2-artifact-assembly-workflow) for complete flow diagram showing automatic content generation and ordered assembly.
 
 ---
 
@@ -2924,6 +3340,8 @@ This section documents common workflows for using chora-compose MCP tools and co
   "generation_time_seconds": 3.2
 }
 ```
+
+**Visual Workflow**: See [workflow-diagrams.md §3](./workflow-diagrams.md#3-collection-generation-workflow-3-tier-architecture) for complete 3-tier architecture diagram including context propagation modes (MERGE/OVERRIDE/ISOLATE) and parallel execution strategies.
 
 ---
 
@@ -3004,6 +3422,8 @@ This section documents common workflows for using chora-compose MCP tools and co
 - Zero IDE context switching
 - Conversational refinement
 
+**Visual Workflow**: See [workflow-diagrams.md §4](./workflow-diagrams.md#4-interactive-config-creation-workflow) for complete draft → test → modify → save cycle diagram.
+
 ---
 
 ### 6.5. Freshness Validation Workflow (v1.5.0)
@@ -3057,6 +3477,8 @@ This section documents common workflows for using chora-compose MCP tools and co
 - CI/CD: Regenerate stale docs before deployment
 - Project maintenance: Identify outdated documentation
 - Coordination: Track dependencies across repositories
+
+**Visual Workflow**: See [workflow-diagrams.md §5](./workflow-diagrams.md#5-freshness-validation-workflow-stigmergic-context-links) for complete freshness checking and regeneration flow diagram.
 
 ---
 

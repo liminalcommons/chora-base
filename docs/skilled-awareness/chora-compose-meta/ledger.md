@@ -221,6 +221,8 @@ None (initial v2.0.0 release)
 - [awareness-guide.md](./awareness-guide.md) - 1,413 lines: AI agent quick reference and workflows
 - [adoption-blueprint.md](./adoption-blueprint.md) - 1,553 lines: Step-by-step adoption guide (Level 1-3)
 - [ledger.md](./ledger.md) - This document: Traceability and version history
+- [workflow-diagrams.md](./workflow-diagrams.md) - 600+ lines: 10 visual Mermaid workflow diagrams for core patterns (P2 enhancement)
+- [custom-generator-tutorial.md](./custom-generator-tutorial.md) - 1,400+ lines: 3 hands-on tutorials for building custom generators (badge, API docs, test cases) (P2 enhancement)
 
 ### Related SAPs
 
