@@ -9,13 +9,13 @@
 
 ## 1. Overview
 
-Formalized 5-week dogfooding pilot methodology for validating patterns through internal use before ecosystem adoption
+Formalized 6-week dogfooding pilot methodology for validating patterns through internal use before ecosystem adoption
 
 
 ### Key Capabilities
 
 
-- 3-phase pilot design (build, validate, decide)
+- 4-phase pilot design (research, build, validate, decide)
 
 - GO/NO-GO criteria framework (time savings, satisfaction, bugs, adoption)
 
@@ -33,38 +33,112 @@ Formalized 5-week dogfooding pilot methodology for validating patterns through i
 
 ## 2. Core Contracts
 
-<!-- TODO: Define main protocol contracts, interfaces, and APIs
+### Contract 1: 6-Week Pilot Timeline
 
-This section should describe the technical specifications for the core functionality.
-Include:
-- Data structures / schemas
-- API endpoints / function signatures
-- Configuration format
-- Input/output contracts
-- Validation rules
--->
+**Description**: Structured dogfooding pilot with 4 phases: research, build, validate, decide
 
-### Contract 1: [Name]
+**Timeline Structure**:
+```markdown
+Week 0 (Research Phase):
+  - Fill research prompt template with SAP domain context
+  - Execute research using Claude Code WebSearch or AI assistant
+  - Generate docs/research/{sap-name}-research.md (10-20 pages)
+  - Extract principles, decision playbooks, anti-patterns for pilot planning
+  - Validate evidence levels (Level A ≥30%, Level B ≥40%, Level C ≤30%)
 
-**Description**: [What this contract defines]
+Weeks 1-3 (Build Phase):
+  - Build capability to minimum viable state
+  - Use research insights to inform design decisions
+  - Track setup time for ROI analysis
 
-**Interface**:
-```python
-# Example interface/API
+Week 4 (Validation Phase):
+  - Use capability 2+ times in real scenarios
+  - Collect metrics per use (time, satisfaction, bugs)
+  - Document adoption cases
+
+Week 4 End (Decision Phase):
+  - Review metrics against GO/NO-GO criteria
+  - Calculate time savings, satisfaction avg, bug count
+  - Write go-no-go-decision.md with data-driven recommendation
+
+Week 5 (Formalization Phase, if GO):
+  - Complete artifact TODOs
+  - Update ledger with adoption tracking
+  - Mark SAP as production-ready
 ```
 
 **Requirements**:
-- Requirement 1
-- Requirement 2
+- Week 0 research report must have ≥30% Level A evidence citations
+- Research must inform Week 1-3 build phase (cite research in design decisions)
+- Week 4 validation requires ≥2 adoption cases
+- GO decision requires all criteria met (time savings ≥5x, satisfaction ≥85%, bugs = 0)
 
-### Contract 2: [Name]
+### Contract 2: Week 0 Research Contract
 
-**Description**: [What this contract defines]
+**Description**: Evidence-based research phase before pilot build
 
 **Interface**:
-```python
-# Example interface/API
+```bash
+# Execute research workflow
+just research "{sap-domain-topic}"
+
+# Example: Before creating SAP-030 (database-migrations)
+just research "database migration best practices for Python projects"
+
+# Output: docs/research/{topic}-research.md
 ```
+
+**Research Output Structure**:
+```markdown
+## Research Report: {Topic}
+
+### Executive Summary
+- 10-12 bullet takeaways
+- "Adopt now vs later" recommendations
+
+### Principles (The Why)
+- Modularity, SOLID, 12-factor, etc.
+- Level A/B/C evidence citations
+
+### Practices (The How)
+- Architecture, testing, CI/CD patterns
+- Code examples, configuration snippets
+
+### Decision Playbooks
+- "Choose X when..." guidance
+- Trade-off tables
+
+### Metrics & Targets
+- DORA, SLOs, security SLAs
+- Baseline → target deltas
+
+### Anti-Patterns
+- What to avoid
+- Why these fail
+
+### Risk Register
+- Top 10 risks
+- Likelihood/impact/mitigations
+
+### Implementation Roadmap
+- 90-day/6-month plan
+- Dependencies, KPI deltas
+
+### Checklists
+- Code review, release, incident, threat modeling
+
+### Appendix
+- Annotated bibliography (Level A/B/C labeled)
+- Glossary
+```
+
+**Requirements**:
+- MUST use research prompt template from docs/templates/research-prompt-template.md
+- MUST achieve ≥30% Level A evidence (standards, peer-reviewed)
+- MUST achieve ≥40% Level B evidence (industry case studies)
+- MUST limit Level C evidence (expert opinion) to ≤30%
+- MUST include decision playbooks for key architectural choices
+- MUST save output to docs/research/{topic}-research.md
 
 ---
 

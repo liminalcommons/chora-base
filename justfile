@@ -81,3 +81,17 @@ release-dry:
 # Create GitHub release for specific version
 release-version VERSION:
     python scripts/create-release.py --version {{VERSION}}
+
+# Generate research report for a topic
+research topic:
+    @echo "📚 Generating research report for: {{topic}}"
+    @echo "📄 Using template: docs/templates/research-prompt-template.md"
+    @echo "💡 Next steps:"
+    @echo "  1. Open docs/templates/research-prompt-template.md"
+    @echo "  2. Fill in the {parameters} with your context"
+    @echo "  3. Copy the filled prompt to Claude Code or your AI assistant"
+    @echo "  4. Execute using WebSearch/WebFetch tools"
+    @echo "  5. Save output to docs/research/{{topic}}-research.md"
+    @echo ""
+    @echo "📂 Output location: docs/research/{{topic}}-research.md"
+    @mkdir -p docs/research

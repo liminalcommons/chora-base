@@ -14,7 +14,7 @@ This file provides **Claude Code-specific patterns** for running dogfooding pilo
 
 1. Read [AGENTS.md](AGENTS.md) for generic dogfooding workflows
 2. Use this file for Claude Code tool integration
-3. Follow 5-week pilot methodology with automated metrics collection
+3. Follow 6-week pilot methodology (Week 0 research + 5-week pilot)
 
 ### Session Resumption
 
@@ -31,36 +31,50 @@ This file provides **Claude Code-specific patterns** for running dogfooding pilo
 ```markdown
 User: "Start dogfooding pilot for {new pattern}"
 
-Claude (Phase 1: Setup - Week 0):
+Claude (Phase 0: Research - Week 0):
 1. Read docs/skilled-awareness/dogfooding-patterns/AGENTS.md
-2. Create pilot directory via Bash:
-   mkdir -p docs/project-docs/dogfooding-pilot/{pattern-name}
-3. Write pilot plan:
+2. Execute research workflow:
+   Bash: just research "{pattern-domain} best practices"
+   # Uses WebSearch/WebFetch tools to generate research report
+   # Time: 15-30 minutes
+3. Review research output:
+   Read docs/research/{pattern-domain}-research.md
+   # Extract principles, decision playbooks, anti-patterns
+4. Create pilot directory:
+   Bash: mkdir -p docs/project-docs/dogfooding-pilot/{pattern-name}
+5. Write pilot plan:
    Write docs/project-docs/dogfooding-pilot/{pattern-name}/pilot-plan.md
-   # Content: Hypothesis, GO criteria, timeline
+   # Content: Hypothesis, GO criteria, timeline, research insights
+
+Claude (Phase 1: Setup - Week 0 continued):
+6. Validate research evidence levels:
+   # Check: Level A ≥30%, Level B ≥40%, Level C ≤30%
+7. Extract research insights for build phase:
+   # Cite research in design decision docs
 
 Claude (Phase 2: Build - Weeks 1-3):
-4. Build capability (Write/Edit tools)
-5. Track time spent (manual + note in metrics)
+8. Build capability (Write/Edit tools)
+9. Use research insights to inform design decisions
+10. Track time spent (manual + note in metrics)
 
 Claude (Phase 3: Validate - Week 4):
-6. Use capability 2+ times
-7. Collect metrics after each use:
+11. Use capability 2+ times
+12. Collect metrics after each use:
    - Time tracking via Bash: time {command}
    - Satisfaction: Ask user for 1-5 rating
    - Log bugs: Write to metrics file
-8. Write week-4-metrics.md with all data
+13. Write week-4-metrics.md with all data
 
 Claude (Phase 4: Decision - Week 4 end):
-9. Read week-4-metrics.md
-10. Calculate: Time savings, satisfaction avg, bugs, adoption
-11. Write go-no-go-decision.md with recommendation
+14. Read week-4-metrics.md
+15. Calculate: Time savings, satisfaction avg, bugs, adoption
+16. Write go-no-go-decision.md with recommendation
 
 Claude (Phase 5: Formalization - Week 5 if GO):
-12. Edit protocol-spec.md (complete TODOs)
-13. Edit ledger.md (add adoption tracking)
-14. Write final-summary.md
-15. Commit changes
+17. Edit protocol-spec.md (complete TODOs)
+18. Edit ledger.md (add adoption tracking, cite research report)
+19. Write final-summary.md
+20. Commit changes
 
 Result: Pattern validated and formalized (or deprecated if NO-GO)
 ```

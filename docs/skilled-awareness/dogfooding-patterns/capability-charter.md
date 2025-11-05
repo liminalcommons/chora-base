@@ -53,9 +53,9 @@ Without dogfooding methodology:
 
 SAP-027 provides a formalized dogfooding pilot methodology for validating patterns through internal use before ecosystem adoption.
 
-Key capabilities: 3-phase pilot design (build, validate, decide), GO/NO-GO criteria framework (≥5x time savings, ≥85% satisfaction, 0 critical bugs, 2+ adoption cases), ROI analysis templates, metrics collection structure, pilot documentation patterns.
+Key capabilities: 4-phase pilot design (research, build, validate, decide), GO/NO-GO criteria framework (≥5x time savings, ≥85% satisfaction, 0 critical bugs, 2+ adoption cases), ROI analysis templates, metrics collection structure, pilot documentation patterns.
 
-Setup time: 5-week pilot (expandable to 8 weeks), GO decision at Week 4, formalization at Week 5.
+Setup time: 6-week pilot (expandable to 9 weeks), research at Week 0, build Weeks 1-3, validate Week 4, GO decision at Week 4, formalization at Week 5.
 
 ### Key Principles
 
@@ -83,7 +83,7 @@ Setup time: 5-week pilot (expandable to 8 weeks), GO decision at Week 4, formali
 
 
 
-- 3-phase pilot framework (build weeks 1-3, validate week 4, decide week 5)
+- 4-phase pilot framework (research week 0, build weeks 1-3, validate week 4, decide week 5)
 
 - GO/NO-GO criteria (time savings ≥5x, satisfaction ≥85%, bugs = 0, adoption ≥2 cases)
 

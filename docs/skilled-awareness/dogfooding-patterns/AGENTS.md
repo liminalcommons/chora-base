@@ -13,8 +13,9 @@
 
 **Dogfooding** = Testing patterns/capabilities through internal use before recommending to ecosystem
 
-SAP-027 provides a formalized **5-week pilot methodology** for validating patterns with:
-- 3-phase design (build, validate, decide)
+SAP-027 provides a formalized **6-week pilot methodology** for validating patterns with:
+- 4-phase design (research, build, validate, decide)
+- Week 0 research phase using evidence-based research prompt template
 - GO/NO-GO criteria (time savings, satisfaction, bugs, adoption)
 - ROI analysis with break-even calculation
 - Metrics templates and pilot documentation structure
@@ -39,6 +40,7 @@ SAP-027 provides a formalized **5-week pilot methodology** for validating patter
 ### Workflow 1: Launching Dogfooding Pilot
 
 **Steps**:
+0. Research phase (Week 0): Evidence gathering before building
 1. Define hypothesis (e.g., "SAP generation templates save 80% time")
 2. Set GO/NO-GO criteria (time savings ≥5x, satisfaction ≥85%, bugs = 0)
 3. Build capability (Weeks 1-3)
@@ -46,13 +48,22 @@ SAP-027 provides a formalized **5-week pilot methodology** for validating patter
 5. GO/NO-GO decision (Week 4 end)
 6. Formalize if GO (Week 5)
 
-**Example (SAP-029 pilot)**:
+**Example (SAP-029 pilot with research)**:
 ```markdown
+Week 0: Research SAP generation best practices
+  - Topic: "Template automation for code generation, ROI patterns, anti-patterns"
+  - Output: docs/research/sap-generation-research.md (15 pages)
+  - Extract: Template patterns (Level A: Yeoman docs), ROI models (Level B: GitHub case studies)
+
 Week 1-3: Build SAP generation templates
+  - Use research insights for template structure
+  - Cite research decision playbooks for integration patterns
+
 Week 4: Generate 2 SAPs (SAP-029, SAP-028)
   - Metrics: 120x time savings (vs 5x target)
   - Satisfaction: 5/5 (100%)
   - Bugs: 0 critical
+
 Week 4 end: GO decision (24x over target)
 Week 5: Formalize as SAP-029
 ```
@@ -61,7 +72,69 @@ Week 5: Formalize as SAP-029
 
 ---
 
-### Workflow 2: Collecting Dogfooding Metrics
+### Workflow 2: Week 0 Research Phase
+
+**Purpose**: Gather evidence-based insights before building capability
+
+**Steps**:
+1. Fill research prompt template with SAP domain context
+   - Organization/team: "Open-source framework, 1 core maintainer"
+   - Domain: "SAP capability domain" (e.g., "database migrations for Python")
+   - Tech stack: Relevant technologies
+   - Constraints: Open-source, budget, compliance
+   - Time horizon: 6-12 months
+
+2. Execute research prompt
+   - Use Claude Code WebSearch/WebFetch tools
+   - Or: `just research "{topic}"`
+   - Time: 15-30 minutes research execution
+
+3. Review research output
+   - Validate evidence levels: Level A ≥30%, Level B ≥40%, Level C ≤30%
+   - Extract principles for capability charter
+   - Extract decision playbooks for protocol spec
+   - Extract anti-patterns for awareness guide
+
+4. Save research report
+   - Location: `docs/research/{sap-name}-research.md`
+   - Cite in Week 1-3 build phase design decisions
+
+**Example (SAP-030 database-migrations research)**:
+```bash
+# Step 1: Fill template parameters
+just research "database migration best practices for Python projects"
+
+# Step 2: Execute (15-30min)
+# Claude Code WebSearch generates 15-page report
+
+# Step 3: Review output
+# - Level A: 35% (Flyway docs, Alembic specs, PEP standards)
+# - Level B: 45% (Netflix case studies, Stripe postmortems)
+# - Level C: 20% (Expert blogs)
+# ✅ Evidence levels valid
+
+# Step 4: Extract insights
+# Principles → capability-charter.md Section 1 (Problem Statement)
+#   - "Rollback strategies critical for production safety (Level A: Flyway docs)"
+#   - "State tracking prevents drift (Level B: Netflix case study)"
+#
+# Decision playbooks → protocol-spec.md Section 5 (Integration)
+#   - "Choose SQL-based migrations when: team SQL expertise high, schema complex"
+#   - "Choose ORM migrations when: rapid prototyping, simple schema"
+#
+# Anti-patterns → awareness-guide.md Section 5 (Error Patterns)
+#   - "Don't run migrations without rollback plan (causes downtime)"
+#   - "Don't skip migration testing (causes data loss)"
+
+# Step 5: Use in Week 1-3 build
+# Build SAP-030 with research-backed design decisions
+```
+
+**Outcome**: Week 1-3 build phase informed by evidence (reduces pilot failure risk)
+
+---
+
+### Workflow 3: Collecting Dogfooding Metrics
 
 **Steps**:
 1. Track time: Setup time vs per-use time
@@ -103,7 +176,7 @@ Week 5: Formalize as SAP-029
 
 ---
 
-### Workflow 3: Making GO/NO-GO Decision
+### Workflow 4: Making GO/NO-GO Decision
 
 **Steps**:
 1. Review metrics at Week 4 end
@@ -129,7 +202,7 @@ Week 5: Formalize as SAP-029
 
 ---
 
-### Workflow 4: Formalizing After GO Decision
+### Workflow 5: Formalizing After GO Decision
 
 **Steps**:
 1. Complete TODOs in protocol-spec.md (P0/P1 priority)
