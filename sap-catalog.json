@@ -178,7 +178,7 @@
       "id": "SAP-005",
       "name": "ci-cd-workflows",
       "full_name": "CI/CD Workflows",
-      "status": "draft",
+      "status": "active",
       "version": "1.0.0",
       "included_by_default": false,
       "size_kb": 67,
