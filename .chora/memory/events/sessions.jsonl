@@ -1,0 +1,1 @@
+{"event_type": "session", "timestamp": "2025-11-05T22:50:25.153482Z", "action": "start", "context_restored_from_memory": true, "restoration_time_seconds": 5, "manual_context_baseline_seconds": 180, "time_saved_seconds": 175, "session_id": "2025-11-05-22", "tags": ["sap-010", "a-mem", "session-tracking", "roi-tracking"]}

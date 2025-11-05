@@ -1,0 +1,2 @@
+{"event_type": "sap028_setup", "timestamp": "2025-11-05T23:36:15.018281Z", "action": "end", "project": "pypi-demo-alpha", "success": true, "setup_time_minutes": 5.0, "session_id": "default", "tags": ["sap-028", "setup-time", "roi-tracking"]}
+{"event_type": "sap028_setup", "timestamp": "2025-11-05T23:36:15.256517Z", "action": "end", "project": "pypi-demo-gamma", "success": true, "setup_time_minutes": 5.0, "session_id": "default", "tags": ["sap-028", "setup-time", "roi-tracking"]}

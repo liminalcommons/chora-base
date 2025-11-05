@@ -1,0 +1,53 @@
+{
+  "tags": {
+    "sap": [
+      "sap-maturity-assessment-2025-11.md"
+    ],
+    "maturity": [
+      "sap-maturity-assessment-2025-11.md"
+    ],
+    "evaluation": [
+      "sap-maturity-assessment-2025-11.md"
+    ],
+    "l3": [
+      "sap-maturity-assessment-2025-11.md"
+    ],
+    "gaps": [
+      "sap-maturity-assessment-2025-11.md"
+    ],
+    "sap-010": [
+      "sap-010-roi-automation-2025-11.md"
+    ],
+    "roi": [
+      "sap-010-roi-automation-2025-11.md"
+    ],
+    "automation": [
+      "sap-010-roi-automation-2025-11.md"
+    ],
+    "metrics": [
+      "sap-010-roi-automation-2025-11.md"
+    ],
+    "l3-criterion": [
+      "sap-010-roi-automation-2025-11.md"
+    ]
+  },
+  "notes": {
+    "sap-maturity-assessment-2025-11.md": [
+      "sap",
+      "maturity",
+      "evaluation",
+      "l3",
+      "gaps"
+    ],
+    "sap-010-roi-automation-2025-11.md": [
+      "sap-010",
+      "roi",
+      "automation",
+      "metrics",
+      "l3-criterion"
+    ]
+  },
+  "total_tags": 10,
+  "total_notes": 2,
+  "generated": "2025-11-05T22:50:00Z"
+}

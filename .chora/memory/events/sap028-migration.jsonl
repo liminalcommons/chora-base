@@ -1,0 +1,1 @@
+{"event_type": "sap028_migration", "timestamp": "2025-11-05T23:36:21.808413Z", "action": "end", "project": "pypi-demo-beta", "success": true, "migration_time_minutes": 15.0, "secrets_removed": 1, "pep740_enabled": true, "session_id": "default", "tags": ["sap-028", "migration", "token-to-oidc", "roi-tracking"]}

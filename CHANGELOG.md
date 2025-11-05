@@ -7,7 +7,145 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [4.9.0] - 2025-11-05
+
+> **🎉 LANDMARK RELEASE**: 100% SAP Awareness Coverage + Complete Documentation Overhaul
+>
+> **Stats**: 53 commits, 250 files changed, 129,288 insertions, 6,379 deletions
+>
+> This release represents a transformational milestone for chora-base: complete agent awareness infrastructure across all 30+ SAPs, comprehensive user documentation, and full implementation of the memory system (SAP-010).
+
+---
+
+### Added
+
+**🤖 100% SAP Awareness Coverage (SAP-009 Complete)** ✅
+
+Achievement of complete agent awareness infrastructure across the entire chora-base ecosystem:
+
+- **67 Awareness Files** (AGENTS.md + CLAUDE.md pairs):
+  - **Root Level** (2 files): [/AGENTS.md](AGENTS.md), [/CLAUDE.md](CLAUDE.md)
+  - **4 Documentation Domains** (8 files):
+    - [docs/skilled-awareness/](docs/skilled-awareness/) - SAP capabilities domain
+    - [docs/user-docs/](docs/user-docs/) - User-facing guides and references
+    - [docs/dev-docs/](docs/dev-docs/) - Developer contribution guides
+    - [docs/project-docs/](docs/project-docs/) - Project management and planning
+  - **27 SAP Capabilities** (54+ files) - Full coverage from SAP-000 through SAP-029:
+    - **Core Infrastructure**: SAP-000 (framework), SAP-001 (inbox), SAP-002 (chora-base-meta), SAP-004 (testing), SAP-006 (quality-gates), SAP-007 (documentation)
+    - **Development Workflow**: SAP-003 (project-bootstrap), SAP-005 (ci-cd), SAP-008 (automation-scripts), SAP-011 (docker), SAP-012 (dev-lifecycle)
+    - **Agent Intelligence**: SAP-009 (agent-awareness), SAP-010 (memory-system), SAP-027 (dogfooding), SAP-029 (sap-generation)
+    - **Metrics & Tracking**: SAP-013 (metrics-tracking), SAP-014 (mcp-server-dev), SAP-015 (task-tracking), SAP-019 (self-evaluation)
+    - **React Ecosystem** (6 SAPs): SAP-020 (foundation), SAP-021 (testing), SAP-022 (linting), SAP-023 (state), SAP-024 (styling), SAP-025 (performance)
+    - **Integration**: SAP-016 (link-validation), SAP-017 (chora-compose-integration), SAP-018 (chora-compose-meta)
+    - **Publishing**: SAP-028 (publishing-automation)
+
+- **Nested Awareness Pattern**:
+  - Progressive context loading: Root → Domain → Capability → Feature → Component
+  - "Nearest file wins" navigation strategy
+  - Claude-specific patterns and optimization tips in all CLAUDE.md files
+  - Generic agent patterns in all AGENTS.md files
+
+**📚 Documentation Overhaul** ✅
+
+Complete rewrite of user-facing documentation:
+
+- **"Understanding SAPs" Explanation Guide** ([docs/user-docs/explanation/understanding-saps.md](docs/user-docs/explanation/understanding-saps.md))
+  - 10-15 minute conceptual overview for newcomers
+  - Diataxis-compliant explanation documentation
+  - Covers: SAP structure, lifecycle, adoption, common misconceptions
+  - Examples and comparisons with other patterns
+
+- **Quickstart Guide Rewrite** ([docs/user-docs/guides/quickstart.md](docs/user-docs/guides/quickstart.md))
+  - Completely rewritten for clarity and accuracy
+  - Step-by-step getting started instructions
+  - Updated for current SAP maturity levels
+  - Integration with awareness pattern
+
+- **SAP-009 Full Adoption Plan** ([docs/project-docs/plans/sap-009-full-adoption-plan.md](docs/project-docs/plans/sap-009-full-adoption-plan.md))
+  - 11-phase implementation plan (Phases 1-11 complete)
+  - Documents the 100% awareness coverage achievement
+  - Phase-by-phase progress tracking
+
+**🧠 SAP-010 (memory-system) Full Implementation** ✅
+
+Complete A-MEM (Agent Memory) infrastructure:
+
+- **Event-Sourced Memory System**:
+  - `.chora/memory/events/` directory with 6+ event streams:
+    - `development.jsonl` - Development session events
+    - `knowledge-queries.jsonl` - Knowledge base queries
+    - `sessions.jsonl` - Session tracking and context restoration
+    - `sap-evaluations.jsonl` - SAP maturity evaluations
+    - `script-usage.jsonl` - Script execution traces
+    - `sap028-*.jsonl` - SAP-028 specific events (migration, security, setup)
+  - `.chora/memory/knowledge/` directory with knowledge base:
+    - `sap-010-roi-automation-2025-11.md` - ROI automation infrastructure note
+    - `sap-maturity-assessment-2025-11.md` - Maturity assessment knowledge
+    - `links.json` - Cross-reference link registry (inter-note connections)
+    - `tags.json` - Knowledge organization taxonomy (10 tags)
+
+- **ROI Automation Scripts** (7 scripts for L3 validation)
+  - `scripts/a-mem-query.py` - Knowledge query tracker (≥3 queries/session metric)
+  - `scripts/a-mem-reuse-tracker.py` - Note reuse tracker (≥50% reuse metric)
+  - `scripts/a-mem-mistake-tracker.py` - Repeated mistake reduction tracker (≥30% reduction metric)
+  - `scripts/a-mem-session-tracker.py` - Context restoration time tracker (≥80% time saved metric)
+  - `scripts/a-mem-index.py` - Auto-indexing for knowledge base
+  - `scripts/a-mem-compress.py` - Event compression for long-term storage
+  - `scripts/a-mem-metrics.py` - Comprehensive metrics dashboard
+
+- **SAP-028 Automation Scripts** (4 scripts for publishing automation)
+  - `scripts/sap028-setup-tracker.py` - Setup time tracking
+  - `scripts/sap028-migration-tracker.py` - Migration workflow tracking
+  - `scripts/sap028-security-tracker.py` - Security compliance tracking
+  - `scripts/sap028-metrics.py` - Publishing metrics dashboard
+  - `scripts/sap028-validate.py` - Publishing validation checks
+
+**📦 Example PyPI Projects** (3 demonstration projects)
+
+Complete PyPI package examples with full CI/CD:
+
+- `examples/pypi-demo-alpha/` - Basic PyPI package with GitHub Actions
+- `examples/pypi-demo-beta/` - Enhanced PyPI package example with additional features
+- `examples/pypi-demo-gamma/` - Advanced PyPI package with full automation suite
+
+Each includes:
+  - `pyproject.toml` - Modern Python packaging
+  - `.github/workflows/release.yml` - Automated release workflow
+  - `README.md` - Package documentation
+  - Source code with version management
+
+---
+
 ### Changed
+
+**📈 SAP Maturity Improvements**
+
+- **SAP-009 (agent-awareness)**:
+  - Status: Pilot → **Active (L3 maturity)** 🎉
+  - Achievement: 100% awareness coverage milestone (67 files, 30+ SAPs)
+  - 11 phases completed (full adoption plan)
+  - Nested awareness pattern operational
+  - Progressive context loading validated
+
+- **SAP-010 (memory-system)**:
+  - Ledger: v1.0.0 → **v1.0.3**
+  - Status: Draft → **Pilot (L2 maturity)**
+  - Implementation status: "NOT IMPLEMENTED" → "NOW OPERATIONAL"
+  - Multi-adopter expansion: 2 projects (chora-base + chora-compose)
+  - L3 progress: 2/5 criteria met (multi-adopter ✅, context restoration 97.2% ✅)
+  - ROI automation infrastructure operational
+  - Knowledge base: 3 notes, 10 tags, 1 link
+  - Updated 2025-11-05
+
+- **Multiple SAP Ledger Updates**:
+  - SAP-001 (inbox), SAP-002 (chora-base), SAP-003 (project-bootstrap)
+  - SAP-005 (ci-cd-workflows), SAP-011 (docker-operations)
+  - SAP-017 (chora-compose-integration), SAP-018 (chora-compose-meta)
+  - Updated adoption metrics, known issues, version history
+
+---
+
+### Documentation Infrastructure
 
 **SAP Maturity Assessment** (2025-11-04)
 

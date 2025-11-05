@@ -1,0 +1,16 @@
+{
+  "notes": {
+    "sap-maturity-assessment-2025-11.md": [],
+    "sap-010-roi-automation-2025-11.md": [
+      "sap-maturity-assessment-2025-11.md"
+    ]
+  },
+  "backlinks": {
+    "sap-maturity-assessment-2025-11.md": [
+      "sap-010-roi-automation-2025-11.md"
+    ]
+  },
+  "total_notes": 2,
+  "total_links": 1,
+  "generated": "2025-11-05T22:50:00Z"
+}
