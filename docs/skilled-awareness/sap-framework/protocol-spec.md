@@ -332,10 +332,39 @@ python scripts/install-sap.py --list-sets
       "description": "Core SAP framework",
       "capabilities": ["..."],
       "dependencies": [],
-      "tags": ["meta", "required"],
+      "tags": ["meta", "required", "foundational"],
       "location": "docs/skilled-awareness/sap-framework",
       "artifacts": { "capability_charter": true, ... },
-      "system_files": []
+      "system_files": [],
+
+      // NEW: Curatorial Metadata (Phase 2.1)
+      "category": "Meta & Ecosystem",
+      "subcategory": "Framework",
+      "audience": ["developers", "agents", "maintainers"],
+      "complexity": "intermediate",
+      "setup_effort_hours": "0.5-1",
+      "learning_curve": "medium",
+      "related_saps": {
+        "depends_on": [],
+        "integrates_with": ["SAP-029", "SAP-019"],
+        "complements": ["SAP-009"],
+        "alternative_to": [],
+        "supersedes": [],
+        "superseded_by": null
+      },
+      "last_verified": "2025-11-04",
+      "maturity_indicators": {
+        "adopters": 5,
+        "pilot_duration_weeks": 8,
+        "breaking_changes_count": 0,
+        "documentation_completeness": 0.95
+      },
+      "affects_files": {
+        "creates": [],
+        "modifies": ["sap-catalog.json"],
+        "reads": ["sap-catalog.json", "docs/skilled-awareness/**/*.md"]
+      },
+      "affects_domains": ["docs/skilled-awareness"]
     }
   ],
   "sap_sets": {
@@ -443,6 +472,100 @@ All SAPs SHOULD document which files they create, modify, or read using the `aff
 - Use `*` for single-level wildcard (e.g., `*.md`)
 - Be specific where possible (e.g., `pyproject.toml` not `*.toml`)
 - Group related files (e.g., `static-template/**` instead of listing 50 individual files)
+
+**Curatorial Metadata Fields (Phase 2.1)**:
+
+All SAPs SHOULD include the following curatorial metadata to enable filtering, recommendation, and progress tracking:
+
+| Field | Type | Required | Description | Example |
+|-------|------|----------|-------------|---------|
+| `category` | string | ✅ Yes | Top-level taxonomy category | `"Meta & Ecosystem"`, `"Frontend Development"`, `"CI/CD & Deployment"` |
+| `subcategory` | string | ❌ No | Finer-grained grouping within category | `"Framework"`, `"State Management"`, `"Testing"` |
+| `audience` | array | ✅ Yes | Primary users of this SAP | `["developers", "agents", "maintainers"]` |
+| `complexity` | enum | ✅ Yes | Skill level required | `"beginner"`, `"intermediate"`, `"advanced"` |
+| `setup_effort_hours` | string | ✅ Yes | Time to adopt (range) | `"0.5-1"`, `"2-4"`, `"8-16"` |
+| `learning_curve` | enum | ✅ Yes | Learning difficulty | `"low"`, `"medium"`, `"high"` |
+| `last_verified` | date | ✅ Yes | Last adoption validation | `"2025-11-04"` |
+| `maturity_indicators` | object | ✅ Yes | Production-readiness signals | See below |
+
+**Maturity Indicators Sub-Fields**:
+
+| Field | Type | Description | Example |
+|-------|------|-------------|---------|
+| `adopters` | integer | Number of successful adoptions | `5` |
+| `pilot_duration_weeks` | integer | How long SAP was in pilot phase | `8` |
+| `breaking_changes_count` | integer | Number of breaking changes since 1.0 | `0` |
+| `documentation_completeness` | float | Completeness score (0.0-1.0) | `0.95` |
+
+**Standard Categories**:
+
+Use these standardized category names for consistency:
+
+1. **Meta & Ecosystem** - SAPs about SAPs (SAP-000, SAP-029, SAP-019, etc.)
+2. **Development Lifecycle** - Process and workflow (SAP-012, SAP-003, etc.)
+3. **Quality & Testing** - Testing frameworks and validation (SAP-004, SAP-013, etc.)
+4. **CI/CD & Deployment** - Automation and deployment (SAP-005, SAP-011, etc.)
+5. **Documentation** - Documentation frameworks (SAP-007, SAP-016, etc.)
+6. **Agent & Memory** - Agent capabilities and memory (SAP-009, SAP-010, SAP-015, etc.)
+7. **Architecture & Design** - Design patterns and methodologies (SAP-012, etc.)
+8. **Frontend Development** - React/frontend SAPs (SAP-017, SAP-018, SAP-026, etc.)
+9. **Backend Development** - Backend/API SAPs (future)
+10. **Infrastructure** - Docker, configs, tooling (SAP-011, SAP-008, etc.)
+
+**Audience Values**:
+
+- `developers` - Software engineers adopting SAP
+- `agents` - AI agents (Claude Code, etc.) using SAP
+- `maintainers` - SAP maintainers and contributors
+- `users` - End users (rare, usually for user-facing SAPs)
+
+**Complexity Values**:
+
+- `beginner` - Minimal prerequisites, simple concepts, quick setup
+- `intermediate` - Some experience required, moderate complexity
+- `advanced` - Expert knowledge needed, complex integration
+
+**Learning Curve Values**:
+
+- `low` - Understand in <30 minutes
+- `medium` - Understand in 1-2 hours
+- `high` - Understand in 4+ hours
+
+**Curation Use Cases**:
+
+```javascript
+// Filter SAPs by audience and complexity
+const agentSAPs = saps.filter(s =>
+  s.audience.includes("agents") &&
+  s.complexity === "beginner"
+);
+
+// Find SAPs for quick adoption (low effort + low learning curve)
+const quickWins = saps.filter(s =>
+  parseFloat(s.setup_effort_hours.split('-')[1]) <= 2 &&
+  s.learning_curve === "low"
+);
+
+// Find production-ready SAPs (high maturity)
+const productionReady = saps.filter(s =>
+  s.maturity_indicators.adopters >= 3 &&
+  s.maturity_indicators.breaking_changes_count === 0 &&
+  s.maturity_indicators.documentation_completeness >= 0.85
+);
+
+// Find SAPs in specific category
+const frontendSAPs = saps.filter(s =>
+  s.category === "Frontend Development"
+);
+
+// Recommend SAPs based on current adoption
+function recommendNextSAP(currentSAPs) {
+  const integratesWith = currentSAPs.flatMap(sap =>
+    sap.related_saps.integrates_with || []
+  );
+  return saps.filter(s => integratesWith.includes(s.id));
+}
+```
 
 #### 3.4.3 SAP Sets
 
@@ -979,6 +1102,71 @@ ls inbox/coordination/CAPABILITIES && echo "✅ Registry created"
 
 **Reference Implementation**:
 - [inbox SAP](../inbox/) - Complete pilot SAP
+
+---
+
+## 10. Self-Evaluation Criteria (SAP-009 Phase 4)
+
+This section documents the validation criteria for SAP-000 awareness files (AGENTS.md and CLAUDE.md), required by SAP-009 Phase 4.
+
+### Validation Commands
+
+```bash
+# Check awareness files exist
+ls docs/skilled-awareness/sap-framework/{AGENTS,CLAUDE}.md
+
+# Validate structure
+python scripts/sap-evaluator.py --deep SAP-000
+
+# Check YAML frontmatter
+head -20 docs/skilled-awareness/sap-framework/AGENTS.md | grep -A 15 "^---$"
+head -20 docs/skilled-awareness/sap-framework/CLAUDE.md | grep -A 15 "^---$"
+```
+
+### Expected Workflow Coverage
+
+**AGENTS.md**: 5 workflows
+1. Create New SAP (15-30 min) - Generate 5 artifacts with templates
+2. Install SAP (5-15 min) - Follow adoption blueprint
+3. Validate SAP Structure (1-2 min) - Check artifacts and YAML
+4. Upgrade SAP Version (10-30 min) - Follow migration path
+5. Query SAP Catalog (30s) - Filter by status/domain
+
+**CLAUDE.md**: 5 workflows
+1. Creating New SAP with Write and Bash - Tool-specific artifact creation
+2. Installing SAP with Read and Bash - Blueprint execution patterns
+3. Validating SAP Structure with Bash - Evaluator usage
+4. Upgrading SAP Version with Read and Edit - Version updates
+5. Querying SAP Catalog with Read and Grep - jq filtering
+
+**Rationale for Equivalent Coverage**: Both files have 5 workflows. AGENTS.md focuses on generic agent patterns (templates, validation, migration), while CLAUDE.md shows specific Claude Code tool usage (Write for artifacts, Read for blueprints, Edit for updates, Bash for validation, jq for queries). Different organization but equivalent guidance.
+
+### User Signal Pattern Tables
+
+**AGENTS.md**: 4 tables
+- SAP Creation (4 signals: "create new SAP", "package this capability", etc.)
+- SAP Installation (3 signals: "install SAP-NNN", "adopt SAP-NNN", etc.)
+- SAP Validation (4 signals: "validate SAP-NNN", "check SAP structure", etc.)
+- SAP Upgrade (3 signals: "upgrade SAP-NNN", "migrate to v2.0.0", etc.)
+
+**CLAUDE.md**: Workflows incorporate user signals inline (not separate tables)
+
+**Rationale**: AGENTS.md uses pattern tables for quick lookup (generic agent pattern), CLAUDE.md embeds signals in workflows (Claude Code pattern). Different formats, equivalent coverage.
+
+### Progressive Loading
+
+Both files use YAML frontmatter with phase-based loading:
+- phase_1: Quick reference + core workflows (0-50k tokens)
+- phase_2: Advanced operations (50-100k tokens)
+- phase_3: Full including troubleshooting (100k+ tokens)
+
+### Known Acceptable Gaps
+
+**P2 Gap - Coverage Variance**: AGENTS.md and CLAUDE.md have different workflow organizations (pattern tables vs inline signals). This is acceptable because:
+1. Both provide equivalent guidance for SAP framework operations
+2. AGENTS.md optimized for generic agent quick lookup
+3. CLAUDE.md optimized for Claude Code tool demonstrations
+4. Tolerance: ±30% workflow count difference acceptable per SAP-009 protocol
 
 ---
 
