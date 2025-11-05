@@ -1,18 +1,18 @@
 ---
 sap_id: SAP-012
-version: 1.2.0
-status: Draft
+version: 1.3.0
+status: Active
 last_updated: 2025-11-04
-enhancement: unified-release-workflow
+enhancement: sap-009-phase-4-awareness
 ---
 
 # Ledger: Development Lifecycle Adoption
 
 **SAP ID**: SAP-012
 **Capability**: development-lifecycle
-**Version**: 1.2.0
+**Version**: 1.3.0
 **Last Updated**: 2025-11-04
-**Enhancement**: Unified Release Workflow (GAP-003 Tracks 1 & 2)
+**Enhancement**: SAP-009 Phase 4 Agent Awareness Files
 
 ---
 
@@ -127,6 +127,40 @@ _(No adopters yet)_
 ---
 
 ## 4. Version History
+
+### v1.3.0 (2025-11-04) - SAP-009 Phase 4: Agent Awareness Files
+
+**Changes**:
+- ✅ Added CLAUDE.md (~550 lines, ~11k tokens): Claude Code-specific patterns
+  - 3 Claude Code workflows (Sprint start, DDD change request, BDD scenarios)
+  - Tool usage patterns (Read templates, Edit sprint plans, Bash for quality gates)
+  - Progressive token usage phases (5 phases per workflow)
+  - Claude-specific tips (5 tips: Read templates, run gates, update ledger, verify RED, incremental edits)
+  - Common pitfalls for Claude (5 scenarios: skip DDD, not verify RED, skip gates, forget ledger, overwrite plan)
+- ✅ AGENTS.md already existed (513 lines): Generic agent guidance
+  - 8-phase workflow documentation
+  - User signal patterns (4 tables: Workflow, Sprint, DDD, BDD, TDD, Quality, Release)
+  - Quick reference for all phases
+  - Integration with templates
+
+**Integration with SAP-009**:
+- CLAUDE.md follows SAP-009 progressive token usage pattern
+- Phase-based context loading for reduced initial token usage
+- Tool-specific patterns (Read, Edit, Bash for development lifecycle)
+
+**Expected Impact**:
+- Faster agent onboarding (progressive loading reduces context)
+- Improved workflow coverage (11 total workflows: 8 generic + 3 Claude Code)
+- Better error prevention (10 common pitfalls documented with fixes)
+- Enhanced template usage (Read-Edit pattern for sprint plans, change requests)
+
+**Validation TODO** (before finalizing):
+- [ ] Verify CLAUDE.md follows SAP-009 progressive token usage phase structure
+- [ ] Verify tool usage patterns match Claude Code capabilities (Read, Edit, Bash, Write)
+- [ ] Verify links to templates and related SAPs are correct
+- [ ] Test workflows with actual sprint creation and BDD scenario writing
+
+---
 
 ### v1.2.0 (2025-11-04) - Template Release Workflow (Track 2)
 
