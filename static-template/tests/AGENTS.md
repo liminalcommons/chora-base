@@ -41,6 +41,47 @@ See [../dev-docs/workflows/TDD_WORKFLOW.md](../dev-docs/workflows/TDD_WORKFLOW.m
 
 ---
 
+## Reusable Test Fixtures
+
+This project includes reusable test fixtures in [conftest.py](conftest.py) to streamline test writing:
+
+### Filesystem Fixtures
+- `temp_workspace` - Clean temporary directory for each test
+- `temp_project_structure` - Typical project layout (src/, tests/, docs/, config/)
+
+### Module Loading
+- `load_hyphenated_script` - Load Python scripts with hyphens (e.g., `my-script.py`)
+  - **Use case**: Testing CLI scripts that can't be imported normally
+  - **Pattern**: From chora-workspace SAP-004 reference tests
+
+### Mock Data
+- `sample_json_data` - Common JSON structure for parser/serializer tests
+
+### Utilities
+- `mock_file_operations` - Mock file I/O without filesystem access
+- `captured_output` - Capture print() statements for testing
+
+### Example Usage
+
+See [test_example.py.template](test_example.py.template) for complete examples of:
+- Testing with temporary workspaces
+- Testing hyphenated scripts (importlib pattern)
+- Parametrized tests
+- Error handling tests
+- Async tests
+- Test class organization
+
+**Quick Example**:
+```python
+def test_config_file(temp_workspace):
+    """Test config file creation."""
+    config = temp_workspace / "config.json"
+    config.write_text('{"key": "value"}')
+    assert config.exists()
+```
+
+---
+
 ## Testing Instructions
 
 ### Run All Tests
