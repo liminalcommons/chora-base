@@ -1,3 +1,27 @@
+---
+sap_id: SAP-002
+version: 1.0.0
+status: active
+last_updated: 2025-11-05
+type: comprehensive_guide
+audience: all_agents
+complexity: intermediate
+estimated_reading_time: 52
+progressive_loading:
+  phase_1: "lines 1-200"
+  phase_2: "lines 201-500"
+  phase_3: "full"
+phase_1_token_estimate: 5000
+phase_2_token_estimate: 7500
+phase_3_token_estimate: 7000
+tags:
+  - meta
+  - chora-base
+  - template
+  - sap-framework
+  - production
+---
+
 # Agent Awareness Guide: chora-base Template Repository
 
 **SAP ID**: SAP-002

@@ -2,7 +2,7 @@
 sap_id: SAP-010
 version: 1.0.0
 status: active
-last_updated: 2025-11-04
+last_updated: 2025-11-05
 type: reference
 audience: agents
 complexity: intermediate
@@ -14,6 +14,12 @@ progressive_loading:
 phase_1_token_estimate: 4500
 phase_2_token_estimate: 9000
 phase_3_token_estimate: 12000
+tags:
+  - memory
+  - a-mem
+  - event-sourcing
+  - knowledge-graph
+  - production
 ---
 
 # Memory System (A-MEM) (SAP-010) - Agent Awareness

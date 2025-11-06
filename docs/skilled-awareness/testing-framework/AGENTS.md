@@ -1,8 +1,32 @@
+---
+sap_id: SAP-004
+version: 1.0.0
+status: active
+last_updated: 2025-11-05
+type: comprehensive_guide
+audience: all_agents
+complexity: intermediate
+estimated_reading_time: 45
+progressive_loading:
+  phase_1: "lines 1-200"
+  phase_2: "lines 201-450"
+  phase_3: "full"
+phase_1_token_estimate: 5000
+phase_2_token_estimate: 6250
+phase_3_token_estimate: 5800
+tags:
+  - testing
+  - pytest
+  - coverage
+  - quality-gates
+  - production
+---
+
 # Testing Framework (SAP-004) - Agent Awareness Guide
 
 **SAP ID**: SAP-004
 **Agent Compatibility**: All AI agents with file read/write and command execution
-**Last Updated**: 2025-11-04
+**Last Updated**: 2025-11-05
 
 ---
 

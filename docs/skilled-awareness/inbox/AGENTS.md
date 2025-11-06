@@ -1,3 +1,26 @@
+---
+sap_id: SAP-001
+version: 1.1.0
+status: active
+last_updated: 2025-10-31
+type: quick_reference
+audience: all_agents
+complexity: intermediate
+estimated_reading_time: 13
+progressive_loading:
+  phase_1: "lines 1-100"
+  phase_2: "lines 101-200"
+  phase_3: "full"
+phase_1_token_estimate: 3000
+phase_2_token_estimate: 6000
+phase_3_token_estimate: 6000
+tags:
+  - inbox
+  - coordination
+  - cross-repo
+  - production
+---
+
 # AGENTS.md - Inbox Protocol (SAP-001)
 
 **Domain**: Inbox Coordination

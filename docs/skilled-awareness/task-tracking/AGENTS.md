@@ -2,7 +2,7 @@
 sap_id: SAP-015
 version: 2.0.0
 status: pilot
-last_updated: 2025-11-04
+last_updated: 2025-11-05
 type: reference
 audience: agents
 complexity: intermediate
@@ -14,6 +14,12 @@ progressive_loading:
 phase_1_token_estimate: 2500
 phase_2_token_estimate: 5000
 phase_3_token_estimate: 8500
+tags:
+  - task-tracking
+  - beads
+  - git-backed
+  - multi-agent
+  - pilot
 ---
 
 # Agent Task Tracking (SAP-015) - Agent Awareness
