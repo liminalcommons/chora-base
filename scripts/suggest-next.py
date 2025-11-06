@@ -166,6 +166,19 @@ class ProjectContext:
 
     def check_test_coverage(self) -> Optional[float]:
         """Check current test coverage percentage."""
+        # Check if pytest is already running to avoid spawning duplicates
+        try:
+            ps_check = subprocess.run(
+                ["pgrep", "-f", "pytest.*--cov"],
+                capture_output=True,
+                timeout=5,
+            )
+            if ps_check.returncode == 0:
+                # pytest already running, skip to avoid duplicates
+                return None
+        except (subprocess.TimeoutExpired, FileNotFoundError):
+            pass
+
         try:
             result = subprocess.run(
                 ["pytest", "--cov=src", "--cov-report=term", "--quiet"],
@@ -194,6 +207,19 @@ class ProjectContext:
             "lint_clean": False,
             "type_check_clean": False,
         }
+
+        # Check if pytest is already running to avoid spawning duplicates
+        try:
+            ps_check = subprocess.run(
+                ["pgrep", "-f", "pytest"],
+                capture_output=True,
+                timeout=5,
+            )
+            if ps_check.returncode == 0:
+                # pytest already running, skip tests check
+                return gates
+        except (subprocess.TimeoutExpired, FileNotFoundError):
+            pass
 
         # Check tests
         try:

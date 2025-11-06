@@ -1,15 +1,44 @@
 # Chora-Base: Claude Agent Awareness (Root)
 
 **Project**: chora-base
-**Version**: 4.9.0
+**Version**: 4.10.0
 **Claude Compatibility**: Sonnet 4.5+
-**Last Updated**: 2025-11-04
+**Last Updated**: 2025-11-06
+
+---
+
+## ⚠️ CRITICAL: Read This First!
+
+**chora-base is a TEMPLATE SOURCE, not a project to set up.**
+
+### Quick Decision for Claude
+
+**Are you trying to CREATE A NEW PROJECT using chora-base?**
+
+**✅ YES** → Use the fast-setup script (recommended):
+
+```bash
+python scripts/create-model-mcp-server.py \
+    --name "Your Project Name" \
+    --namespace yournamespace \
+    --output ~/projects/your-project
+```
+
+**What happens**: 1-2 minutes of automated setup creating a fully-configured model citizen MCP server with all chora-base infrastructure (testing, CI/CD, quality gates, beads, inbox, A-MEM, documentation).
+
+**See**: [README.md](README.md#-start-here-ai-agent-quick-decision-tree) or [Quickstart Guide](docs/user-docs/quickstart-mcp-server.md)
+
+---
+
+**Are you DEVELOPING chora-base itself?**
+
+**✅ YES** → Continue reading this file for Claude-specific navigation patterns
 
 ---
 
 ## Quick Start for Claude
 
-Welcome to chora-base! This file provides Claude-specific navigation and context loading strategies for working with this project.
+This file provides Claude-specific navigation and context loading strategies for working with the chora-base template repository.
 
 ### First-Time Navigation
 

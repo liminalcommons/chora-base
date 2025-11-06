@@ -2,7 +2,45 @@
 
 **Purpose**: Machine-readable instructions for AI agents working on the chora-base template repository.
 
-**Last Updated**: 2025-11-02 (SAP-001 v1.1.0 inbox coordination integration)
+**Last Updated**: 2025-11-06 (Fast-setup infrastructure v4.9.0)
+
+---
+
+## ⚠️ CRITICAL: chora-base is a TEMPLATE SOURCE
+
+**DO NOT** try to "set up chora-base" as if it were a project to develop.
+
+**chora-base** is a **template repository** used to **generate other projects**.
+
+### Decision Tree for Agents
+
+**Are you trying to CREATE A NEW PROJECT using chora-base?**
+
+→ **YES**: Use the fast-setup script:
+
+```bash
+python scripts/create-model-mcp-server.py \
+    --name "Your Project Name" \
+    --namespace yournamespace \
+    --output ~/projects/your-project
+```
+
+See: [README.md](README.md) for complete instructions, or [docs/user-docs/quickstart-mcp-server.md](docs/user-docs/quickstart-mcp-server.md)
+
+**Time**: 5-10 minutes to fully-configured project
+
+---
+
+**Are you DEVELOPING chora-base itself** (contributing to the template)?
+
+→ **YES**: Continue reading this file
+
+**What you're working on**: The template source code, SAP definitions, scripts, documentation
+
+**Key directories**:
+- `static-template/` - Files that get copied to generated projects
+- `docs/skilled-awareness/` - SAP documentation (30+ capabilities)
+- `scripts/` - Automation scripts (create-model-mcp-server.py, install-sap.py, etc.)
 
 ---
 

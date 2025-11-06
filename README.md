@@ -4,6 +4,58 @@
 
 A production-ready Python project template designed FOR AI coding agents, not retrofitted. Zero dependencies, one-line setup, works every time.
 
+---
+
+## 🤖 START HERE: AI Agent Quick Decision Tree
+
+**IMPORTANT**: chora-base is a **TEMPLATE SOURCE**, not a project to set up.
+
+### Are you trying to CREATE A NEW PROJECT using chora-base?
+
+**✅ YES** → Use the fast-setup script (5-10 minutes):
+
+```bash
+# Option 1: Create an MCP Server (Recommended - Full Infrastructure)
+python scripts/create-model-mcp-server.py \
+    --name "Your MCP Server Name" \
+    --namespace yournamespace \
+    --output ~/projects/your-project
+
+# Option 2: Generic Python Project (coming soon)
+# python scripts/create-python-project.py --name "Your Project" --output ~/projects/your-project
+```
+
+**What you get**: Complete project with testing, CI/CD, quality gates, task tracking, memory system, and documentation. Ready to code in 5-10 minutes.
+
+**Documentation**: [Quickstart Guide](docs/user-docs/quickstart-mcp-server.md) | [SAP-003](docs/skilled-awareness/project-bootstrap/) | [SAP-014](docs/skilled-awareness/mcp-server-development/)
+
+---
+
+### Are you DEVELOPING chora-base itself?
+
+**✅ YES** → See [Developer Documentation](docs/dev-docs/)
+
+```bash
+# Read developer setup
+cat docs/dev-docs/AGENTS.md
+cat CLAUDE.md  # If you're Claude Code
+```
+
+---
+
+### Are you ADOPTING chora-base SAPs into an existing project?
+
+**✅ YES** → See [SAP Catalog](docs/skilled-awareness/INDEX.md)
+
+```bash
+# Install specific SAPs
+python scripts/install-sap.py SAP-015 --source /path/to/chora-base  # Task tracking
+python scripts/install-sap.py SAP-001 --source /path/to/chora-base  # Inbox coordination
+python scripts/install-sap.py SAP-010 --source /path/to/chora-base  # Memory system
+```
+
+---
+
 ## What is chora-base?
 
 chora-base is a production-ready Python project template featuring:

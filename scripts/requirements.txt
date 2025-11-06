@@ -1,0 +1,7 @@
+# Requirements for chora-base automation scripts
+
+# Fast-setup scripts (create-model-mcp-server.py, test-mcp-template-render.py)
+Jinja2>=3.1.0
+
+# Optional: For enhanced template validation
+# MarkupSafe>=2.1.0 (installed automatically with Jinja2)
