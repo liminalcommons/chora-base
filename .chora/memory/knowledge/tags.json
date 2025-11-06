@@ -32,6 +32,7 @@
     ]
   },
   "notes": {
+    "sap-015-multiagent-validation-2025-11.md": [],
     "sap-maturity-assessment-2025-11.md": [
       "sap",
       "maturity",
@@ -39,6 +40,7 @@
       "l3",
       "gaps"
     ],
+    "sap-010-015-integration-2025-11.md": [],
     "sap-010-roi-automation-2025-11.md": [
       "sap-010",
       "roi",
@@ -48,6 +50,6 @@
     ]
   },
   "total_tags": 10,
-  "total_notes": 2,
+  "total_notes": 4,
   "generated": "2025-11-05T22:50:00Z"
 }
