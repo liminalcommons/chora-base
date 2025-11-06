@@ -118,31 +118,41 @@ Setup time: 6-week pilot (expandable to 9 weeks), research at Week 0, build Week
 ### Success Criteria
 
 **Adoption Success** (Level 1):
-- <!-- TODO: Define Level 1 adoption success criteria -->
-- SAP-027 installed (5 artifacts present)
-- Basic functionality validated
-- Time estimate: 1-2 hours
+- ✅ SAP-027 installed (5 artifacts present: capability-charter, protocol-spec, awareness-guide, adoption-blueprint, ledger)
+- ✅ First pilot completed using simplified 3-week workflow (skip discovery & research, focus on build + validate)
+- ✅ GO/NO-GO decision made based on satisfaction ≥85% (simplified criteria, no time savings requirement)
+- ✅ Pilot documentation created: pilot plan + GO/NO-GO decision document
+- ✅ Time estimate: 3-4 hours setup + 3-week pilot (20-25 hours total)
 
 **Adoption Success** (Level 2):
-- <!-- TODO: Define Level 2 adoption success criteria -->
-- Advanced features integrated
-- Workflow improvements measured
-- Time estimate: 4-6 hours
+- ✅ All Level 1 criteria met
+- ✅ Full 6-week pilot completed (Week -1 discovery + Week 0 research + Weeks 1-3 build + Week 4 validation)
+- ✅ Evidence-based research conducted (≥30% Level A, ≥40% Level B, ≤30% Level C, 10+ total sources)
+- ✅ Weighted candidate scoring used (evidence 40%, alignment 30%, demand 20%, feasibility 10%)
+- ✅ GO decision achieved (composite score ≥60%, all hard gates passed: time_savings ≥5x, satisfaction ≥85%, bugs = 0, adoption ≥2)
+- ✅ Integration with SAP-010 (A-MEM event logging), SAP-006 (vision promotion/demotion), SAP-015 (beads epic creation)
+- ✅ Time estimate: 6-8 hours setup + 6-week pilot (25-50 hours total, depending on build complexity)
 
 **Adoption Success** (Level 3):
-- <!-- TODO: Define Level 3 adoption success criteria -->
-- Full mastery achieved
-- Optimization and best practices applied
-- Time estimate: 8-12 hours
+- ✅ All Level 2 criteria met
+- ✅ Multi-pilot infrastructure operational: pilot dashboard, automated vision sync, candidate scoring scripts
+- ✅ 5+ pilots completed (2+ GO decisions, 1+ NO-GO with lessons learned documented)
+- ✅ Average pilot setup time reduced to ≤2 hours (vs 6-8 hours at Level 2) via automation
+- ✅ Vision document reflects pilot outcomes (Wave 1 promotions for GO, Wave 3 demotions for NO-GO)
+- ✅ Beads backlog contains P1 epics for all GO decisions, with pilot metadata (satisfaction, time savings, bugs)
+- ✅ Lessons learned notes created for all NO-GO decisions, with root causes and recommendations
+- ✅ Time estimate: 12-16 hours one-time infrastructure setup, then 1-2 hours per subsequent pilot
 
 ### Key Metrics
 
-<!-- TODO: Define measurable outcomes -->
-
-| Metric | Baseline | Target (Level 2) | Target (Level 3) |
-|--------|----------|------------------|------------------|
-| Metric 1 | TBD | TBD | TBD |
-| Metric 2 | TBD | TBD | TBD |
+| Metric | Baseline (No SAP-027) | Target (Level 2) | Target (Level 3) |
+|--------|----------------------|------------------|------------------|
+| **Pilot Setup Time** | Ad-hoc (8-12h) | 6-8h (structured) | 1-2h (automated) |
+| **GO Decision Confidence** | 50% (gut feel) | 90% (evidence-based) | 95% (multi-pilot data) |
+| **Pilot Success Rate** | 40% (2/5 pilots GO) | 60% (3/5 pilots GO) | 70% (7/10 pilots GO) |
+| **Failed Pattern Cost** | 50h wasted (unvalidated) | 25h (early NO-GO Week 4) | 10h (Week -1 filtering) |
+| **Vision Accuracy** | 50% (untested roadmap) | 80% (pilot-validated) | 90% (5+ pilots inform roadmap) |
+| **Lessons Learned Coverage** | 0% (failures undocumented) | 100% (NO-GO → lessons note) | 100% + cross-pilot patterns |
 
 ---
 
@@ -161,19 +171,20 @@ Setup time: 6-week pilot (expandable to 9 weeks), research at Week 0, build Week
   
 
 **Primary Users**:
-- <!-- TODO: Define primary user roles and their needs -->
-- AI agents (Claude, other LLMs)
-- Development teams
-- Technical leaders
+- **Product Managers**: Need structured methodology to validate features before roadmap commitment. Use Week -1 discovery scoring to select highest-ROI pilots from 20+ candidates.
+- **Engineering Leads**: Need evidence-based GO/NO-GO criteria (not gut feel) to decide which patterns to adopt. Use composite scoring (time savings, satisfaction, bugs, adoption) to justify decisions.
+- **AI Agents (Claude, other LLMs)**: Need clear workflows for pilot execution. Use awareness-guide.md decision tree to navigate 3 common workflows (discovery, GO decision, NO-GO decision).
+- **Development Teams**: Need pilot templates to dogfood features efficiently. Use Level 1 (simplified) adoption for first pilot, upgrade to Level 2 after 2-3 pilots.
+- **Technical Leaders**: Need metrics to track pilot program health. Use pilot dashboard (Level 3) to view active/completed pilots, GO/NO-GO trends, time savings ROI.
 
 ### Secondary Stakeholders
 
 **Related SAP Maintainers**:
 
-
-- **SAP-000**: [Integration point description]
-
-- **SAP-029**: [Integration point description]
+- **SAP-000 (SAP Framework)**: SAP-027 follows SAP-000 artifact structure (5 artifacts) and uses sap-evaluator.py for validation
+- **SAP-010 (Memory System)**: SAP-027 requires A-MEM event logging (dogfooding.jsonl) for pilot metrics tracking and intention inventory for candidate selection
+- **SAP-006 (Vision Synthesis)**: SAP-027 integrates with vision document to promote GO decisions to Wave 1, demote NO-GO to Wave 3
+- **SAP-015 (Task Tracking)**: SAP-027 integrates with beads to create P1 epics for GO decisions, close tasks for NO-GO decisions
 
 
 
@@ -188,27 +199,32 @@ Setup time: 6-week pilot (expandable to 9 weeks), research at Week 0, build Week
 
 ### Required SAP Dependencies
 
+- **SAP-000 (SAP Framework)**: Provides artifact structure (5 files), validation tooling (sap-evaluator.py), and versioning conventions. SAP-027 must follow SAP-000 structure to be discoverable in sap-catalog.json.
 
-
-- **SAP-000**: [Why this dependency is required]
-
-- **SAP-029**: [Why this dependency is required]
-
-
+- **SAP-010 (Memory System / A-MEM)**: Provides event logging (`.chora/memory/events/dogfooding.jsonl`) for pilot metrics tracking, intention inventory for Week -1 candidate selection, and knowledge notes for lessons learned. Without SAP-010, pilot metrics cannot be tracked systematically.
 
 ### Optional SAP Dependencies
 
-<!-- TODO: List optional dependencies that enhance this SAP -->
-- [Optional dependency and benefit]
+- **SAP-006 (Vision Synthesis)**: Enables automatic vision document updates (Wave promotion/demotion) after GO/NO-GO decisions. Without SAP-006, vision updates must be done manually.
+
+- **SAP-015 (Task Tracking / Beads)**: Enables automatic epic creation (GO decisions) and task closure (NO-GO decisions). Without SAP-015, backlog updates must be done manually in existing task tracker (Jira, Linear, GitHub Issues).
+
+- **SAP-019 (Self-Evaluation)**: Enables validation of pilot SAP candidates before piloting. Use `sap-evaluator.py` to check artifact completeness (≥3 of 5 artifacts) before investing in full pilot.
+
+- **SAP-016 (Link Validation)**: Enables validation of links in pilot documentation before GO decision. Ensures adoption blueprints and awareness guides have working cross-references.
 
 ### External Dependencies
 
 **Required**:
-- <!-- TODO: List required external tools, libraries, services -->
-- Python 3.9+ / Node.js 22+ / [Technology stack]
+- **Python 3.9+**: For A-MEM event logging (JSON), scoring scripts (candidate selection), and pilot dashboard (Level 3)
+- **jq**: For A-MEM event querying and JSON parsing in validation commands
+- **Bash 4.0+**: For pilot automation scripts (sync-to-vision.sh, pilot-dashboard.sh)
+- **Git**: For version control of pilot documentation and A-MEM event logs
 
 **Optional**:
-- <!-- TODO: List optional external integrations -->
+- **just (command runner)**: For simplified pilot workflows (e.g., `just research "{query}"` for Week 0 research)
+- **bd (beads CLI)**: For SAP-015 integration (epic creation, task management)
+- **GitHub CLI (gh)**: For coordination requests (SAP-001 inbox) related to pilot outcomes
 
 ---
 
@@ -216,57 +232,72 @@ Setup time: 6-week pilot (expandable to 9 weeks), research at Week 0, build Week
 
 ### Constraints
 
-<!-- TODO: List technical, organizational, or resource constraints -->
+1. **Time Investment Constraint**: Full pilot (Level 2) requires 25-50 hours over 6 weeks. Teams with <10h/week available should use Level 1 (simplified) instead.
 
-1. **Constraint 1**: [Description]
-2. **Constraint 2**: [Description]
-3. **Constraint 3**: [Description]
+2. **Minimum Adoption Requirement**: GO decisions require ≥2 adoption cases (projects/teams). Single-team pilots cannot achieve GO status, limiting applicability for solo developers.
+
+3. **Evidence Availability Constraint**: Week 0 research requires ≥30% Level A evidence (standards, peer-reviewed). Cutting-edge patterns with no established evidence cannot meet research requirements, forcing Level 1 (skip research) adoption.
+
+4. **Manual Metrics Collection**: Satisfaction surveys and time tracking are manual (not automated). Adds 30-60 minutes overhead per pilot Week 4 validation.
+
+5. **Integration Dependency**: Vision promotion/demotion and epic creation require SAP-006 and SAP-015. Projects without these SAPs must handle vision/backlog updates manually.
 
 ### Assumptions
 
-<!-- TODO: List assumptions about users, environment, capabilities -->
+1. **Internal Dogfooding Feasibility**: Assumes teams can dogfood patterns internally before external rollout. Not applicable for patterns requiring external users (e.g., public API adoption).
 
-1. **Assumption 1**: [Description]
-2. **Assumption 2**: [Description]
-3. **Assumption 3**: [Description]
+2. **Quantifiable Metrics**: Assumes time savings, satisfaction, and bugs are measurable. Qualitative benefits (e.g., "improved code clarity") cannot be quantified for GO/NO-GO decision.
+
+3. **Stable Evaluation Criteria**: Assumes GO/NO-GO thresholds (≥5x time savings, ≥85% satisfaction, 0 bugs) are appropriate across all pattern types. Some patterns may require adjusted criteria.
+
+4. **Week 4 Decision Readiness**: Assumes 3 weeks build time is sufficient for meaningful validation. Complex patterns requiring >3 weeks build may need extended pilot timeline.
+
+5. **A-MEM Event Logging Discipline**: Assumes teams will consistently log pilot events to `.chora/memory/events/dogfooding.jsonl`. Inconsistent logging prevents accurate metrics tracking.
+
+6. **Intention Inventory Maintenance**: Assumes project maintains up-to-date intention inventory (SAP-010) with 10-20+ candidates. Without inventory, Week -1 discovery scoring cannot be performed.
 
 ---
 
 ## 8. Risks & Mitigations
 
-### Risk 1: [Risk Name]
+### Risk 1: False Negatives (Good Patterns Rejected by NO-GO)
 
-**Risk**: [Description of the risk]
+**Risk**: GO/NO-GO criteria are too strict (≥5x time savings, ≥85% satisfaction, 0 bugs). Valuable patterns that deliver 3x time savings or have 1 minor bug get rejected, missing adoption opportunities.
 
-**Likelihood**: Low / Medium / High
-**Impact**: Low / Medium / High
-
-**Mitigation**:
-- [Mitigation strategy 1]
-- [Mitigation strategy 2]
-- [Mitigation strategy 3]
-
-### Risk 2: [Risk Name]
-
-**Risk**: [Description of the risk]
-
-**Likelihood**: Low / Medium / High
-**Impact**: Low / Medium / High
+**Likelihood**: Medium (40% of pilots may fall in "gray zone" between GO and NO-GO)
+**Impact**: High (Pattern rejection means 25-50 hours pilot investment wasted, plus opportunity cost of not adopting valuable pattern)
 
 **Mitigation**:
-- [Mitigation strategy 1]
-- [Mitigation strategy 2]
+- Use composite score (60% threshold) as primary decision, not just individual hard gates
+- Document "near-miss" NO-GO decisions (e.g., 58% composite score) with recommendations for scope reduction and re-pilot
+- Create P3 future tasks for NO-GO patterns that show promise (e.g., high satisfaction but low time savings suggests narrower scope pilot)
+- Review GO/NO-GO thresholds quarterly based on 5+ pilot outcomes (adjust if <50% GO rate indicates overly strict criteria)
 
-### Risk 3: [Risk Name]
+### Risk 2: Pilot Overhead Discourages Adoption
 
-**Risk**: [Description of the risk]
+**Risk**: Level 2 full pilot requires 6-8 hours setup + 25-50 hours execution. Teams perceive overhead as too high, skip pilots entirely, return to ad-hoc validation with 40% failure rate.
 
-**Likelihood**: Low / Medium / High
-**Impact**: Low / Medium / High
+**Likelihood**: Medium (50% of first-time adopters may abandon after seeing 6-8h setup estimate)
+**Impact**: Medium (No pilots = 40% pattern failure rate = 20-50h wasted per failed pattern across ecosystem)
 
 **Mitigation**:
-- [Mitigation strategy 1]
-- [Mitigation strategy 2]
+- Promote Level 1 (simplified) as default entry point (3-4h setup vs 6-8h)
+- Quantify ROI in adoption blueprint: "6-8h setup investment prevents 25-50h failed pilot cost" (5-10x ROI)
+- Provide pilot plan templates (Level 1 template reduces setup to 1h via copy-paste)
+- Create pilot dashboard (Level 3) showing cumulative time savings across all pilots (motivates continued investment)
+
+### Risk 3: Inconsistent A-MEM Event Logging
+
+**Risk**: Teams forget to log pilot events (`pilot_started`, `pilot_completed`, `pilot_go_decision`) to `.chora/memory/events/dogfooding.jsonl`. Week 4 evaluation lacks metrics data, forcing manual reconstruction (adds 1-2h overhead).
+
+**Likelihood**: High (70% of first pilots miss ≥1 event due to unfamiliarity)
+**Impact**: Low (1-2h manual metrics collection, but doesn't block GO/NO-GO decision)
+
+**Mitigation**:
+- Add event logging checklist to pilot plan template (Week 1: log `pilot_started`, Week 4: log `pilot_completed` + decision)
+- Create pilot-init script (`scripts/pilot-init.sh`) that auto-logs `pilot_started` event when creating pilot directory
+- Add validation command to Week 4 checklist: `grep "pilot_started" .chora/memory/events/dogfooding.jsonl` (catches missing events before evaluation)
+- Provide fallback: Manual metrics documentation in `go-no-go-decision.md` if A-MEM events missing (no pilot blocked by logging failure)
 
 ---
 
@@ -343,14 +374,17 @@ Setup time: 6-week pilot (expandable to 9 weeks), research at Week 0, build Week
 
 ### External Documentation
 
-<!-- TODO: Link to relevant external resources -->
-
 **Official Documentation**:
-- [External resource 1](https://example.com) - [Description]
-- [External resource 2](https://example.com) - [Description]
+- [Wikipedia: Eating your own dog food](https://en.wikipedia.org/wiki/Eating_your_own_dog_food) - History and practice of dogfooding
+- [Google Research: Dogfooding at Scale](https://research.google/pubs/pub43146/) - Large-scale internal product validation
+- [Stage-Gate Process (Robert G. Cooper)](https://www.stage-gate.com/) - Product development gates with GO/KILL decisions
+- [Oxford Centre for Evidence-Based Medicine Levels](https://www.cebm.ox.ac.uk/resources/levels-of-evidence) - Evidence quality pyramid (Level A/B/C)
+- [Google's HEART Framework](https://www.dtelepathy.com/ux-metrics/#happiness) - Happiness, Engagement, Adoption, Retention, Task Success metrics
 
 **Community Resources**:
-- [Community resource 1](https://example.com) - [Description]
+- [Atlassian: Team Playbook - Pilot Programs](https://www.atlassian.com/team-playbook/plays/pilot-program) - Internal validation patterns
+- [ProductPlan: How to Run a Product Pilot](https://www.productplan.com/glossary/product-pilot/) - Pilot program best practices
+- [Amplitude: Product Waves Framework](https://amplitude.com/blog/product-roadmap) - Wave 1/2/3 strategic planning
 
 ---
 

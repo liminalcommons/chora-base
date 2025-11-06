@@ -4,11 +4,30 @@ Pytest configuration and fixtures for chora-base tests
 Wave 5 (v4.1.0) - Testing install-sap.py script
 """
 
+import sys
 import json
 import pytest
 from pathlib import Path
 from typing import Dict, Any
 from unittest.mock import Mock, MagicMock
+
+# Add project root to Python path for imports
+repo_root = Path(__file__).parent.parent
+if str(repo_root) not in sys.path:
+    sys.path.insert(0, str(repo_root))
+
+
+@pytest.fixture
+def temp_workspace(tmp_path) -> Path:
+    """
+    Create a temporary workspace directory for tests.
+
+    This fixture provides a clean temporary directory for each test that needs
+    a filesystem workspace (for chora-workspace SAP-004 tests).
+    """
+    workspace = tmp_path / "workspace"
+    workspace.mkdir()
+    return workspace
 
 
 @pytest.fixture

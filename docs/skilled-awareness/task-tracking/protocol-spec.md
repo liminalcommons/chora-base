@@ -428,6 +428,124 @@ git pull  # Auto-imports closed tasks
 bd ready --json  # See if any newly-unblocked work
 ```
 
+### Workflow 5: Backlog Refinement (Quarterly)
+
+**Scenario**: Quarterly backlog grooming to maintain backlog health
+
+**Duration**: 2-4 hours per quarter
+
+**Frequency**: Quarterly (aligned with vision synthesis cycles)
+
+**Inputs**:
+1. Current backlog snapshot: `bd list --status open --json > backlog-snapshot-$(date +%Y-Q%q).json`
+2. Stale task threshold: 90 days (configurable)
+3. Priority distribution target: P0 (<5%), P1 (<20%), P2 (<30%), P3 (<30%), P4 (<15%)
+4. Epic completion rates from last quarter
+
+**Activities**:
+
+**Step 1: Stale Task Review**
+```bash
+# Find tasks >90 days old
+bd list --status open --created-before $(date -v-90d +%Y-%m-%d) --json > stale-tasks.json
+
+# Review each stale task:
+# - Still relevant? Update priority or close
+# - Blocked indefinitely? Convert to P4 (BACKLOG) or close
+# - Wrong priority? Adjust based on current strategy
+```
+
+**Step 2: Priority Adjustment**
+```bash
+# Get priority distribution
+bd list --status open --json | jq 'group_by(.priority) | map({priority: .[0].priority, count: length})'
+
+# Adjust priorities based on:
+# - Vision wave alignment (Wave 1 → P1/P2, Wave 2 → P3, Wave 3 → P4)
+# - Roadmap commitments (Committed → P1/P2, Exploratory → P3)
+# - Resource availability (Team capacity for P0/P1 work)
+
+# Example: Downgrade exploratory tasks
+bd list --priority 1 --json | jq '.[] | select(.metadata.vision_wave == 2) | .id' | xargs -I {} bd update {} --priority 3
+```
+
+**Step 3: Backlog Archival**
+```bash
+# Close stale P4 tasks that won't be done
+bd list --priority 4 --status open --created-before $(date -v-180d +%Y-%m-%d) --json | \
+  jq -r '.[] | .id' | \
+  xargs -I {} bd close {} --reason "Backlog cleanup: archived after 180 days in P4"
+
+# Archive closed tasks older than 1 year (optional, for performance)
+bd compact --older-than 365d
+```
+
+**Step 4: Epic Progress Review**
+```bash
+# List all epics with completion stats
+bd list --type epic --status open --json | jq '.[] | {
+  id: .id,
+  title: .title,
+  total_subtasks: (.dependencies | map(select(.type == "parent")) | length),
+  completed_subtasks: (.dependencies | map(select(.type == "parent" and .target_status == "closed")) | length)
+}'
+
+# For epics with 100% completion: Close epic
+# For epics stalled >90 days: Re-evaluate or deprioritize
+```
+
+**Step 5: Metadata Refresh**
+```bash
+# Update epic metadata with vision wave alignment
+bd list --type epic --status open --json | jq -r '.[] | .id' | while read epic_id; do
+  # Prompt: "Is this epic still aligned with current vision?"
+  # Update metadata: bd update $epic_id --metadata '{"vision_wave": 2, "target_quarter": "2026-Q2"}'
+done
+```
+
+**Outputs**:
+1. Refined backlog with adjusted priorities
+2. Closed stale/irrelevant tasks
+3. Updated epic metadata
+4. Backlog health metrics logged to A-MEM
+
+**Quality Gates**:
+- ✅ Stale tasks (>90 days) reduced by ≥50%
+- ✅ Priority distribution within ±5% of target distribution
+- ✅ All P0 tasks have assignees and are unblocked
+- ✅ All epics have updated progress notes or are closed
+- ✅ Backlog health metrics logged to `.chora/memory/events/backlog-health.jsonl`
+
+**Integration with SAP-010 (A-MEM)**:
+
+Log backlog health snapshot to A-MEM:
+```bash
+# Create backlog health event
+cat <<EOF >> .chora/memory/events/backlog-health.jsonl
+{
+  "event": "backlog_refinement_completed",
+  "timestamp": "$(date -u +%Y-%m-%dT%H:%M:%SZ)",
+  "quarter": "$(date +%Y-Q%q)",
+  "metrics": {
+    "total_open_tasks": $(bd list --status open --json | jq 'length'),
+    "stale_tasks_count": $(bd list --status open --created-before $(date -v-90d +%Y-%m-%d) --json | jq 'length'),
+    "priority_distribution": $(bd list --status open --json | jq 'group_by(.priority) | map({priority: .[0].priority, count: length})'),
+    "epic_completion_rate": $(bd list --type epic --status closed --created-after $(date -v-90d +%Y-%m-%d) --json | jq 'length')
+  },
+  "actions_taken": {
+    "tasks_closed": $(bd list --status closed --closed-after $(date -v-7d +%Y-%m-%d) --json | jq 'length'),
+    "priorities_adjusted": 42,
+    "epics_closed": 3
+  }
+}
+EOF
+```
+
+**Traceability**:
+- Backlog refinement events stored in `.chora/memory/events/backlog-health.jsonl`
+- Links to vision synthesis cycle (SAP-006) via `quarter` field
+- Provides historical data for strategic planning (e.g., velocity trends, priority drift)
+
 ---
 
 ## 8. Integration with Chora-Base

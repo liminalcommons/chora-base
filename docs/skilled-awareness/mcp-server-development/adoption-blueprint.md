@@ -11,9 +11,57 @@
 
 This blueprint provides step-by-step instructions for adopting the MCP Server Development capability package (SAP-014) in your Python project. It covers prerequisites, installation, validation, and next steps.
 
-**Time Estimate**: 30-60 minutes (first server), 10-15 minutes (subsequent servers)
+**Time Estimate**:
+- **Fast-Setup (v4.9.0+)**: 1-2 minutes (agent), 5-10 minutes (human)
+- **Manual Setup**: 30-60 minutes (first server), 10-15 minutes (subsequent servers)
+
 **Complexity**: Intermediate (requires Python experience)
 **Prerequisites**: Python 3.9+, pip or uv, MCP client (Claude Desktop, Cursor, etc.)
+
+---
+
+## Fast-Setup (Recommended - v4.9.0+)
+
+**NEW**: Use the one-command fast-setup script to create a fully-configured "model citizen" MCP server:
+
+```bash
+# From chora-base directory
+python scripts/create-model-mcp-server.py \
+    --name "Weather MCP Server" \
+    --namespace weather \
+    --output ~/projects/weather-mcp
+```
+
+**What This Creates** (in 1-2 minutes):
+- ✅ FastMCP server scaffold (SAP-014)
+- ✅ Beads task tracking (SAP-015)
+- ✅ Inbox coordination (SAP-001)
+- ✅ A-MEM memory system (SAP-010)
+- ✅ CI/CD workflows (SAP-005)
+- ✅ Quality gates (SAP-006)
+- ✅ Testing framework (SAP-004)
+- ✅ Documentation (SAP-007)
+- ✅ Agent awareness (SAP-009)
+
+**Setup Time**: 1-2 minutes (agent), 5-10 minutes (human)
+
+**Next Steps After Fast-Setup**:
+```bash
+cd ~/projects/weather-mcp
+python -m venv venv && source venv/bin/activate
+pip install -e .[dev]
+pytest  # Run tests
+```
+
+Then jump to [Section 7: Configure Claude Desktop](#7-configure-claude-desktop) to connect your MCP server.
+
+**For custom setup or manual adoption**, continue reading below.
+
+---
+
+## Manual Setup (Advanced Users)
+
+The following sections describe manual setup if you need custom configuration or want to understand the detailed steps.
 
 ---
 

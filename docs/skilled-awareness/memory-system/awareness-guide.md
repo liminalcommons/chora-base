@@ -1,8 +1,8 @@
 ---
 sap_id: SAP-010
-version: 1.0.0
+version: 1.1.0
 status: Draft
-last_updated: 2025-10-28
+last_updated: 2025-11-05
 audience: ai-agents
 ---
 
@@ -541,23 +541,398 @@ save_agent_profile("claude-code", profile)
 
 ---
 
-## 7. Memory Maintenance
+## 7. Strategic Planning Workflows
 
-### 7.1 Compress Old Events (Monthly)
+**NEW (2025-11-05)**: A-MEM now supports strategic planning templates for vision synthesis, intention tracking, roadmap planning, and strategic theme analysis.
+
+**Purpose**: Use these workflows for monthly intention discovery, quarterly vision synthesis, and evidence-based strategic planning.
+
+**See Also**: [protocol-spec.md Section 3.3](protocol-spec.md#33-strategic-knowledge-templates) for template specifications.
+
+---
+
+### 7.1 When to Use Strategic Templates
+
+Use strategic templates when:
+- **Monthly**: Consolidating unfulfilled intentions from multiple sources (inbox, GitHub, dogfooding, research, A-MEM)
+- **Quarterly**: Synthesizing vision from intentions, reviewing Wave decision criteria
+- **Post-Wave-Commit**: Creating roadmap milestones for committed vision waves
+- **Post-Pilot**: Storing dogfooding feedback for vision decision updates
+
+**Strategic Template Types**:
+- **Vision Document**: Multi-wave planning (3/6/12-month horizons)
+- **Intention Inventory**: Evidence-based intention consolidation (Level A/B/C)
+- **Roadmap Milestone**: Version goals linked to beads epics
+- **Strategic Theme Matrix**: Theme clustering and prioritization
+
+---
+
+### 7.2 Intention Discovery Workflow (Monthly)
+
+**Trigger**: 1st of each month
+
+**Purpose**: Consolidate unfulfilled user intentions from multiple sources into structured inventory
+
+**Steps**:
+
+**1. Scan Sources**
+```bash
+# Inbox coordination requests
+cat inbox/coordination/active.jsonl | jq -r '.request'
+
+# GitHub issues
+gh issue list --label feature-request --state open
+
+# Dogfooding feedback
+grep '"tags".*dogfooding-feedback' .chora/memory/knowledge/notes/*.md
+
+# Research reports
+ls docs/research/*-research.md
+
+# A-MEM user requests
+grep '"tags".*user-request' .chora/memory/knowledge/notes/*.md
+```
+
+**2. Create Intention Inventory**
+```bash
+# Copy template
+cp .chora/memory/templates/intention-inventory-template.md \
+   .chora/memory/knowledge/notes/intention-inventory-$(date +%Y-%m-%d).md
+```
+
+**3. Fill Frontmatter**
+```yaml
+---
+id: intention-inventory-2025-11-05
+type: intention-inventory
+sources:
+  inbox: 4
+  github: 12
+  dogfooding: 3
+  research: 8
+  a-mem: 15
+tags: [intention-discovery, strategic-planning, backlog-refinement]
+created: 2025-11-05T00:00:00Z
+updated: 2025-11-05T00:00:00Z
+---
+```
+
+**4. Categorize Intentions by Evidence Level**
+
+**Level A (Standards)**: IETF RFCs, W3C specs, ISO standards, PEPs, peer-reviewed research, production data
+**Level B (Case Studies)**: Production usage (>100 users), ecosystem patterns, expert consensus
+**Level C (Expert Opinion)**: Blog posts, single-user requests, anecdotal evidence
+
+**5. For Each Intention**:
+- Title (descriptive)
+- Source (inbox | github | dogfooding | research | a-mem)
+- Evidence (cite standards, papers, case studies)
+- User demand (count explicit requests)
+- Description (2-3 sentences)
+- Related SAPs
+- Priority (HIGH/MEDIUM/LOW)
+- Recommended Wave (1/2/3 based on evidence + demand)
+
+**6. Calculate Evidence Distribution**
+- Count Level A, B, C intentions
+- Calculate percentages (A%, B%, C%)
+- Check quality bar: Total A+B ≥ 60% for Wave 2, ≥ 70% for Wave 1
+
+**Output**: `intention-inventory-{date}.md` with {N} intentions categorized
+
+**Example** (chora-base Nov 2025):
+- 42 intentions scanned
+- 14 High-Evidence (A): 33%
+- 18 Medium-Evidence (B): 43%
+- 10 Low-Evidence (C): 24%
+- Top theme: Strategic Planning (14 intentions, 79% A+B, HIGH priority)
+
+---
+
+### 7.3 Strategic Theme Analysis Workflow (Quarterly)
+
+**Trigger**: After intention inventory, before vision drafting
+
+**Purpose**: Cluster intentions into strategic themes with evidence × demand scoring
+
+**Steps**:
+
+**1. Create Strategic Theme Matrix**
+```bash
+# Copy template
+cp .chora/memory/templates/strategic-theme-matrix-template.md \
+   .chora/memory/knowledge/notes/strategic-themes-$(date +%Y-%m-%d).md
+```
+
+**2. Cluster Intentions into Themes**
+- Group related intentions by strategic domain (e.g., strategic planning, testing, performance)
+- Identify common patterns across intentions
+- Name theme based on primary capability gap
+
+**3. For Each Theme, Calculate**:
+- **Intention count**: How many intentions in this theme?
+- **Evidence level breakdown**: A%, B%, C% of intentions
+- **User demand**: Sum of explicit requests across intentions
+- **Effort estimate**: Total hours for theme (sum feature estimates)
+- **ROI potential**: Expected multiplier (based on validation data)
+
+**4. Apply Wave Decision Criteria**:
+
+**Wave 1 (Committed - 3 months)**:
+- Evidence: A+B ≥ 70%
+- User Demand: ≥ 10 explicit requests
+- Effort: < 50 hours
+- ROI: ≥ 5x validated
+
+**Wave 2 (Exploratory - 6 months)**:
+- Evidence: A+B ≥ 60% (validate via dogfooding)
+- User Demand: ≥ 5 explicit requests
+- Effort: < 100 hours
+- ROI: 3-5x, needs validation
+
+**Wave 3 (Aspirational - 12 months)**:
+- Evidence: A+B < 60% (insufficient evidence)
+- User Demand: < 5 requests
+- Defer until more data
+
+**5. Rank Themes**
+- Sort by: (evidence % × user demand count × ROI potential)
+- Recommend wave assignment for each theme
+
+**Output**: `strategic-themes-{date}.md` with {N} themes prioritized
+
+**Example** (chora-base Nov 2025):
+- 42 intentions → 5 themes
+- Theme 1 (Strategic Planning): 79% A+B, 14 requests → Wave 1
+- Theme 2 (Testing): 75% A+B, 8 requests → Wave 1
+- Theme 3 (MCP): 83% A+B, 8 requests → Wave 2 (validate via dogfooding)
+- Theme 4 (Performance): 60% A+B, 3 requests → Wave 2 (needs more evidence)
+- Theme 5 (Docs): 50% A+B, 2 requests → Wave 3 (defer)
+
+---
+
+### 7.4 Vision Drafting Workflow (Quarterly)
+
+**Trigger**: After strategic theme analysis
+
+**Purpose**: Create multi-wave vision document from prioritized themes
+
+**Steps**:
+
+**1. Create Vision Document**
+```bash
+# Copy template
+cp .chora/memory/templates/vision-document-template.md \
+   .chora/memory/knowledge/notes/vision-{project}-{horizon}.md
+```
+
+**2. Fill Frontmatter**
+```yaml
+---
+id: vision-chora-base-6-month
+type: strategic-vision
+horizon: 6-month
+status: draft
+waves:
+  - wave: 1
+    status: committed
+    target_version: v1.5.0
+  - wave: 2
+    status: exploratory
+    decision_review: 2026-Q1
+  - wave: 3
+    status: aspirational
+tags: [vision, strategic-planning, chora-base]
+created: 2025-11-05T00:00:00Z
+updated: 2025-11-05T00:00:00Z
+---
+```
+
+**3. Write Wave 1 (Committed - 3 months)**:
+- Features from HIGH-priority themes (evidence A+B ≥ 70%, user demand ≥ 10)
+- Target version (e.g., v1.5.0)
+- Measurable success criteria for each feature
+- Effort estimates
+
+**4. Write Wave 2 (Exploratory - 6 months)**:
+- Candidates from MEDIUM-priority themes (evidence A+B ≥ 60%, user demand ≥ 5)
+- Decision review date (quarterly)
+- Validation plan: How to dogfood/validate before committing
+- Success criteria for promotion to Wave 1
+
+**5. Write Wave 3 (Aspirational - 12 months)**:
+- Long-term vision from LOW-priority themes or future possibilities
+- What's missing: Evidence gaps, demand gaps, resource constraints
+- Path to Wave 2: Conditions required for promotion
+- Quarterly review criteria
+
+**6. Review & Activate**:
+- Validate wave assignments with stakeholders
+- Update `status: active` after approval
+- Link to intention inventory and theme matrix in frontmatter
+
+**Output**: `vision-{project}-{horizon}.md` with 3 waves
+
+**Example** (chora-base Nov 2025):
+- Horizon: 6-month (Nov 2025 - Apr 2026)
+- Wave 1: Strategic Planning Infrastructure (4 SAP enhancements, v1.5.0, Feb 2026)
+- Wave 2: Automation & Tooling (4 CLIs, validate via dogfooding, decision Q1 2026)
+- Wave 3: Ecosystem Adoption (3+ projects adopt, case studies, 12-month)
+
+---
+
+### 7.5 Roadmap Milestone Creation Workflow (After Wave 1 Commit)
+
+**Trigger**: After vision Wave 1 finalized
+
+**Purpose**: Convert Wave 1 features into roadmap milestone linked to beads epic
+
+**Steps**:
+
+**1. Create Roadmap Milestone**
+```bash
+# Copy template
+cp .chora/memory/templates/roadmap-milestone-template.md \
+   .chora/memory/knowledge/notes/milestone-{version}.md
+```
+
+**2. Fill Frontmatter**
+```yaml
+---
+id: milestone-v1.5.0
+type: roadmap-milestone
+version: v1.5.0
+target_date: 2026-02-01
+from_vision_wave: 1
+committed: true
+linked_to:
+  - vision-chora-base-6-month
+tags: [roadmap, milestone, v1.5.0, strategic-planning]
+created: 2025-11-05T00:00:00Z
+updated: 2025-11-05T00:00:00Z
+---
+```
+
+**3. List Features from Vision Wave 1**:
+- Copy features from vision document Wave 1 section
+- Include description, success criteria, effort estimate
+- Set completion status (not started initially)
+
+**4. Define Overall Success Criteria**:
+- What makes this milestone successful as a whole?
+- Define measurable metrics (time savings, adoption, quality)
+
+**5. Create Beads Epic** (SAP-015 integration):
+```bash
+# Create epic for Wave 1 features
+bd create "Wave 1: Strategic Planning Infrastructure (v1.5.0)" \
+  --priority 1 \
+  --type epic \
+  --description "From vision-chora-base-6-month Wave 1"
+
+# Get epic ID
+epic_id=$(bd list --type epic | grep "v1.5.0" | awk '{print $1}')
+```
+
+**6. Link Epic to Milestone**:
+- Update roadmap milestone `linked_to` array: Add `beads-epic-{id}`
+- Fill "Linked Beads Epic" section with task breakdown
+
+**7. Track Progress**:
+- Update completion status as features finish
+- Update timeline as milestones hit
+- Add changelog entries for major updates
+
+**Output**: `milestone-{version}.md` linked to beads epic
+
+**Example** (chora-base v1.5.0):
+- Features: SAP-010, SAP-006, SAP-015, SAP-027 enhancements
+- Success criteria: All 4 SAPs enhanced, workflow validated, ecosystem reusable
+- Beads epic: chora-base-xyz (20 tasks estimated)
+- Traceability: vision → milestone → epic → tasks
+
+---
+
+### 7.6 Traceability Queries
+
+**Vision → Roadmap → Epic Chain**:
+```bash
+# Find vision document
+grep -l '"type": "strategic-vision"' .chora/memory/knowledge/notes/*.md
+
+# Find linked roadmap milestones
+grep -l "linked_to.*vision-chora-base-6-month" .chora/memory/knowledge/notes/*.md
+
+# Find beads epic ID in milestone
+grep "beads-epic-" .chora/memory/knowledge/notes/milestone-v1.5.0.md
+
+# Show beads epic
+epic_id=$(grep -o 'beads-epic-[a-z0-9-]*' .chora/memory/knowledge/notes/milestone-v1.5.0.md)
+bd show $epic_id
+
+# List epic tasks
+bd list --parent $epic_id
+```
+
+**Find Active Visions**:
+```bash
+grep -l '"type": "strategic-vision"' .chora/memory/knowledge/notes/*.md | \
+  xargs grep -l '"status": "active"'
+```
+
+**Find Stale Intention Inventories** (>3 months old):
+```bash
+grep -l '"type": "intention-inventory"' .chora/memory/knowledge/notes/*.md | \
+  xargs grep -l '"created": "2025-0[1-7]'
+```
+
+---
+
+### 7.7 Example: Chora-Base Strategic Planning Cycle
+
+**Monthly (1st of month)**: Intention Discovery
+1. Scanned 42 intentions from inbox, GitHub, dogfooding, research, A-MEM
+2. Created `intention-inventory-2025-11-05.md`
+3. Evidence: 33% Level A, 43% Level B, 24% Level C
+
+**Quarterly (Every 3 months)**: Strategic Theme Analysis
+1. Clustered 42 intentions → 5 themes
+2. Created `strategic-themes-2025-11-05.md`
+3. Theme 1 (Strategic Planning): 79% A+B → Wave 1
+4. Theme 2 (Testing): 75% A+B → Wave 1
+
+**Quarterly**: Vision Drafting
+1. Created `vision-chora-base-6-month.md`
+2. Wave 1: Strategic Planning Infrastructure (v1.5.0, Feb 2026)
+3. Wave 2: Automation & Tooling (validate Q1 2026)
+4. Wave 3: Ecosystem Adoption (12-month)
+
+**After Wave 1 Commit**: Roadmap Milestone Creation
+1. Created `milestone-v1.5.0.md`
+2. Created beads epic: chora-base-xyz (20 tasks)
+3. Linked: vision → milestone → epic → tasks
+
+**Result**: Evidence-based strategic planning with full traceability from intentions → vision → backlog → tasks
+
+---
+
+## 8. Memory Maintenance
+
+### 8.1 Compress Old Events (Monthly)
 
 ```bash
 # Compress events older than 1 month
 find .chora/memory/events -name "events.jsonl" -mtime +30 -exec gzip {} \;
 ```
 
-### 7.2 Archive Events (Quarterly)
+### 8.2 Archive Events (Quarterly)
 
 ```bash
 # Move events older than 6 months to archive
 find .chora/memory/events -name "*.jsonl.gz" -mtime +180 -exec mv {} /archive/ \;
 ```
 
-### 7.3 Deprecate Old Knowledge Notes
+### 8.3 Deprecate Old Knowledge Notes
 
 ```markdown
 # Update note frontmatter
@@ -578,7 +953,7 @@ status: deprecated  # Changed from "validated"
 
 ---
 
-## 8. Common Agent Mistakes
+## 9. Common Agent Mistakes
 
 ### Mistake 1: Not Checking Memory Before Acting
 **Wrong**: Immediately fix issue without checking memory
@@ -607,7 +982,7 @@ status: deprecated  # Changed from "validated"
 
 ---
 
-## 9. Common Pitfalls
+## 10. Common Pitfalls
 
 ### Pitfall 1: Not Checking Memory Before Acting
 
@@ -843,7 +1218,7 @@ related_traces: [abc123, def456, ghi789]  # Added new trace
 
 ---
 
-## 10. Integration with Other SAPs
+## 11. Integration with Other SAPs
 
 ### SAP-009 (agent-awareness)
 - `.chora/memory/AGENTS.md` - Generic memory guidance
@@ -859,7 +1234,7 @@ related_traces: [abc123, def456, ghi789]  # Added new trace
 
 ---
 
-## 11. Installation
+## 12. Installation
 
 ### Quick Install
 
@@ -913,7 +1288,7 @@ For custom installation paths or options, see:
 
 ---
 
-## 12. Related Content
+## 13. Related Content
 
 ### Within This SAP (skilled-awareness/memory-system/)
 

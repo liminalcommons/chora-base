@@ -1,18 +1,18 @@
 ---
 sap_id: SAP-012
-version: 1.3.0
+version: 1.4.0
 status: Active
-last_updated: 2025-11-04
-enhancement: sap-009-phase-4-awareness
+last_updated: 2025-11-05
+enhancement: vision-synthesis-workflow
 ---
 
 # Ledger: Development Lifecycle Adoption
 
 **SAP ID**: SAP-012
 **Capability**: development-lifecycle
-**Version**: 1.3.0
-**Last Updated**: 2025-11-04
-**Enhancement**: SAP-009 Phase 4 Agent Awareness Files
+**Version**: 1.4.0
+**Last Updated**: 2025-11-05
+**Enhancement**: Vision Synthesis Workflow
 
 ---
 
@@ -127,6 +127,62 @@ _(No adopters yet)_
 ---
 
 ## 4. Version History
+
+### v1.4.0 (2025-11-05) - Vision Synthesis Workflow
+
+**Changes**:
+- ✅ **Protocol Spec Section 3.1 Expansion**: Expanded Phase 1 (Vision & Strategy) from monolithic phase into 4 structured sub-phases (~280 lines added)
+  - **Phase 1.1 Discovery** (1-2 days): Consolidate intentions from 5 sources (inbox, GitHub, dogfooding, research, A-MEM)
+  - **Phase 1.2 Analysis** (1-2 days): Cluster intentions into strategic themes, apply Wave decision criteria (A+B ≥70%/≥60%/<60%)
+  - **Phase 1.3 Vision Drafting** (2-3 days): Multi-timeframe vision (3/6/12-month horizons with Wave 1/2/3)
+  - **Phase 1.4 Backlog Cascade** (1 day): Vision Wave 1 → ROADMAP.md → beads epic → tasks with traceability
+- ✅ **Protocol Spec Section 4 Integration Patterns**: Added 4 SAP integration patterns (~210 lines added)
+  - **Section 4.1**: Integration with SAP-001 (Inbox) - coordination requests as intention sources
+  - **Section 4.2**: Integration with SAP-010 (A-MEM) - strategic templates, knowledge graph queries
+  - **Section 4.3**: Integration with SAP-015 (Beads) - backlog cascade, traceability metadata
+  - **Section 4.4**: Integration with SAP-027 (Dogfooding) - pilot feedback, Wave 2 validation
+  - **Section renumbering**: Old Section 4 → Section 5 (Decision Trees), Old Section 5 → Section 6 (Templates)
+- ✅ **Awareness Guide Section 3.5 Vision Synthesis Workflows**: Added 5 workflow examples (~510 lines added)
+  - **Section 3.5.1**: Intention Discovery workflow (scan 5 sources, consolidate inventory, evidence levels)
+  - **Section 3.5.2**: Strategic Theme Analysis workflow (cluster intentions, apply Wave criteria, theme matrix)
+  - **Section 3.5.3**: Vision Drafting workflow (3/6/12-month horizons, multi-wave structure, examples)
+  - **Section 3.5.4**: Backlog Cascade workflow (ROADMAP.md → milestone note → beads epic → tasks)
+  - **Section 3.5.5**: Quarterly Vision Review workflow (pilot results → Wave 2 updates → next cycle)
+  - **Section renumbering**: Old Section 3.5 → Section 3.6 (Release Version)
+- ✅ **Vision Workflow Templates**: Copied 3 templates to docs/project-docs/templates/ for human access
+  - `VISION_DOCUMENT_TEMPLATE.md` (11,350 bytes)
+  - `INTENTION_INVENTORY_TEMPLATE.md` (13,832 bytes)
+  - `STRATEGIC_THEME_MATRIX.md` (16,353 bytes)
+  - Note: Agent workflows use SAP-010 templates in `.chora/memory/templates/`
+
+**Integration with Other SAPs**:
+- **SAP-001 (Inbox)**: Coordination requests now feed into intention discovery (Phase 1.1)
+- **SAP-010 (A-MEM)**: Strategic templates provide structure for vision artifacts, knowledge graph stores vision history
+- **SAP-015 (Beads)**: Vision Wave 1 automatically cascades into beads epic + tasks with traceability
+- **SAP-027 (Dogfooding)**: Pilot GO/NO-GO decisions update vision Wave 2 quarterly
+
+**Expected Impact**:
+- **End-to-end strategic planning**: From scattered intentions → structured vision → operational backlog
+- **Evidence-based prioritization**: Wave 1 (≥70% A+B evidence), Wave 2 (≥60%), Wave 3 (<60%)
+- **Multi-timeframe clarity**: 3-month (committed), 6-month (exploratory), 12-month (aspirational) horizons
+- **Traceability**: Vision Wave 1 → ROADMAP.md → Roadmap Milestone → Beads Epic → Tasks
+- **Quarterly validation**: Wave 2 candidates validated via SAP-027 pilots before committing to Wave 1
+- **Time savings**: ~10x faster strategic planning cycles (vs ad-hoc intention consolidation)
+
+**Validation Status**:
+- ✅ Protocol Spec updated and sections renumbered correctly
+- ✅ Awareness Guide updated with 5 detailed workflow examples
+- ✅ Templates copied and accessible at docs/project-docs/templates/
+- ⏳ End-to-end workflow testing (pending chora-base dogfooding in Q1 2026)
+
+**Related Work**:
+- SAP-010 v1.1.0 (Strategic Templates Enhancement) - provides foundation templates
+- SAP-027 v1.1.0 (Pre-Pilot Discovery Enhancement) - provides pilot feedback loop
+- SAP-015 v1.1.0 (Backlog Organization Enhancement - in progress) - provides backlog cascade patterns
+
+**Adopters**: 0 (chora-base dogfooding planned for Q1 2026 strategic planning cycle)
+
+---
 
 ### v1.3.0 (2025-11-04) - SAP-009 Phase 4: Agent Awareness Files
 

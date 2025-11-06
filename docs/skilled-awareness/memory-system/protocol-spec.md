@@ -1,9 +1,9 @@
 # Protocol Specification: Memory System (A-MEM)
 
 **SAP ID**: SAP-010
-**Version**: 1.0.0
+**Version**: 1.1.0
 **Status**: Draft (Phase 3)
-**Last Updated**: 2025-10-28
+**Last Updated**: 2025-11-05
 
 ---
 
@@ -220,7 +220,185 @@ cat .chora/memory/events/**/*.jsonl | \
 
 ---
 
-### 3.4 Event Types
+### 3.3 Strategic Knowledge Templates
+
+**Purpose**: Standardized templates for strategic planning artifacts (vision documents, intention inventories, roadmap milestones, strategic theme matrices).
+
+**Version**: 1.1.0 (added 2025-11-05)
+
+---
+
+#### 3.3.1 Strategic vs Operational Knowledge
+
+A-MEM knowledge notes serve two purposes:
+
+**Operational Knowledge** (existing):
+- Troubleshooting solutions
+- Pattern learnings
+- Configuration notes
+- Personal preferences
+
+**Strategic Knowledge** (NEW in v1.1.0):
+- **Vision documents**: Multi-horizon plans (3/6/12-month waves)
+- **Intention inventories**: Consolidated user requests with evidence levels
+- **Roadmap milestones**: Version goals linked to vision waves
+- **Strategic theme matrices**: Prioritization analysis for vision synthesis
+
+**Distinction**: Use `type` field in frontmatter to distinguish strategic from operational knowledge.
+
+---
+
+#### 3.3.2 Template Reference
+
+Four templates are provided in `.chora/memory/templates/`:
+
+**1. vision-document-template.md**:
+- **Purpose**: Create vision documents with capability waves
+- **Horizons**: 3-month (committed), 6-month (exploratory), 12-month (aspirational)
+- **Usage**: `cp .chora/memory/templates/vision-document-template.md .chora/memory/knowledge/notes/vision-{project}-{horizon}.md`
+- **Frontmatter**: `type: strategic-vision`, `horizon`, `status`, `waves` array
+
+**2. intention-inventory-template.md**:
+- **Purpose**: Consolidate unfulfilled intentions from inbox, GitHub, dogfooding, research, A-MEM
+- **Usage**: `cp .chora/memory/templates/intention-inventory-template.md .chora/memory/knowledge/notes/intention-inventory-{date}.md`
+- **Frontmatter**: `type: intention-inventory`, `sources` object (inbox, github, dogfooding, research, a-mem)
+
+**3. roadmap-milestone-template.md**:
+- **Purpose**: Track roadmap milestones (from vision Wave 1) with linkage to beads epics
+- **Usage**: `cp .chora/memory/templates/roadmap-milestone-template.md .chora/memory/knowledge/notes/milestone-{version}.md`
+- **Frontmatter**: `type: roadmap-milestone`, `version`, `target_date`, `from_vision_wave`, `linked_to` array
+
+**4. strategic-theme-matrix-template.md**:
+- **Purpose**: Cluster intentions into strategic themes with prioritization
+- **Usage**: `cp .chora/memory/templates/strategic-theme-matrix-template.md .chora/memory/knowledge/notes/strategic-themes-{date}.md`
+- **Frontmatter**: `type: strategic-theme-matrix`, `input_inventory`
+
+---
+
+#### 3.3.3 Type Field System
+
+**New Frontmatter Field**: `type`
+
+**Valid Values**:
+- `troubleshooting`: Operational knowledge (error solutions)
+- `pattern-learning`: Operational knowledge (best practices)
+- `strategic-vision`: Strategic knowledge (vision document)
+- `intention-inventory`: Strategic knowledge (unfulfilled user intentions)
+- `roadmap-milestone`: Strategic knowledge (version goals)
+- `strategic-theme-matrix`: Strategic knowledge (theme prioritization)
+
+**Example**:
+```yaml
+---
+id: vision-chora-base-6-month
+type: strategic-vision
+horizon: 6-month
+status: active
+waves:
+  - wave: 1
+    status: committed
+    target_version: v1.5.0
+  - wave: 2
+    status: exploratory
+    decision_review: 2026-Q1
+tags: [vision, strategic-planning, chora-base]
+created: 2025-11-05T00:00:00Z
+updated: 2025-11-05T00:00:00Z
+---
+```
+
+**Query by Type**:
+```bash
+# Find all vision documents
+grep -l '"type": "strategic-vision"' .chora/memory/knowledge/notes/*.md
+
+# Find latest intention inventory
+grep -l '"type": "intention-inventory"' .chora/memory/knowledge/notes/*.md | sort | tail -1
+
+# Find all roadmap milestones
+grep -l '"type": "roadmap-milestone"' .chora/memory/knowledge/notes/*.md
+```
+
+---
+
+#### 3.3.4 Query Patterns
+
+**Find Stale Inventories** (>3 months old):
+```bash
+grep -l '"type": "intention-inventory"' .chora/memory/knowledge/notes/*.md | \
+  xargs grep -l '"created": "2025-0[1-7]'
+```
+
+**Trace Vision → Roadmap → Epic**:
+```bash
+# Step 1: Find vision document
+vision_id=$(grep -l '"id": "vision-chora-base-6-month"' .chora/memory/knowledge/notes/*.md | head -1)
+
+# Step 2: Find linked roadmap milestones
+grep -l "linked_to.*vision-chora-base-6-month" .chora/memory/knowledge/notes/*.md
+
+# Step 3: Find beads epic ID in roadmap milestone
+grep "beads-epic-" .chora/memory/knowledge/notes/milestone-v1.5.0.md
+
+# Step 4: Show beads epic
+bd show chora-base-xyz
+```
+
+**Find Active Visions**:
+```bash
+grep -l '"type": "strategic-vision"' .chora/memory/knowledge/notes/*.md | \
+  xargs grep -l '"status": "active"'
+```
+
+---
+
+#### 3.3.5 Strategic Artifact Lifecycle
+
+**Creation** (monthly for inventories, quarterly for visions):
+1. Copy template from `.chora/memory/templates/`
+2. Fill frontmatter (id, type, tags, created, updated)
+3. Fill body content
+4. Save to `.chora/memory/knowledge/notes/{id}.md`
+5. Update links.json (if linking to other notes)
+
+**Quarterly Review** (vision documents):
+1. Read active vision documents: `grep -l '"status": "active"' .chora/memory/knowledge/notes/vision-*.md`
+2. Check Wave decision criteria (have exploratory items been validated?)
+3. Update `status` field:
+   - Wave 1 committed → delivered: Mark `status: archived`, link to milestone note
+   - Wave 2 exploratory → committed: Promote to Wave 1 in new vision document
+   - Wave 2 exploratory → deferred: Move to Wave 3 or remove
+4. Create new vision document for next quarter
+
+**Archival** (post-delivery):
+1. Update `status: archived` in frontmatter
+2. Add `delivered_date`, `outcome` fields
+3. Link to roadmap milestone note (which version delivered this wave)
+4. Keep in `.chora/memory/knowledge/notes/` for traceability (do NOT delete)
+
+---
+
+#### 3.3.6 Integration Points
+
+**SAP-006 (Development Lifecycle)**: Vision synthesis workflow uses strategic templates
+- **Phase 1.1 (Discovery)**: Creates intention inventory using `intention-inventory-template.md`
+- **Phase 1.2 (Analysis)**: Creates strategic theme matrix using `strategic-theme-matrix-template.md`
+- **Phase 1.3 (Vision Drafting)**: Creates vision document using `vision-document-template.md`
+- **Phase 1.4 (Backlog Cascade)**: Creates roadmap milestone using `roadmap-milestone-template.md`
+
+**SAP-015 (Task Tracking with Beads)**: Roadmap milestone links to beads epic
+- **Vision Cascade**: Roadmap milestone `linked_to` field contains beads epic ID
+- **Epic Metadata**: Beads epic metadata contains `from_vision_wave`, `roadmap_version`
+- **Traceability**: Vision → roadmap → epic → tasks chain
+
+**SAP-027 (Dogfooding Patterns)**: Pre-pilot discovery reads intention inventory
+- **Week -1 Discovery**: Queries latest intention inventory for pilot candidate prioritization
+- **Pilot Feedback**: Stores pilot final summary as knowledge note with tags `[dogfooding-feedback, {pattern}, vision-wave-{N}]`
+- **Vision Update**: Quarterly vision review queries dogfooding feedback to update Wave 2 decision criteria
+
+---
+
+### 3.5 Event Types
 
 #### Gateway Events
 
@@ -253,7 +431,7 @@ cat .chora/memory/events/**/*.jsonl | \
 
 ---
 
-### 3.5 Trace Correlation
+### 3.6 Trace Correlation
 
 **Concept**: All events in a multi-step workflow share the same `trace_id`
 
@@ -283,7 +461,7 @@ cat .chora/memory/events/2025-01/traces/abc123.jsonl
 
 ---
 
-### 3.6 Event Log Retention
+### 3.7 Event Log Retention
 
 **Policy**: Archive events older than 6 months
 

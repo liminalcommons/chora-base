@@ -1,13 +1,105 @@
 # Traceability Ledger: Dogfooding Patterns
 
 **SAP ID**: SAP-027
-**Current Version**: 1.0.0
-**Status**: active
-**Last Updated**: 2025-11-03
+**Current Version**: 1.1.0
+**Status**: pilot
+**Last Updated**: 2025-11-05
 
 ---
 
 ## 1. Version History
+
+### v1.1.0 (2025-11-05) - Pre-Pilot Discovery + Feedback Loops
+
+**Status**: Pilot
+**Release Type**: Minor (Feature Enhancement)
+**Phase**: Dogfooding Validation
+
+**Summary**:
+Added Week -1 Discovery Phase for systematic pilot candidate selection, completed missing protocol-spec sections (Integration, Configuration, Error Handling), established feedback loops connecting pilot results to strategic vision (SAP-006) and operational backlog (SAP-015), and added 3 comprehensive discovery examples to awareness guide.
+
+**Key Features**:
+
+**New Capabilities**:
+- **Week -1 Discovery Phase**: Systematic process to select 3-5 high-value pilot candidates from intention inventory using weighted scoring (evidence 40%, strategic alignment 30%, user demand 20%, feasibility 10%)
+- **Pilot → Vision Feedback Loop**: GO decisions promote features from Wave 2 (exploratory) → Wave 1 (committed); NO-GO decisions demote to Wave 3 (future)
+- **Pilot → Backlog Integration**: GO decisions auto-create P1 beads epics with metadata; NO-GO decisions close discovery tasks and log lessons learned
+- **Complete Protocol-Spec**: Added Sections 2.0 (Week -1 Discovery), 3 (Integration Patterns), 4 (Configuration), 5 (Error Handling)
+- **Discovery Examples**: 3 comprehensive agent workflows in awareness-guide.md (Week -1 discovery, Pilot GO with promotion/epic, Pilot NO-GO with lessons/demotion)
+
+**Enhanced Integrations**:
+- **SAP-001 (Inbox)**: Query coordination requests for demand signals during discovery
+- **SAP-006 (Vision Synthesis)**: Automated Wave promotion/demotion based on pilot outcomes
+- **SAP-010 (Memory System)**: Read intention inventory, log pilot lifecycle events, store pilot-candidates and lessons-learned notes
+- **SAP-015 (Task Tracking)**: Create P1 epics on GO (with pilot metadata), close discovery tasks on NO-GO, optionally create P3 future tasks
+
+**Configuration Enhancements**:
+- Complete `.chora/config.yaml` schema with discovery, pilot, vision_integration, memory_integration, backlog_integration, notifications, automation sections
+- 6 environment variables for override (CHORA_DOGFOODING_*)
+- Configuration validation (scoring weights sum to 1.0, thresholds in valid ranges, required paths exist)
+- Minimal and automated example configurations
+
+**Error Handling**:
+- 10 specific error codes (SAP-027-001 through SAP-027-010)
+- Detailed common error scenarios with causes, solutions, and A-MEM logging
+- Recovery strategies table (auto-recovery vs manual recovery)
+- Debug guidance with query examples
+
+**Documentation**:
+- Protocol-spec.md: +170 lines (Sections 2.0, 3, 4, 5)
+- Awareness-guide.md: +490 lines (Section 2 with 3 workflows)
+- Total additions: ~26 pages across 3 files
+
+**Rationale**:
+SAP-027 v1.0.0 defined a strong 6-week pilot methodology but lacked three critical components: (1) systematic discovery to select which intentions to validate (resulting in ad-hoc pilot selection), (2) feedback loops to update strategic vision after validation (causing pilot results to be siloed), and (3) automated backlog integration (requiring manual epic creation). Version 1.1.0 addresses these gaps by adding Week -1 Discovery with weighted scoring, creating bidirectional feedback between pilots and vision/backlog, and completing all TODO sections in protocol-spec. This transforms SAP-027 from a standalone pilot framework into an integrated strategic planning → validation → execution pipeline.
+
+**Dependencies**:
+- SAP-000 (SAP Framework)
+- SAP-001 (Inbox) - Optional, for demand scoring
+- SAP-006 (Vision Synthesis) - Optional, for Wave promotion/demotion
+- SAP-010 (Memory System) - Required, for intention inventory + event logging
+- SAP-015 (Task Tracking) - Optional, for epic/task integration
+
+**Breaking Changes**: None (fully backward compatible with v1.0.0)
+
+**Migration Guide**:
+No migration required. Projects using SAP-027 v1.0.0 can continue unchanged. To adopt v1.1.0 features:
+1. Adopt SAP-010 (if not already adopted) for intention inventory
+2. Add `dogfooding` section to `.chora/config.yaml` (optional, uses defaults)
+3. Run Week -1 discovery before next pilot: `python scripts/score-pilot-candidates.py`
+4. After pilot GO/NO-GO, use new vision/backlog integration workflows (see awareness-guide.md Section 2)
+
+**Dogfooding Plan** (6 weeks):
+- **Week 1 (2025-11-06)**: Execute Week -1 discovery on chora-base intention inventory (target: select SAP-015 pilot candidate in <2 hours)
+- **Weeks 2-5 (2025-11-11 to 2025-12-06)**: Run SAP-015 Backlog Organization pilot using v1.1.0 methodology
+- **Week 5 (2025-12-06)**: Make GO/NO-GO decision, test vision promotion + beads epic creation workflows
+- **Week 6 (2025-12-09)**: Validate feedback loops (vision updated, epic created, A-MEM logged), measure time budgets
+
+**Success Criteria for v1.1.0 Validation**:
+- Week -1 discovery completes in ≤2 hours (target: 1.5 hours)
+- Pilot candidate scoring identifies ≥3 intentions above threshold (7.0)
+- GO decision creates beads epic with metadata in ≤5 minutes
+- NO-GO decision logs lessons learned in ≤5 minutes
+- Vision document updated correctly (Wave 2→1 on GO, Wave 2→3 on NO-GO)
+- All A-MEM events logged (dogfooding.jsonl, vision-updates.jsonl, backlog-updates.jsonl)
+
+**Next Steps**:
+- 2025-11-06: Begin 6-week dogfooding validation
+- 2025-12-09: Review validation results, promote to production if success criteria met
+- Q1 2026: Expand to 3+ projects for multi-team validation
+
+**Related PRs/Commits**:
+- feat(sap-027): Add Week -1 Discovery Phase (protocol-spec.md Section 2.0)
+- feat(sap-027): Complete Integration Patterns (protocol-spec.md Section 3)
+- feat(sap-027): Add Configuration + Error Handling (protocol-spec.md Sections 4, 5)
+- feat(sap-027): Add 3 discovery workflow examples (awareness-guide.md Section 2)
+- chore(sap-027): Update ledger to v1.1.0
+
+**Adoption Targets**:
+- All new SAP pilots (SAP-028, SAP-004, SAP-016+)
+- Existing projects using SAP-027 v1.0.0 (migration guide provided, but not required)
+
+---
 
 ### v1.0.0 (2025-11-03) - Initial Release
 

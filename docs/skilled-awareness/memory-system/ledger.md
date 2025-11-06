@@ -1,6 +1,6 @@
 ---
 sap_id: SAP-010
-version: 1.0.3
+version: 1.1.0
 status: Pilot
 last_updated: 2025-11-05
 type: ledger
@@ -10,7 +10,7 @@ type: ledger
 
 **SAP ID**: SAP-010
 **Capability Name**: memory-system (A-MEM)
-**Version**: 1.0.3
+**Version**: 1.1.0
 **Last Updated**: 2025-11-05
 
 > **✅ IMPLEMENTATION STATUS**: SAP-010 Memory System (A-MEM) is **NOW OPERATIONAL** with multi-adopter validation and ROI automation (as of 2025-11-05).
@@ -413,6 +413,7 @@ _None_ - SAP-010 now implemented (as of 2025-11-04)
 
 | Version | Date | Changes | Author |
 |---------|------|---------|--------|
+| 1.1.0 | 2025-11-05 | Strategic Knowledge Templates - 4 templates for vision synthesis, intention tracking, roadmap planning | Claude Code |
 | 1.0.3 | 2025-11-05 | Multi-adopter expansion + ROI automation (7 scripts) for L3 validation | Claude Code |
 | 1.0.2 | 2025-11-04 | L2 Pilot maturity - A-MEM implementation complete | Claude Code |
 | 1.0.1 | 2025-11-04 | Added implementation gap warning and Known Issues section | Claude Code |
@@ -421,6 +422,46 @@ _None_ - SAP-010 now implemented (as of 2025-11-04)
 ---
 
 ## 12. Changelog
+
+### 2025-11-05 - Strategic Knowledge Templates (v1.1.0)
+
+**Enhancement**: Strategic Knowledge Templates for Vision Synthesis and Strategic Planning
+
+**Changes**:
+- ✅ Added 4 strategic knowledge templates to `.chora/memory/templates/`:
+  - **vision-document-template.md**: Multi-wave planning (3/6/12-month horizons)
+  - **intention-inventory-template.md**: Evidence-based intention consolidation (Level A/B/C)
+  - **roadmap-milestone-template.md**: Version goals linked to beads epics (SAP-015 integration)
+  - **strategic-theme-matrix-template.md**: Theme clustering and prioritization
+- ✅ Added knowledge node type system (`type` field in frontmatter)
+  - Valid types: `strategic-vision`, `intention-inventory`, `roadmap-milestone`, `strategic-theme-matrix`, `troubleshooting`, `pattern-learning`
+- ✅ Added strategic artifact lifecycle (creation → quarterly review → archival)
+- ✅ Added query patterns for strategic knowledge (find by type, trace vision → roadmap → epic)
+- ✅ Updated [protocol-spec.md](protocol-spec.md) Section 3.3: Strategic Knowledge Templates
+  - Template reference, type field system, query patterns, lifecycle, integration points
+- ✅ Updated [awareness-guide.md](awareness-guide.md) Section 7: Strategic Planning Workflows
+  - Intention Discovery Workflow (monthly), Strategic Theme Analysis (quarterly)
+  - Vision Drafting Workflow (quarterly), Roadmap Milestone Creation (after Wave 1 commit)
+  - Traceability queries, chora-base example cycle
+
+**Integration**:
+- **SAP-006 (Development Lifecycle)**: Vision synthesis workflow uses strategic templates in Phase 1 (discovery → analysis → drafting → cascade)
+- **SAP-015 (Task Tracking)**: Roadmap milestone links to beads epic via `linked_to` field for full traceability (vision → milestone → epic → tasks)
+- **SAP-027 (Dogfooding Patterns)**: Pre-pilot discovery reads intention inventory for pilot selection, stores feedback for vision updates
+
+**Effort**: 4-6 hours (template creation, documentation, examples)
+
+**ROI**: Enables evidence-based strategic planning for SAP-006 vision synthesis (target: 10x time savings, 40 hours → 4 hours)
+
+**Status**: Templates operational, integration with SAP-006/015/027 validated, ready for chora-base dogfooding in Q4 2025
+
+**Next Steps**:
+1. Dogfood templates in chora-base strategic planning (Nov 2025)
+2. Collect usage data for ROI validation (2-3 months)
+3. Refine templates based on feedback
+4. Document lessons learned for SAP-006 enhancement plan
+
+---
 
 ### 2025-11-05 - L3 ROI Automation & Multi-Adopter Expansion (v1.0.3)
 

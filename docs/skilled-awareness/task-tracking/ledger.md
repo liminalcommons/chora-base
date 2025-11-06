@@ -2,11 +2,11 @@
 ## Agent Task Tracking with Beads
 
 **SAP ID**: SAP-015
-**Version**: 1.1.0
+**Version**: 1.2.0
 **Status**: L3 Pilot (Infrastructure Complete, Data Collection Pending)
 **Owner**: Victor Piper
 **Created**: 2025-11-04
-**Last Updated**: 2025-11-06
+**Last Updated**: 2025-11-05
 
 ---
 
@@ -167,6 +167,88 @@ This pattern is now formalized in SAP-027 (dogfooding-patterns) and SAP-029 (sap
 ---
 
 ## Version History
+
+### SAP-015 v1.2.0 (2025-11-05) - Backlog Organization Enhancements
+
+**Status**: L3 Pilot (Infrastructure + Organization Patterns)
+
+**Enhancement Summary**:
+
+SAP-015 has been enhanced with comprehensive backlog organization patterns to enable teams to manage multi-tier work backlogs effectively. This release adds strategic planning integration (SAP-006 vision waves → beads priorities), quarterly backlog refinement workflows, and health monitoring capabilities.
+
+**Changes**:
+
+1. ✅ **Awareness Guide Section 4: Backlog Organization Patterns** (~665 lines)
+   - **Pattern 4.1: Multi-Tier Priority Pattern (P0-P4)** - Semantic priority tiers aligned with timeframes
+     - P0 (NOW - this week): Blocks critical path, urgent bugs
+     - P1 (NEXT - 1-2 sprints): Roadmap committed, decomposed, estimated
+     - P2 (LATER - 3-6 months): Roadmap committed, not yet scheduled
+     - P3 (SOMEDAY - 6-12 months): Exploratory, vision Wave 2+
+     - P4 (BACKLOG - indefinite): Low priority, may never do
+   - **Pattern 4.2: Vision Cascade Pattern** - Automated workflow for converting vision Wave 1 themes into beads epics/tasks
+     - 7-step cascade: Vision document → Wave 1 themes → ROADMAP.md → Beads epic → Beads tasks
+     - Traceability metadata: `from_vision_wave`, `vision_document`, `roadmap_version`, `target_quarter`
+   - **Pattern 4.3: Backlog Refinement Workflow** - Quarterly grooming process
+     - 5-step refinement: Stale task review → Priority adjustment → Backlog archival → Epic progress → Metadata refresh
+   - **Pattern 4.4: Epic Decomposition Template** - Structured breakdown from roadmap milestones to executable tasks
+     - 6-step workflow: Create epic → Link milestone → Decompose tasks → Add dependencies → Estimate → Track
+   - **Pattern 4.5: Backlog Health Queries** - CLI queries for health monitoring
+     - 5 queries: Stale tasks (>90 days), Orphan tasks, Epic progress, Priority distribution, High-priority staleness
+     - Backlog health dashboard script
+
+2. ✅ **Protocol Spec Workflow 5: Backlog Refinement (Quarterly)** (~120 lines)
+   - Quarterly backlog grooming workflow (2-4 hours per quarter)
+   - 5-step process aligned with awareness guide Pattern 4.3
+   - Quality gates: Stale tasks reduced by ≥50%, priority distribution within ±5% of target
+   - Integration with SAP-010 (A-MEM): Logs backlog health metrics to `.chora/memory/events/backlog-health.jsonl`
+   - Traceability: Links to vision synthesis cycle (SAP-006) via quarter field
+
+3. ✅ **Backlog Refinement Template** (~400 lines)
+   - Structured template for quarterly backlog grooming: `.chora/memory/templates/backlog-refinement-template.md`
+   - 8 main sections: Executive Summary, Pre/Post-Refinement Metrics, 5 Refinement Activities, Insights, A-MEM Event Log, Action Items, Sign-Off
+   - YAML frontmatter for metadata tracking (quarter, date, project, owner, duration, linked documents)
+   - Quality gates assessment checklist
+   - A-MEM integration with JSON event structure
+   - Appendices with reference queries and change log
+
+**Integration with Other SAPs**:
+
+- **SAP-006 (Development Lifecycle)**: Vision Wave 1/2/3 → Priority P0-P4 mapping, vision cascade workflow
+- **SAP-010 (Memory System)**: Backlog health events logged to A-MEM (`.chora/memory/events/backlog-health.jsonl`)
+- **SAP-027 (Dogfooding Patterns)**: Backlog refinement insights feed into quarterly GO/NO-GO decisions
+
+**Expected Impact**:
+
+- **Strategic Alignment**: Tasks aligned with vision waves (Wave 1 → P1/P2, Wave 2 → P3, Wave 3 → P4)
+- **Backlog Health**: Quarterly refinement reduces stale tasks by ≥50%, maintains priority distribution
+- **Traceability**: End-to-end lineage from user intentions → vision themes → roadmap milestones → beads epics → tasks
+- **Time Savings**: ~2-4 hours quarterly investment prevents backlog drift, reduces ad-hoc priority debates
+
+**Files Modified**:
+
+1. `docs/skilled-awareness/task-tracking/awareness-guide.md` - Added Section 4 (~665 lines), renumbered sections 5-9 → 6-10
+2. `docs/skilled-awareness/task-tracking/protocol-spec.md` - Added Workflow 5 (~120 lines)
+3. `.chora/memory/templates/backlog-refinement-template.md` - Created (~400 lines)
+4. `docs/skilled-awareness/task-tracking/ledger.md` - Updated to v1.2.0
+
+**Breaking Changes**: None
+
+**Deprecations**: None
+
+**Migration Notes**:
+
+- Existing SAP-015 v1.0.0 or v1.1.0 users can upgrade to v1.2.0 without changes
+- New backlog organization patterns are optional but recommended for teams with >20 open tasks
+- Quarterly backlog refinement is recommended for projects in L2 Advanced or L3 Pilot adoption
+
+**Next Steps**:
+
+1. Dogfood backlog refinement workflow in chora-base (quarterly)
+2. Validate vision cascade pattern with SAP-006 vision documents
+3. Collect feedback on priority tier semantics (P0-P4) over 1-2 quarters
+4. Consider adding backlog health dashboard CLI command in future beads releases
+
+---
 
 ### SAP-015 v1.1.0 (2025-11-06) - L3 Infrastructure Complete
 

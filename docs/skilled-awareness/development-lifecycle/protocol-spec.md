@@ -103,44 +103,283 @@ TDD (Test Driven Development)
 
 ## 3. Phase Contracts
 
-### 3.1 Phase 1: Vision & Strategy
+### 3.1 Phase 1: Vision & Strategy (ENHANCED)
 
-**Time Scale**: Months (quarterly review)
+**Time Scale**: 5-8 days (1-2 days per sub-phase)
 **Frequency**: Quarterly
 **Participants**: Leadership, product, engineering leads
+**Objective**: Synthesize scattered user intentions into structured vision and operational backlog
 
-#### Inputs
-- Market trends
-- User feedback
-- Ecosystem evolution
-- Competitive analysis
+**Overview**: Phase 1 has been expanded from a monolithic vision/strategy phase into **4 structured sub-phases** that systematically consolidate scattered intentions (inbox, GitHub, dogfooding, research, A-MEM) into a multi-timeframe strategic vision (3/6/12-month horizons) and cascade Wave 1 into operational backlog.
 
-#### Activities
-1. Define product vision and mission
-2. Identify target users and use cases
-3. Analyze ecosystem and competition
-4. Establish multi-year goals
-5. Define success metrics
+---
 
-#### Outputs
-- **ROADMAP.md** - Strategic roadmap (quarters to years)
-- **Vision statements** - Product vision, mission, goals
-- **Release plan** - Major version timeline (v2.0, v3.0)
+#### 3.1.1: Phase 1.1 - Discovery
 
-#### Quality Gates
-- ✅ Vision statement reviewed by stakeholders
-- ✅ Roadmap aligned with ecosystem trends
-- ✅ Success metrics defined and measurable
+**Duration**: 1-2 days
 
-#### Example Vision Statement
-```markdown
-**Vision:** Transform {project} from prototype to production-grade
-{capability} with comprehensive documentation pipeline,
-{feature 1}, and {feature 2}.
+**Inputs**:
+1. **Inbox Coordination Requests** (SAP-001): `cat inbox/coordination/active.jsonl`
+2. **GitHub Issues**: `gh issue list --label feature-request,high-demand`
+3. **Dogfooding Pilot Feedback** (SAP-027): `grep '"tags".*dogfooding-feedback' .chora/memory/knowledge/notes/*.md`
+4. **Research Reports**: `ls docs/research/*-research.md`
+5. **A-MEM Knowledge Notes** (SAP-010): `grep '"tags".*user-request' .chora/memory/knowledge/notes/*.md`
 
-**Current Status:** v1.0.0 released (Oct 2025)
-**Next Milestone:** v2.0.0 (Major Feature) - Q1 2026
+**Activities**:
+1. Query latest intention inventory (if exists): `grep -l '"type": "intention-inventory"' .chora/memory/knowledge/notes/*.md | sort | tail -1`
+2. Scan inbox for new coordination requests since last inventory
+3. Review GitHub issues/discussions with `feature-request` or `high-demand` labels
+4. Read dogfooding pilot final summaries from SAP-027
+5. Query A-MEM knowledge graph for unfulfilled user needs
+6. Consolidate all intentions into inventory (SAP-010 template)
+7. Categorize intentions by evidence level:
+   - **Level A** (Standards): IETF RFCs, W3C specs, PEPs, peer-reviewed research
+   - **Level B** (Case Studies): Production data (>100 users), industry case studies, established patterns
+   - **Level C** (Expert Opinion): Blog posts, expert opinions, single-user requests, unvalidated ideas
+
+**Output**: Intention inventory (`.chora/memory/knowledge/notes/intention-inventory-{date}.md`)
+
+**Quality Gates**:
+- ✅ All 5 sources scanned (inbox, GitHub, dogfooding, research, A-MEM)
+- ✅ Each intention has: title, source, evidence citation, user demand count, related SAPs, priority
+- ✅ Evidence percentages calculated (A%, B%, C%)
+
+**Example** (chora-base Nov 2025):
+- Scanned 89 unfulfilled intentions:
+  - Inbox: 4 coordination requests
+  - GitHub: 12 feature requests
+  - Dogfooding: 3 pilot summaries (SAP-029, SAP-028, SAP-027)
+  - Research: 8 research reports
+  - A-MEM: 15 knowledge notes with `user-request` tag
+- Evidence levels: 16% A, 35% B, 49% C
+- Top intention: "Strategic Planning Workflow" (4 inbox requests, HIGH priority)
+
+---
+
+#### 3.1.2: Phase 1.2 - Analysis
+
+**Duration**: 1-2 days
+
+**Input**: Intention inventory (from Phase 1.1)
+
+**Activities**:
+1. Cluster intentions into strategic themes (pattern recognition):
+   - Group by similar user needs (e.g., "Strategic Planning", "Testing & Quality", "MCP Integration")
+   - Count intentions per theme
+2. Calculate evidence level breakdown per theme:
+   - Theme A%: (Level A intentions / total intentions in theme) × 100
+   - Theme B%: (Level B intentions / total intentions in theme) × 100
+   - Theme C%: (Level C intentions / total intentions in theme) × 100
+   - Theme A+B%: Theme A% + Theme B%
+3. Quantify user demand per theme (sum across intentions)
+4. Estimate effort per theme (sum across intentions)
+5. Estimate ROI potential per theme (time savings multiplier)
+6. Apply Wave decision criteria:
+   - **Wave 1 (Committed)**: Evidence A+B ≥ 70%, user demand ≥ 10, effort < 50 hours
+   - **Wave 2 (Exploratory)**: Evidence A+B ≥ 60%, user demand ≥ 5, validate via dogfooding (SAP-027)
+   - **Wave 3 (Aspirational)**: Evidence A+B < 60%, user demand < 5, defer to quarterly review
+7. Rank themes by (evidence × demand × roi_potential)
+8. Document in strategic theme matrix (SAP-010 template)
+
+**Output**: Strategic theme matrix (`.chora/memory/knowledge/notes/strategic-themes-{date}.md`)
+
+**Quality Gates**:
+- ✅ All intentions assigned to themes (no orphans)
+- ✅ Each theme has: intention count, evidence breakdown (A%, B%, C%), user demand, effort estimate, ROI estimate, priority, recommended wave
+- ✅ Wave decision criteria applied consistently
+- ✅ Top 3-5 themes identified for vision drafting
+
+**Example** (chora-base Nov 2025):
+- 42 intentions → 5 themes:
+  1. **Strategic Planning Infrastructure**: 14 intentions, 79% A+B, 4 user requests → Wave 1 ✅
+  2. **Testing & Quality**: 8 intentions, 75% A+B, 8 user requests → Wave 1 ✅
+  3. **MCP Integration**: 6 intentions, 83% A+B, 8 user requests → Wave 2 (validate via dogfooding)
+  4. **Performance Optimization**: 5 intentions, 60% A+B, 3 user requests → Wave 2 (needs more evidence)
+  5. **Documentation Quality**: 4 intentions, 50% A+B, 2 user requests → Wave 3 (defer)
+
+---
+
+#### 3.1.3: Phase 1.3 - Vision Drafting
+
+**Duration**: 2-3 days
+
+**Input**: Strategic theme matrix (from Phase 1.2)
+
+**Activities**:
+1. Copy vision document template: `cp .chora/memory/templates/vision-document-template.md .chora/memory/knowledge/notes/vision-{project}-{horizon}.md`
+2. Fill frontmatter:
+   - `horizon`: 3-month | 6-month | 12-month
+   - `waves`: Array (wave 1: committed, wave 2: exploratory, wave 3: aspirational)
+   - `status`: draft (until stakeholder review)
+3. Write Wave 1 (Committed - 3-month horizon):
+   - Features from HIGH-priority themes (evidence A+B ≥ 70%, user demand ≥ 10)
+   - Target version (e.g., v1.5.0)
+   - Target date (e.g., 2026-02-01)
+   - Success criteria (measurable outcomes)
+   - Will be decomposed to ROADMAP.md + beads epic/tasks in Phase 1.4
+4. Write Wave 2 (Exploratory - 6-month horizon):
+   - Candidates from MEDIUM-priority themes (evidence A+B ≥ 60%, user demand ≥ 5)
+   - Decision review date (quarterly)
+   - Validation plan (dogfooding pilots via SAP-027)
+   - Decision criteria (time savings ≥ 5x, satisfaction ≥ 85%, bugs = 0, adoption ≥ 2)
+5. Write Wave 3 (Aspirational - 12-month horizon):
+   - Long-term vision from LOW-priority themes or future possibilities
+   - Quarterly review (promote to Wave 2 or deprecate)
+   - May not have specific features, more directional themes
+6. Review with stakeholders
+7. Update `status: active` after approval
+
+**Output**: Vision document (`.chora/memory/knowledge/notes/vision-{project}-{horizon}.md`)
+
+**Quality Gates**:
+- ✅ Wave 1 (Committed): All features have evidence A+B ≥ 70%, target version set, success criteria measurable
+- ✅ Wave 2 (Exploratory): Decision review date set, validation plan defined (which dogfooding pilots)
+- ✅ Wave 3 (Aspirational): Quarterly review cadence documented
+- ✅ Stakeholders approved (status: active)
+
+**Multi-Timeframe Guidance**:
+
+**3-Month Horizon (Wave 1)**:
+- **Status**: Committed in ROADMAP.md
+- **Decomposed**: Beads epic + tasks (Phase 1.4)
+- **Review**: Sprint planning (bi-weekly), sprint retrospective (bi-weekly)
+- **Updates**: Feature scope may adjust, but version target is committed
+
+**6-Month Horizon (Wave 2)**:
+- **Status**: Exploratory
+- **Validation**: Dogfooding pilot (SAP-027) - 6-week pilot per candidate
+- **Decision**: Quarterly review (commit to Wave 1 in next vision, defer to Wave 3, or remove)
+- **Criteria**: GO decision requires time savings ≥ 5x, satisfaction ≥ 85%, bugs = 0, adoption ≥ 2
+
+**12-Month Horizon (Wave 3)**:
+- **Status**: Aspirational
+- **Review**: Quarterly (promote to Wave 2 if evidence/demand increases, deprecate if no traction)
+- **Updates**: Themes may shift based on ecosystem trends, new research, changed priorities
+
+**Example Vision Document** (chora-base Nov 2025):
+```yaml
+---
+id: vision-chora-base-6-month
+type: strategic-vision
+horizon: 6-month
+status: active
+waves:
+  - wave: 1
+    status: committed
+    target_version: v1.5.0
+    target_date: 2026-02-01
+  - wave: 2
+    status: exploratory
+    decision_review: 2026-Q1
+---
+
+# Vision: chora-base 6-Month (Nov 2025 - Apr 2026)
+
+## Wave 1: Strategic Planning Infrastructure (Committed - 3 months)
+
+**Target**: v1.5.0 (Feb 1, 2026)
+
+**Features**:
+- SAP-010: Strategic knowledge templates (vision, intention, roadmap, theme)
+- SAP-006: Vision synthesis workflow (discovery → analysis → drafting → cascade)
+- SAP-015: Backlog organization patterns (multi-tier, refinement, decomposition)
+- SAP-027: Pre-pilot discovery phase (intention prioritization)
+
+**Success Criteria**:
+- All 4 SAPs enhanced with strategic planning capabilities
+- Workflow pipeline validated through dogfooding in chora-base
+- Ecosystem can consolidate intentions → vision → backlog
+
+## Wave 2: Automation & Tooling (Exploratory - 6 months)
+
+**Decision Review**: 2026-Q1 (after Wave 1 delivery)
+
+**Candidates**:
+- Intention discovery CLI (scripts/discover-intentions.py)
+- Strategic theme clustering CLI (scripts/cluster-strategic-themes.py)
+- Vision → backlog cascade CLI (scripts/cascade-vision-to-backlog.py)
+- Backlog health dashboard (scripts/backlog-health.py)
+
+**Validation Plan**: Dogfood CLIs during Wave 1 execution, collect time savings data (target ≥ 5x), GO/NO-GO decision Q1 2026
+
+## Wave 3: Ecosystem Adoption (Aspirational - 12 months)
+
+**Target**: 3+ ecosystem projects adopt strategic planning SAPs
+
+**Themes**:
+- Public documentation for strategic planning workflow
+- Video tutorials for vision synthesis
+- Case studies from ecosystem adopters
+- Strategic planning SAP set (minimal-strategic-planning)
 ```
+
+---
+
+#### 3.1.4: Phase 1.4 - Backlog Cascade
+
+**Duration**: 1 day
+
+**Input**: Vision Wave 1 (committed) from Phase 1.3
+
+**Activities**:
+1. Update ROADMAP.md with Wave 1 features:
+   - Copy features from vision Wave 1
+   - Add target version, target date, success criteria
+   - Link to vision document
+2. Create roadmap milestone knowledge note:
+   - Copy template: `cp .chora/memory/templates/roadmap-milestone-template.md .chora/memory/knowledge/notes/milestone-{version}.md`
+   - Fill frontmatter: version, target_date, from_vision_wave: 1, linked_to: [vision-{project}-{horizon}]
+   - List features, success criteria
+3. Create beads epic from Wave 1 (SAP-015 integration):
+   ```bash
+   bd create "Wave 1: {Theme} (v{version})" \
+     --priority 1 \
+     --type epic \
+     --description "From vision-{project}-{horizon} Wave 1. Features: {list}."
+   ```
+   - Returns epic ID (e.g., chora-base-epic-xyz)
+4. Update roadmap milestone with epic ID:
+   - Add to `linked_to` array: `beads-epic-{id}`
+5. Decompose epic into tasks (SAP-015 patterns):
+   - Research phase (P2): Spikes, API research
+   - Implementation phase (P1): Core features
+   - Quality phase (P1): Tests, documentation
+6. Link tasks to epic:
+   ```bash
+   bd dep add {epic-id} blocks {task-1-id}
+   bd dep add {epic-id} blocks {task-2-id}
+   ...
+   ```
+7. Add metadata for traceability:
+   ```bash
+   bd update {epic-id} --metadata '{"from_vision_wave": 1, "roadmap_version": "v{version}", "vision_document": "vision-{project}-{horizon}"}'
+   ```
+
+**Output**:
+- Updated ROADMAP.md (Wave 1 features)
+- Roadmap milestone knowledge note (`.chora/memory/knowledge/notes/milestone-{version}.md`)
+- Beads epic (chora-base-epic-{id})
+- Beads tasks (P0-P2, linked to epic)
+
+**Quality Gates**:
+- ✅ ROADMAP.md updated with Wave 1 features, target version, target date, success criteria
+- ✅ Roadmap milestone note created with `linked_to: [vision, beads-epic]`
+- ✅ Beads epic created with `from_vision_wave: 1` metadata
+- ✅ All Wave 1 features decomposed into beads tasks
+- ✅ Tasks linked to epic via dependencies (`bd dep add {epic} blocks {task}`)
+
+**Traceability Chain**:
+Vision Wave 1 → ROADMAP.md → Roadmap Milestone Note → Beads Epic → Beads Tasks
+
+**Example** (chora-base v1.5.0):
+- ROADMAP.md updated with 4 SAP enhancements (SAP-010, SAP-006, SAP-015, SAP-027)
+- Roadmap milestone: `milestone-v1.5.0.md` with `linked_to: [vision-chora-base-6-month, beads-epic-chora-base-xyz]`
+- Beads epic: `chora-base-xyz` with metadata `{"from_vision_wave": 1, "roadmap_version": "v1.5.0"}`
+- Beads tasks: 20 tasks (5 per SAP) linked to epic
+
+---
+
+**Phase 1 Summary**: The 4-phase vision synthesis workflow consolidates scattered intentions (Phase 1.1) → clusters into themes (Phase 1.2) → drafts multi-timeframe vision (Phase 1.3) → cascades Wave 1 into operational backlog (Phase 1.4). This systematic approach ensures evidence-based strategic planning with clear traceability from user needs to executable tasks.
 
 ---
 
@@ -571,9 +810,222 @@ Identify issue or opportunity
 
 ---
 
-## 4. Decision Trees
+## 4. Integration Patterns
 
-### 4.1 Which Methodology to Use?
+**Overview**: SAP-006 Development Lifecycle integrates with SAP-001 (Inbox), SAP-010 (A-MEM), SAP-015 (Beads), SAP-027 (Dogfooding) to enable end-to-end strategic planning from scattered intentions to operational backlog.
+
+---
+
+### 4.1 Integration with SAP-001 (Inbox Coordination Protocol)
+
+**Integration Point**: Phase 1.1 Discovery
+
+**Data Flow**: SAP-001 inbox → SAP-006 intention inventory
+
+**Mechanism**:
+1. Phase 1.1 Discovery reads active coordination requests: `cat inbox/coordination/active.jsonl`
+2. Each coordination request mapped to intention in inventory:
+   - `title`: Coordination request title
+   - `source`: "inbox (coordination request {id})"
+   - `evidence`: Coordination request description (usually Level B or C)
+   - `user_demand`: 1 (requester) + any upvotes/comments
+3. High-priority coordination requests (P0, urgent) → HIGH-priority intentions
+
+**Example** (chora-base Nov 2025):
+- COORD-2025-001 "Minimal SAP collaboration" → Intention "SAP ecosystem collaboration patterns" (HIGH priority)
+- COORD-2025-003 "v1.9.0 capabilities update" → Intention "Update v1.9.0 capability docs" (MEDIUM priority)
+
+**Benefits**:
+- Coordination requests systematically evaluated (not ad-hoc)
+- User demand signal captured in intention inventory
+- Enables evidence-based prioritization (coordination request = Level B evidence if from established contributor)
+
+---
+
+### 4.2 Integration with SAP-010 (Memory System - A-MEM)
+
+**Integration Point**: Phase 1.1-1.4 (all sub-phases)
+
+**Data Flow**: Bidirectional
+- SAP-006 → SAP-010: Creates strategic knowledge notes (intention inventory, theme matrix, vision document, roadmap milestone)
+- SAP-010 → SAP-006: Provides strategic templates, stores vision artifacts for quarterly review
+
+**Mechanism**:
+
+**Phase 1.1 Discovery**:
+- Copy template: `cp .chora/memory/templates/intention-inventory-template.md .chora/memory/knowledge/notes/intention-inventory-{date}.md`
+- Query existing intentions: `grep '"tags".*user-request' .chora/memory/knowledge/notes/*.md`
+- Query dogfooding feedback: `grep '"tags".*dogfooding-feedback' .chora/memory/knowledge/notes/*.md`
+
+**Phase 1.2 Analysis**:
+- Copy template: `cp .chora/memory/templates/strategic-theme-matrix-template.md .chora/memory/knowledge/notes/strategic-themes-{date}.md`
+- Link to input: `input_inventory: intention-inventory-{date}` in frontmatter
+
+**Phase 1.3 Vision Drafting**:
+- Copy template: `cp .chora/memory/templates/vision-document-template.md .chora/memory/knowledge/notes/vision-{project}-{horizon}.md`
+- Store with `type: strategic-vision` for queryability
+
+**Phase 1.4 Backlog Cascade**:
+- Copy template: `cp .chora/memory/templates/roadmap-milestone-template.md .chora/memory/knowledge/notes/milestone-{version}.md`
+- Link to vision: `linked_to: [vision-{project}-{horizon}]` in frontmatter
+
+**Example** (chora-base v1.5.0):
+```bash
+# Phase 1.1
+cp .chora/memory/templates/intention-inventory-template.md \
+   .chora/memory/knowledge/notes/intention-inventory-2025-11-05.md
+
+# Phase 1.2
+cp .chora/memory/templates/strategic-theme-matrix-template.md \
+   .chora/memory/knowledge/notes/strategic-themes-2025-11-05.md
+
+# Phase 1.3
+cp .chora/memory/templates/vision-document-template.md \
+   .chora/memory/knowledge/notes/vision-chora-base-6-month.md
+
+# Phase 1.4
+cp .chora/memory/templates/roadmap-milestone-template.md \
+   .chora/memory/knowledge/notes/milestone-v1.5.0.md
+```
+
+**Benefits**:
+- Standardized structure for strategic artifacts (reusable across ecosystem)
+- Knowledge graph traceability (intention → theme → vision → roadmap)
+- Quarterly review queries: `grep -l '"type": "strategic-vision"' .chora/memory/knowledge/notes/*.md | xargs grep -l '"status": "active"'`
+
+---
+
+### 4.3 Integration with SAP-015 (Task Tracking with Beads)
+
+**Integration Point**: Phase 1.4 Backlog Cascade
+
+**Data Flow**: SAP-006 → SAP-015 (vision Wave 1 → beads epic/tasks)
+
+**Mechanism**:
+
+**Step 1: Create Beads Epic**
+```bash
+bd create "Wave 1: Strategic Planning Infrastructure (v1.5.0)" \
+  --priority 1 \
+  --type epic \
+  --description "From vision-chora-base-6-month Wave 1. Features: SAP-010, SAP-006, SAP-015, SAP-027 enhancements."
+# Returns: chora-base-epic-xyz
+```
+
+**Step 2: Decompose Epic into Tasks**
+```bash
+# SAP-010 tasks
+bd create "SAP-010: Create 4 strategic templates" --priority 2
+bd create "SAP-010: Update protocol-spec Section 3.5" --priority 2
+bd create "SAP-010: Update awareness-guide strategic section" --priority 2
+
+# SAP-006 tasks
+bd create "SAP-006: Expand Phase 1 with 4 sub-phases" --priority 2
+bd create "SAP-006: Add multi-timeframe vision guidance" --priority 2
+...
+```
+
+**Step 3: Link Tasks to Epic**
+```bash
+bd dep add chora-base-epic-xyz blocks {sap-010-task-1-id}
+bd dep add chora-base-epic-xyz blocks {sap-010-task-2-id}
+...
+```
+
+**Step 4: Add Traceability Metadata**
+```bash
+bd update chora-base-epic-xyz --metadata '{
+  "from_vision_wave": 1,
+  "roadmap_version": "v1.5.0",
+  "vision_document": "vision-chora-base-6-month",
+  "target_date": "2026-02-01"
+}'
+```
+
+**Step 5: Link Roadmap Milestone to Epic**
+Update roadmap milestone note:
+```yaml
+---
+id: milestone-v1.5.0
+type: roadmap-milestone
+version: v1.5.0
+linked_to:
+  - vision-chora-base-6-month
+  - beads-epic-chora-base-xyz  # Add epic ID here
+---
+```
+
+**Traceability Chain**:
+1. Vision Wave 1 (`vision-chora-base-6-month.md`, Wave 1 section)
+2. Roadmap milestone (`milestone-v1.5.0.md`, `linked_to: [vision-..., beads-epic-...]`)
+3. Beads epic (`chora-base-epic-xyz`, metadata `from_vision_wave: 1`)
+4. Beads tasks (20 tasks, dependencies link to epic)
+
+**Benefits**:
+- Automatic decomposition of strategic vision into operational work
+- Traceability from vision → roadmap → epic → tasks
+- Agents can query: "Show me all tasks for vision Wave 1" → `bd list --json | jq '.[] | select(.metadata.from_vision_wave == 1)'`
+
+---
+
+### 4.4 Integration with SAP-027 (Dogfooding Patterns)
+
+**Integration Point**: Phase 1.1 Discovery + Quarterly Vision Review
+
+**Data Flow**: Bidirectional
+- SAP-027 → SAP-006: Pilot feedback informs vision decision criteria
+- SAP-006 → SAP-027: Vision Wave 2 candidates become pilot candidates
+
+**Mechanism**:
+
+**Phase 1.1 Discovery**: Read pilot feedback
+```bash
+# Query dogfooding pilot summaries
+grep -l '"tags".*dogfooding-feedback' .chora/memory/knowledge/notes/*.md
+
+# Example: SAP-029 pilot final summary
+# - Pattern: sap-generation
+# - Result: GO (119x time savings, 100% satisfaction, 0 bugs, 2 adoption cases)
+# - Recommendation: Formalize SAP-029, add to vision Wave 1 for v1.5.0
+```
+
+**Quarterly Vision Review**: Update Wave 2 decision criteria
+```markdown
+## Wave 2: Automation & Tooling (Exploratory - 6 months)
+
+**Decision Review**: 2026-Q1 (after Wave 1 delivery)
+
+**Candidate 1: SAP Generation Automation**
+- **Status**: ✅ Validated (Pilot GO - Nov 2025)
+- **Evidence**: Dogfooding pilot (SAP-029) achieved 119x time savings (target: ≥5x)
+- **Satisfaction**: 100% (target: ≥85%)
+- **Bugs**: 0 (target: 0)
+- **Adoption**: 2 SAPs generated (SAP-029, SAP-028) (target: ≥2)
+- **Decision**: **COMMIT to Wave 1 in next vision (v1.6.0)**
+
+**Candidate 2: Intention Discovery CLI**
+- **Status**: ⏳ Pending pilot (Q1 2026)
+- **Validation Plan**: 6-week pilot during v1.5.0 execution
+- **Decision Criteria**: Time savings ≥ 5x, satisfaction ≥ 85%, bugs = 0, adoption ≥ 2
+- **Decision**: Defer to Q1 2026 review
+```
+
+**Vision Wave 2 → SAP-027 Pilot Selection**:
+1. Quarterly review identifies top 1-3 Wave 2 candidates
+2. Rank by (evidence × demand × roi_potential)
+3. Select #1 candidate for dogfooding pilot
+4. SAP-027 Week -1 Discovery reads vision Wave 2 list
+
+**Benefits**:
+- Wave 2 candidates systematically validated before committing resources
+- Quarterly review updates driven by objective pilot data (not opinions)
+- Tight feedback loop: pilot GO → vision Wave 1 → roadmap → backlog
+
+---
+
+## 5. Decision Trees
+
+### 5.1 Which Methodology to Use?
 
 ```
 What are you building?
@@ -613,7 +1065,7 @@ What are you building?
    └─ Skip all three (prototype first, then wrap with tests)
 ```
 
-### 4.2 Time Investment by Feature Complexity
+### 5.2 Time Investment by Feature Complexity
 
 | Phase | Simple Feature | Medium Feature | Complex Feature |
 |-------|----------------|----------------|-----------------|
@@ -628,9 +1080,9 @@ What are you building?
 
 ---
 
-## 5. Templates
+## 6. Templates
 
-### 5.1 Sprint Template
+### 6.1 Sprint Template
 
 **Location**: `project-docs/sprints/sprint-template.md`
 
@@ -646,7 +1098,7 @@ What are you building?
 7. Daily standup notes
 8. Sprint retrospective (completed at sprint end)
 
-### 5.2 Release Template
+### 6.2 Release Template
 
 **Location**: `project-docs/releases/release-template.md`
 
@@ -662,7 +1114,7 @@ What are you building?
 7. Known issues (unresolved bugs)
 8. Release checklist (pre-release validation)
 
-### 5.3 Process Metrics Template
+### 6.3 Process Metrics Template
 
 **Location**: `project-docs/metrics/PROCESS_METRICS.md`
 

@@ -17,7 +17,9 @@ This blueprint guides **adopters** (humans and AI agents) through using chora-ba
 - Customize the project for your needs
 - Understand upgrade paths
 
-**Time Estimate**: 5-10 minutes (agent-assisted), 10-20 minutes (human)
+**Time Estimate**: 1-2 minutes (agent with fast-setup), 5-10 minutes (human with fast-setup)
+
+**Historical Time** (pre-v4.9.0): 30-40 minutes (manual SAP-by-SAP adoption)
 
 ---
 
@@ -107,10 +109,12 @@ Decide on your project details:
 - **Author Email**: Your email address
 - **GitHub Username**: Your GitHub handle
 
-**Auto-Derived** (setup.py will calculate):
+**Auto-Derived** (create-model-mcp-server.py will calculate):
 - **Project Slug**: Kebab-case (e.g., "mcp-github" from "MCP GitHub")
 - **Package Name**: Snake_case (e.g., "mcp_github" from "mcp-github")
-- **MCP Namespace**: No separators (e.g., "mcpgithub" from "mcp_github")
+- **MCP Namespace**: No separators (e.g., "github" from "mcp_github")
+- **Author Info**: From git config (user.name, user.email) if not provided
+- **GitHub Username**: From git remote origin or derived from author name
 
 **Example**:
 ```
@@ -126,159 +130,200 @@ Derived:
   MCP Namespace: mcpgithub
 ```
 
-### Step 3: Run Generation
+### Step 3: Run Fast-Setup Script
 
-**For Humans** (interactive):
+**New (v4.9.0+): One-Command Setup**
+
+Use the fast-setup script to create a "model citizen" MCP server with all chora-base infrastructure:
+
 ```bash
-# Historical Note: setup.py removed in Wave 3 Phase 5
-# Follow interactive prompts
+python scripts/create-model-mcp-server.py \
+    --name "MCP GitHub" \
+    --namespace github \
+    --output ~/projects/mcp-github
 ```
+
+**What This Creates**:
+- FastMCP server scaffold
+- Beads task tracking (SAP-015)
+- Inbox coordination (SAP-001)
+- A-MEM memory system (SAP-010)
+- CI/CD workflows (SAP-005)
+- Quality gates (SAP-006)
+- Testing framework (SAP-004)
+- Documentation (SAP-007)
+- Agent awareness (SAP-009)
+
+**Setup Time**: 1-2 minutes (agent), 5-10 minutes (human)
 
 **For Agents** (programmatic):
 ```python
-# Prepare variables dict
-variables = {
-    "project_name": "MCP GitHub",
-    "project_slug": "mcp-github",
-    "package_name": "mcp_github",
-    "mcp_namespace": "mcpgithub",
-    "project_description": "GitHub operations via MCP",
-    "author_name": "Alice Smith",
-    "author_email": "alice@example.com",
-    "github_username": "alice-smith",
-    "python_version": "3.11",
-    "project_version": "0.1.0",
-    "license": "MIT",
-}
+import subprocess
 
-# Run setup.py with variables (interactive prompts use these defaults)
-# Historical Note: setup.py removed in Wave 3 Phase 5
+# Run fast-setup script
+result = subprocess.run([
+    "python", "scripts/create-model-mcp-server.py",
+    "--name", "MCP GitHub",
+    "--namespace", "github",
+    "--output", "/path/to/mcp-github",
+], check=True, capture_output=True, text=True)
+
+# Validation automatically runs
+print(result.stdout)
 ```
+
+**Historical Note**:
+- setup.py removed in Wave 3 Phase 5 (Oct 29, 2025, commit f7e5f26)
+- Replaced with create-model-mcp-server.py in v4.9.0 (Nov 6, 2025)
+- New approach: Dynamic template rendering with decision profiles
 
 **Output** (expected):
 ```
-============================================================
-Chora-Base v3.3.0 Setup
-============================================================
+================================================================================
+Create Model Citizen MCP Server v1.0.0
+Chora-Base v4.9.0
+================================================================================
 
-Project Configuration
-------------------------------------------------------------
-Project name: MCP GitHub
-Derived values:
-  Project slug: mcp-github
-  Package name: mcp_github
-  MCP namespace: mcpgithub
+📋 Using profile: standard
+   FastMCP + beads + inbox, full CI/CD (DEFAULT)
 
-Use these derived values? [Y/n]: y
-Project description: GitHub operations via MCP
-Author name [Alice Smith]:
-Author email [alice@example.com]:
-GitHub username [alice-smith]:
-Python version [3.11]:
-Initial version [0.1.0]:
-License [MIT]:
+🔧 Deriving project variables...
+   Auto-derived namespace: github
 
-Summary:
-------------------------------------------------------------
-  [Shows all variables]
+📦 Project Configuration
+────────────────────────────────────────────────────────────────────────────────
+  Project Name:     MCP GitHub
+  Project Slug:     mcp-github
+  Package Name:     mcp_github
+  MCP Namespace:    github
+  Description:      MCP GitHub - MCP server for github operations
+  Author:           Alice Smith <alice@example.com>
+  GitHub:           alice-smith
+  Python Version:   3.11
+  License:          MIT
+  Profile:          standard
+────────────────────────────────────────────────────────────────────────────────
 
-Proceed with setup? [Y/n]: y
+📁 Creating project at: /path/to/mcp-github
 
-============================================================
-Setting up project...
-============================================================
+📂 Creating directory structure...
+  ✓ Created src/mcp_github/
+  ✓ Created tests/
+  ✓ Created docs/user-docs/
+  ✓ Created .beads/
+  ✓ Created inbox/coordination/
+  ✓ Created .chora/memory/events/
 
-Copying static template to my-new-project...
-✓ Copied static template
+📋 Copying static files...
+  ✓ Copied .github/workflows/test.yml
+  ✓ Copied .gitignore
 
-Renaming src/__package_name__/ → src/mcp_github/
-✓ Renamed package directories
+Rendering templates...
+  ✓ Rendered src/mcp_github/server.py
+  ✓ Rendered pyproject.toml
+  ✓ Rendered AGENTS.md
+  ✓ Rendered CLAUDE.md
 
-Processing blueprints...
-  ✓ pyproject.toml
-  ✓ README.md
-  ✓ AGENTS.md
-  ✓ CHANGELOG.md
-  ✓ ROADMAP.md
-  ✓ .gitignore
-  ✓ .env.example
-  ✓ src/mcp_github/__init__.py
-  ✓ src/mcp_github/mcp/server.py
-  ✓ src/mcp_github/mcp/__init__.py
-✓ Processed blueprints
+Initializing beads (SAP-015)...
+  ✓ Created .beads/config.yaml
+  ✓ Created .beads/issues.jsonl
+
+Initializing inbox (SAP-001)...
+  ✓ Created inbox/coordination/active.jsonl
+
+Initializing A-MEM (SAP-010)...
+  ✓ Created .chora/memory/events/development.jsonl
 
 Initializing git repository...
-✓ Initialized git repository
+  ✓ Initialized git repository
+  ✓ Created initial commit
 
-Validating setup...
-  ✓ pyproject.toml
-  ✓ README.md
-  ✓ AGENTS.md
-  ✓ src/mcp_github/__init__.py
-  ✓ src/mcp_github/mcp/server.py
-  ✓ src/mcp_github/memory/event_log.py
-  ✓ src/mcp_github/utils/validation.py
+Validating generated project...
+  ✅ FastMCP server exists
+  ✅ MCP namespace module exists
+  ✅ AGENTS.md with YAML frontmatter
+  ✅ CLAUDE.md exists
+  ✅ Beads initialized
+  ✅ Inbox initialized
+  ✅ Memory system initialized
+  ✅ Testing framework configured
+  ✅ CI/CD workflows configured
+  ✅ Quality gates configured
+  ✅ Documentation structure
+  ✅ No unsubstituted variables
 
-✅ Validation passed!
+================================================================================
+✅ Model Citizen MCP Server Created Successfully!
+================================================================================
 
-============================================================
-✅ Setup complete!
-============================================================
+📁 Location: /path/to/mcp-github
 
-Project: MCP GitHub
-Location: /path/to/my-new-project
+📝 Next Steps:
+  1. cd /path/to/mcp-github
+  2. Create virtual environment: python -m venv venv && source venv/bin/activate
+  3. Install dependencies: pip install -e .[dev]
+  4. Run tests: pytest
 
-Next steps:
-  1. cd my-new-project
-  2. Run tests: pytest
-  3. Start dev server: ./scripts/dev-server.sh
-  4. Implement your MCP server in src/mcp_github/mcp/server.py
+🚀 Happy coding!
 ```
 
-**Time**: 30-60 seconds (agent), 2-5 minutes (human with prompts)
+**Time**: 1-2 minutes (agent), 5-10 minutes (human)
 
 ### Step 4: Validate Generated Project
 
-**Change to project directory**:
+**Automated Validation (v4.9.0+)**:
+
+The create-model-mcp-server.py script automatically runs validation after generation. To manually re-validate:
+
 ```bash
-cd my-new-project
+cd /path/to/mcp-github
+python /path/to/chora-base/scripts/validate-model-citizen.py
 ```
 
-**Run validation checks**:
+**Output**:
+```
+================================================================================
+Model Citizen MCP Server Validation v1.0.0
+================================================================================
 
-1. **Check critical files exist**:
-```bash
-ls pyproject.toml README.md AGENTS.md src/mcp_github/__init__.py
-# Expected: All files listed (no errors)
+Project: /path/to/mcp-github
+
+✅ FastMCP server exists
+✅ MCP namespace module exists
+✅ AGENTS.md with YAML frontmatter
+✅ CLAUDE.md exists
+✅ Beads initialized
+✅ Inbox initialized
+✅ Memory system initialized
+✅ Testing framework configured
+✅ CI/CD workflows configured
+✅ Quality gates configured
+✅ Documentation structure
+✅ No unsubstituted variables
+
+================================================================================
+Summary
+================================================================================
+  Passed:    12/12
+  Failed:    0 required checks
+  Warnings:  0 recommended checks
+
+✅ Project is MODEL CITIZEN COMPLIANT!
 ```
 
-2. **Check for unreplaced placeholders**:
+**Strict Validation** (fail on warnings):
 ```bash
-grep -r "{{" . --exclude-dir=.git --exclude-dir=__pycache__
-# Expected: No output (no unreplaced placeholders)
+python /path/to/chora-base/scripts/validate-model-citizen.py --strict
 ```
 
-3. **Check tests are loadable**:
+**JSON Output** (for programmatic use):
 ```bash
-pytest --collect-only
-# Expected: X tests collected (no errors)
-```
-
-4. **Check git initialized**:
-```bash
-git log --oneline
-# Expected: 1 commit "Initial commit from chora-base v3.3.0"
-```
-
-5. **Check Python files valid**:
-```bash
-python -c "import sys; sys.path.insert(0, 'src'); import mcp_github; print('✅ Package imports')"
-# Expected: ✅ Package imports
+python /path/to/chora-base/scripts/validate-model-citizen.py --format json
 ```
 
 **All checks pass**: ✅ Generation successful, proceed to development
 
-**Any check fails**: See Section 8 (Troubleshooting)
+**Any check fails**: Re-run create-model-mcp-server.py or fix issues manually
 
 ### Step 5: Initial Development Setup
 

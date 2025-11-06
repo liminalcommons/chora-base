@@ -410,7 +410,672 @@ Task state?
 
 ---
 
-## 4. Common Mistakes & Corrections
+## 4. Backlog Organization Patterns
+
+This section provides 5 backlog organization patterns for managing multi-tier work backlogs effectively.
+
+### 4.1: Multi-Tier Priority Pattern (P0-P4)
+
+**Problem**: Teams struggle to prioritize work consistently across timeframes (this week vs next quarter vs next year).
+
+**Solution**: Use semantic priority tiers aligned with timeframes.
+
+#### Priority Tier Definitions
+
+| Tier | Name | Timeframe | Criteria | Example |
+|------|------|-----------|----------|---------|
+| **P0** | NOW | This week | Blocks critical path, current sprint, urgent bugs | "Fix production outage" |
+| **P1** | NEXT | 1-2 sprints | Roadmap committed, decomposed, estimated | "Implement auth feature (v1.5)" |
+| **P2** | LATER | 3-6 months | Roadmap committed, not yet scheduled | "Add GraphQL API (v2.0)" |
+| **P3** | SOMEDAY | 6-12 months | Exploratory, vision Wave 2+, dogfooding candidates | "Evaluate Rust rewrite" |
+| **P4** | BACKLOG | Indefinite | Low priority, may never do, historical context | "Support IE11" |
+
+#### Usage
+
+**Creating Tasks with Priority**:
+```bash
+# P0 (NOW): Urgent bug fix
+bd create "Fix login timeout bug" --priority 0 --type bug
+
+# P1 (NEXT): Roadmap committed feature
+bd create "Implement OAuth2 flow" --priority 1 --type feature
+
+# P2 (LATER): Scheduled for v2.0
+bd create "Add GraphQL API" --priority 2 --type feature
+
+# P3 (SOMEDAY): Exploratory, dogfooding candidate
+bd create "Evaluate Rust for performance" --priority 3 --type spike
+
+# P4 (BACKLOG): Low priority, may never do
+bd create "Support IE11 browser" --priority 4 --type task
+```
+
+**Querying by Priority**:
+```bash
+# Show all P0 (NOW) tasks
+bd list --status open --priority 0
+
+# Show P1 (NEXT) and P2 (LATER) tasks (roadmap committed)
+bd list --status open --priority 1,2
+
+# Show P3 (SOMEDAY) + P4 (BACKLOG) (exploratory + low priority)
+bd list --status open --priority 3,4
+```
+
+#### Best Practices
+
+1. **Limit P0 (NOW) to <10 tasks**: If more than 10, promote from P1 or close stale P0
+2. **Keep P1 (NEXT) decomposed**: All P1 tasks should have effort estimates and be ready to start
+3. **Review P3 (SOMEDAY) quarterly**: Promote successful dogfooding pilots to P2, demote stale P3 to P4
+4. **Archive P4 (BACKLOG) annually**: Close P4 tasks >1 year old with `--reason "deprioritized"`
+
+#### Integration with Vision Waves (SAP-006)
+
+Vision waves map to priority tiers:
+- **Vision Wave 1 (Committed - 3 months)** → **P1 (NEXT)** or **P2 (LATER)**
+- **Vision Wave 2 (Exploratory - 6 months)** → **P3 (SOMEDAY)**
+- **Vision Wave 3 (Aspirational - 12 months)** → **P4 (BACKLOG)**
+
+When cascading vision to backlog (SAP-006 Phase 1.4):
+- Wave 1 themes become P1 epics
+- Wave 1 features become P1/P2 tasks (P1 if this quarter, P2 if next quarter)
+
+---
+
+### 4.2: Vision Cascade Pattern (Wave 1 → Beads)
+
+**Problem**: Strategic vision (SAP-006) doesn't cascade into operational backlog, creating gap between strategy and execution.
+
+**Solution**: Automated workflow for converting vision Wave 1 themes into beads epics and tasks.
+
+#### Workflow: Vision → Backlog
+
+This pattern is triggered by **SAP-006 Phase 1.4 (Backlog Cascade)**.
+
+**Step 1: Read Vision Wave 1**
+
+```bash
+# Query vision document (SAP-010 knowledge note)
+vision_file=$(grep -l '"type": "strategic-vision"' .chora/memory/knowledge/notes/*.md | tail -1)
+cat "$vision_file"
+```
+
+**Step 2: Extract Wave 1 Themes**
+
+From vision document, extract all Wave 1 sections:
+```markdown
+## Wave 1: Strategic Planning Infrastructure (Committed - 3 months)
+**Target Version**: v1.5.0
+**Evidence**: A+B 75% (Level A: 35%, Level B: 40%)
+**Themes**: 4 SAP enhancements (SAP-010, SAP-006, SAP-015, SAP-027)
+...
+```
+
+**Step 3: Create Beads Epic per Theme**
+
+```bash
+# Create epic for Wave 1 theme
+bd create "Wave 1: Strategic Planning Infrastructure (v1.5.0)" \
+  --type epic \
+  --priority 1 \
+  --description "From vision-chora-base-6-month Wave 1. Enhance 4 SAPs to enable ecosystem-wide strategic planning." \
+  --metadata '{
+    "from_vision_wave": 1,
+    "vision_document": "vision-chora-base-6-month",
+    "roadmap_version": "v1.5.0",
+    "target_quarter": "2025-Q4"
+  }'
+
+# Returns: chora-base-epic-abc123
+```
+
+**Step 4: Decompose Epic into Tasks**
+
+Use Epic Decomposition Template (Pattern 4.4):
+
+```bash
+# SAP-010 tasks (P2 - LATER)
+bd create "SAP-010: Create 4 strategic templates" \
+  --type task \
+  --priority 2 \
+  --description "Vision, intention inventory, roadmap milestone, strategic theme matrix" \
+  --metadata '{"effort_hours": 4, "sap": "SAP-010"}'
+
+# SAP-006 tasks (P2 - LATER)
+bd create "SAP-006: Expand Phase 1 with 4 sub-phases" \
+  --type task \
+  --priority 2 \
+  --description "Discovery → Analysis → Vision Drafting → Backlog Cascade" \
+  --metadata '{"effort_hours": 8, "sap": "SAP-006"}'
+
+# SAP-015 tasks (P2 - LATER)
+bd create "SAP-015: Add 5 backlog organization patterns" \
+  --type task \
+  --priority 2 \
+  --description "Multi-tier priority, vision cascade, refinement, epic decomp, health queries" \
+  --metadata '{"effort_hours": 6, "sap": "SAP-015"}'
+
+# SAP-027 tasks (P2 - LATER)
+bd create "SAP-027: Add Week -1 discovery phase" \
+  --type task \
+  --priority 2 \
+  --description "Intention prioritization, pilot selection criteria, feedback loop" \
+  --metadata '{"effort_hours": 4, "sap": "SAP-027"}'
+```
+
+**Step 5: Link Tasks to Epic**
+
+```bash
+# Epic blocks all tasks (tasks depend on epic)
+bd dep add chora-base-epic-abc123 blocks {sap-010-task-id}
+bd dep add chora-base-epic-abc123 blocks {sap-006-task-id}
+bd dep add chora-base-epic-abc123 blocks {sap-015-task-id}
+bd dep add chora-base-epic-abc123 blocks {sap-027-task-id}
+```
+
+**Step 6: Link Epic to Roadmap Milestone (SAP-010)**
+
+```bash
+# Create roadmap milestone note (SAP-010)
+cat > .chora/memory/knowledge/notes/roadmap-chora-base-v1.5.0.md <<'EOF'
+---
+id: roadmap-chora-base-v1.5.0
+type: roadmap-milestone
+version: v1.5.0
+status: in_progress
+target_date: 2025-12-31
+tags: [roadmap, milestone, strategic-planning]
+created: 2025-11-05T00:00:00Z
+updated: 2025-11-05T00:00:00Z
+---
+
+# Roadmap Milestone: chora-base v1.5.0
+
+**Theme**: Strategic Planning Infrastructure
+**From**: vision-chora-base-6-month Wave 1
+**Beads Epic**: chora-base-epic-abc123
+**Target Date**: 2025-12-31
+
+## Features
+1. SAP-010: Strategic knowledge templates (4 templates)
+2. SAP-006: Vision synthesis workflow (4-phase)
+3. SAP-015: Backlog organization patterns (5 patterns)
+4. SAP-027: Pre-pilot discovery phase (Week -1)
+
+## Success Criteria
+- Vision cascade completes in <30 minutes
+- Backlog health queries detect issues in <5 seconds
+- Quarterly refinement reduces P3/P4 backlog by ≥20%
+EOF
+
+# Update epic with roadmap milestone link
+bd update chora-base-epic-abc123 --metadata '{
+  "roadmap_milestone_note": "roadmap-chora-base-v1.5.0"
+}'
+```
+
+**Step 7: Verify Cascade**
+
+```bash
+# Show epic and all blocked tasks
+bd show chora-base-epic-abc123 --json
+bd list --blocked-by chora-base-epic-abc123 --json
+```
+
+#### Output
+
+After cascade, backlog should have:
+- 1 epic (P1 - NEXT) linked to roadmap milestone
+- 4-10 tasks (P2 - LATER) blocked by epic
+- Traceability metadata linking tasks → epic → roadmap → vision
+
+---
+
+### 4.3: Backlog Refinement Workflow (Quarterly)
+
+**Problem**: Backlog entropy (stale tasks accumulate, priorities drift, orphan tasks).
+
+**Solution**: Quarterly grooming process for backlog health.
+
+#### When to Run
+
+- **Cadence**: Once per quarter (aligned with roadmap cycles)
+- **Duration**: 2-4 hours
+- **Owner**: Product/Engineering lead
+- **Participants**: Core team (3-5 people)
+
+#### Workflow
+
+Use backlog refinement template: `.chora/memory/templates/backlog-refinement-template.md`
+
+**Step 1: Stale Task Review (>90 days)**
+
+```bash
+# Find tasks >90 days old, still open
+bd list --status open --created-before $(date -v-90d +%Y-%m-%d) --json
+```
+
+**Actions**:
+- **Close** tasks with `--reason "stale"` if no longer relevant
+- **Update** tasks with context if still relevant
+- **Promote** to P0/P1 if newly urgent
+
+**Example**:
+```bash
+# Close stale task
+bd close chora-base-abc --reason "Stale: No longer needed after v1.5 architecture change"
+
+# Update stale task with context
+bd update chora-base-def --description "Still relevant: Blocked on vendor API release (ETA 2026-Q1)"
+
+# Promote stale task
+bd update chora-base-ghi --priority 1  # Promote to P1 (NEXT)
+```
+
+**Step 2: Priority Adjustment**
+
+**Review P1 (NEXT)**:
+```bash
+bd list --status open --priority 1 --json
+```
+
+**Actions**:
+- **Demote P1 → P2**: If not executed this quarter, demote to LATER
+- **Promote P2 → P1**: If newly urgent, promote to NEXT
+
+**Example**:
+```bash
+# Demote P1 → P2 (not executed this quarter)
+bd update chora-base-jkl --priority 2  # Demote to P2 (LATER)
+
+# Promote P2 → P1 (newly urgent)
+bd update chora-base-mno --priority 1  # Promote to P1 (NEXT)
+```
+
+**Review P2 (LATER)**:
+```bash
+bd list --status open --priority 2 --json
+```
+
+**Actions**:
+- **Demote P2 → P3**: If not scheduled, demote to SOMEDAY
+- **Promote P3 → P2**: If dogfooding pilot succeeds (SAP-027 GO), promote to LATER
+
+**Example**:
+```bash
+# Demote P2 → P3 (not scheduled)
+bd update chora-base-pqr --priority 3  # Demote to P3 (SOMEDAY)
+
+# Promote P3 → P2 (dogfooding pilot GO decision)
+bd update chora-base-stu --priority 2 --metadata '{
+  "from_dogfooding_pilot": "pilot-sap-015-2025-q4",
+  "decision": "GO"
+}'
+```
+
+**Step 3: Backlog Archival (P4)**
+
+```bash
+bd list --status open --priority 4 --json
+```
+
+**Actions**:
+- **Close** P4 tasks with `--reason "deprioritized"` if >6 months old
+- **Keep** P4 tasks if historical context valuable
+
+**Example**:
+```bash
+# Close old P4 task
+bd close chora-base-vwx --reason "Deprioritized: Not executed in 6 months, no longer needed"
+```
+
+**Step 4: Epic Progress Review**
+
+```bash
+bd list --type epic --status open --json
+```
+
+**For each epic**:
+1. Calculate % tasks complete
+2. Close epic if 100% complete
+3. Update epic description with progress
+
+**Example**:
+```bash
+# Show epic and all tasks
+bd show chora-base-epic-abc123 --json
+
+# Count total tasks
+total=$(bd list --blocked-by chora-base-epic-abc123 --json | jq 'length')
+
+# Count complete tasks
+complete=$(bd list --status closed --blocked-by chora-base-epic-abc123 --json | jq 'length')
+
+# Calculate progress
+progress=$((complete * 100 / total))
+
+# Update epic description
+bd update chora-base-epic-abc123 --description "Progress: $complete/$total ($progress%)"
+
+# Close epic if 100% complete
+if [ $progress -eq 100 ]; then
+  bd close chora-base-epic-abc123 --reason "Epic complete: All tasks finished"
+fi
+```
+
+**Step 5: Log Refinement to A-MEM (SAP-010)**
+
+```bash
+# Log to .chora/memory/events/backlog-refinement.jsonl
+cat >> .chora/memory/events/backlog-refinement.jsonl <<EOF
+{
+  "timestamp": "$(date -u +%Y-%m-%dT%H:%M:%SZ)",
+  "event": "backlog_refinement_complete",
+  "quarter": "2025-Q4",
+  "metrics": {
+    "stale_tasks_closed": 12,
+    "priority_demotions": 8,
+    "priority_promotions": 3,
+    "backlog_archived": 15,
+    "epics_closed": 2
+  },
+  "backlog_snapshot": {
+    "p0": 5,
+    "p1": 18,
+    "p2": 32,
+    "p3": 47,
+    "p4": 21
+  }
+}
+EOF
+```
+
+#### Output
+
+- Backlog health metrics logged to A-MEM
+- Stale tasks closed or updated
+- Priority distribution updated
+- Epics closed if complete
+- Backlog reduced by ≥20% (P3/P4 tasks)
+
+---
+
+### 4.4: Epic Decomposition Template
+
+**Problem**: Teams struggle to decompose large initiatives (roadmap milestones) into executable work (epics, tasks).
+
+**Solution**: Standardized template for breaking roadmap milestones into epics, breaking epics into tasks, estimating effort.
+
+#### Template: Roadmap Milestone → Epic → Tasks
+
+**Step 1: Read Roadmap Milestone (SAP-010)**
+
+```bash
+# Query roadmap milestone note
+milestone_file=".chora/memory/knowledge/notes/roadmap-{project}-v{version}.md"
+cat "$milestone_file"
+```
+
+**Step 2: Create Epic**
+
+```bash
+bd create "Epic: {Theme} (v{Version})" \
+  --type epic \
+  --priority 1 \
+  --description "{Description from roadmap milestone}" \
+  --metadata '{
+    "roadmap_milestone_note": "roadmap-{project}-v{version}",
+    "target_version": "v{Version}",
+    "target_date": "{YYYY-MM-DD}"
+  }'
+
+# Returns: {epic-id}
+```
+
+**Step 3: Decompose Epic into Tasks**
+
+For each feature in roadmap milestone:
+
+```bash
+bd create "{Feature Name}" \
+  --type task \
+  --priority 2 \
+  --description "{Feature description}" \
+  --metadata '{
+    "effort_hours": {Hours},
+    "feature": "{Feature Name}"
+  }'
+
+# Returns: {task-id}
+```
+
+**Step 4: Link Tasks to Epic**
+
+```bash
+# Epic blocks all tasks
+bd dep add {epic-id} blocks {task-1-id}
+bd dep add {epic-id} blocks {task-2-id}
+# ...
+```
+
+**Step 5: Add Task Dependencies (if any)**
+
+```bash
+# Task 1 blocks Task 2 (Task 2 depends on Task 1)
+bd dep add {task-1-id} blocks {task-2-id}
+```
+
+**Step 6: Estimate Total Epic Effort**
+
+```bash
+# Sum effort_hours from all tasks
+total_effort=$(bd list --blocked-by {epic-id} --json | jq '[.[].metadata.effort_hours] | add')
+
+# Update epic with total effort
+bd update {epic-id} --metadata "{\"total_effort_hours\": $total_effort}"
+```
+
+#### Example: Epic Decomposition
+
+**Roadmap Milestone**: chora-base v1.5.0 (Strategic Planning Infrastructure)
+
+**Epic**:
+```bash
+bd create "Epic: Strategic Planning Infrastructure (v1.5.0)" \
+  --type epic \
+  --priority 1 \
+  --description "Enable ecosystem-wide strategic planning via 4 SAP enhancements" \
+  --metadata '{
+    "roadmap_milestone_note": "roadmap-chora-base-v1.5.0",
+    "target_version": "v1.5.0",
+    "target_date": "2025-12-31"
+  }'
+# Returns: chora-base-epic-abc123
+```
+
+**Tasks** (4 SAP enhancements):
+```bash
+# SAP-010
+bd create "SAP-010: Create 4 strategic templates" \
+  --type task \
+  --priority 2 \
+  --description "Vision, intention inventory, roadmap milestone, strategic theme matrix" \
+  --metadata '{"effort_hours": 4, "sap": "SAP-010"}'
+# Returns: chora-base-task-def456
+
+# SAP-006
+bd create "SAP-006: Expand Phase 1 with 4 sub-phases" \
+  --type task \
+  --priority 2 \
+  --description "Discovery → Analysis → Vision Drafting → Backlog Cascade" \
+  --metadata '{"effort_hours": 8, "sap": "SAP-006"}'
+# Returns: chora-base-task-ghi789
+
+# SAP-015
+bd create "SAP-015: Add 5 backlog organization patterns" \
+  --type task \
+  --priority 2 \
+  --description "Multi-tier priority, vision cascade, refinement, epic decomp, health queries" \
+  --metadata '{"effort_hours": 6, "sap": "SAP-015"}'
+# Returns: chora-base-task-jkl012
+
+# SAP-027
+bd create "SAP-027: Add Week -1 discovery phase" \
+  --type task \
+  --priority 2 \
+  --description "Intention prioritization, pilot selection criteria, feedback loop" \
+  --metadata '{"effort_hours": 4, "sap": "SAP-027"}'
+# Returns: chora-base-task-mno345
+```
+
+**Link Tasks to Epic**:
+```bash
+bd dep add chora-base-epic-abc123 blocks chora-base-task-def456
+bd dep add chora-base-epic-abc123 blocks chora-base-task-ghi789
+bd dep add chora-base-epic-abc123 blocks chora-base-task-jkl012
+bd dep add chora-base-epic-abc123 blocks chora-base-task-mno345
+```
+
+**Estimate Total Effort**:
+```bash
+total_effort=$(bd list --blocked-by chora-base-epic-abc123 --json | jq '[.[].metadata.effort_hours] | add')
+# Returns: 22 hours
+
+bd update chora-base-epic-abc123 --metadata '{"total_effort_hours": 22}'
+```
+
+#### Output
+
+- 1 epic (P1 - NEXT) linked to roadmap milestone
+- 4 tasks (P2 - LATER) blocked by epic
+- Total effort estimated (22 hours)
+- Traceability metadata linking tasks → epic → roadmap
+
+---
+
+### 4.5: Backlog Health Queries
+
+**Problem**: Backlog health degrades invisibly (stale tasks, orphan tasks, stuck epics).
+
+**Solution**: CLI queries for detecting backlog issues.
+
+#### Query 1: Stale Tasks (>90 days old)
+
+```bash
+# Find tasks >90 days old, still open
+bd list --status open --created-before $(date -v-90d +%Y-%m-%d) --json
+```
+
+**Usage**: Run during backlog refinement (Pattern 4.3), close or update stale tasks.
+
+---
+
+#### Query 2: Orphan Tasks (no epic dependency)
+
+```bash
+# Find tasks with no epic (no blockers)
+bd list --status open --type task --json | jq '[.[] | select(.dependencies.blocked_by | length == 0)]'
+```
+
+**Usage**: Find tasks that should be linked to epics but aren't. Add dependencies or close if no longer relevant.
+
+---
+
+#### Query 3: Epic Progress (% tasks complete)
+
+```bash
+# For a specific epic
+epic_id="chora-base-epic-abc123"
+
+# Total tasks
+total=$(bd list --blocked-by $epic_id --json | jq 'length')
+
+# Complete tasks
+complete=$(bd list --status closed --blocked-by $epic_id --json | jq 'length')
+
+# Progress
+echo "Epic $epic_id: $complete/$total ($((complete * 100 / total))%)"
+```
+
+**Usage**: Run during backlog refinement, close epics at 100%, update epic descriptions with progress.
+
+---
+
+#### Query 4: Priority Distribution (count by P0-P4)
+
+```bash
+# Count open tasks by priority
+bd list --status open --json | jq 'group_by(.priority) | map({priority: .[0].priority, count: length})'
+```
+
+**Output**:
+```json
+[
+  {"priority": 0, "count": 5},
+  {"priority": 1, "count": 18},
+  {"priority": 2, "count": 32},
+  {"priority": 3, "count": 47},
+  {"priority": 4, "count": 21}
+]
+```
+
+**Usage**: Understand backlog distribution, ensure P0 <10, P1 <30, P3+P4 <50% of total.
+
+---
+
+#### Query 5: High-Priority Staleness (P0/P1 >30 days old)
+
+```bash
+# Find P0/P1 tasks >30 days old
+bd list --status open --priority 0,1 --created-before $(date -v-30d +%Y-%m-%d) --json
+```
+
+**Usage**: Detect stuck high-priority work. Demote to P2/P3 or unblock.
+
+---
+
+#### Backlog Health Dashboard
+
+Combine all queries into a dashboard:
+
+```bash
+#!/bin/bash
+# backlog-health.sh
+
+echo "=== Backlog Health Dashboard ==="
+echo ""
+
+echo "## Priority Distribution"
+bd list --status open --json | jq 'group_by(.priority) | map({priority: .[0].priority, count: length})'
+echo ""
+
+echo "## Stale Tasks (>90 days)"
+bd list --status open --created-before $(date -v-90d +%Y-%m-%d) --json | jq 'length'
+echo ""
+
+echo "## High-Priority Staleness (P0/P1 >30 days)"
+bd list --status open --priority 0,1 --created-before $(date -v-30d +%Y-%m-%d) --json | jq 'length'
+echo ""
+
+echo "## Orphan Tasks (no epic)"
+bd list --status open --type task --json | jq '[.[] | select(.dependencies.blocked_by | length == 0)] | length'
+echo ""
+
+echo "## Epic Progress"
+bd list --type epic --status open --json | jq -r '.[] | "\(.id): \(.title)"' | while read epic; do
+  epic_id=$(echo "$epic" | cut -d: -f1)
+  total=$(bd list --blocked-by $epic_id --json | jq 'length')
+  complete=$(bd list --status closed --blocked-by $epic_id --json | jq 'length')
+  progress=$((complete * 100 / total))
+  echo "$epic_id: $complete/$total ($progress%)"
+done
+```
+
+**Usage**: Run monthly or during backlog refinement, create cleanup tasks for issues.
+
+---
+
+## 5. Common Mistakes & Corrections
 
 ### Mistake 1: Not checking ready work at session start
 
@@ -502,7 +1167,7 @@ bd dep add chora-base-b2c4 chora-base-a3f8  # Tests block on OAuth
 
 ---
 
-## 5. Troubleshooting
+## 6. Troubleshooting
 
 ### Issue: `bd` command not found
 
@@ -573,7 +1238,7 @@ bd ready  # Task should no longer appear
 
 ---
 
-## 6. Best Practices
+## 7. Best Practices
 
 ### ✅ DO
 
@@ -597,7 +1262,7 @@ bd ready  # Task should no longer appear
 
 ---
 
-## 7. Quick Reference Card
+## 8. Quick Reference Card
 
 ```bash
 # === SESSION START ===
@@ -632,7 +1297,7 @@ bd dep cycles                      # Detect circular deps
 
 ---
 
-## 8. Integration Checklist
+## 9. Integration Checklist
 
 When using beads in a chora-base project:
 
@@ -647,7 +1312,7 @@ When using beads in a chora-base project:
 
 ---
 
-## 9. Training Exercises
+## 10. Training Exercises
 
 ### Exercise 1: Basic Workflow
 

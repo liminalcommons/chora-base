@@ -1,9 +1,9 @@
 # Traceability Ledger: Testing Framework
 
 **SAP ID**: SAP-004
-**Current Version**: 1.0.1
-**Status**: Active (Level 3 - Template, Level 1 - Project)
-**Last Updated**: 2025-11-05
+**Current Version**: 1.1.0
+**Status**: Active (Level 3 - Template, Level 2 - Project)
+**Last Updated**: 2025-11-06
 
 ---
 
@@ -21,15 +21,18 @@
   - 6 test pattern templates available
   - Projects inheriting template get instant L3 testing framework
 
-- **Project-Level Adoption: L1** ⚠️ (chora-base repository itself)
+- **Project-Level Adoption: L2** ⚠️ (chora-base repository itself)
   - Location: `tests/` (project root)
-  - 60 tests written, 100% pass rate
-  - **Coverage: 4%** (measured 2025-11-05)
+  - 187 tests written, 99.5% pass rate (1 environment-specific test fails)
+  - **Coverage: 16%** (measured 2025-11-06, up from 4% on 2025-11-05)
+    - **utils/sap_evaluation.py**: 90% (adopted chora-workspace tests)
+    - **utils/claude_metrics.py**: 78% (adopted chora-workspace tests)
     - scripts/install-sap.py: 79% (well-tested)
     - scripts/usage_tracker.py: 17% (minimal tests)
-    - All other scripts: 0% (no tests)
-  - **Gap**: 4% << 85% target (81 percentage points below target)
-  - **Why**: Most scripts (40+) lack tests, only install-sap.py is well-tested
+    - All other scripts: 0-16% (minimal/no tests)
+  - **Gap**: 16% << 85% target (69 percentage points below target)
+  - **Why**: Most scripts (40+) lack tests, only 3 utils modules + install-sap.py well-tested
+  - **Recent improvement**: +12 percentage points (4% → 16%) from adopting chora-workspace SAP-004 reference tests (2 test files, 97 tests)
 
 **Previous Ledger Claims**:
 - Line 14 claimed "85% coverage" - **OVER-REPORTED** (actually 4%)
@@ -49,7 +52,7 @@
 | Project | Adoption Type | Coverage | Status | Last Updated | Notes |
 |---------|---------------|----------|--------|--------------|-------|
 | chora-base (template) | Template-Level L3 | 85% (standard) | ✅ Active | 2025-11-05 | Pytest framework with 85% threshold distributed to all projects |
-| chora-base (project) | Project-Level L1 | 4% (actual) | ⚠️ Gap | 2025-11-05 | 60 tests exist, 100% pass, but only install-sap.py well-tested (79%). Need 81 more percentage points for L3. |
+| chora-base (project) | Project-Level L2 | 16% (actual) | ⚠️ Gap | 2025-11-06 | 187 tests exist, 99.5% pass. Adopted chora-workspace SAP-004 reference tests (+12pp). Need 69 more percentage points for L3. |
 | chora-compose | ~80% | Improving | 2025-10-20 | Working toward 85% |
 | mcp-n8n | ~75% | Active | 2025-10-22 | Coverage improvement in progress |
 | _Other projects_ | - | - | - | Add as adopted |
@@ -65,6 +68,7 @@
 
 | Version | Release Date | Type | Changes | Migration Required |
 |---------|--------------|------|---------|-------------------|
+| 1.1.0 | 2025-11-06 | MINOR | Added advanced testing patterns (importlib for hyphenated files), adopted chora-workspace reference tests (+12pp coverage, 4%→16%), project-level L1→L2 | No |
 | 1.0.0 | 2025-10-28 | MAJOR | Initial SAP-004 release: pytest 8.3.0, pytest-asyncio 0.24.0, pytest-cov 6.0.0, 85% coverage standard, async patterns | N/A (initial) |
 
 **Legend**:
@@ -275,7 +279,7 @@ _None yet_ - Initial versions
 
 ### Phase 2 Feedback (2025-10 → 2026-01)
 
-**Collected From**: chora-base maintainer (Victor), early adopters
+**Collected From**: chora-base maintainer (Victor), early adopters, chora-workspace
 
 **Key Themes**:
 - ✅ **pytest clarity**: pytest patterns clear, easy to follow
@@ -283,12 +287,21 @@ _None yet_ - Initial versions
 - ⚠️ **Async patterns**: Async test examples needed in template
 - ✅ **CI integration**: Automatic testing works well
 - ⚠️ **Coverage gaps**: Error path testing often missed
+- ✅ **Efficiency gains**: chora-workspace reported 6.2x efficiency vs. estimates (2.5h actual vs 12-18h estimated for 7 files, 300 tests, 85%+ coverage)
 
 **Action Items**:
 - ✅ Document testing framework (SAP-004 created)
 - 🔄 Add async MCP server test example (planned for v1.1.0)
 - 🔄 Emphasize error path testing in docs (updated in Protocol)
 - 🔄 Track coverage compliance across projects (ledger tracking)
+
+**Reference Implementations** (2025-11-06):
+- **chora-workspace**: Provided SAP-004 Phase 1 reference tests (7 files, 300 tests, 95-100% coverage per file)
+  - chora-base adopted 2 applicable test files (test_sap_evaluation.py, test_claude_metrics.py)
+  - Result: +12 percentage points coverage improvement (4% → 16%)
+  - Time saved: ~7-10 hours (vs writing from scratch)
+  - Demonstrated patterns: importlib for hyphenated files, fixture-based architecture, comprehensive edge case coverage
+  - Coordination via SAP-001 (inbox): `inbox/incoming/coordination/chora-base-sap-004-package/`
 
 ### Phase 3 Feedback (Future)
 

@@ -1,9 +1,9 @@
 # Awareness Guide: Testing Framework
 
 **SAP ID**: SAP-004
-**Version**: 1.0.0
+**Version**: 1.1.0
 **Target Audience**: AI agents (Claude Code, Cursor, etc.)
-**Last Updated**: 2025-10-28
+**Last Updated**: 2025-11-06
 
 ---
 
@@ -331,6 +331,64 @@ Agent workflow:
 - ❌ Make tests depend on each other (test order)
 - ❌ Leave flaky tests (intermittent failures)
 - ❌ Aim for 100% coverage (diminishing returns)
+
+---
+
+## 5.5. Advanced Testing Patterns
+
+### Testing Hyphenated Python Files
+
+**Challenge**: Python files with hyphens (e.g., `sap-evaluator.py`, `automation-dashboard.py`) can't be imported normally.
+
+**Solution**: Use `importlib` to load the module dynamically.
+
+**Pattern** (from chora-workspace SAP-004 reference tests):
+```python
+import importlib.util
+from pathlib import Path
+
+# Define path to script
+script_path = Path("/path/to/scripts/automation-dashboard.py")
+
+# Load module with importlib
+spec = importlib.util.spec_from_file_location("automation_dashboard", script_path)
+module = importlib.util.module_from_spec(spec)
+spec.loader.exec_module(module)
+
+# Now you can use functions from the module
+result = module.some_function()
+```
+
+**Example Test**:
+```python
+import pytest
+import importlib.util
+from pathlib import Path
+
+@pytest.fixture
+def dashboard_module():
+    """Load automation-dashboard.py module."""
+    repo_root = Path(__file__).parent.parent
+    script_path = repo_root / "scripts" / "automation-dashboard.py"
+
+    spec = importlib.util.spec_from_file_location("automation_dashboard", script_path)
+    module = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(module)
+
+    return module
+
+def test_dashboard_function(dashboard_module):
+    """Test a function from automation-dashboard.py."""
+    result = dashboard_module.generate_dashboard()
+    assert result is not None
+```
+
+**Why This Matters**:
+- Many chora-base scripts use hyphens (CLI convention)
+- Standard imports fail: `import sap-evaluator` → SyntaxError
+- importlib enables testing without renaming files
+
+**Credit**: Pattern learned from chora-workspace SAP-004 Phase 1 reference tests (2025-11-06)
 
 ---
 
