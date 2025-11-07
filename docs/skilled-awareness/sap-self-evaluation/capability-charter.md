@@ -21,7 +21,7 @@ Organizations and AI agents adopting chora-base SAPs (Skilled Awareness Patterns
 ### Current State
 
 **What exists**:
-- ✅ 18 SAPs with 3-level adoption frameworks (Level 1 → 2 → 3)
+- ✅ 30 SAPs with 3-level adoption frameworks (Level 1 → 2 → 3)
 - ✅ Installation tooling (`install-sap.py`)
 - ✅ Validation scripts (`check-sap-awareness-integration.sh`)
 - ✅ Ledger tracking per SAP
@@ -45,7 +45,7 @@ Organizations and AI agents adopting chora-base SAPs (Skilled Awareness Patterns
 - Resource allocation is guesswork (which SAP investments yield highest ROI?)
 
 **With self-evaluation capability**:
-- Clear visibility into adoption maturity (12/18 SAPs at Level 2+, 67% mature)
+- Clear visibility into adoption maturity (12/30 SAPs at Level 2+, 40% mature)
 - Prioritized action plans (adopt SAP-004 Level 2 next, 3 hours, unblocks CI/CD)
 - Evidence-based stakeholder communication (3x ROI, 75 hours saved from 25 invested)
 - Continuous improvement framework (quarterly goals, sprint tracking)
@@ -325,7 +325,7 @@ Organizations and AI agents adopting chora-base SAPs (Skilled Awareness Patterns
 ### Risk 4: Inconsistent Criteria Across SAPs
 
 **Impact**: Medium - Evaluation quality varies per SAP
-**Likelihood**: Medium - 18 SAPs may have different standards
+**Likelihood**: Medium - 30 SAPs may have different standards
 
 **Mitigation**:
 - Standardize protocol-spec.md evaluation sections (template)
@@ -361,7 +361,7 @@ Organizations and AI agents adopting chora-base SAPs (Skilled Awareness Patterns
 - Integration with SAP-013 metrics
 
 **Baseline Established**:
-- 18 SAPs evaluatable
+- 30 SAPs evaluatable
 - 3-level maturity assessment
 - Prioritized roadmap generation
 

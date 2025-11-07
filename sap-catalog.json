@@ -4,7 +4,7 @@
   "sap_sets_version": "2.0.0",
   "sap_sets_architecture": "domain-based",
   "description": "Machine-readable catalog of all Skilled Awareness Packages in chora-base with domain-based set architecture",
-  "total_saps": 29,
+  "total_saps": 30,
   "saps": [
     {
       "id": "SAP-000",

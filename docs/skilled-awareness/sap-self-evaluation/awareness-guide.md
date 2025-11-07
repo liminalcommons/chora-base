@@ -137,7 +137,7 @@ python scripts/sap-evaluator.py --quick SAP-000 && echo "✅ Evaluator working" 
    ```markdown
    ## SAP Adoption Status
 
-   **Installed**: 12/18 SAPs (67%)
+   **Installed**: 12/30 SAPs (40%)
    **Maturity**: 2/12 at Level 2+ (17%)
    **Health**: 🟡 Progressing
 
@@ -222,7 +222,7 @@ python scripts/sap-evaluator.py --quick SAP-000 && echo "✅ Evaluator working" 
    ## Q1-2026 SAP Adoption Roadmap
 
    ### Current State
-   - 12/18 SAPs installed (67%)
+   - 12/30 SAPs installed (40%)
    - Average Level: 1.17
    - Current ROI: 1.46x (35h saved / 24h invested)
 
@@ -564,7 +564,7 @@ Corrected plan:
 ```
 Agent: *Runs 30-minute strategic analysis*
 Agent: *Generates 50-page report*
-Agent: *Lists 47 gaps across 18 SAPs*
+Agent: *Lists 47 gaps across 30 SAPs*
 User: *Overwhelmed, takes no action*
 ```
 

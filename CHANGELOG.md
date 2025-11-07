@@ -7,6 +7,58 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [4.11.1] - 2025-11-06
+
+> **📊 SAP-019 VERIFICATION**: Confirmed support for all 30 SAPs + documentation accuracy updates
+
+This patch release verifies that SAP-019 (sap-self-evaluation) supports all 30 SAPs in the catalog and corrects outdated documentation references.
+
+---
+
+### Fixed
+
+**📊 SAP-019 Documentation Accuracy**
+
+- **sap-catalog.json**: Corrected `total_saps` metadata (29 → 30)
+- **SAP-019 Documentation**: Updated all references from "18 SAPs" to "30 SAPs"
+  - [capability-charter.md](docs/skilled-awareness/sap-self-evaluation/capability-charter.md): 4 instances updated
+  - [awareness-guide.md](docs/skilled-awareness/sap-self-evaluation/awareness-guide.md): 3 instances updated
+  - [AGENTS.md](docs/skilled-awareness/sap-self-evaluation/AGENTS.md): 3 instances updated
+  - [ledger.md](docs/skilled-awareness/sap-self-evaluation/ledger.md): Added v1.2.1 verification changelog
+
+**Updated Percentage Calculations**:
+- Examples: 12/18 SAPs → 12/30 SAPs (40%)
+- Roadmap goals: 14/18 SAPs → 24/30 SAPs (80% coverage)
+
+### Verified
+
+**✅ SAP-019 Evaluator Functionality**
+
+Tested `scripts/sap-evaluator.py --quick`:
+```
+Installed: 29/30 SAPs (97%)
+✅ All 30 SAPs evaluated successfully
+```
+
+**Key Findings**:
+- ✅ sap-evaluator.py already supports all 30 SAPs dynamically via `load_catalog()`
+- ✅ No code changes needed - evaluator was already future-proof
+- ✅ Supports new domain-based SAP sets from v4.11.0
+- ✅ Documentation now accurately reflects full SAP catalog
+
+**SAP Catalog Coverage** (30 SAPs total):
+- ecosystem (20 SAPs): SAP-000-013, SAP-015-016, SAP-019, SAP-027-029
+- domain-mcp (1 SAP): SAP-014
+- domain-react (7 SAPs): SAP-020-026
+- domain-chora-compose (2 SAPs): SAP-017-018
+
+### Impact
+
+- **Documentation Quality**: SAP-019 documentation now current with v4.11.0 catalog
+- **Accuracy**: All SAP count references updated to reflect actual 30 SAPs
+- **Verification**: Confirmed evaluator dynamically supports full catalog
+- **No Breaking Changes**: Pure documentation fix, no functional changes
+
 ## [4.11.0] - 2025-11-06
 
 > **🏗️ DOMAIN-BASED SAP SETS + POST-INSTALL AUTOMATION**: Intelligent SAP Organization + Level 1 Configuration (75-85% time savings)

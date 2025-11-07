@@ -103,7 +103,7 @@ docs/skilled-awareness/sap-self-evaluation/
    ```markdown
    ## SAP Adoption Status
 
-   **Coverage**: 12/18 SAPs installed (67%)
+   **Coverage**: 12/30 SAPs installed (40%)
    **Maturity**: 8/12 at Level 2+ (67%)
    **Health**: 🟢 Strong adoption
 
@@ -211,7 +211,7 @@ docs/skilled-awareness/sap-self-evaluation/
    roadmap:
      quarter: Q1 2026
      goals:
-       - Achieve 80% SAP coverage (14/18 SAPs)
+       - Achieve 80% SAP coverage (24/30 SAPs)
        - Reach Level 2+ for all core SAPs
      sprints:
        - sprint: 1
@@ -231,7 +231,7 @@ docs/skilled-awareness/sap-self-evaluation/
    ```markdown
    ## Q1 2026 SAP Adoption Roadmap
 
-   **Goal**: 80% coverage (14/18 SAPs), all core SAPs at Level 2+
+   **Goal**: 80% coverage (24/30 SAPs), all core SAPs at Level 2+
 
    ### Sprint 1 (Weeks 1-2): Testing & Quality Foundation
    - SAP-004: Coverage tracking (3 hours)

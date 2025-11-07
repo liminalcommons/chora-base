@@ -97,6 +97,45 @@
 
 ## 7. Changelog
 
+### 2025-11-06 - Verified Support for All 30 SAPs (v1.2.1)
+
+**Repository**: chora-base
+**Verification**: SAP-019 evaluator supports all 30 SAPs (SAP-000 through SAP-029)
+
+**Updates**:
+- Updated sap-catalog.json `total_saps` from 29 → 30 (corrected count)
+- Updated all SAP-019 documentation references from "18 SAPs" to "30 SAPs"
+- Verified sap-evaluator.py dynamically loads all SAPs from catalog
+- Tested quick_check_all() - successfully evaluates all 30 SAPs
+- Updated percentage calculations in examples (e.g., 12/18 → 12/30)
+
+**SAPs Now Supported** (total 30):
+- SAP-000 through SAP-029 (all installed and evaluatable)
+- Includes new SAPs from v4.11.0 domain-based architecture:
+  - ecosystem set (20 SAPs)
+  - domain-mcp (1 SAP)
+  - domain-react (7 SAPs)
+  - domain-chora-compose (2 SAPs)
+
+**Files Updated**:
+- sap-catalog.json (total_saps metadata)
+- docs/skilled-awareness/sap-self-evaluation/capability-charter.md (4 references)
+- docs/skilled-awareness/sap-self-evaluation/awareness-guide.md (3 references)
+- docs/skilled-awareness/sap-self-evaluation/AGENTS.md (3 references)
+- docs/skilled-awareness/sap-self-evaluation/ledger.md (this changelog)
+
+**Test Results**:
+```
+python scripts/sap-evaluator.py --quick
+Installed: 29/30 SAPs (97%)
+✅ All 30 SAPs evaluated successfully
+```
+
+**Impact**:
+- SAP-019 remains current with full SAP catalog
+- No functional changes needed (evaluator already dynamic)
+- Documentation now accurate for domain-based SAP sets
+
 ### 2025-11-04 - Level 3 Adoption Achieved (v1.2.0)
 
 **Repository**: chora-base
