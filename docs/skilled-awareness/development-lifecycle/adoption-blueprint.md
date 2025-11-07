@@ -1,8 +1,8 @@
 ---
 sap_id: SAP-012
-version: 1.0.0
-status: Draft
-last_updated: 2025-10-28
+version: 1.1.0
+status: Active
+last_updated: 2025-11-06
 type: how-to
 audience: developers, ai-agents
 ---
@@ -11,7 +11,7 @@ audience: developers, ai-agents
 
 **SAP ID**: SAP-012
 **For**: Projects adopting the 8-phase lifecycle
-**Purpose**: Step-by-step guide to implement DDD→BDD→TDD workflow
+**Purpose**: Step-by-step guide to implement DDD→BDD→TDD workflow with Light+ planning
 
 ---
 

@@ -1,9 +1,9 @@
 # Protocol Specification: Development Lifecycle
 
 **SAP ID**: SAP-012
-**Version**: 1.0.0
-**Status**: Draft (Phase 3)
-**Last Updated**: 2025-10-28
+**Version**: 1.1.0
+**Status**: Active
+**Last Updated**: 2025-11-06
 
 ---
 
@@ -98,6 +98,192 @@ TDD (Test Driven Development)
   ↓
   Produces: Fully tested feature (unit tests + BDD scenarios GREEN)
 ```
+
+### 2.3 Light+ Planning Construct Hierarchy
+
+The 8-phase lifecycle operates within a **4-level planning hierarchy** that structures work from strategic vision to daily tasks.
+
+**Key Principle**: Planning constructs define **WHAT** we build, while the 8 phases define **HOW** we build it.
+
+```
+1. Strategy (Quarterly)
+       ↓
+2. Releases (Sprint-based)
+       ↓
+3. Features (User capabilities)
+       ↓
+4. Tasks (Work items)
+```
+
+---
+
+#### 2.3.1 Construct 1: Strategy
+
+**Purpose**: 3-6 month strategic direction
+**Planned in**: Phase 1 (Vision & Strategy)
+**Cadence**: Quarterly review
+**Owner**: Product/Tech Lead
+
+**Artifacts**:
+- `ROADMAP.md` - Strategic vision and capability waves
+- `docs/project-docs/vision/` - Vision documents
+- `.chora/memory/knowledge/notes/strategic-analysis-*.md` - Strategic priorities
+
+**Activities**:
+- Define strategic themes (3-5 per quarter)
+- Establish success metrics
+- Identify capability waves
+- Set design principles
+
+**SAP Maturity Levels**:
+- **L0**: No strategic planning
+- **L1**: Basic ROADMAP.md exists
+- **L2**: Quarterly strategy documented with metrics
+- **L3**: Strategy actively guides release planning
+- **L4**: Strategy integrated with retrospectives and feedback loops
+- **L5**: Strategic planning optimized with predictive modeling
+
+---
+
+#### 2.3.2 Construct 2: Releases
+
+**Purpose**: Group features into deliverable milestones
+**Planned in**: Phase 2 (Planning)
+**Cadence**: Per sprint (1-2 weeks) or version milestone
+**Owner**: Product Manager / Scrum Master
+
+**Artifacts**:
+- Sprint planning documents
+- Version milestones in ROADMAP.md
+- Sprint tracking documents
+
+**Activities**:
+- Select features for release based on strategy
+- Create sprint goals
+- Estimate capacity (never >80%)
+- Track velocity and burndown
+- Link features to strategic themes
+
+**SAP Maturity Levels**:
+- **L0**: Ad-hoc releases, no planning
+- **L1**: Basic sprint structure exists
+- **L2**: Consistent sprint cadence with planning docs
+- **L3**: Release planning integrated with strategy
+- **L4**: Automated release metrics and retrospectives
+- **L5**: Optimized release cadence with predictive planning
+
+---
+
+#### 2.3.3 Construct 3: Features
+
+**Purpose**: User-facing capabilities to be built
+**Planned in**: Phase 2 (Planning) + Phase 3 (Requirements & Design)
+**Cadence**: Per feature
+**Owner**: Feature Owner / Developer
+
+**Artifacts**:
+- DDD worksheets (Phase 3)
+- BDD scenarios (Phase 4)
+- Feature specification documents
+- Architecture Decision Records (ADRs)
+
+**Activities**:
+- Define user value and acceptance criteria
+- Domain modeling (DDD workflow)
+- Technical design
+- Break down into tasks
+- Link to release milestones
+
+**SAP Maturity Levels**:
+- **L0**: No feature planning, code-first approach
+- **L1**: Basic feature descriptions exist
+- **L2**: Features documented before implementation
+- **L3**: DDD/BDD/TDD workflow followed for all features
+- **L4**: Feature specs integrated with metrics and retrospectives
+- **L5**: Feature planning optimized with reusable patterns
+
+---
+
+#### 2.3.4 Construct 4: Tasks
+
+**Purpose**: Day-to-day work items
+**Planned in**: Phase 2 (Planning)
+**Cadence**: Daily
+**Owner**: Individual Contributors
+
+**Artifacts**:
+- `.beads/issues.jsonl` - Task database (SAP-015)
+- Beads CLI for task management
+- Task dependencies and estimates
+
+**Activities**:
+- Break features into tasks (2-8 hour chunks)
+- Track status (todo → in_progress → done)
+- Manage dependencies
+- Log time estimates vs actuals
+- Link tasks to features
+
+**SAP Maturity Levels**:
+- **L0**: No task tracking
+- **L1**: Basic task list (TODO comments, issues)
+- **L2**: Structured task tracking (Beads installed)
+- **L3**: Tasks linked to features with dependency tracking
+- **L4**: Automated task metrics and velocity tracking
+- **L5**: Optimized task management with AI-assisted breakdown
+
+---
+
+#### 2.3.5 Integration with 8 Phases
+
+The 4 planning constructs map to the 8 execution phases:
+
+| Phase | Planning Constructs Used | Activities |
+|-------|-------------------------|------------|
+| **Phase 1: Vision & Strategy** | Strategy (Construct 1) | Define quarterly strategic themes, capability waves |
+| **Phase 2: Planning** | Releases, Features, Tasks (Constructs 2-4) | Sprint planning, feature breakdown, task creation |
+| **Phase 3: Requirements (DDD)** | Features (Construct 3) | Feature specification, domain modeling |
+| **Phase 4: Development (BDD/TDD)** | Features, Tasks (Constructs 3-4) | Build features using tasks |
+| **Phase 5-8: Testing → Monitoring** | Tasks (Construct 4) | Execute tasks, track completion |
+
+**Planning Flows**:
+
+**Quarterly (Strategy)**:
+1. Review previous quarter metrics
+2. Define strategic themes for next quarter
+3. Update ROADMAP.md with capability waves
+4. Set measurable success criteria
+
+**Per Sprint (Releases)**:
+1. Review strategic themes
+2. Select features that align with themes
+3. Create sprint goal
+4. Break features into tasks
+5. Estimate and commit (≤80% capacity)
+
+**Per Feature**:
+1. Define user value and acceptance criteria
+2. Execute DDD workflow (domain modeling)
+3. Break into tasks
+4. Add to sprint backlog
+5. Link to release milestone
+
+**Daily (Tasks)**:
+1. Pick task from backlog (`.beads/issues.jsonl`)
+2. Execute using BDD/TDD methodology
+3. Update task status
+4. Log progress and learnings
+
+---
+
+#### 2.3.6 Benefits of Light+ Model
+
+1. **Traceability**: Every task links to a feature → release → strategy
+2. **Scalability**: Simple projects skip Strategy, complex projects use full hierarchy
+3. **Fork-Friendly**: Template users adopt incrementally (L0 → L5 maturity)
+4. **Clear Separation**: Planning constructs (WHAT) separate from execution phases (HOW)
+5. **Maturity Tracking**: Use SAP maturity levels to track adoption depth
+
+**Quick Reference**: See [LIGHT_PLUS_REFERENCE.md](LIGHT_PLUS_REFERENCE.md) for practical planning workflows and maturity assessment.
 
 ---
 

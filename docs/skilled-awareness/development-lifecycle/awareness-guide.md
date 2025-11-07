@@ -1,8 +1,8 @@
 ---
 sap_id: SAP-012
-version: 1.0.0
-status: Draft
-last_updated: 2025-10-28
+version: 1.1.0
+status: Active
+last_updated: 2025-11-06
 audience: ai-agents
 ---
 
@@ -38,6 +38,28 @@ audience: ai-agents
 | **Phase 6: Review** | Create PR | Bash (gh pr create) |
 | **Phase 7: Release** | Run release scripts | Bash (bump-version.sh, publish-prod.sh) |
 | **Phase 8: Monitoring** | Update PROCESS_METRICS.md | Edit |
+
+### Light+ Planning Constructs (NEW in v1.1)
+
+**What**: 4-level planning hierarchy (Strategy → Releases → Features → Tasks)
+**Why**: Provides structure for **WHAT** to build (planning constructs) separate from **HOW** to build it (8 phases)
+
+| Construct | Owner | Cadence | Artifact | Phase |
+|-----------|-------|---------|----------|-------|
+| **Strategy** | Product/Tech Lead | Quarterly | ROADMAP.md | Phase 1 |
+| **Releases** | PM/Scrum Master | Per sprint (1-2 weeks) | Sprint docs | Phase 2 |
+| **Features** | Feature Owner/Dev | Per feature | DDD docs, BDD scenarios | Phase 2-3 |
+| **Tasks** | Individual Contributors | Daily | .beads/issues.jsonl | Phase 2-8 |
+
+**Agent Usage**:
+- Read [LIGHT_PLUS_REFERENCE.md](LIGHT_PLUS_REFERENCE.md) for planning workflows
+- Read [protocol-spec.md - Section 2.3](protocol-spec.md#23-light-planning-construct-hierarchy) for technical details
+- Use Light+ patterns when planning features, sprints, or strategy
+
+**Key Benefits**:
+- **Traceability**: Every task links to feature → release → strategy
+- **Scalability**: Simple projects skip Strategy, complex projects use full hierarchy
+- **Maturity Tracking**: L0-L5 maturity levels for each construct
 
 ---
 

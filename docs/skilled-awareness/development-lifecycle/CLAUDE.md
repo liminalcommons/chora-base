@@ -1,8 +1,8 @@
 ---
 sap_id: SAP-012
-version: 1.0.0
+version: 1.1.0
 status: active
-last_updated: 2025-11-04
+last_updated: 2025-11-06
 type: reference
 audience: claude_code
 complexity: intermediate

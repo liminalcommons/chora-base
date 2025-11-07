@@ -1,18 +1,18 @@
 ---
 sap_id: SAP-012
-version: 1.4.0
+version: 1.5.0
 status: Active
-last_updated: 2025-11-05
-enhancement: vision-synthesis-workflow
+last_updated: 2025-11-06
+enhancement: light-plus-planning-model
 ---
 
 # Ledger: Development Lifecycle Adoption
 
 **SAP ID**: SAP-012
 **Capability**: development-lifecycle
-**Version**: 1.4.0
-**Last Updated**: 2025-11-05
-**Enhancement**: Vision Synthesis Workflow
+**Version**: 1.5.0
+**Last Updated**: 2025-11-06
+**Enhancement**: Light+ Planning Model
 
 ---
 
@@ -127,6 +127,63 @@ _(No adopters yet)_
 ---
 
 ## 4. Version History
+
+### v1.5.0 (2025-11-06) - Light+ Planning Model
+
+**Changes**:
+- ✅ **SAP-012 Version Bump**: Updated all SAP artifacts from v1.0.0 → v1.1.0
+- ✅ **Protocol Spec Section 2.3**: Added Light+ Planning Construct Hierarchy (~190 lines)
+  - **Construct 1: Strategy** (Quarterly) - ROADMAP.md, strategic themes, capability waves
+  - **Construct 2: Releases** (Sprint-based) - Sprint planning, version milestones, velocity tracking
+  - **Construct 3: Features** (Per feature) - DDD/BDD/TDD workflow, feature specifications
+  - **Construct 4: Tasks** (Daily) - Beads task tracking, 2-8 hour chunks, dependency management
+  - **Integration mapping**: Shows how 4 constructs map to 8 execution phases
+  - **Planning flows**: Quarterly (Strategy), Per Sprint (Releases), Per Feature, Daily (Tasks)
+  - **Benefits**: Traceability (task → feature → release → strategy), scalability, fork-friendly, maturity tracking
+- ✅ **New File: LIGHT_PLUS_REFERENCE.md**: Quick reference guide (~447 lines, ~12k tokens)
+  - Quick overview table (4 constructs)
+  - Maturity assessment checklist (L0-L5 for each construct)
+  - 4 common planning patterns (Strategy-First, Bottom-Up Validation, Incremental Adoption, Agile Sprint)
+  - Detailed planning workflows (Quarterly, Sprint, Feature, Daily)
+  - Tools & integration (ROADMAP.md, Beads, DDD workflows)
+  - Integration commands (sap-evaluator.py, bd CLI)
+  - Metrics & tracking (per construct)
+  - Quick checklist (Daily, Weekly, Monthly, Quarterly)
+  - Troubleshooting guide (common problems + solutions)
+- ✅ **Awareness Guide Update**: Added Light+ Planning Constructs section
+  - Quick reference table for agents
+  - Links to protocol-spec.md Section 2.3 and LIGHT_PLUS_REFERENCE.md
+  - Key benefits (traceability, scalability, maturity tracking)
+
+**Integration with Other SAPs**:
+- **SAP-015 (Beads)**: Task construct (Construct 4) uses Beads for daily task tracking
+- **SAP-019 (Self-Evaluation)**: Strategic roadmap generation aligns with Strategy construct (Construct 1)
+- **SAP-010 (A-MEM)**: Strategic planning documents stored in .chora/memory/knowledge/notes/
+
+**Key Principle**:
+- **Planning constructs** (Strategy → Releases → Features → Tasks) define **WHAT** we build
+- **8-phase lifecycle** (Vision → Planning → DDD → BDD/TDD → etc.) defines **HOW** we build it
+
+**Expected Impact**:
+- **Clear planning hierarchy**: From quarterly strategy to daily tasks
+- **Traceability**: Every task links to feature → release → strategy
+- **Scalability**: Simple projects skip Strategy, complex projects use full hierarchy
+- **Fork-friendly**: Template users adopt incrementally (L0 → L5 maturity)
+- **Maturity tracking**: L0-L5 maturity levels for each construct enable assessment
+
+**Validation Status**:
+- ✅ Protocol Spec updated with Light+ section (Section 2.3)
+- ✅ LIGHT_PLUS_REFERENCE.md created with practical workflows
+- ✅ Awareness Guide updated with Light+ quick reference
+- ✅ All SAP-012 artifact versions updated (v1.0.0 → v1.1.0)
+- ✅ sap-catalog.json updated with v1.1.0 and new capabilities
+- ⏳ End-to-end dogfooding validation (pending adoption in projects)
+
+**Source**: Coordination request sap-012_1-1 from chora-mcp-template team
+
+**Adopters**: 0 (available for adoption as of 2025-11-06)
+
+---
 
 ### v1.4.0 (2025-11-05) - Vision Synthesis Workflow
 

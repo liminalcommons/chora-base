@@ -1,8 +1,8 @@
 ---
 sap_id: SAP-012
-version: 1.0.0
-status: Draft
-last_updated: 2025-10-28
+version: 1.1.0
+status: Active
+last_updated: 2025-11-06
 scope: All (Vision & Strategy, Planning, Implementation)
 ---
 
@@ -10,8 +10,8 @@ scope: All (Vision & Strategy, Planning, Implementation)
 
 **SAP ID**: SAP-012
 **Capability Name**: development-lifecycle
-**Version**: 1.0.0
-**Status**: Draft (Phase 3)
+**Version**: 1.1.0
+**Status**: Active
 
 ---
 

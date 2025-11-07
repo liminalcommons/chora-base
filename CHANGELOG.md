@@ -7,6 +7,101 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [4.12.0] - 2025-11-06
+
+> **🎯 SAP-012 LIGHT+ PLANNING MODEL**: 4-construct planning hierarchy (Strategy → Releases → Features → Tasks) with maturity levels L0-L5
+
+This minor release adds the Light+ Planning Model to SAP-012 (development-lifecycle), providing a 4-level planning hierarchy that integrates with the existing 8-phase execution lifecycle.
+
+---
+
+### Added
+
+**🎯 SAP-012 v1.1.0 - Light+ Planning Model**
+
+Complete planning framework bridging strategic vision to daily tasks:
+
+- **4-Construct Hierarchy**:
+  1. **Strategy (Quarterly)**: ROADMAP.md, strategic themes, capability waves
+  2. **Releases (Sprint-based)**: Sprint planning, version milestones, velocity tracking
+  3. **Features (Per feature)**: DDD/BDD/TDD workflow, feature specifications
+  4. **Tasks (Daily)**: Beads task tracking, 2-8 hour chunks, dependency management
+
+- **New File: [LIGHT_PLUS_REFERENCE.md](docs/skilled-awareness/development-lifecycle/LIGHT_PLUS_REFERENCE.md)** (444 lines)
+  - Quick reference table for all 4 constructs
+  - Maturity assessment checklist (L0-L5 for each construct)
+  - 4 common planning patterns (Strategy-First, Bottom-Up Validation, Incremental Adoption, Agile Sprint)
+  - Detailed planning workflows (Quarterly, Sprint, Feature, Daily)
+  - Tools & integration guides (ROADMAP.md, Beads, DDD workflows)
+  - Metrics & tracking per construct
+  - Quick checklists (Daily, Weekly, Monthly, Quarterly)
+  - Troubleshooting guide
+
+- **[protocol-spec.md - Section 2.3](docs/skilled-awareness/development-lifecycle/protocol-spec.md#23-light-planning-construct-hierarchy)** (~192 lines)
+  - Complete technical specification of Light+ model
+  - Integration mapping: How 4 constructs map to 8 execution phases
+  - Planning cadences: Quarterly → Sprint → Feature → Daily
+  - Traceability: Task → Feature → Release → Strategy linkage
+  - Scalability: Simple projects skip Strategy, complex use full hierarchy
+  - Fork-friendly: Template users adopt incrementally (L0 → L5 maturity)
+
+- **Updated SAP-012 Artifacts**:
+  - [awareness-guide.md](docs/skilled-awareness/development-lifecycle/awareness-guide.md): Added Light+ quick reference for agents
+  - [capability-charter.md](docs/skilled-awareness/development-lifecycle/capability-charter.md): v1.0.0 → v1.1.0, status Draft → Active
+  - [ledger.md](docs/skilled-awareness/development-lifecycle/ledger.md): Added v1.5.0 changelog entry
+  - [AGENTS.md](docs/skilled-awareness/development-lifecycle/AGENTS.md): Version updates
+  - [CLAUDE.md](docs/skilled-awareness/development-lifecycle/CLAUDE.md): Version updates
+  - [adoption-blueprint.md](docs/skilled-awareness/development-lifecycle/adoption-blueprint.md): Version updates
+
+**Integration with Other SAPs**:
+- **SAP-015 (Beads)**: Task construct (Construct 4) uses Beads for daily task tracking
+- **SAP-019 (Self-Evaluation)**: Strategic roadmap generation aligns with Strategy construct (Construct 1)
+- **SAP-010 (A-MEM)**: Strategic planning documents stored in `.chora/memory/knowledge/notes/`
+
+**Key Benefits**:
+- **Traceability**: Every task links to feature → release → strategy
+- **Scalability**: Simple projects use Tasks only, complex projects use full 4-construct hierarchy
+- **Maturity Tracking**: L0-L5 levels for each construct enable progressive adoption assessment
+- **Fork-Friendly**: Template users adopt incrementally based on project needs
+
+**Maturity Levels** (per construct):
+- **L0** (None): No planning, ad-hoc work
+- **L1** (Basic): Basic structures exist (ROADMAP, task list)
+- **L2** (Configured): Structured processes (quarterly docs, sprint cadence)
+- **L3** (Active): Integrated workflows (DDD/BDD/TDD, linked tasks)
+- **L4** (Deep): Feedback loops (metrics, retrospectives, velocity tracking)
+- **L5** (Mature): Optimized processes (predictive modeling, AI assistance)
+
+**Planning Patterns**:
+1. **Strategy-First**: Start with quarterly themes, cascade to sprints/features/tasks
+2. **Bottom-Up Validation**: Verify tactical work aligns with strategy
+3. **Incremental Adoption**: Start with Tasks (L1), add Features → Releases → Strategy
+4. **Agile Sprint**: Integrate with Scrum/agile methodologies
+
+### Changed
+
+**📚 SAP-012 Status Update**:
+- Status: Draft → **Active** (production-ready)
+- Version: v1.0.0 → **v1.1.0**
+- Enhancement: Vision Synthesis Workflow → **Light+ Planning Model**
+
+### Impact
+
+- **Planning Clarity**: Clear hierarchy from quarterly strategy to daily tasks
+- **Progressive Adoption**: Teams can start simple (Tasks only) and scale up
+- **Better Traceability**: Every task traces back to strategic themes
+- **Maturity Assessment**: L0-L5 levels enable SAP-019 to assess planning maturity
+- **No Breaking Changes**: Light+ extends SAP-012, doesn't replace existing 8-phase lifecycle
+
+**File Changes**:
+- 7 SAP-012 files updated (AGENTS.md, CLAUDE.md, adoption-blueprint.md, awareness-guide.md, capability-charter.md, ledger.md, protocol-spec.md)
+- 1 new file added (LIGHT_PLUS_REFERENCE.md, 444 lines)
+- Total: +290 lines / -25 lines
+
+**Note**: SAP-012 v1.1.0 metadata was already released in sap-catalog.json (v4.11.1), this release completes the documentation and specification updates.
+
+---
+
 ## [4.11.1] - 2025-11-06
 
 > **📊 SAP-019 VERIFICATION**: Confirmed support for all 30 SAPs + documentation accuracy updates
