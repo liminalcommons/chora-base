@@ -138,8 +138,9 @@ Created to address the high time cost (10 hours per SAP) of manual SAP creation 
 No security incidents recorded for SAP-029.
 
 **Preventive Measures**:
-- [Security measure 1]
-- [Security measure 2]
+- **Template Injection Prevention**: Jinja2 environment configured with `autoescape=False` (markdown output, not HTML) but validates variable names against whitelist (only catalog fields allowed). Prevents arbitrary code execution via malicious sap-catalog.json entries.
+- **Path Traversal Prevention**: Generator script validates SAP ID format (alphanumeric + hyphens only) via `os.path.basename()` check before file operations. Prevents `../../../etc/passwd` injection attempts in SAP ID parameter.
+- **Git Commit Safety**: Generated artifacts committed with clear provenance metadata (YAML frontmatter: `generation_method: template`, `generated_at: ISO timestamp`). Enables audit trail and rollback if malicious content detected post-generation.
 
 ---
 

@@ -1,7 +1,9 @@
 {
-  "version": "4.9.0",
-  "updated": "2025-11-02",
-  "description": "Machine-readable catalog of all Skilled Awareness Packages in chora-base",
+  "version": "5.0.0",
+  "updated": "2025-11-06",
+  "sap_sets_version": "2.0.0",
+  "sap_sets_architecture": "domain-based",
+  "description": "Machine-readable catalog of all Skilled Awareness Packages in chora-base with domain-based set architecture",
   "total_saps": 29,
   "saps": [
     {
@@ -240,7 +242,57 @@
         "static-template/ruff.toml"
       ],
       "phase": "Phase 2",
-      "priority": "P0"
+      "priority": "P0",
+      "post_install": {
+        "level_1": {
+          "description": "Basic usage - pre-commit hooks installed and configured, ruff + mypy installed, first run successful",
+          "dependencies": [
+            {
+              "command": "pre-commit --version",
+              "install_hint": "pip install pre-commit",
+              "fallback_install": "brew install pre-commit"
+            },
+            {
+              "command": "ruff --version",
+              "install_hint": "pip install ruff",
+              "fallback_install": "brew install ruff"
+            },
+            {
+              "command": "mypy --version",
+              "install_hint": "pip install mypy",
+              "fallback_install": "brew install mypy"
+            }
+          ],
+          "steps": [
+            {
+              "command": "pre-commit install",
+              "description": "Install pre-commit hooks from .pre-commit-config.yaml",
+              "working_dir": "project_root"
+            },
+            {
+              "command": "pre-commit run --all-files || true",
+              "description": "Run pre-commit on all files (may fail initially - expected)",
+              "optional": true
+            }
+          ],
+          "validation": {
+            "command": "test -f .git/hooks/pre-commit",
+            "expected_output": "",
+            "description": "Verify pre-commit git hook is installed"
+          },
+          "estimated_minutes": 5,
+          "success_criteria": [
+            "pre-commit, ruff, and mypy are installed",
+            ".git/hooks/pre-commit exists (git hook installed)",
+            "pre-commit runs on all files (may report issues)"
+          ],
+          "notes": [
+            "First pre-commit run may report linting errors - this is expected",
+            "Fix errors iteratively or use --no-verify to skip temporarily",
+            "Pre-commit hooks run automatically on git commit after installation"
+          ]
+        }
+      }
     },
     {
       "id": "SAP-007",
@@ -385,7 +437,38 @@
         ".chora/memory/"
       ],
       "phase": "Phase 3",
-      "priority": "P1"
+      "priority": "P1",
+      "post_install": {
+        "level_1": {
+          "description": "Basic usage - memory directory structure created, event logging enabled, first event logged",
+          "dependencies": [],
+          "steps": [
+            {
+              "command": "mkdir -p .chora/memory/events .chora/memory/knowledge .chora/memory/profiles .chora/memory/traces",
+              "description": "Create A-MEM directory structure for 4 memory types"
+            },
+            {
+              "command": "echo '{\"timestamp\":\"'$(date -u +%Y-%m-%dT%H:%M:%SZ)'\",\"event_type\":\"sap_adoption\",\"sap_id\":\"SAP-010\",\"description\":\"A-MEM memory system initialized\",\"metadata\":{\"setup_automated\":true}}' >> .chora/memory/events/development.jsonl",
+              "description": "Log first event to demonstrate A-MEM event logging"
+            },
+            {
+              "command": "cat > .chora/memory/README.md << 'EOF'\n# Agent Memory (A-MEM)\n\nThis directory contains event-sourced agent memory.\n\n## Structure\n\n- `events/` - Event logs (JSONL format)\n- `knowledge/` - Zettelkasten knowledge graph\n- `profiles/` - Agent profiles and preferences\n- `traces/` - Cross-session trace correlation\n\n## Usage\n\nLog events to `events/{domain}.jsonl` using the event schema from SAP-010.\nEOF",
+              "description": "Create README documenting A-MEM structure"
+            }
+          ],
+          "validation": {
+            "command": "test -f .chora/memory/events/development.jsonl && test -f .chora/memory/README.md",
+            "expected_output": "",
+            "description": "Verify memory directory and first event exist"
+          },
+          "estimated_minutes": 2,
+          "success_criteria": [
+            ".chora/memory/ directory structure exists (events, knowledge, profiles, traces)",
+            ".chora/memory/events/development.jsonl contains first event",
+            ".chora/memory/README.md documents A-MEM structure"
+          ]
+        }
+      }
     },
     {
       "id": "SAP-011",
@@ -422,7 +505,48 @@
         "DOCKER_BEST_PRACTICES.md"
       ],
       "phase": "Phase 3",
-      "priority": "P1"
+      "priority": "P1",
+      "post_install": {
+        "level_1": {
+          "description": "Basic usage - Docker installed and verified, test image built successfully",
+          "dependencies": [
+            {
+              "command": "docker --version",
+              "install_hint": "Install Docker Desktop from https://www.docker.com/products/docker-desktop or use package manager",
+              "fallback_install": "brew install --cask docker"
+            }
+          ],
+          "steps": [
+            {
+              "command": "docker build -f Dockerfile.test -t ${PROJECT_NAME:-app}-test:latest .",
+              "description": "Build test Docker image to validate Dockerfile.test",
+              "optional": true,
+              "skip_if_missing": "Dockerfile.test"
+            },
+            {
+              "command": "docker images | grep ${PROJECT_NAME:-app}-test",
+              "description": "Verify test image was created",
+              "optional": true
+            }
+          ],
+          "validation": {
+            "command": "docker info > /dev/null 2>&1",
+            "expected_output": "",
+            "description": "Verify Docker daemon is running"
+          },
+          "estimated_minutes": 3,
+          "success_criteria": [
+            "docker --version returns valid version",
+            "Docker daemon is running (docker info succeeds)",
+            "Test image builds successfully (if Dockerfile.test exists)"
+          ],
+          "notes": [
+            "Building production image (Dockerfile) is optional and may require dependencies",
+            "Test image build validates multi-stage Dockerfile patterns",
+            "Skip image builds if project lacks dependencies or takes >2 minutes"
+          ]
+        }
+      }
     },
     {
       "id": "SAP-012",
@@ -568,7 +692,41 @@
         "examples/beads-demo-multiagent/"
       ],
       "phase": "Phase 3",
-      "priority": "P1"
+      "priority": "P1",
+      "post_install": {
+        "level_1": {
+          "description": "Basic usage - beads CLI installed, database initialized, first task created",
+          "dependencies": [
+            {
+              "command": "bd --version",
+              "install_hint": "npm install -g @beads/bd",
+              "fallback_install": "pip install beads-cli"
+            }
+          ],
+          "steps": [
+            {
+              "command": "bd init",
+              "description": "Initialize beads database and configuration",
+              "working_dir": "project_root"
+            },
+            {
+              "command": "bd create 'Setup beads for project tracking' --priority 2 --status open",
+              "description": "Create first task to demonstrate beads workflow"
+            }
+          ],
+          "validation": {
+            "command": "bd list --json | python -c 'import sys, json; print(len(json.load(sys.stdin)) >= 1)'",
+            "expected_output": "True",
+            "description": "Verify at least one task exists"
+          },
+          "estimated_minutes": 5,
+          "success_criteria": [
+            ".beads/issues.jsonl exists and contains task data",
+            ".beads/config.yaml exists with default configuration",
+            "bd list command returns at least one task"
+          ]
+        }
+      }
     },
     {
       "id": "SAP-016",
@@ -601,7 +759,36 @@
         "scripts/validate-links.sh"
       ],
       "phase": "Wave 2",
-      "priority": "P0"
+      "priority": "P0",
+      "post_install": {
+        "level_1": {
+          "description": "Basic usage - link validation script installed and tested on documentation",
+          "dependencies": [],
+          "steps": [
+            {
+              "command": "bash scripts/validate-links.sh",
+              "description": "Run link validation on all markdown files to verify installation",
+              "working_dir": "project_root"
+            }
+          ],
+          "validation": {
+            "command": "test -x scripts/validate-links.sh",
+            "expected_output": "",
+            "description": "Verify validate-links.sh script is executable"
+          },
+          "estimated_minutes": 2,
+          "success_criteria": [
+            "scripts/validate-links.sh is executable",
+            "Link validation runs successfully on existing markdown files",
+            "Script reports internal and external link status"
+          ],
+          "notes": [
+            "Initial run may report broken links - this is expected",
+            "Fix broken links iteratively as part of documentation quality",
+            "Add to CI/CD workflow (.github/workflows/) for automated validation"
+          ]
+        }
+      }
     },
     {
       "id": "SAP-017",
@@ -1210,181 +1397,125 @@
   ],
 
   "sap_sets": {
-    "minimal-entry": {
-      "id": "minimal-entry",
-      "name": "Minimal Ecosystem Entry",
-      "version": "1.0.0",
-      "description": "5 essential SAPs for quick ecosystem onboarding and cross-repo coordination",
-      "saps": ["SAP-000", "SAP-001", "SAP-009", "SAP-016", "SAP-002"],
-      "estimated_tokens": 29000,
-      "estimated_hours": "3-5",
+    "ecosystem": {
+      "id": "ecosystem",
+      "name": "Ecosystem Foundation",
+      "type": "universal",
+      "version": "2.0.0",
+      "description": "Universal capabilities for any technology stack - meta, infrastructure, quality, memory, coordination",
+      "saps": [
+        "SAP-000", "SAP-001", "SAP-002", "SAP-003", "SAP-004",
+        "SAP-005", "SAP-006", "SAP-007", "SAP-008", "SAP-009",
+        "SAP-010", "SAP-011", "SAP-012", "SAP-013", "SAP-015",
+        "SAP-016", "SAP-019", "SAP-027", "SAP-028", "SAP-029"
+      ],
+      "estimated_tokens": 125000,
+      "estimated_hours": "3-5 days",
       "use_cases": [
-        "First-time chora ecosystem adoption",
-        "Contributing to ecosystem repos via inbox protocol",
-        "Cross-repo coordination",
-        "Lightweight onboarding before full adoption"
+        "Any Python project foundation",
+        "Cross-domain coordination",
+        "Technology-agnostic infrastructure",
+        "Pre-requisite for all domain sets"
       ],
       "included_capabilities": [
         "SAP framework and protocols (SAP-000)",
         "Cross-repo inbox coordination (SAP-001)",
-        "Agent awareness via AGENTS.md (SAP-009)",
-        "Link validation for documentation quality (SAP-016)",
-        "chora-base meta documentation (SAP-002)"
-      ],
-      "next_steps": [
-        "Add domain-specific SAP (SAP-004 for testing, SAP-014 for MCP)",
-        "Upgrade to 'recommended' set for full productivity",
-        "Customize AGENTS.md for your project"
-      ],
-      "warnings": [],
-      "tags": ["minimal", "entry", "ecosystem", "coordination"]
-    },
-
-    "recommended": {
-      "id": "recommended",
-      "name": "Recommended Foundation",
-      "version": "1.0.0",
-      "description": "10 SAPs covering core development workflows for production-ready projects",
-      "saps": [
-        "SAP-000", "SAP-001", "SAP-002", "SAP-003", "SAP-004",
-        "SAP-005", "SAP-006", "SAP-007", "SAP-009", "SAP-016"
-      ],
-      "estimated_tokens": 60000,
-      "estimated_hours": "1-2 days",
-      "use_cases": [
-        "Standalone projects built on chora-base",
-        "Full development lifecycle support",
-        "Production-ready projects"
-      ],
-      "included_capabilities": [
-        "All minimal-entry capabilities",
+        "chora-base meta documentation (SAP-002)",
         "Project scaffolding with Copier (SAP-003)",
         "Testing framework with pytest and 85%+ coverage (SAP-004)",
         "CI/CD workflows with GitHub Actions (SAP-005)",
         "Quality gates with ruff and mypy (SAP-006)",
-        "Documentation framework with Diátaxis (SAP-007)"
-      ],
-      "next_steps": [
-        "Add advanced capabilities (SAP-010 memory, SAP-011 docker)",
-        "Add technology-specific SAPs (SAP-014 MCP, etc.)",
-        "Customize CI/CD workflows for your tech stack"
-      ],
-      "warnings": [],
-      "tags": ["recommended", "foundation", "core", "productivity"]
-    },
-
-    "full": {
-      "id": "full",
-      "name": "Complete Capability Suite",
-      "version": "1.0.0",
-      "description": "All 18 SAPs for comprehensive coverage of chora-base capabilities",
-      "saps": [
-        "SAP-000", "SAP-001", "SAP-002", "SAP-003", "SAP-004",
-        "SAP-005", "SAP-006", "SAP-007", "SAP-008", "SAP-009",
-        "SAP-010", "SAP-011", "SAP-012", "SAP-013", "SAP-014",
-        "SAP-016", "SAP-017", "SAP-018"
-      ],
-      "estimated_tokens": 100000,
-      "estimated_hours": "2-4 weeks",
-      "use_cases": [
-        "Advanced users wanting all capabilities",
-        "Organizations standardizing on chora-base",
-        "Reference implementations",
-        "chora-base contributors"
-      ],
-      "included_capabilities": [
-        "All recommended capabilities",
-        "Automation scripts with justfile (SAP-008)",
-        "Memory system with A-MEM (SAP-010)",
+        "Documentation framework with Diátaxis (SAP-007)",
+        "Automation scripts (25 scripts + justfile) (SAP-008)",
+        "Agent awareness via AGENTS.md + CLAUDE.md (SAP-009)",
+        "Memory system with A-MEM event logging (SAP-010)",
         "Docker operations with multi-stage builds (SAP-011)",
-        "Development lifecycle with DDD/BDD/TDD (SAP-012)",
+        "Development lifecycle (8-phase DDD/BDD/TDD) (SAP-012)",
         "Metrics tracking with ROI calculator (SAP-013)",
-        "MCP server development with FastMCP (SAP-014)",
-        "chora-compose integration (SAP-017, SAP-018)"
+        "Task tracking with beads for multi-session memory (SAP-015)",
+        "Link validation for documentation quality (SAP-016)",
+        "SAP self-evaluation framework (SAP-019)",
+        "Dogfooding patterns and methodology (SAP-027)",
+        "PyPI publishing automation with OIDC (SAP-028)",
+        "SAP generation templates (SAP-029)"
       ],
       "next_steps": [
-        "No additional SAPs needed",
-        "Customize capabilities for your domain",
-        "Consider contributing new SAPs back to chora-base"
+        "Add domain-specific set (domain-mcp, domain-react, etc.)",
+        "Cherry-pick ecosystem SAPs if full set too large",
+        "Evaluate adoption with SAP-019 (sap-evaluator.py)"
       ],
+      "progressive_adoption_guide": {
+        "minimal_quickstart": {
+          "saps": ["SAP-000", "SAP-001", "SAP-002", "SAP-009", "SAP-016"],
+          "description": "5 SAPs for quick ecosystem entry (3-5 hours)",
+          "use_case": "First-time coordination, lightweight onboarding",
+          "install_command": "install-sap.py SAP-000 SAP-001 SAP-002 SAP-009 SAP-016"
+        },
+        "production_core": {
+          "saps": ["SAP-000", "SAP-001", "SAP-002", "SAP-003", "SAP-004", "SAP-005", "SAP-006", "SAP-007", "SAP-009", "SAP-016"],
+          "description": "10 SAPs for production-ready projects (1-2 days)",
+          "use_case": "Standalone projects, full development lifecycle",
+          "install_command": "install-sap.py SAP-000 SAP-001 SAP-002 SAP-003 SAP-004 SAP-005 SAP-006 SAP-007 SAP-009 SAP-016"
+        },
+        "full_ecosystem": {
+          "saps": "all 20 SAPs",
+          "description": "Complete ecosystem coverage (3-5 days)",
+          "use_case": "Advanced users, comprehensive adoption",
+          "install_command": "install-sap.py --set ecosystem"
+        }
+      },
       "warnings": [
-        "Large token footprint - consider progressive adoption"
+        "Large token footprint (125k tokens) - consider progressive adoption via minimal/core subsets",
+        "Includes 2 pilot SAPs (SAP-015 task-tracking, SAP-028 publishing-automation) - production promotion pending"
       ],
-      "tags": ["full", "complete", "comprehensive", "advanced"]
+      "tags": ["universal", "foundation", "ecosystem", "cross-domain"]
     },
 
-    "testing-focused": {
-      "id": "testing-focused",
-      "name": "Testing & Quality Focused",
-      "version": "1.0.0",
-      "description": "6 SAPs emphasizing testing, quality gates, and CI/CD for quality-first development",
-      "saps": ["SAP-000", "SAP-003", "SAP-004", "SAP-005", "SAP-006", "SAP-016"],
-      "estimated_tokens": 35000,
-      "estimated_hours": "4-6",
-      "use_cases": [
-        "Projects prioritizing test coverage and quality",
-        "CI/CD-heavy workflows",
-        "Quality-first development",
-        "QA-focused contributors"
-      ],
-      "included_capabilities": [
-        "SAP framework (SAP-000)",
-        "Project scaffolding (SAP-003)",
-        "Testing framework with 85%+ coverage (SAP-004)",
-        "CI/CD workflows with GitHub Actions (SAP-005)",
-        "Quality gates with pre-commit hooks (SAP-006)",
-        "Link validation for documentation quality (SAP-016)"
-      ],
-      "next_steps": [
-        "Add documentation framework (SAP-007) for quality docs",
-        "Add development lifecycle (SAP-012) for BDD/TDD workflows",
-        "Consider metrics tracking (SAP-013) for quality metrics"
-      ],
-      "warnings": [],
-      "tags": ["testing", "quality", "ci-cd", "coverage", "qa"]
-    },
-
-    "mcp-server": {
-      "id": "mcp-server",
+    "domain-mcp": {
+      "id": "domain-mcp",
       "name": "MCP Server Development",
-      "version": "1.0.0",
-      "description": "10 SAPs for building Model Context Protocol servers with FastMCP",
+      "type": "domain-specific",
+      "version": "2.0.0",
+      "description": "FastMCP-based Model Context Protocol server development patterns",
       "saps": [
-        "SAP-000", "SAP-003", "SAP-004", "SAP-005", "SAP-006",
-        "SAP-007", "SAP-009", "SAP-012", "SAP-014", "SAP-016"
+        "SAP-014"
       ],
-      "estimated_tokens": 55000,
-      "estimated_hours": "1 day",
+      "requires": {
+        "ecosystem": ["SAP-000", "SAP-003", "SAP-004", "SAP-012"],
+        "rationale": "MCP development requires project scaffolding (SAP-003), testing (SAP-004), and lifecycle (SAP-012)"
+      },
+      "estimated_tokens": 10000,
+      "estimated_hours": "4-6 hours",
       "use_cases": [
         "Building MCP servers with FastMCP",
         "Creating Claude Desktop integrations",
-        "Developing custom MCP tools and resources",
-        "MCP-first projects"
+        "Developing custom MCP tools and resources"
       ],
       "included_capabilities": [
-        "All testing-focused capabilities",
-        "Documentation framework with Diátaxis (SAP-007)",
-        "Agent awareness via AGENTS.md (SAP-009)",
-        "Development lifecycle with DDD/BDD/TDD (SAP-012)",
-        "MCP server development patterns and templates (SAP-014)"
+        "FastMCP patterns and conventions",
+        "11 MCP templates (tools, resources, prompts)",
+        "Tool definition patterns",
+        "Testing strategies for MCP servers",
+        "Deployment workflows"
       ],
-      "next_steps": [
-        "Add chora-compose integration (SAP-017/018) for content generation",
-        "Add automation scripts (SAP-008) for MCP deployment",
-        "Consider memory system (SAP-010) for stateful MCP servers",
-        "Consider docker operations (SAP-011) for containerized MCP servers"
-      ],
-      "warnings": [],
-      "tags": ["mcp", "fastmcp", "model-context-protocol", "claude"]
+      "complete_setup_command": "install-sap.py --set ecosystem --set domain-mcp",
+      "tags": ["mcp", "fastmcp", "model-context-protocol", "claude", "domain-specific"]
     },
 
-    "react-development": {
-      "id": "react-development",
+    "domain-react": {
+      "id": "domain-react",
       "name": "React Development Suite",
-      "version": "1.0.0",
-      "description": "Complete React development stack with Next.js 15, TypeScript, Vitest, and production best practices (Q4 2024 - Q1 2025)",
-      "saps": ["SAP-000", "SAP-003", "SAP-004", "SAP-020", "SAP-021", "SAP-022", "SAP-023", "SAP-024", "SAP-025", "SAP-026"],
-      "estimated_tokens": 75000,
+      "type": "domain-specific",
+      "version": "2.0.0",
+      "description": "Modern React with Next.js 15, TypeScript, Vitest, and production best practices",
+      "saps": [
+        "SAP-020", "SAP-021", "SAP-022", "SAP-023", "SAP-024", "SAP-025", "SAP-026"
+      ],
+      "requires": {
+        "ecosystem": ["SAP-000", "SAP-003", "SAP-004"],
+        "rationale": "React projects require project scaffolding (SAP-003) and base testing framework (SAP-004)"
+      },
+      "estimated_tokens": 65000,
       "estimated_hours": "1-2 days",
       "use_cases": [
         "Building modern React applications with Next.js 15",
@@ -1394,29 +1525,100 @@
         "Enterprise-grade front-end development"
       ],
       "included_capabilities": [
-        "SAP framework (SAP-000)",
-        "Project scaffolding (SAP-003)",
-        "Base testing framework (SAP-004)",
-        "React project foundation with Next.js 15 + TypeScript (SAP-020)",
-        "React testing with Vitest + RTL + MSW (SAP-021)",
-        "React linting with ESLint 9 + Prettier (SAP-022)",
-        "State management with TanStack Query + Zustand (SAP-023)",
-        "Styling with Tailwind v4 + shadcn/ui (SAP-024)",
-        "Performance optimization and Core Web Vitals (SAP-025)",
-        "WCAG 2.2 Level AA accessibility (SAP-026)"
+        "Next.js 15 with App Router + TypeScript strict mode (SAP-020)",
+        "Vitest v4 + React Testing Library + MSW v2 (SAP-021)",
+        "ESLint 9 flat config + Prettier 3 (182x faster) (SAP-022)",
+        "TanStack Query v5 + Zustand v4 + React Hook Form v7 + Zod (SAP-023)",
+        "Tailwind CSS v4 + shadcn/ui component library (SAP-024)",
+        "Core Web Vitals optimization (LCP, INP, CLS) (SAP-025)",
+        "WCAG 2.2 Level AA accessibility compliance (SAP-026)"
       ],
-      "next_steps": [
-        "Add CI/CD workflows (SAP-005) for React deployment pipelines",
-        "Add documentation framework (SAP-007) for component docs",
-        "Consider development lifecycle (SAP-012) for DDD/BDD/TDD workflows",
-        "Customize templates for your specific use case"
-      ],
+      "complete_setup_command": "install-sap.py --set ecosystem --set domain-react",
       "warnings": [
-        "React SAPs focus on Next.js 15 as primary framework - Vite/Remix alternatives provided",
         "Requires Node.js 22.x LTS for optimal performance",
         "Tailwind v4 is in beta - check compatibility before production use"
       ],
-      "tags": ["react", "nextjs", "typescript", "frontend", "production", "enterprise"]
+      "tags": ["react", "nextjs", "typescript", "frontend", "domain-specific"]
+    },
+
+    "domain-chora-compose": {
+      "id": "domain-chora-compose",
+      "name": "Chora-Compose Integration",
+      "type": "domain-specific",
+      "version": "2.0.0",
+      "description": "Content generation with chora-compose MCP tools and Collections architecture",
+      "saps": [
+        "SAP-017", "SAP-018"
+      ],
+      "requires": {
+        "ecosystem": ["SAP-003"],
+        "rationale": "chora-compose integration benefits from project scaffolding patterns"
+      },
+      "estimated_tokens": 20000,
+      "estimated_hours": "6-8 hours",
+      "use_cases": [
+        "Adopting chora-compose for content generation",
+        "MCP server integration (24 tools)",
+        "Collections-based context management",
+        "Advanced content generation workflows"
+      ],
+      "included_capabilities": [
+        "Installation methods (pip, MCP, CLI) (SAP-017)",
+        "Docker integration (SAP-017)",
+        "MCP server configuration (SAP-017)",
+        "24 MCP tools in 7 categories (SAP-018)",
+        "3-tier Collections architecture (SAP-018)",
+        "Context propagation (MERGE/OVERRIDE/ISOLATE) (SAP-018)",
+        "SHA-256 caching (94%+ hit rate) (SAP-018)",
+        "Event emission (OpenTelemetry) (SAP-018)"
+      ],
+      "complete_setup_command": "install-sap.py --set ecosystem --set domain-chora-compose",
+      "tags": ["chora-compose", "content-generation", "mcp", "collections", "domain-specific"]
+    }
+  },
+
+  "deprecated_sets": {
+    "minimal-entry": {
+      "deprecated_version": "1.0.0",
+      "deprecated_date": "2025-11-06",
+      "replacement": "ecosystem with progressive_adoption_guide.minimal_quickstart",
+      "migration_path": "Use: install-sap.py SAP-000 SAP-001 SAP-002 SAP-009 SAP-016",
+      "rationale": "Replaced by ecosystem set with progressive adoption guidance"
+    },
+    "recommended": {
+      "deprecated_version": "1.0.0",
+      "deprecated_date": "2025-11-06",
+      "replacement": "ecosystem with progressive_adoption_guide.production_core",
+      "migration_path": "Use: install-sap.py SAP-000 SAP-001 SAP-002 SAP-003 SAP-004 SAP-005 SAP-006 SAP-007 SAP-009 SAP-016",
+      "rationale": "Replaced by ecosystem set with progressive adoption guidance"
+    },
+    "full": {
+      "deprecated_version": "1.0.0",
+      "deprecated_date": "2025-11-06",
+      "replacement": "ecosystem (all 20 SAPs)",
+      "migration_path": "Use: install-sap.py --set ecosystem",
+      "rationale": "Replaced by ecosystem set - old 'full' only had 18/29 SAPs"
+    },
+    "testing-focused": {
+      "deprecated_version": "1.0.0",
+      "deprecated_date": "2025-11-06",
+      "replacement": "Cherry-pick from ecosystem",
+      "migration_path": "Use: install-sap.py SAP-000 SAP-003 SAP-004 SAP-005 SAP-006 SAP-016",
+      "rationale": "Not a coherent domain - cherry-pick testing SAPs from ecosystem instead"
+    },
+    "mcp-server": {
+      "deprecated_version": "1.0.0",
+      "deprecated_date": "2025-11-06",
+      "replacement": "ecosystem + domain-mcp",
+      "migration_path": "Use: install-sap.py --set ecosystem --set domain-mcp",
+      "rationale": "Split into universal ecosystem + domain-specific MCP SAPs"
+    },
+    "react-development": {
+      "deprecated_version": "1.0.0",
+      "deprecated_date": "2025-11-06",
+      "replacement": "ecosystem + domain-react",
+      "migration_path": "Use: install-sap.py --set ecosystem --set domain-react",
+      "rationale": "Split into universal ecosystem + domain-specific React SAPs"
     }
   }
 }

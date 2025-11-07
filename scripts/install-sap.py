@@ -8,9 +8,13 @@ Usage:
     python scripts/install-sap.py SAP-004
     python scripts/install-sap.py SAP-004 --source /path/to/chora-base
 
+    # Install with automatic Level 1 configuration
+    python scripts/install-sap.py SAP-015 --configure
+    python scripts/install-sap.py --set ecosystem --configure
+
     # Install SAP set
-    python scripts/install-sap.py --set minimal-entry
-    python scripts/install-sap.py --set recommended
+    python scripts/install-sap.py --set ecosystem
+    python scripts/install-sap.py --set ecosystem --set domain-mcp
 
     # List options
     python scripts/install-sap.py --list
@@ -18,7 +22,7 @@ Usage:
 
     # Dry run
     python scripts/install-sap.py SAP-004 --dry-run
-    python scripts/install-sap.py --set minimal-entry --dry-run
+    python scripts/install-sap.py --set ecosystem --configure --dry-run
 
 Exit codes:
     0 - Success
@@ -29,6 +33,7 @@ Exit codes:
 import argparse
 import json
 import shutil
+import subprocess
 import sys
 import time
 from pathlib import Path
@@ -60,6 +65,8 @@ class InstallStats:
     def __init__(self):
         self.saps_installed = 0
         self.saps_skipped = 0
+        self.saps_configured = 0
+        self.config_failed = 0
         self.errors = 0
         self.warnings = 0
         self.start_time = None
@@ -238,7 +245,7 @@ def get_sap_set(set_id: str, catalog: Dict, target_dir: Path) -> Optional[Dict]:
 
     return None
 
-def install_sap_set(set_id: str, source_dir: Path, target_dir: Path, catalog: Dict, dry_run: bool = False) -> bool:
+def install_sap_set(set_id: str, source_dir: Path, target_dir: Path, catalog: Dict, dry_run: bool = False, configure: bool = False) -> bool:
     """Install a SAP set (multiple SAPs)"""
     sap_set = get_sap_set(set_id, catalog, target_dir)
 
@@ -255,6 +262,8 @@ def install_sap_set(set_id: str, source_dir: Path, target_dir: Path, catalog: Di
         print_info(f"Estimated tokens: ~{sap_set['estimated_tokens']:,}")
     if 'estimated_hours' in sap_set:
         print_info(f"Estimated time: {sap_set['estimated_hours']}")
+    if configure:
+        print_info("Configuration: Enabled (Level 1 automation)")
     print()
 
     # Show warnings if any
@@ -274,7 +283,7 @@ def install_sap_set(set_id: str, source_dir: Path, target_dir: Path, catalog: Di
     for idx, sap_id in enumerate(sap_set['saps']):
         stats.current_sap_index = idx
 
-        if not install_sap(sap_id, source_dir, target_dir, catalog, dry_run, indent=True):
+        if not install_sap(sap_id, source_dir, target_dir, catalog, dry_run, indent=True, configure=configure):
             success = False
             # Continue with other SAPs even if one fails
 
@@ -315,7 +324,7 @@ def validate_sap_installation(sap_id: str, sap: Dict, target_dir: Path) -> bool:
 
     return True
 
-def install_dependencies(sap: Dict, source_dir: Path, target_dir: Path, catalog: Dict, dry_run: bool, indent: bool = False) -> bool:
+def install_dependencies(sap: Dict, source_dir: Path, target_dir: Path, catalog: Dict, dry_run: bool, indent: bool = False, configure: bool = False) -> bool:
     """Install SAP dependencies recursively"""
     prefix = "  " if indent else ""
     dependencies = sap.get('dependencies', [])
@@ -332,13 +341,13 @@ def install_dependencies(sap: Dict, source_dir: Path, target_dir: Path, catalog:
             continue
 
         print_info(f"{prefix}  📦 Installing dependency: {dep_id}")
-        if not install_sap(dep_id, source_dir, target_dir, catalog, dry_run, indent=True):
+        if not install_sap(dep_id, source_dir, target_dir, catalog, dry_run, indent=True, configure=configure):
             print_error(f"{prefix}  Failed to install dependency: {dep_id}")
             success = False
 
     return success
 
-def install_sap(sap_id: str, source_dir: Path, target_dir: Path, catalog: Dict, dry_run: bool = False, indent: bool = False) -> bool:
+def install_sap(sap_id: str, source_dir: Path, target_dir: Path, catalog: Dict, dry_run: bool = False, indent: bool = False, configure: bool = False) -> bool:
     """Install a single SAP with dependency resolution"""
     prefix = "  " if indent else ""
 
@@ -350,9 +359,18 @@ def install_sap(sap_id: str, source_dir: Path, target_dir: Path, catalog: Dict, 
 
     # Check if already installed
     sap_dir = target_dir / sap['location']
-    if sap_dir.exists():
+    already_installed = sap_dir.exists()
+
+    if already_installed:
         print_info(f"{prefix}✓ {sap_id} ({sap['name']}) already installed - skipping")
         stats.saps_skipped += 1
+
+        # If --configure flag is set, still run configuration even if already installed
+        if configure and not dry_run:
+            configure_success = configure_sap(sap_id, sap, target_dir, dry_run, indent)
+            if not configure_success:
+                stats.config_failed += 1
+
         return True
 
     print()
@@ -365,10 +383,14 @@ def install_sap(sap_id: str, source_dir: Path, target_dir: Path, catalog: Dict, 
     if dry_run:
         print_info(f"{prefix}[DRY RUN] Would install {sap_id}")
         stats.saps_installed += 1
+
+        if configure:
+            print_info(f"{prefix}[DRY RUN] Would configure {sap_id} to Level 1")
+
         return True
 
     # Install dependencies first
-    if not install_dependencies(sap, source_dir, target_dir, catalog, dry_run, indent):
+    if not install_dependencies(sap, source_dir, target_dir, catalog, dry_run, indent, configure):
         print_warning(f"{prefix}Some dependencies failed, continuing anyway")
 
     # Copy SAP directory
@@ -418,6 +440,209 @@ def install_sap(sap_id: str, source_dir: Path, target_dir: Path, catalog: Dict, 
     print_success(f"{prefix}{sap['name']} installed successfully!")
     stats.saps_installed += 1
 
+    # Configure SAP to Level 1 if --configure flag is set
+    if configure:
+        configure_success = configure_sap(sap_id, sap, target_dir, dry_run, indent)
+        if not configure_success:
+            stats.config_failed += 1
+
+    return True
+
+#############################################################################
+# Configuration Functions (Level 1 Maturity)
+#############################################################################
+
+def run_command(command: str, description: str, working_dir: Optional[Path] = None, check: bool = True, prefix: str = "") -> bool:
+    """Execute a shell command and return success status
+
+    Args:
+        command: Shell command to execute
+        description: Human-readable description of what the command does
+        working_dir: Directory to execute command in (default: current directory)
+        check: Whether to raise error on non-zero exit code
+        prefix: Indentation prefix for output
+
+    Returns:
+        True if command succeeded, False otherwise
+    """
+    print_info(f"{prefix}{description}")
+
+    try:
+        result = subprocess.run(
+            command,
+            shell=True,
+            cwd=working_dir,
+            capture_output=True,
+            text=True,
+            timeout=120  # 2 minute timeout
+        )
+
+        if result.returncode == 0:
+            print_success(f"{prefix}  ✓ Success")
+            if result.stdout.strip():
+                print(f"{prefix}    {result.stdout.strip()[:100]}")
+            return True
+        else:
+            if check:
+                print_error(f"{prefix}  ✗ Failed (exit code {result.returncode})")
+                if result.stderr.strip():
+                    print(f"{prefix}    {result.stderr.strip()[:200]}")
+            return False
+
+    except subprocess.TimeoutExpired:
+        print_error(f"{prefix}  ✗ Timeout after 2 minutes")
+        return False
+    except Exception as e:
+        print_error(f"{prefix}  ✗ Error: {e}")
+        return False
+
+def check_dependency(dep_info: Dict, prefix: str = "") -> bool:
+    """Check if a dependency is installed
+
+    Args:
+        dep_info: Dependency info dict with 'command', 'install_hint', optional 'fallback_install'
+        prefix: Indentation prefix
+
+    Returns:
+        True if dependency is available, False otherwise
+    """
+    command = dep_info['command']
+
+    try:
+        result = subprocess.run(
+            command,
+            shell=True,
+            capture_output=True,
+            timeout=10
+        )
+
+        if result.returncode == 0:
+            print_success(f"{prefix}  ✓ {command.split()[0]} is installed")
+            return True
+        else:
+            print_warning(f"{prefix}  ✗ {command.split()[0]} not found")
+            print_info(f"{prefix}    Install hint: {dep_info['install_hint']}")
+            if 'fallback_install' in dep_info:
+                print_info(f"{prefix}    Alternative: {dep_info['fallback_install']}")
+            return False
+
+    except Exception as e:
+        print_warning(f"{prefix}  ✗ Could not check {command}: {e}")
+        return False
+
+def configure_sap(sap_id: str, sap: Dict, target_dir: Path, dry_run: bool = False, indent: bool = False) -> bool:
+    """Configure a SAP to Level 1 maturity using post_install automation
+
+    Args:
+        sap_id: SAP identifier (e.g., 'SAP-015')
+        sap: SAP metadata dict
+        target_dir: Target directory for project
+        dry_run: Whether to only simulate configuration
+        indent: Whether to indent output
+
+    Returns:
+        True if configuration succeeded, False otherwise
+    """
+    prefix = "  " if indent else ""
+
+    # Check if SAP has post_install configuration
+    if 'post_install' not in sap or 'level_1' not in sap['post_install']:
+        print_info(f"{prefix}No Level 1 automation available for {sap_id}")
+        return True  # Not a failure, just no automation
+
+    post_install = sap['post_install']['level_1']
+
+    print()
+    print(f"{prefix}{Colors.BLUE}Configuring {sap['name']} ({sap_id}) to Level 1{Colors.NC}")
+    print_info(f"{prefix}{post_install['description']}")
+
+    if 'estimated_minutes' in post_install:
+        print_info(f"{prefix}Estimated time: {post_install['estimated_minutes']} minutes")
+
+    if dry_run:
+        print_info(f"{prefix}[DRY RUN] Would configure {sap_id}")
+        return True
+
+    # Check dependencies
+    dependencies = post_install.get('dependencies', [])
+    if dependencies:
+        print_info(f"{prefix}Checking dependencies...")
+        all_deps_ok = True
+        for dep_info in dependencies:
+            if not check_dependency(dep_info, prefix=prefix):
+                all_deps_ok = False
+
+        if not all_deps_ok:
+            print_error(f"{prefix}Some dependencies are missing - configuration may fail")
+            print_info(f"{prefix}Continuing anyway...")
+
+    # Execute configuration steps
+    steps = post_install.get('steps', [])
+    if steps:
+        print_info(f"{prefix}Executing {len(steps)} configuration steps...")
+        for step in steps:
+            command = step['command']
+            description = step.get('description', command)
+            optional = step.get('optional', False)
+            skip_if_missing = step.get('skip_if_missing')
+
+            # Check if we should skip this step
+            if skip_if_missing:
+                skip_file = target_dir / skip_if_missing
+                if not skip_file.exists():
+                    print_info(f"{prefix}  ⊘ Skipping (file not found: {skip_if_missing})")
+                    continue
+
+            # Replace ${PROJECT_NAME} placeholder
+            working_dir_str = step.get('working_dir', 'project_root')
+            working_dir = target_dir if working_dir_str == 'project_root' else Path(working_dir_str)
+
+            success = run_command(
+                command,
+                description,
+                working_dir=working_dir,
+                check=not optional,
+                prefix=prefix
+            )
+
+            if not success and not optional:
+                print_error(f"{prefix}Configuration step failed: {description}")
+                return False
+
+    # Run validation
+    validation = post_install.get('validation')
+    if validation:
+        print_info(f"{prefix}Validating configuration...")
+        val_command = validation['command']
+        val_description = validation.get('description', 'Validation check')
+
+        success = run_command(
+            val_command,
+            val_description,
+            working_dir=target_dir,
+            check=False,
+            prefix=prefix
+        )
+
+        if not success:
+            print_warning(f"{prefix}Validation failed - configuration may be incomplete")
+            # Don't fail completely, just warn
+
+    # Print success criteria
+    if 'success_criteria' in post_install:
+        print_info(f"{prefix}Success criteria:")
+        for criterion in post_install['success_criteria']:
+            print(f"{prefix}  • {criterion}")
+
+    # Print notes if any
+    if 'notes' in post_install:
+        print_info(f"{prefix}Notes:")
+        for note in post_install['notes']:
+            print(f"{prefix}  • {note}")
+
+    print_success(f"{prefix}{sap['name']} configured to Level 1!")
+    stats.saps_configured += 1
+
     return True
 
 def list_saps(catalog: Dict) -> None:
@@ -444,12 +669,18 @@ def list_saps(catalog: Dict) -> None:
 # Summary Functions
 #############################################################################
 
-def print_summary(dry_run: bool) -> None:
+def print_summary(dry_run: bool, configure: bool = False) -> None:
     """Print installation summary"""
     print_header("Installation Summary")
 
     print(f"{Colors.GREEN}SAPs installed:{Colors.NC} {stats.saps_installed}")
     print(f"{Colors.BLUE}SAPs skipped (already installed):{Colors.NC} {stats.saps_skipped}")
+
+    if configure:
+        print(f"{Colors.GREEN}SAPs configured to Level 1:{Colors.NC} {stats.saps_configured}")
+        if stats.config_failed > 0:
+            print(f"{Colors.RED}Configurations failed:{Colors.NC} {stats.config_failed}")
+
     print(f"{Colors.YELLOW}Warnings:{Colors.NC} {stats.warnings}")
     print(f"{Colors.RED}Errors:{Colors.NC} {stats.errors}")
     print()
@@ -462,8 +693,14 @@ def print_summary(dry_run: bool) -> None:
             print_info("Next steps:")
             print_info("  1. Review installed SAPs in docs/skilled-awareness/")
             print_info("  2. Update AGENTS.md with installed capabilities")
-            print_info("  3. Read adoption-blueprint.md for each SAP")
-            print_info("  4. Run validation: just test && just lint")
+            if not configure:
+                print_info("  3. Configure SAPs to Level 1: re-run with --configure flag")
+                print_info("  4. Read adoption-blueprint.md for each SAP")
+                print_info("  5. Run validation: just test && just lint")
+            else:
+                print_info("  3. Read adoption-blueprint.md for each SAP")
+                print_info("  4. Run validation: just test && just lint")
+                print_info("  5. Check maturity: python scripts/sap-evaluator.py --quick")
             print()
 
 #############################################################################
@@ -481,11 +718,19 @@ Examples:
   # Install individual SAP
   python scripts/install-sap.py SAP-004
 
-  # Install SAP set
-  python scripts/install-sap.py --set minimal-entry
+  # Install with Level 1 automation (recommended)
+  python scripts/install-sap.py SAP-015 --configure
+  python scripts/install-sap.py --set ecosystem --configure
+
+  # Install single SAP set
+  python scripts/install-sap.py --set ecosystem
+
+  # Install multiple SAP sets (domain-based architecture)
+  python scripts/install-sap.py --set ecosystem --set domain-mcp --configure
+  python scripts/install-sap.py --set ecosystem --set domain-react --configure
 
   # Preview without installing
-  python scripts/install-sap.py --set recommended --dry-run
+  python scripts/install-sap.py --set ecosystem --configure --dry-run
 
   # List available options
   python scripts/install-sap.py --list
@@ -497,9 +742,10 @@ More Info:
     )
 
     parser.add_argument('sap_id', nargs='?', help='SAP ID to install (e.g., SAP-004)')
-    parser.add_argument('--set', dest='set_id', help='Install a SAP set (e.g., minimal-entry)')
+    parser.add_argument('--set', dest='set_ids', action='append', help='Install a SAP set (e.g., ecosystem, domain-mcp). Can be used multiple times.')
     parser.add_argument('--source', type=Path, default=Path.cwd(), help='Path to chora-base (default: current directory)')
     parser.add_argument('--target', type=Path, default=Path.cwd(), help='Target directory (default: current directory)')
+    parser.add_argument('--configure', action='store_true', help='Configure SAPs to Level 1 maturity after installation (automated setup)')
     parser.add_argument('--list', action='store_true', help='List all available SAPs')
     parser.add_argument('--list-sets', action='store_true', help='List all available SAP sets')
     parser.add_argument('--dry-run', action='store_true', help='Preview without installing')
@@ -507,7 +753,7 @@ More Info:
     args = parser.parse_args()
 
     # Validate arguments
-    if not any([args.sap_id, args.set_id, args.list, args.list_sets]):
+    if not any([args.sap_id, args.set_ids, args.list, args.list_sets]):
         parser.print_help()
         sys.exit(2)
 
@@ -523,18 +769,32 @@ More Info:
         list_sap_sets(catalog, args.target)
         sys.exit(0)
 
-    # Install SAP set
-    if args.set_id:
+    # Install SAP sets (supports multiple --set arguments)
+    if args.set_ids:
         print_header("SAP Set Installation")
         if args.dry_run:
             print_warning("DRY RUN MODE - No changes will be made")
             print()
 
-        success = install_sap_set(args.set_id, args.source, args.target, catalog, args.dry_run)
-        print()
-        print_summary(args.dry_run)
+        if args.configure:
+            print_info("Configuration mode enabled - SAPs will be configured to Level 1")
+            print()
 
-        sys.exit(0 if success else 1)
+        # Print sets to install
+        if len(args.set_ids) > 1:
+            print_info(f"Installing {len(args.set_ids)} sets: {', '.join(args.set_ids)}")
+            print()
+
+        # Install each set
+        overall_success = True
+        for set_id in args.set_ids:
+            success = install_sap_set(set_id, args.source, args.target, catalog, args.dry_run, args.configure)
+            if not success:
+                overall_success = False
+            print()
+
+        print_summary(args.dry_run, args.configure)
+        sys.exit(0 if overall_success else 1)
 
     # Install individual SAP
     if args.sap_id:
@@ -543,9 +803,13 @@ More Info:
             print_warning("DRY RUN MODE - No changes will be made")
             print()
 
-        success = install_sap(args.sap_id, args.source, args.target, catalog, args.dry_run)
+        if args.configure:
+            print_info("Configuration mode enabled - SAP will be configured to Level 1")
+            print()
+
+        success = install_sap(args.sap_id, args.source, args.target, catalog, args.dry_run, configure=args.configure)
         print()
-        print_summary(args.dry_run)
+        print_summary(args.dry_run, args.configure)
 
         sys.exit(0 if success else 1)
 

@@ -147,14 +147,13 @@ For each SAP, generates 5 markdown files with:
 
 ## 3. Integration Patterns
 
-<!-- TODO: Describe how this SAP integrates with other components
+SAP-029 integrates with the SAP ecosystem to provide automated artifact generation. Key integration points:
 
-Include:
-- Integration with other SAPs (especially dependencies)
-- External system integration
-- Common usage patterns
-- Configuration examples
--->
+1. **SAP-000 (SAP Framework)**: Consumes SAP artifact structure specifications, validates generated artifacts against SAP-000 protocols
+2. **sap-catalog.json**: Reads SAP metadata (id, name, description, tags) as input for template rendering
+3. **SAP-019 (Self-Evaluation)**: Generated artifacts include metadata for sap-evaluator.py validation
+4. **SAP-005 (CI/CD Workflows)**: Generator script can be invoked in GitHub Actions/GitLab CI for automated SAP creation
+5. **SAP-016 (Link Validation)**: Generated artifacts include link placeholders that integrate with link validation workflows
 
 
 ### Dependencies Integration
@@ -162,175 +161,383 @@ Include:
 
 #### Integration with SAP-000
 
-<!-- TODO: Describe how this SAP integrates with SAP-000 -->
-
-**Integration Point**: [Description]
+**Integration Point**: SAP-000 defines the 5-artifact structure (capability-charter, protocol-spec, awareness-guide, adoption-blueprint, ledger) that SAP-029 generates. Templates conform to SAP-000 section requirements.
 
 **Configuration**:
 ```yaml
-# Example configuration for SAP-000 integration
+sap-generation:
+  sap_framework_version: "4.0.0"  # SAP-000 version to conform to
+  artifact_templates:
+    capability-charter: templates/sap/capability-charter.md.j2
+    protocol-spec: templates/sap/protocol-spec.md.j2
+    awareness-guide: templates/sap/awareness-guide.md.j2
+    adoption-blueprint: templates/sap/adoption-blueprint.md.j2
+    ledger: templates/sap/ledger.md.j2
 ```
+
+**Validation**: Generated artifacts MUST pass `python scripts/sap-evaluator.py --quick {SAP_ID}` which validates SAP-000 compliance.
 
 
 
 
 ### External Integrations
 
-<!-- TODO: Describe integration with external systems/tools -->
+**Integration 1**: Jinja2 Template Engine
+- **Purpose**: Core templating system for artifact generation. Jinja2 provides variable substitution, loops, conditionals, and filters for generating SAP markdown content.
+- **Configuration**:
+  ```python
+  from jinja2 import Environment, FileSystemLoader
+  env = Environment(
+      loader=FileSystemLoader('templates/sap/'),
+      trim_blocks=True,
+      lstrip_blocks=True
+  )
+  ```
 
-**Integration 1**: [External system name]
-- **Purpose**: [Why integrate]
-- **Configuration**: [How to configure]
+**Integration 2**: sap-catalog.json (Project Configuration)
+- **Purpose**: Source of truth for SAP metadata. Generator reads catalog to populate template variables (sap_id, name, description, tags, dependencies).
+- **Configuration**: Add SAP entry to `sap-catalog.json` before generation:
+  ```json
+  {
+    "id": "SAP-030",
+    "name": "database-migrations",
+    "description": "Database migration automation",
+    "tags": ["backend", "database"],
+    "dependencies": ["SAP-000"]
+  }
+  ```
+
+**Integration 3**: GitHub Actions / CI/CD Pipelines
+- **Purpose**: Automate SAP generation in continuous integration workflows
+- **Configuration**: See adoption-blueprint.md Level 3, Step 3.1 for GitHub Actions workflow example
 
 ---
 
 ## 4. Configuration
 
-<!-- TODO: Define configuration schema and options
+Configuration for SAP-029 is stored in `.chora/config.yaml` (project root). The configuration defines template paths, schema fields, generation behavior, and integration settings.
 
-Include:
-- Configuration file format (YAML, JSON, TOML, etc.)
-- Required vs optional settings
-- Default values
-- Environment variables
-- Validation rules
--->
+**Configuration File Format**: YAML
 
 ### Configuration Schema
 
 ```yaml
-# Example configuration format
 sap-generation:
-  enabled: true  # Enable this capability
-  # TODO: Add configuration options
+  enabled: true  # Enable SAP generation capability
+  level: 1  # Adoption level (1: Basic, 2: Advanced, 3: Mastery)
+
+  # Template Configuration (REQUIRED)
+  templates:
+    path: templates/sap/  # Base template directory
+    version: "1.2.0"  # Template version
+    cache_enabled: false  # Cache compiled templates (Level 3)
+
+  # Schema Configuration (Level 1: MVP, Level 2+: Extended)
+  schema:
+    mvp_fields:  # 9 MVP fields for Level 1
+      - sap_id
+      - name
+      - description
+      - problem
+      - solution
+      - principles
+      - in_scope
+      - out_of_scope
+      - one_sentence_summary
+    extended_fields: []  # Level 2: Add stakeholders, metrics, etc.
+
+  # Generation Behavior
+  generation:
+    output_dir: docs/skilled-awareness/
+    auto_add_to_catalog: false  # Auto-update sap-catalog.json
+    update_index: true  # Auto-update INDEX.md
+    force_overwrite: false  # Overwrite existing files without --force flag
+
+  # Validation (Level 2+)
+  validation:
+    auto_validate: false  # Run sap-evaluator.py after generation
+    fail_on_error: false  # Exit with error if validation fails
+    todo_threshold: 10  # Max TODOs for quality gate (Level 3)
+
+  # CI/CD Integration (Level 3)
+  ci_cd:
+    enabled: false
+    platform: github_actions  # or gitlab_ci, jenkins
+    auto_pr_creation: false
+
+  # Advanced Features (Level 3)
+  advanced:
+    parallel_generation: false  # Generate multiple SAPs concurrently
+    dependency_resolution: false  # Auto-generate dependent SAPs
+    template_caching: false  # Cache Jinja2 templates
 ```
+
+**Validation Rules**:
+- `templates.path` MUST exist and contain `.j2` template files
+- `level` MUST be 1, 2, or 3
+- `validation.todo_threshold` MUST be >= 0
+- `schema.mvp_fields` MUST contain at least 5 fields
 
 ### Environment Variables
 
 | Variable | Required | Default | Description |
 |----------|----------|---------|-------------|
-| `SAP-GENERATION_ENABLED` | No | `true` | Enable/disable this capability |
-<!-- TODO: Add environment variables -->
+| `SAP_GENERATION_ENABLED` | No | `true` | Enable/disable SAP generation capability |
+| `SAP_GENERATION_TEMPLATE_PATH` | No | `templates/sap/` | Override template directory path |
+| `SAP_GENERATION_OUTPUT_DIR` | No | `docs/skilled-awareness/` | Override output directory |
+| `SAP_GENERATION_LEVEL` | No | `1` | Override adoption level (1, 2, or 3) |
+| `PYTHONIOENCODING` | No | `utf-8` | Python I/O encoding (required on Windows to handle Unicode in sap-evaluator output)
 
 ---
 
 ## 5. Error Handling
 
-<!-- TODO: Define error codes, messages, and recovery procedures
-
-Include:
-- Error codes / exception types
-- Error messages
-- Recovery procedures
-- Logging/debugging guidance
--->
+SAP-029 defines structured error codes for common failure scenarios. All errors are logged to `.chora/logs/sap-generation.log` if logging is enabled.
 
 ### Error Codes
 
 | Code | Error | Cause | Resolution |
 |------|-------|-------|------------|
-| `SAP-029-001` | [Error name] | [Common cause] | [How to fix] |
-| `SAP-029-002` | [Error name] | [Common cause] | [How to fix] |
+| `SAP-029-001` | SAP Not Found in Catalog | SAP ID doesn't exist in sap-catalog.json | Add SAP entry to catalog first, or check spelling (SAP-030 not SAP030) |
+| `SAP-029-002` | Template Not Found | Jinja2 template file missing or incorrect path | Verify templates/sap/ contains required .j2 files (5 artifact templates) |
+| `SAP-029-003` | Template Syntax Error | Invalid Jinja2 syntax in template | Fix Jinja2 errors: missing `{% endfor %}`, unescaped `{{`, undefined variables |
+| `SAP-029-004` | Permission Denied | Write permissions issue for output directory | Check directory ownership: `chmod -R u+w docs/skilled-awareness/` |
+| `SAP-029-005` | SAP Already Exists | Target SAP directory already exists | Use `--force` flag to overwrite, or delete existing directory first |
+| `SAP-029-006` | Invalid Schema | Catalog entry missing required MVP fields | Ensure SAP entry has: id, name, description, problem, solution, principles |
+| `SAP-029-007` | Unicode Encoding Error | Windows console encoding issue (cp1252 can't handle emoji) | Set `PYTHONIOENCODING=utf-8` or use UTF-8 console |
+| `SAP-029-008` | Validation Failed | Generated SAP doesn't pass sap-evaluator.py | Review validation output, fix artifact structure issues |
 
-<!-- TODO: Add specific error codes for this SAP -->
+**Exception Hierarchy**:
+```python
+class SAPGenerationError(Exception):
+    """Base exception for SAP generation errors"""
+
+class TemplateNotFoundError(SAPGenerationError):
+    """Error code SAP-029-002"""
+
+class TemplateSyntaxError(SAPGenerationError):
+    """Error code SAP-029-003"""
+
+class SAPAlreadyExistsError(SAPGenerationError):
+    """Error code SAP-029-005"""
+```
 
 ### Common Errors
 
-**Error: [Error message]**
-- **Cause**: [Why this happens]
-- **Solution**: [How to fix]
+**Error: `jinja2.exceptions.UndefinedError: 'sap' is undefined`**
+- **Cause**: Template references undefined variable `sap.field_name`. Catalog entry missing field.
+- **Solution**: Add missing field to SAP entry in sap-catalog.json, or update template to handle missing field with `{{ sap.field_name | default('N/A') }}`
+
+**Error: `FileExistsError: [Errno 17] File exists: 'docs/skilled-awareness/database-migrations/'`**
+- **Cause**: SAP directory already exists from previous generation
+- **Solution**: Use `python scripts/generate-sap.py SAP-030 --force` to overwrite, or `rm -rf docs/skilled-awareness/database-migrations/` first
+
+**Logging**: Enable debug logging with `--verbose` flag:
+```bash
+python scripts/generate-sap.py SAP-030 --verbose 2>&1 | tee generation.log
+```
 
 ---
 
 ## 6. Security Considerations
 
-<!-- TODO: Document security requirements and best practices
+SAP-029 is a local code generation tool with minimal security risks. Key considerations:
 
-Include:
-- Authentication/authorization requirements
-- Data protection
-- Secret management
-- Security best practices
-- Known vulnerabilities and mitigations
--->
+**1. Template Injection Prevention**:
+- **Risk**: Malicious templates could execute arbitrary Python code via Jinja2's `eval()` or `exec()`
+- **Mitigation**: Disable Jinja2 autoescape and restrict template features:
+  ```python
+  env = Environment(
+      loader=FileSystemLoader('templates/sap/'),
+      autoescape=False,  # Markdown output, not HTML
+      enable_async=False,  # Disable async features
+      finalize=lambda x: x if x is not None else ''  # Null-safe
+  )
+  # Do NOT use: env.globals['__builtins__'] (allows arbitrary code)
+  ```
+- **Best Practice**: Review all templates before using. Store templates in version-controlled directories only.
 
+**2. Path Traversal Prevention**:
+- **Risk**: Malicious SAP IDs like `../../etc/passwd` could write outside intended directory
+- **Mitigation**: Sanitize SAP IDs:
+  ```python
+  import os
+  safe_id = os.path.basename(sap_id)  # Remove path components
+  if safe_id != sap_id:
+      raise ValueError(f"Invalid SAP ID: {sap_id}")
+  ```
 
-<!-- TODO: Add security considerations if applicable -->
+**3. Secret Management**:
+- **Risk**: Generated SAPs might accidentally include secrets (API keys, passwords) in examples or configuration
+- **Mitigation**:
+  - Use placeholder values in templates: `api_key: "YOUR_API_KEY_HERE"`, not real credentials
+  - Add `.chora/config.yaml` to `.gitignore` if it contains environment-specific secrets
+  - Use secret scanning tools (e.g., git-secrets, trufflehog) on generated artifacts before commit
+
+**4. Dependency Security**:
+- **Risk**: Jinja2 library vulnerabilities (CVE-2019-10906, CVE-2020-28493)
+- **Mitigation**: Keep Jinja2 updated to latest stable version (3.1.2+). Run `pip install --upgrade jinja2` regularly.
+
+**Known Vulnerabilities**: None specific to SAP-029 (as of 2025-11-02). Monitor Jinja2 security advisories.
 
 
 ---
 
 ## 7. Performance Requirements
 
-<!-- TODO: Define performance targets and benchmarks
-
-Include:
-- Response time requirements
-- Throughput targets
-- Resource usage limits
-- Scalability considerations
-- Performance monitoring
--->
+SAP generation performance targets ensure acceptable user experience. Targets vary by adoption level.
 
 ### Performance Targets
 
-| Metric | Target | Measurement |
-|--------|--------|-------------|
-| Response Time | < X ms | [How measured] |
-| Throughput | X ops/sec | [How measured] |
-| Resource Usage | < X MB | [How measured] |
+| Metric | Target (Level 1) | Target (Level 3) | Measurement |
+|--------|------------------|------------------|-------------|
+| **Generation Time** | < 5 minutes | < 30 seconds | Time from script invocation to completion (5 artifacts) |
+| **Throughput** | 1 SAP/5min | 12 SAPs/5min (parallel) | SAPs generated per unit time |
+| **Memory Usage** | < 100 MB | < 250 MB | Peak RAM during generation (measured with `memory_profiler`) |
+| **Template Compile Time** | 2-3 seconds | < 500ms (cached) | Time to compile Jinja2 templates |
+| **TODO Count** | 60-105 per SAP | <10 per SAP | Manual work remaining after generation |
 
-<!-- TODO: Define specific performance targets -->
+**Scalability Considerations**:
+- **Level 1**: Sequential generation. Time complexity O(N) where N = number of SAPs
+- **Level 3**: Parallel generation. Time complexity O(N/K) where K = CPU cores (8 cores: ~8x speedup)
+- **Bottleneck**: Disk I/O for writing files. Use SSD for best performance (5x faster than HDD)
+
+**Performance Monitoring**:
+```bash
+# Benchmark generation time
+time python scripts/generate-sap.py SAP-030
+
+# Benchmark with memory profiling
+python -m memory_profiler scripts/generate-sap.py SAP-030
+
+# Benchmark batch generation (Level 3)
+time python scripts/generate-sap.py --batch batch-generate.yaml --parallel
+```
+
+**Optimization Techniques** (Level 3):
+1. **Template Caching**: Compile templates once, reuse 50+ times (50-70% time savings)
+2. **Parallel Generation**: Use `multiprocessing` to generate N SAPs concurrently
+3. **Lazy Loading**: Load catalog only once, share across parallel workers
+4. **Incremental Updates**: Only regenerate changed artifacts (--incremental flag)
 
 ---
 
 ## 8. Examples
 
-<!-- TODO: Provide concrete usage examples
+### Example 1: Basic Usage - Generate a Single SAP
 
-Include:
-- Basic usage example
-- Advanced usage examples
-- Common patterns
-- Edge cases
-- Integration examples
--->
+**Scenario**: First-time SAP generation (Level 1). Create SAP-030 for database migrations.
 
-### Example 1: Basic Usage
+```bash
+# Step 1: Add SAP entry to catalog
+cat >> sap-catalog.json <<EOF
+{
+  "id": "SAP-030",
+  "name": "database-migrations",
+  "status": "draft",
+  "version": "0.1.0",
+  "description": "Database migration automation for Python projects",
+  "tags": ["backend", "database", "automation"],
+  "dependencies": ["SAP-000"]
+}
+EOF
 
-**Scenario**: [What this example demonstrates]
+# Step 2: Generate SAP artifacts
+python scripts/generate-sap.py SAP-030
 
-```python
-# Example code demonstrating basic usage
-# TODO: Add example code
+# Step 3: Validate generated SAP
+python scripts/sap-evaluator.py --quick SAP-030
 ```
 
 **Expected Output**:
 ```
-# TODO: Show expected output
+🔍 Generating SAP-030 (database-migrations)...
+✅ Created docs/skilled-awareness/database-migrations/
+✅ Generated capability-charter.md (45 lines, 8 TODOs)
+✅ Generated protocol-spec.md (120 lines, 15 TODOs)
+✅ Generated awareness-guide.md (95 lines, 12 TODOs)
+✅ Generated adoption-blueprint.md (180 lines, 25 TODOs)
+✅ Generated ledger.md (60 lines, 5 TODOs)
+
+📊 Summary: 5 files created, 65 TODOs to fill
+⏱️ Estimated manual fill time: 2-3 hours
 ```
 
-### Example 2: Advanced Usage
+### Example 2: Advanced Usage - Batch Generation with Custom Domain
 
-**Scenario**: [What this example demonstrates]
+**Scenario**: Level 2 adoption. Generate 3 frontend SAPs using domain-specific templates.
 
-```python
-# Example code demonstrating advanced usage
-# TODO: Add advanced example
+```bash
+# Step 1: Create batch configuration
+cat > batch-generate.yaml <<EOF
+batch:
+  - id: SAP-031
+    name: routing-navigation
+    domain: frontend
+    tags: ["frontend", "react", "nextjs"]
+  - id: SAP-032
+    name: performance-optimization
+    domain: frontend
+    tags: ["frontend", "react", "performance"]
+  - id: SAP-033
+    name: data-fetching
+    domain: frontend
+    tags: ["frontend", "react", "api"]
+EOF
+
+# Step 2: Run batch generation
+python scripts/generate-sap.py --batch batch-generate.yaml
+
+# Step 3: Validate all SAPs
+for sap in SAP-031 SAP-032 SAP-033; do
+  python scripts/sap-evaluator.py --quick $sap
+done
+```
+
+### Example 3: Level 3 - CI/CD Integration with Quality Gates
+
+**Scenario**: Production deployment. Auto-generate SAP via GitHub Actions with quality gate enforcement.
+
+```yaml
+# .github/workflows/generate-sap.yml
+name: Generate SAP with Quality Gates
+on:
+  workflow_dispatch:
+    inputs:
+      sap_id:
+        required: true
+
+jobs:
+  generate-and-validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-python@v4
+        with:
+          python-version: '3.11'
+      - run: pip install jinja2
+      - name: Generate SAP
+        run: python scripts/generate-sap.py ${{ github.event.inputs.sap_id }}
+      - name: Quality Gate
+        run: python scripts/quality-gate-sap.py ${{ github.event.inputs.sap_id }} 10
+      - name: Create PR
+        uses: peter-evans/create-pull-request@v5
+        with:
+          title: "feat: Generate ${{ github.event.inputs.sap_id }}"
 ```
 
 ---
 
 ## 9. Validation & Testing
 
-<!-- TODO: Define validation criteria and testing approaches
+### Validation Criteria
 
-Include:
-- How to validate correct implementation
-- Test cases
-- Validation commands
-- Expected results
--->
+A SAP is considered validly generated if:
+1. All 5 artifacts exist in correct directory (`docs/skilled-awareness/{sap-name}/`)
+2. Each artifact has valid YAML frontmatter with `generation` metadata
+3. Artifacts pass sap-evaluator.py structure validation
+4. Generated content contains expected sections per SAP-000 specification
+5. TODO count is within expected range (60-105 for technical SAPs, 40-80 for meta SAPs)
 
 ### Validation Commands
 
@@ -351,40 +558,83 @@ just validate-sap SAP-029
 python scripts/sap-evaluator.py SAP-029
 
 # Validate generation script itself
-python scripts/generate-sap.py SAP-029 --dry-run
+python scripts/generate-sap.py SAP-030 --dry-run
 
-# Expected: Shows 5 artifacts that would be generated
+# Expected: Shows 5 artifacts that would be generated without creating them
 ```
 
 ### Test Cases
 
-**Test Case 1**: [Test name]
-- **Given**: [Initial state]
-- **When**: [Action taken]
-- **Then**: [Expected result]
+**Test Case 1**: Generate SAP with MVP Schema
+- **Given**: Fresh repository with SAP-030 entry in catalog (9 MVP fields populated)
+- **When**: Run `python scripts/generate-sap.py SAP-030`
+- **Then**: 5 artifacts created, each with valid frontmatter, 60-80 TODOs total, passes sap-evaluator validation
+
+**Test Case 2**: Generate SAP with Missing Catalog Entry
+- **Given**: SAP-035 NOT in sap-catalog.json
+- **When**: Run `python scripts/generate-sap.py SAP-035`
+- **Then**: Error SAP-029-001 raised, no files created, helpful error message suggesting to add catalog entry
+
+**Test Case 3**: Regenerate Existing SAP with --force
+- **Given**: SAP-030 directory already exists from previous generation
+- **When**: Run `python scripts/generate-sap.py SAP-030 --force`
+- **Then**: Existing files overwritten, warning logged, new generation metadata in frontmatter
+
+**Test Case 4**: Batch Generation (Level 2)
+- **Given**: batch-generate.yaml with 3 SAP IDs
+- **When**: Run `python scripts/generate-sap.py --batch batch-generate.yaml`
+- **Then**: 15 total artifacts created (3 SAPs × 5 artifacts), all pass validation
+
+**Test Case 5**: Quality Gate Enforcement (Level 3)
+- **Given**: Generated SAP-030 with 15 TODOs remaining
+- **When**: Run `python scripts/quality-gate-sap.py SAP-030 10` (threshold: 10 TODOs)
+- **Then**: Quality gate fails, exit code 1, error message "15 TODOs exceeds threshold of 10"
 
 ---
 
 ## 10. Versioning & Compatibility
 
-<!-- TODO: Define versioning strategy and compatibility guarantees
+SAP-029 follows **Semantic Versioning 2.0.0** (semver.org) with SAP-specific compatibility guarantees.
 
-Include:
-- Version numbering scheme
-- Breaking changes policy
-- Backward compatibility
-- Migration paths
-- Deprecation policy
--->
+### Version Numbering Scheme
+
+**Format**: `MAJOR.MINOR.PATCH` (e.g., 1.2.3)
+
+- **MAJOR** (x.0.0): Breaking changes to template structure, schema requirements, or generator API
+  - Example: Changing MVP schema from 9 to 12 required fields
+  - Migration guide REQUIRED in ledger.md
+
+- **MINOR** (1.x.0): Backward-compatible new features (new template fields, new CLI flags)
+  - Example: Adding --domain flag for domain-specific templates
+  - Existing workflows unaffected
+
+- **PATCH** (1.0.x): Backward-compatible bug fixes only
+  - Example: Fixing Unicode encoding issue in Windows
+  - No user-facing changes beyond bug resolution
 
 ### Version Compatibility
 
 **Current Version**: 1.0.0
 
 **Compatibility Guarantees**:
-- Patch versions (1.0.x): Backward compatible bug fixes
-- Minor versions (1.x.0): Backward compatible new features
-- Major versions (x.0.0): Breaking changes allowed with migration guide
+- Generated SAPs track `generator_version` in frontmatter
+- Templates track `template_version` in frontmatter
+- Generator MUST support artifacts generated by previous MINOR versions (e.g., 1.2.0 can regenerate 1.1.0 artifacts)
+- Generator SHOULD warn when regenerating artifacts with old template versions (>6 months old)
+
+**Breaking Changes Policy**:
+- MAJOR version bumps REQUIRE 90-day deprecation notice in CHANGELOG
+- Migration scripts provided for MAJOR version transitions
+- Legacy compatibility mode available for 1 MAJOR version back (e.g., 2.0.0 supports 1.x.x artifacts in legacy mode)
+
+**Deprecation Policy**:
+1. Feature marked deprecated in CHANGELOG with migration path
+2. Deprecation warnings added to CLI output
+3. Feature removed in next MAJOR version (minimum 90 days after deprecation)
+
+**Migration Paths**:
+- MAJOR version migrations documented in adoption-blueprint.md "Migration Paths" section
+- `scripts/migrate-sap-version.py` provided for automated migration (Level 3)
 
 
 ### Dependency Compatibility
@@ -418,10 +668,12 @@ Include:
 
 ### External Specifications
 
-<!-- TODO: Link to relevant external specifications, RFCs, standards -->
-
-- [External Spec 1](https://example.com) - [Description]
-- [External Spec 2](https://example.com) - [Description]
+- [Semantic Versioning 2.0.0](https://semver.org/) - Version numbering specification
+- [Jinja2 Template Documentation](https://jinja.palletsprojects.com/en/3.1.x/) - Template engine specification
+- [YAML 1.2 Specification](https://yaml.org/spec/1.2/spec.html) - Configuration file format
+- [ISO 8601 Date/Time Standard](https://www.iso.org/iso-8601-date-and-time-format.html) - Timestamp format in frontmatter
+- [GitHub Actions Workflow Syntax](https://docs.github.com/en/actions/reference/workflow-syntax-for-github-actions) - CI/CD integration
+- [Python PEP 8 Style Guide](https://pep8.org/) - Generator script coding standards
 
 ---
 

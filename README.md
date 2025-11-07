@@ -45,10 +45,15 @@ cat CLAUDE.md  # If you're Claude Code
 
 ### Are you ADOPTING chora-base SAPs into an existing project?
 
-**✅ YES** → See [SAP Catalog](docs/skilled-awareness/INDEX.md)
+**✅ YES** → See [SAP Catalog](docs/skilled-awareness/INDEX.md) | [Migration Guide](docs/user-docs/SAP_SETS_MIGRATION_GUIDE.md)
 
 ```bash
-# Install specific SAPs
+# Install SAP sets (domain-based architecture v2.0.0)
+python scripts/install-sap.py --set ecosystem                      # 20 universal SAPs
+python scripts/install-sap.py --set ecosystem --set domain-mcp     # + MCP development
+python scripts/install-sap.py --set ecosystem --set domain-react   # + React/Next.js
+
+# Or install individual SAPs
 python scripts/install-sap.py SAP-015 --source /path/to/chora-base  # Task tracking
 python scripts/install-sap.py SAP-001 --source /path/to/chora-base  # Inbox coordination
 python scripts/install-sap.py SAP-010 --source /path/to/chora-base  # Memory system

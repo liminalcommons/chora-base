@@ -7,6 +7,180 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [4.11.0] - 2025-11-06
+
+> **🏗️ DOMAIN-BASED SAP SETS + POST-INSTALL AUTOMATION**: Intelligent SAP Organization + Level 1 Configuration (75-85% time savings)
+>
+> **Breaking Change**: SAP sets architecture migrated from tier-based to domain-based (ecosystem + domain-X)
+>
+> **Time Savings**: 75-85% reduction in SAP configuration time (15-30 min → 2-5 min per SAP with `--configure`)
+>
+> This release delivers a production-ready domain-based SAP sets architecture with composable installation, comprehensive migration guide, and automated Level 1 configuration for 5 high-automation SAPs. The new architecture scales better, eliminates SAP overlap, and enables technology-specific extensions.
+
+---
+
+### Added
+
+**🏗️ Domain-Based SAP Sets Architecture v2.0.0** (Breaking Change)
+
+New composable architecture replaces tier-based sets:
+
+- **ecosystem (20 SAPs)** - Universal foundation for any technology stack
+  - Meta: SAP-000, SAP-001, SAP-002, SAP-009, SAP-019
+  - Infrastructure: SAP-003, SAP-004, SAP-005, SAP-006, SAP-007, SAP-008
+  - Advanced: SAP-010, SAP-011, SAP-012, SAP-013, SAP-015, SAP-016
+  - Pilot: SAP-027, SAP-028, SAP-029
+  - Progressive adoption guide: minimal_quickstart (5 SAPs), production_core (10 SAPs), full_ecosystem (20 SAPs)
+
+- **domain-mcp (1 SAP)** - MCP server development
+  - SAP-014 (FastMCP patterns)
+
+- **domain-react (7 SAPs)** - React/Next.js development
+  - SAP-020-026 (Next.js 15, Vitest, ESLint, state, styling, performance, accessibility)
+
+- **domain-chora-compose (2 SAPs)** - Content generation
+  - SAP-017, SAP-018 (chora-compose integration)
+
+**Benefits**:
+- **Zero overlap**: Each SAP belongs to exactly one set (vs. 80% overlap in old architecture)
+- **Composable**: `--set ecosystem --set domain-mcp` = complete MCP project (21 SAPs)
+- **Scalable**: Easy to add domain-python-cli, domain-web-api, etc.
+- **Complete coverage**: ecosystem includes ALL 20 universal SAPs (vs. old "full" with only 18/29)
+
+**🤖 Multi-Set Installation Support**
+
+Enhanced `install-sap.py` with composable set installation:
+
+```bash
+# Install multiple sets in one command
+python scripts/install-sap.py --set ecosystem --set domain-mcp
+python scripts/install-sap.py --set ecosystem --set domain-react
+
+# Works with all flags
+python scripts/install-sap.py --set ecosystem --set domain-mcp --configure --dry-run
+```
+
+**⚙️ Post-Install Automation (Level 1 Configuration)**
+
+New `--configure` flag automates SAP configuration to Level 1 maturity:
+
+- **5 High-Automation SAPs** with `post_install` configuration:
+  - **SAP-006 (quality-gates)**: Install pre-commit/ruff/mypy, run `pre-commit install` (5 min, 67-75% savings)
+  - **SAP-010 (memory-system)**: Create `.chora/memory/` structure, log first event (2 min, 80% savings)
+  - **SAP-011 (docker-operations)**: Verify Docker, build test image (3 min, 80% savings)
+  - **SAP-015 (task-tracking)**: Install beads CLI, run `bd init`, create first task (5 min, 75-83% savings)
+  - **SAP-016 (link-validation)**: Run link validation script (2 min, 60% savings)
+
+- **Automation Features**:
+  - Dependency checking with install hints
+  - Step-by-step execution with progress reporting
+  - Validation and success criteria
+  - Optional steps (skip if files missing)
+  - Configuration statistics (configured/failed counts)
+
+**Usage**:
+```bash
+# Configure individual SAP
+python scripts/install-sap.py SAP-015 --configure
+
+# Configure entire ecosystem (5/20 SAPs automated)
+python scripts/install-sap.py --set ecosystem --configure
+
+# Preview configuration
+python scripts/install-sap.py --set ecosystem --configure --dry-run
+```
+
+**📚 SAP Sets Migration Guide**
+
+New comprehensive migration documentation (`docs/user-docs/SAP_SETS_MIGRATION_GUIDE.md`):
+
+- Migration table for all 6 deprecated sets → new equivalents
+- Detailed migration instructions for each scenario
+- Progressive adoption paths (minimal/core/full)
+- FAQ section (10 common questions)
+- Rollback instructions (if needed)
+- Version history and support links
+
+**🔧 Enhanced install-sap.py** (316 new lines)
+
+- `configure_sap()`: Execute post_install automation
+- `run_command()`: Safe shell execution with timeout (2 min)
+- `check_dependency()`: Verify dependencies with install hints
+- Statistics tracking: `saps_configured`, `config_failed`
+- Enhanced summary: Configuration stats, tailored next steps
+- Updated examples and help text
+
+### Changed
+
+**📦 sap-catalog.json** (v4.9.0 → v5.0.0)
+
+- **sap_sets_version**: 1.0.0 → 2.0.0
+- **sap_sets_architecture**: tier-based → domain-based
+- **New `post_install` section** for 5 SAPs (SAP-006, SAP-010, SAP-011, SAP-015, SAP-016)
+  - `level_1.description`: Human-readable configuration goal
+  - `level_1.dependencies[]`: Required tools with install hints
+  - `level_1.steps[]`: Configuration commands
+  - `level_1.validation`: Success verification
+  - `level_1.estimated_minutes`: Time estimate
+  - `level_1.success_criteria[]`: Completion checklist
+  - `level_1.notes[]`: Important guidance
+
+**📖 README.md**
+
+- Updated SAP adoption section with domain-based examples
+- New multi-set installation examples
+- Replaced tier-based set references
+
+### Deprecated
+
+**🗑️ Old SAP Sets** (Deprecated in v5.0.0)
+
+All tier-based sets are deprecated with migration paths:
+
+- `minimal-entry` → ecosystem subset (5 SAPs) or progressive_adoption_guide.minimal_quickstart
+- `recommended` → ecosystem subset (10 SAPs) or progressive_adoption_guide.production_core
+- `full` → ecosystem (20 SAPs, was only 18)
+- `testing-focused` → cherry-pick from ecosystem (not a coherent domain)
+- `mcp-server` → ecosystem + domain-mcp
+- `react-development` → ecosystem + domain-react
+
+**Migration support**:
+- `deprecated_sets` section in sap-catalog.json
+- Error messages guide users to new equivalents
+- Migration guide provides detailed instructions
+
+### Technical Debt Eliminated
+
+**Problems Fixed**:
+1. ❌ Old "full" set missing 11 SAPs (SAP-015, SAP-019, SAP-027-029, etc.)
+   ✅ New ecosystem includes ALL 20 universal SAPs
+
+2. ❌ 80% overlap between sets (recommended vs. mcp-server)
+   ✅ Zero overlap - each SAP belongs to exactly one set
+
+3. ❌ Manual 15-30 min configuration per SAP after installation
+   ✅ Automated to 2-5 min with `--configure` (75-85% savings for 5 SAPs)
+
+4. ❌ Single --set argument prevents composable installation
+   ✅ Multiple --set arguments: `--set ecosystem --set domain-mcp`
+
+### Impact
+
+**Time Savings**:
+- SAP configuration: 15-30 min → 2-5 min per automated SAP (75-85% reduction)
+- Ecosystem set adoption: 75-95 min manual config → 17 min automated (77-82% reduction)
+- Installation + configuration: Now possible in one command (`--set ecosystem --configure`)
+
+**Scalability**:
+- Easy to add new domain sets (domain-python-cli, domain-web-api)
+- Zero maintenance for ecosystem when adding domain SAPs
+- Clear separation of universal vs. technology-specific capabilities
+
+**Clarity**:
+- Progressive adoption guide built into ecosystem set
+- Each SAP's purpose is clearer (ecosystem vs. domain-X)
+- Migration guide provides complete upgrade path
+
 ## [4.10.0] - 2025-11-06
 
 > **🚀 PRODUCTION-READY FAST SETUP**: MCP Server Generation + Testing Infrastructure + Agent Discoverability
