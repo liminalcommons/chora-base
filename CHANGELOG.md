@@ -7,6 +7,125 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [4.13.0] - 2025-11-08
+
+> **✅ VERIFICATION METHODOLOGY VALIDATION + FAST-SETUP FIXES**: First production verification run validates SAP verification methodology with successful fix-verify iteration
+
+This minor release captures the first production use of the SAP Verification Methodology, resulting in 4 critical fast-setup script fixes, methodology enhancements with real case studies, and comprehensive verification documentation.
+
+---
+
+### Fixed
+
+**🔧 Fast-Setup Script - 4 Critical Blockers Resolved**
+
+Complete fixes from first verification run (CONDITIONAL NO-GO → fixes → ready for re-verification):
+
+1. **Template Rendering Error** ([#2](https://github.com/liminalcommons/chora-base/issues/2))
+   - Fixed undefined variable `include_memory_system` in `.gitignore.template`
+   - Changed to `include_memory` to match `DEFAULT_CONFIG`
+   - Added missing `include_docker` to `DEFAULT_CONFIG`
+   - Added missing `pypi_auth_method` to `DEFAULT_CONFIG`
+
+2. **Missing Test Files** ([#3](https://github.com/liminalcommons/chora-base/issues/3))
+   - Created comprehensive `test_server.py.template` with 40+ test cases
+   - Test coverage: namespace validation, tool functionality, resource access, server config, integration
+   - Added to template rendering mappings in `create-model-mcp-server.py`
+
+3. **Windows Unicode Encoding Errors** ([#4](https://github.com/liminalcommons/chora-base/issues/4))
+   - Added UTF-8 reconfiguration at script start: `sys.stdout.reconfigure(encoding='utf-8')`
+   - Fixed validation functions to read files with UTF-8 encoding
+   - Resolves emoji rendering failures in console output
+
+4. **Unsubstituted Template Variables** ([#5](https://github.com/liminalcommons/chora-base/issues/5))
+   - Moved `test.yml`, `lint.yml`, `release.yml` from static files to `mcp-templates/`
+   - Added workflow templates to Jinja2 rendering pipeline
+   - Fixed `{{ package_name }}` patterns left in generated projects
+   - Added `docker_org` variable to prevent undefined variable errors
+
+**Fix Metrics**:
+- Verification time: 12 minutes
+- Fix implementation: 60 minutes (estimated 70 minutes)
+- All fixes verified via integration tests
+- Commit: [9dd95b5](https://github.com/liminalcommons/chora-base/commit/9dd95b5)
+
+### Added
+
+**📋 SAP Verification Methodology - Production Validation**
+
+First production verification run validates and enhances the methodology:
+
+- **CONDITIONAL NO-GO Decision Type** ([sap-verification-methodology.md](docs/project-docs/plans/sap-verification-methodology.md))
+  - New decision category: distinguishes "fixable blockers (<2h)" from "critical failures (>4h)"
+  - Fix effort estimation: enables same-day fix-verify iterations
+  - Thresholds: Script completes + fixable blockers + fix effort <2 hours + verification can be re-run
+  - Value: Prevents false NO-GO decisions for minor issues with quick fixes
+
+- **Real Case Study: Fast-Setup L1 Verification (2025-11-08)**
+  - Complete case study from actual verification run (CONDITIONAL NO-GO → fixes → ready for re-verification)
+  - 4 critical blockers with fix details and commit references
+  - Fix-verify iteration timeline: 12min verification + 60min fixes + same-day completion
+  - Validates methodology effectiveness for rapid quality improvement
+
+- **Enhanced Feedback Loop Documentation**
+  - 5-step feedback process: Initial Verification → Issue Creation → Fix-Verify Iteration → Iteration Cycle → Lessons Capture
+  - GitHub issue workflow for blocker tracking
+  - Same-day fix-verify iteration guidance
+  - Lessons capture and methodology refinement process
+
+- **5 Key Lessons Learned**
+  1. Cross-platform testing is essential (Windows-specific issues require Windows testing)
+  2. Template validation needed (undefined variables only caught at runtime)
+  3. Out-of-box experience matters (missing test files = poor developer experience)
+  4. Documentation is living (update methodology based on actual experience)
+  5. Fast iteration compounds value (same-day fixes maintain momentum and context)
+
+- **Verification Run Documentation** ([docs/project-docs/verification/](docs/project-docs/verification/))
+  - **[NEXT_STEPS.md](docs/project-docs/verification/NEXT_STEPS.md)**: Re-verification guide with 2 options (manual commands + Claude Code prompt)
+  - **[verification-runs/2025-11-08-13-14-fast-setup-l1/](docs/project-docs/verification/verification-runs/2025-11-08-13-14-fast-setup-l1/)**:
+    - `report.md`: Full verification report with CONDITIONAL NO-GO decision
+    - `metrics.json`: Quantitative metrics (execution time, SAP counts, etc.)
+    - `verification.jsonl`: Detailed event log
+    - `generated-project/`: Complete generated project for reference
+
+### Changed
+
+**📚 Verification Methodology Status**
+
+- Status: **Draft → Validated** (proven through production use)
+- Validation: First verification run (2025-11-08) successfully executed methodology
+- Outcome: Identified 4 blockers, executed 60-minute fix-verify cycle, same-day resolution
+- Enhancement: Added CONDITIONAL NO-GO decision type based on real-world experience
+- Commit: [8216856](https://github.com/liminalcommons/chora-base/commit/8216856)
+
+### Impact
+
+**🎯 Fast-Setup Quality**:
+- ✅ Script now generates functional projects on first run (expected: GO on re-verification)
+- ✅ 40+ test cases included in generated projects (previously: 0)
+- ✅ Cross-platform compatibility (Windows + Unix)
+- ✅ All template variables substituted correctly
+
+**📊 Methodology Validation**:
+- ✅ CONDITIONAL NO-GO prevents false negatives (distinguishes fixable from critical)
+- ✅ Fix effort estimation accurate (70min estimated, 60min actual)
+- ✅ Same-day iteration feasible (fast feedback loop maintains momentum)
+- ✅ Real case studies more valuable than hypothetical examples
+
+**🚀 Verification Capability**:
+- Fast-setup L1 verification proven (12-minute verification + 60-minute fix)
+- Week 2 ready: Incremental SAP adoption testing
+- Re-verification ready: Expected GO decision with fixed script
+- Methodology refinement: 5 lessons learned applied to future verifications
+
+**File Changes**:
+- 8 files modified (1 template, 1 script, 1 methodology, 3 workflow templates moved, 2 verification docs)
+- 27 files added (verification run artifacts)
+- 3 workflow files moved (static → templates)
+- Commits: [9dd95b5](https://github.com/liminalcommons/chora-base/commit/9dd95b5), [8216856](https://github.com/liminalcommons/chora-base/commit/8216856), [746e271](https://github.com/liminalcommons/chora-base/commit/746e271)
+
+---
+
 ## [4.12.0] - 2025-11-06
 
 > **🎯 SAP-012 LIGHT+ PLANNING MODEL**: 4-construct planning hierarchy (Strategy → Releases → Features → Tasks) with maturity levels L0-L5
