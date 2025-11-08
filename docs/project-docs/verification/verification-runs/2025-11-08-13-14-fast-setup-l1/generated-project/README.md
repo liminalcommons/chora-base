@@ -1,0 +1,259 @@
+# SAP Verification Test Server
+
+SAP Verification Test Server - MCP server for sapverify operations
+
+## Overview
+
+**SAP Verification Test Server** is a Model Context Protocol (MCP) server that provides [describe your server's capabilities].
+
+This project follows the MCP specification and can be integrated with:
+- Claude Desktop
+- Cursor
+- Other MCP-compatible clients
+
+## Features
+
+- **[Feature 1]** - Description
+- **[Feature 2]** - Description
+- **Agent Memory System** - Cross-session learning with event log, knowledge graph, and trace correlation
+- **CLI Interface** - Command-line tools for memory queries and management
+- **Comprehensive Testing** - 85%+ test coverage with pytest
+
+## Installation
+
+### Quick Setup
+
+```bash
+# Clone repository
+git clone https://github.com/sapverifier/sap-verification-test-server.git
+cd sap-verification-test-server
+
+# One-command setup (installs dependencies, hooks, and runs checks)
+./scripts/setup.sh
+```
+
+### Manual Setup
+
+```bash
+# Create virtual environment
+python -m venv .venv
+source .venv/bin/activate  # or `.venv\Scripts\activate` on Windows
+
+# Install with development dependencies
+pip install -e ".[dev]"
+
+# Install pre-commit hooks
+pre-commit install
+```
+
+## Configuration
+
+### Environment Variables
+
+Create a `.env` file:
+
+```env
+# Application configuration
+SAP_VERIFICATION_TEST_SERVER_LOG_LEVEL=INFO
+
+# Add your configuration here
+```
+
+### Client Configuration
+
+#### Claude Desktop (macOS)
+
+**Development Mode (Editable Install):**
+```json
+{
+  "mcpServers": {
+    "sap-verification-test-server-dev": {
+      "command": "/path/to/sap-verification-test-server/.venv/bin/python",
+      "args": ["-m", "sap_verification_test_server.server"],
+      "cwd": "/path/to/sap-verification-test-server",
+      "env": {
+        "SAP_VERIFICATION_TEST_SERVER_DEBUG": "1"
+      }
+    }
+  }
+}
+```
+
+**Production Mode (Installed Package):**
+```json
+{
+  "mcpServers": {
+    "sap-verification-test-server": {
+      "command": "sap-verification-test-server",
+      "args": [],
+      "env": {}
+    }
+  }
+}
+```
+
+## Usage
+
+```bash
+# Example command
+sap-verification-test-server --help
+
+# Memory CLI commands
+sap-verification-test-server-memory query --type "event_name"
+sap-verification-test-server-memory knowledge search --tag "topic"
+
+# [Add your specific usage examples here]
+```
+
+## Development Process
+
+This project follows the chora-base 8-phase development lifecycle.
+
+### Quick Reference
+
+**Committed Work:** See [ROADMAP.md](ROADMAP.md)
+**Sprint Planning:** See [project-docs/sprints/](project-docs/sprints/)
+**Development Workflow:** See [dev-docs/workflows/DEVELOPMENT_LIFECYCLE.md](dev-docs/workflows/DEVELOPMENT_LIFECYCLE.md)
+**Process Metrics:** See [project-docs/metrics/PROCESS_METRICS.md](project-docs/metrics/PROCESS_METRICS.md)
+
+### 8-Phase Lifecycle
+
+1. **Vision & Strategy** → [ROADMAP.md](ROADMAP.md)
+2. **Planning** → [Sprint Planning](project-docs/sprints/README.md)
+3. **Requirements & Design** → [DDD Workflow](dev-docs/workflows/DDD_WORKFLOW.md) (saves 8-15 hours)
+4. **Development** → [BDD](dev-docs/workflows/BDD_WORKFLOW.md) + [TDD](dev-docs/workflows/TDD_WORKFLOW.md) (40-80% fewer defects)
+5. **Testing & Quality** → Automated quality gates (≥85% coverage)
+6. **Review & Integration** → PR workflow with CI/CD (see [AGENTS.md](AGENTS.md))
+7. **Release & Deployment** → [Release Planning](project-docs/releases/RELEASE_PLANNING_GUIDE.md)
+8. **Monitoring & Feedback** → [Process Metrics](project-docs/metrics/PROCESS_METRICS.md)
+
+### For AI Agents
+
+**Complete Walkthrough:** [dev-docs/examples/FEATURE_WALKTHROUGH.md](dev-docs/examples/FEATURE_WALKTHROUGH.md)
+**Anti-Patterns:** [dev-docs/ANTI_PATTERNS.md](dev-docs/ANTI_PATTERNS.md)
+**Process Guide:** [dev-docs/workflows/DEVELOPMENT_PROCESS.md](dev-docs/workflows/DEVELOPMENT_PROCESS.md)
+
+## Development
+
+### Quick Reference
+
+**Discover all available commands:**
+```bash
+just --list
+```
+
+**Common tasks:**
+```bash
+just test            # Run test suite
+just lint            # Check code style
+just pre-merge       # Run all checks (required before PR)
+just build           # Build distribution packages
+just help            # Show common workflows
+```
+
+The [justfile](justfile) is self-documenting - run `just` or `just --list` to see all commands.
+
+### Common Workflows
+
+**Running tests:**
+```bash
+just test           # Full test suite
+just smoke          # Quick smoke tests (~10 sec)
+just test-coverage  # With coverage report
+```
+
+**Code quality:**
+```bash
+just lint           # Check style
+just lint-fix       # Auto-fix issues
+just format         # Format code
+just typecheck      # Type checking
+just check          # All quality checks
+```
+
+**Before creating PR:**
+```bash
+just pre-merge      # Run lint + test + coverage (required)
+```
+
+**Building & releasing:**
+```bash
+just build                  # Build distribution packages
+just prepare-release patch  # Bump version, update CHANGELOG
+just publish-test           # Publish to TestPyPI
+just publish-prod           # Publish to PyPI
+```
+
+**Application:**
+```bash
+just run            # Start the application
+sap-verification-test-server  # Or run directly
+```
+
+### Without `just` (Fallback)
+
+If `just` installation fails, use commands directly:
+
+| Task | Command |
+|------|---------|
+| Run tests | `pytest` |
+| Build | `./scripts/build-dist.sh` |
+| Lint | `ruff check src/sap_verification_test_server tests` |
+| Format | `black src/sap_verification_test_server tests` |
+| Pre-merge | `./scripts/pre-merge.sh` |
+| Type check | `mypy src/sap_verification_test_server` |
+
+See [justfile](justfile) for complete command mappings.
+
+## Documentation
+
+This project follows the [Diátaxis framework](https://diataxis.fr/) with three documentation directories:
+
+### For End Users (user-docs/)
+Learn how to **use** SAP Verification Test Server:
+- **[Getting Started Tutorial](user-docs/tutorials/01-getting-started.md)** - Learn the basics
+- **[How-To Guides](user-docs/how-to/)** - Solve specific problems
+- **[API Reference](user-docs/reference/)** - Look up specifications
+- **[Explanations](user-docs/explanation/)** - Understand concepts
+
+### For Project Planning (project-docs/)
+Project roadmap and architecture decisions:
+- **[ROADMAP.md](project-docs/ROADMAP.md)** - Long-term vision and milestones
+- **[Release Notes](project-docs/releases/)** - Version history and changes
+- **[Architecture Decisions](project-docs/decisions/)** - ADRs and design choices
+
+### For Contributors (dev-docs/)
+Learn how to **build** SAP Verification Test Server:
+- **[CONTRIBUTING.md](dev-docs/CONTRIBUTING.md)** - Contribution guidelines
+- **[DEVELOPMENT.md](dev-docs/DEVELOPMENT.md)** - Developer setup and architecture
+- **[TROUBLESHOOTING.md](dev-docs/TROUBLESHOOTING.md)** - Common development issues
+- **[Vision Documents](dev-docs/vision/)** - Strategic design guidance
+
+### For AI Coding Agents
+- **[AGENTS.md](AGENTS.md)** - Machine-readable instructions (OpenAI/Google standard)
+
+**Documentation Standard:**
+- **[DOCUMENTATION_STANDARD.md](DOCUMENTATION_STANDARD.md)** - Writing guidelines and templates
+
+## Project Principles
+
+This project follows best practices for:
+
+- **Code Quality** - Linting (ruff), formatting (black), type checking (mypy)
+- **Testing** - Comprehensive test suite with 85%+ coverage
+- **Documentation** - Clear, up-to-date documentation following Diátaxis framework
+- **Agentic Coding** - Machine-readable instructions, stateful memory for AI agents
+
+## License
+
+MIT - see [LICENSE](LICENSE)
+
+## Related Projects
+
+- [chora-base](https://github.com/liminalcommons/chora-base) - Python project template
+- [chora-composer](https://github.com/liminalcommons/chora-composer) - Configuration-driven artifact generation
+- [chora-platform](https://github.com/liminalcommons/chora-platform) - Shared platform tooling
+
+---
+
+🤖 Generated with [chora-base](https://github.com/liminalcommons/chora-base) template

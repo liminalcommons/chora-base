@@ -1,0 +1,12 @@
+{"timestamp": "2025-11-08T13:14:00Z", "event": "verification_started", "workflow": "fast-setup", "target_maturity": "L1", "script_version": "1.0.0", "chora_base_version": "4.9.0"}
+{"timestamp": "2025-11-08T13:14:30Z", "event": "script_executed", "command": "python scripts/create-model-mcp-server.py --name 'SAP Verification Test Server' --namespace sapverify --profile standard", "result": "partial_success", "friction": "template_error"}
+{"timestamp": "2025-11-08T13:25:00Z", "event": "error_encountered", "error_type": "template_rendering", "error_message": "'include_memory_system' is undefined", "severity": "medium", "impact": "Script completed but .gitignore template failed to render"}
+{"timestamp": "2025-11-08T13:26:00Z", "event": "saps_identified", "count": 8, "saps": ["SAP-001", "SAP-004", "SAP-005", "SAP-006", "SAP-007", "SAP-009", "SAP-010", "SAP-015"]}
+{"timestamp": "2025-11-08T13:26:30Z", "event": "sap_verification", "sap": "SAP-001", "name": "Inbox Coordination Protocol", "status": "configured", "evidence": "inbox/ directory with coordination/ and examples/ subdirectories"}
+{"timestamp": "2025-11-08T13:26:31Z", "event": "sap_verification", "sap": "SAP-004", "name": "Testing Framework", "status": "configured", "evidence": "tests/ directory, pytest configuration, 85% coverage threshold"}
+{"timestamp": "2025-11-08T13:26:32Z", "event": "sap_verification", "sap": "SAP-005", "name": "CI/CD Workflows", "status": "configured", "evidence": "8 GitHub Actions workflows in .github/workflows/"}
+{"timestamp": "2025-11-08T13:26:33Z", "event": "sap_verification", "sap": "SAP-006", "name": "Quality Gates", "status": "configured", "evidence": "mypy strict mode, ruff linting, coverage threshold"}
+{"timestamp": "2025-11-08T13:26:34Z", "event": "sap_verification", "sap": "SAP-007", "name": "Documentation", "status": "configured", "evidence": "docs/ with user-docs/, dev-docs/, project-docs/, skilled-awareness/"}
+{"timestamp": "2025-11-08T13:26:35Z", "event": "sap_verification", "sap": "SAP-009", "name": "Agent Awareness", "status": "configured", "evidence": "AGENTS.md, CLAUDE.md present"}
+{"timestamp": "2025-11-08T13:26:36Z", "event": "sap_verification", "sap": "SAP-010", "name": "A-MEM Memory System", "status": "configured", "evidence": ".chora/memory/ with events/, knowledge/, profiles/, traces/"}
+{"timestamp": "2025-11-08T13:26:37Z", "event": "sap_verification", "sap": "SAP-015", "name": "Beads Task Tracking", "status": "configured", "evidence": ".beads/ directory present"}
