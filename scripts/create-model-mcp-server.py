@@ -43,6 +43,10 @@ from datetime import datetime
 from pathlib import Path
 from typing import Any, Dict, Optional
 
+# Configure UTF-8 output for Windows console compatibility
+if sys.platform == 'win32':
+    sys.stdout.reconfigure(encoding='utf-8')
+
 # Try to import Jinja2, provide helpful error if missing
 try:
     from jinja2 import Environment, FileSystemLoader, StrictUndefined
@@ -67,6 +71,7 @@ DEFAULT_CONFIG = {
     "test_coverage_threshold": 85,
     "project_version": "0.1.0",
     "docker_registry": "ghcr.io",
+    "pypi_auth_method": "trusted_publishing",
     "mcp_enable_namespacing": "true",
     "mcp_validate_names": "true",
     "mcp_resource_uri_scheme": "true",
@@ -74,6 +79,7 @@ DEFAULT_CONFIG = {
     "include_inbox": True,
     "include_memory": True,
     "include_ci_cd": True,
+    "include_docker": True,
 }
 
 DECISION_PROFILES = {
@@ -261,7 +267,9 @@ def copy_static_template(chora_base_dir: Path, output_dir: Path, config: Dict[st
     ]
 
     if config.get("include_ci_cd"):
-        # Copy GitHub Actions workflows
+        # GitHub Actions workflows are now rendered as templates (see render_templates function)
+        # Remaining workflows in .github/workflows/ that don't need template substitution
+        # are copied below if they exist
         workflows_src = static_template / ".github" / "workflows"
         workflows_dst = output_dir / ".github" / "workflows"
         if workflows_src.exists():
@@ -300,6 +308,7 @@ def render_templates(chora_base_dir: Path, output_dir: Path, variables: Dict[str
         "server.py.template": f"src/{variables['package_name']}/server.py",
         "mcp__init__.py.template": f"src/{variables['package_name']}/mcp/__init__.py",
         "package__init__.py.template": f"src/{variables['package_name']}/__init__.py",
+        "test_server.py.template": "tests/test_server.py",
         "pyproject.toml.template": "pyproject.toml",
         "README_TEMPLATE.md": "README.md",
         "AGENTS.md.template": "AGENTS.md",
@@ -312,6 +321,9 @@ def render_templates(chora_base_dir: Path, output_dir: Path, variables: Dict[str
         "bump-version.py.template": "scripts/bump-version.py",
         "create-release.py.template": "scripts/create-release.py",
         "how-to-create-release.md.template": "docs/user-docs/how-to-create-release.md",
+        "test.yml.template": ".github/workflows/test.yml",
+        "lint.yml.template": ".github/workflows/lint.yml",
+        "release.yml.template": ".github/workflows/release.yml",
     }
 
     print("\nRendering templates...")
@@ -600,7 +612,7 @@ def validate_generated_project(output_dir: Path, variables: Dict[str, Any]) -> b
     agents_exists = agents_md.exists()
     has_frontmatter = False
     if agents_exists:
-        content = agents_md.read_text()
+        content = agents_md.read_text(encoding='utf-8')
         has_frontmatter = content.startswith("---")
     checks.append(("AGENTS.md with frontmatter", agents_exists and has_frontmatter))
 
@@ -637,7 +649,7 @@ def validate_generated_project(output_dir: Path, variables: Dict[str, Any]) -> b
     # Check 12: No unsubstituted template variables
     unsubstituted_files = []
     for py_file in output_dir.rglob("*.py"):
-        content = py_file.read_text()
+        content = py_file.read_text(encoding='utf-8')
         if '{{' in content or '}}' in content:
             unsubstituted_files.append(str(py_file.relative_to(output_dir)))
     checks.append(("No unsubstituted variables", len(unsubstituted_files) == 0))
@@ -853,6 +865,7 @@ def main():
         "author_email": author_email,
         "github_username": github_username,
         "github_org": github_username,  # Default to same as username
+        "docker_org": github_username,  # Default Docker org to GitHub username
         **profile_config,
     }
 

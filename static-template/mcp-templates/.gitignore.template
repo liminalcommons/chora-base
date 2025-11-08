@@ -2,7 +2,7 @@
 temp/
 tmp/
 
-{% if include_memory_system -%}
+{% if include_memory -%}
 # Agent memory (ephemeral learning data)
 .chora/memory/events/
 .chora/memory/knowledge/

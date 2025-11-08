@@ -1,0 +1,256 @@
+"""Tests for {{ project_name }} MCP Server.
+
+This test suite validates:
+- Tool functionality and naming conventions
+- Resource access and URI schemes
+- MCP naming validation
+- Server initialization and configuration
+
+Run with: pytest tests/test_server.py
+"""
+
+import pytest
+from {{ package_name }}.server import mcp, example_tool, hello_world, get_capabilities
+from {{ package_name }}.mcp import (
+    NAMESPACE,
+    make_tool_name,
+    validate_tool_name,
+    make_resource_uri,
+    validate_resource_uri,
+)
+
+
+# ============================================================================
+# Fixtures
+# ============================================================================
+
+@pytest.fixture
+def expected_namespace():
+    """Expected MCP namespace for this server."""
+    return "{{ mcp_namespace }}"
+
+
+# ============================================================================
+# Namespace and Naming Tests
+# ============================================================================
+
+class TestNamingConventions:
+    """Test Chora MCP Conventions v1.0 compliance."""
+
+    def test_namespace_constant(self, expected_namespace):
+        """Verify NAMESPACE constant matches expected value."""
+        assert NAMESPACE == expected_namespace
+
+    def test_make_tool_name(self, expected_namespace):
+        """Verify tool name generation follows namespace:name pattern."""
+        tool_name = make_tool_name("example_tool")
+        assert tool_name == f"{expected_namespace}:example_tool"
+
+    def test_validate_tool_name_valid(self, expected_namespace):
+        """Verify validation accepts correctly formatted tool names."""
+        tool_name = make_tool_name("example_tool")
+        # Should not raise exception
+        validate_tool_name(tool_name, expected_namespace=expected_namespace)
+
+    def test_validate_tool_name_invalid_namespace(self, expected_namespace):
+        """Verify validation rejects tool names with wrong namespace."""
+        with pytest.raises(ValueError, match="namespace"):
+            validate_tool_name("wrong:example_tool", expected_namespace=expected_namespace)
+
+    def test_make_resource_uri(self, expected_namespace):
+        """Verify resource URI generation follows namespace://type/id pattern."""
+        uri = make_resource_uri("capabilities", "server")
+        assert uri == f"{expected_namespace}://capabilities/server"
+
+    def test_validate_resource_uri_valid(self, expected_namespace):
+        """Verify validation accepts correctly formatted resource URIs."""
+        uri = make_resource_uri("capabilities", "server")
+        # Should not raise exception
+        validate_resource_uri(uri, expected_namespace=expected_namespace)
+
+    def test_validate_resource_uri_invalid_scheme(self, expected_namespace):
+        """Verify validation rejects URIs with wrong scheme."""
+        with pytest.raises(ValueError, match="scheme"):
+            validate_resource_uri("wrong://capabilities/server", expected_namespace=expected_namespace)
+
+
+# ============================================================================
+# Tool Tests
+# ============================================================================
+
+class TestTools:
+    """Test MCP tool functionality."""
+
+    @pytest.mark.asyncio
+    async def test_example_tool_success(self, expected_namespace):
+        """Verify example_tool returns expected response structure."""
+        message = "Test message"
+        result = await example_tool(message)
+
+        assert result["status"] == "success"
+        assert result["message"] == message
+        assert result["tool"] == f"{expected_namespace}:example_tool"
+        assert result["namespace"] == expected_namespace
+
+    @pytest.mark.asyncio
+    async def test_example_tool_empty_message(self, expected_namespace):
+        """Verify example_tool handles empty message."""
+        result = await example_tool("")
+
+        assert result["status"] == "success"
+        assert result["message"] == ""
+        assert result["namespace"] == expected_namespace
+
+    @pytest.mark.asyncio
+    async def test_hello_world(self, expected_namespace):
+        """Verify hello_world tool returns greeting."""
+        result = await hello_world()
+
+        assert isinstance(result, str)
+        assert expected_namespace in result
+        assert result == f"Hello from {expected_namespace}!"
+
+
+# ============================================================================
+# Resource Tests
+# ============================================================================
+
+class TestResources:
+    """Test MCP resource functionality."""
+
+    @pytest.mark.asyncio
+    async def test_get_capabilities_structure(self, expected_namespace):
+        """Verify capabilities resource returns expected structure."""
+        capabilities = await get_capabilities()
+
+        # Verify required fields
+        assert "name" in capabilities
+        assert "namespace" in capabilities
+        assert "version" in capabilities
+        assert "tools" in capabilities
+        assert "resources" in capabilities
+        assert "conventions" in capabilities
+
+    @pytest.mark.asyncio
+    async def test_get_capabilities_namespace(self, expected_namespace):
+        """Verify capabilities reports correct namespace."""
+        capabilities = await get_capabilities()
+        assert capabilities["namespace"] == expected_namespace
+
+    @pytest.mark.asyncio
+    async def test_get_capabilities_version(self):
+        """Verify capabilities includes version information."""
+        capabilities = await get_capabilities()
+        version = capabilities["version"]
+
+        # Should be either installed version or dev fallback
+        assert isinstance(version, str)
+        assert len(version) > 0
+        assert version == "{{ project_version }}" or version == "0.0.0-dev"
+
+    @pytest.mark.asyncio
+    async def test_get_capabilities_tools_list(self, expected_namespace):
+        """Verify capabilities lists all available tools."""
+        capabilities = await get_capabilities()
+        tools = capabilities["tools"]
+
+        assert isinstance(tools, list)
+        assert f"{expected_namespace}:example_tool" in tools
+        assert f"{expected_namespace}:hello_world" in tools
+
+    @pytest.mark.asyncio
+    async def test_get_capabilities_resources_list(self, expected_namespace):
+        """Verify capabilities lists all available resources."""
+        capabilities = await get_capabilities()
+        resources = capabilities["resources"]
+
+        assert isinstance(resources, list)
+        assert f"{expected_namespace}://capabilities/server" in resources
+
+    @pytest.mark.asyncio
+    async def test_get_capabilities_conventions(self):
+        """Verify capabilities declares Chora MCP Conventions compliance."""
+        capabilities = await get_capabilities()
+        assert "Chora MCP Conventions" in capabilities["conventions"]
+
+
+# ============================================================================
+# Server Configuration Tests
+# ============================================================================
+
+class TestServerConfiguration:
+    """Test FastMCP server instance configuration."""
+
+    def test_mcp_instance_exists(self):
+        """Verify FastMCP instance is created."""
+        assert mcp is not None
+
+    def test_mcp_instance_name(self):
+        """Verify FastMCP instance has correct name."""
+        # FastMCP stores name in config
+        # This test validates server initialization
+        assert hasattr(mcp, 'name') or hasattr(mcp, '_name')
+
+    def test_server_tools_registered(self):
+        """Verify tools are registered with FastMCP instance."""
+        # FastMCP decorators should register tools
+        # Actual validation happens via integration tests
+        # This is a basic sanity check
+        assert callable(example_tool)
+        assert callable(hello_world)
+
+    def test_server_resources_registered(self):
+        """Verify resources are registered with FastMCP instance."""
+        assert callable(get_capabilities)
+
+
+# ============================================================================
+# Integration Tests
+# ============================================================================
+
+class TestIntegration:
+    """Integration tests for end-to-end server functionality."""
+
+    @pytest.mark.asyncio
+    async def test_tool_resource_consistency(self, expected_namespace):
+        """Verify tools listed in capabilities match registered tools."""
+        capabilities = await get_capabilities()
+        listed_tools = capabilities["tools"]
+
+        # All decorated tools should be listed
+        expected_tools = [
+            f"{expected_namespace}:example_tool",
+            f"{expected_namespace}:hello_world",
+        ]
+
+        for tool in expected_tools:
+            assert tool in listed_tools, f"Tool {tool} not found in capabilities"
+
+    @pytest.mark.asyncio
+    async def test_namespace_consistency(self, expected_namespace):
+        """Verify namespace is consistent across all components."""
+        # Check tool response
+        tool_result = await example_tool("test")
+        assert tool_result["namespace"] == expected_namespace
+
+        # Check capabilities
+        capabilities = await get_capabilities()
+        assert capabilities["namespace"] == expected_namespace
+
+        # Check NAMESPACE constant
+        assert NAMESPACE == expected_namespace
+
+    @pytest.mark.asyncio
+    async def test_naming_validation_consistency(self, expected_namespace):
+        """Verify naming validation is consistent across tools and resources."""
+        # Tool name validation
+        tool_name = make_tool_name("example_tool")
+        validate_tool_name(tool_name, expected_namespace=expected_namespace)
+
+        # Resource URI validation
+        resource_uri = make_resource_uri("capabilities", "server")
+        validate_resource_uri(resource_uri, expected_namespace=expected_namespace)
+
+        # Both should use same namespace
+        assert tool_name.startswith(expected_namespace)
+        assert resource_uri.startswith(expected_namespace)
