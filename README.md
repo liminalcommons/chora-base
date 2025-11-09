@@ -1,8 +1,14 @@
 # chora-base
 
+[![Cross-Platform Compatibility](https://github.com/YOUR_USERNAME/chora-base/actions/workflows/cross-platform-test.yml/badge.svg)](https://github.com/YOUR_USERNAME/chora-base/actions/workflows/cross-platform-test.yml)
+[![Windows Compatible](https://img.shields.io/badge/Windows-Compatible-blue)](docs/project-docs/windows-compatibility-summary.md)
+[![Python 3.8+](https://img.shields.io/badge/python-3.8+-blue.svg)](https://www.python.org/downloads/)
+
 **Python Project Template for AI-Agent-First Development**
 
 A production-ready Python project template designed FOR AI coding agents, not retrofitted. Zero dependencies, one-line setup, works every time.
+
+**Cross-Platform**: Fully compatible with Windows, macOS, and Linux.
 
 ---
 

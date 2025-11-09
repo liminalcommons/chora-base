@@ -42,7 +42,9 @@
       "Bash(gh issue create:*)",
       "Bash(gh issue close:*)",
       "Bash(find:*)",
-      "Bash(git rm:*)"
+      "Bash(git rm:*)",
+      "Bash(git check-ignore:*)",
+      "Bash(gh release create:*)"
     ],
     "deny": [],
     "ask": []
