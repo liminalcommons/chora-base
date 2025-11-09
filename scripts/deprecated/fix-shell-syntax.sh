@@ -1,4 +1,23 @@
 #!/usr/bin/env bash
+#
+# ============================================================================
+# DEPRECATED: This script has been migrated to Python for cross-platform support
+# ============================================================================
+#
+# Use: python scripts/fix-shell-syntax.py
+# Or:  just fix-shell-syntax
+#
+# Migration Guide: docs/user-docs/how-to/bash-to-python-migration.md
+# Deprecated: v4.3.0 (2025-11-03)
+# Removal: v5.0.0 (planned)
+#
+# Reason: Windows compatibility - this bash script uses:
+#   - sed -i '' (macOS-only syntax, fails on Linux)
+#   - find with -exec
+#   - No 'sed' on Windows
+#
+# ============================================================================
+#
 # Fix shell syntax that was incorrectly converted by delimiter migration
 # This script restores shell constructs that got converted to Jinja2 syntax
 

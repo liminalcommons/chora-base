@@ -17,6 +17,12 @@ from claude_metrics import ClaudeMetric, ClaudeROICalculator
 from usage_tracker import track_usage
 
 
+
+# Configure UTF-8 output for Windows console compatibility
+if sys.platform == 'win32':
+    sys.stdout.reconfigure(encoding='utf-8')
+    sys.stderr.reconfigure(encoding='utf-8')
+
 @track_usage
 def main():
     """Run ROI calculation demo for chora-base SAP maturity assessment work."""

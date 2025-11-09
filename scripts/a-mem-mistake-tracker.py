@@ -49,7 +49,7 @@ def log_mistake_event(
     }
 
     mistakes_log = events_dir / "mistakes.jsonl"
-    with open(mistakes_log, "a") as f:
+    with open(mistakes_log, "a", encoding='utf-8') as f:
         f.write(json.dumps(event) + "\n")
 
     return event
@@ -63,7 +63,7 @@ def measure_recurrence(error_type: str, events_dir: Path) -> int:
         return 0
 
     count = 0
-    with open(mistakes_log, "r") as f:
+    with open(mistakes_log, "r", encoding='utf-8') as f:
         for line in f:
             if not line.strip():
                 continue
@@ -82,7 +82,7 @@ def get_all_mistakes(events_dir: Path) -> List[dict]:
         return []
 
     mistakes = []
-    with open(mistakes_log, "r") as f:
+    with open(mistakes_log, "r", encoding='utf-8') as f:
         for line in f:
             if not line.strip():
                 continue
@@ -98,6 +98,12 @@ def calculate_reduction_metrics(events_dir: Path, baseline_days: int = 30) -> di
     Compares recent period to baseline period.
     """
     from datetime import timedelta
+
+
+# Configure UTF-8 output for Windows console compatibility
+if sys.platform == 'win32':
+    sys.stdout.reconfigure(encoding='utf-8')
+    sys.stderr.reconfigure(encoding='utf-8')
 
     mistakes = get_all_mistakes(events_dir)
 

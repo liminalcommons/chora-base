@@ -28,10 +28,16 @@ from datetime import datetime, timezone, timedelta
 from collections import Counter
 
 
+
+# Configure UTF-8 output for Windows console compatibility
+if sys.platform == 'win32':
+    sys.stdout.reconfigure(encoding='utf-8')
+    sys.stderr.reconfigure(encoding='utf-8')
+
 def load_taxonomy(taxonomy_path: str = "schemas/event-tag-taxonomy.yaml") -> Dict[str, Any]:
     """Load event tag taxonomy from YAML file."""
     try:
-        with open(taxonomy_path, 'r') as f:
+        with open(taxonomy_path, 'r', encoding='utf-8') as f:
             taxonomy = yaml.safe_load(f)
         return taxonomy
     except Exception as e:
@@ -101,7 +107,7 @@ def read_events_from_file(file_path: str) -> List[Dict[str, Any]]:
     events = []
 
     try:
-        with open(file_path, 'r') as f:
+        with open(file_path, 'r', encoding='utf-8') as f:
             for line_num, line in enumerate(f, 1):
                 try:
                     event = json.loads(line.strip())

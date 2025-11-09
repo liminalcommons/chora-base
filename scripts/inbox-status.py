@@ -25,6 +25,12 @@ from datetime import datetime, timedelta
 from pathlib import Path
 from typing import Dict, List, Optional, Tuple
 
+
+# Configure UTF-8 output for Windows console compatibility
+if sys.platform == 'win32':
+    sys.stdout.reconfigure(encoding='utf-8')
+    sys.stderr.reconfigure(encoding='utf-8')
+
 # Colors for terminal output
 class Colors:
     RED = '\033[0;31m'
@@ -56,7 +62,7 @@ INBOX_DIR = REPO_ROOT / 'inbox'
 def load_json_file(filepath: Path) -> Optional[Dict]:
     """Load and parse JSON file"""
     try:
-        with open(filepath, 'r') as f:
+        with open(filepath, 'r', encoding='utf-8') as f:
             return json.load(f)
     except (FileNotFoundError, json.JSONDecodeError) as e:
         return None
@@ -69,7 +75,7 @@ def load_events(last_n: Optional[int] = None, last_days: Optional[int] = None) -
 
     events = []
     try:
-        with open(events_file, 'r') as f:
+        with open(events_file, 'r', encoding='utf-8') as f:
             for line in f:
                 line = line.strip()
                 if line:

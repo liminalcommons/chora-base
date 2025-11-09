@@ -1,0 +1,409 @@
+# Awareness Guide: Cross-Platform Python Environments
+
+**SAP ID**: SAP-031
+**Version**: 1.0.0
+**For**: AI Agents, LLM-Based Assistants
+**Last Updated**: 2025-11-03
+
+---
+
+## Quick Start for AI Agents
+
+### One-Sentence Summary
+
+SAP-031 standardizes Python environment setup across Mac, Windows, and Linux with platform-specific installation guides, venv patterns, and check-python-env.py validation to eliminate 'Python not found' onboarding friction.
+
+### When to Use This SAP
+
+Use SAP-031 when:
+<!-- TODO: List use cases when agents should use this SAP -->
+- ✅ [Use case 1]
+- ✅ [Use case 2]
+- ✅ [Use case 3]
+
+Don't use SAP-031 for:
+<!-- TODO: List cases when agents should NOT use this SAP -->
+- ❌ [Non-use case 1]
+- ❌ [Non-use case 2]
+
+---
+
+## 1. Core Concepts for Agents
+
+<!-- TODO: Provide decision trees, key concepts, mental models for AI agents
+
+This section helps agents quickly understand:
+- Key decisions they need to make
+- Common patterns and anti-patterns
+- Mental models for this capability
+-->
+
+### Key Concepts
+
+**Concept 1**: [Name]
+- **Description**: [What agents need to know]
+- **When to use**: [Conditions]
+- **Example**: [Concrete example]
+
+**Concept 2**: [Name]
+- **Description**: [What agents need to know]
+- **When to use**: [Conditions]
+- **Example**: [Concrete example]
+
+### Decision Tree
+
+```
+User request about Cross-Platform Python Environments
+   │
+   ├─ [Condition 1]?
+   │   └─> [Recommendation/Action]
+   │
+   ├─ [Condition 2]?
+   │   └─> [Recommendation/Action]
+   │
+   └─ [Condition 3]?
+       └─> [Recommendation/Action]
+```
+
+---
+
+## 2. Common Agent Workflows
+
+<!-- TODO: Define step-by-step workflows for common agent tasks
+
+Each workflow should include:
+- User request (trigger)
+- Agent actions (numbered steps)
+- Validation (how to verify)
+- Common variations
+-->
+
+### Workflow 1: [Most Common Task]
+
+**User Request**: "[Typical user request]"
+
+**Agent Actions**:
+1. [Step 1 with specific tool/command]
+2. [Step 2 with specific tool/command]
+3. [Step 3 with specific tool/command]
+
+**Validation**:
+```bash
+# Command to verify workflow succeeded
+# TODO: Add validation command
+```
+
+**Expected Output**:
+```
+# TODO: Show expected output
+```
+
+**Common Variations**:
+- **Variation 1**: If [condition], then [alternative action]
+- **Variation 2**: If [condition], then [alternative action]
+
+### Workflow 2: [Second Common Task]
+
+**User Request**: "[Typical user request]"
+
+**Agent Actions**:
+1. [Step 1]
+2. [Step 2]
+3. [Step 3]
+
+**Validation**:
+```bash
+# TODO: Add validation command
+```
+
+### Workflow 3: [Third Common Task]
+
+**User Request**: "[Typical user request]"
+
+**Agent Actions**:
+1. [Step 1]
+2. [Step 2]
+3. [Step 3]
+
+**Validation**:
+```bash
+# TODO: Add validation command
+```
+
+---
+
+## 3. Quick Reference for Agents
+
+<!-- TODO: Provide cheat sheet for agents
+
+Include:
+- Key commands
+- File paths
+- Configuration snippets
+- Common patterns
+-->
+
+### Key Commands
+
+```bash
+# Most common command
+# TODO: Add command
+
+# Validation command
+# TODO: Add validation command
+
+# Status check command
+# TODO: Add status command
+```
+
+### Important File Paths
+
+| File | Purpose | Agent Action |
+|------|---------|--------------|
+| `[file-path]` | [Purpose] | [What agents should do with this file] |
+
+<!-- TODO: Add key file paths -->
+
+### Configuration Snippets
+
+**Configuration 1**: [Purpose]
+```yaml
+# TODO: Add configuration example
+cross-platform-python-environments:
+  enabled: true
+```
+
+### Common Patterns
+
+**Pattern 1**: [Pattern name]
+```python
+# TODO: Add code pattern
+```
+
+---
+
+## 4. Integration with Other SAPs
+
+<!-- TODO: Describe how this SAP works with other SAPs
+
+Help agents understand:
+- Which SAPs to use together
+- Integration points
+- Workflow combinations
+-->
+
+
+### Required Dependencies
+
+
+#### SAP-000
+
+**Relationship**: [How this SAP depends on SAP-000]
+
+**Agent Workflow**:
+1. When using SAP-031, check if SAP-000 is installed
+2. If not, recommend installing SAP-000 first
+3. [Additional integration steps]
+
+
+#### SAP-030
+
+**Relationship**: [How this SAP depends on SAP-030]
+
+**Agent Workflow**:
+1. When using SAP-031, check if SAP-030 is installed
+2. If not, recommend installing SAP-030 first
+3. [Additional integration steps]
+
+
+
+
+### Complementary SAPs
+
+<!-- TODO: List SAPs that work well together with this one -->
+
+**SAP-XXX**: [Name]
+- **Use together when**: [Condition]
+- **Benefit**: [Why combine these SAPs]
+
+---
+
+## 5. Error Patterns & Troubleshooting
+
+<!-- TODO: Common errors agents encounter and how to fix them
+
+Help agents:
+- Recognize error patterns
+- Provide solutions
+- Avoid common mistakes
+-->
+
+### Error Pattern 1: [Error Message or Symptom]
+
+**Symptoms**:
+- [What the user/agent will see]
+- [Error message excerpt]
+
+**Cause**: [Why this happens]
+
+**Agent Solution**:
+1. [Step to diagnose]
+2. [Step to fix]
+3. [Step to verify fix]
+
+**Prevention**: [How to avoid this error]
+
+### Error Pattern 2: [Error Message or Symptom]
+
+**Symptoms**: [Description]
+
+**Cause**: [Why this happens]
+
+**Agent Solution**:
+1. [Fix step 1]
+2. [Fix step 2]
+
+---
+
+## 6. Agent Communication Patterns
+
+<!-- TODO: How agents should communicate about this SAP to users
+
+Guide agents on:
+- How to explain concepts
+- What details to include
+- Common user questions
+-->
+
+### Explaining Cross-Platform Python Environments to Users
+
+**Simple Explanation** (for beginners):
+> [1-2 sentence explanation in simple terms]
+
+**Technical Explanation** (for experienced users):
+> [1-2 sentence technical explanation]
+
+### Common User Questions
+
+**Q: [Common question 1]?**
+
+**Agent Response**:
+[How to answer - reference relevant sections]
+
+**Q: [Common question 2]?**
+
+**Agent Response**:
+[How to answer]
+
+---
+
+## 7. Best Practices for Agents
+
+<!-- TODO: Guidelines for agents using this SAP
+
+Include:
+- Best practices
+- Anti-patterns to avoid
+- Efficiency tips
+- Quality checks
+-->
+
+### Do's ✅
+
+- ✅ [Best practice 1]
+- ✅ [Best practice 2]
+- ✅ [Best practice 3]
+
+### Don'ts ❌
+
+- ❌ [Anti-pattern 1]
+- ❌ [Anti-pattern 2]
+- ❌ [Anti-pattern 3]
+
+### Efficiency Tips
+
+**Tip 1**: [Optimization]
+- **Why**: [Benefit]
+- **How**: [Implementation]
+
+**Tip 2**: [Optimization]
+- **Why**: [Benefit]
+- **How**: [Implementation]
+
+---
+
+## 8. Validation & Quality Checks
+
+<!-- TODO: How agents should validate their work
+
+Help agents:
+- Verify correct implementation
+- Check quality
+- Confirm success
+-->
+
+### Agent Self-Check Checklist
+
+Before completing a task with SAP-031, agents should verify:
+
+- [ ] [Check 1]
+- [ ] [Check 2]
+- [ ] [Check 3]
+- [ ] Validation command executed successfully
+- [ ] User confirmed expected behavior
+
+### Validation Commands
+
+```bash
+# Primary validation
+# TODO: Add validation command
+
+# Secondary validation (optional)
+# TODO: Add additional checks
+```
+
+---
+
+## 9. Version Compatibility
+
+**Current Version**: 1.0.0
+
+### Compatibility Notes
+
+- **SAP-031 1.0.0** is compatible with:
+
+
+  - SAP-000 1.0.0+
+
+  - SAP-030 1.0.0+
+
+
+
+### Breaking Changes
+
+<!-- TODO: Document any breaking changes from previous versions -->
+
+**No breaking changes** (initial release)
+
+---
+
+## 10. Additional Resources
+
+### Within chora-base
+
+- [Protocol Specification](./protocol-spec.md) - Technical contracts
+- [Adoption Blueprint](./adoption-blueprint.md) - Step-by-step installation
+- [Capability Charter](./capability-charter.md) - Problem statement and scope
+
+### External Resources
+
+<!-- TODO: Link to relevant external resources for agent learning -->
+
+- [External Resource 1](https://example.com) - [Description]
+- [External Resource 2](https://example.com) - [Description]
+
+---
+
+**For Agents**: This awareness guide is your quick reference. For detailed technical specifications, see [protocol-spec.md](./protocol-spec.md). For installation instructions, see [adoption-blueprint.md](./adoption-blueprint.md).
+
+**Version**: 1.0.0 (2025-11-03)

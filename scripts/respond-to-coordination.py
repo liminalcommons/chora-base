@@ -33,6 +33,12 @@ from pathlib import Path
 from datetime import datetime
 from typing import Dict, Any, Optional
 
+
+# Configure UTF-8 output for Windows console compatibility
+if sys.platform == 'win32':
+    sys.stdout.reconfigure(encoding='utf-8')
+    sys.stderr.reconfigure(encoding='utf-8')
+
 VERSION = "1.0.0"
 
 
@@ -121,7 +127,7 @@ def emit_event(
     if notes:
         event["notes"] = notes
 
-    with open(events_file, 'a') as f:
+    with open(events_file, 'a', encoding='utf-8') as f:
         f.write(json.dumps(event) + "\n")
 
 
@@ -210,7 +216,7 @@ def main():
             output_file = outgoing_dir / f"{args.request}-response.json"
 
         # Write response
-        with open(output_file, 'w') as f:
+        with open(output_file, 'w', encoding='utf-8') as f:
             json.dump(response, f, indent=2)
 
         print(f"✓ Response created: {output_file}")

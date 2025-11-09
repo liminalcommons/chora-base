@@ -24,6 +24,12 @@ from pathlib import Path
 from typing import List, Optional
 
 
+
+# Configure UTF-8 output for Windows console compatibility
+if sys.platform == 'win32':
+    sys.stdout.reconfigure(encoding='utf-8')
+    sys.stderr.reconfigure(encoding='utf-8')
+
 def log_session_event(
     action: str,
     with_memory: bool,
@@ -48,7 +54,7 @@ def log_session_event(
     }
 
     sessions_log = events_dir / "sessions.jsonl"
-    with open(sessions_log, "a") as f:
+    with open(sessions_log, "a", encoding='utf-8') as f:
         f.write(json.dumps(event) + "\n")
 
     return event
@@ -62,7 +68,7 @@ def get_all_sessions(events_dir: Path) -> List[dict]:
         return []
 
     sessions = []
-    with open(sessions_log, "r") as f:
+    with open(sessions_log, "r", encoding='utf-8') as f:
         for line in f:
             if not line.strip():
                 continue

@@ -17,6 +17,12 @@ from pathlib import Path
 from typing import Optional
 
 
+
+# Configure UTF-8 output for Windows console compatibility
+if sys.platform == 'win32':
+    sys.stdout.reconfigure(encoding='utf-8')
+    sys.stderr.reconfigure(encoding='utf-8')
+
 def log_reuse_event(
     note_id: str,
     context: str,
@@ -38,7 +44,7 @@ def log_reuse_event(
     }
 
     reuse_log = events_dir / "knowledge-reuse.jsonl"
-    with open(reuse_log, "a") as f:
+    with open(reuse_log, "a", encoding='utf-8') as f:
         f.write(json.dumps(event) + "\n")
 
     return event
@@ -69,7 +75,7 @@ def calculate_reuse_metrics(knowledge_dir: Path, events_dir: Path) -> dict:
     reused_note_ids = set()
     total_time_saved = 0
 
-    with open(reuse_log, "r") as f:
+    with open(reuse_log, "r", encoding='utf-8') as f:
         for line in f:
             if not line.strip():
                 continue

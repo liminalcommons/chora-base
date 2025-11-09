@@ -19,6 +19,12 @@ from datetime import datetime
 from pathlib import Path
 from typing import Dict, List, Tuple
 
+
+# Configure UTF-8 output for Windows console compatibility
+if sys.platform == 'win32':
+    sys.stdout.reconfigure(encoding='utf-8')
+    sys.stderr.reconfigure(encoding='utf-8')
+
 # Root directory
 ROOT_DIR = Path(__file__).parent.parent
 

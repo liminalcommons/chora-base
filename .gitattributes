@@ -1,0 +1,86 @@
+# .gitattributes template for cross-platform development
+# Ensures consistent line endings across Mac, Windows, and Linux
+#
+# See SAP-030 (Cross-Platform Development Fundamentals) for details
+
+# Default: normalize all text files (LF in repository, platform-native on checkout)
+* text=auto
+
+# Force LF for Unix-style files (scripts, config, docs)
+*.sh text eol=lf
+*.py text eol=lf
+*.md text eol=lf
+*.rst text eol=lf
+*.yml text eol=lf
+*.yaml text eol=lf
+*.json text eol=lf
+*.toml text eol=lf
+*.ini text eol=lf
+*.cfg text eol=lf
+*.conf text eol=lf
+*.txt text eol=lf
+*.xml text eol=lf
+*.html text eol=lf
+*.css text eol=lf
+*.js text eol=lf
+*.jsx text eol=lf
+*.ts text eol=lf
+*.tsx text eol=lf
+*.mjs text eol=lf
+*.cjs text eol=lf
+*.vue text eol=lf
+*.svg text eol=lf
+Makefile text eol=lf
+justfile text eol=lf
+Dockerfile text eol=lf
+.gitignore text eol=lf
+.gitattributes text eol=lf
+.editorconfig text eol=lf
+.env.* text eol=lf
+
+# Force CRLF for Windows-specific files
+*.bat text eol=crlf
+*.cmd text eol=crlf
+*.ps1 text eol=crlf
+
+# Binary files (no line ending conversion)
+*.png binary
+*.jpg binary
+*.jpeg binary
+*.gif binary
+*.ico binary
+*.pdf binary
+*.zip binary
+*.tar binary
+*.gz binary
+*.7z binary
+*.woff binary
+*.woff2 binary
+*.ttf binary
+*.eot binary
+*.otf binary
+*.mp3 binary
+*.mp4 binary
+*.mov binary
+*.avi binary
+*.mkv binary
+*.db binary
+*.sqlite binary
+*.pkl binary
+*.pyc binary
+*.pyo binary
+*.so binary
+*.dll binary
+*.dylib binary
+*.exe binary
+
+# Git diff settings for specific file types
+*.py diff=python
+*.md diff=markdown
+*.json diff=json
+
+# Linguist language detection overrides (optional)
+*.md linguist-detectable
+*.json linguist-detectable
+docs/** linguist-documentation
+tests/** linguist-vendored=false

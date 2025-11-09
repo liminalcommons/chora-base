@@ -42,7 +42,7 @@ Configuration prompts surfaced by `python setup.py /path/to/project`
 |----------|------|---------|-------------|----------------------|
 | `include_cli` | bool | `true` | CLI interface | `src/{{package_name}}/cli/main.py`, entry point in pyproject.toml |
 | `cli_framework` | str | `click` | CLI framework (if include_cli=true) | click or typer dependency |
-| `include_memory_system` | bool | `true` | Agent Memory System | `src/{{package_name}}/memory/`, `.chora/memory/`, memory CLI |
+| `include_memory` | bool | `true` | Agent Memory System | `src/{{package_name}}/memory/`, `.chora/memory/`, memory CLI |
 | `include_agents_md` | bool | `true` | Machine-readable instructions | `AGENTS.md` (900+ lines) |
 | `include_tests` | bool | `true` | Testing infrastructure | `tests/`, pytest config |
 | `test_coverage_threshold` | int | `85` | Test coverage % required | `--cov-fail-under` in pytest config |
@@ -82,7 +82,7 @@ project_name: my-project
 author_name: Jane Doe
 python_version: "3.11"
 project_type: mcp_server
-include_memory_system: false  # Minimal
+include_memory: false  # Minimal
 include_agents_md: false      # Minimal
 include_cli: false            # Minimal
 include_justfile: false       # Minimal
@@ -104,7 +104,7 @@ project_name: my-project
 author_name: Jane Doe
 python_version: "3.12"
 project_type: mcp_server
-include_memory_system: true   # Agent learning
+include_memory: true   # Agent learning
 include_agents_md: true       # AI instructions
 include_cli: true             # Memory CLI
 cli_framework: click
@@ -128,7 +128,7 @@ python setup.py my-library
 ```yaml
 project_name: my-library
 project_type: library         # Not MCP server
-include_memory_system: false  # Libraries don't need memory
+include_memory: false  # Libraries don't need memory
 include_agents_md: true       # Still useful for contributors
 include_cli: false            # No CLI for library
 ```
@@ -150,7 +150,7 @@ README.md
 pyproject.toml
 ```
 
-### If `include_memory_system=true`
+### If `include_memory=true`
 
 ```
 .chora/memory/README.md

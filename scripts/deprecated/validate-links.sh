@@ -1,9 +1,30 @@
 #!/usr/bin/env bash
+#
+# ============================================================================
+# DEPRECATED: This script has been migrated to Python for cross-platform support
+# ============================================================================
+#
+# Use: python scripts/validate-links.py [PATH]
+# Or:  just validate-links [PATH]
+#
+# Migration Guide: docs/user-docs/how-to/bash-to-python-migration.md
+# Deprecated: v4.3.0 (2025-11-03)
+# Removal: v5.0.0 (planned)
+#
+# Reason: Windows compatibility - this bash script:
+#   - Already called Python for path normalization!
+#   - Uses grep -oE (regex) with bash pipelines
+#   - Uses find ... -print0 (bash-specific)
+#   - Unicode emoji in output (❌✅)
+#
+# ============================================================================
+#
 # Link Validation Script v1.0-mvp
 # Part of SAP-016: Link Validation & Reference Management
 #
 # Simplified MVP focusing on internal markdown link validation
-# Usage: ./scripts/validate-links-simple.sh [PATH]
+# Usage: ./scripts/validate-links-simple.sh [PATH]  (DEPRECATED)
+#        python scripts/validate-links.py [PATH]    (RECOMMENDED)
 
 VERSION="1.0-mvp"
 TARGET_PATH="${1:-.}"

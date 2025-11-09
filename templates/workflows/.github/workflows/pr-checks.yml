@@ -1,0 +1,76 @@
+# PR Checks Workflow Template (Cost-Optimized)
+# Runs on Ubuntu only for PR checks (faster, cheaper)
+# Full multi-OS matrix runs on main branch pushes
+#
+# See SAP-032 (Cross-Platform CI/CD & Quality Gates) for details
+
+name: PR Checks
+
+on:
+  pull_request:
+    branches: [main, develop]
+
+jobs:
+  quick-check:
+    name: Quick Check (Ubuntu)
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Python 3.12
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+          cache: 'pip'
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -e .[dev]
+
+      - name: Run linting
+        run: |
+          ruff check .
+          mypy .
+
+      - name: Run tests
+        run: pytest tests/ --cov=. --cov-report=term
+
+      - name: Check cross-platform scripts
+        run: |
+          # Validate that all Python scripts use pathlib
+          python scripts/platform-info.py --json > /dev/null
+          python scripts/check-python-env.py --json > /dev/null
+
+  platform-validation:
+    name: Platform Validation
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Validate .gitattributes
+        run: |
+          if [ ! -f .gitattributes ]; then
+            echo "ERROR: .gitattributes not found (required for cross-platform line endings)"
+            exit 1
+          fi
+          echo "✓ .gitattributes found"
+
+      - name: Check for hardcoded path separators
+        run: |
+          # Search for hardcoded / or \ in Python files (should use pathlib)
+          # Exclude comments, strings with URLs, and this script itself
+          if grep -r -n --include="*.py" --exclude-dir=".venv" --exclude-dir="venv" "os.path.join\|'/\|'\\\\'" . | grep -v "http://" | grep -v "https://" | grep -v "# " | head -10; then
+            echo "WARNING: Found potential hardcoded path separators (consider using pathlib.Path)"
+          fi
+
+      - name: Check for bash-only scripts
+        run: |
+          # List all .sh files (should be migrated to Python per SAP-030)
+          if find . -name "*.sh" -not -path "./.git/*" | head -10; then
+            echo "INFO: Found bash scripts (should be migrated to Python per SAP-030)"
+          fi

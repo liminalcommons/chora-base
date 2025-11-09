@@ -29,7 +29,7 @@ def load_events(events_path: Path) -> List[dict]:
         return []
 
     events = []
-    with open(events_path, "r") as f:
+    with open(events_path, "r", encoding='utf-8') as f:
         for line in f:
             if line.strip():
                 events.append(json.loads(line))
@@ -57,7 +57,7 @@ def log_dependency_event(
     }
 
     # Append to events log
-    with open(events_path, "a") as f:
+    with open(events_path, "a", encoding='utf-8') as f:
         f.write(json.dumps(event) + "\n")
 
     return event

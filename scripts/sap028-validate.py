@@ -22,6 +22,12 @@ from pathlib import Path
 from typing import Dict, List, Tuple
 
 
+
+# Configure UTF-8 output for Windows console compatibility
+if sys.platform == 'win32':
+    sys.stdout.reconfigure(encoding='utf-8')
+    sys.stderr.reconfigure(encoding='utf-8')
+
 def check_workflow_exists(project_dir: Path) -> Tuple[bool, str]:
     """Check if release workflow exists"""
     workflow_paths = [

@@ -194,7 +194,7 @@ def save_markdown_report(result: EvaluationResult, output_path: Path):
     # Ensure output directory exists
     output_path.parent.mkdir(parents=True, exist_ok=True)
 
-    with open(output_path, "w") as f:
+    with open(output_path, "w", encoding='utf-8') as f:
         f.write("\n".join(md))
 
     print(f"✅ Report saved to: {output_path}")
@@ -204,7 +204,7 @@ def save_json_output(data: dict, output_path: Path):
     """Save evaluation result as JSON"""
     output_path.parent.mkdir(parents=True, exist_ok=True)
 
-    with open(output_path, "w") as f:
+    with open(output_path, "w", encoding='utf-8') as f:
         json.dump(data, f, indent=2, default=str)
 
     print(f"✅ JSON saved to: {output_path}")
@@ -248,7 +248,7 @@ def save_yaml_roadmap(roadmap: AdoptionRoadmap, output_path: Path):
 
     output_path.parent.mkdir(parents=True, exist_ok=True)
 
-    with open(output_path, "w") as f:
+    with open(output_path, "w", encoding='utf-8') as f:
         f.write("\n".join(yaml_lines))
 
     print(f"✅ Roadmap saved to: {output_path}")
@@ -294,7 +294,7 @@ def save_evaluation_to_history(result: EvaluationResult | AdoptionRoadmap, evalu
         }
 
     # Append to history file (JSONL format)
-    with open(history_file, "a") as f:
+    with open(history_file, "a", encoding='utf-8') as f:
         f.write(json.dumps(history_entry, default=str) + "\n")
 
 
@@ -327,7 +327,7 @@ def load_evaluation_history(
     if days:
         cutoff_date = datetime.now(timezone.utc) - timedelta(days=days)
 
-    with open(history_file, "r") as f:
+    with open(history_file, "r", encoding='utf-8') as f:
         for line in f:
             try:
                 entry = json.loads(line.strip())
@@ -519,7 +519,7 @@ def export_evaluation_history(
 
         if output_path:
             output_path.parent.mkdir(parents=True, exist_ok=True)
-            with open(output_path, "w") as f:
+            with open(output_path, "w", encoding='utf-8') as f:
                 json.dump(data, f, indent=2, default=str)
             print(f"✅ History exported to: {output_path}")
         else:
@@ -682,6 +682,12 @@ def main():
     except Exception as e:
         print(f"\n❌ Error: {e}", file=sys.stderr)
         import traceback
+
+# Configure UTF-8 output for Windows console compatibility
+if sys.platform == 'win32':
+    sys.stdout.reconfigure(encoding='utf-8')
+    sys.stderr.reconfigure(encoding='utf-8')
+
         traceback.print_exc()
         return 1
 

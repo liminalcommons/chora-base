@@ -428,7 +428,7 @@ def main():
 
         # Write to file
         args.output.parent.mkdir(parents=True, exist_ok=True)
-        with open(args.output, "w") as f:
+        with open(args.output, "w", encoding='utf-8') as f:
             f.write(html)
 
         print(f"✅ Dashboard generated: {args.output}")
@@ -442,6 +442,12 @@ def main():
     except Exception as e:
         print(f"❌ Error: {e}", file=sys.stderr)
         import traceback
+
+# Configure UTF-8 output for Windows console compatibility
+if sys.platform == 'win32':
+    sys.stdout.reconfigure(encoding='utf-8')
+    sys.stderr.reconfigure(encoding='utf-8')
+
         traceback.print_exc()
         return 1
 

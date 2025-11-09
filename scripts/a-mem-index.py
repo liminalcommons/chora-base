@@ -18,6 +18,12 @@ from pathlib import Path
 from typing import Dict, List, Set
 
 
+
+# Configure UTF-8 output for Windows console compatibility
+if sys.platform == 'win32':
+    sys.stdout.reconfigure(encoding='utf-8')
+    sys.stderr.reconfigure(encoding='utf-8')
+
 def parse_frontmatter(content: str) -> dict:
     """Extract YAML frontmatter from markdown file"""
     frontmatter_pattern = r'^---\s*\n(.*?)\n---\s*\n'
@@ -193,7 +199,7 @@ def main():
             print("📄 links.json (dry-run):")
             print(json.dumps(links_data, indent=2))
         else:
-            with open(links_path, "w") as f:
+            with open(links_path, "w", encoding='utf-8') as f:
                 json.dump(links_data, f, indent=2)
             print(f"✅ Generated: {links_path}")
             print(f"   Total notes: {links_data['total_notes']}")
@@ -208,7 +214,7 @@ def main():
             print("\n📄 tags.json (dry-run):")
             print(json.dumps(tags_data, indent=2))
         else:
-            with open(tags_path, "w") as f:
+            with open(tags_path, "w", encoding='utf-8') as f:
                 json.dump(tags_data, f, indent=2)
             print(f"✅ Generated: {tags_path}")
             print(f"   Total tags: {tags_data['total_tags']}")

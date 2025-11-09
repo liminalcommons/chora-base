@@ -632,7 +632,7 @@ class MyCustomTool(Tool):
 3. Apply refactoring framework
 4. Document decision:
    ```bash
-{% if include_memory_system -%}
+{% if include_memory -%}
    # Record decision in knowledge graph
    echo "Decision: Return dict instead of str in tool responses
    Rationale: Enables Wave 2 tool chaining without breaking changes
@@ -658,7 +658,7 @@ class MyCustomTool(Tool):
 - [ROADMAP.md](../../ROADMAP.md) - Committed features and timelines
 - [AGENTS.md](../../AGENTS.md) - Machine-readable agent instructions
 - [CHANGELOG.md](../../CHANGELOG.md) - Delivered features
-{% if include_memory_system -%}
+{% if include_memory -%}
 - [.chora/memory/](../../.chora/memory/) - Agent memory for decision tracking
 {% endif -%}
 

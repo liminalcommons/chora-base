@@ -15,6 +15,7 @@ from jinja2 import Environment, FileSystemLoader
 def main():
     # Configure UTF-8 output for Windows
     sys.stdout.reconfigure(encoding='utf-8')
+    sys.stderr.reconfigure(encoding='utf-8')
 
     # Load test data
     test_data_file = Path("test-data/mcp-test-project.json")
@@ -22,7 +23,7 @@ def main():
         print(f"Error: Test data file not found: {test_data_file}")
         sys.exit(1)
 
-    with open(test_data_file) as f:
+    with open(test_data_file, encoding='utf-8') as f:
         data = json.load(f)
 
     # Set up Jinja2 environment

@@ -21,10 +21,16 @@ import os
 import re
 import glob
 import argparse
+import sys
 from pathlib import Path
 from typing import Dict, List, Set, Any, Optional, Tuple
 from datetime import datetime, timezone
 from urllib.parse import urlparse
+
+# Configure UTF-8 output for Windows console compatibility
+if sys.platform == 'win32':
+    sys.stdout.reconfigure(encoding='utf-8')
+    sys.stderr.reconfigure(encoding='utf-8')
 
 
 def is_external_link(link: str) -> bool:
@@ -338,12 +344,12 @@ def export_link_graph(
 
     # Export
     if format == "json":
-        with open(output_path, 'w') as f:
+        with open(output_path, 'w', encoding='utf-8') as f:
             json.dump(graph, f, indent=2)
         print(f"✅ Link graph exported to {output_path}")
     elif format == "yaml":
         output_path = output_path.replace('.json', '.yaml')
-        with open(output_path, 'w') as f:
+        with open(output_path, 'w', encoding='utf-8') as f:
             yaml.dump(graph, f, default_flow_style=False, sort_keys=False)
         print(f"✅ Link graph exported to {output_path}")
 

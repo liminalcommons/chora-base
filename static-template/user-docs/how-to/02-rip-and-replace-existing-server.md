@@ -65,7 +65,7 @@ python setup.py your-project-NEW
 # Provide the same answers as the original project:
 # - project_name: your-project
 # - package_name: your_package
-# - include_memory_system: true  # NEW feature
+# - include_memory: true  # NEW feature
 # - ... (see How-To 01 for full prompts)
 
 # Script initializes git and commits template snapshot automatically.

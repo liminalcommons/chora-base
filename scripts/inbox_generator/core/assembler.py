@@ -130,7 +130,7 @@ class ArtifactAssembler:
             output_file = output_path or Path(artifact_config.output_file)
             output_file.parent.mkdir(parents=True, exist_ok=True)
 
-            with open(output_file, 'w') as f:
+            with open(output_file, 'w', encoding='utf-8') as f:
                 json.dump(artifact_data, f, indent=2)
 
             print(f"✓ Artifact written to: {output_file}")
@@ -151,6 +151,12 @@ class ArtifactAssembler:
         # Cache generators except AI generators (which may have per-element prompts)
         if generation_pattern == 'ai_augmented':
             from ..generators.ai_augmented import AIAugmentedGenerator
+
+# Configure UTF-8 output for Windows console compatibility
+if sys.platform == 'win32':
+    sys.stdout.reconfigure(encoding='utf-8')
+    sys.stderr.reconfigure(encoding='utf-8')
+
             return AIAugmentedGenerator(model=kwargs.get('model'), api_key=kwargs.get('api_key'))
 
         if generation_pattern not in self._generator_cache:

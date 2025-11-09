@@ -1,0 +1,61 @@
+{
+  "id": "SAP-028",
+  "name": "publishing-automation",
+  "full_name": "Publishing Automation",
+  "status": "active",
+  "version": "1.0.0",
+  "description": "Secure PyPI publishing with OIDC trusted publishing as default, eliminating long-lived API tokens for chora-base generated projects",
+  "capabilities": [
+    "OIDC trusted publishing (recommended default)",
+    "Token-based publishing (backward compatibility)",
+    "Manual publishing (local development)",
+    "PEP 740 attestations for build provenance",
+    "GitHub Actions workflow integration",
+    "Migration protocols (token → trusted publishing)",
+    "Template integration via pypi_auth_method variable"
+  ],
+  "dependencies": ["SAP-003", "SAP-005"],
+  "tags": ["security", "publishing", "ci-cd", "pypi", "oidc", "production"],
+  "author": "chora-base",
+  "location": "docs/skilled-awareness/publishing-automation",
+  "phase": "Immediate",
+  "priority": "P0",
+
+  "owner": "Victor",
+  "created_date": "2025-11-02",
+  "problem_statement": "chora-base generated Python projects need secure PyPI publishing that eliminates long-lived API tokens while maintaining backward compatibility and supporting multiple publishing methods (manual, CI/CD).\n\nCurrent challenge: Most projects use token-based publishing, which creates security risks (token theft, rotation burden). PyPI now recommends OIDC trusted publishing, but migration path is unclear.\n\nDevelopers face: choosing between 3 publishing methods, configuring security correctly, understanding trade-offs between convenience and security.",
+  "evidence": [
+    "PyPI recommends trusted publishing over API tokens (official docs)",
+    "chora-compose migrated to trusted publishing Nov 2025 (successful)",
+    "Token theft attack surface ~90% with API tokens vs ~0% with OIDC",
+    "Token rotation quarterly with tokens vs never with OIDC"
+  ],
+  "business_impact": "Without standardized secure publishing:\n\n- Security risk: API token theft exposes PyPI account to malicious uploads\n- Maintenance burden: Quarterly token rotation across projects\n- Inconsistency: Each project implements publishing differently\n- Slow onboarding: 30-60 minutes to set up publishing per project",
+  "solution_overview": "SAP-028 provides battle-tested PyPI publishing patterns with OIDC trusted publishing as default.\n\nKey capabilities: 3 publishing methods (trusted/token/manual), migration protocols, GitHub Actions workflows, template integration via pypi_auth_method variable, PEP 740 attestation support.\n\nSetup time: 2-5 minutes for trusted publishing (recommended), 10-15 minutes for token-based, 1-2 minutes for manual.",
+  "key_principles": [
+    "Security-first: OIDC trusted publishing as recommended default",
+    "Zero long-lived secrets: Eliminate API token storage where possible",
+    "Backward compatible: Support token-based publishing for transition",
+    "Progressive adoption: Manual → Token → Trusted path",
+    "Template integration: pypi_auth_method variable for copier templates",
+    "Community-validated: Based on PyPI official recommendations"
+  ],
+  "in_scope": [
+    "OIDC trusted publishing (GitHub Actions + PyPI)",
+    "Token-based publishing (API tokens + GitHub Secrets)",
+    "Manual publishing (twine upload for development)",
+    "Migration protocols (token → trusted publishing)",
+    "PEP 740 attestation support",
+    "Template integration (pypi_auth_method variable)",
+    "GitHub Actions workflow contracts",
+    "Security model comparison"
+  ],
+  "out_of_scope": [
+    "Non-PyPI package registries (conda, npm, rubygems)",
+    "Private package servers (Artifactory, Nexus)",
+    "Publishing from local machines in CI/CD (OIDC requires GitHub Actions)",
+    "Multi-registry publishing (publish to PyPI + conda simultaneously)",
+    "Package signing with GPG (use PEP 740 attestations instead)"
+  ],
+  "one_sentence_summary": "SAP-028 defines secure PyPI publishing with OIDC trusted publishing as default, eliminating long-lived API tokens for chora-base generated projects."
+}

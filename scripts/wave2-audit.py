@@ -4,6 +4,12 @@
 import os
 import glob
 
+
+# Configure UTF-8 output for Windows console compatibility
+if sys.platform == 'win32':
+    sys.stdout.reconfigure(encoding='utf-8')
+    sys.stderr.reconfigure(encoding='utf-8')
+
 saps = [
     "sap-framework", "inbox", "chora-base", "project-bootstrap",
     "testing-framework", "ci-cd-workflows", "quality-gates",
@@ -24,7 +30,7 @@ for sap in saps:
 
     count = 0
     for md_file in glob.glob(f"{path}/*.md"):
-        with open(md_file, 'r') as f:
+        with open(md_file, 'r', encoding='utf-8') as f:
             content = f.read()
             count += content.count("dev-docs/")
             count += content.count("user-docs/")

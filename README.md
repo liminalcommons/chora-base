@@ -15,14 +15,23 @@ A production-ready Python project template designed FOR AI coding agents, not re
 **✅ YES** → Use the fast-setup script (5-10 minutes):
 
 ```bash
-# Option 1: Create an MCP Server (Recommended - Full Infrastructure)
+# Unix/Mac:
 python scripts/create-model-mcp-server.py \
     --name "Your MCP Server Name" \
     --namespace yournamespace \
     --output ~/projects/your-project
 
-# Option 2: Generic Python Project (coming soon)
-# python scripts/create-python-project.py --name "Your Project" --output ~/projects/your-project
+# Windows (PowerShell):
+python scripts/create-model-mcp-server.py `
+    --name "Your MCP Server Name" `
+    --namespace yournamespace `
+    --output $env:USERPROFILE\projects\your-project
+
+# Windows (CMD):
+python scripts/create-model-mcp-server.py ^
+    --name "Your MCP Server Name" ^
+    --namespace yournamespace ^
+    --output %USERPROFILE%\projects\your-project
 ```
 
 **What you get**: Complete project with testing, CI/CD, quality gates, task tracking, memory system, and documentation. Ready to code in 5-10 minutes.

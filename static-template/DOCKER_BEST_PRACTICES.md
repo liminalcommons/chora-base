@@ -348,7 +348,7 @@ volumes:
   # Data (persistent, backup regularly)
   - ./data:/app/data
 
-{% if include_memory_system -%}
+{% if include_memory -%}
   # Agent memory (persistent, version controlled)
   - ./.chora/memory:/app/.chora/memory
 {% endif -%}

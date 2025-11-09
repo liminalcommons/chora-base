@@ -32,6 +32,12 @@ from typing import Any, Dict, List, Optional, Tuple
 try:
     import jsonschema
     from jsonschema import Draft7Validator
+
+# Configure UTF-8 output for Windows console compatibility
+if sys.platform == 'win32':
+    sys.stdout.reconfigure(encoding='utf-8')
+    sys.stderr.reconfigure(encoding='utf-8')
+
 except ImportError:
     print("Error: jsonschema package required. Install with: pip install jsonschema", file=sys.stderr)
     sys.exit(3)
@@ -73,7 +79,7 @@ class QualityEvaluator:
     def load_artifact(self, path: Path) -> Optional[Dict[str, Any]]:
         """Load JSON artifact from file."""
         try:
-            with open(path) as f:
+            with open(path, encoding='utf-8') as f:
                 return json.load(f)
         except (json.JSONDecodeError, IOError) as e:
             print(f"Error loading {path}: {e}", file=sys.stderr)
@@ -357,7 +363,7 @@ class QualityEvaluator:
             return 0.0, feedback
 
         try:
-            with open(schema_path) as f:
+            with open(schema_path, encoding='utf-8') as f:
                 schema = json.load(f)
 
             validator = Draft7Validator(schema)
@@ -717,7 +723,7 @@ def main() -> int:
 
     # Save to file if requested
     if args.output:
-        with open(args.output, 'w') as f:
+        with open(args.output, 'w', encoding='utf-8') as f:
             json.dump(results, f, indent=2)
         print(f"\nResults saved to: {args.output}")
 

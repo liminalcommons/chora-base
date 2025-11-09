@@ -23,6 +23,12 @@ from pathlib import Path
 from typing import List, Dict
 
 
+
+# Configure UTF-8 output for Windows console compatibility
+if sys.platform == 'win32':
+    sys.stdout.reconfigure(encoding='utf-8')
+    sys.stderr.reconfigure(encoding='utf-8')
+
 def load_events(events_dir: Path) -> List[dict]:
     """Load all A-MEM events from development.jsonl"""
     events_path = events_dir / "development.jsonl"
@@ -31,7 +37,7 @@ def load_events(events_dir: Path) -> List[dict]:
         return []
 
     events = []
-    with open(events_path, "r") as f:
+    with open(events_path, "r", encoding='utf-8') as f:
         for line in f:
             if line.strip():
                 try:

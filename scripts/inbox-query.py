@@ -87,7 +87,7 @@ class InboxQuery:
         items = []
         for item_file in incoming_dir.glob("*.json"):
             try:
-                with open(item_file) as f:
+                with open(item_file, encoding='utf-8') as f:
                     data = json.load(f)
 
                 # Add metadata
@@ -138,7 +138,7 @@ class InboxQuery:
         items = []
         for item_file in active_dir.glob("*.json"):
             try:
-                with open(item_file) as f:
+                with open(item_file, encoding='utf-8') as f:
                     data = json.load(f)
 
                 stat = item_file.stat()
@@ -186,7 +186,7 @@ class InboxQuery:
             item_file = search_dir / f"{item_id}.json"
             if item_file.exists():
                 try:
-                    with open(item_file) as f:
+                    with open(item_file, encoding='utf-8') as f:
                         data = json.load(f)
 
                     stat = item_file.stat()
@@ -266,7 +266,7 @@ class InboxQuery:
         events_file = self.inbox_path / "coordination" / "events.jsonl"
         if events_file.exists():
             try:
-                with open(events_file) as f:
+                with open(events_file, encoding='utf-8') as f:
                     for line in f:
                         event = json.loads(line)
                         if event.get("request_id") == item_id and \
@@ -285,7 +285,7 @@ class InboxQuery:
 
         latest_status = "unknown"
         try:
-            with open(events_file) as f:
+            with open(events_file, encoding='utf-8') as f:
                 for line in f:
                     event = json.loads(line)
                     if event.get("request_id") == item_id:

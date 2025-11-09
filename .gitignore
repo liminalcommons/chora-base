@@ -3,6 +3,10 @@
 .AppleDouble
 .LSOverride
 
+# Windows
+nul
+.test_target/
+
 # Python
 __pycache__/
 *.py[cod]

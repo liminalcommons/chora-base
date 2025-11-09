@@ -50,7 +50,7 @@ def parse_agents_md(file_path: str) -> Tuple[List[str], Dict[str, Section]]:
     if not Path(file_path).exists():
         return [], {}
 
-    with open(file_path, 'r') as f:
+    with open(file_path, 'r', encoding='utf-8') as f:
         lines = f.readlines()
 
     preamble = []
@@ -94,7 +94,7 @@ def load_config(chorabase_path: str = '.chorabase') -> dict:
         print(f"Error: {chorabase_path} not found")
         sys.exit(1)
 
-    with open(chorabase_path, 'r') as f:
+    with open(chorabase_path, 'r', encoding='utf-8') as f:
         config = yaml.safe_load(f)
 
     return config.get('hybrid', {}).get('AGENTS.md', {})
@@ -193,7 +193,7 @@ def write_merged_file(lines: List[str], output_path: str, dry_run: bool) -> None
             print(f"\n... ({len(content) - 1000} more characters)")
         print("=" * 70)
     else:
-        with open(output_path, 'w') as f:
+        with open(output_path, 'w', encoding='utf-8') as f:
             f.write(content)
         print(f"✓ Merged AGENTS.md written to: {output_path}")
 
@@ -261,6 +261,12 @@ def main():
     else:
         # Write to temp file for parsing
         import tempfile
+
+# Configure UTF-8 output for Windows console compatibility
+if sys.platform == 'win32':
+    sys.stdout.reconfigure(encoding='utf-8')
+    sys.stderr.reconfigure(encoding='utf-8')
+
         with tempfile.NamedTemporaryFile(mode='w', delete=False, suffix='.md') as tmp:
             tmp.write(upstream_content)
             tmp_path = tmp.name

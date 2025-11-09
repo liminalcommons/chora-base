@@ -25,6 +25,11 @@ from datetime import datetime
 from pathlib import Path
 from typing import List, Set, Tuple
 
+# Configure UTF-8 output for Windows console compatibility
+if sys.platform == 'win32':
+    sys.stdout.reconfigure(encoding='utf-8')
+    sys.stderr.reconfigure(encoding='utf-8')
+
 try:
     import yaml
 except ImportError:
@@ -114,7 +119,7 @@ def check_prerequisites(chorabase_file: str) -> dict:
 
     # Load .chorabase metadata
     try:
-        with open(chorabase_file, 'r') as f:
+        with open(chorabase_file, 'r', encoding='utf-8') as f:
             config = yaml.safe_load(f)
         print_success("Successfully parsed .chorabase metadata")
     except Exception as e:
@@ -198,13 +203,13 @@ def create_backup(config: dict, no_backup: bool, dry_run: bool) -> str:
         # Save current commit
         _, current_commit, _ = run_command(["git", "rev-parse", "HEAD"])
         current_commit = current_commit.strip()
-        with open(f"{backup_dir}/commit.txt", 'w') as f:
+        with open(f"{backup_dir}/commit.txt", 'w', encoding='utf-8') as f:
             f.write(current_commit)
 
         # Save current branch
         _, current_branch, _ = run_command(["git", "branch", "--show-current"])
         current_branch = current_branch.strip()
-        with open(f"{backup_dir}/branch.txt", 'w') as f:
+        with open(f"{backup_dir}/branch.txt", 'w', encoding='utf-8') as f:
             f.write(current_branch)
 
         print_success(f"Backup created: {backup_dir}")

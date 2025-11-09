@@ -115,7 +115,7 @@ docker-compose down
 
 - **[Main AGENTS.md](../AGENTS.md)** - Project overview, architecture, common tasks
 - **[Testing AGENTS.md](../tests/AGENTS.md)** - Testing instructions
-{% if include_memory_system -%}
+{% if include_memory -%}
 - **[Memory System AGENTS.md](../.chora/memory/AGENTS.md)** - Cross-session learning
 {% endif -%}
 - **[scripts/AGENTS.md](../scripts/AGENTS.md)** - Automation scripts reference

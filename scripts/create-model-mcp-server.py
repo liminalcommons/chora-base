@@ -46,6 +46,7 @@ from typing import Any, Dict, Optional
 # Configure UTF-8 output for Windows console compatibility
 if sys.platform == 'win32':
     sys.stdout.reconfigure(encoding='utf-8')
+    sys.stderr.reconfigure(encoding='utf-8')
 
 # Try to import Jinja2, provide helpful error if missing
 try:

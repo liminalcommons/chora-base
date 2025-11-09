@@ -1,12 +1,31 @@
 #!/bin/bash
+#
+# ============================================================================
+# DEPRECATED: This script has been migrated to Python for cross-platform support
+# ============================================================================
+#
+# Use: python scripts/check-sap-awareness-integration.py <sap-directory>
+# Or:  just check-sap-awareness <sap-directory>
+#
+# Migration Guide: docs/user-docs/how-to/bash-to-python-migration.md
+# Deprecated: v4.3.0 (2025-11-03)
+# Removal: v5.0.0 (planned)
+#
+# Reason: Windows compatibility - this bash script uses:
+#   - grep -q, grep -i (different implementations)
+#   - Unicode emoji in output (✅❌⚠️ℹ️)
+#   - Bash arithmetic ((VAR++))
+#
+# ============================================================================
+#
 # SAP Awareness Integration Checker
 #
 # Purpose: Quick pattern detection for AGENTS.md/CLAUDE.md integration in SAP adoption blueprints
 # Scope: SIMPLE checks only - complex validation requires LLM-based audit (SAP_AWARENESS_INTEGRATION_CHECKLIST.md)
 #
 # Usage:
-#   ./scripts/check-sap-awareness-integration.sh <sap-directory>
-#   ./scripts/check-sap-awareness-integration.sh docs/skilled-awareness/testing-framework
+#   ./scripts/check-sap-awareness-integration.sh <sap-directory>  (DEPRECATED)
+#   python scripts/check-sap-awareness-integration.py <sap-directory>  (RECOMMENDED)
 #
 # Exit codes:
 #   0 - All basic patterns found (still requires full LLM audit for quality)

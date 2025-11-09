@@ -29,6 +29,12 @@ from typing import Any, Dict, Optional
 try:
     import jsonschema
     from jsonschema import Draft7Validator
+
+# Configure UTF-8 output for Windows console compatibility
+if sys.platform == 'win32':
+    sys.stdout.reconfigure(encoding='utf-8')
+    sys.stderr.reconfigure(encoding='utf-8')
+
 except ImportError:
     print("Error: jsonschema package required. Install with: pip install jsonschema", file=sys.stderr)
     sys.exit(3)
@@ -66,7 +72,7 @@ class ArtifactProcessor:
 
         # Append to error log
         try:
-            with open(self.error_log, 'a') as f:
+            with open(self.error_log, 'a', encoding='utf-8') as f:
                 f.write(error_entry)
         except Exception as e:
             print(f"Warning: Could not write to error log: {e}", file=sys.stderr)
@@ -89,7 +95,7 @@ class ArtifactProcessor:
             return False
 
         try:
-            with open(schema_path) as f:
+            with open(schema_path, encoding='utf-8') as f:
                 schema = json.load(f)
         except json.JSONDecodeError as e:
             self.log_error(f"Invalid JSON in schema file: {e}")
@@ -186,7 +192,7 @@ class ArtifactProcessor:
 
         try:
             # Append to events.jsonl
-            with open(self.events_file, 'a') as f:
+            with open(self.events_file, 'a', encoding='utf-8') as f:
                 f.write(json.dumps(event) + '\n')
 
             self.log(f"✓ Event emitted to {self.events_file}")
@@ -221,7 +227,7 @@ class ArtifactProcessor:
 
         try:
             # Write artifact to target location
-            with open(target_path, 'w') as f:
+            with open(target_path, 'w', encoding='utf-8') as f:
                 json.dump(artifact, f, indent=2, ensure_ascii=False)
                 f.write('\n')
 
@@ -253,7 +259,7 @@ class ArtifactProcessor:
             return 2
 
         try:
-            with open(self.draft_path) as f:
+            with open(self.draft_path, encoding='utf-8') as f:
                 artifact = json.load(f)
         except json.JSONDecodeError as e:
             self.log_error(f"Invalid JSON in draft file: {e}")

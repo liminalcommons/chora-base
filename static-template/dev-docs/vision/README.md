@@ -270,7 +270,7 @@ Each archived wave includes:
 2. Read vision document for context
 3. Apply architecture check: "Does this block future waves?"
 4. If refactoring needed, check decision framework
-5. Document choice in knowledge note (if `include_memory_system=true`)
+5. Document choice in knowledge note (if `include_memory=true`)
 
 **When encountering design decision:**
 1. Query event log for similar past decisions:
@@ -347,7 +347,7 @@ To create a new vision document:
 - [ROADMAP.md](../../ROADMAP.md) - Committed features and timelines
 - [AGENTS.md](../../AGENTS.md) - Machine-readable agent instructions (Section 3: Strategic Design)
 - [CHANGELOG.md](../../CHANGELOG.md) - Historical record of delivered features
-{% if include_memory_system -%}
+{% if include_memory -%}
 - [.chora/memory/](../../.chora/memory/) - Agent memory system for decision tracking
 {% endif -%}
 

@@ -168,7 +168,7 @@ class SAPEvaluator:
             print(f"Warning: sap-catalog.json not found at {catalog_path}", file=sys.stderr)
             return {}
 
-        with open(catalog_path) as f:
+        with open(catalog_path, encoding='utf-8') as f:
             data = json.load(f)
             # Handle different catalog formats
             if isinstance(data, list):
@@ -315,7 +315,7 @@ class SAPEvaluator:
         try:
             if not file_path.exists():
                 return None
-            with open(file_path, 'r') as f:
+            with open(file_path, 'r', encoding='utf-8') as f:
                 return f.read()
         except Exception:
             return None
@@ -723,7 +723,7 @@ class SAPEvaluator:
 
         total_hours = 0.0
         try:
-            with open(history_file) as f:
+            with open(history_file, encoding='utf-8') as f:
                 for line in f:
                     event = json.loads(line)
                     if "hours_invested" in event:
@@ -873,6 +873,12 @@ class SAPEvaluator:
     def calculate_next_review_date(self) -> date:
         """Calculate next quarterly review date"""
         from datetime import timedelta
+
+# Configure UTF-8 output for Windows console compatibility
+if sys.platform == 'win32':
+    sys.stdout.reconfigure(encoding='utf-8')
+    sys.stderr.reconfigure(encoding='utf-8')
+
         now = datetime.now()
         quarter = (now.month - 1) // 3 + 1
 

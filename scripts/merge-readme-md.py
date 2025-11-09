@@ -33,7 +33,7 @@ def load_config(chorabase_path: str = '.chorabase') -> dict:
         print(f"Error: {chorabase_path} not found")
         sys.exit(1)
 
-    with open(chorabase_path, 'r') as f:
+    with open(chorabase_path, 'r', encoding='utf-8') as f:
         config = yaml.safe_load(f)
 
     return config.get('hybrid', {}).get('README.md', {})
@@ -49,7 +49,7 @@ def extract_project_variables(readme_path: str, config: dict) -> Dict[str, str]:
     if not Path(readme_path).exists():
         return {}
 
-    with open(readme_path, 'r') as f:
+    with open(readme_path, 'r', encoding='utf-8') as f:
         content = f.read()
 
     variables = {}
@@ -89,6 +89,12 @@ def extract_project_variables(readme_path: str, config: dict) -> Dict[str, str]:
 def get_upstream_readme() -> Optional[str]:
     """Get README.md content from upstream using git"""
     import subprocess
+
+
+# Configure UTF-8 output for Windows console compatibility
+if sys.platform == 'win32':
+    sys.stdout.reconfigure(encoding='utf-8')
+    sys.stderr.reconfigure(encoding='utf-8')
 
     try:
         # Try to read from upstream
@@ -169,7 +175,7 @@ def merge_with_preserved_sections(
     if not Path(current_readme_path).exists():
         return upstream_content
 
-    with open(current_readme_path, 'r') as f:
+    with open(current_readme_path, 'r', encoding='utf-8') as f:
         current_content = f.read()
 
     # Extract sections
@@ -209,7 +215,7 @@ def write_merged_file(content: str, output_path: str, dry_run: bool) -> None:
             print(f"\n... ({len(content) - 1500} more characters)")
         print("=" * 70)
     else:
-        with open(output_path, 'w') as f:
+        with open(output_path, 'w', encoding='utf-8') as f:
             f.write(content)
         print(f"✓ Merged README.md written to: {output_path}")
 

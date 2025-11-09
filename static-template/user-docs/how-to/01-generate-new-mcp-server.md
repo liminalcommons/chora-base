@@ -26,7 +26,7 @@ python setup.py /path/to/new-project
 | `project_description` | "MCP server for..." | Short description |
 | `python_version` | `3.11` | Choose 3.11, 3.12, or 3.13 |
 | `project_type` | `mcp_server` | **Important for MCP** |
-| `include_memory_system` | `true` | Agent learning capability |
+| `include_memory` | `true` | Agent learning capability |
 | `include_agents_md` | `true` | AI agent instructions |
 | `include_cli` | `true` | CLI tools for memory |
 | `cli_framework` | `click` | Click or Typer |

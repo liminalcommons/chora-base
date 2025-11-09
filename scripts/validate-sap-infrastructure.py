@@ -25,6 +25,11 @@ import sys
 from pathlib import Path
 from typing import Dict, List, Optional, Tuple
 
+# Configure UTF-8 output for Windows console compatibility
+if sys.platform == 'win32':
+    sys.stdout.reconfigure(encoding='utf-8')
+    sys.stderr.reconfigure(encoding='utf-8')
+
 # SAP infrastructure requirements by adoption level
 INFRASTRUCTURE_REQUIREMENTS = {
     1: {
@@ -61,7 +66,7 @@ INFRASTRUCTURE_REQUIREMENTS = {
 def load_adoption_history(history_path: str = "adoption-history.jsonl") -> List[Dict]:
     """Load adoption events from adoption-history.jsonl"""
     events = []
-    with open(history_path, 'r') as f:
+    with open(history_path, 'r', encoding='utf-8') as f:
         for line in f:
             if line.strip():
                 events.append(json.loads(line))
@@ -336,7 +341,7 @@ def main():
     levels = get_current_adoption_levels(events)
 
     # Load SAP catalog
-    with open("sap-catalog.json", 'r') as f:
+    with open("sap-catalog.json", 'r', encoding='utf-8') as f:
         catalog = json.load(f)
 
     # Determine which SAPs to validate

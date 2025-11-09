@@ -1,11 +1,31 @@
 #!/usr/bin/env bash
+#
+# ============================================================================
+# DEPRECATED: This script has been migrated to Python for cross-platform support
+# ============================================================================
+#
+# Use: python scripts/validate-prerequisites.py
+# Or:  just validate-prerequisites
+#
+# Migration Guide: docs/user-docs/how-to/bash-to-python-migration.md
+# Deprecated: v4.3.0 (2025-11-03)
+# Removal: v5.0.0 (planned)
+#
+# Reason: Windows compatibility - this bash script fails on Windows due to:
+#   - df command (disk space check) not available
+#   - Unicode symbols in output
+#   - Bash-specific constructs
+#
+# ============================================================================
+#
 # validate-prerequisites.sh - Pre-flight validation for chora-base onboarding
 #
 # Purpose: Catch prerequisite issues before install-sap.py runs
 # Exit codes: 0 = PASS, 1 = FAIL
 #
 # Usage:
-#   bash scripts/validate-prerequisites.sh
+#   bash scripts/validate-prerequisites.sh  (DEPRECATED)
+#   python scripts/validate-prerequisites.py  (RECOMMENDED)
 #
 # Based on: COORD-003 Sprint 1 requirements
 # Target: Catch 90%+ of prerequisite issues before installation failure

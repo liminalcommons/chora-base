@@ -154,6 +154,12 @@ class InboxInstaller:
             self.log(f"Installation failed: {e}", "error")
             if self.verbose:
                 import traceback
+
+# Configure UTF-8 output for Windows console compatibility
+if sys.platform == 'win32':
+    sys.stdout.reconfigure(encoding='utf-8')
+    sys.stderr.reconfigure(encoding='utf-8')
+
                 traceback.print_exc()
             return False
 
@@ -430,7 +436,7 @@ See: `docs/skilled-awareness/inbox/` for detailed protocol documentation
             "trace_id": f"inbox-protocol-install-{date.today().year}"
         }
 
-        with open(event_log, 'w') as f:
+        with open(event_log, 'w', encoding='utf-8') as f:
             f.write(json.dumps(installation_event) + "\n")
 
         self.log(f"Initialized event log with installation event")
@@ -453,7 +459,7 @@ See: `docs/skilled-awareness/inbox/` for detailed protocol documentation
             "notes": "Auto-registered during inbox protocol installation"
         }
 
-        with open(ecosystem_registration, 'w') as f:
+        with open(ecosystem_registration, 'w', encoding='utf-8') as f:
             json.dump(registration_data, f, indent=2)
 
         self.log("Created ecosystem registration request")

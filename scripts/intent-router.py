@@ -28,6 +28,12 @@ from typing import Optional
 import yaml
 
 
+
+# Configure UTF-8 output for Windows console compatibility
+if sys.platform == 'win32':
+    sys.stdout.reconfigure(encoding='utf-8')
+    sys.stderr.reconfigure(encoding='utf-8')
+
 @dataclass
 class IntentMatch:
     """Represents a matched intent with confidence score."""
@@ -66,7 +72,7 @@ class IntentRouter:
         if not self.patterns_file.exists():
             return self._create_default_patterns()
 
-        with open(self.patterns_file) as f:
+        with open(self.patterns_file, encoding='utf-8') as f:
             data = yaml.safe_load(f)
 
         patterns = []
@@ -374,12 +380,12 @@ class IntentRouter:
             ]
         }
 
-        with open(self.patterns_file, "w") as f:
+        with open(self.patterns_file, "w", encoding='utf-8') as f:
             yaml.dump(data, f, default_flow_style=False, sort_keys=False)
 
     def export_usage_log(self, output_file: Path) -> None:
         """Export usage log for analysis."""
-        with open(output_file, "w") as f:
+        with open(output_file, "w", encoding='utf-8') as f:
             json.dump(self.usage_log, f, indent=2)
 
 

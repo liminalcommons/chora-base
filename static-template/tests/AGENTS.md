@@ -441,7 +441,7 @@ pre-commit clean
 ## Related Documentation
 
 - **[Main AGENTS.md](../AGENTS.md)** - Project overview, architecture, common tasks
-{% if include_memory_system -%}
+{% if include_memory -%}
 - **[Memory System AGENTS.md](../.chora/memory/AGENTS.md)** - Cross-session learning, knowledge management
 {% endif -%}
 {% if include_docker -%}

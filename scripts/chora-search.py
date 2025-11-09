@@ -20,6 +20,12 @@ from typing import Optional
 
 
 
+
+# Configure UTF-8 output for Windows console compatibility
+if sys.platform == 'win32':
+    sys.stdout.reconfigure(encoding='utf-8')
+    sys.stderr.reconfigure(encoding='utf-8')
+
 @dataclass
 class GlossaryEntry:
     """Represents a single glossary entry."""
@@ -48,7 +54,7 @@ class GlossarySearch:
             print(f"⚠️  Glossary not found at {self.glossary_file}")
             return []
 
-        with open(self.glossary_file) as f:
+        with open(self.glossary_file, encoding='utf-8') as f:
             content = f.read()
 
         # Parse markdown glossary structure

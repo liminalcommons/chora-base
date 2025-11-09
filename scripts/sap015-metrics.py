@@ -18,6 +18,12 @@ from pathlib import Path
 from typing import Dict, List
 
 
+
+# Configure UTF-8 output for Windows console compatibility
+if sys.platform == 'win32':
+    sys.stdout.reconfigure(encoding='utf-8')
+    sys.stderr.reconfigure(encoding='utf-8')
+
 def load_events(events_dir: Path, event_log: str) -> List[dict]:
     """Load events from a JSONL file"""
     log_path = events_dir / event_log
@@ -26,7 +32,7 @@ def load_events(events_dir: Path, event_log: str) -> List[dict]:
         return []
 
     events = []
-    with open(log_path, "r") as f:
+    with open(log_path, "r", encoding='utf-8') as f:
         for line in f:
             if line.strip():
                 events.append(json.loads(line))

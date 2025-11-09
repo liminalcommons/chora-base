@@ -31,6 +31,12 @@ import json
 import statistics
 
 
+
+# Configure UTF-8 output for Windows console compatibility
+if sys.platform == 'win32':
+    sys.stdout.reconfigure(encoding='utf-8')
+    sys.stderr.reconfigure(encoding='utf-8')
+
 @dataclass
 class ClaudeMetric:
     """Track metrics for a single Claude interaction session.

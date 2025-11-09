@@ -1,0 +1,72 @@
+{
+  "version": "test",
+  "updated": "2025-11-02",
+  "description": "Test catalog for SAP-029 generation",
+  "total_saps": 1,
+  "saps": [
+    {
+      "id": "SAP-029",
+      "name": "example-capability",
+      "full_name": "Example Capability for Pilot",
+      "version": "1.0.0",
+      "status": "draft",
+      "size_kb": 100,
+      "description": "Example SAP to test generation workflow and validate dogfooding pilot",
+      "capabilities": [
+        "Template-based artifact generation",
+        "MVP field integration",
+        "Automatic structure creation",
+        "Placeholder guidance for manual content"
+      ],
+      "dependencies": ["SAP-000"],
+      "tags": ["example", "pilot", "testing"],
+      "author": "chora-base",
+      "location": "docs/skilled-awareness/example-capability",
+      "artifacts": {
+        "capability_charter": false,
+        "protocol_spec": false,
+        "awareness_guide": false,
+        "adoption_blueprint": false,
+        "ledger": false
+      },
+      "phase": "Pilot",
+      "priority": "P2",
+      "generation": {
+        "owner": "Victor",
+        "created_date": "2025-11-10",
+        "problem_statement": "Creating SAPs manually is time-consuming and error-prone. Each SAP requires 5 artifacts with overlapping structure, leading to 10 hours of work per SAP.\n\nCurrent challenge: No automated way to generate SAP artifacts from metadata, resulting in inconsistent structure, manual duplication, and slow SAP creation velocity.\n\nDevelopers face: writing repetitive sections, maintaining consistency across 5 files, and tracking TODO placeholders.",
+        "evidence": [
+          "Manual SAP creation takes 10 hours on average",
+          "28 existing SAPs with 5 artifacts each = 140 files",
+          "chora-compose achieved 9x efficiency with dogfooding pattern",
+          "Week 1 analysis identified 80% structure automation opportunity"
+        ],
+        "business_impact": "Without SAP generation automation:\n\n- Slow velocity: 10 hours per SAP limits creation speed\n- Inconsistency: Manual creation leads to structural variations\n- Maintenance burden: Updates require touching 5 files per SAP\n- Adoption friction: High effort discourages SAP creation",
+        "solution_overview": "SAP-029 provides template-based SAP generation using Jinja2 templates and sap-catalog.json metadata.\n\nKey capabilities: 5 Jinja2 templates (one per artifact), MVP schema (9 generation fields), automatic structure generation, placeholder comments for manual content.\n\nSetup time: 7-11 hours one-time investment, 2 hours per SAP after (80% time savings).",
+        "key_principles": [
+          "80/20 automation: Automate structure (80%), manual content (20%)",
+          "Template-first: Jinja2 templates define consistent structure",
+          "Metadata-driven: sap-catalog.json as single source of truth",
+          "Placeholder guidance: TODO comments guide manual content",
+          "Progressive enhancement: Start with MVP, expand schema over time",
+          "Validation integration: Generated artifacts validate with sap-evaluator.py"
+        ],
+        "in_scope": [
+          "Jinja2 template system (5 templates for 5 artifacts)",
+          "MVP generation schema (9 fields: owner, created_date, problem, evidence, impact, solution, principles, in_scope, out_of_scope, one_sentence_summary)",
+          "Generator script (scripts/generate-sap.py)",
+          "Test data and validation",
+          "Documentation (week-1 and week-2 plans)"
+        ],
+        "out_of_scope": [
+          "Full schema automation (30+ fields) - Post-pilot enhancement",
+          "INDEX.md auto-update - Week 3 feature",
+          "justfile integration - Week 3 feature",
+          "Cross-SAP dependency analysis - Future enhancement",
+          "Content pre-fill beyond MVP fields - Post-pilot"
+        ],
+        "one_sentence_summary": "SAP-029 defines template-based SAP artifact generation to reduce creation time from 10 hours to 2 hours (80% savings)."
+      }
+    }
+  ]
+}

@@ -12,6 +12,12 @@ from pathlib import Path
 from dataclasses import dataclass, asdict
 from typing import Optional
 
+
+# Configure UTF-8 output for Windows console compatibility
+if sys.platform == 'win32':
+    sys.stdout.reconfigure(encoding='utf-8')
+    sys.stderr.reconfigure(encoding='utf-8')
+
 @dataclass
 class QualityIssue:
     """A quality issue found in SAP documentation"""
@@ -53,7 +59,7 @@ class SAPQualityAnalyzer:
     def load_catalog(self) -> dict:
         """Load SAP catalog"""
         catalog_path = self.repo_root / "sap-catalog.json"
-        with open(catalog_path) as f:
+        with open(catalog_path, encoding='utf-8') as f:
             data = json.load(f)
             if isinstance(data, dict) and "saps" in data:
                 return {sap["id"]: sap for sap in data["saps"]}
@@ -770,7 +776,7 @@ def main():
     }
 
     output_file = repo_root / "sap-quality-analysis.json"
-    with open(output_file, 'w') as f:
+    with open(output_file, 'w', encoding='utf-8') as f:
         json.dump(output, f, indent=2)
 
     print(f"\n✅ Analysis complete. Results saved to: {output_file}")

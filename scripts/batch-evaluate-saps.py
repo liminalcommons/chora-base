@@ -22,6 +22,12 @@ sys.path.insert(0, str(Path(__file__).parent.parent))
 from utils.sap_evaluation import SAPEvaluator
 
 
+
+# Configure UTF-8 output for Windows console compatibility
+if sys.platform == 'win32':
+    sys.stdout.reconfigure(encoding='utf-8')
+    sys.stderr.reconfigure(encoding='utf-8')
+
 def load_sap_catalog(repo_root: Path) -> List[Dict[str, Any]]:
     """Load SAP catalog from sap-catalog.json"""
     catalog_path = repo_root / "sap-catalog.json"
@@ -30,7 +36,7 @@ def load_sap_catalog(repo_root: Path) -> List[Dict[str, Any]]:
         print(f"Error: SAP catalog not found at {catalog_path}")
         sys.exit(1)
 
-    with open(catalog_path, 'r') as f:
+    with open(catalog_path, 'r', encoding='utf-8') as f:
         data = json.load(f)
 
     return data.get("saps", [])
@@ -228,7 +234,7 @@ def main():
     # Save to file if requested
     if args.output:
         output_path = Path(args.output)
-        with open(output_path, 'w') as f:
+        with open(output_path, 'w', encoding='utf-8') as f:
             json.dump(results, f, indent=2)
         print(f"\nDetailed results saved to: {output_path}")
 

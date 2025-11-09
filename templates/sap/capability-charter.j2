@@ -1,0 +1,350 @@
+# Capability Charter: {{ full_name }}
+
+**SAP ID**: {{ id }}
+**Version**: {{ version }}
+**Status**: {{ status }}
+**Owner**: {{ owner | default("chora-base maintainer") }}
+**Created**: {{ created_date | default("YYYY-MM-DD") }}
+**Last Updated**: {{ created_date | default("YYYY-MM-DD") }}
+
+---
+
+## 1. Problem Statement
+
+### Current Challenge
+
+{{ problem_statement | default("<!-- TODO: Describe the current challenge (2-4 paragraphs)\n\nWhat problem does this SAP solve? What pain points exist without this capability? -->") }}
+
+### Evidence
+
+{% if evidence and evidence|length > 0 %}
+{% for item in evidence %}
+- {{ item }}
+{% endfor %}
+{% else %}
+<!-- TODO: Provide evidence of the problem -->
+- Evidence point 1
+- Evidence point 2
+- Evidence point 3
+{% endif %}
+
+### Business Impact
+
+{{ business_impact | default("<!-- TODO: Describe business impact (1-2 paragraphs)\n\nWhat is the cost of not solving this problem? Time, resources, quality issues? -->") }}
+
+---
+
+## 2. Proposed Solution
+
+### {{ full_name }}
+
+{{ solution_overview | default("<!-- TODO: Describe the proposed solution (2-3 paragraphs)\n\nWhat does this SAP provide? How does it solve the problem? What are the key capabilities? -->") }}
+
+### Key Principles
+
+{% if key_principles and key_principles|length > 0 %}
+{% for principle in key_principles %}
+- {{ principle }}
+{% endfor %}
+{% else %}
+<!-- TODO: List 4-8 key principles guiding this SAP -->
+- Principle 1: [Description]
+- Principle 2: [Description]
+- Principle 3: [Description]
+- Principle 4: [Description]
+{% endif %}
+
+---
+
+## 3. Scope
+
+### In Scope
+
+{% if in_scope and in_scope|length > 0 %}
+{% for item in in_scope %}
+- {{ item }}
+{% endfor %}
+{% else %}
+<!-- TODO: List capabilities/features included in this SAP -->
+{% if capabilities and capabilities|length > 0 %}
+{% for capability in capabilities %}
+- {{ capability }}
+{% endfor %}
+{% else %}
+- Capability 1
+- Capability 2
+{% endif %}
+{% endif %}
+
+### Out of Scope
+
+{% if out_of_scope and out_of_scope|length > 0 %}
+{% for item in out_of_scope %}
+- {{ item }}
+{% endfor %}
+{% else %}
+<!-- TODO: List capabilities explicitly excluded from this SAP -->
+- Out of scope item 1
+- Out of scope item 2
+{% endif %}
+
+---
+
+## 4. Outcomes
+
+### Success Criteria
+
+**Adoption Success** (Level 1):
+- <!-- TODO: Define Level 1 adoption success criteria -->
+- SAP-{{ id.split('-')[1] if '-' in id else '000' }} installed (5 artifacts present)
+- Basic functionality validated
+- Time estimate: 1-2 hours
+
+**Adoption Success** (Level 2):
+- <!-- TODO: Define Level 2 adoption success criteria -->
+- Advanced features integrated
+- Workflow improvements measured
+- Time estimate: 4-6 hours
+
+**Adoption Success** (Level 3):
+- <!-- TODO: Define Level 3 adoption success criteria -->
+- Full mastery achieved
+- Optimization and best practices applied
+- Time estimate: 8-12 hours
+
+### Key Metrics
+
+<!-- TODO: Define measurable outcomes -->
+
+| Metric | Baseline | Target (Level 2) | Target (Level 3) |
+|--------|----------|------------------|------------------|
+| Metric 1 | TBD | TBD | TBD |
+| Metric 2 | TBD | TBD | TBD |
+
+---
+
+## 5. Stakeholders
+
+### Primary Stakeholders
+
+**{{ full_name }} Owner**:
+- **Owner**: {{ owner | default("chora-base maintainer") }}
+- **Responsibilities**:
+  - Maintain SAP artifacts and documentation
+  - Review community feedback
+  - Coordinate with related SAP owners
+  {% if dependencies and dependencies|length > 0 %}
+  - Coordinate with dependencies: {{ dependencies|join(', ') }}
+  {% endif %}
+
+**Primary Users**:
+- <!-- TODO: Define primary user roles and their needs -->
+- AI agents (Claude, other LLMs)
+- Development teams
+- Technical leaders
+
+### Secondary Stakeholders
+
+**Related SAP Maintainers**:
+{% if dependencies and dependencies|length > 0 %}
+{% for dep in dependencies %}
+- **{{ dep }}**: [Integration point description]
+{% endfor %}
+{% else %}
+- <!-- TODO: List stakeholders from related SAPs -->
+{% endif %}
+
+**Community**:
+- chora-base adopters
+- Ecosystem contributors
+- External users
+
+---
+
+## 6. Dependencies
+
+### Required SAP Dependencies
+
+{% if dependencies and dependencies|length > 0 %}
+{% for dep_id in dependencies %}
+- **{{ dep_id }}**: [Why this dependency is required]
+{% endfor %}
+{% else %}
+- **SAP-000** (sap-framework): Core SAP protocols and patterns
+{% endif %}
+
+### Optional SAP Dependencies
+
+<!-- TODO: List optional dependencies that enhance this SAP -->
+- [Optional dependency and benefit]
+
+### External Dependencies
+
+**Required**:
+- <!-- TODO: List required external tools, libraries, services -->
+- Python 3.9+ / Node.js 22+ / [Technology stack]
+
+**Optional**:
+- <!-- TODO: List optional external integrations -->
+
+---
+
+## 7. Constraints & Assumptions
+
+### Constraints
+
+<!-- TODO: List technical, organizational, or resource constraints -->
+
+1. **Constraint 1**: [Description]
+2. **Constraint 2**: [Description]
+3. **Constraint 3**: [Description]
+
+### Assumptions
+
+<!-- TODO: List assumptions about users, environment, capabilities -->
+
+1. **Assumption 1**: [Description]
+2. **Assumption 2**: [Description]
+3. **Assumption 3**: [Description]
+
+---
+
+## 8. Risks & Mitigations
+
+### Risk 1: [Risk Name]
+
+**Risk**: [Description of the risk]
+
+**Likelihood**: Low / Medium / High
+**Impact**: Low / Medium / High
+
+**Mitigation**:
+- [Mitigation strategy 1]
+- [Mitigation strategy 2]
+- [Mitigation strategy 3]
+
+### Risk 2: [Risk Name]
+
+**Risk**: [Description of the risk]
+
+**Likelihood**: Low / Medium / High
+**Impact**: Low / Medium / High
+
+**Mitigation**:
+- [Mitigation strategy 1]
+- [Mitigation strategy 2]
+
+### Risk 3: [Risk Name]
+
+**Risk**: [Description of the risk]
+
+**Likelihood**: Low / Medium / High
+**Impact**: Low / Medium / High
+
+**Mitigation**:
+- [Mitigation strategy 1]
+- [Mitigation strategy 2]
+
+---
+
+## 9. Lifecycle
+
+### Development Phase
+**Status**: ⏳ **Planned**
+**Target Completion**: [Date]
+
+**Milestones**:
+- [ ] SAP catalog entry created
+- [ ] capability-charter.md (this document)
+- [ ] protocol-spec.md (technical contracts)
+- [ ] awareness-guide.md (AI agent guidance)
+- [ ] adoption-blueprint.md (installation guide)
+- [ ] ledger.md (adoption tracking)
+
+### Pilot Phase
+**Status**: ⏳ **Planned**
+**Target Start**: [Date]
+**Duration**: 1-2 weeks
+
+**Activities**:
+- Install SAP in 2-3 test projects
+- Measure adoption time (target: documented estimates)
+- Agent execution validation
+- Collect feedback from early adopters
+- Iterate on documentation
+
+### Active Phase
+**Status**: ⏳ **Planned**
+**Target Start**: [Date]
+
+**Ongoing Activities**:
+- Quarterly reviews and updates
+- Community feedback integration
+- Ledger maintenance (adoption tracking)
+{% if dependencies and dependencies|length > 0 %}
+- Integration with {{ dependencies|join(', ') }}
+{% endif %}
+
+### Maintenance Phase
+
+**Maintenance SLA**:
+- Critical issues: 24-48 hours
+- Major updates: 1-2 weeks
+- Minor updates: Quarterly batch updates
+- Documentation improvements: Ad-hoc
+
+---
+
+## 10. Related Documents
+
+### Within chora-base
+
+**SAP Artifacts**:
+- [Protocol Specification](./protocol-spec.md) - Technical contracts for {{ full_name }}
+- [Awareness Guide](./awareness-guide.md) - AI agent quick reference
+- [Adoption Blueprint](./adoption-blueprint.md) - Step-by-step installation
+- [Traceability Ledger](./ledger.md) - Version history and adoption tracking
+
+**Related SAPs**:
+- [SAP-000: SAP Framework](../sap-framework/capability-charter.md) - Core SAP protocols
+{% if dependencies and dependencies|length > 0 %}
+{% for dep_id in dependencies %}
+- [{{ dep_id }}: [Name]](../[directory]/capability-charter.md) - [Relationship]
+{% endfor %}
+{% endif %}
+
+**SAP Catalog**:
+- [sap-catalog.json](../../../sap-catalog.json) - Machine-readable SAP registry
+
+### External Documentation
+
+<!-- TODO: Link to relevant external resources -->
+
+**Official Documentation**:
+- [External resource 1](https://example.com) - [Description]
+- [External resource 2](https://example.com) - [Description]
+
+**Community Resources**:
+- [Community resource 1](https://example.com) - [Description]
+
+---
+
+## 11. Approval & Sign-Off
+
+**Charter Author**: {{ owner | default("chora-base maintainer") }}
+**Date**: {{ created_date | default("YYYY-MM-DD") }}
+**Version**: {{ version }}
+
+**Approval Status**: {% if status == 'active' %}✅ **Approved**{% elif status == 'pilot' %}⏳ **Pilot**{% else %}⏳ **Draft**{% endif %}
+
+**Review Cycle**:
+- **Next Review**: [Date]
+- **Review Frequency**: Quarterly
+
+**Change Log**:
+- {{ created_date | default("YYYY-MM-DD") }}: Initial charter ({{ version }}) - {{ owner | default("chora-base maintainer") }}
+
+---
+
+**Version History**:
+- **{{ version }}** ({{ created_date | default("YYYY-MM-DD") }}): Initial charter for {{ full_name }}

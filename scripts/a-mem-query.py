@@ -17,6 +17,12 @@ from pathlib import Path
 from typing import List, Optional
 
 
+
+# Configure UTF-8 output for Windows console compatibility
+if sys.platform == 'win32':
+    sys.stdout.reconfigure(encoding='utf-8')
+    sys.stderr.reconfigure(encoding='utf-8')
+
 def get_session_id() -> str:
     """Generate or retrieve current session ID"""
     # Simple: use current date + hour
@@ -61,7 +67,7 @@ def log_query_event(
     }
 
     queries_log = events_dir / "knowledge-queries.jsonl"
-    with open(queries_log, "a") as f:
+    with open(queries_log, "a", encoding='utf-8') as f:
         f.write(json.dumps(event) + "\n")
 
     return event
@@ -75,7 +81,7 @@ def calculate_session_metrics(session_id: str, events_dir: Path) -> dict:
         return {"session_id": session_id, "queries": 0, "target": 3}
 
     session_queries = 0
-    with open(queries_log, "r") as f:
+    with open(queries_log, "r", encoding='utf-8') as f:
         for line in f:
             if not line.strip():
                 continue

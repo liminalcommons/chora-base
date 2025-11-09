@@ -101,7 +101,7 @@ class ConfigLoader:
             raise FileNotFoundError(f"Content config not found: {config_file}")
 
         # Load and parse JSON
-        with open(config_file, 'r') as f:
+        with open(config_file, 'r', encoding='utf-8') as f:
             data = json.load(f)
 
         # Validate required fields
@@ -162,7 +162,7 @@ class ConfigLoader:
             raise FileNotFoundError(f"Artifact config not found: {config_file}")
 
         # Load and parse JSON
-        with open(config_file, 'r') as f:
+        with open(config_file, 'r', encoding='utf-8') as f:
             data = json.load(f)
 
         # Validate required fields

@@ -26,6 +26,11 @@ from typing import Optional
 
 import yaml
 
+# Configure UTF-8 output for Windows console compatibility
+if sys.platform == 'win32':
+    sys.stdout.reconfigure(encoding='utf-8')
+    sys.stderr.reconfigure(encoding='utf-8')
+
 # Add repo root to path for imports
 repo_root = Path(__file__).parent.parent
 sys.path.insert(0, str(repo_root / "scripts"))
@@ -65,7 +70,7 @@ class ProjectContext:
         cutoff = datetime.now(timezone.utc) - timedelta(hours=hours)
         recent = []
 
-        with open(self.event_log) as f:
+        with open(self.event_log, encoding='utf-8') as f:
             for line in f:
                 try:
                     event = json.loads(line)
@@ -123,7 +128,7 @@ class ProjectContext:
             return None
 
         try:
-            with open(ecosystem_file) as f:
+            with open(ecosystem_file, encoding='utf-8') as f:
                 return yaml.safe_load(f)
         except (yaml.YAMLError, IOError):
             return None

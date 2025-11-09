@@ -39,6 +39,11 @@ import time
 from pathlib import Path
 from typing import Dict, List, Optional, Set, Tuple
 
+# Configure UTF-8 output for Windows console compatibility
+if sys.platform == 'win32':
+    sys.stdout.reconfigure(encoding='utf-8')
+    sys.stderr.reconfigure(encoding='utf-8')
+
 # Add repo root to path for imports
 repo_root = Path(__file__).parent.parent
 sys.path.insert(0, str(repo_root / "scripts"))
@@ -159,7 +164,7 @@ def load_catalog(source_dir: Path) -> Dict:
         sys.exit(1)
 
     try:
-        with open(catalog_file, 'r') as f:
+        with open(catalog_file, 'r', encoding='utf-8') as f:
             catalog = json.load(f)
         print_success(f"Loaded catalog (v{catalog.get('version', 'unknown')}, {catalog.get('total_saps', 0)} SAPs)")
         return catalog
@@ -184,7 +189,7 @@ def load_custom_sets(target_dir: Path) -> Dict:
         return {}
 
     try:
-        with open(chorabase_file, 'r') as f:
+        with open(chorabase_file, 'r', encoding='utf-8') as f:
             config = yaml.safe_load(f)
         return config.get('sap_sets', {})
     except Exception as e:

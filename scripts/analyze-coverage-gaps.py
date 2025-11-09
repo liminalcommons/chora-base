@@ -10,6 +10,12 @@ from collections import defaultdict
 from typing import Dict, List, Set
 from datetime import datetime
 
+
+# Configure UTF-8 output for Windows console compatibility
+if sys.platform == 'win32':
+    sys.stdout.reconfigure(encoding='utf-8')
+    sys.stderr.reconfigure(encoding='utf-8')
+
 # Root directory
 ROOT = Path(__file__).parent.parent
 
@@ -133,7 +139,7 @@ SAP_DEFINITIONS = {
 
 def load_inventory(csv_path: Path) -> List[Dict]:
     """Load file inventory from CSV."""
-    with open(csv_path, 'r') as f:
+    with open(csv_path, 'r', encoding='utf-8') as f:
         reader = csv.DictReader(f)
         return list(reader)
 

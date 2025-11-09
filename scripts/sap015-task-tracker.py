@@ -20,13 +20,19 @@ from pathlib import Path
 from typing import List
 
 
+
+# Configure UTF-8 output for Windows console compatibility
+if sys.platform == 'win32':
+    sys.stdout.reconfigure(encoding='utf-8')
+    sys.stderr.reconfigure(encoding='utf-8')
+
 def load_events(events_path: Path) -> List[dict]:
     """Load task completion events from JSONL file"""
     if not events_path.exists():
         return []
 
     events = []
-    with open(events_path, "r") as f:
+    with open(events_path, "r", encoding='utf-8') as f:
         for line in f:
             if line.strip():
                 events.append(json.loads(line))
@@ -52,7 +58,7 @@ def log_task_event(
     }
 
     # Append to events log
-    with open(events_path, "a") as f:
+    with open(events_path, "a", encoding='utf-8') as f:
         f.write(json.dumps(event) + "\n")
 
     return event

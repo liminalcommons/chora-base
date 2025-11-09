@@ -20,6 +20,12 @@ from pathlib import Path
 from typing import List
 
 
+
+# Configure UTF-8 output for Windows console compatibility
+if sys.platform == 'win32':
+    sys.stdout.reconfigure(encoding='utf-8')
+    sys.stderr.reconfigure(encoding='utf-8')
+
 def get_event_age_days(event: dict) -> int:
     """Calculate age of event in days"""
     try:
@@ -46,7 +52,7 @@ def compress_event_log(
 
     # Read all events
     events = []
-    with open(log_path, "r") as f:
+    with open(log_path, "r", encoding='utf-8') as f:
         for line in f:
             if line.strip():
                 events.append(json.loads(line))
@@ -95,7 +101,7 @@ def compress_event_log(
         compressed_size = archive_path.stat().st_size
 
     # Overwrite log with recent events only
-    with open(log_path, "w") as f:
+    with open(log_path, "w", encoding='utf-8') as f:
         for event in recent_events:
             f.write(json.dumps(event) + "\n")
 

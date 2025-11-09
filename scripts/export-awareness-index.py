@@ -21,9 +21,15 @@ import os
 import re
 import glob
 import argparse
+import sys
 from pathlib import Path
 from typing import Dict, List, Set, Any, Optional
 from datetime import datetime, timezone, date
+
+# Configure UTF-8 output for Windows console compatibility
+if sys.platform == 'win32':
+    sys.stdout.reconfigure(encoding='utf-8')
+    sys.stderr.reconfigure(encoding='utf-8')
 
 
 class DateTimeEncoder(json.JSONEncoder):
@@ -341,12 +347,12 @@ def export_awareness_index(
 
     # Export
     if format == "json":
-        with open(output_path, 'w') as f:
+        with open(output_path, 'w', encoding='utf-8') as f:
             json.dump(index, f, indent=2, cls=DateTimeEncoder)
         print(f"✅ Awareness index exported to {output_path}")
     elif format == "yaml":
         output_path = output_path.replace('.json', '.yaml')
-        with open(output_path, 'w') as f:
+        with open(output_path, 'w', encoding='utf-8') as f:
             yaml.dump(index, f, default_flow_style=False, sort_keys=False)
         print(f"✅ Awareness index exported to {output_path}")
 

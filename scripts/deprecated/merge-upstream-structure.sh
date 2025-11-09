@@ -1,8 +1,30 @@
 #!/bin/bash
+#
+# ============================================================================
+# DEPRECATED: This script has been migrated to Python for cross-platform support
+# ============================================================================
+#
+# Use: python scripts/merge-upstream-structure.py [--dry-run] [--no-backup]
+# Or:  just merge-upstream
+# Or:  just merge-upstream-dry-run
+#
+# Migration Guide: docs/user-docs/how-to/bash-to-python-migration.md
+# Deprecated: v4.3.0 (2025-11-03)
+# Removal: v5.0.0 (planned)
+#
+# Reason: Windows compatibility - this bash script:
+#   - Requires 'yq' (YAML parser, separate installation)
+#   - Uses Unicode emoji in output (✓✗⚠ℹ🔄)
+#   - Uses complex bash string processing
+#   - Uses eval for validation commands (security concern)
+#
+# ============================================================================
+#
 # merge-upstream-structure.sh - Merge structural updates from chora-base upstream
 #
 # Purpose: Safely merge structure-only files from chora-base upstream while preserving project content
-# Usage: ./scripts/merge-upstream-structure.sh [--dry-run] [--no-backup]
+# Usage: ./scripts/merge-upstream-structure.sh [--dry-run] [--no-backup]  (DEPRECATED)
+#        python scripts/merge-upstream-structure.py [OPTIONS]             (RECOMMENDED)
 #
 # This script:
 # 1. Reads .chorabase metadata to identify structure-only files

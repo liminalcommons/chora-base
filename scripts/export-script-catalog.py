@@ -20,9 +20,15 @@ import os
 import re
 import glob
 import argparse
+import sys
 from pathlib import Path
 from typing import Dict, List, Any, Optional
 from datetime import datetime, timezone
+
+# Configure UTF-8 output for Windows console compatibility
+if sys.platform == 'win32':
+    sys.stdout.reconfigure(encoding='utf-8')
+    sys.stderr.reconfigure(encoding='utf-8')
 
 
 def parse_justfile(justfile_path: str = "justfile") -> Dict[str, Dict[str, str]]:
@@ -45,7 +51,7 @@ def parse_justfile(justfile_path: str = "justfile") -> Dict[str, Dict[str, str]]
         print(f"Warning: {justfile_path} not found")
         return recipes
 
-    with open(justfile_path, 'r') as f:
+    with open(justfile_path, 'r', encoding='utf-8') as f:
         content = f.read()
 
     # Regex to match recipe definitions
@@ -91,7 +97,7 @@ def parse_script_header(script_path: str) -> Dict[str, Any]:
     }
 
     try:
-        with open(script_path, 'r') as f:
+        with open(script_path, 'r', encoding='utf-8') as f:
             lines = f.readlines()
 
         # Look for docstring or comments in first 30 lines
@@ -357,13 +363,13 @@ def export_script_catalog(output_path: str = "scripts/script-catalog.json", form
     os.makedirs(os.path.dirname(output_path) if os.path.dirname(output_path) else ".", exist_ok=True)
 
     if format == "json":
-        with open(output_path, 'w') as f:
+        with open(output_path, 'w', encoding='utf-8') as f:
             json.dump(catalog, f, indent=2)
         print(f"✅ Script catalog exported to {output_path}")
         print(f"   Total scripts: {catalog['total_scripts']}")
     elif format == "yaml":
         output_path = output_path.replace('.json', '.yaml')
-        with open(output_path, 'w') as f:
+        with open(output_path, 'w', encoding='utf-8') as f:
             yaml.dump(catalog, f, default_flow_style=False, sort_keys=False)
         print(f"✅ Script catalog exported to {output_path}")
         print(f"   Total scripts: {catalog['total_scripts']}")

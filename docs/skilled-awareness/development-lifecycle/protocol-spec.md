@@ -35,9 +35,10 @@ This protocol defines the **8-phase development lifecycle** for chora-base proje
 └────────────────────┬─────────────────────────────────────────────┘
                      ↓
 ┌──────────────────────────────────────────────────────────────────┐
-│ PHASE 3: REQUIREMENTS & DESIGN (DDD) (Days)                     │
-│ Documentation Driven Design: Change request → API reference →   │
-│ Acceptance criteria                                              │
+│ PHASE 3: REQUIREMENTS & DESIGN (Days)                           │
+│ Documentation-Driven Development: Define requirements through   │
+│ Diataxis-structured docs before implementation                  │
+│ L2: Manual BDD | L3: Executable How-To → Extracted BDD         │
 │ Documents: Diataxis docs, API specs, acceptance criteria        │
 └────────────────────┬─────────────────────────────────────────────┘
                      ↓
@@ -76,10 +77,13 @@ This protocol defines the **8-phase development lifecycle** for chora-base proje
                      └──→ Back to PHASE 1 or PHASE 2 (continuous improvement)
 ```
 
-### 2.2 DDD → BDD → TDD Integration
+### 2.2 Documentation-Driven Development → BDD → TDD Integration
 
 ```
-DDD (Documentation Driven Design)
+Documentation-Driven Development (Phase 3)
+  ↓
+  L2 Pattern: Write docs manually → Write BDD scenarios manually
+  L3 Pattern: Write executable how-to → Extract BDD scenarios (automated)
   ↓
   Produces: API specification + Acceptance criteria
   ↓
@@ -98,6 +102,11 @@ TDD (Test Driven Development)
   ↓
   Produces: Fully tested feature (unit tests + BDD scenarios GREEN)
 ```
+
+**Note on Terminology**:
+- **Documentation-Driven Development** (Phase 3): Write Diataxis-structured documentation before implementation
+- **Domain-Driven Design** (DDD): Eric Evans' strategic design patterns for complex domain logic (entities, aggregates, bounded contexts) - used when domain complexity requires explicit modeling
+- Both can be used together: Documentation-Driven Development for requirements, Domain-Driven Design for complex domain modeling
 
 ### 2.3 Light+ Planning Construct Hierarchy
 

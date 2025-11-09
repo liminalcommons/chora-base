@@ -156,7 +156,7 @@ def main():
     # Load context
     if args.context:
         # Load from JSON file
-        with open(args.context, 'r') as f:
+        with open(args.context, 'r', encoding='utf-8') as f:
             context = json.load(f)
         if args.verbose:
             print(f"✓ Loaded context from: {args.context}")
@@ -231,6 +231,12 @@ def main():
         print(f"\n✗ Generation failed: {e}", file=sys.stderr)
         if args.verbose:
             import traceback
+
+# Configure UTF-8 output for Windows console compatibility
+if sys.platform == 'win32':
+    sys.stdout.reconfigure(encoding='utf-8')
+    sys.stderr.reconfigure(encoding='utf-8')
+
             traceback.print_exc()
         sys.exit(1)
 
