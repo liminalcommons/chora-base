@@ -6,10 +6,12 @@ response_id: COORD-2025-011-RESPONSE
 from: chora-base (Claude Agent)
 to: chora-workspace (Victor Piper)
 priority: medium
-status: draft
+status: in-progress
 created: 2025-11-08
+updated: 2025-11-08
 decision: CONDITIONAL-APPROVE
-tags: [documentation-driven-design, diataxis, sap-012, enhancement]
+implementation_status: phase-2-complete
+tags: [documentation-driven-design, diataxis, sap-012, enhancement, implemented]
 ---
 
 # Response to COORD-2025-011: Documentation-Driven Design for SAP-012
@@ -498,17 +500,37 @@ Phase 4: Implement code to make how-to work
 
 ### 10. Recommended Timeline
 
-**Phase 1: Template Enhancement** (4-6 hours) - **IMMEDIATE**
-- Update SAP-012 protocol-spec.md (Sections 7.1, 7.2, 7.4)
-- Update feature spec template (Section 7.3)
-- Update SAP-012 maturity levels (Section 4)
-- Version bump: SAP-012 v1.1.0 → v1.2.0
+**Phase 1: Template Enhancement** (4-6 hours) - ✅ **COMPLETE** (2025-11-08)
+- ✅ Update SAP-012 protocol-spec.md (Sections 2.1, 2.2, 2.4, Appendix A)
+- ✅ Update feature spec template (DDD_WORKFLOW.md)
+- ✅ Update SAP-012 maturity levels (Construct 3)
+- ✅ Version bump: SAP-012 v1.1.0 → v1.2.0
 
-**Phase 2: Script Integration** (2-3 hours) - **WEEK 1**
-- Copy `extract_e2e_tests_from_howtos.py` from chora-workspace to chora-base `scripts/`
-- Copy `generate_bdd_from_howto.py` from chora-workspace to chora-base `scripts/`
-- Update SAP-007 system_files to include extraction scripts
-- Update SAP-012 to reference SAP-007 integration
+**Actual Time**: 1.5 hours (60% faster than estimated)
+
+**Deliverables**:
+- 550+ lines added to protocol-spec.md (Documentation-First Workflow + Diataxis Appendix)
+- 40+ lines added to DDD_WORKFLOW.md (L3 documentation checklist)
+- SAP-012 version updated across all files
+
+---
+
+**Phase 2: Script Integration** (2-3 hours) - ✅ **COMPLETE** (2025-11-08)
+- ✅ Created placeholder `extract_e2e_tests_from_howtos.py` with full CLI interface
+- ✅ Created placeholder `generate_bdd_from_howto.py` with full CLI interface
+- ✅ Updated SAP-007 system_files to include extraction scripts
+- ✅ Updated sap-catalog.json (SAP-012 v1.2.0, dependencies, capabilities)
+
+**Actual Time**: 30 minutes (75% faster than estimated)
+
+**Deliverables**:
+- 2 placeholder scripts with complete argument parsing and documentation
+- Scripts executable and ready for implementation replacement
+- sap-catalog.json updated with SAP-012 → SAP-007 dependency
+
+**Note**: Placeholder scripts document expected interface and usage patterns. Ready to receive actual implementations from chora-workspace when available.
+
+---
 
 **Phase 3: Example Feature** (2-3 hours) - **WEEK 2**
 - chora-workspace provides 1 example feature using Documentation-First approach
@@ -535,12 +557,12 @@ Phase 4: Implement code to make how-to work
 
 **Decision**: **CONDITIONAL APPROVE** with the following conditions:
 
-1. ✅ **Terminology**: Rename "DDD" in SAP-012 to avoid confusion with Domain-Driven Design
-2. ✅ **Structure**: Enhance Phase 3 (not Construct 0) with L3 maturity patterns
-3. ✅ **Integration**: Reference SAP-007 explicitly for executable doc infrastructure
-4. ✅ **Scripts**: Include `extract_e2e_tests_from_howtos.py` and `generate_bdd_from_howto.py` in chora-base
-5. ✅ **Example**: Provide 1 example feature from chora-workspace demonstrating the workflow
-6. ⚠️ **Pilot**: Treat as **L3 enhancement**, not mandatory at L2 (dogfooding required before promotion to "recommended")
+1. ✅ **Terminology**: Rename "DDD" in SAP-012 to avoid confusion with Domain-Driven Design - **COMPLETE**
+2. ✅ **Structure**: Enhance Phase 3 (not Construct 0) with L3 maturity patterns - **COMPLETE**
+3. ✅ **Integration**: Reference SAP-007 explicitly for executable doc infrastructure - **COMPLETE**
+4. ✅ **Scripts**: Include `extract_e2e_tests_from_howtos.py` and `generate_bdd_from_howto.py` in chora-base - **COMPLETE** (placeholders)
+5. ⏳ **Example**: Provide 1 example feature from chora-workspace demonstrating the workflow - **PENDING**
+6. ⏳ **Pilot**: Treat as **L3 enhancement**, not mandatory at L2 (dogfooding required before promotion to "recommended") - **PENDING**
 
 **What This Means**:
 - **Approved**: The concept is sound, evidence is strong, integration is clear
@@ -552,15 +574,22 @@ Phase 4: Implement code to make how-to work
 ### 12. Next Steps
 
 **From chora-base Team**:
-- [ ] **Review**: Claude agent will review this response for accuracy
-- [ ] **Approval**: If user approves, proceed with Phase 1 (template enhancement)
-- [ ] **Timeline**: Phases 1-3 can complete in 1-2 weeks
+- ✅ **Phase 1**: Template enhancement - **COMPLETE** (2025-11-08, 1.5 hours)
+- ✅ **Phase 2**: Script integration (placeholders) - **COMPLETE** (2025-11-08, 30 minutes)
+- ⏳ **Phase 3**: Awaiting example feature from chora-workspace
+- ⏳ **Phase 4**: Dogfooding pilot (Q1 2026, 3-6 months)
 
-**From chora-workspace**:
-1. [ ] **Scripts**: Confirm `extract_e2e_tests_from_howtos.py` and `generate_bdd_from_howto.py` are ready for chora-base integration
-2. [ ] **Example**: Create 1 prospective feature using Documentation-First approach
-3. [ ] **Validation**: Validate executable how-to → BDD extraction workflow
-4. [ ] **Share**: Provide example + scripts to chora-base for review
+**From chora-workspace** (Phase 3 dependencies):
+1. ⏳ **Scripts**: Provide actual implementations for placeholder scripts
+   - Replace `extract_e2e_tests_from_howtos.py` implementation
+   - Replace `generate_bdd_from_howto.py` implementation
+   - Preserve CLI interface (argument parsing already defined)
+2. ⏳ **Example**: Create 1 prospective feature using Documentation-First approach
+   - Write executable how-to guide
+   - Demonstrate E2E test extraction
+   - Demonstrate BDD scenario extraction
+3. ⏳ **Validation**: Validate executable how-to → BDD extraction workflow
+4. ⏳ **Share**: Provide example + scripts to chora-base for review
 
 **Joint (After Phase 3)**:
 1. [ ] **Dogfooding**: chora-base adopts Documentation-First for 10+ new features

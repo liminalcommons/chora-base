@@ -326,7 +326,9 @@
         "docs/user-docs/",
         "docs/dev-docs/",
         "docs/project-docs/",
-        "scripts/extract_tests.py"
+        "scripts/extract_tests.py",
+        "scripts/extract_e2e_tests_from_howtos.py",
+        "scripts/generate_bdd_from_howto.py"
       ],
       "phase": "Phase 3",
       "priority": "P1"
@@ -553,19 +555,22 @@
       "name": "development-lifecycle",
       "full_name": "Development Lifecycle",
       "status": "active",
-      "version": "1.0.0",
+      "version": "1.2.0",
       "included_by_default": false,
-      "size_kb": 156,
-      "description": "8-phase lifecycle (Vision → Monitoring) with DDD → BDD → TDD workflow and anti-patterns guide",
+      "size_kb": 180,
+      "description": "8-phase lifecycle (Vision → Monitoring) with Documentation-Driven Development, L3 Documentation-First workflow, Diataxis framework, and BDD → TDD integration",
       "capabilities": [
         "8-phase development lifecycle",
-        "DDD → BDD → TDD integration",
+        "Documentation-Driven Development (L2/L3 patterns)",
+        "Documentation-First workflow (L3+): Executable how-tos → BDD extraction",
+        "Diataxis framework integration (4 doc types)",
+        "BDD → TDD integration",
         "40-80% defect reduction",
         "Sprint/release templates",
         "ANTI_PATTERNS.md (1,309 lines)"
       ],
-      "dependencies": ["SAP-000"],
-      "tags": ["lifecycle", "ddd", "bdd", "tdd", "process"],
+      "dependencies": ["SAP-000", "SAP-007"],
+      "tags": ["lifecycle", "documentation-driven", "diataxis", "bdd", "tdd", "process", "l3-workflow"],
       "author": "chora-base",
       "location": "docs/skilled-awareness/development-lifecycle",
       "artifacts": {

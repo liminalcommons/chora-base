@@ -486,7 +486,40 @@ last_updated: YYYY-MM-DD
 
 ---
 
-## How-to Guide
+## User-Facing Documentation (L3 Optional, L4 Recommended)
+
+**At L2**: Skip this section and write BDD scenarios manually below
+**At L3+**: Complete this section to enable Documentation-First workflow
+
+- [ ] **How-To Guide** (Required at L3): `docs/user-docs/how-to/{feature-name}.md`
+  - [ ] Frontmatter: `test_extraction: true`
+  - [ ] Format: Step-by-step (Command, Expected Output, Validation blocks)
+  - [ ] E2E tests extracted: `tests/e2e/test_{feature-name}.py`
+  - [ ] E2E tests passing: `pytest tests/e2e/test_{feature-name}.py`
+
+- [ ] **BDD Scenarios Extracted**: `features/{feature-name}.feature`
+  - [ ] Scenarios match how-to steps
+  - [ ] Gherkin syntax validated
+
+- [ ] **Tutorial** (if learning-oriented): `docs/user-docs/tutorial/{feature-name}.md`
+
+- [ ] **Explanation** (if conceptual): `docs/user-docs/explanation/{feature-name}.md`
+
+- [ ] **Reference** (API specs): `docs/user-docs/reference/{feature-name}.md`
+
+**Documentation-First Workflow** (L3+):
+1. Write how-to guide first (before implementation)
+2. Extract E2E tests: `python scripts/extract_e2e_tests_from_howtos.py`
+3. Extract BDD scenarios: `python scripts/generate_bdd_from_howto.py docs/user-docs/how-to/{feature-name}.md`
+4. Implement code to make how-to work (TDD driven by BDD)
+
+**See**: [SAP-012 Section 2.4: Documentation-First Workflow](../../skilled-awareness/development-lifecycle/protocol-spec.md#24-documentation-first-workflow-l3-pattern)
+
+---
+
+## How-to Guide (L2 Manual Version)
+
+**If skipping L3 Documentation-First, manually document user workflow here:**
 
 **User Workflow:**
 
@@ -514,6 +547,9 @@ last_updated: YYYY-MM-DD
 ---
 
 ## Acceptance Criteria
+
+**At L2**: Write manually (Given/When/Then scenarios)
+**At L3**: Extract from how-to guide (automated via scripts)
 
 {See Step 2 template above}
 ```

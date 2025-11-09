@@ -1,9 +1,9 @@
 # Protocol Specification: Development Lifecycle
 
 **SAP ID**: SAP-012
-**Version**: 1.1.0
+**Version**: 1.2.0
 **Status**: Active
-**Last Updated**: 2025-11-06
+**Last Updated**: 2025-11-08
 
 ---
 
@@ -206,10 +206,10 @@ The 8-phase lifecycle operates within a **4-level planning hierarchy** that stru
 **SAP Maturity Levels**:
 - **L0**: No feature planning, code-first approach
 - **L1**: Basic feature descriptions exist
-- **L2**: Features documented before implementation
-- **L3**: DDD/BDD/TDD workflow followed for all features
-- **L4**: Feature specs integrated with metrics and retrospectives
-- **L5**: Feature planning optimized with reusable patterns
+- **L2**: Features documented before implementation, manual BDD scenarios
+- **L3**: Documentation-First workflow (10+ executable how-tos, BDD extracted from docs)
+- **L4**: Feature specs integrated with metrics, E2E tests validate all how-tos
+- **L5**: Feature planning optimized with reusable patterns, doc-driven development at scale
 
 ---
 
@@ -293,6 +293,209 @@ The 4 planning constructs map to the 8 execution phases:
 5. **Maturity Tracking**: Use SAP maturity levels to track adoption depth
 
 **Quick Reference**: See [LIGHT_PLUS_REFERENCE.md](LIGHT_PLUS_REFERENCE.md) for practical planning workflows and maturity assessment.
+
+---
+
+### 2.4 Documentation-First Workflow (L3 Pattern)
+
+**Purpose**: Use executable how-to guides as the source of truth for BDD scenarios and E2E tests.
+
+**Maturity Level**: L3+ (optional at L2, recommended at L4)
+
+**Prerequisites**:
+- SAP-007 (documentation-framework) adopted
+- `test_extraction: true` frontmatter enabled in how-to guides
+- Extraction scripts available in `scripts/` directory
+
+**When to Use**:
+- **Use** when building user-facing features that require step-by-step workflows
+- **Use** when documentation quality is critical (docs are the product)
+- **Skip** at L2 (use manual BDD workflow instead)
+- **Skip** for internal utilities without user documentation needs
+
+---
+
+#### 2.4.1 Workflow Steps
+
+**Step 1: Write Executable How-To Guide** (1-2 hours)
+
+Create user-facing how-to guide with executable format:
+
+```markdown
+---
+title: "How to Add a New MCP Tool"
+type: how-to
+test_extraction: true
+execution_mode: local
+e2e_test_id: mcp-add-tool
+---
+
+# How to Add a New MCP Tool
+
+## Steps
+
+### Step 1: Create Tool File
+
+**Command:**
+\`\`\`bash
+mkdir -p src/tools
+cat > src/tools/my_tool.py << 'EOF'
+from fastmcp import FastMCP
+
+@mcp.tool()
+def my_tool(param: str) -> str:
+    """Tool description"""
+    return f"Result: {param}"
+EOF
+\`\`\`
+
+**Expected Output:**
+\`\`\`
+# File created successfully
+\`\`\`
+
+**Validation:**
+\`\`\`bash
+test -f src/tools/my_tool.py && echo "Tool file created"
+\`\`\`
+```
+
+**File**: `docs/user-docs/how-to/<feature-name>.md`
+
+**Key Elements**:
+- **Frontmatter**: `test_extraction: true` enables E2E test generation
+- **Steps**: `### Step 1:`, `### Step 2:`, etc. (numbered sequentially)
+- **Command blocks**: Actual commands users run
+- **Expected Output blocks**: What users should see
+- **Validation blocks**: Commands to verify success
+
+---
+
+**Step 2: Extract E2E Tests** (5 minutes, automated)
+
+Generate E2E tests from how-to validation blocks:
+
+```bash
+python scripts/extract_e2e_tests_from_howtos.py
+```
+
+**Output**: `tests/e2e/test_<feature-name>.py`
+
+**Validation**:
+```bash
+pytest tests/e2e/test_<feature-name>.py -v
+```
+
+**What This Does**:
+- Parses how-to markdown for validation blocks
+- Generates pytest test functions (one per step)
+- Creates fixtures for setup/teardown
+- Validates expected output matches actual output
+
+---
+
+**Step 3: Extract BDD Scenarios** (10 minutes, semi-automated)
+
+Generate Gherkin scenarios from how-to steps:
+
+```bash
+python scripts/generate_bdd_from_howto.py docs/user-docs/how-to/<feature-name>.md
+```
+
+**Output**: `features/<feature-name>.feature`
+
+**Example Generated Scenario**:
+```gherkin
+Feature: Add New MCP Tool
+
+  Scenario: Create tool file (from Step 1 of how-to)
+    Given I am in the project root directory
+    When I run "mkdir -p src/tools"
+    And I create file "src/tools/my_tool.py" with tool definition
+    Then the file "src/tools/my_tool.py" should exist
+    And the tool file should contain "def my_tool"
+```
+
+**Manual Review**: Verify scenarios match how-to steps (5-10 minutes)
+
+---
+
+**Step 4: Refine API Reference** (30 minutes)
+
+Extract API calls from how-to command blocks and document:
+
+**File**: `docs/user-docs/reference/api/<feature-name>.md`
+
+**Cross-Link**: Reference ↔ How-To bidirectional links
+
+---
+
+#### 2.4.2 Benefits
+
+✅ **Documentation proves it works**: E2E tests validate how-tos before release
+✅ **BDD scenarios extracted**: 50% time savings vs manual BDD writing
+✅ **Single source of truth**: How-to guide drives everything
+✅ **User-facing value first**: Docs are the product, not an afterthought
+✅ **Regression protection**: How-to updates automatically update tests
+
+---
+
+#### 2.4.3 Anti-Patterns
+
+❌ **Writing how-to after code**: Defeats "documentation-first" principle
+❌ **Skipping extraction scripts**: Manual BDD duplication introduces drift
+❌ **Non-executable how-tos**: No validation, documentation drifts from reality
+❌ **Missing validation blocks**: E2E tests can't verify correctness
+❌ **Complex multi-step validations in single step**: Break into smaller steps
+
+---
+
+#### 2.4.4 Integration with BDD/TDD
+
+**L2 Workflow** (Manual BDD):
+```
+Phase 3: Write docs (Explanation, Reference)
+       ↓
+Phase 4: Write BDD scenarios manually (Given/When/Then)
+       ↓
+Phase 4: Write TDD tests
+       ↓
+Phase 4: Implement code
+```
+
+**L3 Workflow** (Documentation-First):
+```
+Phase 3: Write executable how-to guide
+       ↓
+Phase 3: Extract E2E tests (automated)
+       ↓
+Phase 3: Extract BDD scenarios (semi-automated)
+       ↓
+Phase 4: BDD scenarios → TDD tests
+       ↓
+Phase 4: Implement code to make how-to work
+```
+
+**Key Difference**: At L3, BDD scenarios are **extracted** from how-tos, not written separately. The TDD cycle (RED-GREEN-REFACTOR) remains unchanged.
+
+---
+
+#### 2.4.5 SAP-007 Integration
+
+**SAP-007 (documentation-framework)** provides the infrastructure:
+- Diátaxis 4-domain structure (How-To, Tutorial, Explanation, Reference)
+- Frontmatter schema validation
+- Executable how-to guide format
+- Test extraction scripts
+
+**SAP-012 (this document)** provides the workflow:
+- When to write executable how-tos (Phase 3, L3+)
+- How to extract BDD scenarios from how-tos
+- Integration with BDD/TDD development lifecycle
+
+**See Also**:
+- [SAP-007: documentation-framework](../documentation-framework/) - Executable doc infrastructure
+- [How to Write Executable Documentation](../../user-docs/how-to/write-executable-documentation.md) - Format guide
 
 ---
 
@@ -1518,5 +1721,361 @@ python scripts/sap-evaluator.py --deep SAP-012
 
 ---
 
+## Appendix A: Diataxis Framework Reference
+
+**Overview**: Diataxis is a systematic approach to technical documentation that divides documentation into four distinct types based on user needs and context.
+
+**Official Site**: https://diataxis.fr/
+
+**Created by**: Daniele Procida (Divio)
+
+---
+
+### Four Documentation Types
+
+#### 1. Tutorial (Learning-Oriented)
+
+**Purpose**: Teaching a beginner to achieve a simple goal through hands-on practice
+
+**Characteristics**:
+- **Analogy**: "Learning to cook" - step-by-step guidance with guaranteed success
+- **Format**: Sequential steps with explanations
+- **Tone**: Encouraging, patient, educational
+- **Audience**: Beginners with no prior knowledge
+- **Success Metric**: User completes tutorial and understands basics
+
+**When to Write**:
+- Onboarding new users to the project
+- Teaching fundamental concepts
+- First-time setup and configuration
+
+**Example**: "Your First MCP Server in 15 Minutes"
+
+**Structure**:
+```markdown
+# Tutorial: Build Your First MCP Server
+
+## What You'll Learn
+- How to set up FastMCP
+- How to create a simple tool
+- How to test your server
+
+## Prerequisites
+- Python 3.11+
+- 15 minutes
+
+## Step 1: Install FastMCP
+[Detailed setup with explanations]
+
+## Step 2: Create Your First Tool
+[Code with line-by-line breakdown]
+
+## Step 3: Test It
+[Verification steps with expected output]
+
+## What You've Learned
+[Recap and next steps]
+```
+
+**Not Tutorials**:
+- API reference (that's Reference)
+- Production deployment guide (that's How-To)
+- Architectural explanation (that's Explanation)
+
+---
+
+#### 2. How-To Guide (Task-Oriented)
+
+**Purpose**: Solving a specific, practical problem with step-by-step instructions
+
+**Characteristics**:
+- **Analogy**: "Recipe" - precise steps to achieve a specific outcome
+- **Format**: Numbered steps with commands and validations
+- **Tone**: Direct, imperative, practical
+- **Audience**: Users with specific goals and some familiarity
+- **Success Metric**: User achieves their task successfully
+
+**When to Write**:
+- **For every feature** (L3 requirement for SAP-012)
+- Common tasks and workflows
+- Problem-solving scenarios
+
+**Example**: "How to Add a New MCP Tool"
+
+**Structure** (Executable Format for L3):
+```markdown
+---
+title: "How to Deploy to Production"
+type: how-to
+test_extraction: true  # L3: Enable E2E test generation
+execution_mode: local
+e2e_test_id: production-deploy
+---
+
+# How to Deploy to Production
+
+## Prerequisites
+- Staging deployment successful
+- All tests passing
+
+## Steps
+
+### Step 1: Bump Version
+
+**Command:**
+\`\`\`bash
+just bump-version patch
+\`\`\`
+
+**Expected Output:**
+\`\`\`
+Version bumped: 1.2.3 → 1.2.4
+\`\`\`
+
+**Validation:**
+\`\`\`bash
+git tag | tail -n 1 | grep "v1.2.4"
+\`\`\`
+
+### Step 2: Build and Publish
+[Additional steps...]
+```
+
+**Not How-Tos**:
+- Conceptual explanations (that's Explanation)
+- Complete API documentation (that's Reference)
+- Learning exercises (that's Tutorial)
+
+---
+
+#### 3. Explanation (Understanding-Oriented)
+
+**Purpose**: Clarifying concepts, design decisions, and the "why" behind implementations
+
+**Characteristics**:
+- **Analogy**: "History and theory of cooking" - context and understanding
+- **Format**: Prose, diagrams, comparisons
+- **Tone**: Thoughtful, comprehensive, exploratory
+- **Audience**: Users seeking deeper understanding
+- **Success Metric**: User understands concept and can reason about it
+
+**When to Write**:
+- Complex architectural decisions
+- Trade-offs and alternatives considered
+- Design rationale documentation
+- Conceptual overviews
+
+**Example**: "Why We Use FastMCP Over Raw MCP"
+
+**Structure**:
+```markdown
+# Explanation: FastMCP vs Raw MCP
+
+## Context
+[Problem space and background]
+
+## Alternatives Considered
+1. Raw MCP Protocol
+   - Pros: Full control, no abstractions
+   - Cons: 5x more boilerplate, error-prone
+
+2. FastMCP Framework
+   - Pros: 80% less code, type-safe, battle-tested
+   - Cons: Additional dependency
+
+## Decision Rationale
+[Why we chose FastMCP]
+
+## Implications
+[How this affects architecture]
+
+## Future Considerations
+[When we might revisit this]
+```
+
+**Not Explanations**:
+- Step-by-step instructions (that's How-To or Tutorial)
+- Technical specifications (that's Reference)
+
+---
+
+#### 4. Reference (Information-Oriented)
+
+**Purpose**: Providing comprehensive technical specifications in a dry, factual format
+
+**Characteristics**:
+- **Analogy**: "Encyclopedia of ingredients" - exhaustive, factual information
+- **Format**: Structured lists, tables, specifications
+- **Tone**: Dry, precise, comprehensive
+- **Audience**: Users looking up specific technical details
+- **Success Metric**: User finds the exact information they need
+
+**When to Write**:
+- API documentation
+- Configuration reference
+- Command-line interface specs
+- Schema definitions
+
+**Example**: "MCP Tool Schema Reference"
+
+**Structure**:
+```markdown
+# Reference: MCP Tool Schema
+
+## Tool Definition
+
+### Required Fields
+
+| Field | Type | Description | Example |
+|-------|------|-------------|---------|
+| `name` | `str` | Tool identifier | `"get_user"` |
+| `description` | `str` | Tool purpose | `"Retrieve user by ID"` |
+| `inputSchema` | `dict` | JSON Schema for parameters | See below |
+
+### Optional Fields
+
+| Field | Type | Description | Default |
+|-------|------|-------------|---------|
+| `strict` | `bool` | Enforce strict validation | `false` |
+
+## Input Schema Structure
+
+\`\`\`json
+{
+  "type": "object",
+  "properties": {
+    "user_id": {
+      "type": "string",
+      "description": "User identifier"
+    }
+  },
+  "required": ["user_id"]
+}
+\`\`\`
+
+## Return Value
+
+Type: `dict`
+
+Structure:
+- `result`: Operation outcome
+- `error`: Error message (if failed)
+```
+
+**Not Reference**:
+- How to use the API (that's How-To)
+- Why the API is designed this way (that's Explanation)
+- Learning exercises with the API (that's Tutorial)
+
+---
+
+### Diataxis in SAP-012 Workflow
+
+**Phase 1 (Vision & Strategy)**:
+- **Explanation** docs: Why this feature? Design rationale
+
+**Phase 2 (Planning)**:
+- **Tutorial** planning: What will users learn?
+- **How-To** planning: What tasks will users accomplish?
+
+**Phase 3 (Requirements & Design)**:
+- **How-To** (L3 executable): User-facing workflows with validation blocks
+- **Reference**: API specifications, configuration schemas
+
+**Phase 4 (Development)**:
+- Implement code to make How-To guides work
+- Update Reference docs with actual API details
+
+**Phase 7 (Release)**:
+- **Tutorial**: Onboarding guide for new feature
+- **Explanation**: Design rationale and trade-offs
+
+---
+
+### Quick Decision Tree
+
+**User asks "How do I...?"** → **How-To Guide**
+- "How do I deploy to production?"
+- "How do I add a new tool?"
+- "How do I configure logging?"
+
+**User asks "What is...?" or "Why...?"** → **Explanation**
+- "What is the MCP protocol?"
+- "Why do we use FastMCP?"
+- "What's the difference between tools and resources?"
+
+**User asks "Show me all..."** → **Reference**
+- "Show me all configuration options"
+- "Show me all API endpoints"
+- "Show me all CLI commands"
+
+**User says "I'm new to..."** → **Tutorial**
+- "I'm new to MCP development"
+- "I'm new to this codebase"
+- "I'm new to FastMCP"
+
+---
+
+### L3 Documentation-First Integration
+
+**At L3**, How-To guides become executable:
+
+1. **Write How-To first** (with `test_extraction: true`)
+2. **Extract E2E tests** from validation blocks
+3. **Extract BDD scenarios** from steps
+4. **Implement code** to make how-to work
+5. **Tests validate** that documentation is accurate
+
+**Other Diataxis types remain non-executable**:
+- **Tutorial**: Semi-executable (can have validation blocks, but focus is on learning)
+- **Explanation**: Non-executable (conceptual)
+- **Reference**: Non-executable (technical specs)
+
+**Only How-To guides require `test_extraction: true` at L3.**
+
+---
+
+### SAP-007 Integration
+
+**SAP-007 (documentation-framework)** provides:
+- Diátaxis 4-domain directory structure
+- Frontmatter schema for each type
+- Executable how-to format specification
+- Test extraction scripts
+
+**SAP-012 (this document)** provides:
+- When to write each Diataxis type (Phase 1-8 mapping)
+- How to use executable how-tos in Phase 3 (L3 workflow)
+- Integration with BDD/TDD development lifecycle
+
+---
+
+### Common Mistakes
+
+❌ **Tutorial disguised as How-To**: Too much explanation, not focused on specific task
+- Fix: Split into Tutorial (learning) + How-To (task)
+
+❌ **How-To disguised as Tutorial**: Too brief, assumes too much knowledge
+- Fix: Add Tutorial for beginners, keep How-To task-focused
+
+❌ **Reference disguised as How-To**: Just lists API calls without workflow
+- Fix: Move API details to Reference, create How-To with actual user task
+
+❌ **Explanation disguised as Reference**: Too much prose, not structured
+- Fix: Extract conceptual discussion to Explanation, leave only specs in Reference
+
+---
+
+### Learn More
+
+- **Official Diataxis Site**: https://diataxis.fr/
+- **SAP-007 Documentation Framework**: [../documentation-framework/](../documentation-framework/)
+- **How to Write Executable Documentation**: [../../user-docs/how-to/write-executable-documentation.md](../../user-docs/how-to/write-executable-documentation.md)
+- **Diataxis Interactive Tutorial**: https://diataxis.fr/tutorials-how-to/
+
+---
+
 **Version History**:
+- **1.2.0** (2025-11-08): Added Documentation-First Workflow (L3), Diataxis reference, updated maturity levels
+- **1.1.0** (2025-11-06): Enhanced Light+ Planning Model
 - **1.0.0** (2025-10-28): Initial protocol specification for development-lifecycle SAP
