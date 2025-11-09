@@ -57,7 +57,7 @@ def make_tool_name(tool: str) -> str:
 def make_resource_uri(
     resource_type: str,
     resource_id: str,
-    query: Optional[dict[str, str}} = None
+    query: Optional[dict[str, str]] = None
 ) -> str:
     """Generate resource URI following Chora MCP Conventions v1.0.
 
@@ -112,7 +112,7 @@ def parse_tool_name(full_name: str) -> tuple[str, str]:
     return namespace, tool
 
 
-def parse_resource_uri(uri: str) -> tuple[str, str, str, Optional[dict[str, str}}]:
+def parse_resource_uri(uri: str) -> tuple[str, str, str, Optional[dict[str, str]]]:
     """Parse resource URI into components.
 
     Args:
