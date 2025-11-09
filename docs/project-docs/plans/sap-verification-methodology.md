@@ -2099,19 +2099,33 @@ After verification, update the SAP's `ledger.md` with verification results:
 - Fix: Remove `| lower` filter from 3 boolean variables, use Python booleans
 - Release: [v4.14.1](https://github.com/liminalcommons/chora-base/releases/tag/v4.14.1)
 - Commits: [d61a94d](https://github.com/liminalcommons/chora-base/commit/d61a94d), [89be4dd](https://github.com/liminalcommons/chora-base/commit/89be4dd)
-- Status: All 6 blockers resolved (4 original + 2 regressions)
+- Status: All 6 code blockers resolved (4 original + 2 regressions)
 - Expected: GO on fourth verification
+
+**Iteration 5: Fourth Verification + Hot-Fix (Test Template)**
+- Decision: CONDITIONAL NO-GO (code 100%, tests 39%)
+- Result: All 6 code blockers verified ✅, new test template incompatibility identified
+- New blocker: Test template tries to call `FunctionTool`/`FunctionResource` objects directly → TypeError
+- Impact: 14 of 23 tests fail (61% failure rate) despite code working correctly
+- Time: 5 minutes verification + 30 minutes fix
+- Fix: Update 14 test functions to access underlying functions via `.fn` attribute
+- Release: [v4.14.2](https://github.com/liminalcommons/chora-base/releases/tag/v4.14.2)
+- Commits: [df9e1a2](https://github.com/liminalcommons/chora-base/commit/df9e1a2), [985d5b3](https://github.com/liminalcommons/chora-base/commit/985d5b3)
+- Status: All 7 blockers resolved (6 code + 1 test)
+- Expected: GO on fifth verification
 
 **Lessons Learned**:
 1. **CONDITIONAL NO-GO is valuable**: Distinguishes "needs minor fixes" from "fundamentally broken"
-2. **Fix effort estimation works**: 70-minute estimate (actual: 60 min), 2-minute estimates (actual: 2 min each)
-3. **Fast iteration pays off**: 4 iterations in same day, momentum maintained
+2. **Fix effort estimation works**: 70-minute estimate (actual: 60 min), 2-minute estimates (actual: 2 min each), 30-minute estimate (actual: 30 min)
+3. **Fast iteration pays off**: 5 iterations in same day, momentum maintained
 4. **Template testing needed**: Missing variables only caught during verification, not development
 5. **Cross-platform testing essential**: Windows-specific issues require testing on Windows
-6. **Regressions happen repeatedly**: 100% of fix iterations introduced new template errors
+6. **Regressions happen repeatedly**: 100% of fix iterations introduced new template errors (2 syntax + 1 test)
 7. **Systemic issues need systemic solutions**: Automated template validation recommended over continued fix-regression cycles
+8. **Framework-aware testing essential**: Tests must understand framework behavior (e.g., FastMCP decorators)
+9. **Code working ≠ tests passing**: Fourth verification showed perfect code generation but failing tests
 
-**Total Cycle**: 4 iterations, same-day resolution, 6 blockers resolved, 2 regressions handled
+**Total Cycle**: 5 iterations, same-day resolution, 7 blockers resolved (6 code + 1 test), 3 regressions handled
 
 ---
 
