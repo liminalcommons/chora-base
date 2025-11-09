@@ -2,17 +2,17 @@
 
 ## Current Status (2025-11-08)
 
-**Phase**: Third Iteration Ready ✅
+**Phase**: Fourth Iteration Ready ✅
 **Workflow**: Fast-Setup Workflow (Primary)
-**Latest Version**: v4.13.1 (hot-fix applied)
-**Status**: All 5 blockers resolved (4 original + 1 regression)
-**Next Action**: Run third verification with v4.13.1 (Expected: GO)
+**Latest Version**: v4.14.1 (boolean filter fix applied)
+**Status**: All 6 blockers resolved (4 original + 2 regressions)
+**Next Action**: Run fourth verification with v4.14.1 (Expected: GO)
 
 ---
 
 ## What Just Happened
 
-### Complete Fix-Verify Cycle (3 Iterations)
+### Complete Fix-Verify Cycle (4 Iterations)
 
 **Iteration 1: Initial Verification (2025-11-08-13-14)** - v4.9.0
 - **Result**: CONDITIONAL NO-GO
@@ -26,10 +26,17 @@
 - **Blockers**: 1 new syntax error (regression)
 - **Outcome**: v4.13.1 released with syntax fix
 
-**Iteration 3: Pending** - v4.13.1
+**Iteration 3: Third Verification (2025-11-08-17-46)** - v4.14.0
+- **Result**: CONDITIONAL NO-GO (83% progress)
+- **Time**: 6 minutes verification + 2 minutes hot-fix
+- **Blockers**: 1 new boolean filter error (regression)
+- **Progress**: 5 of 6 blockers resolved
+- **Outcome**: v4.14.1 released with boolean fix
+
+**Iteration 4: Pending** - v4.14.1
 - **Expected Result**: GO
-- **Estimated Time**: 10-15 minutes
-- **All Blockers**: Resolved (4 original + 1 regression = 5 total)
+- **Estimated Time**: 8-10 minutes
+- **All Blockers**: Resolved (4 original + 2 regressions = 6 total)
 
 ---
 
@@ -46,33 +53,40 @@
 - [9dd95b5](https://github.com/liminalcommons/chora-base/commit/9dd95b5) - Initial fixes
 - [01f2956](https://github.com/liminalcommons/chora-base/commit/01f2956) - v4.13.0 release
 
-### Regression Blocker (v4.13.1)
+### Regression Blockers
 
-5. ✅ Syntax error in `mcp__init__.py.template` - Found in re-verification
+**5. ✅ Syntax error in `mcp__init__.py.template`** - Found in iteration 2 (v4.13.1)
    - Lines 60, 115: `dict[str, str}}` → `dict[str, str]]`
    - 2-minute fix (100% estimate accuracy)
+   - **Commits**: [6fbf944](https://github.com/liminalcommons/chora-base/commit/6fbf944), [f1f08cd](https://github.com/liminalcommons/chora-base/commit/f1f08cd)
 
-**Commits**:
-- [6fbf944](https://github.com/liminalcommons/chora-base/commit/6fbf944) - Syntax fix
-- [f1f08cd](https://github.com/liminalcommons/chora-base/commit/f1f08cd) - v4.13.1 release
+**6. ✅ Boolean filter error in `mcp__init__.py.template`** - Found in iteration 3 (v4.14.1)
+   - Lines 17, 20, 23: `{{ var | lower }}` outputs `true` instead of `True`
+   - NameError: name 'true' is not defined
+   - 2-minute fix (100% estimate accuracy)
+   - **Commits**: [d61a94d](https://github.com/liminalcommons/chora-base/commit/d61a94d), pending release
 
-**Methodology Updated**: [8216856](https://github.com/liminalcommons/chora-base/commit/8216856)
+**Methodology Updated**: [8216856](https://github.com/liminalcommons/chora-base/commit/8216856), [7d73a2e](https://github.com/liminalcommons/chora-base/commit/7d73a2e)
 
 ---
 
-## Immediate Next Step: Third Verification
+## Immediate Next Step: Fourth Verification
 
 ### Goal
-Verify that all 5 blockers (4 original + 1 regression) are resolved and fast-setup script now produces production-ready projects.
+Verify that all 6 blockers (4 original + 2 regressions) are resolved and fast-setup script now produces production-ready projects.
 
 ### Expected Result
 **GO** decision with:
-- ✅ Script executes without errors (v4.13.1)
+- ✅ Script executes without errors (v4.14.1)
 - ✅ Test files generated (`tests/test_server.py` with 23+ test cases)
 - ✅ All template variables substituted correctly
 - ✅ Works on Windows without encoding errors
 - ✅ Valid Python syntax in all generated code
+- ✅ Valid Python booleans (True/False, not true/false)
 - ✅ All tests pass, linting passes, build succeeds
+
+### Systemic Improvement Recommended
+**Template Validation**: Consider implementing automated validation (1-2 hours) to prevent future regressions, as 100% of fix iterations introduced new template errors.
 
 ### How to Execute
 
