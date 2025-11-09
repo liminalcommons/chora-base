@@ -14,13 +14,13 @@ from typing import Optional
 NAMESPACE = "{{ mcp_namespace }}"
 """MCP namespace for {{ project_name }}."""
 
-ENABLE_NAMESPACING = {{ mcp_enable_namespacing | lower }}
+ENABLE_NAMESPACING = {{ mcp_enable_namespacing }}
 """Whether to use namespaced tool names (namespace:tool_name)."""
 
-ENABLE_RESOURCE_URIS = {{ mcp_resource_uri_scheme | lower }}
+ENABLE_RESOURCE_URIS = {{ mcp_resource_uri_scheme }}
 """Whether to use resource URI scheme (namespace://type/id)."""
 
-ENABLE_VALIDATION = {{ mcp_validate_names | lower }}
+ENABLE_VALIDATION = {{ mcp_validate_names }}
 """Whether to validate naming conventions at runtime."""
 
 # === Validation Patterns ===
