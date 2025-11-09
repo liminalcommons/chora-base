@@ -254,6 +254,32 @@ Claude should load context progressively to optimize token usage:
 
 ---
 
+### Domain 5: Memory System (.chora/)
+
+**Path**: [.chora/AGENTS.md](.chora/AGENTS.md) + [.chora/CLAUDE.md](.chora/CLAUDE.md)
+
+**Navigation tip**: Read domain-specific files for 60-70% token savings
+- [.chora/CLAUDE.md](.chora/CLAUDE.md) - Claude workflows (8-min, ~5k tokens)
+- [.chora/AGENTS.md](.chora/AGENTS.md) - Memory patterns (13-min, ~10k tokens)
+
+**Use when**:
+- Creating knowledge notes to capture learnings
+- Querying event logs for context restoration
+- Logging significant events (milestones, decisions, errors)
+- Restoring context across sessions (hours, days, or weeks apart)
+- Building knowledge graph with wikilink connections
+
+**Contents**:
+- Event logging patterns (JSONL format, trace correlation)
+- Knowledge note workflows (Zettelkasten-style)
+- Agent profile management
+- Query template examples
+- Context restoration workflows
+
+**Note**: Memory system (`.chora/`) only exists in generated projects, not in chora-base template repository itself.
+
+---
+
 ## Common Claude Code Workflows
 
 ### Workflow 1: Adopting a SAP

@@ -318,6 +318,52 @@ class MyApp(StatefulObject):
   - Multi-agent coordination support
   - Integration with inbox (SAP-001) and A-MEM (SAP-010)
 
+### Memory System (A-MEM) - SAP-010
+
+**When to use SAP-010**:
+- Capturing learnings, insights, or patterns for cross-session reuse
+- Querying event logs to restore context after breaks or across multiple sessions
+- Logging significant events for audit trails and traceability
+- Building knowledge graph with wikilink connections between notes
+- Tracking agent behavior patterns and learned approaches over time
+
+**What you get**:
+- **Event logging**: JSONL-format event logs with trace correlation, structured metadata, timestamp precision
+- **Knowledge notes**: Markdown notes with YAML frontmatter, Zettelkasten-style wikilinks, confidence ratings
+- **Agent profiles**: YAML profiles capturing learned patterns, preferences, behavior tracking over time
+- **Query templates**: Reusable query patterns for common searches and analysis
+- **Nested awareness**: Domain-specific AGENTS.md ([.chora/AGENTS.md](.chora/AGENTS.md)) and CLAUDE.md ([.chora/CLAUDE.md](.chora/CLAUDE.md)) for progressive loading (60-70% token savings)
+
+**Quick start**:
+```bash
+# Log an event
+echo '{"event_type":"learning_captured","timestamp":"'$(date -u +%Y-%m-%dT%H:%M:%SZ)'","data":{"pattern":"test-pattern"}}' >> .chora/memory/events/development.jsonl
+
+# Query recent events
+tail -n 20 .chora/memory/events/*.jsonl
+
+# Create knowledge note
+cp .chora/memory/knowledge/templates/default.md .chora/memory/knowledge/notes/my-pattern.md
+
+# List knowledge notes
+ls -lt .chora/memory/knowledge/notes/*.md | head -10
+
+# Check system health
+python scripts/memory-health-check.py
+```
+
+**Documentation**:
+- Nested awareness: [.chora/AGENTS.md](.chora/AGENTS.md) (memory patterns, 13-min read), [.chora/CLAUDE.md](.chora/CLAUDE.md) (Claude workflows, 8-min read)
+- Protocol specification: [docs/skilled-awareness/memory-system/protocol-spec.md](docs/skilled-awareness/memory-system/protocol-spec.md)
+- Adoption guide: [docs/skilled-awareness/memory-system/adoption-blueprint.md](docs/skilled-awareness/memory-system/adoption-blueprint.md)
+
+**ROI**: 5-15 minutes saved per session via context restoration, 40-48 hours saved annually for active agents
+
+**Related SAPs**:
+- SAP-009 (Agent Awareness): Nested AGENTS.md/CLAUDE.md hierarchy for progressive context loading
+- SAP-001 (Inbox): Coordination requests → Memory events integration
+- SAP-015 (Task Tracking): Completed tasks → Knowledge notes workflow
+
 ### Project Types Supported
 
 - **Library/Package** - Python libraries for PyPI distribution

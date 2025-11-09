@@ -819,18 +819,87 @@ python -c "from utils.claude_metrics import ClaudeROICalculator; \
 
 ---
 
-## Memory System (A-MEM)
+## Memory System (A-MEM) - SAP-010
 
-**Note**: chora-base template includes A-MEM as optional feature (`include_memory_system`)
+**When to use SAP-010**:
+- Capturing learnings, insights, or patterns discovered during work for reuse in future sessions
+- Querying event logs to restore context after breaks (hours, days, or weeks between sessions)
+- Logging significant events (milestones, decisions, errors) for audit trails
+- Building knowledge graph with wikilink connections to relate discoveries
+- Tracking agent behavior patterns and learned approaches across sessions
 
-**Purpose**: Cross-session learning for AI agents working on generated projects
+**Quick-start approach** (recommended):
+```bash
+# Work in memory system domain
+cd .chora/
 
-**Components**:
-- Event log (`.chora/memory/events/`) - Timestamped operation events
-- Knowledge graph (`.chora/memory/knowledge/`) - Distilled learnings
-- Profiles (`.chora/memory/profiles/`) - Per-agent learned patterns
+# Read domain-specific guidance (60-70% token savings vs root files)
+cat AGENTS.md        # Generic memory patterns (13-min read)
+cat CLAUDE.md        # Claude-specific workflows (8-min read)
 
-**Not Applicable**: chora-base repository itself does not use memory system (no `.chora/` directory)
+# Log an event
+echo '{"event_type":"learning_captured","timestamp":"'$(date -u +%Y-%m-%dT%H:%M:%SZ)'","data":{"pattern":"test-pattern"}}' >> memory/events/development.jsonl
+
+# Create knowledge note
+cp memory/knowledge/templates/default.md memory/knowledge/notes/my-pattern.md
+
+# Query event logs
+tail -n 20 memory/events/*.jsonl
+
+# Check system health
+python ../scripts/memory-health-check.py
+```
+
+**What you get**:
+- **Event logging**: JSONL-format logs with trace correlation (CHORA_TRACE_ID), structured metadata, microsecond timestamps
+- **Knowledge notes**: Markdown with YAML frontmatter, Zettelkasten wikilinks (`[[note-name]]`), confidence ratings (0.0-1.0)
+- **Agent profiles**: YAML files capturing learned patterns, preferences, historical behavior
+- **Query templates**: Reusable queries in `.chora/memory/queries/` for common analysis patterns
+- **Nested awareness**: Domain-specific [.chora/AGENTS.md](.chora/AGENTS.md) and [.chora/CLAUDE.md](.chora/CLAUDE.md) for progressive context loading
+
+**Example workflow**:
+```bash
+# Scenario: Capture learning from completed task integration
+
+# 1. Complete task (SAP-015 beads)
+bd close task-123 --reason "Implemented async error handling pattern"
+
+# 2. Extract pattern → knowledge note
+cp .chora/memory/knowledge/templates/default.md .chora/memory/knowledge/notes/async-error-handling.md
+# Edit note: Document pattern, add wikilinks to related notes
+
+# 3. Log learning event
+echo '{"event_type":"learning_captured","timestamp":"'$(date -u +%Y-%m-%dT%H:%M:%SZ)'","data":{"task_id":"task-123","pattern":"async-error-handling","confidence":0.9}}' >> .chora/memory/events/development.jsonl
+
+# 4. Link to related knowledge
+# In note, add: [[error-handling-patterns]] [[async-best-practices]]
+
+# 5. Later: Query for context restoration (new session)
+grep "async-error" .chora/memory/events/development.jsonl
+ls -lt .chora/memory/knowledge/notes/*.md | head -10
+
+# Result: Pattern available for future tasks, context restored in <2 minutes
+```
+
+**Nested awareness guides**:
+- [.chora/AGENTS.md](.chora/AGENTS.md) - Memory system patterns (13-min read, ~10k tokens)
+- [.chora/CLAUDE.md](.chora/CLAUDE.md) - Claude workflows (8-min read, ~5k tokens)
+- **Progressive loading**: Load only what you need (60-70% token savings vs loading full root AGENTS.md)
+
+**Integration with other SAPs**:
+- **SAP-001 (Inbox)**: Coordination request received → Log event in `events/inbox.jsonl`
+- **SAP-015 (Task Tracking)**: Task completed → Create knowledge note with learnings
+- **SAP-012 (Planning)**: Sprint retrospective → Distill insights to knowledge graph
+- **SAP-009 (Awareness)**: Uses nested AGENTS.md/CLAUDE.md pattern for domain-specific guidance
+
+**Documentation**:
+- Domain guides: [.chora/AGENTS.md](.chora/AGENTS.md), [.chora/CLAUDE.md](.chora/CLAUDE.md)
+- Protocol specification: [docs/skilled-awareness/memory-system/protocol-spec.md](docs/skilled-awareness/memory-system/protocol-spec.md)
+- Adoption blueprint: [docs/skilled-awareness/memory-system/adoption-blueprint.md](docs/skilled-awareness/memory-system/adoption-blueprint.md)
+
+**ROI**: 5-15 minutes saved per session via context restoration, 40-48 hours saved annually for active agents
+
+**Note**: chora-base template repository itself does not use memory system (no `.chora/` directory in template repo). Memory system is included in generated projects when `include_memory_system=true`.
 
 ---
 

@@ -726,6 +726,544 @@ projected_outcomes:
 - Validation tracking (which checks fail most often?)
 - Sprint retrospectives (actual vs. estimated effort)
 
+### 3.5 Discoverability Assessment Protocol
+
+**Purpose**: Evaluate SAP discoverability across root awareness files and CLI touchpoints (2-5 minutes).
+
+**Rationale**: Implementation quality is irrelevant if agents cannot discover the capability exists. This protocol measures how easily agents can find and understand SAP capabilities from root files (README.md, AGENTS.md, CLAUDE.md, justfile).
+
+**Key Principle**: "The better the pattern, the worse the impact if undiscoverable" - advanced patterns (like SAP-009 nested hierarchies) require proportionally higher discoverability.
+
+#### 3.5.1 Discoverability Scoring Framework
+
+**Total Score**: 100 points across 6 touchpoints
+
+| Touchpoint | Points | Description |
+|-----------|--------|-------------|
+| **README.md** | 30 | Dedicated section with use cases, examples, ROI |
+| **AGENTS.md** | 20 | Dedicated section with workflows, integrations |
+| **CLAUDE.md** | 15 | Claude-specific guidance or domain links |
+| **justfile** | 15 | ≥3 recipes with comments and examples |
+| **Documentation** | 10 | How-to guides, explanations, references |
+| **Examples** | 10 | Working implementations or code samples |
+
+**Score Interpretation**:
+- **80-100**: HIGH - Excellent discoverability, agents find SAP easily (<5 min)
+- **50-79**: MEDIUM - Adequate, but gaps exist (5-15 min discovery time)
+- **0-49**: LOW - Critical gap, blocks adoption (>15 min or never discovered)
+
+**L1 Requirement**: Score ≥80/100 (required before marking Level 1 complete)
+
+#### 3.5.2 Touchpoint Scoring Criteria
+
+**README.md (30 points)**:
+- **30 points**: Dedicated section (≥30 lines) with:
+  - "When to use SAP-XXX" (5 use cases)
+  - "What you get" (detailed features)
+  - Quick-start code example (5-10 commands)
+  - Links to nested files (if SAP-009)
+  - ROI statement (quantified value)
+  - Documentation links
+- **15 points**: Mentioned (10-29 lines) with some examples
+- **5 points**: Brief mention only (<10 lines)
+- **0 points**: Not mentioned
+
+**Validation**:
+```bash
+grep -A 40 "### SAP-XXX\|### [SAP Name]" README.md | wc -l
+# Target: ≥30 lines for full credit
+```
+
+**AGENTS.md (20 points)**:
+- **20 points**: Dedicated section (≥60 lines) with:
+  - "When to use SAP-XXX" (5+ scenarios)
+  - Quick-start approach with commands
+  - "What you get" (detailed capabilities)
+  - Example workflow (complete scenario)
+  - Integration patterns with other SAPs
+  - Links to nested AGENTS.md (if applicable)
+  - ROI statement
+- **10 points**: Section exists (30-59 lines) with some guidance
+- **5 points**: Listed in SAP catalog only (1-2 lines)
+- **0 points**: Not mentioned
+
+**Validation**:
+```bash
+grep -A 70 "### SAP-XXX\|### [SAP Name]" AGENTS.md | wc -l
+# Target: ≥60 lines for full credit
+```
+
+**CLAUDE.md (15 points)**:
+- **15 points**: Dedicated workflow/pattern section OR domain section with direct links
+- **7 points**: Mentioned in context (integration pattern, example)
+- **0 points**: Not mentioned
+
+**Validation**:
+```bash
+grep -i "SAP-XXX\|[sap-name]" CLAUDE.md && echo "✅ Mentioned" || echo "❌ Not found"
+```
+
+**justfile (15 points)**:
+- **15 points**: ≥3 recipes with:
+  - Section header (# === SAP-XXX: Name ===)
+  - Section comment (SAP purpose)
+  - Inline comment for each recipe (# Description)
+  - Usage example for complex recipes (# Example: just ...)
+  - Default values for arguments
+- **10 points**: 1-2 recipes with comments
+- **5 points**: 1 recipe without comments
+- **0 points**: No recipes
+
+**Validation**:
+```bash
+grep -A 20 "SAP-XXX" justfile | grep "^[a-z]" | wc -l
+# Target: ≥3 recipes
+```
+
+**Documentation (10 points)**:
+- **10 points**: ≥3 docs (how-to, explanation, reference) in SAP-007 structure
+- **5 points**: 1-2 docs
+- **0 points**: No documentation
+
+**Validation**:
+```bash
+ls docs/how-to/*[sap-name]* docs/explanation/*[sap-name]* docs/reference/*[sap-name]* 2>/dev/null | wc -l
+# Target: ≥3 files
+```
+
+**Examples (10 points)**:
+- **10 points**: ≥5 working implementations or code samples
+- **5 points**: 1-4 examples
+- **0 points**: No examples
+
+**Validation**:
+```bash
+grep -r "SAP-XXX\|[sap-name]" examples/ tests/ 2>/dev/null | wc -l
+# Target: ≥5 occurrences
+```
+
+#### 3.5.3 Automated Discoverability Audit
+
+**Data Model**:
+```python
+@dataclass
+class DiscoverabilityResult:
+    """Result of SAP discoverability assessment"""
+
+    # Identity
+    sap_id: str
+    sap_name: str
+    timestamp: datetime
+
+    # Scores (out of max points)
+    readme_score: int           # 0-30
+    agents_score: int           # 0-20
+    claude_score: int           # 0-15
+    justfile_score: int         # 0-15
+    docs_score: int             # 0-10
+    examples_score: int         # 0-10
+
+    total_score: int            # 0-100
+    level: str                  # "HIGH" | "MEDIUM" | "LOW"
+
+    # Detailed findings
+    readme_lines: int
+    agents_lines: int
+    claude_mentioned: bool
+    recipe_count: int
+    doc_count: int
+    example_count: int
+
+    # Gaps
+    missing_touchpoints: list[str]
+    below_threshold_touchpoints: list[str]
+
+    # Recommendations
+    priority_improvements: list[Action]
+    estimated_effort_hours: float  # To reach ≥80
+```
+
+**CLI Interface**:
+```bash
+# Audit single SAP
+python scripts/sap-evaluator.py --disc SAP-010
+
+# Audit all SAPs
+python scripts/sap-evaluator.py --disc --all
+
+# Generate discoverability report
+python scripts/sap-evaluator.py --disc SAP-010 --format md > disc-report.md
+```
+
+**Example Output**:
+```
+SAP-010 (Memory System) - Discoverability Audit
+================================================
+Generated: 2025-11-09 15:30:00
+
+## Scores by Touchpoint
+
+✅ README.md:      30/30 (Dedicated section, 45 lines)
+✅ AGENTS.md:      20/20 (Dedicated section, 75 lines)
+✅ CLAUDE.md:      15/15 (Domain section with links)
+✅ justfile:       15/15 (8 recipes with comments)
+❌ Documentation:   0/10 (No how-to guides found)
+✅ Examples:       10/10 (12 examples found)
+
+## Overall Score: 90/100 (HIGH)
+
+✅ Meets L1 requirement (≥80/100)
+✅ Agent discovery time: <5 minutes (estimated)
+⚠️  Missing documentation touchpoint
+
+## Priority Improvements (to reach 100/100)
+
+1. Create how-to guide (P1, 1-2 hours)
+   File: docs/how-to/using-memory-system.md
+   Content: Quick start, common tasks, troubleshooting
+
+Estimated effort to 100/100: 1-2 hours
+
+Run deep dive for full analysis:
+  python scripts/sap-evaluator.py --deep SAP-010
+```
+
+#### 3.5.4 Integration with Deep Dive Protocol
+
+**Add to Deep Dive Evaluation**:
+
+When running deep dive assessment, include discoverability check:
+
+```python
+def deep_dive_evaluation(sap_id: str) -> EvaluationResult:
+    # Existing deep dive steps...
+
+    # NEW: Add discoverability assessment
+    disc_result = assess_discoverability(sap_id)
+
+    # Fail L1 validation if discoverability <80
+    if disc_result.total_score < 80:
+        result.blockers.append(
+            f"Discoverability score too low ({disc_result.total_score}/100, "
+            f"target: ≥80/100). Cannot mark L1 complete until improved."
+        )
+        result.gaps.append(Gap(
+            gap_id="disc-001",
+            gap_type="installation",
+            title="Discoverability below L1 requirement",
+            description=f"SAP is {disc_result.total_score}/100 discoverable. "
+                        f"Missing touchpoints: {disc_result.missing_touchpoints}",
+            impact="high",
+            effort="low" if disc_result.total_score >= 60 else "medium",
+            priority="P0",  # Blocks L1
+            actions=disc_result.priority_improvements,
+            estimated_hours=disc_result.estimated_effort_hours
+        ))
+
+    return result
+```
+
+#### 3.5.5 Discovery-to-Value Ratio
+
+**Metric**: Value gained per session / Discovery cost (one-time)
+
+**Target**: Ratio ≥ 2.0 (value exceeds discovery cost from first session)
+
+**Calculation**:
+```python
+def calculate_discovery_to_value_ratio(sap_id: str) -> float:
+    """Calculate ROI ratio for discoverability investment"""
+
+    # Estimate discovery cost based on discoverability score
+    disc_score = get_discoverability_score(sap_id)
+    if disc_score >= 80:
+        discovery_time_min = 2  # Easy to find (<2 min)
+    elif disc_score >= 50:
+        discovery_time_min = 10  # Medium effort (5-15 min)
+    else:
+        discovery_time_min = 20  # Hard to find or never discovered
+
+    # Estimate value gained per session (from SAP metadata or ledger)
+    value_per_session_min = get_sap_value_per_session(sap_id)  # e.g., 10 min saved
+
+    # Ratio
+    ratio = value_per_session_min / discovery_time_min
+
+    return ratio
+
+# Example:
+# SAP-010 (Memory System)
+# - Discoverability: 90/100 → Discovery time: 2 min
+# - Value per session: 12 min (context restoration)
+# - Ratio: 12 / 2 = 6.0 (excellent - value >> cost)
+
+# SAP-010 (before improvements)
+# - Discoverability: 40/100 → Discovery time: 20 min
+# - Value per session: 12 min
+# - Ratio: 12 / 20 = 0.6 (poor - cost > value in first session)
+```
+
+#### 3.5.6 Meta-Discoverability Principle
+
+**For SAPs using advanced patterns** (SAP-009 nested hierarchies, SAP-012 planning, etc.):
+
+**Higher discoverability threshold**:
+- Standard SAPs: ≥80/100
+- Advanced pattern SAPs: ≥85/100
+
+**Required elements** (in addition to standard touchpoints):
+1. Explicit statement of pattern benefits (e.g., "60-70% token reduction")
+2. Read time estimates (e.g., "8-min, 5k tokens")
+3. Direct links from root to nested files (not optional)
+4. "Navigation tip" sections
+
+**Rationale**: Without strong discoverability, navigation tax exceeds pattern benefits, making advanced patterns net negative.
+
+**Example** (SAP-010 with nested .chora/CLAUDE.md):
+
+```markdown
+### Domain 4: Memory System (.chora/)
+
+**Path**: [.chora/AGENTS.md](.chora/AGENTS.md) + [.chora/CLAUDE.md](.chora/CLAUDE.md)
+
+**Navigation tip**: Read domain-specific files for 60-70% token savings
+- [.chora/CLAUDE.md](.chora/CLAUDE.md) - Claude workflows (8-min, 5k tokens)
+- [.chora/AGENTS.md](.chora/AGENTS.md) - Memory patterns (13-min, 10k tokens)
+
+**Use when**:
+- Creating knowledge notes
+- Querying event logs
+- Restoring context across sessions
+```
+
+#### 3.5.7 Validation Script
+
+**Core function**:
+
+```python
+def audit_discoverability(sap_id: str) -> DiscoverabilityResult:
+    """Audit SAP discoverability across 6 touchpoints."""
+
+    sap_name = get_sap_name(sap_id)
+    score = 0
+    missing = []
+    below_threshold = []
+
+    # README.md (30 points)
+    readme_lines = count_sap_section_lines("README.md", sap_id, sap_name)
+    if readme_lines >= 30:
+        readme_score = 30
+    elif readme_lines >= 10:
+        readme_score = 15
+        below_threshold.append("README.md (15/30)")
+    elif readme_lines >= 1:
+        readme_score = 5
+        below_threshold.append("README.md (5/30)")
+    else:
+        readme_score = 0
+        missing.append("README.md")
+
+    # AGENTS.md (20 points)
+    agents_lines = count_sap_section_lines("AGENTS.md", sap_id, sap_name)
+    if agents_lines >= 60:
+        agents_score = 20
+    elif agents_lines >= 30:
+        agents_score = 10
+        below_threshold.append("AGENTS.md (10/20)")
+    elif has_catalog_entry("AGENTS.md", sap_id):
+        agents_score = 5
+        below_threshold.append("AGENTS.md (5/20)")
+    else:
+        agents_score = 0
+        missing.append("AGENTS.md")
+
+    # CLAUDE.md (15 points)
+    claude_mentioned = is_mentioned("CLAUDE.md", sap_id, sap_name)
+    if has_dedicated_section("CLAUDE.md", sap_id, sap_name):
+        claude_score = 15
+    elif claude_mentioned:
+        claude_score = 7
+        below_threshold.append("CLAUDE.md (7/15)")
+    else:
+        claude_score = 0
+        missing.append("CLAUDE.md")
+
+    # justfile (15 points)
+    recipe_count = count_recipes("justfile", sap_id, sap_name)
+    if recipe_count >= 3:
+        justfile_score = 15
+    elif recipe_count >= 1:
+        has_comments = check_recipe_comments("justfile", sap_id)
+        justfile_score = 10 if has_comments else 5
+        below_threshold.append(f"justfile ({justfile_score}/15)")
+    else:
+        justfile_score = 0
+        missing.append("justfile")
+
+    # Documentation (10 points)
+    doc_count = count_docs(sap_name)
+    if doc_count >= 3:
+        docs_score = 10
+    elif doc_count >= 1:
+        docs_score = 5
+        below_threshold.append("Documentation (5/10)")
+    else:
+        docs_score = 0
+        missing.append("Documentation")
+
+    # Examples (10 points)
+    example_count = count_examples(sap_id, sap_name)
+    if example_count >= 5:
+        examples_score = 10
+    elif example_count >= 1:
+        examples_score = 5
+        below_threshold.append("Examples (5/10)")
+    else:
+        examples_score = 0
+        missing.append("Examples")
+
+    total_score = (readme_score + agents_score + claude_score +
+                   justfile_score + docs_score + examples_score)
+
+    level = "HIGH" if total_score >= 80 else "MEDIUM" if total_score >= 50 else "LOW"
+
+    # Generate priority improvements
+    priority_improvements = generate_improvement_actions(
+        sap_id, sap_name, missing, below_threshold
+    )
+
+    # Estimate effort to reach ≥80
+    effort_hours = estimate_discoverability_improvement_effort(
+        total_score, missing, below_threshold
+    )
+
+    return DiscoverabilityResult(
+        sap_id=sap_id,
+        sap_name=sap_name,
+        timestamp=datetime.now(),
+        readme_score=readme_score,
+        agents_score=agents_score,
+        claude_score=claude_score,
+        justfile_score=justfile_score,
+        docs_score=docs_score,
+        examples_score=examples_score,
+        total_score=total_score,
+        level=level,
+        readme_lines=readme_lines,
+        agents_lines=agents_lines,
+        claude_mentioned=claude_mentioned,
+        recipe_count=recipe_count,
+        doc_count=doc_count,
+        example_count=example_count,
+        missing_touchpoints=missing,
+        below_threshold_touchpoints=below_threshold,
+        priority_improvements=priority_improvements,
+        estimated_effort_hours=effort_hours
+    )
+```
+
+**Helper functions**:
+
+```python
+def count_sap_section_lines(file: str, sap_id: str, sap_name: str) -> int:
+    """Count lines in SAP's dedicated section"""
+    # Search for "### SAP-XXX" or "### [SAP Name]"
+    # Count lines until next "###" or "##"
+    pass
+
+def count_recipes(file: str, sap_id: str, sap_name: str) -> int:
+    """Count justfile recipes related to SAP"""
+    # Search for section header or individual recipes
+    # Match recipe names containing sap_name
+    pass
+
+def count_docs(sap_name: str) -> int:
+    """Count documentation files"""
+    # Check docs/how-to/, docs/explanation/, docs/reference/
+    # Match files containing sap_name
+    pass
+
+def count_examples(sap_id: str, sap_name: str) -> int:
+    """Count code examples"""
+    # Search examples/ and tests/ directories
+    # Match SAP-XXX or sap_name references
+    pass
+
+def generate_improvement_actions(sap_id: str, sap_name: str,
+                                  missing: list[str],
+                                  below_threshold: list[str]) -> list[Action]:
+    """Generate prioritized actions to improve discoverability"""
+    # Prioritize: missing touchpoints first, then below-threshold
+    # Use templates from discoverability checklist
+    pass
+
+def estimate_discoverability_improvement_effort(total_score: int,
+                                                 missing: list[str],
+                                                 below_threshold: list[str]) -> float:
+    """Estimate hours to reach ≥80/100"""
+    # Missing README section: 1-2 hours
+    # Missing AGENTS section: 2-3 hours
+    # Missing justfile recipes: 2-3 hours
+    # Below threshold adjustments: 0.5-1 hour each
+    pass
+```
+
+#### 3.5.8 Usage in L1 Validation
+
+**Update Level 1 completion criteria**:
+
+```python
+def validate_level_1_complete(sap_id: str) -> EvaluationResult:
+    """Validate SAP meets Level 1 requirements"""
+
+    result = EvaluationResult(sap_id=sap_id, current_level=1)
+
+    # Existing L1 checks (installation, basic functionality)
+    # ...
+
+    # NEW: Discoverability check (required for L1)
+    disc_result = audit_discoverability(sap_id)
+
+    if disc_result.total_score < 80:
+        result.validation_results["discoverability"] = False
+        result.blockers.append(
+            f"Discoverability score {disc_result.total_score}/100 "
+            f"(target: ≥80/100). Add README.md, AGENTS.md sections, "
+            f"justfile recipes before marking L1 complete."
+        )
+        result.current_level = 0  # Not complete until discoverable
+    else:
+        result.validation_results["discoverability"] = True
+
+    return result
+```
+
+**Recommended workflow**:
+
+```bash
+# 1. Install SAP (implementation)
+python scripts/install-sap.py SAP-010
+
+# 2. Validate installation
+python scripts/sap-evaluator.py --quick SAP-010
+# Status: "Installed, but discoverability <80 (blocksL1)"
+
+# 3. Improve discoverability
+python scripts/sap-evaluator.py --disc SAP-010
+# Shows: Missing README.md section (0/30), AGENTS.md section (5/20)
+
+# 4. Add sections (use templates from adoption blueprint)
+# ... (edit README.md, AGENTS.md, justfile)
+
+# 5. Re-validate
+python scripts/sap-evaluator.py --disc SAP-010
+# Score: 90/100 (HIGH) ✅
+
+# 6. Mark L1 complete
+python scripts/sap-evaluator.py --validate-level SAP-010 1
+# ✅ Level 1 complete (includes discoverability ≥80/100)
+```
+
 ## 4. Integration Points
 
 ### 4.1 SAP-013 Integration (Metrics Tracking)

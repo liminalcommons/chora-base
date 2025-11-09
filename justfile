@@ -95,3 +95,58 @@ research topic:
     @echo ""
     @echo "📂 Output location: docs/research/{{topic}}-research.md"
     @mkdir -p docs/research
+
+# ============================================================================
+# SAP-010: Memory System (A-MEM)
+# ============================================================================
+# Event logging, knowledge notes, agent profiles for cross-session learning.
+# See: .chora/AGENTS.md, .chora/CLAUDE.md
+
+# Show last N memory events (default: 20)
+# Example: just memory-events 50
+memory-events N="20":
+    @tail -n {{N}} .chora/memory/events/*.jsonl 2>/dev/null || echo "No memory events found (memory system may not be installed)"
+
+# Search memory events by keyword
+# Example: just memory-events-search "sap_adoption"
+memory-events-search QUERY:
+    @grep -i "{{QUERY}}" .chora/memory/events/*.jsonl 2>/dev/null || echo "No matching events found"
+
+# List recent N knowledge notes (default: 20)
+# Example: just knowledge-list 10
+knowledge-list N="20":
+    @ls -lt .chora/memory/knowledge/notes/*.md 2>/dev/null | head -n {{N}} || echo "No knowledge notes found"
+
+# Create new knowledge note from template
+# Example: just knowledge-note "async-error-handling"
+knowledge-note NAME:
+    @test -f .chora/memory/knowledge/templates/default.md && cp .chora/memory/knowledge/templates/default.md .chora/memory/knowledge/notes/{{NAME}}.md && echo "✅ Created .chora/memory/knowledge/notes/{{NAME}}.md" || echo "❌ Memory system not installed (no template found)"
+
+# Search knowledge notes by keyword
+# Example: just knowledge-search "beads"
+knowledge-search QUERY:
+    @grep -r -i "{{QUERY}}" .chora/memory/knowledge/notes/ 2>/dev/null || echo "No matching notes found"
+
+# Log a memory event (event_type required)
+# Example: just memory-log "learning_captured" '{"pattern":"test-pattern","confidence":0.9}'
+memory-log EVENT_TYPE DATA='{}':
+    @echo '{"event_type":"{{EVENT_TYPE}}","timestamp":"'$(date -u +%Y-%m-%dT%H:%M:%SZ)'","data":{{DATA}}}' >> .chora/memory/events/development.jsonl && echo "✅ Event logged to development.jsonl"
+
+# Validate memory system integrity (JSONL format, schema)
+# Checks: JSONL format, event schema, knowledge note structure
+memory-health:
+    @python scripts/memory-health-check.py 2>/dev/null || echo "Memory health check script not available"
+
+# Show agent profile
+# Example: just agent-profile-show "claude-code"
+agent-profile-show NAME:
+    @cat .chora/memory/profiles/{{NAME}}.yaml 2>/dev/null || echo "Profile '{{NAME}}' not found"
+
+# Show memory system statistics
+memory-stats:
+    @echo "📊 Memory System Statistics"
+    @echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+    @echo "Events: $(find .chora/memory/events/ -name '*.jsonl' -exec wc -l {} + 2>/dev/null | tail -1 | awk '{print $1}' || echo 0) total"
+    @echo "Knowledge notes: $(find .chora/memory/knowledge/notes/ -name '*.md' 2>/dev/null | wc -l || echo 0)"
+    @echo "Agent profiles: $(find .chora/memory/profiles/ -name '*.yaml' 2>/dev/null | wc -l || echo 0)"
+    @echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
