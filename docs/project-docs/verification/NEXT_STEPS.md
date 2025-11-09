@@ -2,44 +2,76 @@
 
 ## Current Status (2025-11-08)
 
-**Phase**: Fix-Verify Iteration Complete ✅
+**Phase**: Third Iteration Ready ✅
 **Workflow**: Fast-Setup Workflow (Primary)
-**Previous Result**: CONDITIONAL NO-GO → Fixes Implemented → Ready for Re-verification
-**Next Action**: Re-run L1 verification with fixed script (Expected: GO)
+**Latest Version**: v4.13.1 (hot-fix applied)
+**Status**: All 5 blockers resolved (4 original + 1 regression)
+**Next Action**: Run third verification with v4.13.1 (Expected: GO)
 
 ---
 
 ## What Just Happened
 
-### First Verification Run (2025-11-08)
+### Complete Fix-Verify Cycle (3 Iterations)
 
-**Result**: CONDITIONAL NO-GO
-**Time**: 12 minutes verification + 60 minutes fixes = 72 minutes total
-**Outcome**: All 4 critical blockers fixed and merged to chora-base
+**Iteration 1: Initial Verification (2025-11-08-13-14)** - v4.9.0
+- **Result**: CONDITIONAL NO-GO
+- **Time**: 12 minutes verification + 60 minutes fixes
+- **Blockers**: 4 critical issues identified
+- **Outcome**: v4.13.0 released with 3 fixes
 
-**Critical Blockers Fixed**:
+**Iteration 2: Re-Verification (2025-11-08-16-04)** - v4.13.0
+- **Result**: CONDITIONAL NO-GO (75% improvement)
+- **Time**: 8 minutes verification + 2 minutes hot-fix
+- **Blockers**: 1 new syntax error (regression)
+- **Outcome**: v4.13.1 released with syntax fix
+
+**Iteration 3: Pending** - v4.13.1
+- **Expected Result**: GO
+- **Estimated Time**: 10-15 minutes
+- **All Blockers**: Resolved (4 original + 1 regression = 5 total)
+
+---
+
+## Blockers Resolved
+
+### Original 4 Blockers (v4.13.0)
+
 1. ✅ Template rendering error (`.gitignore` variable) - [Issue #2](https://github.com/liminalcommons/chora-base/issues/2)
-2. ✅ Missing test files (empty `tests/` directory) - [Issue #3](https://github.com/liminalcommons/chora-base/issues/3)
+2. ✅ Missing test files (23 test cases added) - [Issue #3](https://github.com/liminalcommons/chora-base/issues/3)
 3. ✅ Windows Unicode encoding errors - [Issue #4](https://github.com/liminalcommons/chora-base/issues/4)
-4. ✅ Unsubstituted template variables in workflows - [Issue #5](https://github.com/liminalcommons/chora-base/issues/5)
+4. ✅ Unsubstituted template variables (partially) - [Issue #5](https://github.com/liminalcommons/chora-base/issues/5)
 
-**Fixes Committed**: [9dd95b5](https://github.com/liminalcommons/chora-base/commit/9dd95b5)
+**Commits**:
+- [9dd95b5](https://github.com/liminalcommons/chora-base/commit/9dd95b5) - Initial fixes
+- [01f2956](https://github.com/liminalcommons/chora-base/commit/01f2956) - v4.13.0 release
+
+### Regression Blocker (v4.13.1)
+
+5. ✅ Syntax error in `mcp__init__.py.template` - Found in re-verification
+   - Lines 60, 115: `dict[str, str}}` → `dict[str, str]]`
+   - 2-minute fix (100% estimate accuracy)
+
+**Commits**:
+- [6fbf944](https://github.com/liminalcommons/chora-base/commit/6fbf944) - Syntax fix
+- [f1f08cd](https://github.com/liminalcommons/chora-base/commit/f1f08cd) - v4.13.1 release
 
 **Methodology Updated**: [8216856](https://github.com/liminalcommons/chora-base/commit/8216856)
 
 ---
 
-## Immediate Next Step: Re-verification
+## Immediate Next Step: Third Verification
 
 ### Goal
-Verify that all 4 blockers are resolved and fast-setup script now produces production-ready projects.
+Verify that all 5 blockers (4 original + 1 regression) are resolved and fast-setup script now produces production-ready projects.
 
 ### Expected Result
 **GO** decision with:
-- ✅ Script executes without errors
-- ✅ Test files generated (`tests/test_server.py` with 40+ test cases)
+- ✅ Script executes without errors (v4.13.1)
+- ✅ Test files generated (`tests/test_server.py` with 23+ test cases)
 - ✅ All template variables substituted correctly
 - ✅ Works on Windows without encoding errors
+- ✅ Valid Python syntax in all generated code
 - ✅ All tests pass, linting passes, build succeeds
 
 ### How to Execute
