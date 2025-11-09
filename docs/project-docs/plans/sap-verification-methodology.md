@@ -2084,23 +2084,34 @@ After verification, update the SAP's `ledger.md` with verification results:
 - Time: 8 minutes verification (33% faster than initial)
 - Test files: 23 test cases generated (vs 0 initially)
 
-**Iteration 3: Hot-Fix**
+**Iteration 3: Hot-Fix (Syntax)**
 - Fix: Syntax error `dict[str, str}}` → `dict[str, str]]` (2 lines)
 - Time: 2 minutes (100% estimate accuracy)
 - Release: v4.13.1
 - Commits: [6fbf944](https://github.com/liminalcommons/chora-base/commit/6fbf944), [f1f08cd](https://github.com/liminalcommons/chora-base/commit/f1f08cd)
 - Status: All 5 blockers resolved (4 original + 1 regression)
-- Expected: GO on third verification
+
+**Iteration 4: Third Verification + Hot-Fix (Boolean)**
+- Decision: CONDITIONAL NO-GO (83% progress, 5 of 6 resolved)
+- Result: Syntax fix verified ✅, new boolean filter regression identified
+- New blocker: `| lower` filter outputs `true` instead of `True` → NameError
+- Time: 6 minutes verification + 2 minutes fix
+- Fix: Remove `| lower` filter from 3 boolean variables, use Python booleans
+- Release: v4.14.1
+- Commits: [d61a94d](https://github.com/liminalcommons/chora-base/commit/d61a94d), pending release
+- Status: All 6 blockers resolved (4 original + 2 regressions)
+- Expected: GO on fourth verification
 
 **Lessons Learned**:
 1. **CONDITIONAL NO-GO is valuable**: Distinguishes "needs minor fixes" from "fundamentally broken"
-2. **Fix effort estimation works**: 70-minute estimate (actual: 60 min), 2-minute estimate (actual: 2 min)
-3. **Fast iteration pays off**: 3 iterations in same day, momentum maintained
+2. **Fix effort estimation works**: 70-minute estimate (actual: 60 min), 2-minute estimates (actual: 2 min each)
+3. **Fast iteration pays off**: 4 iterations in same day, momentum maintained
 4. **Template testing needed**: Missing variables only caught during verification, not development
 5. **Cross-platform testing essential**: Windows-specific issues require testing on Windows
-6. **Regressions happen**: New template introduced syntax error, but rapid iteration caught and fixed it
+6. **Regressions happen repeatedly**: 100% of fix iterations introduced new template errors
+7. **Systemic issues need systemic solutions**: Automated template validation recommended over continued fix-regression cycles
 
-**Total Cycle**: 3 iterations, same-day resolution, 4 releases (v4.13.0, v4.13.1, v4.14.0, plus methodology)
+**Total Cycle**: 4 iterations, same-day resolution, 6 blockers resolved, 2 regressions handled
 
 ---
 
