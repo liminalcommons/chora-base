@@ -903,6 +903,157 @@ ls -lt .chora/memory/knowledge/notes/*.md | head -10
 
 ---
 
+## Task Tracking (Beads) - SAP-015
+
+**Status**: Pilot (v1.0.0) | **Adoption Level**: L0 (Available for installation)
+
+SAP-015 provides persistent task tracking using `.beads/issues.jsonl` for cross-session context restoration. Eliminates work loss between Claude Code sessions by maintaining git-committed task state.
+
+**Quick-start approach**:
+```bash
+# Domain-specific awareness files (if SAP-015 adopted in your project)
+cd .beads/
+cat AGENTS.md  # 10-min read: Beads workflow patterns
+cat CLAUDE.md  # 7-min read: Claude-specific beads usage
+
+# Alternative: Read full protocol specification
+cat docs/skilled-awareness/task-tracking/protocol-spec.md  # 25-min read
+```
+
+**When to use SAP-015**:
+- **Session startup**: Restore context from previous session (<2 min vs 5-10 min manual)
+- **Multi-session work**: Track progress across multiple Claude Code sessions
+- **Backlog management**: Prioritize tasks with dependencies and blockers
+- **Audit trails**: Document completion reasons and link artifacts
+- **Team coordination**: Share task state with other agents or humans
+
+**Core CLI commands**:
+```bash
+# Session startup: Find unblocked work
+bd ready --json                              # Programmatic (Claude Code)
+bd ready                                     # Human-readable
+
+# Claim task
+bd update task-123 --status in_progress --assignee "claude-code"
+
+# Add notes during work
+bd update task-123 --notes "Implemented async error handling, tests passing"
+
+# Complete task
+bd close task-123 --reason "Feature implemented, tested, and documented"
+
+# Query by status
+bd list --status open --json                 # Open backlog
+bd list --status in_progress --json          # Active work
+bd list --status blocked --json              # Blocked tasks
+bd list --status closed --json --limit 10   # Recent completions
+
+# Query by assignee
+bd list --assignee "claude-code" --json      # All Claude Code tasks
+```
+
+**Example workflow (multi-session coordination)**:
+```bash
+# Session 1: Start feature work
+bd create --title "Implement user authentication" \
+  --description "Add JWT-based auth with refresh tokens" \
+  --priority high \
+  --tags "feature,auth,security"
+
+bd update task-456 --status in_progress --assignee "claude-code"
+
+# Mid-session: Discover blocker
+bd update task-456 --status blocked \
+  --blockers "Waiting for API key from DevOps team" \
+  --notes "Auth flow implemented, needs production API key for testing"
+
+# Session 2 (next day): Check ready tasks
+bd ready --json
+# Output: [] (task-456 still blocked)
+
+bd list --status blocked --json
+# Output: Shows task-456 with blocker reason
+
+# Session 3 (API key received): Resume work
+bd update task-456 --status in_progress \
+  --notes "API key received, testing auth flow"
+
+# Complete task
+bd close task-456 \
+  --reason "Auth implemented, tested with production API, docs updated" \
+  --artifacts "src/auth.py,tests/test_auth.py,docs/authentication.md"
+```
+
+**Task data structure**:
+```json
+{
+  "id": "task-456",
+  "title": "Implement user authentication",
+  "description": "Add JWT-based auth with refresh tokens",
+  "status": "closed",
+  "priority": "high",
+  "assignee": "claude-code",
+  "tags": ["feature", "auth", "security"],
+  "created": "2025-11-09T10:30:00Z",
+  "updated": "2025-11-09T16:45:00Z",
+  "closed": "2025-11-09T16:45:00Z",
+  "blockers": [],
+  "dependencies": [],
+  "notes": "API key received, testing auth flow",
+  "completion_reason": "Auth implemented, tested with production API, docs updated",
+  "artifacts": ["src/auth.py", "tests/test_auth.py", "docs/authentication.md"]
+}
+```
+
+**Integration with other SAPs**:
+- **SAP-001 (Inbox)**: Coordination request → Decompose into beads tasks
+  ```bash
+  # Receive coordination request
+  cat inbox/incoming/coordination/COORD-2025-042.md
+
+  # Create tasks from coordination request
+  bd create --title "Task 1 from COORD-2025-042" --tags "coordination,COORD-2025-042"
+  bd create --title "Task 2 from COORD-2025-042" --tags "coordination,COORD-2025-042"
+  ```
+
+- **SAP-010 (Memory)**: Task completed → Extract learnings to knowledge notes
+  ```bash
+  # Complete task
+  bd close task-789 --reason "Implemented async error handling pattern"
+
+  # Extract pattern to knowledge note
+  cp .chora/memory/knowledge/templates/default.md \
+     .chora/memory/knowledge/notes/async-error-handling.md
+
+  # Log learning event
+  echo '{"event_type":"learning_captured","task_id":"task-789"}' >> \
+    .chora/memory/events/development.jsonl
+  ```
+
+- **SAP-005 (CI/CD)**: CI failure → Create bead to track fix
+  ```bash
+  # CI failure detected
+  bd create --title "Fix CI test failure in test_api.py" \
+    --priority urgent \
+    --tags "ci,bug,test-failure"
+  ```
+
+**Nested awareness guides**:
+- [.beads/AGENTS.md](.beads/AGENTS.md) - Beads workflow patterns (10-min read, ~8k tokens)
+- [.beads/CLAUDE.md](.beads/CLAUDE.md) - Claude beads workflows (7-min read, ~5k tokens)
+- **Progressive loading**: Load only what you need (60-70% token savings)
+
+**Documentation**:
+- Protocol specification: [docs/skilled-awareness/task-tracking/protocol-spec.md](docs/skilled-awareness/task-tracking/protocol-spec.md)
+- Adoption blueprint: [docs/skilled-awareness/task-tracking/adoption-blueprint.md](docs/skilled-awareness/task-tracking/adoption-blueprint.md)
+- CLI reference: `bd --help` or see protocol-spec.md Section 3
+
+**ROI**: 5-10 minutes saved per session via context restoration, 40-80 hours saved annually for active projects
+
+**Note**: chora-base template repository does not use beads (no `.beads/` directory in template repo). Beads is included in generated projects when adopted.
+
+---
+
 ## SAP Evaluation Workflow
 
 ### Purpose

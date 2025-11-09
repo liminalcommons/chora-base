@@ -280,6 +280,32 @@ Claude should load context progressively to optimize token usage:
 
 ---
 
+### Domain 6: Task Tracking (.beads/)
+
+**Path**: [.beads/AGENTS.md](.beads/AGENTS.md) + [.beads/CLAUDE.md](.beads/CLAUDE.md)
+
+**Navigation tip**: Read domain-specific files for 60-70% token savings
+- [.beads/CLAUDE.md](.beads/CLAUDE.md) - Claude beads workflows (7-min, ~5k tokens)
+- [.beads/AGENTS.md](.beads/AGENTS.md) - Beads patterns (10-min, ~8k tokens)
+
+**Use when**:
+- Restoring context at session startup (finding unblocked work)
+- Tracking multi-session work (progress, blockers, dependencies)
+- Managing backlog and task prioritization
+- Coordinating with other agents or team members
+- Creating audit trails for completed work
+
+**Contents**:
+- Session startup patterns (`bd ready --json`)
+- Task lifecycle workflows (create, update, block, close)
+- Query patterns by status/assignee/tags
+- Integration with SAP-001 (inbox) and SAP-010 (memory)
+- Context restoration workflows
+
+**Note**: Beads (`.beads/`) only exists in generated projects when SAP-015 is adopted, not in chora-base template repository itself.
+
+---
+
 ## Common Claude Code Workflows
 
 ### Workflow 1: Adopting a SAP

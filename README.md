@@ -364,6 +364,66 @@ python scripts/memory-health-check.py
 - SAP-001 (Inbox): Coordination requests → Memory events integration
 - SAP-015 (Task Tracking): Completed tasks → Knowledge notes workflow
 
+### Task Tracking (Beads) - SAP-015
+
+**Status**: Pilot (v1.0.0) | **Adoption Level**: L0 (Available for installation)
+
+SAP-015 provides persistent task tracking with `.beads/` workflow system, enabling context restoration across sessions and eliminating work loss between Claude Code sessions.
+
+**When to use SAP-015**:
+- Restoring context after breaks or session timeouts (5-10 min → <2 min)
+- Tracking multi-session work with persistent memory
+- Managing backlogs, dependencies, and blocked tasks
+- Creating audit trails for completed work
+- Coordinating tasks with other agents or team members
+
+**Quick start**:
+```bash
+# Initialize beads (one-time setup, <2 minutes)
+mkdir -p .beads && touch .beads/issues.jsonl
+
+# Create first task
+echo '{"id":"task-001","title":"Implement feature X","status":"open","created":"'$(date -u +%Y-%m-%dT%H:%M:%SZ)'"}' >> .beads/issues.jsonl
+
+# Query ready tasks (no blockers)
+bd ready --json  # Programmatic
+bd ready         # Human-readable
+
+# Update task status
+bd update task-001 --status in_progress --assignee "claude-code"
+
+# Complete task
+bd close task-001 --reason "Feature X implemented and tested"
+```
+
+**Core workflows**:
+- **Session startup**: `bd ready --json` → Find unblocked work in <2 seconds
+- **Mid-session**: `bd update {id}` → Track progress, add notes, change status
+- **Session end**: `bd close {id}` → Document completion, link artifacts
+- **Cross-session**: Tasks persist in `.beads/issues.jsonl` (git-committed)
+
+**Integration with other SAPs**:
+- **SAP-001 (Inbox)**: Coordination request → Decompose into beads tasks
+- **SAP-010 (Memory)**: Task completed → Extract learnings to knowledge notes
+- **SAP-005 (CI/CD)**: CI failure → Create bead to track fix
+- **SAP-009 (Awareness)**: Document task patterns in AGENTS.md
+
+**ROI**: 5-10 minutes saved per session via context restoration, 40-80 hours saved annually for active projects
+
+**Documentation**:
+- Protocol specification: [docs/skilled-awareness/task-tracking/protocol-spec.md](docs/skilled-awareness/task-tracking/protocol-spec.md)
+- Adoption blueprint: [docs/skilled-awareness/task-tracking/adoption-blueprint.md](docs/skilled-awareness/task-tracking/adoption-blueprint.md)
+- CLI reference: `bd --help` or see protocol-spec.md Section 3
+
+**CLI recipes** (see justfile):
+```bash
+just beads-ready           # Show ready tasks
+just beads-status          # Show all tasks by status
+just beads-create "title"  # Create new task
+```
+
+---
+
 ### Project Types Supported
 
 - **Library/Package** - Python libraries for PyPI distribution

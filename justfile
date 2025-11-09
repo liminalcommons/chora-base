@@ -150,3 +150,59 @@ memory-stats:
     @echo "Knowledge notes: $(find .chora/memory/knowledge/notes/ -name '*.md' 2>/dev/null | wc -l || echo 0)"
     @echo "Agent profiles: $(find .chora/memory/profiles/ -name '*.yaml' 2>/dev/null | wc -l || echo 0)"
     @echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+
+# ============================================================================
+# SAP-015: Task Tracking (Beads)
+# ============================================================================
+# Persistent task tracking with .beads/ workflow for cross-session context.
+# See: AGENTS.md "Task Tracking (Beads) - SAP-015" section
+
+# Show ready tasks (no blockers, not assigned)
+# Example: just beads-ready
+beads-ready:
+    @test -f .beads/issues.jsonl && grep '"status":"open"' .beads/issues.jsonl | grep -v '"blockers":\[' | jq -r '.id + " | " + .title' 2>/dev/null || echo "No beads system found (.beads/issues.jsonl missing)"
+
+# Show all tasks grouped by status
+# Example: just beads-status
+beads-status:
+    @test -f .beads/issues.jsonl && echo "📋 Task Status Summary" && echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━" && echo "Open: $(grep -c '"status":"open"' .beads/issues.jsonl 2>/dev/null || echo 0)" && echo "In Progress: $(grep -c '"status":"in_progress"' .beads/issues.jsonl 2>/dev/null || echo 0)" && echo "Blocked: $(grep -c '"status":"blocked"' .beads/issues.jsonl 2>/dev/null || echo 0)" && echo "Closed: $(grep -c '"status":"closed"' .beads/issues.jsonl 2>/dev/null || echo 0)" || echo "No beads system found"
+
+# Create new task
+# Example: just beads-create "Implement feature X"
+beads-create TITLE:
+    @test -f .beads/issues.jsonl && TASK_ID="task-$(date +%s)" && echo "{\"id\":\"$TASK_ID\",\"title\":\"{{TITLE}}\",\"status\":\"open\",\"created\":\"$(date -u +%Y-%m-%dT%H:%M:%SZ)\"}" >> .beads/issues.jsonl && echo "✅ Created task: $TASK_ID" || echo "❌ Beads system not installed"
+
+# Show task details by ID
+# Example: just beads-show task-123
+beads-show TASK_ID:
+    @test -f .beads/issues.jsonl && grep "\"id\":\"{{TASK_ID}}\"" .beads/issues.jsonl | jq '.' || echo "Task {{TASK_ID}} not found"
+
+# List tasks by status
+# Example: just beads-list-open
+beads-list-open:
+    @test -f .beads/issues.jsonl && grep '"status":"open"' .beads/issues.jsonl | jq -r '.id + " | " + .title' || echo "No open tasks"
+
+# List tasks in progress
+# Example: just beads-list-in-progress
+beads-list-in-progress:
+    @test -f .beads/issues.jsonl && grep '"status":"in_progress"' .beads/issues.jsonl | jq -r '.id + " | " + .assignee + " | " + .title' || echo "No tasks in progress"
+
+# List blocked tasks
+# Example: just beads-list-blocked
+beads-list-blocked:
+    @test -f .beads/issues.jsonl && grep '"status":"blocked"' .beads/issues.jsonl | jq -r '.id + " | " + .title + " | Blockers: " + (.blockers | join(", "))' || echo "No blocked tasks"
+
+# List recently closed tasks
+# Example: just beads-list-closed
+beads-list-closed N="10":
+    @test -f .beads/issues.jsonl && grep '"status":"closed"' .beads/issues.jsonl | tail -n {{N}} | jq -r '.id + " | " + .title + " | " + .completion_reason' || echo "No closed tasks"
+
+# Search tasks by keyword
+# Example: just beads-search "authentication"
+beads-search QUERY:
+    @test -f .beads/issues.jsonl && grep -i "{{QUERY}}" .beads/issues.jsonl | jq -r '.id + " | " + .status + " | " + .title' || echo "No tasks matching '{{QUERY}}'"
+
+# Show task statistics
+# Example: just beads-stats
+beads-stats:
+    @test -f .beads/issues.jsonl && echo "📊 Beads Statistics" && echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━" && echo "Total tasks: $(wc -l < .beads/issues.jsonl 2>/dev/null || echo 0)" && echo "Open: $(grep -c '"status":"open"' .beads/issues.jsonl 2>/dev/null || echo 0)" && echo "In Progress: $(grep -c '"status":"in_progress"' .beads/issues.jsonl 2>/dev/null || echo 0)" && echo "Blocked: $(grep -c '"status":"blocked"' .beads/issues.jsonl 2>/dev/null || echo 0)" && echo "Closed: $(grep -c '"status":"closed"' .beads/issues.jsonl 2>/dev/null || echo 0)" && echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━" || echo "No beads system found"
