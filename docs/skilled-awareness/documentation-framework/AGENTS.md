@@ -1,9 +1,9 @@
 # Documentation Framework - Agent Awareness (SAP-007)
 
 **SAP ID**: SAP-007
-**Version**: 1.0.0
-**Status**: Draft (Phase 3)
-**Last Updated**: 2025-11-05
+**Version**: 1.1.0
+**Status**: Pilot
+**Last Updated**: 2025-11-09
 
 ---
 
@@ -711,7 +711,120 @@ complexity: Enum           # beginner | intermediate | advanced
 
 ---
 
-### Workflow 4: Refactor Duplicated Documentation
+### Workflow 4: Enforce SAP-007 Structure (Level 3)
+
+**Goal**: Install and use validation enforcement to maintain documentation structure
+
+**Steps**:
+
+1. **Copy validation script to your project**:
+   ```bash
+   # From chora-base template
+   mkdir -p scripts/
+   cp docs/skilled-awareness/documentation-framework/templates/validate-sap-007-structure.py scripts/
+   ```
+
+2. **Customize validation rules** (edit `scripts/validate-sap-007-structure.py`):
+   ```python
+   # ALLOWED_ROOT_FILES - add project-specific exceptions
+   ALLOWED_ROOT_FILES = [
+       "README.md",
+       "AGENTS.md",
+       "CLAUDE.md",
+       "CHANGELOG.md",
+       "CONTRIBUTING.md",
+       "LICENSE.md",
+       "DOCUMENTATION_STANDARD.md",
+       "ROADMAP.md",
+       # Add your project-specific root files here
+       "YOUR_PROJECT_FILE.md",  # Document rationale in AGENTS.md
+   ]
+
+   # REQUIRED_PROJECT_DOCS_SUBDIRS - customize for your project
+   REQUIRED_PROJECT_DOCS_SUBDIRS = [
+       "sprints",
+       "releases",
+       "metrics",
+       "decisions",
+       "retrospectives",
+       # Add your project-specific subdirectories
+   ]
+   ```
+
+3. **Run manual validation**:
+   ```bash
+   python scripts/validate-sap-007-structure.py
+   # Check for violations before installing hook
+   ```
+
+4. **Fix any existing violations**:
+   ```bash
+   # If validation fails, move files to appropriate directories
+   # Use decision tree: docs/skilled-awareness/documentation-framework/decision-tree-template.md
+   mv ROOT_VIOLATION.md project-docs/sprints/  # Example
+   ```
+
+5. **Install pre-commit hook** (prevents future violations):
+   ```bash
+   # Option 1: Install to .git/hooks/
+   mkdir -p .git/hooks
+   cp docs/skilled-awareness/documentation-framework/templates/sap-007-check.sh .git/hooks/pre-commit
+   chmod +x .git/hooks/pre-commit
+
+   # Option 2: Install to .githooks/ (team projects)
+   mkdir -p .githooks
+   cp docs/skilled-awareness/documentation-framework/templates/sap-007-check.sh .githooks/pre-commit
+   chmod +x .githooks/pre-commit
+   git config core.hooksPath .githooks
+   ```
+
+6. **Test pre-commit hook**:
+   ```bash
+   # Create intentional violation
+   echo "# Test" > TEST_VIOLATION.md
+   git add TEST_VIOLATION.md
+   git commit -m "test hook"
+   # Should fail with SAP-007 validation error
+
+   # Clean up test
+   git reset HEAD TEST_VIOLATION.md
+   rm TEST_VIOLATION.md
+   ```
+
+7. **Add decision tree to AGENTS.md files**:
+   ```bash
+   # Copy template to your project
+   # Add to root AGENTS.md, dev-docs/AGENTS.md, user-docs/AGENTS.md, project-docs/AGENTS.md
+   # Customize [PROJECT_SPECIFIC] placeholders
+   ```
+
+8. **Verify enforcement is active**:
+   ```bash
+   # Validation script exists
+   test -f scripts/validate-sap-007-structure.py && echo "✓ Validation script ready"
+
+   # Pre-commit hook installed
+   test -f .git/hooks/pre-commit && echo "✓ Pre-commit hook installed"
+   # OR: test -f .githooks/pre-commit && echo "✓ Pre-commit hook installed"
+   ```
+
+**SAP-031 Integration**:
+This workflow implements SAP-031 (Discoverability-Based Enforcement) for SAP-007:
+- **Layer 1 (Discoverability)**: Decision tree in AGENTS.md (where agents look)
+- **Layer 2 (Pre-Commit)**: Validation hook catches violations before commit
+- **Layer 4 (Documentation)**: This workflow itself documents enforcement
+
+See: [docs/skilled-awareness/discoverability-based-enforcement/](../discoverability-based-enforcement/)
+
+**Expected Outcome**: SAP-007 structure violations blocked automatically by pre-commit hook
+
+**Time Estimate**: 15-30 minutes (one-time setup)
+
+**Prevention Rate**: 90%+ (proven in chora-workspace pilot)
+
+---
+
+### Workflow 5: Refactor Duplicated Documentation
 
 **Goal**: Remove duplication by applying Diataxis structure
 
@@ -1119,28 +1232,30 @@ Edit doc.md
 
 ### Workflow Coverage Analysis
 
-**Protocol Spec Workflows**: 5 (specified in protocol-spec.md)
+**Protocol Spec Workflows**: 6 (specified in protocol-spec.md)
 1. Choose Diataxis type (decision matrix)
 2. Add frontmatter (YAML schema)
 3. Write executable How-To (test extraction)
 4. Validate documentation (frontmatter, structure)
 5. Organize by directory (user/dev/project docs)
+6. Enforce structure (Level 3 validation) - NEW in v1.1.0
 
-**AGENTS.md Workflows**: 5 (implemented above)
+**AGENTS.md Workflows**: 6 (implemented above)
 1. Choose Correct Diataxis Type
 2. Add and Validate Frontmatter
 3. Write Executable How-To with Test Extraction
-4. Refactor Duplicated Documentation
-5. Validate Documentation Structure
+4. Enforce SAP-007 Structure (Level 3) - NEW in v1.1.0
+5. Refactor Duplicated Documentation
+6. Validate Documentation Structure
 
 **CLAUDE.md Workflows**: 3 (to be implemented in CLAUDE.md)
 1. Create Documentation with Frontmatter (Write tool)
 2. Extract and Run Tests from How-Tos (Bash + Read tools)
 3. Validate and Fix Documentation Quality (Bash + Edit tools)
 
-**Coverage**: 5/5 = 100% (all protocol-spec workflows covered)
+**Coverage**: 6/6 = 100% (all protocol-spec workflows covered)
 
-**Variance**: 40% (5 generic workflows vs 3 Claude-specific workflows)
+**Variance**: 50% (6 generic workflows vs 3 Claude-specific workflows)
 
 **Rationale**: CLAUDE.md focuses on tool-specific patterns (Bash/Read/Write/Edit), while AGENTS.md provides comprehensive guidance applicable to all agents. Both provide equivalent support for SAP-007 adoption.
 
@@ -1149,6 +1264,14 @@ Edit doc.md
 ---
 
 ## 11. Version History
+
+**1.1.0** (2025-11-09):
+- Added Workflow 4: Enforce SAP-007 Structure (Level 3) - COORD-2025-011
+- Added SAP-031 integration (Discoverability-Based Enforcement)
+- Added references to validation templates (validate-sap-007-structure.py, sap-007-check.sh)
+- Added decision tree template reference
+- Total workflows: 5 → 6
+- Status: Draft → Pilot
 
 **1.0.0** (2025-11-05):
 - Initial AGENTS.md for SAP-007 (documentation-framework)
@@ -1164,6 +1287,10 @@ Edit doc.md
 - **Protocol Spec**: [protocol-spec.md](protocol-spec.md) - Complete Diataxis framework reference
 - **Capability Charter**: [capability-charter.md](capability-charter.md) - Design rationale
 - **Adoption Blueprint**: [adoption-blueprint.md](adoption-blueprint.md) - Installation guide
+- **Validation Script Template**: [templates/validate-sap-007-structure.py](templates/validate-sap-007-structure.py) - NEW in v1.1.0
+- **Pre-Commit Hook Template**: [templates/sap-007-check.sh](templates/sap-007-check.sh) - NEW in v1.1.0
+- **Decision Tree Template**: [decision-tree-template.md](decision-tree-template.md) - NEW in v1.1.0
+- **SAP-031 Enforcement**: [../discoverability-based-enforcement/](../discoverability-based-enforcement/) - Enforcement methodology
 - **Test Extraction Script**: [../../scripts/extract_tests.py](../../scripts/extract_tests.py)
 - **Frontmatter Validation**: [../../scripts/validate_frontmatter.py](../../scripts/validate_frontmatter.py)
 

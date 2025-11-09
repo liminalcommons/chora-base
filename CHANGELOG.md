@@ -7,6 +7,76 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [4.15.0] - 2025-11-09
+
+> **✨ FEATURE: SAP-007 v1.1.0 - Level 3 Enforcement Layer**: Add validation templates and SAP-031 integration for sustainable documentation structure
+
+This minor release adds Level 3 enforcement capabilities to SAP-007 (Documentation Framework) based on real-world adoption learnings from chora-workspace (COORD-2025-011). SAP-007 becomes the second reference implementation of SAP-031 (Discoverability-Based Enforcement).
+
+---
+
+### Added
+
+**SAP-007 v1.1.0 - Level 3 Enforcement Layer (COORD-2025-011)**
+
+**Problem**: L2 (structure reorganization) without L3 (enforcement) degrades within days
+- chora-workspace reorganized 41→8 root files
+- Violations occurred within hours of completion
+- Manual enforcement unsustainable
+
+**Solution**: Provide enforcement templates following SAP-031 pattern:
+1. **Validation Script**: `templates/validate-sap-007-structure.py`
+   - Checks root directory ≤8 files
+   - Validates project-docs/ subdirectories
+   - Detects orphaned docs
+   - Exit codes for CI/CD
+   - Cross-platform compatible (Windows/Mac/Linux)
+
+2. **Pre-Commit Hook**: `templates/sap-007-check.sh`
+   - Runs validation before commit
+   - Blocks commits that violate structure
+   - Educational error messages
+   - Optional bypass with --no-verify
+
+3. **Decision Tree Template**: `decision-tree-template.md`
+   - "Where should this doc go?" flowchart
+   - Examples for each category
+   - Customizable for projects
+   - Add to AGENTS.md files
+
+**SAP-031 Integration**:
+- **Layer 1 (Discoverability)**: Decision tree in AGENTS.md (~70% prevention)
+- **Layer 2 (Pre-Commit)**: Validation hook (~20% prevention)
+- **Layer 4 (Documentation)**: Workflow 4 in AGENTS.md (support)
+- **Result**: 90%+ prevention rate (validated in chora-workspace)
+
+**Reference Implementation**: SAP-007 serves as **second validation** of SAP-031 (after SAP-030 cross-platform)
+
+**File Changes**:
+- ✅ `docs/skilled-awareness/documentation-framework/templates/validate-sap-007-structure.py` (new, 327 lines)
+- ✅ `docs/skilled-awareness/documentation-framework/templates/sap-007-check.sh` (new, 67 lines)
+- ✅ `docs/skilled-awareness/documentation-framework/decision-tree-template.md` (new, 271 lines)
+- ✅ `docs/skilled-awareness/documentation-framework/AGENTS.md` (updated: Workflow 4, version 1.0.0→1.1.0)
+- ✅ `docs/skilled-awareness/documentation-framework/ledger.md` (updated: v1.1.0, SAP-031 integration)
+- ✅ `docs/skilled-awareness/discoverability-based-enforcement/ledger.md` (updated: SAP-007 as second reference)
+- ✅ `sap-catalog.json` (updated: SAP-007 v1.0.0→1.1.0, status active→pilot)
+- ✅ `inbox/incoming/coordination/COORD-2025-011-RESPONSE.md` (new, acceptance response)
+
+**Adoption Feedback** (chora-workspace):
+- Setup time: 2 hours (adapt templates)
+- Prevention rate: 90%+ (0 violations post-hook)
+- Feedback: "L3 enforcement should be mandatory, not optional"
+- ROI: 15-30x over 1 year
+
+**Impact**:
+- Future SAP-007 adopters get enforcement templates "for free"
+- Validates SAP-031 domain-agnostic design (2 quality domains: cross-platform, documentation)
+- Establishes pattern for applying SAP-031 to ANY quality domain
+
+**Commits**: COORD-2025-011 accepted and implemented (2025-11-09)
+
+---
+
 ## [4.14.2] - 2025-11-08
 
 > **🔧 HOT-FIX: Test Template FastMCP Incompatibility**: Fix test template design flaw causing 61% test failure rate in generated projects
