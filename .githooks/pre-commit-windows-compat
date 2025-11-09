@@ -71,6 +71,51 @@ def check_new_bash_scripts(staged_files):
     return True
 
 
+def check_path_patterns(staged_files):
+    """Check for unsafe path patterns in Python files"""
+    import re
+
+    python_files = [f for f in staged_files if f.endswith('.py')]
+    if not python_files:
+        return True
+
+    issues = []
+    for file_path in python_files:
+        try:
+            with open(file_path, 'r', encoding='utf-8') as f:
+                content = f.read()
+                lines = content.splitlines()
+
+                for i, line in enumerate(lines, 1):
+                    # Check for string concatenation with / (likely path building)
+                    if re.search(r'["\'].*\{.*\}/', line) and 'http' not in line:
+                        issues.append((file_path, i, "String path concatenation (use pathlib)", line.strip()[:80]))
+
+                    # Check for hardcoded ~/ in Python code
+                    if '~/' in line and 'Path.home()' not in line and '#' not in line.split('~/')[0]:
+                        issues.append((file_path, i, "Hardcoded ~/ (use Path.home())", line.strip()[:80]))
+
+        except Exception:
+            continue
+
+    if issues:
+        print("⚠️  WARNING: Potentially unsafe path patterns detected:")
+        print()
+        for file_path, line_num, issue_type, line_content in issues[:10]:  # Show first 10
+            print(f"  {file_path}:{line_num}")
+            print(f"    Issue: {issue_type}")
+            print(f"    Line: {line_content}")
+            print()
+
+        print(f"Found {len(issues)} potential issue(s)")
+        print()
+        print("These are warnings only. Consider using pathlib for cross-platform compatibility.")
+        print("See: scripts/AGENTS.md for patterns")
+        print()
+
+    return True  # Don't block commit, just warn
+
+
 def check_windows_compatibility(staged_files):
     """Run Windows compatibility validation on staged Python files"""
     python_files = [f for f in staged_files if f.endswith('.py')]
@@ -127,7 +172,10 @@ def main():
     if not check_new_bash_scripts(staged_files):
         return 1
 
-    # Check 2: Windows compatibility for Python files
+    # Check 2: Path patterns (warnings only)
+    check_path_patterns(staged_files)
+
+    # Check 3: Windows compatibility for Python files (blocking)
     if not check_windows_compatibility(staged_files):
         return 1
 
