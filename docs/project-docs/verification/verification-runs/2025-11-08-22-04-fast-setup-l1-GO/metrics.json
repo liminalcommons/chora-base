@@ -1,0 +1,43 @@
+{
+  "verification_run": {
+    "timestamp": "2025-11-08T22:04:00Z",
+    "run_number": 4,
+    "chora_base_version": "4.14.1",
+    "expected_result": "GO",
+    "actual_result": "CONDITIONAL_NO_GO",
+    "duration_minutes": 5
+  },
+  "all_previous_fixes": {
+    "total_blockers_from_previous_runs": 6,
+    "all_resolved": true,
+    "resolution_rate": "100%"
+  },
+  "test_results": {
+    "tests_total": 23,
+    "tests_passed": 9,
+    "tests_failed": 14,
+    "pass_rate": "39%",
+    "failure_rate": "61%"
+  },
+  "new_issue": {
+    "type": "test_template_design_flaw",
+    "severity": "high",
+    "description": "Test template incompatible with FastMCP decorator behavior",
+    "root_cause": "Tests try to call FunctionTool/FunctionResource objects directly",
+    "impact": "61% of tests fail despite code working correctly",
+    "server_code_status": "works_correctly",
+    "import_test": "passed"
+  },
+  "four_iteration_summary": {
+    "iteration_1": {"version": "v4.9.0", "blockers": 4, "result": "COND_NO_GO"},
+    "iteration_2": {"version": "v4.13.0", "blockers": 1, "result": "COND_NO_GO"},
+    "iteration_3": {"version": "v4.14.0", "blockers": 1, "result": "COND_NO_GO"},
+    "iteration_4": {"version": "v4.14.1", "blockers": 1, "result": "COND_NO_GO"},
+    "total_unique_blockers": 7,
+    "code_generation_blockers_resolved": 6,
+    "test_generation_blockers_remaining": 1,
+    "overall_code_progress": "100%",
+    "overall_test_progress": "39%"
+  },
+  "recommendation": "Fix test template or relax L1 criteria to allow manual test verification"
+}
