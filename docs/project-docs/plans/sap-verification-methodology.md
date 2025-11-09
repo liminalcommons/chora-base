@@ -2065,24 +2065,42 @@ After verification, update the SAP's `ledger.md` with verification results:
 3. Windows Unicode errors: Emoji characters cause encoding failures
 4. Unsubstituted variables: CI/CD workflows contain `{{ package_name }}` patterns
 
-**Fix-Verify Iteration**:
+**Fix-Verify Iteration (3 iterations, same-day)**:
+
+**Iteration 1: Initial Fixes**
 - Issues created: #2, #3, #4, #5 in chora-base repository
 - Fixes implemented: 60 minutes (✅ under 2-hour threshold)
   - Fixed variable name in `.gitignore.template`
-  - Created `test_server.py.template` with 40+ test cases
+  - Created `test_server.py.template` with 23 test cases
   - Added UTF-8 encoding for Windows compatibility
   - Moved workflows to templates for Jinja2 rendering
-- Re-verification: All tests passed ✅
-- Commit: [9dd95b5](https://github.com/liminalcommons/chora-base/commit/9dd95b5)
+- Release: v4.13.0
+- Commits: [9dd95b5](https://github.com/liminalcommons/chora-base/commit/9dd95b5), [01f2956](https://github.com/liminalcommons/chora-base/commit/01f2956)
+
+**Iteration 2: Re-Verification**
+- Decision: CONDITIONAL NO-GO (75% improvement, 4 → 1 blocker)
+- Result: 3 of 4 original blockers resolved ✅
+- New blocker: Syntax error in `mcp__init__.py.template` (regression)
+- Time: 8 minutes verification (33% faster than initial)
+- Test files: 23 test cases generated (vs 0 initially)
+
+**Iteration 3: Hot-Fix**
+- Fix: Syntax error `dict[str, str}}` → `dict[str, str]]` (2 lines)
+- Time: 2 minutes (100% estimate accuracy)
+- Release: v4.13.1
+- Commits: [6fbf944](https://github.com/liminalcommons/chora-base/commit/6fbf944), [f1f08cd](https://github.com/liminalcommons/chora-base/commit/f1f08cd)
+- Status: All 5 blockers resolved (4 original + 1 regression)
+- Expected: GO on third verification
 
 **Lessons Learned**:
 1. **CONDITIONAL NO-GO is valuable**: Distinguishes "needs minor fixes" from "fundamentally broken"
-2. **Fix effort estimation works**: 70-minute estimate was accurate (actual: 60 minutes)
-3. **Fast iteration pays off**: Same-day fix-verify cycle prevents context loss
+2. **Fix effort estimation works**: 70-minute estimate (actual: 60 min), 2-minute estimate (actual: 2 min)
+3. **Fast iteration pays off**: 3 iterations in same day, momentum maintained
 4. **Template testing needed**: Missing variables only caught during verification, not development
 5. **Cross-platform testing essential**: Windows-specific issues require testing on Windows
+6. **Regressions happen**: New template introduced syntax error, but rapid iteration caught and fixed it
 
-**Updated Decision After Fixes**: Ready for re-verification → Expected GO
+**Total Cycle**: 3 iterations, same-day resolution, 4 releases (v4.13.0, v4.13.1, v4.14.0, plus methodology)
 
 ---
 
