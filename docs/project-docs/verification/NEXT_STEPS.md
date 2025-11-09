@@ -64,7 +64,8 @@
    - Lines 17, 20, 23: `{{ var | lower }}` outputs `true` instead of `True`
    - NameError: name 'true' is not defined
    - 2-minute fix (100% estimate accuracy)
-   - **Commits**: [d61a94d](https://github.com/liminalcommons/chora-base/commit/d61a94d), pending release
+   - **Commits**: [d61a94d](https://github.com/liminalcommons/chora-base/commit/d61a94d), [89be4dd](https://github.com/liminalcommons/chora-base/commit/89be4dd)
+   - **Release**: [v4.14.1](https://github.com/liminalcommons/chora-base/releases/tag/v4.14.1)
 
 **Methodology Updated**: [8216856](https://github.com/liminalcommons/chora-base/commit/8216856), [7d73a2e](https://github.com/liminalcommons/chora-base/commit/7d73a2e)
 

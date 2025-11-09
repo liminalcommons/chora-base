@@ -2097,8 +2097,8 @@ After verification, update the SAP's `ledger.md` with verification results:
 - New blocker: `| lower` filter outputs `true` instead of `True` → NameError
 - Time: 6 minutes verification + 2 minutes fix
 - Fix: Remove `| lower` filter from 3 boolean variables, use Python booleans
-- Release: v4.14.1
-- Commits: [d61a94d](https://github.com/liminalcommons/chora-base/commit/d61a94d), pending release
+- Release: [v4.14.1](https://github.com/liminalcommons/chora-base/releases/tag/v4.14.1)
+- Commits: [d61a94d](https://github.com/liminalcommons/chora-base/commit/d61a94d), [89be4dd](https://github.com/liminalcommons/chora-base/commit/89be4dd)
 - Status: All 6 blockers resolved (4 original + 2 regressions)
 - Expected: GO on fourth verification
 
