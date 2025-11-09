@@ -2,7 +2,19 @@
 
 **Purpose**: Machine-readable instructions for AI agents working on the chora-base template repository.
 
-**Last Updated**: 2025-11-06 (Fast-setup infrastructure v4.9.0)
+**Last Updated**: 2025-11-08 (Windows compatibility + cross-platform enforcement)
+
+---
+
+## 🔴 CROSS-PLATFORM REMINDER
+
+**ALL code MUST work on Windows, Mac, and Linux without modification.**
+
+Before writing Python scripts, read: **[scripts/AGENTS.md](scripts/AGENTS.md)** for cross-platform patterns.
+
+**Quick Template**: Copy [templates/cross-platform/python-script-template.py](templates/cross-platform/python-script-template.py)
+
+**Validation**: `python scripts/validate-windows-compat.py --file your-script.py`
 
 ---
 
