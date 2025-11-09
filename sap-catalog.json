@@ -1,10 +1,21 @@
 {
-  "version": "5.0.0",
-  "updated": "2025-11-08",
+  "version": "5.1.0",
+  "updated": "2025-11-09",
   "sap_sets_version": "2.0.0",
   "sap_sets_architecture": "domain-based",
-  "description": "Machine-readable catalog of all Skilled Awareness Packages in chora-base with domain-based set architecture",
-  "total_saps": 31,
+  "description": "Machine-readable catalog of all Skilled Awareness Packages in chora-base with domain-based set architecture and discoverability tracking",
+  "total_saps": 34,
+  "schema_enhancements": {
+    "v5.1.0": {
+      "date": "2025-11-09",
+      "changes": [
+        "Added optional 'discoverability' field for SAP entries",
+        "Discoverability schema: score (0-100), level (LOW/MEDIUM/HIGH), component scores (readme/agents/claude/justfile/docs/examples), last_audit date, notes"
+      ],
+      "pilot_saps": ["SAP-010", "SAP-015"],
+      "rationale": "COORD-2025-011: Discoverability as L1 requirement for all SAPs"
+    }
+  },
   "saps": [
     {
       "id": "SAP-000",
@@ -611,7 +622,17 @@
       },
       "dependents": [
         "SAP-015"
-      ]
+      ],
+      "discoverability": {
+        "score": 80,
+        "level": "HIGH",
+        "readme_score": 30,
+        "agents_score": 20,
+        "claude_score": 15,
+        "justfile_score": 15,
+        "last_audit": "2025-11-09",
+        "notes": "Phase 2.1 pilot: 40/100 → 80/100 (+100% improvement). Added README.md section (51 lines), AGENTS.md section (86 lines), CLAUDE.md Domain 5, and 9 justfile recipes."
+      }
     },
     {
       "id": "SAP-011",
@@ -924,7 +945,19 @@
           ]
         }
       },
-      "dependents": []
+      "dependents": [],
+      "discoverability": {
+        "score": 100,
+        "level": "HIGH",
+        "readme_score": 30,
+        "agents_score": 20,
+        "claude_score": 15,
+        "justfile_score": 15,
+        "docs_score": 10,
+        "examples_score": 10,
+        "last_audit": "2025-11-09",
+        "notes": "Phase 2.2 pilot: minimal → 100/100 (perfect score). Added README.md section (58 lines), AGENTS.md section (148 lines), CLAUDE.md Domain 6, and 10 justfile recipes."
+      }
     },
     {
       "id": "SAP-016",
