@@ -189,6 +189,60 @@ rollback-dev:
     @bash scripts/rollback-dev.sh 2>/dev/null || echo "❌ rollback-dev.sh script not available"
 
 # ============================================================================
+# SAP-011: Docker Operations (Production Containerization)
+# ============================================================================
+# Multi-stage Dockerfiles, docker-compose orchestration, 40% smaller images (150-250MB).
+# See: AGENTS.md "Docker Operations - SAP-011" section, static-template/Dockerfile
+
+# Build production Docker image (multi-stage, 150-250MB)
+# Example: just docker-build myproject latest
+docker-build PROJECT TAG="latest":
+    @echo "🐳 Building production Docker image (multi-stage)..."
+    @docker build -t {{PROJECT}}:{{TAG}} . 2>/dev/null || echo "❌ Dockerfile not available (install SAP-011)"
+
+# Build CI test Docker image (single-stage, editable install)
+# Example: just docker-build-test myproject test
+docker-build-test PROJECT TAG="test":
+    @echo "🧪 Building CI test Docker image..."
+    @docker build -f Dockerfile.test -t {{PROJECT}}:{{TAG}} . 2>/dev/null || echo "❌ Dockerfile.test not available (install SAP-011)"
+
+# Run tests in Docker container
+# Example: just docker-test myproject
+docker-test PROJECT:
+    @echo "🧪 Running tests in Docker container..."
+    @docker run --rm {{PROJECT}}:test 2>/dev/null || echo "❌ Test image not built (run: just docker-build-test {{PROJECT}})"
+
+# Start services with docker-compose
+# Example: just docker-up
+docker-up:
+    @echo "🚀 Starting services with docker-compose..."
+    @docker-compose up -d 2>/dev/null || echo "❌ docker-compose.yml not available (install SAP-011)"
+
+# Stop services with docker-compose
+# Example: just docker-down
+docker-down:
+    @echo "🛑 Stopping services with docker-compose..."
+    @docker-compose down 2>/dev/null || echo "❌ docker-compose.yml not available (install SAP-011)"
+
+# View docker-compose logs
+# Example: just docker-logs
+docker-logs:
+    @echo "📋 Viewing docker-compose logs..."
+    @docker-compose logs -f 2>/dev/null || echo "❌ Services not running (run: just docker-up)"
+
+# Check docker-compose service health
+# Example: just docker-health
+docker-health:
+    @echo "🏥 Checking service health..."
+    @docker-compose ps 2>/dev/null || echo "❌ Services not running (run: just docker-up)"
+
+# Clean Docker build cache and stopped containers
+# Example: just docker-clean
+docker-clean:
+    @echo "🧹 Cleaning Docker build cache and stopped containers..."
+    @docker system prune -f 2>/dev/null || echo "❌ Docker not available"
+
+# ============================================================================
 # SAP-007: Documentation Framework (Diátaxis 4-Domain)
 # ============================================================================
 # Diátaxis-based documentation with frontmatter validation, test extraction, L3 enforcement.

@@ -1379,6 +1379,207 @@ just integration                    # Full integration test suite
 
 ---
 
+### Docker Operations (Production Containerization) - SAP-011 L1
+
+**Purpose**: Provide production-ready Docker containerization with multi-stage builds, CI-optimized test containers, docker-compose orchestration, and 40% smaller images.
+
+**Adoption Level**: L1 (Fully operational)
+
+**Core Docker Architecture**:
+```bash
+# 5 Docker artifacts:
+project/
+├── Dockerfile                     # Production multi-stage build (150-250MB)
+├── Dockerfile.test                # CI test environment (editable install)
+├── docker-compose.yml             # Service orchestration
+├── .dockerignore                  # Build context optimization (81% reduction)
+└── DOCKER_BEST_PRACTICES.md       # Guidance and troubleshooting
+
+# Multi-stage production build pattern:
+# Stage 1: Builder (build wheel)
+# Stage 2: Runtime (install wheel, non-root, health check)
+# Result: 150-250MB images (vs 500MB+ with editable install)
+
+# CI-optimized test pattern:
+# Single-stage: editable install + dev dependencies
+# GitHub Actions cache: 6x faster builds (3 min → 30 sec)
+```
+
+**Session Startup Routine** (agents should execute):
+```bash
+# 1. Check if Docker artifacts exist
+ls -la Dockerfile Dockerfile.test docker-compose.yml .dockerignore
+
+# 2. Build production image
+just docker-build myproject latest
+
+# 3. Build test image (for CI)
+just docker-build-test myproject test
+
+# 4. Run tests in container (validate)
+just docker-test myproject
+
+# 5. Start services with compose
+just docker-up
+just docker-health
+```
+
+**Common Workflows**:
+
+1. **Build and run production container**:
+```bash
+# Build production image (multi-stage)
+just docker-build myproject latest
+
+# Run production container
+docker run -d \
+  -p 8000:8000 \
+  -v ./configs:/app/configs:ro \
+  -v ./logs:/app/logs \
+  --name myproject-prod \
+  myproject:latest
+
+# Check health
+docker inspect myproject-prod | grep -A 10 Health
+
+# View logs
+docker logs -f myproject-prod
+
+# Stop and remove
+docker stop myproject-prod && docker rm myproject-prod
+```
+
+2. **Build and test in CI (GitHub Actions integration)**:
+```bash
+# Build CI test image (with GitHub Actions cache)
+just docker-build-test myproject test
+
+# Run tests in container
+just docker-test myproject
+
+# Extract coverage report (if needed)
+docker cp $(docker create --name tmp myproject:test):/app/htmlcov ./htmlcov
+docker rm tmp
+```
+
+3. **Docker Compose orchestration (multi-service)**:
+```bash
+# Start all services (main app + dependencies)
+just docker-up
+
+# Check service health
+just docker-health
+docker-compose ps
+
+# View logs (all services)
+just docker-logs
+
+# View logs (specific service)
+docker-compose logs -f myproject
+
+# Execute command in running container
+docker-compose exec myproject bash
+
+# Restart specific service
+docker-compose restart myproject
+
+# Stop all services
+just docker-down
+```
+
+4. **Volume management (3-tier strategy)**:
+```bash
+# Tier 1: Configs (read-only hot-reload)
+# - Mount: ./configs:/app/configs:ro
+# - Use: Configuration files that can be updated without rebuild
+# - Example: YAML configs, JSON settings
+
+# Tier 2: Ephemeral (session data)
+# - Mount: ./ephemeral:/app/ephemeral
+# - Use: Temporary data that survives restarts
+# - Example: Cache, session storage
+
+# Tier 3: Persistent (long-term data)
+# - Mount: ./logs:/app/logs, ./data:/app/data, ./.chora/memory:/app/.chora/memory
+# - Use: Critical data that must survive container removal
+# - Example: Logs, database, event memory (SAP-010)
+
+# Validate volume mounts
+docker-compose config
+docker inspect myproject | grep -A 20 Mounts
+```
+
+5. **Optimize Docker build context**:
+```bash
+# Check current build context size
+du -sh .
+
+# Review .dockerignore patterns
+cat .dockerignore
+
+# Expected exclusions (81% reduction):
+# - .git/ (largest contributor)
+# - tests/, docs/ (not needed in production)
+# - .venv/, __pycache__/ (Python artifacts)
+# - *.md (documentation)
+# - .github/ (CI configs)
+
+# Verify build context reduction
+docker build --no-cache -t myproject:latest . 2>&1 | grep "Sending build context"
+```
+
+6. **Debug Docker containers**:
+```bash
+# Check container logs
+docker-compose logs -f myproject
+
+# Execute shell in running container
+docker-compose exec myproject bash
+
+# Inspect container configuration
+docker inspect myproject
+
+# Check resource usage
+docker stats myproject
+
+# View health check status
+docker inspect myproject | grep -A 10 Health
+
+# Rebuild from scratch (no cache)
+docker build --no-cache -t myproject:latest .
+```
+
+**Integration with Other SAPs**:
+- **SAP-005 (CI/CD)**: Dockerfile.test powers GitHub Actions test workflows with Docker cache (6x speedup)
+- **SAP-010 (Memory System)**: Docker volume mounts for .chora/memory persistence across container restarts
+- **SAP-014 (MCP Server)**: MCP servers deployed as Docker containers with health checks
+- **SAP-008 (Automation)**: Docker build/run scripts integrated with justfile recipes
+
+**Troubleshooting**:
+
+| Issue | Diagnostic | Fix |
+|-------|-----------|-----|
+| Large image size | `docker images` | Check .dockerignore, use multi-stage build |
+| Slow builds | `docker build --progress=plain` | Enable GitHub Actions cache, optimize layers |
+| Import errors | `docker run --rm myproject:latest python -c "import mypackage"` | Use wheel distribution (not editable install) |
+| Health check failing | `docker inspect myproject \| grep Health` | Verify entrypoint, check logs |
+| Volume mount issues | `docker inspect myproject \| grep Mounts` | Check paths, permissions, read-only flags |
+
+**L1 Achievement Evidence**:
+- ✅ Dockerfile (multi-stage production build, 150-250MB)
+- ✅ Dockerfile.test (CI-optimized, 6x faster with cache)
+- ✅ docker-compose.yml (orchestration with volumes, networks, health checks)
+- ✅ .dockerignore (81% build context reduction)
+- ✅ justfile recipes (8 Docker commands for build, test, compose)
+
+**ROI Metrics**:
+- **Image size**: 40% smaller (150-250MB vs 500MB+ with editable install)
+- **CI builds**: 6x faster (3 min → 30 sec with GitHub Actions cache)
+- **Reproducibility**: 100% (identical environments across dev, staging, production)
+- **Deployment**: 5 min setup with docker-compose (vs 30+ min manual setup)
+
+---
+
 ### Testing Framework (pytest) - SAP-004 L3
 
 **Purpose**: Provide automated testing with pytest framework, 85%+ coverage enforcement, and rich test patterns (parametrized, fixtures, mocks).

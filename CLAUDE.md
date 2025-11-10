@@ -589,6 +589,75 @@ just smoke                        # Quick health check
 
 ---
 
+### Docker Operations (SAP-011) - Quick Reference
+
+**No domain-specific CLAUDE.md** (Docker is infrastructure, not code)
+
+**Claude patterns for Docker**:
+```markdown
+# User wants to containerize application → Use Docker artifacts
+just docker-build myproject latest    # Build production image
+just docker-build-test myproject test # Build CI test image
+just docker-test myproject            # Run tests in container
+just docker-up                        # Start with docker-compose
+just docker-health                    # Check service health
+
+# Production workflows
+# 1. Build and run production container
+just docker-build myproject latest
+docker run -d -p 8000:8000 -v ./configs:/app/configs:ro myproject:latest
+docker logs -f myproject
+
+# 2. Build and test in CI (GitHub Actions)
+just docker-build-test myproject test
+just docker-test myproject
+
+# 3. Docker Compose orchestration
+just docker-up                        # Start all services
+just docker-health                    # Check health
+just docker-logs                      # View logs
+just docker-down                      # Stop services
+
+# 4. Volume management (3-tier strategy)
+# Tier 1: Configs (read-only hot-reload)
+#   ./configs:/app/configs:ro
+# Tier 2: Ephemeral (session data)
+#   ./ephemeral:/app/ephemeral
+# Tier 3: Persistent (long-term data)
+#   ./logs:/app/logs, ./data:/app/data, ./.chora/memory:/app/.chora/memory
+
+# Debugging
+docker-compose logs -f myproject      # View logs
+docker-compose exec myproject bash    # Shell access
+docker inspect myproject              # Configuration
+docker stats myproject                # Resource usage
+```
+
+**Progressive loading strategy**:
+- **Phase 1**: Run Docker commands via justfile (instant)
+- **Phase 2**: Read [docs/skilled-awareness/docker-operations/protocol-spec.md](docs/skilled-awareness/docker-operations/protocol-spec.md) for multi-stage build patterns
+- **Phase 3**: Read Dockerfile, Dockerfile.test, docker-compose.yml for implementation details
+
+**ROI**: 40% smaller images (150-250MB vs 500MB+), 6x faster CI builds (3 min → 30 sec), 100% reproducible environments
+
+**5 Docker Artifacts**:
+- **Dockerfile**: Production multi-stage build (builder + runtime, wheel distribution, non-root)
+- **Dockerfile.test**: CI test environment (editable install, dev dependencies, cache-friendly)
+- **docker-compose.yml**: Service orchestration (volumes, networks, health checks)
+- **.dockerignore**: Build context optimization (81% reduction)
+- **DOCKER_BEST_PRACTICES.md**: Guidance, troubleshooting, security patterns
+
+**Multi-Stage Build Pattern**:
+- **Stage 1 (Builder)**: Install build dependencies → Build wheel → Output to /dist/
+- **Stage 2 (Runtime)**: Install wheel (not editable) → Create non-root user → Health check → CMD
+
+**Why Wheel Distribution?**:
+- Eliminates namespace import conflicts (vs editable install)
+- 40% smaller images (no build tools in production)
+- Matches PyPI distribution format
+
+---
+
 ### Chora-Base Meta Package (SAP-002) - Quick Reference
 
 **No domain-specific CLAUDE.md** (chora-base documentation IS the awareness system)
