@@ -24,6 +24,22 @@ phase_3_token_estimate: 11000
 
 ---
 
+## 📖 Quick Reference
+
+**New to SAP-019?** → Read **[README.md](README.md)** first (8-min read)
+
+The README provides:
+- 🚀 **Quick Start** - 4 evaluation commands (quick, deep, strategic, JSON export)
+- 📚 **3 Evaluation Depths** - Quick check (30s), Deep dive (5min), Strategic analysis (30min)
+- 🎯 **4 Adoption Levels** - Level 0/1/2/3 per SAP with completion percentage
+- 🔧 **4 Gap Types** - Installation, Integration, Quality, Optimization
+- 📊 **Data Models** - EvaluationResult, Gap, Action, AdoptionRoadmap
+- 🔧 **Troubleshooting** - 5 common problems (generic actions, low ROI, evaluation failures)
+
+**This CLAUDE.md provides**: Claude Code-specific workflows using Bash (evaluation), Read (reports), Edit (ledgers).
+
+---
+
 ## Quick Start for Claude
 
 This file provides **Claude Code-specific patterns** for self-evaluating SAP adoption using Claude's tool suite (Bash, Read, Edit, Write).
