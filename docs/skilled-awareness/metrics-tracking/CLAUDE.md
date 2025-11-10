@@ -7,6 +7,21 @@
 
 ---
 
+## 📖 Quick Reference
+
+**New to SAP-013?** → Read **[README.md](README.md)** first (5-min read)
+
+The README provides:
+- 🚀 **Quick Start** - Interactive and programmatic tracking examples
+- 📚 **ClaudeROICalculator API** - Python dataclasses and methods
+- 🎯 **4 Metric Categories** - Quality, Velocity, Process, Adoption with targets
+- 📊 **CLI Commands** - All justfile recipes with examples
+- 🔧 **Troubleshooting** - 3 common problems with solutions
+
+**This CLAUDE.md provides**: Claude Code tool integration patterns (Bash for metrics commands, Read for reports, Write for custom tracking).
+
+---
+
 ## Progressive Context Loading
 
 ```yaml
