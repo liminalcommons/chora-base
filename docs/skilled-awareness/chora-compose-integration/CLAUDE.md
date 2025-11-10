@@ -24,6 +24,21 @@ phase_3_token_estimate: 9000
 
 ---
 
+## 📖 Quick Reference
+
+**New to SAP-017?** → Read **[README.md](README.md)** first (5-min read)
+
+The README provides:
+- 🚀 **Quick Start** - Interactive modality selector script + quick starts for all 4 modalities
+- 📚 **4 Modalities** - pip, MCP, CLI, Docker with <30 min time-to-first-success
+- 🎯 **Decision Trees** - Role, use case, and team size-based modality selection
+- 📊 **4 Role-Based Workflows** - Complete paths for developer, AI agent, team lead, DevOps
+- 🔧 **Troubleshooting** - Import errors, MCP loading, selector issues
+
+**This CLAUDE.md provides**: Claude Code-specific workflows using Bash (install/Docker), Write (configs), Read (verification).
+
+---
+
 ## Quick Start for Claude
 
 This file provides **Claude Code-specific patterns** for integrating chora-compose.
