@@ -1,3 +1,19 @@
+## 📖 Quick Reference
+
+**New to SAP-027?** → Read **[README.md](README.md)** first (13-min read)
+
+The README provides:
+- 🚀 **Quick Start** - 3-minute overview (pre-pilot discovery, research, build, validate, decide, formalize)
+- 📚 **6-Week Methodology** - Research (Week 0) → Build (Weeks 1-3) → Validate (Week 4) → Decide/Formalize (Weeks 4-5)
+- 🎯 **GO/NO-GO Criteria** - Time ≥5x, satisfaction ≥85%, bugs = 0, adoption ≥2 (data-driven decisions)
+- 🔧 **Evidence-Based Research** - ≥30% Level A citations (standards, peer-reviewed papers)
+- 📊 **ROI Analysis** - Break-even calculation (hours invested vs hours saved)
+- 🔗 **Integration** - Works with SAP-010 (Memory), SAP-001 (Inbox), SAP-013 (Metrics)
+
+This AGENTS.md provides: Agent-specific dogfooding workflows, pilot tracking, and troubleshooting for AI coding assistants.
+
+---
+
 # Dogfooding Patterns (SAP-027) - Agent Awareness
 
 **SAP ID**: SAP-027
