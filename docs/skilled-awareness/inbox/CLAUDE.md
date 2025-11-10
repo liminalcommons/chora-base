@@ -28,6 +28,10 @@ phase_3_token_estimate: 9500
 
 This file provides **Claude Code-specific patterns** for using the inbox coordination system.
 
+**📖 New to SAP-001?** → Read **[README.md](README.md)** first (5-min read) for complete CLI reference, integration patterns, and troubleshooting.
+
+**This CLAUDE.md provides**: Claude Code tool integration patterns (Read for status, Bash for commands, Edit for updates).
+
 ### First-Time Session
 
 1. Read [AGENTS.md](AGENTS.md) for generic inbox patterns
