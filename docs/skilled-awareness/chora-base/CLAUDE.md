@@ -28,6 +28,14 @@ phase_3_optimization:
 
 ---
 
+## 📖 Quick Reference
+
+**New to SAP-002?** → Read **[README.md](README.md)** first (10-min read) for architecture overview, SAP categories, and meta-capability demonstration.
+
+**This CLAUDE.md provides**: Claude Code-specific tool patterns (Read, Write, Edit, Bash) for scaffolding projects, adopting SAPs, and navigating the chora-base ecosystem.
+
+---
+
 ## 1. Claude Code Tool Patterns
 
 ### Primary Tools for chora-base Operations
