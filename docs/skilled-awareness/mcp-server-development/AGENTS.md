@@ -7,6 +7,21 @@
 
 ---
 
+## 📖 Quick Reference
+
+**New to SAP-014?** → Read **[README.md](README.md)** first (5-min read)
+
+The README provides:
+- 🚀 **Quick Start** - 6-step MCP development workflow (create → implement → test → configure → restart → use)
+- 📚 **MCP Core Concepts** - Tools (functions), Resources (data), Prompts (templates)
+- 🎯 **Chora MCP Conventions v1.0** - namespace:tool_name pattern, namespace://type/id URIs
+- 🔧 **CLI Commands** - create-mcp-server, mcp-validate-namespace, mcp-claude-config, mcp-test
+- 📝 **Troubleshooting** - 4 common problems (server not loading, parameter validation, namespace validation, resource URIs)
+
+**This AGENTS.md provides**: Agent-specific patterns for MCP server development, tool/resource implementation, and client integration.
+
+---
+
 ## Progressive Context Loading
 
 ```yaml

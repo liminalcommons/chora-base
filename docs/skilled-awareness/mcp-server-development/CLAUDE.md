@@ -7,6 +7,21 @@
 
 ---
 
+## 📖 Quick Reference
+
+**New to SAP-014?** → Read **[README.md](README.md)** first (5-min read)
+
+The README provides:
+- 🚀 **Quick Start** - Complete MCP workflow (1-2 min fast-setup → implement → test → Claude Desktop)
+- 📚 **MCP Core Concepts** - Tools, Resources, Prompts with code examples
+- 🎯 **Chora MCP Conventions v1.0** - Namespace validation rules and URI patterns
+- 🔧 **CLI Commands** - create-mcp-server, mcp-claude-config, mcp-test
+- 📝 **Troubleshooting** - Server loading, parameter validation, namespace validation
+
+**This CLAUDE.md provides**: Claude Code-specific workflows using Bash (mcp commands), Write/Edit (implement tools), Read (test logs).
+
+---
+
 ## Progressive Context Loading
 
 ```yaml
