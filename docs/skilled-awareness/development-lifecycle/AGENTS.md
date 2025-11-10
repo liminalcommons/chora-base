@@ -17,6 +17,21 @@ This is the domain-specific AGENTS.md file for the development lifecycle (SAP-01
 
 ---
 
+## 📖 Quick Reference
+
+**New to SAP-012?** → Read **[README.md](README.md)** first (5-min read)
+
+The README provides:
+- 🚀 **Quick Start** - 6 commands for Documentation-First → BDD → TDD workflow
+- 📚 **8 Phases** - Vision → Planning → Requirements → Development → Testing → Review → Release → Monitoring
+- 🎯 **40-80% Defect Reduction** - Research-backed from BDD + TDD integration
+- 📝 **L3 Documentation-First** - How-to guides → Extracted BDD → TDD implementation
+- 🔧 **Troubleshooting** - 4 common problems (BDD failures, slow TDD, quality gates)
+
+**This AGENTS.md provides**: Agent-specific patterns for lifecycle workflows, user signal recognition, and phase-by-phase guidance.
+
+---
+
 ## User Signal Patterns
 
 ### Workflow Operations

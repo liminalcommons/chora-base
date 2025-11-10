@@ -24,6 +24,21 @@ phase_3_token_estimate: 11000
 
 ---
 
+## 📖 Quick Reference
+
+**New to SAP-012?** → Read **[README.md](README.md)** first (5-min read)
+
+The README provides:
+- 🚀 **Quick Start** - Complete workflow from planning to release
+- 📚 **8 Phases** - Complete lifecycle with commands and durations
+- 🎯 **L3 Documentation-First** - How-to guides → BDD → TDD workflow
+- 📝 **LIGHT+ Planning** - 4 planning constructs for different work types
+- 🔧 **Troubleshooting** - Common issues with BDD/TDD cycles
+
+**This CLAUDE.md provides**: Claude Code tool integration (Read, Edit, Bash, Write) for 8-phase lifecycle implementation.
+
+---
+
 ## Quick Start for Claude
 
 This file provides **Claude Code-specific patterns** for the 8-phase development lifecycle (DDD→BDD→TDD).
