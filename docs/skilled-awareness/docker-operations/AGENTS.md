@@ -25,6 +25,21 @@ phase_3_token_estimate: 10000
 
 ---
 
+## 📖 Quick Reference
+
+**New to SAP-011?** → Read **[README.md](README.md)** first (5-min read)
+
+The README provides:
+- 🚀 **Quick Start** - 5 commands to build and deploy in 2 minutes
+- 📚 **5 Docker Artifacts** - Dockerfile, Dockerfile.test, docker-compose.yml, .dockerignore, best practices
+- 🎯 **Multi-Stage Builds** - 40% smaller images (150-250MB vs 500MB+)
+- ⚡ **6x Faster CI** - Layer caching optimization patterns
+- 🔧 **Troubleshooting** - Common problems and solutions
+
+**This AGENTS.md provides**: Agent-specific patterns for Docker workflows, CI/CD integration, and container debugging.
+
+---
+
 ## Overview
 
 Use Docker Operations SAP when containerizing projects for production deployment, CI/CD testing, or multi-architecture builds. This SAP provides multi-stage Dockerfiles (150-250MB images), CI-optimized test environments (6x faster with cache), and docker-compose orchestration.
