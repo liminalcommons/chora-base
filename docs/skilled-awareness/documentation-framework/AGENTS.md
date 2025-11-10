@@ -42,6 +42,20 @@ phase_3_deep_dive:
 
 ---
 
+## 📖 Quick Reference
+
+**New to SAP-007?** → Read **[README.md](README.md)** first (8-min read)
+
+The README provides:
+- 📚 **4 Document Types** - Tutorial, How-To, Reference, Explanation (Diátaxis framework)
+- 🚀 **4 CLI Commands** - doc-structure, extract-doc-tests, doc-completeness, doc-to-bdd
+- 🎓 **Decision Matrix** - When to use each document type
+- 🔧 **Troubleshooting** - 3 common documentation problems
+
+**This AGENTS.md provides**: Agent-executable workflows for organizing docs, extracting tests, and Documentation-First development.
+
+---
+
 ## 1. Quick Start for Agents
 
 ### What is Documentation Framework? (60-second overview)
