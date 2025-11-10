@@ -6,21 +6,19 @@
 
 ---
 
-## Quick Start for Claude
+## 📖 Quick Reference
 
-This file provides **Claude Code-specific patterns** for setting up secure PyPI publishing.
+**New to SAP-028?** → Read **[README.md](README.md)** first (12-min read)
 
-### First-Time Publishing Setup
+The README provides:
+- 🚀 **Quick Start** - 3-minute overview (OIDC vs token vs manual publishing)
+- 📚 **OIDC Trusted Publishing** - Eliminates API tokens, 95%+ credential theft risk reduction
+- 🎯 **GitHub Actions Integration** - Tag-based releases (v1.0.0 → automatic publish)
+- 🔧 **PEP 740 Attestations** - Build provenance for supply chain security
+- 📊 **Migration Protocol** - Token → OIDC migration (10-minute process)
+- 🔗 **Integration** - Works with SAP-003 (Bootstrap), SAP-005 (CI/CD), SAP-008 (Automation)
 
-1. Read [AGENTS.md](AGENTS.md) for generic publishing workflows
-2. Use this file for Claude Code tool integration (Edit, Bash for gh commands)
-3. Follow 4-step process: Configure PyPI publisher → Add workflow → Create release → Verify
-
-### Session Resumption
-
-- Check .github/workflows/release.yml for current publishing method
-- Use Bash tool for gh commands (release creation, secret management)
-- Use Edit tool to update workflow files (pypi_auth_method configuration)
+This CLAUDE.md provides: Claude Code tool integration for publishing automation (Bash, Edit, Write), OIDC setup workflows, and troubleshooting.
 
 ---
 

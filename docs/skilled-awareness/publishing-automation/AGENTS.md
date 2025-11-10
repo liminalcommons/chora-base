@@ -7,31 +7,19 @@
 
 ---
 
-## Quick Reference
+## 📖 Quick Reference
 
-### What is Publishing Automation?
+**New to SAP-028?** → Read **[README.md](README.md)** first (12-min read)
 
-**Publishing Automation** = Secure PyPI publishing using OIDC trusted publishing (zero secrets) as default for Python projects
+The README provides:
+- 🚀 **Quick Start** - 3-minute overview (OIDC vs token vs manual publishing)
+- 📚 **OIDC Trusted Publishing** - Eliminates API tokens, 95%+ credential theft risk reduction
+- 🎯 **GitHub Actions Integration** - Tag-based releases (v1.0.0 → automatic publish)
+- 🔧 **PEP 740 Attestations** - Build provenance for supply chain security
+- 📊 **Migration Protocol** - Token → OIDC migration (10-minute process)
+- 🔗 **Integration** - Works with SAP-003 (Bootstrap), SAP-005 (CI/CD), SAP-008 (Automation)
 
-SAP-028 provides:
-- OIDC trusted publishing configuration (GitHub Actions → PyPI, zero secrets)
-- Token-based publishing fallback (backward compatibility with PYPI_API_TOKEN)
-- PEP 740 attestations (build provenance for supply chain security)
-- GitHub Actions release workflow template (.github/workflows/release.yml)
-- Migration guide (token → trusted publishing upgrade path)
-
-### When to Use Publishing Automation
-
-✅ **Use SAP-028 for**:
-- New Python projects that need PyPI publishing (security-first default)
-- Migrating existing projects from token-based to OIDC trusted publishing
-- Ensuring supply chain security with PEP 740 attestations
-- Eliminating secret management overhead (no token rotation)
-
-❌ **Don't use for**:
-- Non-Python projects (SAP-028 is PyPI-specific)
-- Projects that can't use GitHub Actions (requires GitHub → PyPI OIDC trust)
-- Projects requiring alternative package registries (e.g., private PyPI mirrors without OIDC)
+This AGENTS.md provides: Agent-specific publishing workflows, automation patterns, and troubleshooting for AI coding assistants.
 
 ---
 
