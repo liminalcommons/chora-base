@@ -31,7 +31,22 @@ tags:
 
 ---
 
-## Quick Reference
+## 📖 Quick Reference
+
+**New to SAP-015?** → Read **[README.md](README.md)** first (5-min read)
+
+The README provides:
+- 🚀 **Quick Start** - 6 core commands (init, create, ready, update, close, list)
+- 📚 **Workflow Patterns** - Session startup, multi-session work, dependency management, multi-agent coordination
+- 🎯 **12+ CLI Commands** - Complete `bd` command reference with JSON output
+- 🔗 **Integration Patterns** - Cross-SAP workflows (SAP-001, SAP-010, SAP-012, SAP-013)
+- 🔧 **Troubleshooting** - 4 common problems (no .beads/, no ready work, sync issues, ID collisions)
+
+**This AGENTS.md provides**: Agent-specific patterns for beads workflows, ready-work detection, and multi-agent coordination.
+
+---
+
+## Detailed Quick Reference
 
 ### What is Agent Task Tracking?
 

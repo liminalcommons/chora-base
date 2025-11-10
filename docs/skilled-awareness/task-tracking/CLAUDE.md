@@ -6,6 +6,21 @@
 
 ---
 
+## 📖 Quick Reference
+
+**New to SAP-015?** → Read **[README.md](README.md)** first (5-min read)
+
+The README provides:
+- 🚀 **Quick Start** - 6-command workflow (init → create → ready → update → close → list)
+- 📚 **Core Commands** - Complete `bd` CLI reference with JSON output examples
+- 🎯 **4 Workflow Patterns** - Session startup, multi-session work, dependencies, multi-agent coordination
+- 🔗 **Integration Patterns** - Cross-SAP workflows with examples
+- 🔧 **Troubleshooting** - 4 common problems with solutions
+
+**This CLAUDE.md provides**: Claude Code tool integration patterns (Bash for `bd` commands, Read for task details, JSON parsing).
+
+---
+
 ## Quick Start for Claude
 
 This file provides **Claude Code-specific patterns** for beads task tracking.
