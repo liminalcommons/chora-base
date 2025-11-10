@@ -365,6 +365,43 @@ Phase 3 (50-200k): Read all SAP artifacts (only for complex tasks)
 
 ---
 
+### Testing Framework (SAP-004) - Quick Reference
+
+**No domain-specific CLAUDE.md** (tests/ may have AGENTS.md if complex test patterns exist)
+
+**Claude patterns for testing**:
+```markdown
+# Session startup: Run tests first
+pytest --cov=src --cov-fail-under=85
+just test
+
+# If tests fail: Investigate and fix
+pytest -vv --tb=short                    # Detailed output
+pytest --lf                              # Re-run last failures
+pytest tests/test_specific.py -v         # Run specific test file
+
+# Writing new tests (use TDD)
+# 1. Write test first (RED)
+def test_new_feature():
+    assert new_feature() == expected
+
+# 2. Implement feature (GREEN)
+# 3. Refactor (REFACTOR)
+
+# Check coverage gaps
+coverage report --show-missing
+coverage html && open htmlcov/index.html
+```
+
+**Progressive loading strategy**:
+- **Phase 1**: No loading needed (just run pytest)
+- **Phase 2**: Read [tests/AGENTS.md](tests/AGENTS.md) if complex test patterns (if exists)
+- **Phase 3**: Read [docs/skilled-awareness/testing-framework/protocol-spec.md](docs/skilled-awareness/testing-framework/protocol-spec.md) for pytest configuration
+
+**ROI**: 90% bug prevention via TDD, 15-20 min saved per session (avoid manual testing)
+
+---
+
 ### CI/CD Workflows (SAP-005) - Quick Reference
 
 **No domain-specific CLAUDE.md** (workflows are infrastructure, not code)

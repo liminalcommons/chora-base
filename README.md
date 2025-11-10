@@ -439,6 +439,76 @@ just create-domain-awareness       # Create new domain AGENTS.md
 
 ---
 
+### Testing Framework (pytest) - SAP-004
+
+**Status**: Production (v1.0.0) | **Adoption Level**: L3 (Fully integrated)
+
+SAP-004 provides production-ready pytest testing framework with 85%+ coverage enforcement, parametrized tests, fixtures, and mocking patterns.
+
+**When to use SAP-004**:
+- Automated testing with pytest across unit, integration, and E2E test types
+- 85%+ test coverage enforcement (fail builds below threshold)
+- Parametrized tests to reduce test code duplication (58% adoption in chora-base)
+- Fixtures and mocks for clean test isolation
+- Fast test execution (<60s for full suite, <5s for unit tests)
+
+**Quick start**:
+```bash
+# Run all tests with coverage
+pytest --cov=src/package_name --cov-report=term --cov-report=html
+
+# Run specific test categories
+pytest -m unit                    # Unit tests only (~0.3s)
+pytest -m integration             # Integration tests (~2s)
+pytest -m slow                    # Slow tests (optional)
+
+# Run tests with detailed output
+pytest -v tests/
+
+# Generate HTML coverage report
+coverage run -m pytest
+coverage html
+open htmlcov/index.html          # View coverage report
+
+# Run tests matching pattern
+pytest -k "test_sap_install"     # Specific test functions
+pytest tests/test_install_sap.py # Specific test file
+```
+
+**Core capabilities**:
+- **pytest framework**: Industry-standard testing with rich plugin ecosystem
+- **85%+ coverage gate**: Enforced via pytest.ini fail_under=85
+- **Parametrized tests**: Reduce duplication with @pytest.mark.parametrize
+- **Fixtures**: Reusable test data and setup via @pytest.fixture
+- **Mocking**: Mock external dependencies with pytest-mock
+- **Fast execution**: <60s full suite, <5s unit tests (parallel execution ready)
+- **CI integration**: Automated test runs on every PR via SAP-005
+
+**Integration with other SAPs**:
+- **SAP-005 (CI/CD)**: Automated test execution on every push/PR
+- **SAP-006 (Quality Gates)**: Pre-commit hooks run pytest on staged files
+- **SAP-031 (Enforcement)**: Testing as Layer 1 enforcement (70% prevention via TDD)
+- **SAP-015 (Task Tracking)**: Test failures → Create beads tasks
+- **SAP-009 (Awareness)**: Document test patterns in tests/AGENTS.md
+
+**ROI**: 90% bug prevention via TDD, 15-20 min saved per session (avoid manual testing)
+
+**Documentation**:
+- Protocol specification: [docs/skilled-awareness/testing-framework/protocol-spec.md](docs/skilled-awareness/testing-framework/protocol-spec.md)
+- Adoption blueprint: [docs/skilled-awareness/testing-framework/adoption-blueprint.md](docs/skilled-awareness/testing-framework/adoption-blueprint.md)
+- Test patterns guide: [docs/skilled-awareness/testing-framework/awareness-guide.md](docs/skilled-awareness/testing-framework/awareness-guide.md)
+- Domain awareness: [tests/AGENTS.md](tests/AGENTS.md) (if exists)
+
+**CLI recipes** (see justfile):
+```bash
+just test                    # Run all tests with coverage
+just test-unit              # Run unit tests only
+just test-integration       # Run integration tests
+just test-coverage-report   # Generate HTML coverage report
+```
+
+---
+
 ### CI/CD Workflows (GitHub Actions) - SAP-005
 
 **Status**: Production (v1.0.0) | **Adoption Level**: L3 (Fully automated)

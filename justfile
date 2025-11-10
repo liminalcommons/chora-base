@@ -97,6 +97,42 @@ research topic:
     @mkdir -p docs/research
 
 # ============================================================================
+# SAP-004: Testing Framework (pytest)
+# ============================================================================
+# Automated testing with pytest, 85%+ coverage, parametrized tests, fixtures.
+# See: AGENTS.md "Test Quality Metrics - SAP-004" section, tests/AGENTS.md
+
+# Run all tests with coverage
+# Example: just test
+test:
+    @pytest --cov=src --cov-report=term --cov-report=html --cov-fail-under=85
+
+# Run unit tests only (fast, <5s)
+# Example: just test-unit
+test-unit:
+    @pytest -m unit -v
+
+# Run integration tests only
+# Example: just test-integration
+test-integration:
+    @pytest -m integration -v
+
+# Run specific test file or pattern
+# Example: just test-file tests/test_install_sap.py
+test-file FILE:
+    @pytest {{FILE}} -v
+
+# Generate HTML coverage report
+# Example: just test-coverage-report
+test-coverage-report:
+    @coverage run -m pytest && coverage html && echo "✅ Coverage report: htmlcov/index.html"
+
+# Run tests with detailed output
+# Example: just test-verbose
+test-verbose:
+    @pytest -vv --tb=short
+
+# ============================================================================
 # SAP-005: CI/CD Workflows (GitHub Actions)
 # ============================================================================
 # Automated testing, linting, security, and release workflows.
