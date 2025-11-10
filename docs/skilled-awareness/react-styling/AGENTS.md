@@ -16,6 +16,22 @@ phase_2_token_estimate: 8000
 phase_3_token_estimate: 12000
 ---
 
+## 📖 Quick Reference
+
+**New to SAP-024?** → Read **[README.md](README.md)** first (12-min read)
+
+The README provides:
+- 🚀 **Quick Start** - 4-minute setup (Tailwind v4 + shadcn/ui + CVA installation)
+- 📚 **Tailwind CSS v4** - 5x faster builds, CSS-first @theme config, OKLCH colors
+- 🎯 **shadcn/ui** - Copy-paste component library (no npm install needed)
+- 🔧 **CVA Patterns** - Type-safe component variants with TypeScript inference
+- 🌙 **Dark Mode** - next-themes implementation with SSR support
+- 🔗 **Integration** - Works with SAP-020 (Next.js 15), SAP-026 (Accessibility)
+
+This AGENTS.md provides: Agent-specific styling workflows, automation patterns, and troubleshooting for AI coding assistants.
+
+---
+
 # React Styling Architecture (SAP-024) - Agent Awareness
 
 **SAP ID**: SAP-024
