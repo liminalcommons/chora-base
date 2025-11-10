@@ -24,6 +24,22 @@ phase_3_token_estimate: 9500
 
 ---
 
+## 📖 Quick Reference
+
+**New to SAP-021?** → Read **[README.md](README.md)** first (10-min read)
+
+The README provides:
+- 🚀 **Quick Start** - 3-minute setup (Vitest + RTL + MSW installation)
+- 📚 **Vitest 4.0 Performance** - 4x faster than Jest, native ESM/TypeScript
+- 🎯 **React Testing Library** - Accessible queries, user event simulation, async testing
+- 🔧 **MSW v2 API Mocking** - Network-level mocking with http handlers
+- 📊 **Coverage Thresholds** - 80% lines/functions, 75% branches with v8 provider
+- 🔧 **Troubleshooting** - 5 common problems (jsdom, jest-dom, roles, async, coverage)
+
+**This CLAUDE.md provides**: Claude Code-specific workflows using Bash (testing), Write (test files), Read (verification).
+
+---
+
 ## Quick Start for Claude
 
 This file provides **Claude Code-specific patterns** for React testing with Vitest and React Testing Library.
