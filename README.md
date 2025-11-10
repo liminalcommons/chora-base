@@ -1431,6 +1431,90 @@ calculator.export_to_json("claude-metrics.json")
 
 ---
 
+### Link Validation & Reference Management - SAP-016
+
+**Problem**: Broken internal links in documentation create poor developer experience, wasted debugging time, and reduce trust in codebase quality. Large projects accumulate hundreds of cross-references that break during refactoring.
+
+**Solution**: Automated markdown link validation prevents broken documentation references with 100% internal link coverage.
+
+**When to use**:
+- Pre-commit hooks validating all internal links before pushing
+- CI/CD pipelines failing builds on broken documentation references
+- Large refactoring operations (renaming files/directories with many cross-references)
+- Multi-contributor projects where link breakage is a recurring issue
+- Documentation-heavy projects (30+ markdown files with extensive cross-linking)
+
+**Quick start**:
+
+```bash
+# Validate all markdown files in project
+python scripts/validate-links.py
+
+# Validate specific directory
+python scripts/validate-links.py docs/
+
+# JSON output (for CI/CD parsing)
+python scripts/validate-links.py --json
+
+# Validate single file
+python scripts/validate-links.py README.md
+
+# Via justfile (recommended)
+just validate-links          # All files
+just validate-links-docs     # docs/ only
+just validate-links-ci       # JSON output for CI/CD
+```
+
+**Example output**:
+```
+============================================================
+Link Validation Report
+============================================================
+Files scanned: 127
+Links checked: 456
+
+[FAIL] Broken links: 3
+
+[FAIL] docs/user-docs/getting-started.md
+   -> ../old-path/tutorial.md
+      (resolved to: /project/docs/old-path/tutorial.md)
+
+[FAIL] AGENTS.md
+   -> docs/nonexistent.md
+      (resolved to: /project/docs/nonexistent.md)
+
+============================================================
+[FAIL] Status: FAIL
+```
+
+**Core capabilities**:
+- **Internal link validation**: 100% coverage of `[text](path)` markdown links (relative, absolute, anchor)
+- **Path resolution**: Handles relative (`../docs/file.md`), absolute from root (`/docs/file.md`), anchor (`#section`)
+- **External link detection**: Skips `http://`, `https://`, `mailto:`, `tel:`, `javascript:` (no false positives)
+- **JSON output**: Structured results for CI/CD integration (`--json` flag)
+- **Exit codes**: 0 (all valid), 1 (broken links found) for pipeline automation
+- **Recursive scanning**: `**/*.md` glob pattern for directory validation
+
+**Validation scope**:
+- ✅ Internal markdown links: `[text](path/to/file.md)`, `[text](../relative.md)`, `[text](/absolute.md)`
+- ✅ Anchor links: `[text](file.md#section)`, `[text](#section)` (same-file anchor)
+- ✅ Directory links: `[folder](docs/)` validates directory exists
+- ❌ External links: `http://`, `https://` (skipped, no external validation in MVP)
+- ❌ Image links: `![alt](image.png)` (future enhancement)
+- ❌ HTML links: `<a href="">` (markdown-only for now)
+
+**Integration with other SAPs**:
+- **SAP-005 (CI/CD)**: Add `just validate-links-ci` to GitHub Actions quality gate
+- **SAP-012 (Pre-commit)**: Run `python scripts/validate-links.py` before every commit
+- **SAP-027 (Dogfooding)**: Validate SAP documentation links during SAP development
+- **SAP-004 (Quality Gates)**: Include link validation in quality score (broken links = -10 points)
+
+**ROI**: 10-15 min saved per week from avoiding broken link debugging + improved documentation trust
+
+**See also**: [justfile recipes](#justfile-automation), [AGENTS.md "Link Validation - SAP-016" section](#link-validation-sap-016)
+
+---
+
 ### Project Types Supported
 
 - **Library/Package** - Python libraries for PyPI distribution

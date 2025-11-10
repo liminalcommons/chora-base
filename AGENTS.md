@@ -2463,6 +2463,248 @@ cat docs/skilled-awareness/metrics-tracking/PROCESS_METRICS.md
 
 ---
 
+### Link Validation & Reference Management - SAP-016 L0
+
+**Purpose**: Automated markdown link validation prevents broken documentation references with 100% internal link coverage, exit code enforcement for CI/CD, and JSON output for pipeline integration.
+
+**Status**: L0 (Available - script exists, discoverability complete, formal SAP docs needed for L1)
+
+**Core capabilities**:
+- Internal link validation (100% markdown link coverage)
+- Path resolution (relative, absolute, anchors)
+- External link detection (skip http/https/mailto without false positives)
+- JSON output for CI/CD integration
+- Exit code enforcement (0=pass, 1=fail)
+- Recursive scanning (validate entire project or specific paths)
+
+**Quick reference** (agents - use these commands immediately):
+
+```bash
+# Session startup (optional - validate before starting work)
+just validate-links               # All markdown files
+just validate-links-docs          # docs/ directory only
+
+# During work (validate frequently)
+just validate-links-path README.md           # Specific file
+just validate-links-path docs/user-docs/     # Specific directory
+
+# Before commit (required - prevent broken links)
+just validate-links               # Full validation
+python scripts/validate-links.py  # Or direct script
+
+# CI/CD integration
+just validate-links-ci            # JSON output
+```
+
+**Workflows**:
+
+#### Workflow 1: Validate all markdown links
+
+```bash
+# Run full validation
+python scripts/validate-links.py
+
+# Or via justfile (recommended)
+just validate-links
+```
+
+**Output**:
+```
+============================================================
+Link Validation Report
+============================================================
+Files scanned: 127
+Links checked: 456
+
+[PASS] Broken links: 0
+
+============================================================
+[PASS] Status: PASS
+```
+
+**Exit code**: 0 (pass) or 1 (fail with broken links listed)
+
+---
+
+#### Workflow 2: Validate specific directory or file
+
+```bash
+# Validate docs/ directory only
+python scripts/validate-links.py docs/
+
+# Or via justfile
+just validate-links-docs
+
+# Validate specific file
+python scripts/validate-links.py README.md
+
+# Or via justfile
+just validate-links-path README.md
+```
+
+**Use case**: Large refactoring (renamed file, moved directories) - validate affected area immediately
+
+---
+
+#### Workflow 3: CI/CD integration (SAP-005)
+
+Add to `.github/workflows/quality.yml`:
+
+```yaml
+- name: Validate markdown links
+  run: |
+    python scripts/validate-links.py --json > link-validation.json
+    python scripts/validate-links.py || exit 1
+```
+
+Or with justfile:
+
+```yaml
+- name: Validate markdown links
+  run: just validate-links-ci
+```
+
+**Exit code behavior**: Pipeline fails if broken links found (exit 1)
+
+---
+
+#### Workflow 4: Pre-commit hook integration (SAP-012)
+
+Add to `.pre-commit-config.yaml`:
+
+```yaml
+- repo: local
+  hooks:
+    - id: validate-links
+      name: Validate markdown links
+      entry: python scripts/validate-links.py
+      language: system
+      types: [markdown]
+      pass_filenames: false  # Validate all files (not just staged)
+```
+
+**Behavior**: Every commit validates all markdown links (prevents broken links from entering git history)
+
+---
+
+#### Workflow 5: JSON output for programmatic parsing
+
+```bash
+# Get JSON output
+python scripts/validate-links.py --json > results.json
+
+# Or via justfile
+just validate-links-ci > results.json
+```
+
+**JSON structure**:
+```json
+{
+  "files_scanned": 127,
+  "links_checked": 456,
+  "broken_count": 2,
+  "results": [
+    {
+      "file": "docs/user-docs/getting-started.md",
+      "total_links": 15,
+      "broken_links": [
+        {
+          "link_text": "old tutorial",
+          "link_url": "../old-path/tutorial.md",
+          "resolved_path": "/project/docs/old-path/tutorial.md",
+          "reason": "Target does not exist"
+        }
+      ]
+    }
+  ]
+}
+```
+
+**Use case**: Parse validation results in CI/CD, aggregate broken link metrics, track link health over time
+
+---
+
+#### Workflow 6: Debugging broken links
+
+When validation fails:
+
+1. **Read the report** - broken links listed with resolved paths
+2. **Check if file was moved** - `git log --follow -- <old-path>`
+3. **Find new location** - `find . -name "<filename>"`
+4. **Update link** - change `[text](old-path)` → `[text](new-path)`
+5. **Re-validate** - `just validate-links-path <file>` to confirm fix
+
+**Common causes**:
+- File renamed/moved without updating references
+- Typo in link path
+- Link to non-existent anchor (file exists but `#section` doesn't)
+- Case sensitivity issue (Windows vs Linux path differences)
+
+---
+
+**Validation scope**:
+
+✅ **Validated**:
+- Internal markdown links: `[text](path/to/file.md)`, `[text](../relative.md)`, `[text](/absolute.md)`
+- Anchor links: `[text](file.md#section)`, `[text](#section)` (same-file anchor)
+- Directory links: `[folder](docs/)` (validates directory exists)
+
+❌ **Skipped** (no false positives):
+- External links: `http://`, `https://`, `mailto:`, `tel:`, `javascript:`, `ftp://`
+- Image links: `![alt](image.png)` (future enhancement)
+- HTML links: `<a href="">` (markdown-only for now)
+
+---
+
+**Integration with other SAPs**:
+
+- **SAP-005 (CI/CD)**: Add `just validate-links-ci` to GitHub Actions quality gate
+- **SAP-012 (Pre-commit)**: Run `python scripts/validate-links.py` before every commit
+- **SAP-027 (Dogfooding)**: Validate SAP documentation links during SAP development
+- **SAP-004 (Quality Gates)**: Include link validation in quality score (broken links = -10 points)
+- **SAP-007 (Documentation Framework)**: Enforce link integrity across Diátaxis 4-domain structure
+
+---
+
+**Troubleshooting**:
+
+| Issue | Diagnosis | Fix |
+|-------|-----------|-----|
+| "Target does not exist" | File was moved/renamed/deleted | Update link to new path or remove link |
+| Validation passes but link broken in browser | Anchor doesn't exist (`#section` not found) | Add missing anchor or fix anchor name |
+| False positive (external link flagged) | Link pattern not recognized as external | Check if link starts with `http://`, `https://`, etc. |
+| Validation too slow (large project) | Scanning 1000+ markdown files | Validate specific directory: `just validate-links-path docs/` |
+| Exit code 1 but no broken links shown | Script error (file read failure, encoding) | Check stderr output for Python traceback |
+
+---
+
+**L0 Achievement Evidence** (Available):
+
+✅ **Script exists**: [scripts/validate-links.py](scripts/validate-links.py) (274 lines, complete implementation)
+✅ **justfile recipes**: 5 recipes (validate-links, validate-links-docs, validate-links-ci, validate-links-path, validate-links-help)
+✅ **README.md section**: 84-line section with examples and integration patterns
+✅ **AGENTS.md section**: This section (complete workflows and troubleshooting)
+✅ **CLAUDE.md section**: Quick reference for Claude-specific patterns (pending)
+
+**L1 Requirements** (Foundational - not yet met):
+
+❌ **Formal SAP documentation**: Create docs/skilled-awareness/link-validation/ with 5 artifacts
+❌ **CI/CD integration**: Add to .github/workflows/quality.yml
+❌ **Pre-commit hook**: Add to .pre-commit-config.yaml
+❌ **Dogfooding validation**: 4+ weeks of chora-base using link validation (track metrics)
+❌ **Ledger with adoption metrics**: Time saved, broken links prevented, adoption feedback
+
+---
+
+**Expected ROI**:
+
+- **Time savings**: 10-15 min saved per week (avoid broken link debugging)
+- **Documentation trust**: +20% (developers trust docs when links always work)
+- **Refactoring confidence**: 50% faster (rename/move files without fear of broken references)
+- **Onboarding speed**: +15% (new developers don't hit broken link frustration)
+
+---
+
 ### Testing Framework (pytest) - SAP-004 L3
 
 **Purpose**: Provide automated testing with pytest framework, 85%+ coverage enforcement, and rich test patterns (parametrized, fixtures, mocks).

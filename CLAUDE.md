@@ -907,6 +907,114 @@ just generate-claude-report claude-metrics.json
 
 ---
 
+### Link Validation & Reference Management (SAP-016) - Quick Reference
+
+**When to use**: User asks to "validate links", "check documentation", or after large refactoring (file renames/moves)
+
+**Quick reference** (5 options for Claude):
+
+```bash
+# 1. Validate all markdown files (most common)
+just validate-links
+# Output: Report with files scanned, links checked, broken count
+
+# 2. Validate specific directory
+just validate-links-docs                    # docs/ only
+just validate-links-path docs/user-docs/    # Specific subdirectory
+
+# 3. Validate specific file
+just validate-links-path README.md
+just validate-links-path AGENTS.md
+
+# 4. JSON output (for CI/CD or programmatic parsing)
+just validate-links-ci
+
+# 5. Show help (capabilities and usage)
+just validate-links-help
+```
+
+**Progressive loading**:
+- **Phase 1** (Quick): Read AGENTS.md "Link Validation - SAP-016" section (241 lines, 6 workflows)
+- **Phase 2** (Implementation): Read [scripts/validate-links.py](scripts/validate-links.py) source code (274 lines)
+- **Phase 3** (Deep understanding): No formal SAP docs yet (L0 status)
+
+**Common Claude Code workflows**:
+
+#### Example 1: User asks "validate documentation links"
+
+```markdown
+User: "Validate all links in the documentation"
+
+Claude workflow:
+1. Run validation: just validate-links-docs
+2. Parse output: files scanned, links checked, broken count
+3. If broken links found:
+   - List each broken link with resolved path
+   - Suggest fixes (check git history, find new location)
+   - Offer to fix links automatically
+4. If all pass: Confirm "All documentation links valid (X files, Y links checked)"
+```
+
+**Expected output**:
+```
+🔗 SAP-016: Validating documentation links (docs/)...
+============================================================
+Link Validation Report
+============================================================
+Files scanned: 87
+Links checked: 342
+
+[PASS] Broken links: 0
+
+============================================================
+[PASS] Status: PASS
+```
+
+---
+
+#### Example 2: After large refactoring
+
+```markdown
+User: "I renamed docs/old-guide.md to docs/new-guide.md, validate links"
+
+Claude workflow:
+1. Run validation: just validate-links
+2. If broken links found referencing old-guide.md:
+   - List all files with broken references
+   - Use Edit tool to fix each reference
+   - Re-run validation: just validate-links
+3. Confirm: "All links updated (X references fixed)"
+```
+
+**Common broken link pattern**:
+```
+[FAIL] docs/user-docs/getting-started.md
+   -> ../old-guide.md
+      (resolved to: /project/docs/old-guide.md)
+```
+
+**Fix**:
+```bash
+# Claude uses Edit tool
+old_string: "[guide](../old-guide.md)"
+new_string: "[guide](../new-guide.md)"
+```
+
+---
+
+**ROI for Claude sessions**:
+- **Time saved**: 5-10 min per refactoring (avoid manual link checking)
+- **Confidence**: Immediate validation after file renames/moves
+- **Quality**: Zero broken links in documentation
+
+**Integration with other SAPs**:
+- **SAP-005**: Add to CI/CD pipeline (`just validate-links-ci`)
+- **SAP-012**: Run in pre-commit hooks
+- **SAP-027**: Validate SAP documentation links
+- **SAP-007**: Enforce link integrity across Diátaxis docs
+
+---
+
 ### Testing Framework (SAP-004) - Quick Reference
 
 **No domain-specific CLAUDE.md** (tests/ may have AGENTS.md if complex test patterns exist)
