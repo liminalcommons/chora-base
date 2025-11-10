@@ -206,3 +206,49 @@ beads-search QUERY:
 # Example: just beads-stats
 beads-stats:
     @test -f .beads/issues.jsonl && echo "📊 Beads Statistics" && echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━" && echo "Total tasks: $(wc -l < .beads/issues.jsonl 2>/dev/null || echo 0)" && echo "Open: $(grep -c '"status":"open"' .beads/issues.jsonl 2>/dev/null || echo 0)" && echo "In Progress: $(grep -c '"status":"in_progress"' .beads/issues.jsonl 2>/dev/null || echo 0)" && echo "Blocked: $(grep -c '"status":"blocked"' .beads/issues.jsonl 2>/dev/null || echo 0)" && echo "Closed: $(grep -c '"status":"closed"' .beads/issues.jsonl 2>/dev/null || echo 0)" && echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━" || echo "No beads system found"
+
+# ============================================================================
+# SAP-001: Inbox Coordination Protocol
+# ============================================================================
+# Cross-repo coordination with 5 CLI tools, event logging, and formalized SLAs.
+# See: AGENTS.md "Inbox Coordination Protocol - SAP-001" section
+
+# Show inbox status (visual terminal output)
+# Example: just inbox-status
+inbox-status:
+    @python scripts/inbox-status.py 2>/dev/null || echo "Inbox protocol not installed (run: python scripts/install-inbox-protocol.py)"
+
+# Query incoming coordination requests
+# Example: just inbox-query-incoming
+inbox-query-incoming:
+    @python scripts/inbox-query.py --incoming --format summary 2>/dev/null || echo "Inbox protocol not installed"
+
+# Query outgoing coordination requests
+# Example: just inbox-query-outgoing
+inbox-query-outgoing:
+    @python scripts/inbox-query.py --outgoing --format summary 2>/dev/null || echo "Inbox protocol not installed"
+
+# Query all coordination requests (JSON output)
+# Example: just inbox-query-all
+inbox-query-all:
+    @python scripts/inbox-query.py --all --format json 2>/dev/null || echo "Inbox protocol not installed"
+
+# Generate new coordination request with AI
+# Example: just inbox-generate
+inbox-generate:
+    @python scripts/generate-coordination-request.py 2>/dev/null || echo "Inbox protocol not installed"
+
+# Respond to coordination request
+# Example: just inbox-respond COORD-123 accepted
+inbox-respond COORD_ID STATUS:
+    @python scripts/respond-to-coordination.py {{COORD_ID}} {{STATUS}} 2>/dev/null || echo "Inbox protocol not installed"
+
+# Show recent coordination events
+# Example: just inbox-events 20
+inbox-events N="20":
+    @tail -n {{N}} inbox/coordination/events.jsonl 2>/dev/null || echo "No coordination events found"
+
+# Search coordination events by keyword
+# Example: just inbox-search "SAP-001"
+inbox-search QUERY:
+    @grep -i "{{QUERY}}" inbox/coordination/*.jsonl 2>/dev/null || echo "No matching coordination items found"

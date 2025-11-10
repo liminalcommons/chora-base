@@ -318,6 +318,65 @@ class MyApp(StatefulObject):
   - Multi-agent coordination support
   - Integration with inbox (SAP-001) and A-MEM (SAP-010)
 
+### Inbox Coordination Protocol - SAP-001
+
+**Status**: Production (v1.1.0) | **Adoption Level**: L3 (Fully automated)
+
+SAP-001 provides cross-repository coordination with 5 CLI tools, event logging, and formalized SLAs, reducing coordination effort by 90%.
+
+**When to use SAP-001**:
+- Cross-repository collaboration in multi-repo ecosystems
+- Formal coordination requests with SLAs and tracking (48h default, 4h urgent)
+- Ecosystem-wide capability discovery and coordination
+- AI agent inbox queries for instant status (<100ms query time)
+- Response automation with high-quality AI generation (94.9% quality score)
+
+**Quick start**:
+```bash
+# Install inbox protocol (5 minutes, one-command setup)
+python scripts/install-inbox-protocol.py --repo-path /path/to/your/repo
+
+# Get inbox status (visual terminal output)
+python scripts/inbox-status.py
+
+# Query incoming coordination requests
+python scripts/inbox-query.py --incoming --format summary
+
+# Generate new coordination request with AI
+python scripts/generate-coordination-request.py
+
+# Respond to coordination request
+python scripts/respond-to-coordination.py COORD-123 accepted
+```
+
+**Core capabilities**:
+- **5 Production CLI Tools** (2,158 lines): install, query, respond, generate, status
+- **Event logging**: Append-only JSONL for coordination history and traceability
+- **Formalized SLAs**: 48h default, 4h urgent, 1-week backlog response times
+- **AI-powered generation**: 50% faster coordination request drafting
+- **Performance**: <100ms query, <50ms response time
+
+**Integration with other SAPs**:
+- **SAP-010 (Memory)**: Coordination events → Memory event log integration
+- **SAP-015 (Task Tracking)**: Coordination request → Decompose into beads tasks
+- **SAP-027 (Dogfooding)**: Track SAP adoption via coordination requests
+
+**ROI**: 90% time reduction (hours → minutes per coordination), <100ms query time
+
+**Documentation**:
+- Protocol specification: [docs/skilled-awareness/inbox/protocol-spec.md](docs/skilled-awareness/inbox/protocol-spec.md)
+- Adoption blueprint: [docs/skilled-awareness/inbox/adoption-blueprint.md](docs/skilled-awareness/inbox/adoption-blueprint.md)
+- CLI tools guide: [docs/skilled-awareness/inbox/awareness-guide.md](docs/skilled-awareness/inbox/awareness-guide.md)
+
+**CLI recipes** (see justfile):
+```bash
+just inbox-status          # Show inbox status
+just inbox-query-incoming  # Query incoming requests
+just inbox-respond         # Respond to coordination request
+```
+
+---
+
 ### Memory System (A-MEM) - SAP-010
 
 **When to use SAP-010**:

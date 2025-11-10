@@ -306,6 +306,32 @@ Claude should load context progressively to optimize token usage:
 
 ---
 
+### Domain 7: Inbox Coordination Protocol (inbox/)
+
+**Path**: [docs/skilled-awareness/inbox/AGENTS.md](docs/skilled-awareness/inbox/AGENTS.md) + [docs/skilled-awareness/inbox/CLAUDE.md](docs/skilled-awareness/inbox/CLAUDE.md)
+
+**Navigation tip**: Read domain-specific files for 60-70% token savings
+- [docs/skilled-awareness/inbox/CLAUDE.md](docs/skilled-awareness/inbox/CLAUDE.md) - Claude inbox workflows (8-min, ~6k tokens)
+- [docs/skilled-awareness/inbox/AGENTS.md](docs/skilled-awareness/inbox/AGENTS.md) - Inbox patterns (12-min, ~9k tokens)
+
+**Use when**:
+- Creating or responding to coordination requests
+- Querying inbox status at session startup
+- Generating AI-powered coordination requests
+- Managing cross-repo collaboration with formalized SLAs
+- Tracking coordination events and ecosystem participation
+
+**Contents**:
+- 5 CLI tools (install, query, respond, generate, status)
+- Session startup routines and daily workflows
+- SLA guidelines (48h default, 4h urgent, 1-week backlog)
+- Ecosystem coordination patterns
+- Integration with SAP-010 (memory) and SAP-015 (beads)
+
+**Note**: Inbox coordination (SAP-001) is included in chora-base for ecosystem collaboration. Active coordination happens in `inbox/` directory.
+
+---
+
 ## Common Claude Code Workflows
 
 ### Workflow 1: Adopting a SAP
