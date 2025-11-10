@@ -24,6 +24,22 @@ phase_3_token_estimate: 13000
 
 ---
 
+## 📖 Quick Reference
+
+**New to SAP-023?** → Read **[README.md](README.md)** first (12-min read)
+
+The README provides:
+- 🚀 **Quick Start** - 5-minute setup (TanStack Query + Zustand + React Hook Form)
+- 📚 **Three-Pillar Architecture** - Server (TanStack Query), Client (Zustand), Form (RHF)
+- 🎯 **State Classification** - Decision tree for choosing the right tool
+- 🔧 **TanStack Query v5** - Caching, refetching, optimistic updates, infinite queries
+- 📊 **Zustand v4** - Minimal boilerplate, persist middleware, selectors
+- 🔧 **Troubleshooting** - 5 common problems (QueryClient, persist, validation, infinite re-renders, store updates)
+
+**This AGENTS.md provides**: Agent-specific patterns for React state management workflows.
+
+---
+
 ## Quick Start for Agents
 
 This SAP provides workflows for **React state management** using the three-pillar architecture:

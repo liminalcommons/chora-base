@@ -24,6 +24,22 @@ phase_3_token_estimate: 11000
 
 ---
 
+## 📖 Quick Reference
+
+**New to SAP-023?** → Read **[README.md](README.md)** first (12-min read)
+
+The README provides:
+- 🚀 **Quick Start** - 5-minute setup (TanStack Query + Zustand + React Hook Form)
+- 📚 **Three-Pillar Architecture** - Server (TanStack Query), Client (Zustand), Form (RHF)
+- 🎯 **State Classification** - Decision tree for choosing the right tool
+- 🔧 **TanStack Query v5** - Caching, refetching, optimistic updates, infinite queries
+- 📊 **Zustand v4** - Minimal boilerplate, persist middleware, selectors
+- 🔧 **Troubleshooting** - 5 common problems (QueryClient, persist, validation, infinite re-renders, store updates)
+
+**This CLAUDE.md provides**: Claude Code-specific workflows using Bash (installation), Write (hooks/stores), Read (verification).
+
+---
+
 ## Quick Start for Claude
 
 This file provides **Claude Code-specific patterns** for React state management with the three-pillar architecture:
