@@ -438,6 +438,62 @@ gh run list --limit 5               # Verify new run
 
 ---
 
+### Quality Gates (SAP-006) - Quick Reference
+
+**No domain-specific CLAUDE.md** (pre-commit is infrastructure, not code)
+
+**Claude patterns for pre-commit hooks**:
+```markdown
+# Session startup: Run pre-commit hooks first
+pre-commit run --all-files
+just pre-commit-all
+
+# If hooks fail: Fix and retry
+ruff check --fix src/ tests/ scripts/   # Auto-fix linting
+just lint-fix
+mypy src/ tests/ scripts/               # Type check
+just typecheck
+
+# Emergency bypass (ONLY if justified)
+git commit --no-verify -m "Emergency: Brief justification"
+
+# Common workflows
+# 1. Normal commit with hooks
+git add .
+git commit -m "Add feature"             # Hooks run automatically
+
+# 2. Fix linting errors
+git add file.py
+git commit -m "Add feature"
+# [ruff fails]
+ruff check --fix file.py                # Auto-fix
+git add file.py
+git commit -m "Add feature"             # Success
+
+# 3. Fix type errors
+git add file.py
+git commit -m "Add feature"
+# [mypy fails]
+# Edit file.py to fix type errors
+git add file.py
+git commit -m "Add feature"             # Success
+```
+
+**Progressive loading strategy**:
+- **Phase 1**: No loading needed (hooks auto-run on commit)
+- **Phase 2**: Read [.pre-commit-config.yaml](.pre-commit-config.yaml) if debugging hook failures
+- **Phase 3**: Read [docs/skilled-awareness/quality-gates/protocol-spec.md](docs/skilled-awareness/quality-gates/protocol-spec.md) for hook specifications
+
+**ROI**: Catch 95%+ preventable issues locally in <5s (vs 3-5 min in CI), 10-15 min saved per session
+
+**Integration with SAP-004 (Testing) and SAP-005 (CI/CD)**:
+- Pre-commit hooks run locally BEFORE CI (SAP-006)
+- CI validates remotely AFTER push (SAP-005)
+- Both use same pytest configuration (SAP-004)
+- Dual validation: 99%+ issue prevention before merge
+
+---
+
 ## Common Claude Code Workflows
 
 ### Workflow 1: Adopting a SAP

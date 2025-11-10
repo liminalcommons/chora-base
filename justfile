@@ -97,6 +97,42 @@ research topic:
     @mkdir -p docs/research
 
 # ============================================================================
+# SAP-006: Quality Gates (Pre-commit Hooks)
+# ============================================================================
+# Automated code quality with ruff (linting), mypy (type checking), black (formatting).
+# See: AGENTS.md "Quality Gates - SAP-006" section, .pre-commit-config.yaml
+
+# Run ruff linting on all files
+# Example: just lint
+lint:
+    @ruff check src/ tests/ scripts/
+
+# Auto-fix ruff linting issues
+# Example: just lint-fix
+lint-fix:
+    @ruff check --fix src/ tests/ scripts/
+
+# Run mypy type checking
+# Example: just typecheck
+typecheck:
+    @mypy src/ tests/ scripts/
+
+# Run all pre-commit hooks on all files
+# Example: just pre-commit-all
+pre-commit-all:
+    @pre-commit run --all-files
+
+# Run all pre-commit hooks on staged files
+# Example: just pre-commit-staged
+pre-commit-staged:
+    @pre-commit run
+
+# Update pre-commit hook versions
+# Example: just pre-commit-update
+pre-commit-update:
+    @pre-commit autoupdate
+
+# ============================================================================
 # SAP-004: Testing Framework (pytest)
 # ============================================================================
 # Automated testing with pytest, 85%+ coverage, parametrized tests, fixtures.

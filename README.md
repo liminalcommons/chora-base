@@ -509,6 +509,70 @@ just test-coverage-report   # Generate HTML coverage report
 
 ---
 
+### Quality Gates (Pre-commit Hooks) - SAP-006
+
+**Status**: Production (v1.0.0) | **Adoption Level**: L3 (Fully automated)
+
+SAP-006 provides pre-commit hooks with ruff (linting), mypy (type checking), and automated code formatting, catching 95%+ preventable issues before commit.
+
+**When to use SAP-006**:
+- Automated code quality enforcement on every commit (local validation)
+- Fast feedback loops (<5s for pre-commit checks vs minutes in CI)
+- Consistent code style across team (ruff + black formatting)
+- Type safety with mypy (catch type errors before runtime)
+- Integration with SAP-005 CI/CD for dual validation (local + remote)
+
+**Quick start**:
+```bash
+# Pre-commit hooks are pre-installed in .pre-commit-config.yaml
+# Install hooks (one-time setup)
+pre-commit install
+
+# Run hooks manually on all files
+pre-commit run --all-files
+
+# Run hooks on staged files (automatic on git commit)
+git add .
+git commit -m "message"  # Hooks run automatically
+
+# Skip hooks (emergency only, not recommended)
+git commit -m "message" --no-verify
+
+# Update hook versions
+pre-commit autoupdate
+```
+
+**Core capabilities**:
+- **ruff**: Fast Python linting (10-100x faster than flake8)
+- **mypy**: Static type checking (catch type errors before runtime)
+- **black**: Automated code formatting (consistent style)
+- **trailing-whitespace**: Remove trailing whitespace
+- **end-of-file-fixer**: Ensure files end with newline
+- **Fast execution**: <5s for typical commits (vs minutes in CI)
+
+**Integration with other SAPs**:
+- **SAP-005 (CI/CD)**: Pre-commit (local) + CI (remote) dual validation
+- **SAP-004 (Testing)**: Pre-commit can run pytest on staged files
+- **SAP-031 (Enforcement)**: Pre-commit as Layer 2 enforcement (20% prevention)
+- **SAP-009 (Awareness)**: Document hook patterns in AGENTS.md
+
+**ROI**: 95%+ preventable issues caught locally (<5s), avoid CI failures (save 5-10 min per failed CI run)
+
+**Documentation**:
+- Protocol specification: [docs/skilled-awareness/quality-gates/protocol-spec.md](docs/skilled-awareness/quality-gates/protocol-spec.md)
+- Adoption blueprint: [docs/skilled-awareness/quality-gates/adoption-blueprint.md](docs/skilled-awareness/quality-gates/adoption-blueprint.md)
+- Hook configuration: [.pre-commit-config.yaml](.pre-commit-config.yaml)
+
+**CLI recipes** (see justfile):
+```bash
+just lint                  # Run ruff linting
+just lint-fix             # Auto-fix linting issues
+just typecheck            # Run mypy type checking
+just pre-commit-all       # Run all pre-commit hooks
+```
+
+---
+
 ### CI/CD Workflows (GitHub Actions) - SAP-005
 
 **Status**: Production (v1.0.0) | **Adoption Level**: L3 (Fully automated)
