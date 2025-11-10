@@ -24,6 +24,21 @@ phase_3_token_estimate: 9500
 
 ---
 
+## 📖 Quick Reference
+
+**New to SAP-018?** → Read **[README.md](README.md)** first (5-min read)
+
+The README provides:
+- 🚀 **Quick Start** - Core generation commands and MCP tool overview
+- 📚 **24 MCP Tools** - Complete tool reference across 7 categories
+- 🎯 **3-Tier Collections** - Content, Artifact, Collection architecture
+- 🏗️ **Context Propagation** - MERGE, OVERRIDE, ISOLATE modes
+- 🔧 **Troubleshooting** - Generator errors, cache issues
+
+**This CLAUDE.md provides**: Claude Code-specific workflows using Bash (chora-compose CLI), Write (configs), Read (outputs).
+
+---
+
 ## Quick Start for Claude
 
 This file provides **Claude Code-specific patterns** for understanding chora-compose architecture.
