@@ -6,22 +6,19 @@
 
 ---
 
-## Quick Start for Claude
+## 📖 Quick Reference
 
-This file provides **Claude Code-specific patterns** for generating SAPs using templates.
+**New to SAP-029?** → Read **[README.md](README.md)** first (14-min read)
 
-### First-Time SAP Generation
+The README provides:
+- 🚀 **Quick Start** - 3-minute overview (add to catalog → generate → fill TODOs → validate)
+- 📚 **80% Time Savings** - 10 hours → 2 hours (automated boilerplate + focused manual fill)
+- 🎯 **Jinja2 Templates** - 5 templates for 5 artifacts with MVP generation schema (9 fields)
+- 🔧 **Batch Generation** - Generate multiple SAPs with single command
+- 📊 **Generation Metadata** - Track todos_remaining, completion_percent, regeneration_safe
+- 🔗 **Integration** - Works with SAP-000 (Framework), SAP-027 (Dogfooding), SAP-004 (Testing)
 
-1. Read [AGENTS.md](AGENTS.md) for generic SAP generation workflows
-2. Use this file for Claude Code tool integration (Bash, Write, Edit, WebSearch)
-3. Follow 5-step process: Research (Step 0) → Add to catalog → Generate → Fill content → Validate
-
-### Session Resumption
-
-- Check sap-catalog.json for SAP metadata
-- Use Bash tool for generation and validation commands
-- Use Edit tool to fill TODO comments in generated artifacts
-- Track progress with generated artifact count (5/5)
+This CLAUDE.md provides: Claude Code tool integration for SAP generation (Bash, Edit, Write), metadata tracking, and troubleshooting workflows.
 
 ---
 
