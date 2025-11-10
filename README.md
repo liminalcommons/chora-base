@@ -1094,6 +1094,61 @@ docker-compose down
 4. **.dockerignore** - Build context optimization (81% size reduction)
 5. **DOCKER_BEST_PRACTICES.md** - Guidance, troubleshooting, security patterns
 
+### SAP Framework (Capability Packaging Standard) - SAP-000
+
+**Status**: Active (v1.0.0) | **Adoption Level**: L1 (Foundational)
+
+SAP-000 defines the Skilled Awareness Package framework: 5 standardized artifacts, versioning, installation blueprints, and governance for packaging capabilities as modular, discoverable units.
+
+**When to use SAP-000**:
+- Creating new capabilities as modular packages (instead of ad-hoc documentation)
+- Standardizing documentation structure across capabilities (5 artifacts: charter, protocol, awareness, blueprint, ledger)
+- Enabling AI agents to discover and adopt capabilities independently (via adoption blueprints)
+- Tracking capability adoption across projects (via ledger registry)
+- Versioning and upgrading capabilities with semantic versioning and compatibility tracking
+
+**Quick start**:
+```bash
+# Generate new SAP from catalog metadata
+just generate-sap SAP-042
+
+# Validate SAP structure (5 artifacts, frontmatter)
+just validate-sap-structure docs/skilled-awareness/my-capability/
+
+# Validate all SAPs in docs/skilled-awareness/
+just validate-all-saps
+
+# Check SAP maturity (quick evaluation)
+just validate-sap SAP-042
+
+# List all available SAPs in catalog
+just list-saps
+```
+
+**Core capabilities**:
+- **5 standardized artifacts**: Capability Charter (problem/solution), Protocol Spec (technical contract), Awareness Guide (agent patterns), Adoption Blueprint (installation steps), Ledger (adoption tracking)
+- **YAML frontmatter schema**: Consistent metadata (sap_id, version, status, last_updated) across all artifacts
+- **Semantic versioning**: Major.Minor.Patch with compatibility tracking and upgrade paths
+- **Agent-executable blueprints**: Step-by-step installation guides with validation commands
+- **Adoption tracking**: Ledger registry tracks who adopted which version and when
+- **Template generation**: Automated SAP scaffolding from catalog metadata
+- **Validation tools**: Structure validation, frontmatter schema checks, maturity evaluation
+
+**Integration with other SAPs**:
+- **SAP-029 (SAP Generation)**: Automate SAP artifact creation from templates
+- **SAP-027 (Dogfooding)**: Validate SAP adoption in real projects
+- **SAP-009 (Agent Awareness)**: Nested AGENTS.md/CLAUDE.md pattern used by all SAPs
+- **All SAPs**: SAP-000 is the foundation - every SAP follows this framework
+
+**ROI**: 70-80% documentation time reduction (standardized artifacts vs ad-hoc docs), 90%+ discovery improvement (agents find capabilities via blueprints)
+
+**5 SAP Artifacts**:
+1. **Capability Charter** - Problem statement, solution design, scope, stakeholders, lifecycle
+2. **Protocol Specification** - Technical contract, interfaces, data models, quality gates
+3. **Awareness Guide** - Agent execution patterns, common workflows, troubleshooting
+4. **Adoption Blueprint** - Installation steps, validation, configuration, upgrade paths
+5. **Traceability Ledger** - Adopter registry, version history, active deployments
+
 ---
 
 ### Project Types Supported

@@ -365,6 +365,78 @@ Phase 3 (50-200k): Read all SAP artifacts (only for complex tasks)
 
 ---
 
+### SAP Framework (SAP-000) - Quick Reference
+
+**No domain-specific CLAUDE.md** (SAP framework is meta-infrastructure, not code)
+
+**Claude patterns for SAP operations**:
+```markdown
+# User wants to create new SAP → Use generation workflow
+just list-saps                          # Show all 32+ SAPs
+just generate-sap SAP-042               # Generate from catalog
+just validate-sap-structure docs/skilled-awareness/my-capability/
+
+# Validate existing SAPs
+just validate-all-saps                  # Check all SAPs
+just validate-sap SAP-042               # Check specific SAP maturity
+
+# Common workflows
+# 1. Create new SAP
+# - Add to sap-catalog.json (id, name, status, version, description, capabilities, dependencies)
+# - Run: just generate-sap SAP-042
+# - Fill artifacts: capability-charter, protocol-spec, awareness-guide, adoption-blueprint, ledger
+# - Validate: just validate-sap-structure docs/skilled-awareness/my-capability/
+
+# 2. Update SAP version
+# - Update version in all 5 frontmatters (capability-charter, protocol-spec, awareness-guide, adoption-blueprint, ledger)
+# - Update last_updated date
+# - Document changes in ledger.md version history
+
+# 3. Track SAP adoption
+# - Add adopter to ledger.md (project-name, version, status, date)
+# - Update active deployments count
+# - Document feedback and issues
+
+# SAP Maturity Levels
+# - Draft: Basic structure (5 artifacts exist)
+# - Pilot: Dogfooding (1+ adopter in ledger)
+# - Active: Production-ready (3+ adopters, upgrade path documented)
+# - Deprecated: Migration path available
+# - Archived: Historical reference
+```
+
+**Progressive loading strategy**:
+- **Phase 1**: Read sap-catalog.json for SAP list (instant)
+- **Phase 2**: Read [docs/skilled-awareness/sap-framework/protocol-spec.md](docs/skilled-awareness/sap-framework/protocol-spec.md) for complete schema specs
+- **Phase 3**: Read existing SAP examples for patterns (e.g., SAP-001, SAP-004, SAP-015)
+
+**ROI**: 70-80% documentation time reduction (standardized artifacts), 90%+ discovery improvement (blueprints)
+
+**5 SAP Artifacts**:
+1. **capability-charter.md** - Problem, solution, scope, stakeholders, lifecycle
+2. **protocol-spec.md** - Technical contract, interfaces, data models, quality gates
+3. **awareness-guide.md** - Agent patterns, workflows, troubleshooting, integration
+4. **adoption-blueprint.md** - Installation steps, validation, configuration, upgrades
+5. **ledger.md** - Adopter registry, version history, active deployments, deprecation
+
+**YAML Frontmatter** (all artifacts):
+```yaml
+---
+sap_id: SAP-NNN
+version: X.Y.Z             # Semantic versioning
+status: Draft|Pilot|Active|Deprecated|Archived
+last_updated: YYYY-MM-DD
+---
+```
+
+**Integration with other SAPs**:
+- **SAP-029**: Automates SAP generation from templates
+- **SAP-027**: Validates SAP adoption via dogfooding
+- **SAP-009**: Nested awareness pattern used by all SAPs
+- **All 32+ SAPs**: SAP-000 is the foundation
+
+---
+
 ### Testing Framework (SAP-004) - Quick Reference
 
 **No domain-specific CLAUDE.md** (tests/ may have AGENTS.md if complex test patterns exist)

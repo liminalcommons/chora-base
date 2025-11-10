@@ -5,7 +5,14 @@
 default:
     @just --list
 
+# ============================================================================
+# SAP-000: SAP Framework (Capability Packaging Standard)
+# ============================================================================
+# 5 standardized artifacts, versioning, blueprints, governance for modular capabilities.
+# See: AGENTS.md "SAP Framework - SAP-000" section, docs/skilled-awareness/sap-framework/
+
 # Generate SAP artifacts from catalog metadata
+# Example: just generate-sap SAP-042
 generate-sap SAP_ID:
     python scripts/generate-sap.py {{SAP_ID}}
 
