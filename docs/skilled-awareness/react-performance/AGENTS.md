@@ -16,6 +16,22 @@ phase_2_token_estimate: 9000
 phase_3_token_estimate: 13500
 ---
 
+## 📖 Quick Reference
+
+**New to SAP-025?** → Read **[README.md](README.md)** first (13-min read)
+
+The README provides:
+- 🚀 **Quick Start** - 5-minute setup (Lighthouse CI + bundle analyzer installation)
+- 📚 **Core Web Vitals** - LCP ≤2.5s, INP ≤200ms, CLS ≤0.1 optimization strategies
+- 🎯 **React 19 Optimizations** - useDeferredValue, startTransition, React Server Components
+- 🔧 **Code Splitting** - Route-based + component-based + viewport lazy loading
+- 📊 **Lighthouse CI** - Automated performance budgets in CI/CD
+- 🔗 **Integration** - Works with SAP-020 (Next.js 15), SAP-021 (Testing), SAP-023 (State)
+
+This AGENTS.md provides: Agent-specific performance workflows, automation patterns, and troubleshooting for AI coding assistants.
+
+---
+
 # React Performance Optimization (SAP-025) - Agent Awareness
 
 **SAP ID**: SAP-025
