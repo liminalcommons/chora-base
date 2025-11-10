@@ -24,7 +24,22 @@ phase_3_token_estimate: 9000
 
 ---
 
-## Quick Reference
+## 📖 Quick Reference
+
+**New to SAP-016?** → Read **[README.md](README.md)** first (5-min read)
+
+The README provides:
+- 🚀 **Quick Start** - 5 validation commands (all, docs, path, CI, help)
+- 📚 **3 Validation Modes** - Full scan, changed files (git-aware), single file
+- 🎯 **3 Link Types** - Internal relative, anchor links, external HTTP/HTTPS
+- 📊 **4 Output Formats** - Human-readable, JSON, GitHub Actions annotations, JUnit XML
+- 🔧 **Troubleshooting** - 5 common problems (slow validation, false positives, renamed files, anchors, pre-commit hook)
+
+**This AGENTS.md provides**: Agent-specific patterns for link validation workflows, git-aware validation, and CI/CD integration.
+
+---
+
+## Detailed Quick Reference
 
 ### When to Use
 

@@ -24,6 +24,21 @@ phase_3_token_estimate: 8000
 
 ---
 
+## 📖 Quick Reference
+
+**New to SAP-016?** → Read **[README.md](README.md)** first (5-min read)
+
+The README provides:
+- 🚀 **Quick Start** - 5 justfile commands for link validation
+- 📚 **3 Validation Modes** - Full scan (~5s), changed files (<1s), single file
+- 🎯 **3 Link Types** - Internal, anchors, external (HTTP/HTTPS)
+- 📊 **4 Output Formats** - Human, JSON, GitHub Actions, JUnit
+- 🔧 **Troubleshooting** - Speed issues, false positives, refactoring workflows
+
+**This CLAUDE.md provides**: Claude Code-specific workflows using Bash (validation), Read (reports), Edit (fix broken links).
+
+---
+
 ## Quick Start for Claude
 
 This file provides **Claude Code-specific patterns** for validating markdown links.
