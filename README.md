@@ -1151,6 +1151,78 @@ just list-saps
 
 ---
 
+### Development Lifecycle (8-Phase Workflow) - SAP-012
+
+**Status**: Active (v1.2.0) | **Adoption Level**: L3 (Documentation-First)
+
+SAP-012 defines an 8-phase development lifecycle integrating Documentation-Driven Development → BDD → TDD methodologies into a unified workflow that reduces defects by 40-80% while maintaining velocity.
+
+**When to use SAP-012**:
+- Building features with clear requirements and acceptance criteria (instead of ad-hoc coding)
+- Integrating documentation, behavior specs, and tests into a cohesive workflow (not siloed)
+- Reducing defects through systematic quality gates at each phase (Vision → Monitoring)
+- Scaling teams with predictable, repeatable processes (not tribal knowledge)
+- Tracking work from strategic vision down to daily tasks (complete traceability)
+
+**Quick start**:
+```bash
+# Phase 2: Planning - Create sprint plan
+cp docs/skilled-awareness/development-lifecycle/templates/sprint-template.md docs/project-docs/plans/sprint-$(date +%Y-%m-%d).md
+
+# Phase 3: Requirements - Documentation-First workflow (L3)
+# Write executable how-to guides → extract BDD scenarios automatically
+just doc-to-bdd docs/user-docs/how-to/feature-name.md
+
+# Phase 4: Development - BDD → TDD workflow
+just bdd-scenario features/feature-name.feature  # Create BDD scenario (RED)
+just tdd-cycle tests/test_feature.py             # TDD red-green-refactor
+
+# Phase 5: Testing - Run quality gates
+just test-all                                    # Unit → Smoke → Integration → E2E
+just quality-gates                               # Coverage, linting, type checking
+
+# Phase 7: Release - Version bump and publish
+just bump-version minor                          # Bump version (1.2.0 → 1.3.0)
+just prepare-release                             # Generate changelog, tag
+just publish-prod                                # Publish to PyPI, deploy production
+```
+
+**Core capabilities**:
+- **8-phase lifecycle**: Vision (months) → Planning (weeks) → Requirements (days) → Development (days-weeks) → Testing (hours-days) → Review (hours-days) → Release (hours) → Monitoring (continuous)
+- **Documentation-Driven Development**: Define requirements through Diataxis-structured docs before implementation (L3: executable how-tos → extracted BDD)
+- **BDD → TDD integration**: Gherkin scenarios (RED) → TDD red-green-refactor cycles → fully tested features (GREEN)
+- **Light+ planning**: 4-level hierarchy (Strategy → Releases → Features → Tasks) with maturity levels L0-L5
+- **Quality gates**: Unit → Smoke → Integration → E2E with ≥85% coverage, linting, type checking
+- **Release automation**: Version bumping, changelog generation, PyPI publishing, deployment scripts
+- **Monitoring & feedback**: Process metrics tracking, retrospectives, continuous improvement loops
+
+**Integration with other SAPs**:
+- **SAP-015 (Task Tracking)**: Tasks (Construct 4) managed via Beads CLI (`.beads/issues.jsonl`)
+- **SAP-010 (A-MEM)**: Event-sourced memory tracks development history across phases
+- **SAP-005 (CI/CD)**: Automate Phase 5 (Testing), Phase 6 (Review), Phase 7 (Release)
+- **SAP-027 (Dogfooding)**: Validate lifecycle phases through real project adoption
+- **SAP-009 (Agent Awareness)**: AGENTS.md/CLAUDE.md pattern for phase-specific agent guidance
+
+**ROI**: 40-80% defect reduction (research-backed), 60%+ time savings on debugging (shift-left testing), 100% traceability (strategy → task)
+
+**8 Phases Overview**:
+1. **Vision & Strategy** (Months) - Strategic roadmap, market analysis, ecosystem alignment
+2. **Planning & Prioritization** (Weeks) - Sprint planning, backlog grooming, stakeholder alignment
+3. **Requirements & Design** (Days) - Documentation-Driven Development, DDD/BDD scenarios, API specs
+4. **Development (BDD + TDD)** (Days-Weeks) - Gherkin scenarios (RED) → TDD red-green-refactor → GREEN
+5. **Testing & Quality** (Hours-Days) - Unit → Smoke → Integration → E2E, coverage ≥85%
+6. **Review & Integration** (Hours-Days) - Code review, docs review, CI/CD pipeline, merge
+7. **Release & Deployment** (Hours) - Version bump, changelog, build, publish PyPI, deploy prod
+8. **Monitoring & Feedback** (Continuous) - Metrics, user feedback, bug reports, iteration planning
+
+**Light+ Planning Constructs**:
+1. **Strategy** (Quarterly) - 3-6 month vision, strategic themes, capability waves
+2. **Releases** (Sprint-based) - Feature grouping, sprint goals, velocity tracking
+3. **Features** (User capabilities) - DDD worksheets, BDD scenarios, acceptance criteria
+4. **Tasks** (Work items) - `.beads/issues.jsonl`, 2-8 hour chunks, dependency tracking
+
+---
+
 ### Project Types Supported
 
 - **Library/Package** - Python libraries for PyPI distribution

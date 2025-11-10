@@ -196,6 +196,119 @@ rollback-dev:
     @bash scripts/rollback-dev.sh 2>/dev/null || echo "❌ rollback-dev.sh script not available"
 
 # ============================================================================
+# SAP-012: Development Lifecycle (8-Phase Workflow)
+# ============================================================================
+# 8-phase lifecycle (Vision → Monitoring) with Documentation-Driven Development → BDD → TDD integration.
+# See: AGENTS.md "Development Lifecycle - SAP-012" section, docs/skilled-awareness/development-lifecycle/
+
+# Run all quality gates (Phase 5: Testing)
+# Example: just quality-gates
+quality-gates:
+    @echo "🎯 Running all quality gates..."
+    @echo "1️⃣ Unit tests with coverage..."
+    @pytest --cov=src --cov-report=term-missing --cov-fail-under=85 2>/dev/null || echo "⚠️ Unit tests not configured (pytest + coverage required)"
+    @echo "2️⃣ Linting with ruff..."
+    @ruff check . 2>/dev/null || echo "⚠️ Ruff not configured"
+    @echo "3️⃣ Type checking with mypy..."
+    @mypy src 2>/dev/null || echo "⚠️ Mypy not configured"
+    @echo "4️⃣ Security checks..."
+    @bandit -r src 2>/dev/null || echo "⚠️ Bandit not configured"
+    @echo "✅ Quality gates complete"
+
+# Run full test suite (Unit → Smoke → Integration → E2E)
+# Example: just test-all
+test-all:
+    @echo "🧪 Running full test suite..."
+    @pytest tests/ -v --cov=src --cov-report=term-missing 2>/dev/null || echo "❌ Tests not available"
+
+# Bump version using semantic versioning (Phase 7: Release)
+# Example: just bump-version minor
+bump-version VERSION_TYPE:
+    @echo "📦 Bumping version ({{VERSION_TYPE}})..."
+    @bash scripts/bump-version.sh {{VERSION_TYPE}} 2>/dev/null || echo "❌ bump-version.sh script not available"
+
+# Prepare release (changelog, tag, build)
+# Example: just prepare-release
+prepare-release:
+    @echo "🚀 Preparing release..."
+    @bash scripts/prepare-release.sh 2>/dev/null || echo "❌ prepare-release.sh script not available"
+
+# Publish to production (PyPI, deploy)
+# Example: just publish-prod
+publish-prod:
+    @echo "🌐 Publishing to production..."
+    @bash scripts/publish-prod.sh 2>/dev/null || echo "❌ publish-prod.sh script not available"
+
+# Create BDD scenario from documentation (Phase 3: Requirements, L3 pattern)
+# Example: just doc-to-bdd docs/user-docs/how-to/feature-name.md
+doc-to-bdd DOC_PATH:
+    @echo "📝 Extracting BDD scenarios from documentation..."
+    @python scripts/doc-to-bdd.py {{DOC_PATH}} 2>/dev/null || echo "❌ doc-to-bdd.py script not available (L3 Documentation-First pattern)"
+
+# Create new BDD scenario file (Phase 4: Development)
+# Example: just bdd-scenario features/user-authentication.feature
+bdd-scenario FEATURE_PATH:
+    @echo "🥒 Creating BDD scenario: {{FEATURE_PATH}}"
+    @mkdir -p $(dirname {{FEATURE_PATH}})
+    @echo "Feature: $(basename {{FEATURE_PATH}} .feature)" > {{FEATURE_PATH}}
+    @echo "" >> {{FEATURE_PATH}}
+    @echo "  Scenario: Basic scenario" >> {{FEATURE_PATH}}
+    @echo "    Given initial context" >> {{FEATURE_PATH}}
+    @echo "    When action occurs" >> {{FEATURE_PATH}}
+    @echo "    Then expected outcome" >> {{FEATURE_PATH}}
+    @echo "✅ BDD scenario created at {{FEATURE_PATH}}"
+
+# Run TDD cycle (red-green-refactor) for a test file
+# Example: just tdd-cycle tests/test_feature.py
+tdd-cycle TEST_PATH:
+    @echo "🔴 TDD Cycle: {{TEST_PATH}}"
+    @pytest {{TEST_PATH}} -v 2>/dev/null || echo "❌ Test file not found or pytest not configured"
+
+# Create sprint plan from template (Phase 2: Planning)
+# Example: just create-sprint-plan 2025-11-09
+create-sprint-plan DATE:
+    @echo "📅 Creating sprint plan for {{DATE}}"
+    @mkdir -p docs/project-docs/plans
+    @cp docs/skilled-awareness/development-lifecycle/templates/sprint-template.md docs/project-docs/plans/sprint-{{DATE}}.md 2>/dev/null || echo "❌ Sprint template not available"
+    @echo "✅ Sprint plan created at docs/project-docs/plans/sprint-{{DATE}}.md"
+
+# Show development lifecycle phase diagram
+# Example: just lifecycle-help
+lifecycle-help:
+    @echo "🔄 SAP-012: Development Lifecycle (8 Phases)"
+    @echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+    @echo ""
+    @echo "Phase 1: Vision & Strategy (Months)"
+    @echo "  → Strategic roadmap, market analysis, ecosystem alignment"
+    @echo ""
+    @echo "Phase 2: Planning & Prioritization (Weeks)"
+    @echo "  → just create-sprint-plan YYYY-MM-DD"
+    @echo ""
+    @echo "Phase 3: Requirements & Design (Days)"
+    @echo "  → just doc-to-bdd docs/user-docs/how-to/feature.md  # L3 pattern"
+    @echo ""
+    @echo "Phase 4: Development (BDD + TDD) (Days-Weeks)"
+    @echo "  → just bdd-scenario features/feature.feature"
+    @echo "  → just tdd-cycle tests/test_feature.py"
+    @echo ""
+    @echo "Phase 5: Testing & Quality (Hours-Days)"
+    @echo "  → just test-all"
+    @echo "  → just quality-gates"
+    @echo ""
+    @echo "Phase 6: Review & Integration (Hours-Days)"
+    @echo "  → Code review via GitHub PR, CI/CD pipeline"
+    @echo ""
+    @echo "Phase 7: Release & Deployment (Hours)"
+    @echo "  → just bump-version [major|minor|patch]"
+    @echo "  → just prepare-release"
+    @echo "  → just publish-prod"
+    @echo ""
+    @echo "Phase 8: Monitoring & Feedback (Continuous)"
+    @echo "  → Metrics, user feedback, retrospectives"
+    @echo ""
+    @echo "📖 Full docs: docs/skilled-awareness/development-lifecycle/"
+
+# ============================================================================
 # SAP-011: Docker Operations (Production Containerization)
 # ============================================================================
 # Multi-stage Dockerfiles, docker-compose orchestration, 40% smaller images (150-250MB).

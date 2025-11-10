@@ -437,6 +437,162 @@ last_updated: YYYY-MM-DD
 
 ---
 
+### Development Lifecycle (SAP-012) - Quick Reference
+
+**Domain-specific CLAUDE.md**: [docs/skilled-awareness/development-lifecycle/CLAUDE.md](docs/skilled-awareness/development-lifecycle/CLAUDE.md)
+
+**Claude patterns for development lifecycle**:
+```markdown
+# User asks: "Help me build feature X"
+# Claude workflow: Follow 8-phase lifecycle
+
+# Phase 1: Skip (Vision is long-term, usually already defined)
+
+# Phase 2: Planning
+just create-sprint-plan $(date +%Y-%m-%d)
+# - Add feature to sprint plan
+# - Break into tasks
+# - Add to .beads/issues.jsonl (SAP-015)
+
+# Phase 3: Requirements (Documentation-First - L3 pattern)
+# Write executable how-to guide BEFORE implementation
+# 1. Create docs/user-docs/how-to/feature-x.md
+# 2. Extract BDD scenarios from how-to
+just doc-to-bdd docs/user-docs/how-to/feature-x.md
+# Output: features/feature-x.feature
+
+# Phase 4: Development (BDD → TDD)
+# 1. Create/update BDD scenario
+just bdd-scenario features/feature-x.feature
+# 2. Run BDD (confirm RED)
+pytest features/ --gherkin
+# 3. TDD cycles until GREEN
+just tdd-cycle tests/test_feature_x.py
+# - Write test (RED)
+# - Implement minimal code (GREEN)
+# - Refactor (stay GREEN)
+# 4. Confirm BDD scenarios turn GREEN
+pytest features/ --gherkin
+
+# Phase 5: Quality gates
+just quality-gates                          # Coverage, linting, types, security
+just test-all                               # Full test suite
+
+# Phase 6: Review (skip in interactive session, done via PR)
+
+# Phase 7: Release (if ready)
+just bump-version minor                     # 1.2.0 → 1.3.0
+just prepare-release                        # Changelog, tag, build
+just publish-prod                           # PyPI, deploy
+
+# Phase 8: Monitor (continuous)
+```
+
+**Progressive loading strategy**:
+- **Phase 1**: Read [docs/skilled-awareness/development-lifecycle/AGENTS.md](docs/skilled-awareness/development-lifecycle/AGENTS.md) for quick workflow overview
+- **Phase 2**: Read [docs/skilled-awareness/development-lifecycle/protocol-spec.md](docs/skilled-awareness/development-lifecycle/protocol-spec.md) for complete 8-phase specs
+- **Phase 3**: Read [docs/skilled-awareness/development-lifecycle/LIGHT_PLUS_REFERENCE.md](docs/skilled-awareness/development-lifecycle/LIGHT_PLUS_REFERENCE.md) for planning construct details
+
+**Common workflows**:
+
+**1. Feature request → Implementation**:
+```markdown
+User: "Add user authentication feature"
+
+Claude:
+# 1. Check if sprint plan exists
+ls docs/project-docs/plans/sprint-*.md
+
+# 2. Create sprint plan if missing
+just create-sprint-plan $(date +%Y-%m-%d)
+
+# 3. Write executable how-to (Phase 3: Documentation-First)
+# Create docs/user-docs/how-to/user-authentication.md with:
+# - Step-by-step user instructions
+# - Expected behaviors
+# - Error cases
+
+# 4. Extract BDD scenarios from how-to (L3 pattern)
+just doc-to-bdd docs/user-docs/how-to/user-authentication.md
+
+# 5. Implement using BDD → TDD
+just bdd-scenario features/user-authentication.feature
+just tdd-cycle tests/test_authentication.py
+
+# 6. Run quality gates
+just quality-gates
+just test-all
+```
+
+**2. Bug fix workflow**:
+```markdown
+User: "Fix bug in login validation"
+
+Claude:
+# 1. Start with test (TDD)
+# Create failing test that reproduces bug
+just tdd-cycle tests/test_login_validation.py
+
+# 2. Implement fix (GREEN)
+# Fix code until test passes
+
+# 3. Verify with quality gates
+just quality-gates
+
+# 4. Update how-to if behavior changed
+# Edit docs/user-docs/how-to/user-authentication.md
+
+# 5. Release patch
+just bump-version patch                     # 1.2.0 → 1.2.1
+just prepare-release
+```
+
+**3. Quality gate failure**:
+```markdown
+User: "Tests are failing"
+
+Claude:
+# 1. Run quality gates to diagnose
+just quality-gates
+
+# Scenario A: Coverage <85%
+pytest --cov=src --cov-report=term-missing
+# → Identify uncovered lines
+# → Add unit tests for uncovered code
+
+# Scenario B: Linting errors
+ruff check . --fix                          # Auto-fix
+ruff check .                                # Verify
+
+# Scenario C: Type errors
+mypy src --show-error-codes
+# → Add type hints to functions
+
+# Scenario D: BDD scenarios failing
+pytest features/ --gherkin -v
+# → Continue TDD cycles until scenarios GREEN
+```
+
+**ROI**: 40-80% defect reduction (Documentation-First + BDD + TDD), 60% debugging time reduction
+
+**8 Phases Summary**:
+1. **Vision** (Months) - Strategic roadmap
+2. **Planning** (Weeks) - Sprint plans, task breakdown
+3. **Requirements** (Days) - Documentation-First → BDD
+4. **Development** (Days-Weeks) - BDD → TDD workflow
+5. **Testing** (Hours-Days) - Quality gates
+6. **Review** (Hours-Days) - Code review, CI/CD
+7. **Release** (Hours) - Version bump, publish
+8. **Monitoring** (Continuous) - Metrics, retrospectives
+
+**Integration with other SAPs**:
+- **SAP-015 (Task Tracking)**: `.beads/issues.jsonl` for task management
+- **SAP-010 (A-MEM)**: Event-sourced development history
+- **SAP-005 (CI/CD)**: Automate testing, review, release phases
+- **SAP-004 (Testing)**: pytest framework for quality gates
+
+---
+
 ### Testing Framework (SAP-004) - Quick Reference
 
 **No domain-specific CLAUDE.md** (tests/ may have AGENTS.md if complex test patterns exist)
