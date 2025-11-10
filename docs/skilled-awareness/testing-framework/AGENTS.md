@@ -34,6 +34,16 @@ tags:
 
 This file provides **generic agent workflows** for using chora-base's pytest-based testing framework.
 
+**📖 New to SAP-004?** → Read **[README.md](README.md)** first (8-min read)
+
+The README provides:
+- 🚀 **8 CLI Commands** - Complete pytest command reference (test, smoke, coverage, verbose)
+- 🎓 **4 Testing Patterns** - Async tests, parametrized tests, fixtures, mocking
+- 🏆 **Coverage Standards** - 85% target (research-backed sweet spot)
+- 🔧 **Troubleshooting** - 4 common problems with solutions
+
+**This AGENTS.md provides**: Agent-executable workflows for writing tests, running tests, debugging failures, and TDD cycles.
+
 ### First-Time Testing
 
 1. Read [CLAUDE.md](CLAUDE.md) for Claude Code-specific patterns

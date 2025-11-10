@@ -10,6 +10,10 @@
 
 This file provides **Claude Code-specific patterns** for pytest-based testing.
 
+**📖 New to SAP-004?** → Read **[README.md](README.md)** first (8-min read) for pytest commands, testing patterns, and coverage standards.
+
+**This CLAUDE.md provides**: Claude Code tool patterns (Write, Bash, Edit) for test creation, execution, debugging, and TDD workflows.
+
 ### First-Time Testing
 
 1. Read [AGENTS.md](AGENTS.md) for generic testing workflows
