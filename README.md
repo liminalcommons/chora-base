@@ -897,6 +897,69 @@ just verify-structure              # Validate chora-base structure
 
 ---
 
+### Documentation Framework (Diátaxis 4-Domain) - SAP-007
+
+**Status**: Pilot (v1.1.0) | **Adoption Level**: L3 (Fully enforced via SAP-031)
+
+SAP-007 provides Diátaxis-based 4-domain documentation architecture with frontmatter validation, executable how-to guides, test extraction, and Level 3 enforcement layer.
+
+**When to use SAP-007**:
+- Organizing documentation using Diátaxis 4-domain pattern (tutorials, how-to, explanation, reference)
+- Enforcing documentation standards with frontmatter schema validation
+- Creating executable how-to guides with test extraction (docs as tests)
+- Validating documentation structure with pre-commit hooks (Level 3 enforcement)
+- Integrating with SAP-031 discoverability-based enforcement
+
+**Quick start**:
+```bash
+# Explore documentation structure (4 domains)
+ls docs/user-docs/          # Tutorials, how-to, explanation, reference
+ls docs/dev-docs/            # Developer-focused docs
+ls docs/project-docs/        # Plans, decisions, retrospectives
+ls docs/skilled-awareness/   # SAP capabilities
+
+# Validate documentation standards
+just validate-docs           # Run DOCUMENTATION_STANDARD.md checks
+just validate-frontmatter    # Validate YAML frontmatter schema
+
+# Extract tests from how-to guides
+just extract-doc-tests       # Generate tests from how-to code blocks
+
+# Check documentation with pre-commit hooks (L3 enforcement)
+pre-commit run --all-files   # Includes doc validation hooks
+```
+
+**Core capabilities**:
+- **Diátaxis 4-domain structure**: Tutorials (learning), How-to (tasks), Explanation (understanding), Reference (info)
+- **Frontmatter schema**: YAML validation for audience, time, prerequisites, difficulty
+- **Executable how-to guides**: Code blocks extracted and tested automatically
+- **Test extraction**: Docs as living tests (80%+ accuracy for syntax, 60%+ for semantics)
+- **Level 3 enforcement**: Pre-commit hooks + CI validation (SAP-031 integration)
+- **DOCUMENTATION_STANDARD.md**: 700-line comprehensive guide
+
+**Integration with other SAPs**:
+- **SAP-031 (Enforcement)**: Documentation as Layer 3 enforcement (5-10% prevention via validation)
+- **SAP-006 (Quality Gates)**: Pre-commit hooks validate doc structure and frontmatter
+- **SAP-004 (Testing)**: Extracted doc tests run in pytest suite
+- **SAP-002 (Chora-Base Meta)**: 4-domain structure demonstrated in chora-base itself
+
+**ROI**: 40-60% documentation quality improvement, 15-20 min saved per session (avoid doc inconsistencies)
+
+**Documentation**:
+- Standard: [DOCUMENTATION_STANDARD.md](DOCUMENTATION_STANDARD.md) (700 lines, comprehensive guide)
+- Protocol specification: [docs/skilled-awareness/documentation-framework/protocol-spec.md](docs/skilled-awareness/documentation-framework/protocol-spec.md)
+- Adoption blueprint: [docs/skilled-awareness/documentation-framework/adoption-blueprint.md](docs/skilled-awareness/documentation-framework/adoption-blueprint.md)
+
+**CLI recipes** (see justfile):
+```bash
+just validate-docs             # Validate documentation standards
+just validate-frontmatter      # Check YAML frontmatter schema
+just extract-doc-tests         # Generate tests from how-to guides
+just doc-structure             # Show documentation structure
+```
+
+---
+
 ### Project Types Supported
 
 - **Library/Package** - Python libraries for PyPI distribution

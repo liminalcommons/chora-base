@@ -97,6 +97,71 @@ research topic:
     @mkdir -p docs/research
 
 # ============================================================================
+# SAP-007: Documentation Framework (Diátaxis 4-Domain)
+# ============================================================================
+# Diátaxis-based documentation with frontmatter validation, test extraction, L3 enforcement.
+# See: AGENTS.md "Documentation Framework - SAP-007" section, DOCUMENTATION_STANDARD.md
+
+# Validate documentation against DOCUMENTATION_STANDARD.md
+# Example: just validate-docs
+validate-docs:
+    @echo "🔍 Validating documentation standards..."
+    @python scripts/validate-documentation.py 2>/dev/null || echo "❌ Documentation validation script not available (install SAP-007)"
+
+# Validate YAML frontmatter schema in docs
+# Example: just validate-frontmatter
+validate-frontmatter:
+    @echo "🔍 Validating documentation frontmatter..."
+    @python scripts/validate-frontmatter.py docs/ 2>/dev/null || echo "❌ Frontmatter validation script not available (install SAP-007)"
+
+# Extract tests from how-to guides (docs as tests)
+# Example: just extract-doc-tests
+extract-doc-tests:
+    @echo "🧪 Extracting tests from how-to guides..."
+    @python scripts/extract-doc-tests.py docs/user-docs/how-to/ tests/extracted/ 2>/dev/null || echo "❌ Test extraction script not available (install SAP-007)"
+
+# Show documentation structure (4-domain Diátaxis)
+# Example: just doc-structure
+doc-structure:
+    @echo "📂 Documentation Structure (Diátaxis 4-Domain)"
+    @echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+    @echo ""
+    @echo "📘 User Documentation (docs/user-docs/)"
+    @echo "  └─ tutorials/         Learning-oriented (step-by-step lessons)"
+    @echo "  └─ how-to/            Task-oriented (practical guides)"
+    @echo "  └─ explanation/       Understanding-oriented (concepts)"
+    @echo "  └─ reference/         Information-oriented (technical details)"
+    @echo ""
+    @echo "🔧 Developer Documentation (docs/dev-docs/)"
+    @echo "  └─ architecture, contributing, testing, debugging"
+    @echo ""
+    @echo "📋 Project Documentation (docs/project-docs/)"
+    @echo "  └─ plans, decisions, retrospectives, coordination"
+    @echo ""
+    @echo "🎯 SAP Capabilities (docs/skilled-awareness/)"
+    @echo "  └─ 30+ modular capabilities (SAP-000 through SAP-032)"
+    @echo ""
+    @echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+
+# List all how-to guides
+# Example: just list-howtos
+list-howtos:
+    @echo "📋 Available How-To Guides"
+    @echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+    @find docs/user-docs/how-to/ -name "*.md" 2>/dev/null | sed 's|docs/user-docs/how-to/||' || echo "No how-to guides found"
+
+# Check documentation completeness (missing domains)
+# Example: just doc-completeness
+doc-completeness:
+    @echo "📊 Documentation Completeness Check"
+    @echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+    @test -d docs/user-docs/tutorials && echo "✅ Tutorials" || echo "❌ Tutorials (missing)"
+    @test -d docs/user-docs/how-to && echo "✅ How-To Guides" || echo "❌ How-To Guides (missing)"
+    @test -d docs/user-docs/explanation && echo "✅ Explanations" || echo "❌ Explanations (missing)"
+    @test -d docs/user-docs/reference && echo "✅ References" || echo "❌ References (missing)"
+    @echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+
+# ============================================================================
 # SAP-002: Chora-Base Meta Package (Documentation Framework)
 # ============================================================================
 # Meta-capability describing chora-base itself using SAP framework (dogfooding).

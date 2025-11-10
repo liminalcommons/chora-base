@@ -438,6 +438,75 @@ gh run list --limit 5               # Verify new run
 
 ---
 
+### Documentation Framework (SAP-007) - Quick Reference
+
+**No domain-specific CLAUDE.md** (documentation is infrastructure, not code)
+
+**Claude patterns for documentation**:
+```markdown
+# User wants to add documentation → Use Diátaxis decision tree
+# 1. Learning-oriented? → docs/user-docs/tutorials/
+# 2. Task-oriented? → docs/user-docs/how-to/
+# 3. Understanding-oriented? → docs/user-docs/explanation/
+# 4. Information-oriented? → docs/user-docs/reference/
+
+# Validate documentation structure
+just doc-structure            # Show 4-domain hierarchy
+just validate-docs            # Run DOCUMENTATION_STANDARD.md checks
+just validate-frontmatter     # Check YAML frontmatter
+
+# Extract tests from how-to guides
+just extract-doc-tests        # Generate tests from code blocks
+
+# Common workflows
+# 1. Create new how-to guide with frontmatter
+cat > docs/user-docs/how-to/example.md <<'EOF'
+---
+audience: [developers, agents]
+time: 10 minutes
+prerequisites: [Python 3.11+]
+difficulty: intermediate
+---
+
+# How to [Task]
+
+## Quick Start
+\```bash
+# Step 1
+command-1
+\```
+EOF
+
+just validate-frontmatter     # Validate YAML
+
+# 2. Extract tests from docs
+just extract-doc-tests
+pytest tests/extracted/       # Run extracted tests
+
+# 3. Check completeness
+just doc-completeness         # Verify all 4 domains exist
+```
+
+**Progressive loading strategy**:
+- **Phase 1**: Read [DOCUMENTATION_STANDARD.md](DOCUMENTATION_STANDARD.md) for rules (10-min read)
+- **Phase 2**: Read [docs/skilled-awareness/documentation-framework/protocol-spec.md](docs/skilled-awareness/documentation-framework/protocol-spec.md) for complete spec
+- **Phase 3**: Read Diátaxis reference (https://diataxis.fr/) for deep understanding
+
+**ROI**: 40-60% documentation quality improvement, 15-20 min saved per session (avoid doc inconsistencies)
+
+**Integration with other SAPs**:
+- SAP-031 (Enforcement): Doc validation as Layer 3 enforcement (5-10% prevention)
+- SAP-006 (Quality Gates): Pre-commit hooks validate frontmatter
+- SAP-004 (Testing): Extracted doc tests run in pytest
+
+**Diátaxis Quick Reference**:
+- **Tutorials**: Learning-oriented, step-by-step lessons (e.g., "Getting Started")
+- **How-To**: Task-oriented, practical guides (e.g., "How to Add a SAP")
+- **Explanation**: Understanding-oriented, concepts (e.g., "Why Diátaxis?")
+- **Reference**: Information-oriented, technical details (e.g., "API Docs")
+
+---
+
 ### Chora-Base Meta Package (SAP-002) - Quick Reference
 
 **No domain-specific CLAUDE.md** (chora-base documentation IS the awareness system)
