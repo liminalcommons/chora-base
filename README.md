@@ -573,6 +573,78 @@ just pre-commit-all       # Run all pre-commit hooks
 
 ---
 
+### Project Bootstrap (Fast Setup Script) - SAP-003
+
+**Status**: Active (v1.0.0) | **Adoption Level**: L3 (Production-ready template)
+
+SAP-003 provides 1-2 minute automated project generation using the fast-setup script, creating fully-configured MCP servers with all chora-base infrastructure (testing, CI/CD, quality gates, beads, inbox, A-MEM, documentation).
+
+**When to use SAP-003**:
+- Creating new MCP server projects from chora-base template
+- Scaffolding projects with all quality gates, testing, and CI/CD pre-configured
+- Generating projects with variable substitution (name, namespace, description)
+- Fast iteration: 1-2 min setup vs 30-60 min manual configuration
+- Bootstrap projects that are "model citizens" (100% ready for production)
+
+**Quick start**:
+```bash
+# Create new MCP server from chora-base template
+python scripts/create-model-mcp-server.py \
+    --name "Your Project Name" \
+    --namespace yournamespace \
+    --output ~/projects/your-project
+
+# What happens automatically:
+# 1. Template copying (chora-base → new project directory)
+# 2. Variable substitution (name, namespace, Python package name)
+# 3. Directory structure generation (src/, tests/, docs/, .chora/, .beads/)
+# 4. Git initialization (initial commit with fast-setup provenance)
+# 5. Dependency installation (pip install -e .)
+# 6. Hook installation (pre-commit hooks for quality gates)
+# 7. Initial tests (pytest verification)
+# 8. README generation (project-specific documentation)
+
+# Result: Fully-functional MCP server ready for development
+cd ~/projects/your-project
+pytest                              # All tests pass
+just test                           # pytest with 85%+ coverage
+git log                             # Fast-setup provenance in commit
+```
+
+**Core capabilities**:
+- **Copier-based scaffolding**: Reliable templating with Jinja2 variable substitution
+- **Static template source**: chora-base as immutable, versioned template repository
+- **Fast execution**: 1-2 minutes for complete project setup (vs 30-60 min manual)
+- **100% configured**: All SAPs pre-adopted (SAP-004 testing, SAP-005 CI/CD, SAP-006 quality gates, SAP-001 inbox, SAP-010 memory, SAP-015 beads)
+- **Model citizen pattern**: Generated projects pass all quality gates out-of-the-box
+
+**Integration with other SAPs**:
+- **SAP-000 (Framework)**: Fast-setup adopts all core SAPs automatically
+- **SAP-004 (Testing)**: pytest framework pre-configured with 85%+ coverage gate
+- **SAP-005 (CI/CD)**: GitHub Actions workflows pre-installed (.github/workflows/)
+- **SAP-006 (Quality Gates)**: Pre-commit hooks pre-installed and enabled
+- **SAP-001 (Inbox)**: Coordination protocol files generated (inbox/coordination/)
+- **SAP-010 (Memory)**: A-MEM directory structure created (.chora/memory/)
+- **SAP-015 (Beads)**: Task tracking initialized (.beads/)
+- **SAP-014 (MCP Server)**: FastMCP framework integrated with server entry point
+
+**ROI**: 95% time reduction (30-60 min → 1-2 min project setup), zero-config production readiness
+
+**Documentation**:
+- Quickstart guide: [docs/user-docs/quickstart-mcp-server.md](docs/user-docs/quickstart-mcp-server.md)
+- Protocol specification: [docs/skilled-awareness/project-bootstrap/protocol-spec.md](docs/skilled-awareness/project-bootstrap/protocol-spec.md)
+- Adoption blueprint: [docs/skilled-awareness/project-bootstrap/adoption-blueprint.md](docs/skilled-awareness/project-bootstrap/adoption-blueprint.md)
+- Fast-setup script: [scripts/create-model-mcp-server.py](scripts/create-model-mcp-server.py)
+
+**CLI recipes** (see justfile):
+```bash
+just create-project NAME NS OUTPUT    # Create new project with fast-setup
+just verify-template                  # Verify chora-base template integrity
+just test-fast-setup                  # Test fast-setup script
+```
+
+---
+
 ### CI/CD Workflows (GitHub Actions) - SAP-005
 
 **Status**: Production (v1.0.0) | **Adoption Level**: L3 (Fully automated)

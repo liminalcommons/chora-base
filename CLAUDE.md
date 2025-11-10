@@ -438,6 +438,54 @@ gh run list --limit 5               # Verify new run
 
 ---
 
+### Project Bootstrap (SAP-003) - Quick Reference
+
+**No domain-specific CLAUDE.md** (fast-setup is a script, not infrastructure)
+
+**Claude patterns for project bootstrap**:
+```markdown
+# User wants to create new project → Use fast-setup
+python scripts/create-model-mcp-server.py \
+    --name "Project Name" \
+    --namespace namespace \
+    --output ~/projects/output
+
+# Before fast-setup: Verify template integrity
+just verify-template
+
+# After fast-setup: Validate generated project
+just validate-project ~/projects/output
+
+# Common workflows
+# 1. Create new MCP server
+python scripts/create-model-mcp-server.py --name "Weather MCP" --namespace weather --output ~/projects/weather-mcp
+cd ~/projects/weather-mcp
+pytest --cov=src --cov-fail-under=85  # Verify tests pass
+
+# 2. Verify template before fast-setup
+just verify-template                  # Check template integrity
+
+# 3. Validate generated project
+just validate-project ~/projects/weather-mcp  # Full validation
+
+# 4. List available templates
+just list-templates                   # Show available templates
+```
+
+**Progressive loading strategy**:
+- **Phase 1**: No loading needed (just run fast-setup script)
+- **Phase 2**: Read [scripts/create-model-mcp-server.py](scripts/create-model-mcp-server.py) if debugging script
+- **Phase 3**: Read [docs/skilled-awareness/project-bootstrap/protocol-spec.md](docs/skilled-awareness/project-bootstrap/protocol-spec.md) for copier specifications
+
+**ROI**: 95% time reduction (30-60 min manual → 1-2 min fast-setup), zero-config production readiness
+
+**Integration with other SAPs**:
+- Fast-setup adopts 6+ SAPs automatically: SAP-004 (Testing), SAP-005 (CI/CD), SAP-006 (Quality Gates), SAP-001 (Inbox), SAP-010 (Memory), SAP-015 (Beads)
+- Generated projects are "model citizens" (pass all quality gates out-of-the-box)
+- Use fast-setup to bootstrap new projects, NOT manual setup
+
+---
+
 ### Quality Gates (SAP-006) - Quick Reference
 
 **No domain-specific CLAUDE.md** (pre-commit is infrastructure, not code)

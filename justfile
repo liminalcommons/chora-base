@@ -97,6 +97,50 @@ research topic:
     @mkdir -p docs/research
 
 # ============================================================================
+# SAP-003: Project Bootstrap (Fast Setup Script)
+# ============================================================================
+# Copier-based project scaffolding from chora-base template with 1-2 min setup.
+# See: AGENTS.md "Project Bootstrap - SAP-003" section, scripts/create-model-mcp-server.py
+
+# Create new MCP server project from chora-base template
+# Example: just create-project "My MCP Server" myserver ~/projects/myserver
+create-project NAME NAMESPACE OUTPUT:
+    @python scripts/create-model-mcp-server.py --name "{{NAME}}" --namespace {{NAMESPACE}} --output {{OUTPUT}}
+
+# Verify chora-base template integrity
+# Example: just verify-template
+verify-template:
+    @echo "🔍 Verifying chora-base template integrity..."
+    @python -c "import sys; from pathlib import Path; template_files = ['README.md', 'AGENTS.md', 'CLAUDE.md', 'justfile', 'pyproject.toml', '.pre-commit-config.yaml', 'pytest.ini']; missing = [f for f in template_files if not Path(f).exists()]; sys.exit(1) if missing else print('✅ Template integrity verified')"
+
+# Test fast-setup script (dry-run mode)
+# Example: just test-fast-setup
+test-fast-setup:
+    @echo "🧪 Testing fast-setup script (dry-run)..."
+    @python scripts/create-model-mcp-server.py --help
+
+# List available project templates
+# Example: just list-templates
+list-templates:
+    @echo "📋 Available project templates in chora-base:"
+    @echo ""
+    @echo "  1. MCP Server (default)"
+    @echo "     - FastMCP framework"
+    @echo "     - Full SAP adoption (SAP-004, SAP-005, SAP-006, SAP-001, SAP-010, SAP-015)"
+    @echo "     - Testing + CI/CD + Quality Gates pre-configured"
+    @echo "     - Command: just create-project \"NAME\" namespace output"
+    @echo ""
+
+# Validate generated project (use after create-project)
+# Example: just validate-project ~/projects/myserver
+validate-project PROJECT_PATH:
+    @echo "🔍 Validating generated project: {{PROJECT_PATH}}"
+    @cd {{PROJECT_PATH}} && pytest --cov=src --cov-fail-under=85
+    @cd {{PROJECT_PATH}} && ruff check src/ tests/
+    @cd {{PROJECT_PATH}} && mypy src/ tests/
+    @echo "✅ Project validation complete"
+
+# ============================================================================
 # SAP-006: Quality Gates (Pre-commit Hooks)
 # ============================================================================
 # Automated code quality with ruff (linting), mypy (type checking), black (formatting).

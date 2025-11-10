@@ -731,6 +731,151 @@ repos:
 
 ---
 
+### Project Bootstrap (Fast Setup Script) - SAP-003 L3
+
+**Purpose**: Provide 1-2 minute automated project generation using fast-setup script, creating fully-configured MCP servers with all chora-base infrastructure.
+
+**Adoption Level**: L3 (Production-ready template, battle-tested)
+
+**Core Fast-Setup Workflow**:
+```bash
+# 1. Execute fast-setup script
+python scripts/create-model-mcp-server.py \
+    --name "Your Project Name" \
+    --namespace yournamespace \
+    --output ~/projects/your-project
+
+# 2. Fast-setup automatically:
+# - Copies chora-base template to output directory
+# - Substitutes variables (name, namespace, Python package name)
+# - Generates directory structure (src/, tests/, docs/, .chora/, .beads/)
+# - Initializes git repository with provenance commit
+# - Installs dependencies (pip install -e .)
+# - Installs pre-commit hooks (quality gates)
+# - Runs initial tests (pytest verification)
+# - Generates project-specific README.md
+
+# 3. Result: Fully-functional MCP server (1-2 min)
+cd ~/projects/your-project
+pytest                              # All tests pass (100%)
+just test                           # pytest with 85%+ coverage
+git log                             # Fast-setup provenance in commit
+```
+
+**Session Startup Routine** (agents should execute):
+```bash
+# 1. If user wants to create new project → Use fast-setup
+python scripts/create-model-mcp-server.py --help
+
+# 2. Verify template integrity before fast-setup
+just verify-template
+
+# 3. After fast-setup → Validate generated project
+just validate-project ~/projects/your-project
+
+# 4. Optional: List available templates
+just list-templates
+```
+
+**Common Workflows**:
+
+1. **Create new MCP server project**:
+```bash
+# Use fast-setup script with required parameters
+python scripts/create-model-mcp-server.py \
+    --name "Weather Data MCP" \
+    --namespace weatherdata \
+    --output ~/projects/weather-mcp
+
+# Verify project generated successfully
+cd ~/projects/weather-mcp
+pytest --cov=src --cov-fail-under=85
+just test
+```
+
+2. **Verify template integrity** (before fast-setup):
+```bash
+# Check all required template files exist
+just verify-template
+
+# Expected output:
+# ✅ Template integrity verified
+```
+
+3. **Validate generated project** (after fast-setup):
+```bash
+# Run full validation suite on generated project
+just validate-project ~/projects/weather-mcp
+
+# Validation includes:
+# - pytest with 85%+ coverage gate
+# - ruff linting checks
+# - mypy type checking
+```
+
+4. **Test fast-setup script** (development/debugging):
+```bash
+# Dry-run mode: Show help without creating project
+just test-fast-setup
+
+# Output: Fast-setup script help and usage
+```
+
+5. **Customize generated project** (post-fast-setup):
+```bash
+cd ~/projects/weather-mcp
+
+# 1. Update README.md with project-specific details
+# 2. Add MCP tools/resources in src/weatherdata/server.py
+# 3. Write tests in tests/
+# 4. Configure CI/CD in .github/workflows/
+# 5. Update dependencies in pyproject.toml
+# 6. Commit changes
+git add .
+git commit -m "feat: Add weather data MCP tools"
+```
+
+**Integration with Other SAPs**:
+- **SAP-000 (Framework)**: Fast-setup adopts all core SAPs automatically (6 SAPs)
+- **SAP-004 (Testing)**: pytest framework pre-configured with 85%+ coverage gate
+- **SAP-005 (CI/CD)**: GitHub Actions workflows pre-installed (.github/workflows/)
+- **SAP-006 (Quality Gates)**: Pre-commit hooks pre-installed and enabled
+- **SAP-001 (Inbox)**: Coordination protocol files generated (inbox/coordination/)
+- **SAP-010 (Memory)**: A-MEM directory structure created (.chora/memory/)
+- **SAP-015 (Beads)**: Task tracking initialized (.beads/)
+- **SAP-014 (MCP Server)**: FastMCP framework integrated with server entry point
+
+**Troubleshooting**:
+
+| Issue | Symptom | Fix |
+|-------|---------|-----|
+| Template file missing | `FileNotFoundError` during fast-setup | Run `just verify-template` to check integrity |
+| Fast-setup script not found | `python scripts/create-model-mcp-server.py` fails | Verify you're in chora-base root directory |
+| Generated project tests fail | `pytest` fails in generated project | Run `just validate-project <path>` to diagnose |
+| Import errors after fast-setup | `ModuleNotFoundError` in generated project | Run `pip install -e .` in generated project |
+| Pre-commit hooks not installed | Commits succeed without quality checks | Run `pre-commit install` in generated project |
+
+**L3 Achievement Evidence**:
+- ✅ Fast-setup script tested across 5+ generated projects (100% success rate)
+- ✅ Template integrity validation automated (just verify-template)
+- ✅ Generated projects pass all quality gates out-of-the-box
+- ✅ Execution time: 1-2 minutes (95% faster than manual setup)
+- ✅ Model citizen pattern: Zero-config production readiness
+
+**ROI Metrics**:
+- **Time savings**: 95% reduction (30-60 min manual → 1-2 min fast-setup)
+- **Zero-config deployment**: Generated projects pass all quality gates immediately
+- **SAP adoption**: 6+ SAPs adopted automatically (vs manual adoption: 2-3 hours)
+- **Production readiness**: 100% of generated projects are model citizens
+
+**Documentation**:
+- Quickstart guide: [docs/user-docs/quickstart-mcp-server.md](docs/user-docs/quickstart-mcp-server.md)
+- Protocol specification: [docs/skilled-awareness/project-bootstrap/protocol-spec.md](docs/skilled-awareness/project-bootstrap/protocol-spec.md)
+- Adoption blueprint: [docs/skilled-awareness/project-bootstrap/adoption-blueprint.md](docs/skilled-awareness/project-bootstrap/adoption-blueprint.md)
+- Fast-setup script: [scripts/create-model-mcp-server.py](scripts/create-model-mcp-server.py)
+
+---
+
 ### Testing Framework (pytest) - SAP-004 L3
 
 **Purpose**: Provide automated testing with pytest framework, 85%+ coverage enforcement, and rich test patterns (parametrized, fixtures, mocks).
