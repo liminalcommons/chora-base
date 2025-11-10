@@ -28,6 +28,10 @@ phase_3_token_estimate: 10000
 
 This file provides **Claude Code-specific patterns** for generating Python projects using Claude's tool suite (Bash, Read, Write, Edit).
 
+**📖 New to SAP-003?** → Read **[README.md](README.md)** first (10-min read) for generation workflow, structure overview, and troubleshooting guide.
+
+**This CLAUDE.md provides**: Claude Code tool patterns (Bash, Read, Write, Edit) for project generation, validation, and error recovery.
+
 ### First-Time Generation
 
 1. Read [AGENTS.md](AGENTS.md) for generic project generation workflows

@@ -28,6 +28,17 @@ phase_3_token_estimate: 12000
 
 This file provides **agent-executable workflows** for generating Python projects from chora-base template.
 
+**📖 New to SAP-003?** → Read **[README.md](README.md)** first (10-min read)
+
+The README provides:
+- 🚀 **Quick Start** - Single command to generate production-ready project in 1-2 minutes
+- 📂 **Generated Structure** - 100+ files breakdown (src/, tests/, docs/, docker/, .github/)
+- 🎓 **5-Step Workflow** - Blueprint-based generation process (gather → copy → rename → process → git init)
+- 🔧 **Troubleshooting** - 4 common problems with solutions
+- 🔍 **Blueprint System** - 12 template files with `{{ var }}` substitution
+
+**This AGENTS.md provides**: Agent-executable workflows for generation, validation, customization, and troubleshooting.
+
 ### What is Project Bootstrap?
 
 A **comprehensive project generation system** enabling agents to:
