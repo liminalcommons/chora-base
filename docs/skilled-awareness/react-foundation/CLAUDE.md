@@ -24,6 +24,22 @@ phase_3_token_estimate: 10500
 
 ---
 
+## 📖 Quick Reference
+
+**New to SAP-020?** → Read **[README.md](README.md)** first (10-min read)
+
+The README provides:
+- 🚀 **Quick Start** - 2 initialization commands (Next.js App Router, Vite SPA)
+- 📚 **React 19 Features** - RSC, Actions API, `use()` hook, ref as prop, concurrent features
+- 🎯 **Next.js 15 App Router** - File-based routing, special files, streaming SSR, edge runtime
+- 🔧 **TypeScript Strict Mode** - Catch 40% more errors, no `any` types, index signature safety
+- 📊 **Component Patterns** - Server components, client components, Server Actions
+- 🔧 **Troubleshooting** - 5 common problems (module errors, strict mode, client directive, slow HMR, build failures)
+
+**This CLAUDE.md provides**: Claude Code-specific workflows using Bash (scaffolding), Write (config), Edit (modifications).
+
+---
+
 ## Quick Start for Claude
 
 This file provides **Claude Code-specific patterns** for scaffolding React projects.
