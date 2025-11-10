@@ -876,6 +876,162 @@ git commit -m "feat: Add weather data MCP tools"
 
 ---
 
+### Chora-Base Meta Package (Documentation Framework) - SAP-002 L3
+
+**Purpose**: Meta-capability that describes chora-base itself using the SAP framework, demonstrating self-documenting architecture through dogfooding.
+
+**Adoption Level**: L3 (Self-describing, production-ready documentation framework)
+
+**Core Documentation Framework**:
+```bash
+# Chora-base uses 4-domain documentation structure:
+docs/
+├── user-docs/           # Getting started, tutorials, how-to guides
+├── dev-docs/            # Architecture, contributing, development
+├── project-docs/        # Plans, decisions, retrospectives
+└── skilled-awareness/   # SAP capabilities (30+ modular packages)
+
+# Root-level awareness files:
+AGENTS.md                # Generic agent patterns
+CLAUDE.md                # Claude-specific navigation
+sap-catalog.json         # Machine-readable SAP catalog
+```
+
+**Session Startup Routine** (agents should execute):
+```bash
+# 1. Understand what chora-base is
+cat README.md                         # Overview, features, quick start
+
+# 2. Explore SAP catalog (30+ capabilities)
+just list-saps                        # List all available SAPs
+cat sap-catalog.json                  # Machine-readable catalog
+cat docs/skilled-awareness/INDEX.md   # Human-readable index
+
+# 3. Check chora-base structure
+just verify-structure                 # Validate integrity
+just chora-info                       # Show meta information
+
+# 4. Navigate to relevant domain
+ls docs/user-docs/                    # User guides, tutorials
+ls docs/dev-docs/                     # Development setup
+ls docs/project-docs/                 # Plans, decisions
+ls docs/skilled-awareness/            # SAP capabilities
+```
+
+**Common Workflows**:
+
+1. **Understand chora-base architecture**:
+```bash
+# Read root awareness files
+cat AGENTS.md                         # Agent patterns
+cat CLAUDE.md                         # Claude navigation
+
+# Explore documentation domains
+cat docs/user-docs/AGENTS.md          # User documentation patterns
+cat docs/dev-docs/AGENTS.md           # Developer patterns
+cat docs/project-docs/AGENTS.md       # Project management patterns
+cat docs/skilled-awareness/AGENTS.md  # SAP patterns
+```
+
+2. **Browse SAP catalog**:
+```bash
+# Machine-readable catalog
+just list-saps                        # List all SAPs with status
+cat sap-catalog.json | jq '.saps[] | {id, name, status, version}'
+
+# Human-readable index
+cat docs/skilled-awareness/INDEX.md   # Categorized SAP list
+```
+
+3. **Explore 4-domain documentation**:
+```bash
+# User documentation (getting started, tutorials)
+just explore-docs                     # Show documentation structure
+ls docs/user-docs/                    # List user guides
+cat docs/user-docs/quickstart-mcp-server.md
+
+# Developer documentation (architecture, contributing)
+ls docs/dev-docs/                     # List developer docs
+cat docs/dev-docs/ARCHITECTURE.md
+
+# Project documentation (plans, decisions, retrospectives)
+ls docs/project-docs/                 # List project docs
+ls docs/project-docs/plans/           # Development plans
+
+# SAP documentation (30+ modular capabilities)
+ls docs/skilled-awareness/            # List all SAPs
+cat docs/skilled-awareness/INDEX.md   # SAP catalog
+```
+
+4. **Verify chora-base structure**:
+```bash
+# Automated integrity check
+just verify-structure                 # Validate required dirs/files
+
+# Manual verification
+ls -la                                # Root files (AGENTS.md, CLAUDE.md, etc.)
+ls docs/                              # 4 documentation domains
+ls src/                               # Source code
+ls tests/                             # Test suite
+ls scripts/                           # Automation scripts
+```
+
+5. **Learn SAP framework by example** (meta-pattern):
+```bash
+# Chora-base IS a SAP (SAP-002), demonstrating SAP framework
+ls docs/skilled-awareness/chora-base/
+# - capability-charter.md (problem statement, solution design)
+# - protocol-spec.md (complete technical specification)
+# - awareness-guide.md (operating patterns)
+# - adoption-blueprint.md (installation guide)
+# - ledger.md (metrics, feedback, version history)
+
+# Compare with other SAPs to see consistent pattern
+ls docs/skilled-awareness/testing-framework/
+ls docs/skilled-awareness/ci-cd-workflows/
+ls docs/skilled-awareness/quality-gates/
+```
+
+**Integration with Other SAPs**:
+- **SAP-000 (Framework)**: chora-base implements all SAP framework requirements (5 artifacts)
+- **SAP-009 (Awareness)**: chora-base uses nested AGENTS.md/CLAUDE.md hierarchy extensively
+- **SAP-003 (Bootstrap)**: Fast-setup script generates projects from chora-base template
+- **SAP-027 (Dogfooding)**: chora-base validates SAP patterns through self-application
+- **ALL SAPs**: chora-base provides the foundation that all other SAPs build upon
+
+**Troubleshooting**:
+
+| Issue | Symptom | Fix |
+|-------|---------|-----|
+| Missing documentation files | `FileNotFoundError` when reading docs | Run `just verify-structure` to check integrity |
+| SAP catalog not found | Cannot list SAPs | Verify `sap-catalog.json` exists in root directory |
+| Documentation domain confusion | Unclear which docs/ subdirectory to use | Read [CLAUDE.md](CLAUDE.md) navigation tree (lines 174-365) |
+| Can't find specific SAP | Looking for SAP-XXX documentation | Use `just list-saps` or read [docs/skilled-awareness/INDEX.md](docs/skilled-awareness/INDEX.md) |
+| Outdated documentation | Documentation doesn't match current version | Check git log and version in README.md |
+
+**L3 Achievement Evidence**:
+- ✅ 4-domain documentation structure implemented and documented
+- ✅ 30+ SAPs packaged using consistent SAP framework pattern
+- ✅ Self-describing architecture (chora-base AS a SAP demonstrates SAP framework)
+- ✅ Progressive context loading via nested AGENTS.md/CLAUDE.md hierarchy
+- ✅ Machine-readable catalog (sap-catalog.json) for programmatic access
+
+**ROI Metrics**:
+- **Documentation clarity**: 4 domains with clear separation of concerns
+- **SAP reusability**: 30+ modular capabilities for adoption
+- **Self-documenting**: Zero documentation debt (chora-base documents itself)
+- **Agent discoverability**: Progressive context loading saves 60-70% tokens
+- **Time savings**: 52+ hours per project via pre-configured infrastructure
+
+**Documentation**:
+- Benefits guide: [docs/user-docs/explanation/benefits-of-chora-base.md](docs/user-docs/explanation/benefits-of-chora-base.md)
+- Architecture overview: [docs/dev-docs/AGENTS.md](docs/dev-docs/AGENTS.md)
+- Protocol specification: [docs/skilled-awareness/chora-base/protocol-spec.md](docs/skilled-awareness/chora-base/protocol-spec.md)
+- Adoption blueprint: [docs/skilled-awareness/chora-base/adoption-blueprint.md](docs/skilled-awareness/chora-base/adoption-blueprint.md)
+- SAP catalog: [sap-catalog.json](sap-catalog.json), [docs/skilled-awareness/INDEX.md](docs/skilled-awareness/INDEX.md)
+
+---
+
 ### Testing Framework (pytest) - SAP-004 L3
 
 **Purpose**: Provide automated testing with pytest framework, 85%+ coverage enforcement, and rich test patterns (parametrized, fixtures, mocks).

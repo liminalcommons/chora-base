@@ -821,6 +821,82 @@ just beads-create "title"  # Create new task
 
 ---
 
+### Chora-Base Meta Package (Documentation Framework) - SAP-002
+
+**Status**: Active (v1.0.0) | **Adoption Level**: L3 (Self-describing, dogfooding SAP framework)
+
+SAP-002 is the **meta-capability** that describes chora-base itself using the SAP (Skilled Awareness Package) framework. This is dogfooding at its finest: chora-base documents its own architecture, capabilities, and adoption patterns using the same SAP framework it provides.
+
+**When to use SAP-002**:
+- Understanding what chora-base is and how it works
+- Learning the 4-domain documentation structure (user-docs, dev-docs, project-docs, skilled-awareness)
+- Exploring the SAP framework by example (chora-base AS a SAP)
+- Seeing how meta-capabilities can be self-describing
+- Reference implementation for documenting complex projects
+
+**What you get**:
+- **4-domain documentation**: [docs/user-docs/](docs/user-docs/) (getting started, tutorials, how-to), [docs/dev-docs/](docs/dev-docs/) (architecture, contributing), [docs/project-docs/](docs/project-docs/) (plans, decisions), [docs/skilled-awareness/](docs/skilled-awareness/) (SAP capabilities)
+- **Universal foundation patterns**: Project structure, quality gates, testing, CI/CD, memory, coordination
+- **30+ SAP catalog**: Modular capabilities for adoption ([sap-catalog.json](sap-catalog.json), [docs/skilled-awareness/INDEX.md](docs/skilled-awareness/INDEX.md))
+- **Agent-first design**: AGENTS.md/CLAUDE.md hierarchy, nested awareness pattern, progressive context loading
+- **Self-describing architecture**: chora-base documented as SAP-002, demonstrating SAP framework power
+
+**Quick start**:
+```bash
+# Explore chora-base documentation structure
+ls docs/                           # 4 domains: user-docs, dev-docs, project-docs, skilled-awareness
+cat AGENTS.md                      # Agent awareness patterns
+cat CLAUDE.md                      # Claude-specific navigation
+
+# View SAP catalog (30+ capabilities)
+cat sap-catalog.json | jq '.saps[] | {id, name, status}'
+cat docs/skilled-awareness/INDEX.md
+
+# Understand chora-base architecture
+cat docs/dev-docs/AGENTS.md       # Developer setup, architecture
+cat docs/user-docs/AGENTS.md      # User guides, tutorials
+
+# Explore SAP-002 artifacts (chora-base as a SAP)
+ls docs/skilled-awareness/chora-base/
+# - capability-charter.md (problem statement, solution design)
+# - protocol-spec.md (complete technical specification)
+# - awareness-guide.md (operating patterns)
+# - adoption-blueprint.md (installation guide)
+# - ledger.md (metrics, feedback, version history)
+```
+
+**Core capabilities**:
+- **Meta-SAP pattern**: chora-base describes itself using SAP framework (self-documenting architecture)
+- **4-domain documentation**: Clear separation of concerns (user, dev, project, capabilities)
+- **SAP framework demonstration**: 30+ SAPs showing how to package capabilities
+- **Nested awareness**: Progressive context loading via AGENTS.md/CLAUDE.md hierarchy (SAP-009)
+- **Universal patterns**: Foundation for any Python project (library, CLI, API, MCP server)
+
+**Integration with other SAPs**:
+- **SAP-000 (Framework)**: chora-base implements all SAP framework requirements
+- **SAP-009 (Awareness)**: chora-base uses nested awareness pattern extensively
+- **SAP-003 (Bootstrap)**: Fast-setup script generates projects from chora-base template
+- **SAP-027 (Dogfooding)**: chora-base validates SAP patterns through self-application
+- **ALL SAPs**: chora-base provides the foundation that all other SAPs build upon
+
+**ROI**: 52+ hours saved per project via pre-configured infrastructure, zero-config production readiness
+
+**Documentation**:
+- Benefits guide: [docs/user-docs/explanation/benefits-of-chora-base.md](docs/user-docs/explanation/benefits-of-chora-base.md)
+- Architecture overview: [docs/dev-docs/AGENTS.md](docs/dev-docs/AGENTS.md)
+- Protocol specification: [docs/skilled-awareness/chora-base/protocol-spec.md](docs/skilled-awareness/chora-base/protocol-spec.md)
+- Adoption blueprint: [docs/skilled-awareness/chora-base/adoption-blueprint.md](docs/skilled-awareness/chora-base/adoption-blueprint.md)
+- SAP catalog: [sap-catalog.json](sap-catalog.json), [docs/skilled-awareness/INDEX.md](docs/skilled-awareness/INDEX.md)
+
+**CLI recipes** (see justfile):
+```bash
+just list-saps                     # List all available SAPs
+just explore-docs                  # Open documentation in browser
+just verify-structure              # Validate chora-base structure
+```
+
+---
+
 ### Project Types Supported
 
 - **Library/Package** - Python libraries for PyPI distribution

@@ -438,6 +438,56 @@ gh run list --limit 5               # Verify new run
 
 ---
 
+### Chora-Base Meta Package (SAP-002) - Quick Reference
+
+**No domain-specific CLAUDE.md** (chora-base documentation IS the awareness system)
+
+**Claude patterns for chora-base navigation**:
+```markdown
+# User wants to understand chora-base → Navigate 4-domain docs
+cat README.md                         # Overview, features, quick start
+just list-saps                        # List all 30+ SAPs
+cat docs/skilled-awareness/INDEX.md   # SAP catalog
+
+# Explore documentation domains
+cat docs/user-docs/AGENTS.md          # User guides, tutorials
+cat docs/dev-docs/AGENTS.md           # Architecture, contributing
+cat docs/project-docs/AGENTS.md       # Plans, decisions
+cat docs/skilled-awareness/AGENTS.md  # SAP capabilities
+
+# Verify structure
+just verify-structure                 # Validate integrity
+just chora-info                       # Show meta information
+
+# Common workflows
+# 1. New user wants to understand chora-base
+cat README.md
+just explore-docs
+
+# 2. Developer wants to contribute
+cat docs/dev-docs/AGENTS.md
+cat CONTRIBUTING.md
+
+# 3. Find specific SAP
+just list-saps | grep "SAP-015"
+cat docs/skilled-awareness/INDEX.md
+
+# 4. Learn SAP framework by example
+ls docs/skilled-awareness/chora-base/  # SAP-002 artifacts (5 files)
+ls docs/skilled-awareness/testing-framework/  # Compare pattern
+```
+
+**Progressive loading strategy**:
+- **Phase 1**: Read [README.md](README.md) for overview (5-min read)
+- **Phase 2**: Read domain-specific AGENTS.md ([docs/user-docs/AGENTS.md](docs/user-docs/AGENTS.md), [docs/dev-docs/AGENTS.md](docs/dev-docs/AGENTS.md)) based on task
+- **Phase 3**: Read [docs/skilled-awareness/chora-base/protocol-spec.md](docs/skilled-awareness/chora-base/protocol-spec.md) for complete architecture
+
+**ROI**: 60-70% token savings via progressive loading, zero documentation debt (self-documenting architecture)
+
+**Navigation principle**: "Nearest file wins" - navigate from root (AGENTS.md, CLAUDE.md) → domain → capability → feature
+
+---
+
 ### Project Bootstrap (SAP-003) - Quick Reference
 
 **No domain-specific CLAUDE.md** (fast-setup is a script, not infrastructure)

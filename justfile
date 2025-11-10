@@ -97,6 +97,65 @@ research topic:
     @mkdir -p docs/research
 
 # ============================================================================
+# SAP-002: Chora-Base Meta Package (Documentation Framework)
+# ============================================================================
+# Meta-capability describing chora-base itself using SAP framework (dogfooding).
+# See: AGENTS.md "Chora-Base Meta Package - SAP-002" section, README.md
+
+# List all available SAPs in catalog
+# Example: just list-saps
+list-saps:
+    @echo "📋 Available SAPs in chora-base:"
+    @echo ""
+    @cat sap-catalog.json | python -c "import sys, json; saps = json.load(sys.stdin)['saps']; [print(f\"  {s['id']}: {s['name']} (status: {s['status']})\") for s in saps]"
+
+# Explore chora-base documentation structure
+# Example: just explore-docs
+explore-docs:
+    @echo "📖 Chora-base documentation structure:"
+    @echo ""
+    @echo "1. User Documentation (docs/user-docs/)"
+    @ls -1 docs/user-docs/ | head -10
+    @echo ""
+    @echo "2. Developer Documentation (docs/dev-docs/)"
+    @ls -1 docs/dev-docs/ | head -10
+    @echo ""
+    @echo "3. Project Documentation (docs/project-docs/)"
+    @ls -1 docs/project-docs/ | head -10
+    @echo ""
+    @echo "4. SAP Capabilities (docs/skilled-awareness/)"
+    @ls -1 docs/skilled-awareness/ | head -15
+    @echo ""
+    @echo "📝 Key files:"
+    @echo "  - AGENTS.md: Agent awareness patterns"
+    @echo "  - CLAUDE.md: Claude-specific navigation"
+    @echo "  - sap-catalog.json: Machine-readable SAP catalog"
+
+# Verify chora-base structure integrity
+# Example: just verify-structure
+verify-structure:
+    @echo "🔍 Verifying chora-base structure..."
+    @python -c "from pathlib import Path; import sys; required_dirs = ['docs/user-docs', 'docs/dev-docs', 'docs/project-docs', 'docs/skilled-awareness', 'src', 'tests', 'scripts']; required_files = ['README.md', 'AGENTS.md', 'CLAUDE.md', 'justfile', 'pyproject.toml', 'sap-catalog.json']; missing_dirs = [d for d in required_dirs if not Path(d).exists()]; missing_files = [f for f in required_files if not Path(f).exists()]; sys.exit(1) if missing_dirs or missing_files else print('✅ Chora-base structure verified')"
+
+# Show chora-base meta information
+# Example: just chora-info
+chora-info:
+    @echo "🏗️ Chora-Base Meta Package (SAP-002)"
+    @echo ""
+    @echo "📦 Version: 4.10.0"
+    @echo "🤖 Status: Active (production-ready template)"
+    @echo "📚 SAP Count: $(cat sap-catalog.json | python -c 'import sys, json; print(len(json.load(sys.stdin)[\"saps\"]))')"
+    @echo "📂 Documentation Domains: 4 (user, dev, project, SAPs)"
+    @echo ""
+    @echo "🎯 Purpose: Meta-capability describing chora-base using SAP framework"
+    @echo "🔗 Pattern: Self-documenting architecture (dogfooding demonstration)"
+    @echo ""
+    @echo "📖 Documentation:"
+    @echo "  - Benefits: docs/user-docs/explanation/benefits-of-chora-base.md"
+    @echo "  - Architecture: docs/dev-docs/AGENTS.md"
+    @echo "  - SAP Catalog: sap-catalog.json, docs/skilled-awareness/INDEX.md"
+
+# ============================================================================
 # SAP-003: Project Bootstrap (Fast Setup Script)
 # ============================================================================
 # Copier-based project scaffolding from chora-base template with 1-2 min setup.
