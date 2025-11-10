@@ -809,6 +809,104 @@ just mcp-claude-config project-mcp ~/projects/project-mcp project_mcp
 
 ---
 
+### Metrics Tracking (SAP-013) - Quick Reference
+
+**No domain-specific CLAUDE.md** (metrics tracking is infrastructure, not code)
+
+**Claude patterns for metrics tracking**:
+```markdown
+# User asks: "Track Claude session metrics"
+# Claude workflow: Use ClaudeROICalculator API or interactive tracking
+
+# Option 1: Interactive tracking (simplest)
+just track-claude-session
+# Prompts for: session_id, task_type, lines_generated, time_saved, iterations, bugs, doc_quality, coverage
+# Output: ROI report (time saved, cost savings, quality metrics)
+
+# Option 2: Programmatic tracking
+python -c "
+from chora.metrics import ClaudeROICalculator, ClaudeMetric
+from datetime import datetime
+
+calc = ClaudeROICalculator(100)
+metric = ClaudeMetric(
+    'session-001', datetime.now(), 'feature_implementation',
+    250, 120, 2, 0, 3, 8.5, 0.92, trace_id='COORD-2025-011'
+)
+calc.add_metric(metric)
+print(calc.generate_report())
+"
+
+# Option 3: View metrics summary
+just metrics-summary
+# Shows: Quality (coverage), Velocity (git commits), Process (manual), Adoption (PyPI)
+
+# Option 4: Coverage metrics only
+just coverage-metrics
+# Shows: pytest coverage with ≥90% target
+
+# Option 5: Velocity metrics only
+just velocity-metrics
+# Shows: git commits/files changed with ≥80% sprint velocity target
+```
+
+**Progressive loading strategy**:
+- **Phase 1**: No loading needed (just use justfile commands)
+- **Phase 2**: Read [docs/skilled-awareness/metrics-tracking/PROCESS_METRICS.md](docs/skilled-awareness/metrics-tracking/PROCESS_METRICS.md) for complete framework
+- **Phase 3**: Read protocol-spec.md for ClaudeROICalculator API details
+
+**Common workflows**:
+
+**1. Track session after feature implementation**:
+```markdown
+User: "Track metrics for this session"
+
+Claude:
+# Use interactive tracking
+just track-claude-session
+
+# Provide estimates:
+# - Session ID: session-$(date +%s)
+# - Task type: feature_implementation (vs bugfix, refactor)
+# - Lines generated: 250 (count src/ changes)
+# - Time saved: 120 minutes (vs manual estimate)
+# - Iterations: 2 (refinement rounds)
+# - Bugs introduced/fixed: 0/3
+# - Doc quality: 8.5 (0-10 subjective)
+# - Test coverage: 0.92 (from pytest)
+```
+
+**2. Generate ROI report from multiple sessions**:
+```markdown
+User: "Show ROI for last sprint"
+
+Claude:
+# Assuming metrics collected in claude-metrics.json
+just generate-claude-report claude-metrics.json
+
+# Report shows:
+# - Total time saved (hours)
+# - Cost savings ($)
+# - Acceleration factor (X×)
+# - Quality: bug rate, coverage, doc quality
+# - Task breakdown by type
+```
+
+**ROI**: 15-20 min/sprint (automated vs manual), evidence-based decisions
+
+**4 Metric Categories**:
+1. **Quality**: Coverage (≥90%), defect rate (<3/release)
+2. **Velocity**: Sprint velocity (≥80%), cycle time
+3. **Process**: DDD/BDD/TDD adherence (≥80-90%)
+4. **Adoption**: Downloads, upgrades, satisfaction
+
+**Integration with other SAPs**:
+- **SAP-001**: Link via `trace_id` for cross-repo ROI
+- **SAP-004**: Collect coverage from pytest
+- **SAP-012**: Track process adherence rates
+
+---
+
 ### Testing Framework (SAP-004) - Quick Reference
 
 **No domain-specific CLAUDE.md** (tests/ may have AGENTS.md if complex test patterns exist)

@@ -425,6 +425,104 @@ mcp-help:
     @echo "📖 Full docs: docs/skilled-awareness/mcp-server-development/"
 
 # ============================================================================
+# SAP-013: Metrics Tracking (Process & Quality Measurement)
+# ============================================================================
+# Claude ROI calculator, process quality metrics, team velocity tracking with 4 metric categories.
+# See: AGENTS.md "Metrics Tracking - SAP-013" section, docs/skilled-awareness/metrics-tracking/
+
+# Show process metrics summary (quality, velocity, process, adoption)
+# Example: just metrics-summary
+metrics-summary:
+    @echo "📊 SAP-013: Process Metrics Summary"
+    @echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+    @echo ""
+    @echo "1️⃣ Quality Metrics (from pytest + coverage)"
+    @pytest --cov=src --cov-report=term-missing --quiet 2>/dev/null | tail -5 || echo "⚠️ Run: pytest --cov=src"
+    @echo ""
+    @echo "2️⃣ Velocity Metrics (from git)"
+    @echo "  Commits this week: $(git log --since='1 week ago' --oneline | wc -l)"
+    @echo "  Files changed today: $(git diff --stat HEAD~1 2>/dev/null | tail -1 | awk '{print $1, $2}' || echo 'N/A')"
+    @echo ""
+    @echo "3️⃣ Process Adherence (manual tracking)"
+    @echo "  See: docs/project-docs/PROCESS_METRICS.md"
+    @echo ""
+    @echo "4️⃣ Adoption Metrics (if applicable)"
+    @echo "  PyPI downloads: Check https://pepy.tech/project/[package-name]"
+    @echo ""
+    @echo "📖 Full metrics framework: docs/skilled-awareness/metrics-tracking/PROCESS_METRICS.md"
+
+# Track Claude session metrics (interactive)
+# Example: just track-claude-session
+track-claude-session:
+    @echo "📝 Track Claude Session Metrics"
+    @echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+    @python -c "from chora.metrics import ClaudeROICalculator, ClaudeMetric; from datetime import datetime; import sys; session_id = input('Session ID: '); task_type = input('Task type (feature_implementation/bugfix/refactor): '); lines = int(input('Lines generated: ')); time_saved = int(input('Time saved (minutes): ')); iterations = int(input('Iterations required: ')); bugs_intro = int(input('Bugs introduced: ')); bugs_fixed = int(input('Bugs fixed: ')); doc_quality = float(input('Doc quality (0-10): ')); coverage = float(input('Test coverage (0-1): ')); calc = ClaudeROICalculator(100); metric = ClaudeMetric(session_id, datetime.now(), task_type, lines, time_saved, iterations, bugs_intro, bugs_fixed, doc_quality, coverage); calc.add_metric(metric); print(calc.generate_report())" 2>/dev/null || echo "❌ ClaudeROICalculator not available (install SAP-013)"
+
+# Generate Claude ROI report from metrics file
+# Example: just generate-claude-report claude-metrics.json
+generate-claude-report METRICS_FILE:
+    @echo "📊 Generating Claude ROI Report..."
+    @python -c "from chora.metrics import ClaudeROICalculator; import json; calc = ClaudeROICalculator(100); metrics = json.load(open('{{METRICS_FILE}}')); [calc.add_metric(m) for m in metrics]; print(calc.generate_executive_summary())" 2>/dev/null || echo "❌ ClaudeROICalculator not available or invalid metrics file"
+
+# Export Claude metrics to CSV
+# Example: just export-claude-metrics claude-metrics.csv
+export-claude-metrics OUTPUT_FILE:
+    @echo "📁 Exporting Claude metrics to {{OUTPUT_FILE}}..."
+    @python -c "from chora.metrics import ClaudeROICalculator; calc = ClaudeROICalculator(100); calc.export_to_csv('{{OUTPUT_FILE}}')" 2>/dev/null || echo "❌ ClaudeROICalculator not available"
+    @echo "✅ Metrics exported to {{OUTPUT_FILE}}"
+
+# Show test coverage metrics (from pytest)
+# Example: just coverage-metrics
+coverage-metrics:
+    @echo "🧪 Test Coverage Metrics"
+    @echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+    @pytest --cov=src --cov-report=term-missing 2>/dev/null || echo "❌ pytest not configured"
+    @echo ""
+    @echo "Target: ≥90% coverage (✅ green)"
+
+# Show velocity metrics (from git history)
+# Example: just velocity-metrics
+velocity-metrics:
+    @echo "🚀 Velocity Metrics (from git)"
+    @echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+    @echo "Commits today: $(git log --since='1 day ago' --oneline | wc -l)"
+    @echo "Commits this week: $(git log --since='1 week ago' --oneline | wc -l)"
+    @echo "Commits this sprint (2 weeks): $(git log --since='2 weeks ago' --oneline | wc -l)"
+    @echo ""
+    @echo "Files changed today: $(git diff --stat HEAD~1 2>/dev/null | tail -1 | awk '{print $1, $2}' || echo 'N/A')"
+    @echo "Files changed this week: $(git diff --stat HEAD~7 2>/dev/null | tail -1 | awk '{print $1, $2}' || echo 'N/A')"
+    @echo ""
+    @echo "Target: ≥80% sprint velocity (✅ green)"
+
+# Show metrics tracking help
+# Example: just metrics-help
+metrics-help:
+    @echo "📊 SAP-013: Metrics Tracking Guide"
+    @echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+    @echo ""
+    @echo "📋 Available Commands:"
+    @echo "  just metrics-summary           # Overview of all 4 metric categories"
+    @echo "  just track-claude-session      # Interactive Claude session tracking"
+    @echo "  just generate-claude-report    # Generate ROI report from metrics"
+    @echo "  just export-claude-metrics     # Export metrics to CSV"
+    @echo "  just coverage-metrics          # Test coverage from pytest"
+    @echo "  just velocity-metrics          # Git velocity metrics"
+    @echo ""
+    @echo "🎯 4 Metric Categories:"
+    @echo "  1. Quality: Defect rate, test coverage, technical debt"
+    @echo "  2. Velocity: Sprint velocity, cycle time, lead time"
+    @echo "  3. Process: DDD/BDD/TDD adherence rates"
+    @echo "  4. Adoption: Downloads, upgrades, satisfaction"
+    @echo ""
+    @echo "📈 Targets:"
+    @echo "  Defect rate: <3 per release"
+    @echo "  Test coverage: ≥90%"
+    @echo "  Sprint velocity: ≥80%"
+    @echo "  Process adherence: ≥80-90%"
+    @echo ""
+    @echo "📖 Full framework: docs/skilled-awareness/metrics-tracking/PROCESS_METRICS.md"
+
+# ============================================================================
 # SAP-011: Docker Operations (Production Containerization)
 # ============================================================================
 # Multi-stage Dockerfiles, docker-compose orchestration, 40% smaller images (150-250MB).

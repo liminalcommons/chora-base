@@ -1340,6 +1340,97 @@ def project_summary() -> str:
 
 ---
 
+### Metrics Tracking (Process & Quality Measurement) - SAP-013
+
+**Status**: Draft (v1.0.0) | **Adoption Level**: L0 (Available for adoption)
+
+SAP-013 provides standardized metrics tracking for Claude effectiveness, process quality, and team velocity with ClaudeROICalculator API and PROCESS_METRICS.md framework.
+
+**When to use SAP-013**:
+- Measuring Claude Code effectiveness (time saved, quality metrics, ROI)
+- Tracking process quality (defect rate, test coverage, technical debt)
+- Monitoring team velocity (sprint velocity, cycle time, lead time)
+- Measuring process adherence (DDD/BDD/TDD adoption rates)
+- Calculating ROI for AI-assisted development
+
+**Quick start**:
+```python
+# Track Claude session with ClaudeROICalculator
+from chora.metrics import ClaudeROICalculator, ClaudeMetric
+from datetime import datetime
+
+# Initialize calculator (developer hourly rate for ROI)
+calculator = ClaudeROICalculator(developer_hourly_rate=100)
+
+# Track session metrics
+metric = ClaudeMetric(
+    session_id="session-001",
+    timestamp=datetime.now(),
+    task_type="feature_implementation",  # or "bugfix", "refactor"
+    lines_generated=250,
+    time_saved_minutes=120,  # Manual time estimate
+    iterations_required=2,
+    bugs_introduced=0,
+    bugs_fixed=3,
+    documentation_quality_score=8.5,  # 0-10 scale
+    test_coverage=0.92,  # 0-1 (92%)
+    trace_id="COORD-2025-011"  # Optional: link to SAP-001 coordination
+)
+calculator.add_metric(metric)
+
+# Generate reports
+print(calculator.generate_report())  # Executive summary
+print(calculator.generate_executive_summary())  # Detailed with recommendations
+calculator.export_to_csv("claude-metrics.csv")
+calculator.export_to_json("claude-metrics.json")
+```
+
+**Core capabilities**:
+- **ClaudeROICalculator**: Track Claude sessions, calculate time/cost savings, generate ROI reports
+- **4 metric categories**: Quality (defect rate, coverage), Velocity (sprint velocity, cycle time), Process (DDD/BDD/TDD adherence), Adoption (downloads, upgrades)
+- **Process metrics framework**: PROCESS_METRICS.md with decision trees, dashboards, automation guides
+- **CI/CD integration**: Automated metrics collection from GitHub Actions, pytest, coverage reports
+- **SAP-001 integration**: Link metrics to coordination requests via trace_id for cross-repo ROI tracking
+- **ROI analysis**: Evidence-based estimates (time saved, cost savings, acceleration factor, quality impact)
+
+**Integration with other SAPs**:
+- **SAP-001 (Inbox)**: Link metrics to coordination requests via trace_id for cross-repo ROI tracking
+- **SAP-004 (Testing)**: Collect test coverage metrics from pytest reports
+- **SAP-005 (CI/CD)**: Automated metrics extraction from GitHub Actions workflows
+- **SAP-012 (Development Lifecycle)**: Track process adherence (DDD/BDD/TDD adoption rates)
+- **SAP-027 (Dogfooding)**: Validate SAP adoption with quantified metrics
+
+**ROI**: 15-20 min saved per sprint (metric collection + reporting), evidence-based decision making for team optimization
+
+**4 Metric Categories**:
+1. **Quality Metrics**: Defect rate (<3 per release target), test coverage (≥90% target), technical debt, first-pass success rate
+2. **Velocity Metrics**: Sprint velocity (≥80% target), cycle time, lead time, throughput
+3. **Process Adherence**: DDD/BDD/TDD adoption (≥80-90% target), documentation-first workflow compliance
+4. **Adoption Metrics**: Downloads, upgrade rate, user satisfaction, support tickets
+
+**ClaudeMetric Fields**:
+- **session_id**: Unique identifier for Claude session
+- **task_type**: "feature_implementation", "bugfix", or "refactor"
+- **lines_generated**: Code lines written by Claude
+- **time_saved_minutes**: Estimated time saved vs manual coding
+- **iterations_required**: Number of refinement iterations (≥1)
+- **bugs_introduced/bugs_fixed**: Quality impact tracking
+- **documentation_quality_score**: 0-10 scale (subjective assessment)
+- **test_coverage**: 0-1 (percentage as decimal)
+- **trace_id**: Optional link to SAP-001 coordination request
+
+**PROCESS_METRICS.md Structure** (8 sections):
+1. **Quick Start**: Decision tree for agents (what to measure, when, how)
+2. **Overview**: Why measure? (evidence-based decisions, continuous improvement)
+3. **Metric Categories**: Quality, Velocity, Process, Adoption with targets
+4. **Dashboards**: Sprint, Release, Process Trends (visualization patterns)
+5. **Automation**: CI/CD metrics collection (pytest, GitHub Actions integration)
+6. **ROI Analysis**: Evidence-based estimates (Claude effectiveness, process improvements)
+7. **Anti-Patterns**: What NOT to do (vanity metrics, gaming metrics, over-measurement)
+8. **Agent Checklist**: Daily, Weekly, Release, Quarterly measurement routines
+
+---
+
 ### Project Types Supported
 
 - **Library/Package** - Python libraries for PyPI distribution

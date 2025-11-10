@@ -2270,6 +2270,199 @@ just mcp-validate-namespace my-namespace    # ❌ Invalid (contains hyphen)
 
 ---
 
+### Metrics Tracking (Process & Quality Measurement) - SAP-013 L0
+
+**Purpose**: Standardized metrics tracking for Claude effectiveness, process quality, and team velocity with ClaudeROICalculator API and PROCESS_METRICS.md framework.
+
+**Adoption Level**: L0 (Available for adoption)
+
+**Core Metrics Framework**:
+```bash
+# 4 metric categories with targets:
+1. Quality: Defect rate (<3 per release), test coverage (≥90%), technical debt, first-pass success
+2. Velocity: Sprint velocity (≥80%), cycle time, lead time, throughput
+3. Process: DDD/BDD/TDD adherence (≥80-90%), documentation-first compliance
+4. Adoption: Downloads, upgrade rate, user satisfaction, support tickets
+
+# ClaudeROICalculator tracks:
+- Time/cost savings (hours_saved, cost_savings, acceleration_factor)
+- Quality impact (iterations, bug_rate, doc_quality, coverage, first_pass_success_rate)
+- Task breakdown (feature_implementation, bugfix, refactor)
+```
+
+**Session Startup Routine** (agents should execute):
+```bash
+# 1. Show metrics summary
+just metrics-summary                        # Quality, velocity, process, adoption overview
+
+# 2. Check test coverage (quality metric)
+just coverage-metrics                       # pytest --cov=src target ≥90%
+
+# 3. Check velocity
+just velocity-metrics                       # Git commits, files changed (sprint target ≥80%)
+```
+
+**Common Workflows**:
+
+1. **Track Claude session with ClaudeROICalculator**:
+```python
+from chora.metrics import ClaudeROICalculator, ClaudeMetric
+from datetime import datetime
+
+# Initialize calculator with developer hourly rate
+calculator = ClaudeROICalculator(developer_hourly_rate=100)
+
+# Track session metrics
+metric = ClaudeMetric(
+    session_id="session-001",
+    timestamp=datetime.now(),
+    task_type="feature_implementation",  # or "bugfix", "refactor"
+    lines_generated=250,
+    time_saved_minutes=120,  # Estimated vs manual coding
+    iterations_required=2,  # Number of refinements (≥1)
+    bugs_introduced=0,
+    bugs_fixed=3,
+    documentation_quality_score=8.5,  # 0-10 scale
+    test_coverage=0.92,  # 0-1 (92%)
+    trace_id="COORD-2025-011"  # Optional: SAP-001 coordination link
+)
+calculator.add_metric(metric)
+
+# Generate reports
+print(calculator.generate_report())  # Executive summary
+print(calculator.generate_executive_summary())  # Detailed + recommendations
+calculator.export_to_csv("claude-metrics.csv")
+calculator.export_to_json("claude-metrics.json")
+```
+
+2. **Interactive Claude session tracking**:
+```bash
+# Track session via justfile (interactive prompts)
+just track-claude-session
+
+# Prompts for:
+# - Session ID
+# - Task type (feature_implementation/bugfix/refactor)
+# - Lines generated
+# - Time saved (minutes)
+# - Iterations required
+# - Bugs introduced/fixed
+# - Documentation quality (0-10)
+# - Test coverage (0-1)
+
+# Outputs: ROI report with time saved, cost savings, quality metrics
+```
+
+3. **Generate ROI report from metrics file**:
+```bash
+# Collect metrics over time in JSON file
+cat > claude-metrics.json <<'EOF'
+[
+  {
+    "session_id": "session-001",
+    "timestamp": "2025-11-09T10:00:00Z",
+    "task_type": "feature_implementation",
+    "lines_generated": 250,
+    "time_saved_minutes": 120,
+    "iterations_required": 2,
+    "bugs_introduced": 0,
+    "bugs_fixed": 3,
+    "documentation_quality_score": 8.5,
+    "test_coverage": 0.92
+  }
+]
+EOF
+
+# Generate comprehensive ROI report
+just generate-claude-report claude-metrics.json
+
+# Output:
+# - Total time saved (hours)
+# - Cost savings ($ based on hourly rate)
+# - Acceleration factor (X× faster)
+# - Quality metrics (bug rate, coverage, doc quality)
+# - First-pass success rate
+# - Task breakdown by type
+```
+
+4. **Monitor quality metrics (from pytest)**:
+```bash
+# Show test coverage with target
+just coverage-metrics
+
+# Output:
+# - Line coverage percentage
+# - Missing lines report
+# - Target: ≥90% (green)
+
+# If below target:
+# - Add unit tests for uncovered code
+# - Focus on critical paths first
+# - Use parametrized tests for efficiency
+```
+
+5. **Track velocity metrics (from git)**:
+```bash
+# Show git-based velocity metrics
+just velocity-metrics
+
+# Output:
+# - Commits today/this week/this sprint (2 weeks)
+# - Files changed today/this week
+# - Target: ≥80% sprint velocity (green)
+
+# Velocity interpretation:
+# - High commits + high file churn: Active development
+# - Low commits + high file churn: Large refactoring
+# - High commits + low file churn: Bug fixes, small features
+```
+
+6. **Process adherence tracking (manual)**:
+```bash
+# Check PROCESS_METRICS.md for guidance
+cat docs/skilled-awareness/metrics-tracking/PROCESS_METRICS.md
+
+# Track manually:
+# - DDD adoption: % features with domain worksheets
+# - BDD adoption: % features with .feature files
+# - TDD adoption: % features with test-first approach
+# - Documentation-first: % features with how-tos before implementation
+
+# Targets: ≥80-90% for each practice
+```
+
+**Integration with Other SAPs**:
+- **SAP-001 (Inbox)**: Link metrics to coordination requests via `trace_id` for cross-repo ROI tracking
+- **SAP-004 (Testing)**: Collect test coverage metrics from pytest reports (`test_coverage` field)
+- **SAP-005 (CI/CD)**: Automated metrics extraction from GitHub Actions workflows
+- **SAP-012 (Development Lifecycle)**: Track process adherence (DDD/BDD/TDD adoption rates)
+- **SAP-027 (Dogfooding)**: Validate SAP adoption with quantified metrics
+
+**Troubleshooting**:
+
+| Issue | Diagnosis | Fix |
+|-------|-----------|-----|
+| ClaudeROICalculator import fails | SAP-013 not installed | Install: `pip install chora-base[metrics]` |
+| Coverage below 90% target | Insufficient unit tests | Add tests for uncovered code paths |
+| Low velocity metrics | Git history limited | Check git log range (default: 1 week, 2 weeks) |
+| Metrics file JSON invalid | Malformed structure | Validate with `python -m json.tool metrics.json` |
+| No process adherence data | Manual tracking required | See PROCESS_METRICS.md Agent Checklist (Daily/Weekly/Release/Quarterly) |
+
+**L0 Achievement Evidence**:
+- ✅ **ClaudeROICalculator API**: Available for Claude session tracking
+- ✅ **4 metric categories**: Quality, Velocity, Process, Adoption with targets
+- ✅ **PROCESS_METRICS.md framework**: 8 sections with decision trees, dashboards, automation
+- ✅ **justfile recipes**: 7 commands (metrics-summary, track-claude-session, generate-claude-report, export-claude-metrics, coverage-metrics, velocity-metrics, metrics-help)
+- ✅ **SAP-001 integration**: `trace_id` field links metrics to coordination requests
+
+**ROI Metrics**:
+- **Time savings**: 15-20 min per sprint (automated collection + reporting vs manual)
+- **Decision quality**: Evidence-based optimization (quantified ROI, not anecdotal)
+- **Process improvement**: 10-20% velocity increase (data-driven sprint retrospectives)
+- **Adoption validation**: Quantified SAP ROI (time saved, quality impact, cost savings)
+
+---
+
 ### Testing Framework (pytest) - SAP-004 L3
 
 **Purpose**: Provide automated testing with pytest framework, 85%+ coverage enforcement, and rich test patterns (parametrized, fixtures, mocks).
