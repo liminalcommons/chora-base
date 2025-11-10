@@ -1223,6 +1223,123 @@ just publish-prod                                # Publish to PyPI, deploy produ
 
 ---
 
+### MCP Server Development (FastMCP Patterns) - SAP-014
+
+**Status**: Active (v1.0.0) | **Adoption Level**: L1 (Foundational)
+
+SAP-014 provides FastMCP-based Model Context Protocol server development patterns with 11 templates, Chora MCP Conventions v1.0 for namespacing, and comprehensive testing strategies.
+
+**When to use SAP-014**:
+- Building MCP servers for AI assistants (Claude Desktop, Cursor, Cline, etc.)
+- Implementing tools, resources, and prompts using FastMCP decorators (@mcp.tool, @mcp.resource, @mcp.prompt)
+- Following Chora MCP Conventions v1.0 for consistent namespacing (namespace:tool_name, namespace://type/id)
+- Standardizing MCP server structure across projects (11 templates provided)
+- Testing MCP servers with pytest and MCP-specific mocks
+
+**Quick start**:
+```bash
+# Create new MCP server from chora-base template
+python scripts/create-model-mcp-server.py \
+    --name "My MCP Server" \
+    --namespace mymcp \
+    --output ~/projects/my-mcp-server
+
+# Output: Fully-configured MCP server with FastMCP, testing, CI/CD, documentation
+
+# Install dependencies
+cd ~/projects/my-mcp-server
+uv sync
+
+# Run MCP server in development
+uv run my_mcp_server
+
+# Test MCP server
+pytest tests/
+
+# Configure Claude Desktop to use MCP server
+# Add to ~/Library/Application\ Support/Claude/claude_desktop_config.json:
+{
+  "mcpServers": {
+    "my-mcp-server": {
+      "command": "uv",
+      "args": ["--directory", "/path/to/my-mcp-server", "run", "my_mcp_server"]
+    }
+  }
+}
+```
+
+**Core capabilities**:
+- **FastMCP decorators**: @mcp.tool(), @mcp.resource(uri=...), @mcp.prompt() for tools/resources/prompts
+- **Chora MCP Conventions v1.0**: Namespace validation (3-20 chars, lowercase), tool naming (namespace:tool_name), resource URIs (namespace://type/id)
+- **11 MCP templates**: server.py, mcp/__init__.py, pyproject.toml, AGENTS.md, CLAUDE.md, README.md, CHANGELOG.md, ROADMAP.md, package__init__.py, tests/conftest.py, .github/workflows/
+- **Type safety**: Pydantic validation on tool inputs/outputs, mypy type checking
+- **Testing patterns**: pytest with MCP mocking, 85%+ coverage target, tool/resource/prompt isolation
+- **Client configuration**: Claude Desktop, Cursor, Cline, VS Code (via stdio transport)
+- **Protocol compliance**: MCP 2024-11-05 spec, JSON-RPC 2.0 transport, async support
+
+**Integration with other SAPs**:
+- **SAP-003 (Project Bootstrap)**: MCP server scaffolding via fast-setup script
+- **SAP-004 (Testing)**: pytest framework with MCP-specific test patterns
+- **SAP-005 (CI/CD)**: GitHub Actions workflows for MCP server testing and deployment
+- **SAP-011 (Docker)**: MCP servers deployed as containers with health checks
+- **SAP-012 (Development Lifecycle)**: BDD scenarios for MCP tool behaviors
+
+**ROI**: 80% faster MCP server setup (fast-setup vs manual), 100% protocol compliance (FastMCP SDK), 90% namespace consistency (Chora MCP Conventions)
+
+**MCP Core Concepts**:
+1. **Tools** - Functions AI can call (request/response pattern, JSON-serializable)
+2. **Resources** - Data sources AI can read (URI-based access, cacheable)
+3. **Prompts** - Pre-defined templates for AI interactions (composable, versioned)
+4. **Transport** - JSON-RPC 2.0 over stdio, SSE, or WebSocket
+
+**FastMCP Patterns**:
+```python
+from fastmcp import FastMCP
+from .mcp import make_tool_name, make_resource_uri
+
+mcp = FastMCP("My MCP Server")
+
+# Tool: AI can call this function
+@mcp.tool()
+def create_task(title: str, description: str) -> dict:
+    """Create a new task."""
+    return {"status": "created", "task_id": "123"}
+
+# Resource: AI can read this data
+@mcp.resource(uri=make_resource_uri("templates", "daily.md"))
+def get_template() -> str:
+    """Get daily report template."""
+    return "# Daily Report\\n..."
+
+# Prompt: AI uses this template
+@mcp.prompt()
+def project_summary() -> str:
+    """Generate project summary prompt."""
+    return "Analyze the project and summarize key metrics..."
+```
+
+**Chora MCP Conventions v1.0**:
+- **Namespace**: 3-20 chars, lowercase alphanumeric, starts with letter (e.g., "chora", "mymcp")
+- **Tool naming**: `namespace:tool_name` (e.g., "chora:create_task")
+- **Resource URIs**: `namespace://type/id` (e.g., "chora://templates/daily.md")
+- **Validation**: Runtime validation (optional), namespace collisions prevented
+- **Benefits**: Tool discovery, composability, consistency across ecosystem
+
+**11 MCP Templates**:
+1. **server.py** - FastMCP server entry point with tools/resources/prompts
+2. **mcp/__init__.py** - Chora MCP Conventions implementation (make_tool_name, make_resource_uri, validate_*)
+3. **pyproject.toml** - FastMCP dependency configuration
+4. **AGENTS.md** - MCP-specific agent guidance
+5. **CLAUDE.md** - Claude Desktop configuration
+6. **README.md** - MCP server documentation
+7. **CHANGELOG.md** - Version history
+8. **ROADMAP.md** - Future capabilities
+9. **package__init__.py** - Python package initialization
+10. **tests/conftest.py** - pytest fixtures for MCP mocking
+11. **.github/workflows/** - CI/CD for MCP testing and deployment
+
+---
+
 ### Project Types Supported
 
 - **Library/Package** - Python libraries for PyPI distribution

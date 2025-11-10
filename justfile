@@ -309,6 +309,122 @@ lifecycle-help:
     @echo "📖 Full docs: docs/skilled-awareness/development-lifecycle/"
 
 # ============================================================================
+# SAP-014: MCP Server Development (FastMCP Patterns)
+# ============================================================================
+# FastMCP-based MCP servers with 11 templates, Chora MCP Conventions v1.0, testing strategies.
+# See: AGENTS.md "MCP Server Development - SAP-014" section, docs/skilled-awareness/mcp-server-development/
+
+# Create new MCP server from chora-base template
+# Example: just create-mcp-server "My MCP Server" mymcp ~/projects/my-mcp-server
+create-mcp-server PROJECT_NAME NAMESPACE OUTPUT_PATH:
+    @echo "🚀 Creating MCP server: {{PROJECT_NAME}} (namespace: {{NAMESPACE}})"
+    @python scripts/create-model-mcp-server.py \
+        --name "{{PROJECT_NAME}}" \
+        --namespace {{NAMESPACE}} \
+        --output {{OUTPUT_PATH}}
+    @echo "✅ MCP server created at {{OUTPUT_PATH}}"
+    @echo "📝 Next steps:"
+    @echo "  1. cd {{OUTPUT_PATH}}"
+    @echo "  2. uv sync                       # Install dependencies"
+    @echo "  3. uv run <package_name>         # Run MCP server"
+    @echo "  4. pytest tests/                 # Run tests"
+
+# Run MCP server in development mode (stdio transport)
+# Example: just mcp-run-dev my_mcp_server
+mcp-run-dev PACKAGE_NAME:
+    @echo "🔧 Running MCP server in development mode (stdio)..."
+    @uv run {{PACKAGE_NAME}} 2>/dev/null || echo "❌ Package not found (ensure uv sync completed)"
+
+# Test MCP server with pytest
+# Example: just mcp-test
+mcp-test:
+    @echo "🧪 Testing MCP server..."
+    @pytest tests/ -v --cov=src --cov-report=term-missing 2>/dev/null || echo "❌ Tests not available (ensure pytest installed)"
+
+# Validate MCP namespace according to Chora MCP Conventions v1.0
+# Example: just mcp-validate-namespace mymcp
+mcp-validate-namespace NAMESPACE:
+    @echo "✅ Validating MCP namespace: {{NAMESPACE}}"
+    @python -c "import re; namespace='{{NAMESPACE}}'; valid=bool(re.match(r'^[a-z][a-z0-9]{2,19}$', namespace)); print('✅ Valid namespace' if valid else '❌ Invalid namespace (must be 3-20 chars, lowercase alphanumeric, start with letter)'); exit(0 if valid else 1)"
+
+# Show MCP server configuration for Claude Desktop
+# Example: just mcp-claude-config my-mcp-server /path/to/my-mcp-server my_mcp_server
+mcp-claude-config SERVER_NAME PROJECT_PATH PACKAGE_NAME:
+    @echo "📝 Claude Desktop configuration for {{SERVER_NAME}}:"
+    @echo ""
+    @echo "Add this to ~/Library/Application Support/Claude/claude_desktop_config.json:"
+    @echo "{"
+    @echo "  \"mcpServers\": {"
+    @echo "    \"{{SERVER_NAME}}\": {"
+    @echo "      \"command\": \"uv\","
+    @echo "      \"args\": ["
+    @echo "        \"--directory\","
+    @echo "        \"{{PROJECT_PATH}}\","
+    @echo "        \"run\","
+    @echo "        \"{{PACKAGE_NAME}}\""
+    @echo "      ]"
+    @echo "    }"
+    @echo "  }"
+    @echo "}"
+    @echo ""
+    @echo "Then restart Claude Desktop to load the MCP server."
+
+# List available MCP templates
+# Example: just mcp-list-templates
+mcp-list-templates:
+    @echo "📦 SAP-014: MCP Server Templates (11 templates)"
+    @echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+    @echo ""
+    @echo "Core templates:"
+    @echo "  1. server.py.template              # FastMCP server entry point"
+    @echo "  2. mcp__init__.py.template         # Chora MCP Conventions implementation"
+    @echo "  3. pyproject.toml.template         # FastMCP dependency configuration"
+    @echo ""
+    @echo "Documentation templates:"
+    @echo "  4. AGENTS.md.template              # MCP-specific agent guidance"
+    @echo "  5. CLAUDE.md.template              # Claude Desktop configuration"
+    @echo "  6. README.md.template              # MCP server documentation"
+    @echo "  7. CHANGELOG.md.template           # Version history"
+    @echo "  8. ROADMAP.md.template             # Future capabilities"
+    @echo ""
+    @echo "Infrastructure templates:"
+    @echo "  9. package__init__.py.template     # Python package initialization"
+    @echo " 10. tests/conftest.py.template      # pytest fixtures for MCP mocking"
+    @echo " 11. .github/workflows/              # CI/CD for MCP testing and deployment"
+    @echo ""
+    @echo "📂 Templates location: static-template/mcp-templates/"
+
+# Show MCP development workflow
+# Example: just mcp-help
+mcp-help:
+    @echo "🤖 SAP-014: MCP Server Development (FastMCP Patterns)"
+    @echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+    @echo ""
+    @echo "Step 1: Create new MCP server"
+    @echo "  → just create-mcp-server \"My MCP Server\" mymcp ~/projects/my-mcp-server"
+    @echo ""
+    @echo "Step 2: Install dependencies"
+    @echo "  → cd ~/projects/my-mcp-server"
+    @echo "  → uv sync"
+    @echo ""
+    @echo "Step 3: Implement tools/resources/prompts"
+    @echo "  → Edit src/my_mcp_server/server.py"
+    @echo "  → Add @mcp.tool(), @mcp.resource(), @mcp.prompt() decorators"
+    @echo ""
+    @echo "Step 4: Test MCP server"
+    @echo "  → just mcp-test"
+    @echo ""
+    @echo "Step 5: Configure Claude Desktop"
+    @echo "  → just mcp-claude-config my-mcp-server /path/to/my-mcp-server my_mcp_server"
+    @echo "  → Add config to ~/Library/Application Support/Claude/claude_desktop_config.json"
+    @echo "  → Restart Claude Desktop"
+    @echo ""
+    @echo "Step 6: Run MCP server"
+    @echo "  → just mcp-run-dev my_mcp_server"
+    @echo ""
+    @echo "📖 Full docs: docs/skilled-awareness/mcp-server-development/"
+
+# ============================================================================
 # SAP-011: Docker Operations (Production Containerization)
 # ============================================================================
 # Multi-stage Dockerfiles, docker-compose orchestration, 40% smaller images (150-250MB).

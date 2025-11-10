@@ -593,6 +593,222 @@ pytest features/ --gherkin -v
 
 ---
 
+### MCP Server Development (SAP-014) - Quick Reference
+
+**Domain-specific CLAUDE.md**: [docs/skilled-awareness/mcp-server-development/CLAUDE.md](docs/skilled-awareness/mcp-server-development/CLAUDE.md)
+
+**Claude patterns for MCP server development**:
+```markdown
+# User asks: "Create an MCP server for task management"
+# Claude workflow: Use fast-setup script + implement tools/resources
+
+# Step 1: Create MCP server from template
+just create-mcp-server "Task Manager MCP" taskmgr ~/projects/task-manager-mcp
+
+# Step 2: Navigate to project and install dependencies
+cd ~/projects/task-manager-mcp
+uv sync
+
+# Step 3: Implement tools (src/task_manager_mcp/server.py)
+# Add @mcp.tool() for functions AI can call:
+@mcp.tool()
+def create_task(title: str, description: str) -> dict:
+    """Create a new task."""
+    return {"status": "created", "task_id": "123"}
+
+# Add @mcp.resource() for data AI can read:
+@mcp.resource(uri=make_resource_uri("templates", "daily.md"))
+def get_template() -> str:
+    """Get daily report template."""
+    return "# Daily Report\\n..."
+
+# Add @mcp.prompt() for AI interaction templates:
+@mcp.prompt()
+def project_summary() -> str:
+    """Generate project summary prompt."""
+    return "Analyze the project..."
+
+# Step 4: Test MCP server
+just mcp-test
+
+# Step 5: Configure Claude Desktop
+just mcp-claude-config task-manager-mcp ~/projects/task-manager-mcp task_manager_mcp
+# Copy output to ~/Library/Application Support/Claude/claude_desktop_config.json
+
+# Step 6: Restart Claude Desktop to load MCP server
+
+# Step 7: Test in Claude
+# "Use the taskmgr:create_task tool to create a task"
+```
+
+**Progressive loading strategy**:
+- **Phase 1**: Read [docs/skilled-awareness/mcp-server-development/AGENTS.md](docs/skilled-awareness/mcp-server-development/AGENTS.md) for quick workflow overview
+- **Phase 2**: Read [docs/skilled-awareness/mcp-server-development/protocol-spec.md](docs/skilled-awareness/mcp-server-development/protocol-spec.md) for complete technical contracts
+- **Phase 3**: Read [docs/skilled-awareness/mcp-server-development/awareness-guide.md](docs/skilled-awareness/mcp-server-development/awareness-guide.md) for advanced patterns
+
+**Common workflows**:
+
+**1. Quick MCP server creation**:
+```markdown
+User: "Create an MCP server for my project"
+
+Claude:
+# 1. Create server from template
+just create-mcp-server "Project Name MCP" projectns ~/projects/project-mcp
+
+# 2. Install dependencies
+cd ~/projects/project-mcp
+uv sync
+
+# 3. Verify setup
+pytest tests/                               # Should pass (basic tests)
+just mcp-help                               # Show MCP workflow
+
+# 4. Implement tools (minimal example)
+# Edit src/project_mcp/server.py:
+@mcp.tool()
+def hello(name: str) -> str:
+    """Say hello."""
+    return f"Hello, {name}!"
+
+# 5. Test
+just mcp-test
+
+# 6. Configure Claude Desktop
+just mcp-claude-config project-mcp ~/projects/project-mcp project_mcp
+# Restart Claude Desktop
+
+# 7. Test in Claude
+# "Use the projectns:hello tool with name 'World'"
+```
+
+**2. Namespace validation**:
+```markdown
+User: "Is 'my-mcp' a valid namespace?"
+
+Claude:
+# Check namespace validity
+just mcp-validate-namespace my-mcp
+# ❌ Invalid (contains hyphen)
+
+# Valid namespaces (3-20 chars, lowercase alphanumeric, starts with letter):
+just mcp-validate-namespace mymcp           # ✅ Valid
+just mcp-validate-namespace taskmgr         # ✅ Valid
+just mcp-validate-namespace chora           # ✅ Valid
+
+# Invalid namespaces:
+just mcp-validate-namespace MyMcp           # ❌ Uppercase
+just mcp-validate-namespace ab              # ❌ Too short (<3 chars)
+just mcp-validate-namespace my-namespace    # ❌ Contains hyphen
+just mcp-validate-namespace 123mcp          # ❌ Starts with number
+```
+
+**3. Implementing tools/resources/prompts**:
+```markdown
+User: "Add a tool to create tasks and a resource for templates"
+
+Claude:
+# Edit src/project_mcp/server.py
+
+# 1. Add tool (function AI can call)
+@mcp.tool()
+def create_task(title: str, description: str, priority: int = 3) -> dict:
+    """Create a new task.
+
+    Args:
+        title: Task title
+        description: Task description
+        priority: Priority 1-5 (default: 3)
+
+    Returns:
+        dict with status and task_id
+
+    Raises:
+        ValueError: If priority not in 1-5 range
+    """
+    if priority < 1 or priority > 5:
+        raise ValueError("Priority must be 1-5")
+
+    # Implementation
+    task_id = generate_task_id()
+    return {"status": "created", "task_id": task_id, "title": title}
+
+# 2. Add resource (data AI can read)
+from .mcp import make_resource_uri
+
+@mcp.resource(uri=make_resource_uri("templates", "daily-report.md"))
+def get_daily_template() -> str:
+    """Get daily report template."""
+    return "# Daily Report\\n\\n## Accomplishments\\n- Task 1\\n"
+
+# 3. Add prompt (AI interaction template)
+@mcp.prompt()
+def summarize_tasks() -> str:
+    """Generate task summary prompt."""
+    return "Analyze all tasks and provide a summary including metrics and recommendations."
+
+# 4. Test new features
+just mcp-test
+```
+
+**4. Troubleshooting MCP server**:
+```markdown
+User: "MCP server not loading in Claude Desktop"
+
+Claude:
+# 1. Check config path
+cat ~/Library/Application\ Support/Claude/claude_desktop_config.json
+# Verify server configuration is correct
+
+# 2. Verify server installation
+cd ~/projects/project-mcp
+uv sync                                     # Reinstall dependencies
+pytest tests/                               # Ensure tests pass
+
+# 3. Test server directly
+uv run project_mcp
+# Should start server (stdio transport)
+# Press Ctrl+C to stop
+
+# 4. Check Claude Desktop logs
+tail -f ~/Library/Logs/Claude/mcp*.log
+# Look for errors related to server startup
+
+# 5. Regenerate config
+just mcp-claude-config project-mcp ~/projects/project-mcp project_mcp
+# Copy fresh config to claude_desktop_config.json
+
+# 6. Restart Claude Desktop
+# Quit and reopen Claude Desktop app
+
+# 7. Verify server loaded
+# In Claude: "List all available tools"
+# Should see tools like "projectns:create_task"
+```
+
+**ROI**: 80% faster setup (fast-setup vs manual), 100% protocol compliance (FastMCP), 90% namespace consistency
+
+**MCP Core Concepts**:
+1. **Tools**: Functions AI can call (@mcp.tool)
+2. **Resources**: Data AI can read (@mcp.resource)
+3. **Prompts**: Templates AI uses (@mcp.prompt)
+4. **Transport**: JSON-RPC 2.0 over stdio
+
+**Chora MCP Conventions v1.0**:
+- **Namespace**: 3-20 chars, lowercase, alphanumeric, starts with letter
+- **Tool naming**: namespace:tool_name (e.g., "taskmgr:create_task")
+- **Resource URIs**: namespace://type/id (e.g., "taskmgr://templates/daily.md")
+- **Benefits**: Tool discovery, composability, consistency
+
+**Integration with other SAPs**:
+- **SAP-003 (Bootstrap)**: Fast-setup script creates MCP server
+- **SAP-004 (Testing)**: pytest with MCP mocking
+- **SAP-005 (CI/CD)**: GitHub Actions for MCP testing
+- **SAP-011 (Docker)**: MCP containerization
+- **SAP-012 (Lifecycle)**: BDD for MCP tool behaviors
+
+---
+
 ### Testing Framework (SAP-004) - Quick Reference
 
 **No domain-specific CLAUDE.md** (tests/ may have AGENTS.md if complex test patterns exist)
