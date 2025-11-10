@@ -42,6 +42,21 @@ phase_3_deep_dive:
 
 ---
 
+## 📖 Quick Reference
+
+**New to SAP-006?** → Read **[README.md](README.md)** first (9-min read)
+
+The README provides:
+- 🚀 **Quick Start** - 3 commands to install and run pre-commit hooks
+- 📚 **7 Hooks** - Complete pre-commit hook reference (ruff, mypy, file hygiene)
+- 🎓 **Hook Execution Order** - Critical ordering (ruff before ruff-format)
+- 🔧 **Troubleshooting** - 5 common problems with solutions
+- 🔍 **Ruff vs Legacy** - 200x speed improvement comparison
+
+**This AGENTS.md provides**: Agent-executable workflows for quality gate setup, fixing violations, and pre-commit integration.
+
+---
+
 ## 1. Quick Start for Agents
 
 ### What is Quality Gates? (60-second overview)
