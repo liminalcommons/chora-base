@@ -10,6 +10,10 @@
 
 This file provides **Claude Code-specific patterns** for GitHub Actions workflows.
 
+**📖 New to SAP-005?** → Read **[README.md](README.md)** first (8-min read) for workflow inventory, CLI commands, and troubleshooting guide.
+
+**This CLAUDE.md provides**: Claude Code tool patterns (Edit, Bash, Read) for CI/CD setup, workflow debugging, and release automation.
+
 ### First-Time CI/CD Setup
 
 1. Read [AGENTS.md](AGENTS.md) for generic CI/CD workflows

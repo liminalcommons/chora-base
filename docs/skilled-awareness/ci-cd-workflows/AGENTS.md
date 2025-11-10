@@ -9,6 +9,16 @@
 
 ## Quick Reference
 
+**📖 New to SAP-005?** → Read **[README.md](README.md)** first (8-min read)
+
+The README provides:
+- 🚀 **10 Workflows** - Complete GitHub Actions workflow inventory (test, lint, smoke, security, release, etc.)
+- 📚 **6 CLI Commands** - ci-status, ci-logs, ci-retry, ci-workflows, ci-workflow-show, ci-trigger
+- 🏆 **Success Metrics** - <5 min feedback, 85%+ coverage, 100% security scans
+- 🔧 **Troubleshooting** - 4 common CI/CD problems with solutions
+
+**This AGENTS.md provides**: Agent-executable workflows for CI setup, debugging failures, triggering releases, and monitoring builds.
+
 ### What is CI/CD Workflows?
 
 **CI/CD Workflows** = Comprehensive GitHub Actions automation for testing, quality, security, and deployment
