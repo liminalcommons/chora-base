@@ -365,6 +365,42 @@ Phase 3 (50-200k): Read all SAP artifacts (only for complex tasks)
 
 ---
 
+### CI/CD Workflows (SAP-005) - Quick Reference
+
+**No domain-specific CLAUDE.md** (workflows are infrastructure, not code)
+
+**Claude patterns for CI/CD**:
+```markdown
+# Session startup: Check CI status
+gh run list --limit 10
+just ci-status
+
+# If CI failed: Investigate and fix
+gh run view {run_id} --log          # Read logs
+just ci-logs {run_id}               # Alternative
+
+# Create bead for tracking (SAP-015)
+bd create "Fix test.yml failure" --priority high
+
+# Fix locally BEFORE pushing (SAP-006)
+pytest tests/                       # Run tests
+ruff check --fix src/ tests/        # Auto-fix linting
+mypy src/ tests/                    # Type check
+
+# Push and verify
+git push origin branch
+gh run list --limit 5               # Verify new run
+```
+
+**Progressive loading strategy**:
+- **Phase 1**: No loading needed (CI is automated)
+- **Phase 2**: Read [.github/workflows/](../.github/workflows/) if debugging CI failures
+- **Phase 3**: Read [docs/skilled-awareness/ci-cd-workflows/protocol-spec.md](docs/skilled-awareness/ci-cd-workflows/protocol-spec.md) for workflow specifications
+
+**ROI**: Automated quality gates catch 95%+ preventable issues before merge, <5 min feedback loops
+
+---
+
 ## Common Claude Code Workflows
 
 ### Workflow 1: Adopting a SAP

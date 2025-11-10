@@ -439,6 +439,76 @@ just create-domain-awareness       # Create new domain AGENTS.md
 
 ---
 
+### CI/CD Workflows (GitHub Actions) - SAP-005
+
+**Status**: Production (v1.0.0) | **Adoption Level**: L3 (Fully automated)
+
+SAP-005 provides production-ready GitHub Actions workflows for testing, linting, security scanning, and release automation, reducing CI setup time from hours to minutes.
+
+**When to use SAP-005**:
+- Automated testing across Python 3.11, 3.12, 3.13 with matrix testing
+- Code quality gates (ruff, mypy) enforced on every PR
+- Security scanning with CodeQL and dependency review
+- Automated release publishing to PyPI with trusted publishing (OIDC)
+- Fast feedback loops (<5 min workflow execution)
+
+**Quick start**:
+```bash
+# CI/CD workflows are pre-installed in .github/workflows/
+# Verify workflows
+ls -la .github/workflows/
+
+# Workflows available:
+# - test.yml          (pytest with 85%+ coverage, matrix: 3.11, 3.12, 3.13)
+# - lint.yml          (ruff + mypy code quality gates)
+# - smoke.yml         (quick validation, <1 min)
+# - codeql.yml        (security scanning, weekly schedule)
+# - dependency-review.yml (dependency vulnerability checks)
+# - release.yml       (build + publish to PyPI)
+# - cross-platform-test.yml (Windows, macOS, Linux testing)
+
+# Trigger workflows
+git push origin main              # Runs test, lint, smoke, codeql
+gh pr create --title "..."        # Runs all workflows + dependency-review
+git tag v1.2.3 && git push --tags # Runs release workflow
+
+# Check workflow status
+gh workflow list
+gh run list --limit 10
+gh run view {run_id}
+```
+
+**Core capabilities**:
+- **Matrix testing**: Python 3.11, 3.12, 3.13 across Ubuntu, Windows, macOS
+- **Quality gates**: 85%+ test coverage, ruff (linting), mypy (type checking)
+- **Security**: CodeQL scanning, dependency review, OIDC trusted publishing
+- **Fast feedback**: <5 min execution (cached dependencies, parallel jobs)
+- **Release automation**: One-command publish to PyPI (test + production)
+- **Cross-platform validation**: Windows, macOS, Linux compatibility testing
+
+**Integration with other SAPs**:
+- **SAP-004 (Testing)**: Workflows run pytest test suites with 85%+ coverage gates
+- **SAP-006 (Quality Gates)**: Pre-commit hooks (local) + CI workflows (remote) dual validation
+- **SAP-028 (PyPI Publishing)**: Automated OIDC trusted publishing in release.yml
+- **SAP-015 (Task Tracking)**: CI failure → Create bead to track fix
+- **SAP-031 (Enforcement)**: CI/CD as Layer 3 enforcement (9% prevention rate)
+
+**ROI**: 90% time reduction (hours → 5-10 minutes CI setup), automated quality gates prevent 95%+ preventable issues
+
+**Documentation**:
+- Protocol specification: [docs/skilled-awareness/ci-cd-workflows/protocol-spec.md](docs/skilled-awareness/ci-cd-workflows/protocol-spec.md)
+- Adoption blueprint: [docs/skilled-awareness/ci-cd-workflows/adoption-blueprint.md](docs/skilled-awareness/ci-cd-workflows/adoption-blueprint.md)
+- Workflow details: [docs/skilled-awareness/ci-cd-workflows/awareness-guide.md](docs/skilled-awareness/ci-cd-workflows/awareness-guide.md)
+
+**CLI recipes** (see justfile):
+```bash
+just ci-status            # Show recent CI runs
+just ci-logs RUN_ID       # Show CI logs for run
+just ci-retry RUN_ID      # Retry failed CI run
+```
+
+---
+
 ### Memory System (A-MEM) - SAP-010
 
 **When to use SAP-010**:

@@ -97,6 +97,42 @@ research topic:
     @mkdir -p docs/research
 
 # ============================================================================
+# SAP-005: CI/CD Workflows (GitHub Actions)
+# ============================================================================
+# Automated testing, linting, security, and release workflows.
+# See: .github/workflows/, AGENTS.md "CI/CD Workflows - SAP-005" section
+
+# Show recent CI workflow runs (last 10)
+# Example: just ci-status
+ci-status:
+    @gh run list --limit 10 2>/dev/null || echo "GitHub CLI not installed (run: brew install gh / apt install gh)"
+
+# Show CI logs for specific run
+# Example: just ci-logs 12345678
+ci-logs RUN_ID:
+    @gh run view {{RUN_ID}} --log 2>/dev/null || echo "GitHub CLI not installed or run not found"
+
+# Retry failed CI run
+# Example: just ci-retry 12345678
+ci-retry RUN_ID:
+    @gh run rerun {{RUN_ID}} 2>/dev/null || echo "GitHub CLI not installed or run not found"
+
+# List all CI workflows
+# Example: just ci-workflows
+ci-workflows:
+    @gh workflow list 2>/dev/null || echo "GitHub CLI not installed"
+
+# Show CI workflow details
+# Example: just ci-workflow-show test.yml
+ci-workflow-show WORKFLOW:
+    @gh workflow view {{WORKFLOW}} 2>/dev/null || echo "GitHub CLI not installed or workflow not found"
+
+# Trigger manual workflow run
+# Example: just ci-trigger release.yml
+ci-trigger WORKFLOW:
+    @gh workflow run {{WORKFLOW}} 2>/dev/null || echo "GitHub CLI not installed or workflow not found"
+
+# ============================================================================
 # SAP-009: Agent Awareness (Nested AGENTS.md/CLAUDE.md)
 # ============================================================================
 # Progressive context loading with domain-specific awareness files.

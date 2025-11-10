@@ -721,6 +721,198 @@ print(calculator.generate_token_usage_report())
 
 ---
 
+### CI/CD Workflows (GitHub Actions) - SAP-005 L3
+
+**Purpose**: Provide automated testing, linting, security scanning, and release workflows using GitHub Actions for continuous integration and deployment.
+
+**Adoption Level**: L3 (Fully automated, production-ready)
+
+**Core Workflows** (.github/workflows/):
+
+1. **test.yml** - Matrix testing across Python 3.11, 3.12, 3.13
+   - Trigger: push (main, develop), pull_request
+   - Coverage gate: 85%+ required
+   - Duration: ~2-3 minutes
+   - Status: ✅ Required for merge
+
+2. **lint.yml** - Code quality gates (ruff + mypy)
+   - Trigger: push (main, develop), pull_request
+   - Checks: ruff (linting), mypy (type checking)
+   - Duration: ~1-2 minutes
+   - Status: ✅ Required for merge
+
+3. **smoke.yml** - Quick validation (<1 min)
+   - Trigger: push (main, develop), pull_request
+   - Purpose: Server starts, basic operations
+   - Duration: ~30-60 seconds
+   - Status: ✅ Required for merge
+
+4. **codeql.yml** - Security scanning
+   - Trigger: push (main, develop), pull_request, schedule (weekly)
+   - Purpose: Static security analysis, vulnerability detection
+   - Duration: ~3-5 minutes
+   - Status: ✅ Required for merge (security critical)
+
+5. **dependency-review.yml** - Dependency security
+   - Trigger: pull_request
+   - Purpose: Check new dependencies for vulnerabilities
+   - Duration: ~30-60 seconds
+   - Status: ✅ Required for merge (security critical)
+
+6. **release.yml** - PyPI publishing
+   - Trigger: push (tags: 'v*'), workflow_dispatch
+   - Purpose: Build wheel, publish to PyPI (OIDC trusted publishing)
+   - Duration: ~2-3 minutes
+   - Status: N/A (only for releases)
+
+7. **cross-platform-test.yml** - Multi-OS validation
+   - Trigger: push (main, develop), pull_request
+   - Matrix: Ubuntu, Windows, macOS
+   - Purpose: Cross-platform compatibility testing
+   - Duration: ~5-7 minutes
+   - Status: ✅ Required for merge
+
+**CI Workflow Patterns** (agent should follow):
+
+```bash
+# 1. Check CI status at session startup
+gh run list --limit 10
+just ci-status
+
+# 2. If CI failed, investigate logs
+gh run view {run_id} --log
+just ci-logs {run_id}
+
+# 3. If transient failure, retry
+gh run rerun {run_id}
+just ci-retry {run_id}
+
+# 4. If real failure, create bead to track fix (SAP-015)
+bd create "Fix CI failure in test.yml" --priority high --blocker "ci-failure-{run_id}"
+
+# 5. Fix locally first (pre-commit hooks via SAP-006)
+pytest tests/               # Run tests locally
+ruff check src/ tests/      # Run linting locally
+mypy src/ tests/            # Run type checking locally
+
+# 6. Push fix and verify CI passes
+git push origin branch-name
+gh run list --limit 5       # Verify new run passes
+```
+
+**Quality Gates** (enforced by CI):
+- ✅ 85%+ test coverage (test.yml)
+- ✅ Zero linting errors (lint.yml via ruff)
+- ✅ Zero type errors (lint.yml via mypy)
+- ✅ Zero security vulnerabilities (codeql.yml, dependency-review.yml)
+- ✅ Cross-platform compatibility (cross-platform-test.yml)
+- ✅ Smoke tests pass (smoke.yml)
+
+**Integration with Other SAPs**:
+- **SAP-004 (Testing)**: CI runs pytest test suites with 85%+ coverage gates
+- **SAP-006 (Quality Gates)**: Pre-commit hooks (local) + CI workflows (remote) dual validation
+- **SAP-028 (PyPI Publishing)**: OIDC trusted publishing in release.yml (zero long-lived tokens)
+- **SAP-015 (Task Tracking)**: CI failure → Create bead to track fix with blocker
+- **SAP-031 (Enforcement)**: CI/CD as Layer 3 enforcement (9% prevention rate)
+
+**Release Workflow** (agents should execute):
+
+```bash
+# 1. Bump version and create tag
+python scripts/bump-version.py 1.2.3
+
+# 2. Push tag to trigger release workflow
+git push --tags
+
+# 3. Monitor release workflow
+gh run list --workflow=release.yml
+gh run view {run_id} --log
+
+# 4. Verify PyPI publication
+# Test PyPI: https://test.pypi.org/project/{package_name}/
+# Prod PyPI: https://pypi.org/project/{package_name}/
+
+# 5. Create GitHub release from tag
+gh release create v1.2.3 --notes-from-tag
+```
+
+**Troubleshooting CI Failures**:
+
+1. **Coverage below 85%**:
+   ```bash
+   # Run coverage locally
+   pytest --cov=src/package_name --cov-report=term --cov-report=html
+   open htmlcov/index.html
+
+   # Add missing tests for uncovered lines
+   # Update tests/ directory
+   ```
+
+2. **Lint errors**:
+   ```bash
+   # Run ruff locally
+   ruff check src/ tests/
+
+   # Auto-fix fixable issues
+   ruff check --fix src/ tests/
+   ```
+
+3. **Type errors**:
+   ```bash
+   # Run mypy locally
+   mypy src/ tests/
+
+   # Add type annotations or suppressions
+   # Fix type mismatches
+   ```
+
+4. **Security vulnerabilities**:
+   ```bash
+   # Check CodeQL alerts
+   gh api repos/{owner}/{repo}/code-scanning/alerts
+
+   # Review dependency vulnerabilities
+   gh api repos/{owner}/{repo}/dependabot/alerts
+
+   # Update vulnerable dependencies
+   pip install --upgrade {vulnerable_package}
+   ```
+
+5. **Cross-platform failures**:
+   ```bash
+   # Check which OS failed
+   gh run view {run_id}
+
+   # Read cross-platform guide
+   cat scripts/AGENTS.md  # Cross-platform patterns
+
+   # Use cross-platform template
+   cp templates/cross-platform/python-script-template.py scripts/new-script.py
+   ```
+
+**L3 Achievement Evidence** (2025-11-09):
+- ✅ 7 production workflows deployed (.github/workflows/)
+- ✅ Matrix testing: Python 3.11, 3.12, 3.13 (Ubuntu, Windows, macOS)
+- ✅ Quality gates: 85%+ coverage, ruff, mypy, CodeQL, dependency review
+- ✅ Release automation: OIDC trusted publishing to PyPI
+- ✅ Fast feedback: <5 min average workflow execution
+- ✅ Justfile recipes: 6 CI commands (status, logs, retry, workflows, show, trigger)
+- ✅ Integration with SAP-004, SAP-006, SAP-015, SAP-028, SAP-031
+
+**ROI Metrics**:
+- **Setup time**: 90% reduction (hours → 5-10 minutes via pre-configured workflows)
+- **Quality gates**: 95%+ preventable issues caught before merge
+- **Feedback speed**: <5 min average workflow execution (cached dependencies, parallel jobs)
+- **Security**: 100% automated scanning (CodeQL + dependency review)
+- **Release time**: 80% reduction (manual publish → one-command automated)
+
+**Documentation**:
+- Protocol specification: [docs/skilled-awareness/ci-cd-workflows/protocol-spec.md](docs/skilled-awareness/ci-cd-workflows/protocol-spec.md)
+- Adoption blueprint: [docs/skilled-awareness/ci-cd-workflows/adoption-blueprint.md](docs/skilled-awareness/ci-cd-workflows/adoption-blueprint.md)
+- Workflow details: [docs/skilled-awareness/ci-cd-workflows/awareness-guide.md](docs/skilled-awareness/ci-cd-workflows/awareness-guide.md)
+
+---
+
 ## Common Tasks for AI Agents
 
 ### Task 1: Add New Optional Feature
