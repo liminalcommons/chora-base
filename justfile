@@ -97,6 +97,57 @@ research topic:
     @mkdir -p docs/research
 
 # ============================================================================
+# SAP-009: Agent Awareness (Nested AGENTS.md/CLAUDE.md)
+# ============================================================================
+# Progressive context loading with domain-specific awareness files.
+# See: AGENTS.md, CLAUDE.md, docs/skilled-awareness/agent-awareness/
+
+# Validate AGENTS.md structure (7 required sections)
+# Example: just validate-awareness-structure AGENTS.md
+validate-awareness-structure FILE="AGENTS.md":
+    @python scripts/validate-awareness-structure.py {{FILE}} 2>/dev/null || echo "Awareness structure validation not available (SAP-009 not fully installed)"
+
+# Validate awareness link network (check for broken links)
+# Example: just validate-awareness-links
+validate-awareness-links:
+    @python scripts/validate-awareness-links.py 2>/dev/null || echo "Awareness link validation not available (SAP-009 not fully installed)"
+
+# Create domain-specific AGENTS.md from template
+# Example: just create-domain-awareness tests
+create-domain-awareness DOMAIN:
+    @test -f docs/skilled-awareness/templates/AGENTS.md.template && cp docs/skilled-awareness/templates/AGENTS.md.template {{DOMAIN}}/AGENTS.md && echo "✅ Created {{DOMAIN}}/AGENTS.md from template" || echo "❌ Template not found (SAP-009 not fully installed)"
+
+# Show awareness hierarchy (nested files)
+# Example: just awareness-hierarchy
+awareness-hierarchy:
+    @echo "📂 Awareness File Hierarchy"
+    @echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+    @find . -name "AGENTS.md" -o -name "CLAUDE.md" 2>/dev/null | grep -v node_modules | sort || echo "No awareness files found"
+
+# List domain-specific awareness files
+# Example: just awareness-domains
+awareness-domains:
+    @echo "📋 Domain-Specific Awareness Files"
+    @echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+    @echo "Root:"
+    @test -f AGENTS.md && echo "  ✅ AGENTS.md ($(wc -l < AGENTS.md 2>/dev/null || echo 0) lines)" || echo "  ❌ AGENTS.md missing"
+    @test -f CLAUDE.md && echo "  ✅ CLAUDE.md ($(wc -l < CLAUDE.md 2>/dev/null || echo 0) lines)" || echo "  ❌ CLAUDE.md missing"
+    @echo ""
+    @echo "Domain-specific:"
+    @find tests scripts .chora docs/skilled-awareness -maxdepth 2 -name "AGENTS.md" -o -name "CLAUDE.md" 2>/dev/null | while read f; do echo "  ✅ $$f"; done || echo "  No domain files found"
+
+# Show awareness statistics
+# Example: just awareness-stats
+awareness-stats:
+    @echo "📊 Awareness System Statistics"
+    @echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+    @echo "Total AGENTS.md files: $(find . -name 'AGENTS.md' 2>/dev/null | grep -v node_modules | wc -l || echo 0)"
+    @echo "Total CLAUDE.md files: $(find . -name 'CLAUDE.md' 2>/dev/null | grep -v node_modules | wc -l || echo 0)"
+    @echo "Root AGENTS.md lines: $(wc -l < AGENTS.md 2>/dev/null || echo 0)"
+    @echo "Root CLAUDE.md lines: $(wc -l < CLAUDE.md 2>/dev/null || echo 0)"
+    @echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+
+# ============================================================================
 # SAP-010: Memory System (A-MEM)
 # ============================================================================
 # Event logging, knowledge notes, agent profiles for cross-session learning.

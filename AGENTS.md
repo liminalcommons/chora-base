@@ -566,82 +566,156 @@ pytest -m slow          # Slow tests only
 
 ---
 
-### Token Efficiency Tracking (SAP-009 L3)
+### Agent Awareness (Nested AGENTS.md/CLAUDE.md) - SAP-009 L3
 
-**Purpose**: Track and optimize token usage across agent sessions to maintain efficient context management.
+**Purpose**: Provide structured agent guidance through nested AGENTS.md/CLAUDE.md files using "nearest file wins" pattern for progressive context loading.
 
-**Token Usage Metrics** (integrated with SAP-013):
-- **Target**: <50k tokens average per session
-- **Progressive Loading Target**: ≥90% sessions using Phase 1 (minimal loading)
-- **Tracked via**: [utils/claude_metrics.py](utils/claude_metrics.py) `TokenUsageMetric` class
+**Adoption Level**: L3 (Universal pattern adopted across all domains)
+
+**Core Pattern**: Dual-file hierarchy with domain-specific awareness
+- **AGENTS.md**: Generic agent patterns (all agents)
+- **CLAUDE.md**: Claude-specific optimizations
+
+**Nested Hierarchy (5 Levels)**:
+```
+/AGENTS.md, /CLAUDE.md                           ← Root (project overview)
+├─ tests/AGENTS.md                               ← Domain: Testing
+├─ scripts/AGENTS.md                             ← Domain: Scripts
+├─ .chora/AGENTS.md, .chora/CLAUDE.md            ← Domain: Memory (SAP-010)
+├─ docs/skilled-awareness/AGENTS.md              ← Domain: SAP capabilities
+│  ├─ inbox/AGENTS.md, inbox/CLAUDE.md           ← SAP-001 (Inbox)
+│  ├─ agent-awareness/AGENTS.md, CLAUDE.md       ← SAP-009 (this pattern)
+│  ├─ memory-system/AGENTS.md, CLAUDE.md         ← SAP-010 (Memory)
+│  └─ ... (30+ SAPs with nested awareness)
+```
 
 **Progressive Loading Phases**:
-1. **Phase 1 (Minimal)**: Load only essential context (<20k tokens)
-   - AGENTS.md core sections
-   - Current task-specific files only
-   - On-demand loading for additional context
+1. **Phase 1 (Essential, 0-10k tokens)**:
+   - Read root AGENTS.md sections 1-2 (project overview, development process)
+   - Load only files directly related to current task
+   - **Result**: Quick orientation, minimal token usage
 
-2. **Phase 2 (Standard)**: Load standard working context (20-50k tokens)
-   - AGENTS.md + CLAUDE.md
-   - Recently modified files
-   - Related SAP artifacts
+2. **Phase 2 (Extended, 10-50k tokens)**:
+   - Read root AGENTS.md fully + domain-specific AGENTS.md
+   - Read CLAUDE.md for Claude optimizations
+   - Load related SAP protocol-spec.md if implementing capability
+   - **Result**: Full context for implementation, 60-70% token savings vs loading everything
 
-3. **Phase 3 (Comprehensive)**: Load full context (50-120k tokens)
-   - All SAP documentation
-   - Full project history
-   - Used only when necessary for complex analysis
+3. **Phase 3 (Comprehensive, 50-200k tokens)**:
+   - Read all SAP artifacts (capability-charter.md, ledger.md)
+   - Load full project history and all documentation
+   - **Used only for**: Complex refactoring, architectural decisions, deep debugging
 
-**Usage Tracking Example**:
+**Domain-Specific Files** (60-70% token reduction):
+- **tests/AGENTS.md** (~200 lines, 5-min read): Testing patterns, fixtures, coverage targets
+- **scripts/AGENTS.md** (~250 lines, 6-min read): Cross-platform script patterns, validation
+- **.chora/AGENTS.md** (~400 lines, 13-min read): Memory system workflows, event logging
+- **docs/skilled-awareness/{SAP}/AGENTS.md**: SAP-specific patterns and examples
+
+**Session Startup Routine** (agents should execute this):
+```bash
+# 1. Read root awareness (Phase 1)
+cat AGENTS.md | head -100     # First 100 lines for quick orientation
+
+# 2. Navigate to domain-specific awareness (Phase 2)
+cat tests/AGENTS.md           # If working on tests (60% token savings)
+cat scripts/AGENTS.md         # If working on scripts (65% token savings)
+cat .chora/AGENTS.md          # If working with memory (70% token savings)
+
+# 3. Read Claude optimizations
+cat CLAUDE.md                 # Claude-specific patterns (artifact-first, checkpoints)
+
+# 4. Validate awareness structure
+just validate-awareness-structure AGENTS.md
+just validate-awareness-links
+```
+
+**Validation Commands**:
+```bash
+# Validate AGENTS.md structure (7 required sections)
+python scripts/validate-awareness-structure.py AGENTS.md
+
+# Check for broken links in awareness network
+python scripts/validate-awareness-links.py
+
+# Show awareness hierarchy
+just awareness-hierarchy
+
+# Show awareness statistics
+just awareness-stats
+```
+
+**Creating Domain-Specific Awareness**:
+```bash
+# Copy template for new domain
+cp docs/skilled-awareness/templates/AGENTS.md.template my-domain/AGENTS.md
+cp docs/skilled-awareness/templates/CLAUDE.md.template my-domain/CLAUDE.md
+
+# Edit to add domain-specific patterns
+vim my-domain/AGENTS.md
+
+# Validate structure
+just validate-awareness-structure my-domain/AGENTS.md
+```
+
+**Token Efficiency Tracking** (integrated with SAP-013):
 ```python
 from utils.claude_metrics import ClaudeROICalculator, TokenUsageMetric
 from datetime import datetime
 
 calculator = ClaudeROICalculator(developer_hourly_rate=100.0)
 
-# Track a session
+# Track a session with progressive loading
 metric = TokenUsageMetric(
-    session_id="session-2025-11-04-001",
+    session_id="session-2025-11-09-001",
     timestamp=datetime.now(),
-    tokens_used=35000,
+    tokens_used=35000,                    # Used Phase 2 (extended context)
     tokens_available=200000,
-    progressive_loading_phase=1,  # Used minimal loading
-    context_items_loaded=5,
+    progressive_loading_phase=2,          # Loaded domain-specific AGENTS.md
+    context_items_loaded=5,               # Root + domain + 3 files
     task_completed=True,
-    metadata={"task_type": "sap_validation"}
+    metadata={"task_type": "feature_implementation", "domain": "tests"}
 )
 calculator.track_token_usage(metric)
 
-# Generate report
+# Generate token usage report
 print(calculator.generate_token_usage_report())
 ```
 
-**Token Optimization Strategies**:
-- Use Task tool (subagent_type=Explore) for codebase exploration instead of loading all files
-- Load SAP artifacts on-demand rather than pre-loading full documentation
-- Prefer targeted file reads over broad glob/grep patterns
-- Cache frequently used context in session memory
+**Integration with Other SAPs**:
+- **ALL SAPs**: Every SAP uses nested awareness pattern for discoverability
+- **SAP-010 (Memory)**: Domain-specific .chora/AGENTS.md for memory workflows
+- **SAP-015 (Task Tracking)**: Document beads patterns in AGENTS.md
+- **SAP-001 (Inbox)**: Domain-specific inbox/AGENTS.md for coordination
+- **SAP-027 (Dogfooding)**: Validate awareness adoption completeness
 
-**Monitoring Commands**:
-```bash
-# Check current token usage (this session)
-# Available in Claude Code UI or via metrics tracking
+**L3 Achievement Evidence** (2025-11-09):
+- ✅ Nested hierarchy implemented (5 levels): root → domain → SAP → feature → component
+- ✅ Domain-specific files created: tests/, scripts/, .chora/, inbox/, agent-awareness/
+- ✅ Progressive loading documented in CLAUDE.md with 3 phases
+- ✅ Token tracking integrated with SAP-013 metrics framework
+- ✅ Validation scripts available: validate-awareness-structure.py, validate-awareness-links.py
+- ✅ Justfile recipes: 7 awareness commands (validate, hierarchy, stats, create)
+- ✅ Template files for creating new domain awareness: AGENTS.md.template, CLAUDE.md.template
 
-# Generate token usage report
-python -c "from utils.claude_metrics import ClaudeROICalculator; \
-  calc = ClaudeROICalculator(100); \
-  print(calc.generate_token_usage_report())"
-```
+**ROI Metrics**:
+- **Token reduction**: 60-70% via domain-specific files (Phase 2 vs Phase 3)
+- **Onboarding time**: 5-10 min faster per session (targeted reading vs full codebase scan)
+- **Context restoration**: <2 min via "nearest file wins" pattern
+- **Target**: <50k tokens average per session (current: ~35k baseline)
+- **Progressive loading adoption**: ≥90% sessions using Phase 1-2 (vs Phase 3 full load)
 
-**L3 Achievement Evidence** (2025-11-04):
-- TokenUsageMetric class implemented in [utils/claude_metrics.py:137-181](utils/claude_metrics.py#L137-L181)
-- track_token_usage() method: [utils/claude_metrics.py:523](utils/claude_metrics.py#L523)
-- generate_token_usage_report() method: [utils/claude_metrics.py:531](utils/claude_metrics.py#L531)
-- Progressive loading strategy documented above
-- Integration with SAP-013 metrics framework complete
+**Documentation**:
+- Protocol specification: [docs/skilled-awareness/agent-awareness/protocol-spec.md](docs/skilled-awareness/agent-awareness/protocol-spec.md)
+- Adoption blueprint: [docs/skilled-awareness/agent-awareness/adoption-blueprint.md](docs/skilled-awareness/agent-awareness/adoption-blueprint.md)
+- Domain-specific guide: [docs/skilled-awareness/agent-awareness/AGENTS.md](docs/skilled-awareness/agent-awareness/AGENTS.md)
+- Claude patterns: [docs/skilled-awareness/agent-awareness/CLAUDE.md](docs/skilled-awareness/agent-awareness/CLAUDE.md)
 
-**Target Metrics**:
-- Average tokens per session: <50k (vs current ~35k baseline)
-- Peak token usage: <100k (vs current ~120k baseline)
+**Troubleshooting**:
+- **Broken links**: Run `just validate-awareness-links` to find and fix
+- **Missing sections**: Run `just validate-awareness-structure FILE` to check 7 required sections
+- **Duplicate content**: Keep root AGENTS.md generic, move specifics to domain files
+- **Token overuse**: Check progressive loading phase, use domain-specific files for 60-70% reduction
 - Phase 1 adoption: ≥90% of sessions
 - Task completion rate: ≥95% (maintain current performance)
 

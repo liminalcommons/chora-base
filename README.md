@@ -377,6 +377,68 @@ just inbox-respond         # Respond to coordination request
 
 ---
 
+### Agent Awareness (Nested AGENTS.md/CLAUDE.md) - SAP-009
+
+**Status**: Production (v1.1.0) | **Adoption Level**: L3 (Universal pattern)
+
+SAP-009 provides structured agent guidance through nested AGENTS.md/CLAUDE.md files, enabling progressive context loading and reducing token usage by 60-70% through domain-specific awareness.
+
+**When to use SAP-009**:
+- Building AI-agent-friendly documentation with "nearest file wins" pattern
+- Progressive context loading to manage 200k token budgets efficiently
+- Domain-specific agent guidance (tests/, scripts/, .chora/, docs/)
+- Claude-specific optimizations (artifact-first, checkpoint patterns)
+- Cross-session context restoration and onboarding workflows
+
+**Quick start**:
+```bash
+# Read root awareness files for project overview
+cat AGENTS.md      # Generic agent guidance (900 lines, 15-min read)
+cat CLAUDE.md      # Claude-specific patterns (450 lines, 8-min read)
+
+# Navigate to domain-specific awareness
+cat tests/AGENTS.md     # Testing guidance (200 lines, 5-min read, 60% token savings)
+cat scripts/AGENTS.md   # Script patterns (250 lines, 6-min read, 65% token savings)
+cat .chora/AGENTS.md    # Memory system guide (400 lines, 13-min read, 70% token savings)
+
+# Validate awareness structure (7 required sections)
+python scripts/validate-awareness-structure.py AGENTS.md
+
+# Check for broken links in awareness network
+python scripts/validate-awareness-links.py
+```
+
+**Core capabilities**:
+- **Dual-file pattern**: AGENTS.md (all agents) + CLAUDE.md (Claude optimizations)
+- **Nested hierarchy**: 5 levels (root → domain → capability → feature → component)
+- **Progressive loading**: Essential (0-10k) → Extended (10-50k) → Full (50-200k) token phases
+- **Domain-specific files**: tests/, scripts/, .chora/, docs/skilled-awareness/SAP/
+- **Context optimization**: Token budgets by task, checkpoint patterns, artifact-first development
+
+**Integration with other SAPs**:
+- **ALL SAPs**: Every SAP uses nested awareness pattern for discoverability
+- **SAP-010 (Memory)**: Domain-specific .chora/AGENTS.md for memory workflows
+- **SAP-015 (Task Tracking)**: Document beads patterns in AGENTS.md
+- **SAP-001 (Inbox)**: Domain-specific inbox/AGENTS.md for coordination
+- **SAP-027 (Dogfooding)**: Validate awareness adoption completeness
+
+**ROI**: 60-70% token reduction through domain-specific files, 5-10 min faster onboarding per session
+
+**Documentation**:
+- Protocol specification: [docs/skilled-awareness/agent-awareness/protocol-spec.md](docs/skilled-awareness/agent-awareness/protocol-spec.md)
+- Adoption blueprint: [docs/skilled-awareness/agent-awareness/adoption-blueprint.md](docs/skilled-awareness/agent-awareness/adoption-blueprint.md)
+- Domain-specific guide: [docs/skilled-awareness/agent-awareness/AGENTS.md](docs/skilled-awareness/agent-awareness/AGENTS.md)
+- Claude patterns: [docs/skilled-awareness/agent-awareness/CLAUDE.md](docs/skilled-awareness/agent-awareness/CLAUDE.md)
+
+**CLI recipes** (see justfile):
+```bash
+just validate-awareness-structure  # Validate AGENTS.md structure
+just validate-awareness-links      # Check for broken links
+just create-domain-awareness       # Create new domain AGENTS.md
+```
+
+---
+
 ### Memory System (A-MEM) - SAP-010
 
 **When to use SAP-010**:

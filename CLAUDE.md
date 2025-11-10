@@ -332,6 +332,39 @@ Claude should load context progressively to optimize token usage:
 
 ---
 
+### Domain 8: Agent Awareness (agent-awareness/)
+
+**Path**: [docs/skilled-awareness/agent-awareness/AGENTS.md](docs/skilled-awareness/agent-awareness/AGENTS.md) + [docs/skilled-awareness/agent-awareness/CLAUDE.md](docs/skilled-awareness/agent-awareness/CLAUDE.md)
+
+**Navigation tip**: Read domain-specific files for 60-70% token savings
+- [docs/skilled-awareness/agent-awareness/CLAUDE.md](docs/skilled-awareness/agent-awareness/CLAUDE.md) - Claude progressive loading patterns (10-min, ~7k tokens)
+- [docs/skilled-awareness/agent-awareness/AGENTS.md](docs/skilled-awareness/agent-awareness/AGENTS.md) - Nested awareness patterns (15-min, ~11k tokens)
+
+**Use when**:
+- Understanding the nested AGENTS.md/CLAUDE.md pattern (SAP-009)
+- Implementing progressive context loading (200k token management)
+- Creating domain-specific awareness files (tests/, scripts/, .chora/)
+- Validating awareness structure (7 required sections)
+- Optimizing token usage with "nearest file wins" pattern
+
+**Contents**:
+- Nested hierarchy pattern (5 levels: root → domain → SAP → feature → component)
+- Progressive loading phases (Essential 0-10k, Extended 10-50k, Comprehensive 50-200k)
+- Domain-specific awareness examples (tests/, scripts/, .chora/, inbox/)
+- Validation workflows (structure, links, token tracking)
+- Integration patterns (ALL SAPs use this pattern)
+
+**Progressive Loading Strategy**:
+```markdown
+Phase 1 (0-10k): Read root AGENTS.md sections 1-2 only
+Phase 2 (10-50k): Read root + domain-specific AGENTS.md + CLAUDE.md (60-70% savings)
+Phase 3 (50-200k): Read all SAP artifacts (only for complex tasks)
+```
+
+**Note**: Agent awareness (SAP-009) is the META-SAP that ALL other SAPs depend on for discoverability. This pattern enables 60-70% token reduction via domain-specific files.
+
+---
+
 ## Common Claude Code Workflows
 
 ### Workflow 1: Adopting a SAP
