@@ -1515,6 +1515,135 @@ Links checked: 456
 
 ---
 
+### Dogfooding Patterns (6-Week Pilot Methodology) - SAP-027
+
+**Problem**: New patterns deployed without real-world validation lead to 40-60% adoption failures, wasted development time, and erosion of user trust. "Build it and they will come" rarely works.
+
+**Solution**: Formalized 6-week dogfooding pilot methodology validates patterns through internal use before ecosystem adoption with GO/NO-GO criteria, ROI analysis, and metrics collection.
+
+**When to use**:
+- New SAP development (validate capability before production release)
+- Major SAP version upgrades (validate breaking changes with pilot users)
+- Cross-project pattern validation (test if pattern works across different codebases)
+- High-risk features (validate assumptions before committing to broad rollout)
+- User-requested capabilities (validate that solution actually solves the stated problem)
+
+**Quick start**:
+
+```bash
+# Week -1: Pre-pilot discovery (select pilot candidate)
+cat .chora/memory/knowledge/notes/intention-inventory-*.md | grep -A 5 "^## "
+python scripts/score-pilot-candidates.py --inventory intention-inventory.md
+
+# Week 0: Research phase (gather evidence)
+just research "database migration best practices for Python"
+# Output: docs/research/{topic}-research.md (10-20 pages with Level A/B/C citations)
+
+# Weeks 1-3: Build phase (develop capability)
+# - Build to minimum viable state
+# - Use research insights to inform design
+# - Track setup time for ROI analysis
+
+# Week 4: Validation phase (real-world testing)
+# - Use capability 2+ times in real scenarios
+# - Collect metrics: time saved, satisfaction (0-10), bugs
+# - Document adoption cases
+
+# Week 4 End: Decision phase (GO/NO-GO)
+# - Review metrics against criteria
+# - Write go-no-go-decision.md with recommendation
+# GO criteria: time savings ≥5x, satisfaction ≥85%, bugs = 0
+
+# Week 5: Formalization (if GO)
+# - Complete artifact TODOs
+# - Update ledger with adoption tracking
+# - Mark SAP as production-ready
+```
+
+**Example pilot structure**:
+```
+docs/project-docs/pilots/pilot-2025-11-05-sap-015/
+  ├── week-0-research.md          # Research report (10-20 pages)
+  ├── week-1-metrics.md           # Build phase tracking
+  ├── week-2-metrics.md
+  ├── week-3-metrics.md
+  ├── week-4-validation.md        # Validation use cases
+  ├── go-no-go-decision.md        # Final recommendation
+  └── formalization-checklist.md  # TODOs for production
+```
+
+**4-phase pilot design**:
+
+1. **Week -1 (Pre-Pilot Discovery)**:
+   - Query intention inventory for pilot candidates
+   - Score candidates: Evidence (40%), Strategic Alignment (30%), User Demand (20%), Feasibility (10%)
+   - Select top 3-5 candidates above threshold (≥7.0)
+   - Choose 1 candidate for immediate pilot
+   - **Output**: `.chora/memory/knowledge/notes/pilot-candidates-{date}.md`
+
+2. **Week 0 (Research Phase)**:
+   - Fill research prompt template with SAP domain context
+   - Execute research using Claude Code WebSearch
+   - Generate `docs/research/{sap-name}-research.md` (10-20 pages)
+   - Extract principles, decision playbooks, anti-patterns
+   - Validate evidence levels (≥30% Level A, ≥40% Level B, ≤30% Level C)
+
+3. **Weeks 1-3 (Build Phase)**:
+   - Build capability to minimum viable state
+   - Use research insights to inform design decisions
+   - Track setup time for ROI analysis
+   - Document integration patterns
+
+4. **Week 4 (Validation Phase)**:
+   - Use capability 2+ times in real scenarios
+   - Collect metrics per use: time saved (minutes), satisfaction (0-10), bugs introduced
+   - Document adoption cases with before/after comparison
+   - Calculate aggregate metrics: avg time savings, avg satisfaction, total bugs
+
+5. **Week 4 End (Decision Phase)**:
+   - Review metrics against GO/NO-GO criteria
+   - **GO criteria**: time savings ≥5x setup cost, satisfaction ≥85%, bugs = 0
+   - Write `go-no-go-decision.md` with data-driven recommendation
+   - Log decision event to `.chora/memory/events/dogfooding.jsonl`
+
+6. **Week 5 (Formalization, if GO)**:
+   - Complete artifact TODOs (capability charter, protocol spec, adoption blueprint, ledger)
+   - Update ledger with adoption tracking and pilot metrics
+   - Mark SAP status: pilot → active (production-ready)
+   - Broadcast to ecosystem via SAP-001 announcements
+
+**GO/NO-GO Criteria Framework**:
+- **Time savings**: ≥5x setup cost (5 min setup → ≥25 min saved per use)
+- **Satisfaction**: ≥85% average (≥8.5/10 across validation uses)
+- **Bugs**: 0 bugs introduced during validation phase
+- **Adoption**: ≥2 real-world use cases documented
+
+**ROI Analysis** (built into methodology):
+- **Break-even calculation**: Setup time × 5 = minimum time savings required
+- **Validation metrics**: Avg time saved, avg satisfaction, bug count, adoption cases
+- **Decision confidence**: High (clear GO/NO-GO), Medium (borderline), Low (insufficient data)
+
+**Integration with other SAPs**:
+- **SAP-010 (Memory System)**: Store pilot candidates, research reports, validation metrics in `.chora/memory/knowledge/notes/`
+- **SAP-001 (Inbox)**: Track user demand via coordination requests, broadcast pilot decisions
+- **SAP-006 (Vision Synthesis)**: Score pilot candidates against Wave 1/Wave 2 strategic priorities
+- **SAP-015 (Task Tracking)**: Create P3 discovery tasks, P1 pilot execution tasks
+- **SAP-013 (Metrics Tracking)**: Collect validation metrics (time, satisfaction, bugs)
+- **SAP-027 (Self-Dogfooding)**: SAP-027 itself was validated via 6-week pilot (meta-dogfooding)
+
+**ROI**: 40-60% reduction in pattern adoption failures + 20-30 hours saved per avoided failed rollout + increased user trust
+
+**Real-world example** (SAP-015 pilot):
+- **Week 0**: Research task management patterns (JIRA, Linear, Trello case studies)
+- **Weeks 1-3**: Built beads CLI with JSONL persistence
+- **Week 4**: Validated with 3 real coordination requests (COORD-2025-008, 009, 010)
+- **Metrics**: 12 min setup, 67 min avg saved per use (5.6x ROI), 9.2/10 satisfaction, 0 bugs
+- **Decision**: GO (all criteria met) → formalized to SAP-015 v1.0.0 (active)
+
+**See also**: [justfile recipes](#justfile-automation), [AGENTS.md "Dogfooding Patterns - SAP-027" section](#dogfooding-patterns-sap-027), [docs/skilled-awareness/dogfooding-patterns/](docs/skilled-awareness/dogfooding-patterns/)
+
+---
+
 ### Project Types Supported
 
 - **Library/Package** - Python libraries for PyPI distribution

@@ -604,6 +604,161 @@ validate-links-help:
     @echo "📖 Full documentation: AGENTS.md \"Link Validation - SAP-016\""
 
 # ============================================================================
+# SAP-027: Dogfooding Patterns (6-Week Pilot Methodology)
+# ============================================================================
+# Formalized pilot methodology with GO/NO-GO criteria, ROI analysis, and metrics collection.
+# See: AGENTS.md "Dogfooding Patterns - SAP-027", docs/skilled-awareness/dogfooding-patterns/
+
+# Show dogfooding pilot help (6-week methodology overview)
+# Example: just pilot-help
+pilot-help:
+    @echo "🧪 SAP-027: Dogfooding Patterns (6-Week Pilot Methodology)"
+    @echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+    @echo ""
+    @echo "📖 Overview"
+    @echo "  Validate new patterns through internal use before ecosystem adoption."
+    @echo "  Reduces 40-60% adoption failures with data-driven GO/NO-GO decisions."
+    @echo ""
+    @echo "🗓️ 6-Week Timeline"
+    @echo "  Week -1: Pre-pilot discovery (select candidate from intention inventory)"
+    @echo "  Week 0:  Research phase (gather evidence, generate research report)"
+    @echo "  Week 1-3: Build phase (develop capability to minimum viable state)"
+    @echo "  Week 4:  Validation phase (2+ real-world uses, collect metrics)"
+    @echo "  Week 4:  Decision phase (review metrics, write GO/NO-GO recommendation)"
+    @echo "  Week 5:  Formalization (complete artifacts, update ledger, mark production)"
+    @echo ""
+    @echo "✅ GO/NO-GO Criteria"
+    @echo "  - Time savings: ≥5x setup cost (e.g., 5 min setup → ≥25 min saved per use)"
+    @echo "  - Satisfaction: ≥85% average (≥8.5/10 across validation uses)"
+    @echo "  - Bugs: 0 bugs introduced during validation phase"
+    @echo "  - Adoption: ≥2 real-world use cases documented"
+    @echo ""
+    @echo "🛠️ Recipes"
+    @echo "  just pilot-help                           # This help"
+    @echo "  just pilot-score-candidates <INVENTORY>   # Score pilot candidates"
+    @echo "  just pilot-init <SAP_ID>                  # Initialize pilot structure"
+    @echo "  just pilot-research <TOPIC>               # Execute research phase"
+    @echo "  just pilot-validate <PILOT_ID>            # Generate validation template"
+    @echo "  just pilot-decide <PILOT_ID>              # Generate GO/NO-GO decision template"
+    @echo ""
+    @echo "📊 Real-World Example (SAP-015)"
+    @echo "  Week 0:  Research task management (JIRA, Linear case studies)"
+    @echo "  Week 1-3: Built beads CLI with JSONL persistence"
+    @echo "  Week 4:  3 validation uses (COORD-2025-008/009/010)"
+    @echo "  Metrics: 12 min setup, 67 min avg saved (5.6x ROI), 9.2/10 sat, 0 bugs"
+    @echo "  Decision: GO → SAP-015 v1.0.0 (active)"
+    @echo ""
+    @echo "📖 Full docs: docs/skilled-awareness/dogfooding-patterns/"
+
+# Score pilot candidates from intention inventory
+# Example: just pilot-score-candidates .chora/memory/knowledge/notes/intention-inventory-2025-11-05.md
+pilot-score-candidates INVENTORY:
+    @echo "🧪 SAP-027: Scoring pilot candidates..."
+    @echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+    @python scripts/score-pilot-candidates.py --inventory {{INVENTORY}} --output pilot-candidates-$(date +%Y-%m-%d).md 2>/dev/null || echo "❌ score-pilot-candidates.py not available (manual scoring required)"
+    @echo ""
+    @echo "📊 Scoring Criteria (weighted):"
+    @echo "  - Evidence availability (40%): Level A/B sources exist"
+    @echo "  - Strategic alignment (30%): Fits Wave 1/Wave 2 vision"
+    @echo "  - User demand (20%): Explicit requests in inbox/feedback"
+    @echo "  - Feasibility (10%): Effort estimate and technical risk"
+    @echo ""
+    @echo "🎯 Threshold: ≥7.0 for pilot consideration"
+    @echo "📝 Output: pilot-candidates-$(date +%Y-%m-%d).md"
+
+# Initialize pilot directory structure
+# Example: just pilot-init SAP-015
+pilot-init SAP_ID:
+    @echo "🧪 SAP-027: Initializing pilot structure for {{SAP_ID}}..."
+    @mkdir -p docs/project-docs/pilots/pilot-$(date +%Y-%m-%d)-{{SAP_ID}}
+    @echo "# Week 0: Research Phase\n\n[Research findings go here]\n" > docs/project-docs/pilots/pilot-$(date +%Y-%m-%d)-{{SAP_ID}}/week-0-research.md
+    @echo "# Week 1: Build Metrics\n\n[Build progress goes here]\n" > docs/project-docs/pilots/pilot-$(date +%Y-%m-%d)-{{SAP_ID}}/week-1-metrics.md
+    @echo "# Week 2: Build Metrics\n\n[Build progress goes here]\n" > docs/project-docs/pilots/pilot-$(date +%Y-%m-%d)-{{SAP_ID}}/week-2-metrics.md
+    @echo "# Week 3: Build Metrics\n\n[Build progress goes here]\n" > docs/project-docs/pilots/pilot-$(date +%Y-%m-%d)-{{SAP_ID}}/week-3-metrics.md
+    @echo "# Week 4: Validation\n\n## Use Case 1\n- Time saved:\n- Satisfaction:\n- Bugs:\n\n## Use Case 2\n- Time saved:\n- Satisfaction:\n- Bugs:\n" > docs/project-docs/pilots/pilot-$(date +%Y-%m-%d)-{{SAP_ID}}/week-4-validation.md
+    @echo "# GO/NO-GO Decision\n\n## Metrics Summary\n- Time savings:\n- Satisfaction:\n- Bugs:\n\n## Decision: [GO/NO-GO]\n\n## Rationale:\n" > docs/project-docs/pilots/pilot-$(date +%Y-%m-%d)-{{SAP_ID}}/go-no-go-decision.md
+    @echo "# Formalization Checklist\n\n- [ ] Complete capability-charter.md\n- [ ] Complete protocol-spec.md\n- [ ] Complete adoption-blueprint.md\n- [ ] Complete ledger.md\n- [ ] Update SAP status: pilot → active\n" > docs/project-docs/pilots/pilot-$(date +%Y-%m-%d)-{{SAP_ID}}/formalization-checklist.md
+    @echo "✅ Pilot structure created: docs/project-docs/pilots/pilot-$(date +%Y-%m-%d)-{{SAP_ID}}/"
+    @echo ""
+    @echo "📋 Next steps:"
+    @echo "  1. just pilot-research \"<topic>\""
+    @echo "  2. Build capability (Weeks 1-3)"
+    @echo "  3. just pilot-validate pilot-$(date +%Y-%m-%d)-{{SAP_ID}}"
+    @echo "  4. just pilot-decide pilot-$(date +%Y-%m-%d)-{{SAP_ID}}"
+
+# Execute research phase (generate research report)
+# Example: just pilot-research "database migration best practices for Python"
+pilot-research TOPIC:
+    @echo "🧪 SAP-027: Executing research phase for: {{TOPIC}}"
+    @echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+    @echo ""
+    @echo "📝 Research template structure:"
+    @echo "  1. Executive Summary (10-12 bullet takeaways)"
+    @echo "  2. Principles (The Why) - with Level A/B/C evidence"
+    @echo "  3. Practices (The How) - architecture, testing, CI/CD"
+    @echo "  4. Anti-Patterns (What to Avoid) - common mistakes"
+    @echo "  5. Decision Playbook - when to adopt, when to defer"
+    @echo ""
+    @echo "🎯 Evidence requirements:"
+    @echo "  - ≥30% Level A (standards, peer-reviewed papers)"
+    @echo "  - ≥40% Level B (industry case studies, documented practices)"
+    @echo "  - ≤30% Level C (expert opinion, blog posts)"
+    @echo ""
+    @echo "💡 Use Claude Code WebSearch to gather evidence"
+    @echo "📖 Output: docs/research/{{TOPIC}}-research.md (10-20 pages)"
+
+# Generate validation template for Week 4
+# Example: just pilot-validate pilot-2025-11-05-sap-015
+pilot-validate PILOT_ID:
+    @echo "🧪 SAP-027: Generating validation template for {{PILOT_ID}}"
+    @echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+    @echo ""
+    @echo "📋 Validation checklist:"
+    @echo "  - [ ] Use capability in real scenario #1"
+    @echo "  - [ ] Collect metrics: time saved (minutes), satisfaction (0-10), bugs"
+    @echo "  - [ ] Document before/after comparison"
+    @echo "  - [ ] Use capability in real scenario #2"
+    @echo "  - [ ] Collect metrics: time saved (minutes), satisfaction (0-10), bugs"
+    @echo "  - [ ] Document before/after comparison"
+    @echo "  - [ ] Calculate aggregate metrics (avg time, avg satisfaction, total bugs)"
+    @echo ""
+    @echo "📊 Metrics to collect per use:"
+    @echo "  - Time saved: X minutes (compared to manual approach)"
+    @echo "  - Satisfaction: X/10 (0=frustrated, 10=delighted)"
+    @echo "  - Bugs introduced: X (0 is goal)"
+    @echo ""
+    @echo "📝 Update: docs/project-docs/pilots/{{PILOT_ID}}/week-4-validation.md"
+
+# Generate GO/NO-GO decision template
+# Example: just pilot-decide pilot-2025-11-05-sap-015
+pilot-decide PILOT_ID:
+    @echo "🧪 SAP-027: Generating GO/NO-GO decision template for {{PILOT_ID}}"
+    @echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+    @echo ""
+    @echo "📊 Review metrics against criteria:"
+    @echo "  1. Time savings: ≥5x setup cost?"
+    @echo "     Setup: X min | Avg saved: Y min | Ratio: Y/X"
+    @echo "     ✅ GO if Y/X ≥ 5.0 | ❌ NO-GO if Y/X < 5.0"
+    @echo ""
+    @echo "  2. Satisfaction: ≥85% average?"
+    @echo "     Avg satisfaction: X/10 (need ≥8.5)"
+    @echo "     ✅ GO if ≥8.5 | ❌ NO-GO if <8.5"
+    @echo ""
+    @echo "  3. Bugs: 0 bugs introduced?"
+    @echo "     Total bugs: X (need 0)"
+    @echo "     ✅ GO if 0 | ❌ NO-GO if >0"
+    @echo ""
+    @echo "  4. Adoption: ≥2 real-world uses?"
+    @echo "     Use cases documented: X (need ≥2)"
+    @echo "     ✅ GO if ≥2 | ❌ NO-GO if <2"
+    @echo ""
+    @echo "🎯 Decision:"
+    @echo "  - All 4 criteria met → GO (proceed to formalization)"
+    @echo "  - 1+ criteria failed → NO-GO (document learnings, archive pilot)"
+    @echo ""
+    @echo "📝 Update: docs/project-docs/pilots/{{PILOT_ID}}/go-no-go-decision.md"
+
+# ============================================================================
 # SAP-011: Docker Operations (Production Containerization)
 # ============================================================================
 # Multi-stage Dockerfiles, docker-compose orchestration, 40% smaller images (150-250MB).

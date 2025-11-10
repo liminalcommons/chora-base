@@ -1015,6 +1015,195 @@ new_string: "[guide](../new-guide.md)"
 
 ---
 
+### Dogfooding Patterns (SAP-027) - Quick Reference
+
+**When to use**: User asks to "validate new pattern", "pilot new SAP", or after building capability that needs real-world validation
+
+**Quick reference** (6 recipes for Claude):
+
+```bash
+# 1. Show 6-week methodology overview
+just pilot-help
+
+# 2. Score pilot candidates from intention inventory
+just pilot-score-candidates intention-inventory-2025-11-05.md
+
+# 3. Initialize pilot directory structure
+just pilot-init SAP-015
+# Creates: docs/project-docs/pilots/pilot-{date}-{sap-id}/
+
+# 4. Execute research phase (Week 0)
+just pilot-research "database migration best practices for Python"
+
+# 5. Generate validation template (Week 4)
+just pilot-validate pilot-2025-11-05-sap-015
+
+# 6. Generate GO/NO-GO decision template (Week 4 End)
+just pilot-decide pilot-2025-11-05-sap-015
+```
+
+**Progressive loading**:
+- **Phase 1** (Quick): Read AGENTS.md "Dogfooding Patterns - SAP-027" section (329 lines, 6 workflows)
+- **Phase 2** (Implementation): Read [docs/skilled-awareness/dogfooding-patterns/protocol-spec.md](docs/skilled-awareness/dogfooding-patterns/protocol-spec.md)
+- **Phase 3** (Deep understanding): Read capability-charter.md for design rationale
+
+**Common Claude Code workflows**:
+
+#### Example 1: User asks "start pilot for new SAP"
+
+```markdown
+User: "I want to pilot a new SAP for database migrations"
+
+Claude workflow:
+1. Initialize pilot structure: just pilot-init SAP-030
+2. Execute research: just pilot-research "database migration best practices for Python"
+3. Use WebSearch to gather Level A/B/C evidence (≥30% Level A required)
+4. Generate research report: docs/research/database-migrations-research.md (10-20 pages)
+5. Confirm: "Research complete. Proceed to Week 1-3 build phase."
+```
+
+**Research output structure**:
+```markdown
+# Research Report: Database Migration Best Practices
+
+## Executive Summary
+- 12 bullet takeaways
+- Adopt Alembic (Level A: SQLAlchemy docs)
+- Defer custom migration framework (high complexity)
+
+## Principles
+- Reversibility: All migrations must have down() methods
+- Level A: Django migration guide (official docs)
+- Level B: Prisma case study (Vercel blog)
+
+## Practices
+- Use sequential versioning (001, 002, 003)
+- Test migrations in dev environment first
+
+## Anti-Patterns
+- No manual SQL without migration tracking
+- Avoid data changes in schema migrations
+
+## Decision Playbook
+- Simple project (<5 models): Use Alembic
+- Complex project (>20 models): Consider Prisma/Drizzle
+```
+
+---
+
+#### Example 2: Week 4 validation and GO/NO-GO decision
+
+```markdown
+User: "Validate SAP-015 pilot and make GO/NO-GO decision"
+
+Claude workflow:
+1. Generate validation template: just pilot-validate pilot-2025-11-05-sap-015
+2. Prompt user: "Document 2+ real-world use cases with metrics"
+   - Use case 1: Time saved, satisfaction (0-10), bugs
+   - Use case 2: Time saved, satisfaction (0-10), bugs
+3. Calculate aggregate metrics:
+   - Setup time: 12 min
+   - Avg time saved: 67 min (5.6x ROI)
+   - Avg satisfaction: 9.2/10 (92%)
+   - Total bugs: 0
+   - Adoption cases: 3
+4. Review GO/NO-GO criteria:
+   - ✅ Time savings 5.6x ≥ 5.0
+   - ✅ Satisfaction 92% ≥ 85%
+   - ✅ Bugs 0 = 0
+   - ✅ Adoption 3 ≥ 2
+5. Decision: GO (all 4 criteria met)
+6. Generate decision document: just pilot-decide pilot-2025-11-05-sap-015
+7. Update pilot document with recommendation
+```
+
+**GO/NO-GO decision template**:
+```markdown
+# GO/NO-GO Decision: SAP-015 (Task Tracking)
+
+## Metrics Summary
+- Setup time: 12 minutes
+- Validation uses: 3
+- Avg time saved: 67 minutes (5.6x ROI)
+- Avg satisfaction: 9.2/10 (92%)
+- Bugs introduced: 0
+- Adoption cases: 3 (COORD-2025-008/009/010)
+
+## Decision: ✅ GO
+
+## Rationale:
+All 4 criteria met with strong margins.
+
+## Next Steps:
+1. Complete formalization-checklist.md
+2. Update ledger with pilot metrics
+3. Mark SAP status: pilot → active
+4. Broadcast via SAP-001
+```
+
+---
+
+#### Example 3: Pre-pilot discovery (select candidate)
+
+```markdown
+User: "Help me choose which SAP to pilot next"
+
+Claude workflow:
+1. Query intention inventory: cat .chora/memory/knowledge/notes/intention-inventory-*.md
+2. Score candidates using weighted criteria:
+   - Evidence availability (40%)
+   - Strategic alignment (30%)
+   - User demand (20%)
+   - Feasibility (10%)
+3. Filter candidates above threshold (≥7.0)
+4. Present top 3-5 candidates with scores
+5. User selects 1 candidate
+6. Log decision event to .chora/memory/events/dogfooding.jsonl
+7. Proceed to: just pilot-init {selected-sap-id}
+```
+
+**Scoring example**:
+```
+Top 3 Pilot Candidates:
+
+1. SAP-030: Data Fetching Patterns (Score: 8.4)
+   - Evidence: 9/10 (React Query docs, TanStack case studies)
+   - Alignment: 9/10 (Wave 1 committed feature)
+   - Demand: 8/10 (8 coordination requests)
+   - Feasibility: 8/10 (2-week build, low risk)
+
+2. SAP-031: Routing & Navigation (Score: 7.8)
+   [...]
+
+3. SAP-032: Performance Optimization (Score: 7.2)
+   [...]
+
+Recommendation: SAP-030 (highest score, strong evidence)
+```
+
+---
+
+**ROI for Claude sessions**:
+- **Pattern validation**: 6 weeks upfront → avoid 20-30 hours rework later
+- **Data-driven decisions**: GO/NO-GO criteria eliminate guesswork
+- **Research efficiency**: WebSearch + template → 10-20 page report in 2-3 hours
+
+**6-week pilot timeline** (quick reference):
+- **Week -1**: Pre-pilot discovery (select candidate, score intentions)
+- **Week 0**: Research phase (gather evidence, generate report)
+- **Weeks 1-3**: Build phase (develop capability to minimum viable state)
+- **Week 4**: Validation phase (2+ real uses, collect metrics)
+- **Week 4 End**: Decision phase (review criteria, write GO/NO-GO)
+- **Week 5**: Formalization (complete artifacts, mark production, broadcast)
+
+**Integration with other SAPs**:
+- **SAP-010**: Store pilot candidates, research reports in `.chora/memory/knowledge/notes/`
+- **SAP-001**: Track user demand, broadcast pilot decisions
+- **SAP-015**: Create tasks for pilot tracking
+- **SAP-013**: Collect validation metrics (time, satisfaction, bugs)
+
+---
+
 ### Testing Framework (SAP-004) - Quick Reference
 
 **No domain-specific CLAUDE.md** (tests/ may have AGENTS.md if complex test patterns exist)
