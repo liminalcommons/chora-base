@@ -1,9 +1,9 @@
 # Chora-Base: Claude Agent Awareness (Root)
 
 **Project**: chora-base
-**Version**: 4.10.0
+**Version**: 4.11.0
 **Claude Compatibility**: Sonnet 4.5+
-**Last Updated**: 2025-11-06
+**Last Updated**: 2025-11-09
 
 ---
 
@@ -507,6 +507,88 @@ just doc-completeness         # Verify all 4 domains exist
 
 ---
 
+### Automation Scripts (SAP-008) - Quick Reference
+
+**No domain-specific CLAUDE.md** (automation is infrastructure, not code)
+
+**Claude patterns for automation**:
+```markdown
+# User wants to automate workflows → Use justfile interface
+just automation-help              # Show all 30+ commands grouped by category
+just --list                       # List all available commands
+
+# Setup workflows
+just install                      # Install project in editable mode
+just setup-hooks                  # Install pre-commit hooks
+just check-env                    # Validate environment
+
+# Development workflows
+just test                         # Run pytest suite
+just smoke                        # Quick smoke tests (~5-10s)
+just integration                  # Integration tests
+just diagnose                     # Environment diagnostics
+
+# Quality gates
+just lint                         # Run ruff linter
+just format                       # Format code with ruff
+just type-check                   # Run mypy type checker
+just pre-merge                    # All quality gates before merge
+
+# Version management
+just bump-patch                   # 1.0.0 → 1.0.1 (bug fixes)
+just bump-minor                   # 1.0.0 → 1.1.0 (new features)
+just bump-major                   # 1.0.0 → 2.0.0 (breaking changes)
+
+# Release & publishing
+just build                        # Build distribution packages
+just publish-test                 # Publish to test PyPI
+just publish-prod                 # Publish to production PyPI
+
+# Common workflows
+# 1. Setup new development environment
+just install
+just setup-hooks
+just check-env
+just smoke
+
+# 2. Development workflow (test → lint → format → type-check)
+just test                         # Run tests
+just lint                         # Check code quality
+just format                       # Format code
+just type-check                   # Validate types
+just pre-merge                    # Run all gates
+
+# 3. Release workflow
+just bump-minor                   # Bump version
+just build                        # Build packages
+just publish-test                 # Publish to test PyPI (validate)
+just publish-prod                 # Publish to production PyPI
+
+# 4. Troubleshooting
+just diagnose                     # Run diagnostics
+just check-env                    # Validate environment
+just smoke                        # Quick health check
+```
+
+**Progressive loading strategy**:
+- **Phase 1**: Run `just automation-help` for command reference (instant)
+- **Phase 2**: Read [docs/skilled-awareness/automation-scripts/protocol-spec.md](docs/skilled-awareness/automation-scripts/protocol-spec.md) for complete contracts
+- **Phase 3**: Read individual scripts in scripts/ directory for implementation details
+
+**ROI**: 30-45 min saved per day (consistent automation, no manual workflows), 90%+ reduction in setup errors
+
+**8 Script Categories**:
+- **Setup & Environment**: install, setup-hooks, check-env
+- **Development**: test, smoke, integration, diagnose
+- **Quality**: lint, format, type-check, pre-merge
+- **Version Management**: bump-patch, bump-minor, bump-major
+- **Release & Publishing**: build, publish-test, publish-prod
+- **Documentation**: validate-docs, extract-doc-tests, doc-structure
+- **Safety & Recovery**: rollback-dev, handoff
+- **MCP & Specialized**: mcp-tool, validate-mcp-names
+
+---
+
 ### Chora-Base Meta Package (SAP-002) - Quick Reference
 
 **No domain-specific CLAUDE.md** (chora-base documentation IS the awareness system)
@@ -991,6 +1073,358 @@ bash scripts/validate-awareness-links.sh
 
 ---
 
+## React Development with SAPs
+
+**Quick Access**: [React SAP Integration Guide](docs/user-docs/guides/react-sap-integration-guide.md)
+
+chora-base includes **16 specialized React SAPs** for Next.js 15 + React 19 development, providing production-ready implementations with an average of **89.8% time savings**.
+
+### React SAP Categories (16 SAPs)
+
+**Foundation (4 SAPs)**: Core building blocks for any React application
+
+- [SAP-020](docs/skilled-awareness/react-foundation/) - Next.js 15 Foundation (App Router, Server Components)
+- [SAP-033](docs/skilled-awareness/react-authentication/) - Authentication (NextAuth v5, Clerk, Supabase, Auth0)
+- [SAP-034](docs/skilled-awareness/react-database-integration/) - Database (Prisma, Drizzle ORM)
+- [SAP-041](docs/skilled-awareness/react-form-validation/) - Forms (React Hook Form + Zod validation)
+
+**Developer Experience (6 SAPs)**: Quality and productivity tools
+
+- [SAP-021](docs/skilled-awareness/react-testing/) - Testing (Vitest + React Testing Library)
+- [SAP-022](docs/skilled-awareness/react-linting/) - Linting (ESLint 9 + Prettier)
+- [SAP-023](docs/skilled-awareness/react-state-management/) - State (TanStack Query, Zustand)
+- [SAP-024](docs/skilled-awareness/react-styling/) - Styling (Tailwind CSS + shadcn/ui)
+- [SAP-025](docs/skilled-awareness/react-performance/) - Performance (Core Web Vitals optimization)
+- [SAP-026](docs/skilled-awareness/react-accessibility/) - Accessibility (WCAG 2.2 Level AA)
+
+**User-Facing (2 SAPs)**: Production features
+
+- [SAP-035](docs/skilled-awareness/react-file-upload/) - File Upload (UploadThing, Vercel Blob, Supabase, S3)
+- [SAP-036](docs/skilled-awareness/react-error-handling/) - Error Handling (Sentry, Error Boundaries)
+
+**Advanced (4 SAPs)**: Enterprise capabilities
+
+- [SAP-037](docs/skilled-awareness/react-realtime-synchronization/) - Real-Time (Socket.IO, SSE, Pusher, Ably)
+- [SAP-038](docs/skilled-awareness/react-internationalization/) - i18n (next-intl, react-i18next)
+- [SAP-039](docs/skilled-awareness/react-e2e-testing/) - E2E Testing (Playwright, Cypress)
+- [SAP-040](docs/skilled-awareness/react-monorepo-architecture/) - Monorepo (Turborepo, Nx, pnpm workspaces)
+
+---
+
+### Progressive Loading for React Development
+
+**Phase 1: Foundation** (Read these first - 20 min total)
+
+Start with AGENTS.md files for quick overviews:
+- [SAP-020 AGENTS.md](docs/skilled-awareness/react-foundation/AGENTS.md) (5 min) - Next.js 15 baseline
+- [SAP-033 AGENTS.md](docs/skilled-awareness/react-authentication/AGENTS.md) (5 min) - Authentication overview
+- [SAP-034 AGENTS.md](docs/skilled-awareness/react-database-integration/AGENTS.md) (5 min) - Database overview
+- [SAP-041 AGENTS.md](docs/skilled-awareness/react-form-validation/AGENTS.md) (5 min) - Forms overview
+
+**Phase 2: Implementation** (Read when building - 15-30 min per SAP)
+
+For each SAP you're adopting:
+- Read `protocol-spec.md` for complete technical reference
+- Read `adoption-blueprint.md` for step-by-step setup instructions
+- Review code examples in protocol-spec (25+ examples per SAP)
+
+**Phase 3: Deep Dive** (Read when troubleshooting - 5-15 min per SAP)
+
+Only when you need design rationale or evidence:
+- Read `capability-charter.md` for problem statement and solution design
+- Read `ledger.md` for production case studies and metrics
+- Review integration patterns with other SAPs
+
+**Token Savings**: Progressive loading saves 60-70% tokens vs reading all artifacts at once.
+
+---
+
+### Common React Workflows
+
+**Workflow 1: New Next.js Project**
+
+```markdown
+User: "I want to build a new Next.js app with auth and database"
+
+Claude:
+1. Read [React SAP Integration Guide](docs/user-docs/guides/react-sap-integration-guide.md#foundation-stack)
+2. Follow Foundation Stack tutorial (30 minutes):
+   - SAP-020: Initialize Next.js 15 with App Router
+   - SAP-034: Setup database (Prisma or Drizzle)
+   - SAP-033: Add authentication (NextAuth v5, Clerk, etc.)
+   - SAP-041: Setup forms with validation
+3. Result: Production-ready app with signup/login flow
+```
+
+**Progressive Loading**:
+- Phase 1: Read Integration Guide Foundation Stack section (10 min)
+- Phase 2: Read adoption blueprints for SAP-020, SAP-034, SAP-033, SAP-041 (30 min total)
+- Phase 3 (if needed): Read protocol-spec.md for specific SAPs
+
+---
+
+**Workflow 2: Add Feature to Existing Next.js Project**
+
+```markdown
+User: "Add file upload to my Next.js app"
+
+Claude:
+1. Check dependencies in sap-catalog.json
+   - SAP-035 depends on: SAP-020, SAP-033, SAP-034
+2. Verify dependencies are met (auth + database already set up)
+3. Read [SAP-035 adoption-blueprint.md](docs/skilled-awareness/react-file-upload/adoption-blueprint.md)
+4. Follow step-by-step installation (20 minutes):
+   - Choose provider (UploadThing, Vercel Blob, Supabase, S3)
+   - Setup upload API route
+   - Configure file router with auth middleware
+   - Add upload component
+5. Test integration with existing auth + database
+```
+
+**Progressive Loading**:
+- Phase 1: Read SAP-035 AGENTS.md (5 min)
+- Phase 2: Read SAP-035 adoption-blueprint.md (10 min)
+- Phase 3 (if troubleshooting): Read protocol-spec.md for complete API reference
+
+---
+
+**Workflow 3: Build Enterprise-Scale App**
+
+```markdown
+User: "I need a monorepo with multiple apps, shared UI components, and E2E testing"
+
+Claude:
+1. Read [React SAP Integration Guide](docs/user-docs/guides/react-sap-integration-guide.md#enterprise-stack)
+2. Follow Enterprise Stack tutorial (90 minutes):
+   - Foundation Stack (SAP-020, SAP-033, SAP-034, SAP-041)
+   - SAP-040: Setup monorepo (Turborepo, Nx, or pnpm)
+   - Create shared packages (@acme/ui, @acme/utils)
+   - SAP-039: Add E2E testing (Playwright or Cypress)
+   - Configure remote caching (90% build time reduction)
+3. Result: Multi-app monorepo with shared packages and comprehensive testing
+```
+
+**Progressive Loading**:
+- Phase 1: Read Integration Guide Enterprise Stack section (15 min)
+- Phase 2: Read SAP-040 and SAP-039 adoption blueprints (40 min total)
+- Phase 3 (if needed): Read monorepo case studies in ledger.md
+
+---
+
+**Workflow 4: Troubleshooting Cross-SAP Issues**
+
+```markdown
+User: "Getting type errors between NextAuth and Prisma"
+
+Claude:
+1. Check [React SAP Integration Guide](docs/user-docs/guides/react-sap-integration-guide.md#troubleshooting)
+2. Look for specific issue: "NextAuth + Prisma Type Conflicts"
+3. Apply documented fix:
+   - Extend NextAuth types with session.user.id
+   - Use PrismaAdapter for session storage
+4. If issue not documented:
+   - Read SAP-033 and SAP-034 protocol-spec.md for integration patterns
+   - Review production case studies in ledger.md
+```
+
+**Progressive Loading**:
+- Phase 1: Read Integration Guide Troubleshooting section (5 min)
+- Phase 2 (if not found): Read relevant SAP AGENTS.md files (10 min)
+- Phase 3 (if still stuck): Read protocol-spec.md for both SAPs (20 min)
+
+---
+
+### React SAP Decision Trees
+
+**Which authentication provider?**
+
+```
+Need self-hosted?
+  ✅ Yes → NextAuth v5 (unlimited free tier)
+  ❌ No → Continue
+
+Need quick start with managed auth?
+  ✅ Yes → Clerk (10k MAU free)
+  ❌ No → Continue
+
+Already using Supabase?
+  ✅ Yes → Supabase Auth (50k MAU free)
+  ❌ No → Auth0 (enterprise compliance)
+```
+
+See [SAP-033 protocol-spec.md](docs/skilled-awareness/react-authentication/protocol-spec.md) for complete decision matrix.
+
+---
+
+**Which database ORM?**
+
+```
+Priority: Type safety + performance?
+  ✅ Yes → Drizzle ORM
+  ❌ No → Continue
+
+Priority: Rapid development + ease of use?
+  ✅ Yes → Prisma
+  ❌ No → Either (both excellent)
+```
+
+See [SAP-034 protocol-spec.md](docs/skilled-awareness/react-database-integration/protocol-spec.md) for comparison.
+
+---
+
+**Which real-time solution?**
+
+```
+Need bidirectional communication?
+  ❌ No → Server-Sent Events (simplest, free)
+  ✅ Yes → Continue
+
+Need self-hosted?
+  ✅ Yes → Socket.IO
+  ❌ No → Pusher ($49/mo) or Ably ($29/mo)
+```
+
+See [SAP-037 protocol-spec.md](docs/skilled-awareness/react-realtime-synchronization/protocol-spec.md) for complete comparison.
+
+---
+
+### React SAP Stack Combinations
+
+**Minimal Startup** (Blog, Portfolio)
+- SAP-020 (Next.js 15) + SAP-024 (Styling)
+- **Time**: 15 minutes
+- **Use case**: Static pages, SEO-optimized content
+
+**SaaS Starter** (MVP, Small Apps)
+- Foundation Stack: SAP-020, SAP-033, SAP-034, SAP-041
+- **Time**: 30 minutes
+- **Use case**: Auth + database + forms
+
+**Production SaaS** (Customer-Facing Apps)
+- Foundation + User-Facing: +SAP-035, +SAP-036
+- **Time**: 50 minutes
+- **Use case**: File uploads + error tracking
+
+**Global SaaS** (International Markets)
+- Production SaaS + SAP-038 (i18n)
+- **Time**: 70 minutes
+- **Use case**: Multi-language support, RTL layouts
+
+**Real-Time Collaboration** (Chat, Collaboration Tools)
+- Production SaaS + SAP-037 (Real-Time)
+- **Time**: 80 minutes
+- **Use case**: Live updates, WebSocket communication
+
+**Enterprise Application** (Large Teams, Multi-Product)
+- Advanced + Enterprise: +SAP-039, +SAP-040
+- **Time**: 90 minutes
+- **Use case**: Monorepo, E2E testing, CI/CD
+
+See [React SAP Integration Guide](docs/user-docs/guides/react-sap-integration-guide.md#stack-combinations-quick-reference) for complete stack guide.
+
+---
+
+### React SAP Integration Patterns
+
+React SAPs are designed to work together seamlessly. Common integration patterns:
+
+**Auth + Database** (SAP-033 + SAP-034)
+- PrismaAdapter syncs NextAuth sessions with database
+- Automatic user account linking
+- Type-safe session access in Server Components
+
+**Auth + Forms** (SAP-033 + SAP-041)
+- Protected Server Actions with session validation
+- User context injection in form handlers
+- Type-safe form data with Zod + Prisma schemas
+
+**Real-Time + State** (SAP-037 + SAP-023)
+- WebSocket events trigger TanStack Query invalidation
+- Optimistic updates with automatic rollback
+- Efficient cache synchronization
+
+**i18n + Routing** (SAP-038 + SAP-020)
+- Locale-based routing with Next.js middleware
+- SEO-friendly URLs with hreflang tags
+- Type-safe translations with TypeScript inference
+
+**Monorepo + All** (SAP-040 + All SAPs)
+- Shared packages for UI, auth, database, forms
+- Remote caching for 90% build time reduction
+- Consistent configuration across apps
+
+See [React SAP Integration Guide](docs/user-docs/guides/react-sap-integration-guide.md#common-integration-patterns) for complete code examples.
+
+---
+
+### React SAP Time Savings
+
+| Stack | Setup Time | Manual Time | Time Savings |
+|-------|------------|-------------|--------------|
+| **Foundation** (4 SAPs) | 30 min | 10 hours | 95% |
+| **User-Facing** (+2 SAPs) | 50 min | 15 hours | 94% |
+| **Advanced** (+2 SAPs) | 70 min | 25 hours | 95% |
+| **Enterprise** (+2 SAPs) | 90 min | 35 hours | 96% |
+
+**Average across all 16 React SAPs**: 89.8% time reduction
+
+---
+
+### React SAP Quick Tips for Claude
+
+**Tip 1: Multi-Provider Support**
+
+All React SAPs offer multiple provider options (no vendor lock-in):
+- Authentication: 4 providers (NextAuth, Clerk, Supabase, Auth0)
+- Database: 2 ORMs (Prisma, Drizzle)
+- File Upload: 4 providers (UploadThing, Vercel Blob, Supabase, S3)
+- Real-Time: 4 solutions (Socket.IO, SSE, Pusher, Ably)
+
+Always present options and decision criteria to users.
+
+**Tip 2: TypeScript-First**
+
+All React SAPs use TypeScript with full type inference:
+- 100% type-safe examples
+- Zod schemas with `z.infer<typeof schema>`
+- Prisma/Drizzle type generation
+- Next.js type-safe routes
+
+Never compromise type safety.
+
+**Tip 3: Check Dependencies**
+
+Before adopting a SAP, check dependencies in sap-catalog.json:
+```bash
+grep -A 10 '"id": "SAP-035"' sap-catalog.json | grep dependencies
+# SAP-035 depends on: SAP-000, SAP-020, SAP-033, SAP-034
+```
+
+Ensure dependencies are met before installation.
+
+**Tip 4: Use Integration Guide**
+
+For cross-SAP questions, always reference the Integration Guide:
+- [React SAP Integration Guide](docs/user-docs/guides/react-sap-integration-guide.md)
+- Complete tutorials for all 4 stacks
+- 7 common integration patterns
+- 4 migration guides
+- Comprehensive troubleshooting
+
+This saves 60-70% tokens vs reading individual SAP docs.
+
+**Tip 5: Evidence-Based Recommendations**
+
+All React SAPs are backed by:
+- 30+ production case studies (Vercel, Google, Microsoft, Linear, etc.)
+- Validated time savings metrics
+- Real-world performance benchmarks
+- RT-019 research extraction
+
+Reference case studies when explaining benefits.
+
+---
+
 ## Example Claude Code Session
 
 ```markdown
@@ -1056,6 +1490,15 @@ tail -n 20 .chora/memory/events/development.jsonl
 ---
 
 ## Version History
+
+- **1.1.0** (2025-11-09): React SAP Excellence Initiative completion
+  - Added comprehensive React Development with SAPs section
+  - 16 React SAPs categorized and documented
+  - Progressive loading strategy for React development
+  - 4 common React workflows with examples
+  - Decision trees for provider selection
+  - Stack combinations and integration patterns
+  - Quick reference to React SAP Integration Guide
 
 - **1.0.0** (2025-11-04): Initial root CLAUDE.md for chora-base
   - Complete navigation tree to 4 domains

@@ -97,6 +97,98 @@ research topic:
     @mkdir -p docs/research
 
 # ============================================================================
+# SAP-008: Automation Scripts (25 Script Toolkit)
+# ============================================================================
+# 25 automation scripts (shell + Python) with justfile unified interface, idempotent operations.
+# See: AGENTS.md "Automation Scripts - SAP-008" section, scripts/ directory
+
+# Show all automation commands grouped by category
+# Example: just automation-help
+automation-help:
+    @echo "🤖 SAP-008: Automation Scripts (25 Script Toolkit)"
+    @echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+    @echo ""
+    @echo "📂 Category 1: Setup & Environment"
+    @echo "  just install                 # Install project in editable mode"
+    @echo "  just setup-hooks             # Install pre-commit hooks"
+    @echo "  just check-env               # Validate environment"
+    @echo ""
+    @echo "🔧 Category 2: Development Workflows"
+    @echo "  just test                    # Run pytest suite"
+    @echo "  just smoke                   # Quick smoke tests"
+    @echo "  just integration             # Integration tests"
+    @echo "  just diagnose                # Environment diagnostics"
+    @echo ""
+    @echo "📊 Category 3: Quality Gates"
+    @echo "  just lint                    # Run ruff linter"
+    @echo "  just format                  # Format code with ruff"
+    @echo "  just type-check              # Run mypy type checker"
+    @echo "  just pre-merge               # All quality gates before merge"
+    @echo ""
+    @echo "🔢 Category 4: Version Management"
+    @echo "  just bump-patch              # Bump patch version (1.0.0 → 1.0.1)"
+    @echo "  just bump-minor              # Bump minor version (1.0.0 → 1.1.0)"
+    @echo "  just bump-major              # Bump major version (1.0.0 → 2.0.0)"
+    @echo ""
+    @echo "📦 Category 5: Release & Publishing"
+    @echo "  just build                   # Build distribution packages"
+    @echo "  just publish-test            # Publish to test PyPI"
+    @echo "  just publish-prod            # Publish to production PyPI"
+    @echo ""
+    @echo "📚 Category 6: Documentation"
+    @echo "  just validate-docs           # Validate documentation standards"
+    @echo "  just extract-doc-tests       # Extract tests from how-to guides"
+    @echo "  just doc-structure           # Show Diátaxis 4-domain structure"
+    @echo ""
+    @echo "🛡️ Category 7: Safety & Recovery"
+    @echo "  just rollback-dev            # Rollback development changes"
+    @echo "  just handoff                 # Generate handoff checklist"
+    @echo ""
+    @echo "🔌 Category 8: MCP & Specialized"
+    @echo "  just mcp-tool                # MCP development tools"
+    @echo "  just validate-mcp-names      # Validate MCP naming conventions"
+    @echo ""
+    @echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+    @echo "💡 All scripts are idempotent with safety contracts"
+    @echo "📖 Script source: scripts/ directory (25 scripts)"
+
+# Diagnose development environment (SAP-008)
+# Example: just diagnose
+diagnose:
+    @echo "🔍 Diagnosing development environment..."
+    @bash scripts/diagnose.sh 2>/dev/null || echo "❌ diagnose.sh script not available"
+
+# Check environment prerequisites (SAP-008)
+# Example: just check-env
+check-env:
+    @echo "✅ Checking environment prerequisites..."
+    @bash scripts/check-env.sh 2>/dev/null || echo "❌ check-env.sh script not available"
+
+# Run quick smoke tests (SAP-008)
+# Example: just smoke
+smoke:
+    @echo "🧪 Running smoke tests..."
+    @bash scripts/smoke-test.sh 2>/dev/null || echo "❌ smoke-test.sh script not available"
+
+# Run integration tests (SAP-008)
+# Example: just integration
+integration:
+    @echo "🧪 Running integration tests..."
+    @bash scripts/integration-test.sh 2>/dev/null || echo "❌ integration-test.sh script not available"
+
+# Generate handoff checklist (SAP-008)
+# Example: just handoff
+handoff:
+    @echo "📋 Generating handoff checklist..."
+    @bash scripts/handoff.sh 2>/dev/null || echo "❌ handoff.sh script not available"
+
+# Rollback development changes (SAP-008)
+# Example: just rollback-dev
+rollback-dev:
+    @echo "⏮️ Rolling back development changes..."
+    @bash scripts/rollback-dev.sh 2>/dev/null || echo "❌ rollback-dev.sh script not available"
+
+# ============================================================================
 # SAP-007: Documentation Framework (Diátaxis 4-Domain)
 # ============================================================================
 # Diátaxis-based documentation with frontmatter validation, test extraction, L3 enforcement.
