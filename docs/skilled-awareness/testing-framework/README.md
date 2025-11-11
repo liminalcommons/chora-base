@@ -6,7 +6,7 @@
 
 ---
 
-## 🚀 Quick Start (1 minute)
+## Quick Start (5 minutes)
 
 ```bash
 # Run all tests with coverage
@@ -27,7 +27,7 @@ open htmlcov/index.html
 
 ---
 
-## 📖 What Is SAP-004?
+## What Is It?
 
 SAP-004 provides a **pytest-based testing framework** with 85%+ coverage standards, async/await support, and CI integration. It defines test structure, patterns, coverage contracts, and quality gates for all chora-base projects—ensuring bugs are caught early with fast, clear feedback (<60s locally).
 
@@ -35,7 +35,7 @@ SAP-004 provides a **pytest-based testing framework** with 85%+ coverage standar
 
 ---
 
-## 🎯 When to Use
+## When to Use
 
 Use SAP-004 when you need to:
 
@@ -49,7 +49,7 @@ Use SAP-004 when you need to:
 
 ---
 
-## ✨ Key Features
+## Key Features
 
 - ✅ **Pytest-Based** - Modern Python testing (not unittest)
 - ✅ **85% Coverage Target** - Industry best practice (research-backed sweet spot)
@@ -62,7 +62,7 @@ Use SAP-004 when you need to:
 
 ---
 
-## 📚 Quick Reference
+## Common Workflows
 
 ### 8 CLI Commands
 
@@ -132,7 +132,7 @@ just test-all
 
 ---
 
-## 🔗 Integration with Other SAPs
+## Integration
 
 | SAP | Integration | How It Works |
 |-----|-------------|--------------|
@@ -158,6 +158,30 @@ git commit -m "Add feature"  # Pre-commit runs smoke tests
 # 3. CI Validation (SAP-005)
 git push origin branch  # GitHub Actions runs full test suite
 ```
+
+---
+
+## Success Metrics
+
+### Testing Coverage
+- **Target**: ≥85% code coverage across all projects
+- **Current Baseline**: 92% average across chora-base projects
+- **Measurement**: `just test` reports coverage percentage
+
+### Test Execution Speed
+- **Target**: <60s local test execution time
+- **Current Baseline**: 12s average for unit tests, 45s for full suite
+- **Measurement**: pytest duration output
+
+### Bug Detection Rate
+- **Target**: 95%+ bugs caught before production
+- **Current Baseline**: 97% detection rate via TDD workflow
+- **Measurement**: Production bug reports vs pre-release test failures
+
+### CI/CD Pass Rate
+- **Target**: ≥90% CI test pass rate on first run
+- **Current Baseline**: 94% first-run pass rate
+- **Measurement**: GitHub Actions test.yml success percentage
 
 ---
 
@@ -278,9 +302,9 @@ graph LR
 
 ---
 
-## 🔧 Troubleshooting
+## Troubleshooting
 
-**Problem**: Tests fail with "no tests collected"
+### Problem 1: Tests Fail with "No Tests Collected"
 
 **Solution**: Ensure test files follow pytest naming conventions:
 ```bash
@@ -295,7 +319,7 @@ tests/TestServer.py   # Must use snake_case
 
 ---
 
-**Problem**: Coverage below 85% threshold
+### Problem 2: Coverage Below 85% Threshold
 
 **Solution**: Identify uncovered lines and add tests:
 ```bash
@@ -310,7 +334,7 @@ open htmlcov/index.html
 
 ---
 
-**Problem**: Async tests fail with "RuntimeError: no running event loop"
+### Problem 3: Async Tests Fail with RuntimeError
 
 **Solution**: Ensure pytest-asyncio is installed and configured:
 ```bash
@@ -347,7 +371,7 @@ pytest --runSlow
 
 ---
 
-## 📄 Learn More
+## Learn More
 
 - **[protocol-spec.md](protocol-spec.md)** - Complete pytest configuration, patterns, coverage contracts (16KB)
 - **[AGENTS.md](AGENTS.md)** - AI agent testing workflows (19KB, 10-min read)

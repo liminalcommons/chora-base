@@ -6,7 +6,7 @@
 
 ---
 
-## 🚀 Quick Start (2 minutes)
+## Quick Start (5 minutes)
 
 ```bash
 # Check CI status for current branch
@@ -26,7 +26,7 @@ just ci-trigger test.yml
 
 ---
 
-## 📖 What Is SAP-005?
+## What Is It?
 
 SAP-005 provides **GitHub Actions automation** with 10 pre-configured workflows for testing, security scanning, linting, documentation validation, and deployment. It defines workflow structure, triggers, caching strategies, and integration patterns—ensuring code quality before merge with fast feedback (<5 min execution time) and matrix testing across Python 3.11-3.13.
 
@@ -34,7 +34,7 @@ SAP-005 provides **GitHub Actions automation** with 10 pre-configured workflows 
 
 ---
 
-## 🎯 When to Use
+## When to Use
 
 Use SAP-005 when you need to:
 
@@ -48,7 +48,7 @@ Use SAP-005 when you need to:
 
 ---
 
-## ✨ Key Features
+## Key Features
 
 - ✅ **10 Workflows** - test, lint, smoke, docs-quality, codeql, dependency-review, release, publish, docker, pre-commit
 - ✅ **Matrix Testing** - Python 3.11, 3.12, 3.13 for cross-version compatibility
@@ -61,7 +61,7 @@ Use SAP-005 when you need to:
 
 ---
 
-## 📚 Quick Reference
+## Common Workflows
 
 ### 10 GitHub Actions Workflows
 
@@ -182,7 +182,7 @@ just ci-trigger test.yml
 
 ---
 
-## 🔗 Integration with Other SAPs
+## Integration
 
 | SAP | Integration | How It Works |
 |-----|-------------|--------------|
@@ -218,7 +218,7 @@ just ci-trigger release.yml    # Bump version, tag
 
 ---
 
-## 🏆 Success Metrics
+## Success Metrics
 
 - **Execution Time**: <5 min for core workflows (smoke + test + lint + security)
 - **Coverage**: 85%+ enforced via test.yml
@@ -229,7 +229,7 @@ just ci-trigger release.yml    # Bump version, tag
 
 ---
 
-## 🎓 Workflow Execution Flow
+## Workflow Execution Flow
 
 ```mermaid
 graph TD
@@ -254,9 +254,9 @@ graph TD
 
 ---
 
-## 🔧 Troubleshooting
+## Troubleshooting
 
-**Problem**: CI workflow fails with "Cache restore failed"
+### Problem 1: CI Workflow Fails with Cache Restore Error
 
 **Solution**: Pip cache corruption, retry workflow:
 ```bash
@@ -266,7 +266,7 @@ just ci-retry 12345678
 
 ---
 
-**Problem**: Matrix test fails only on Python 3.13
+### Problem 2: Matrix Test Fails Only on Python 3.13
 
 **Solution**: Version-specific compatibility issue:
 ```bash
@@ -282,7 +282,7 @@ pytest tests/
 
 ---
 
-**Problem**: CodeQL scan fails with security vulnerability
+### Problem 3: CodeQL Scan Fails with Security Vulnerability
 
 **Solution**: Review and fix security issue:
 ```bash
@@ -295,7 +295,7 @@ gh api repos/owner/repo/code-scanning/alerts
 
 ---
 
-**Problem**: Workflow stuck in "Queued" status
+### Problem 4: Workflow Stuck in Queued Status
 
 **Solution**: GitHub Actions runner availability issue:
 ```bash
@@ -309,7 +309,7 @@ just ci-retry 12345678
 
 ---
 
-## 📄 Learn More
+## Learn More
 
 - **[protocol-spec.md](protocol-spec.md)** - Complete workflow specifications (13KB)
 - **[AGENTS.md](AGENTS.md)** - AI agent CI/CD workflows (22KB, 11-min read)
@@ -320,7 +320,7 @@ just ci-retry 12345678
 
 ---
 
-## 📞 Support
+## Support
 
 - **Documentation**: Read [protocol-spec.md](protocol-spec.md) for complete workflow reference
 - **Issues**: Report bugs via GitHub issues with `[SAP-005]` prefix

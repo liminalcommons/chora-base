@@ -30,19 +30,25 @@ tags:
 
 ---
 
+## 📖 Quick Reference
+
+**New to SAP-004?** → Read **[README.md](README.md)** first (8-min read)
+
+The README provides:
+- 🚀 **Quick Start** - 8 CLI commands for running tests (test, smoke, coverage, verbose) with <60s local feedback
+- 📚 **Time Savings** - 90% bug prevention via TDD, 15-20 min saved per session (avoid manual testing)
+- 🎯 **4 Testing Patterns** - Async tests, parametrized tests, fixtures, mocking with pytest best practices
+- 🔧 **Coverage Standards** - 85% target (research-backed sweet spot balancing thoroughness vs maintenance)
+- 📊 **Success Metrics** - 95%+ bug detection, <60s test execution, ≥85% coverage, 90% CI pass rate
+- 🔗 **Integration** - Works with SAP-005 (CI/CD), SAP-006 (Quality Gates), SAP-012 (TDD), SAP-003 (Bootstrap), SAP-014 (MCP)
+
+This AGENTS.md provides: Agent-executable workflows for writing tests, running tests, debugging failures, and TDD cycles.
+
+---
+
 ## Quick Start for Agents
 
 This file provides **generic agent workflows** for using chora-base's pytest-based testing framework.
-
-**📖 New to SAP-004?** → Read **[README.md](README.md)** first (8-min read)
-
-The README provides:
-- 🚀 **8 CLI Commands** - Complete pytest command reference (test, smoke, coverage, verbose)
-- 🎓 **4 Testing Patterns** - Async tests, parametrized tests, fixtures, mocking
-- 🏆 **Coverage Standards** - 85% target (research-backed sweet spot)
-- 🔧 **Troubleshooting** - 4 common problems with solutions
-
-**This AGENTS.md provides**: Agent-executable workflows for writing tests, running tests, debugging failures, and TDD cycles.
 
 ### First-Time Testing
 

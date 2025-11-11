@@ -24,13 +24,25 @@ phase_3_token_estimate: 9500
 
 ---
 
+## 📖 Quick Reference
+
+**New to SAP-001?** → Read **[README.md](README.md)** first (8-min read)
+
+The README provides:
+- 🚀 **Quick Start** - 5-minute setup with 4 CLI commands and coordination request examples
+- 📚 **Time Savings** - 60% coordination time reduction (2 hours → 45 min per request with formalized SLAs)
+- 🎯 **Type 1/2/3 Intake** - Structured coordination request taxonomy with priority-based routing
+- 🔧 **7 CLI Tools** - Complete command reference (install, query, respond, generate, status, validate, archive)
+- 📊 **SLA Guidelines** - Response time expectations (4h urgent, 48h default, 1-week backlog)
+- 🔗 **Integration** - Works with SAP-010 (Memory), SAP-015 (Tasks), SAP-027 (Dogfooding), SAP-013 (Metrics)
+
+This CLAUDE.md provides: Claude Code-specific workflows using Read (status), Bash (commands), Write/Edit (updates).
+
+---
+
 ## Quick Start for Claude
 
 This file provides **Claude Code-specific patterns** for using the inbox coordination system.
-
-**📖 New to SAP-001?** → Read **[README.md](README.md)** first (5-min read) for complete CLI reference, integration patterns, and troubleshooting.
-
-**This CLAUDE.md provides**: Claude Code tool integration patterns (Read for status, Bash for commands, Edit for updates).
 
 ### First-Time Session
 

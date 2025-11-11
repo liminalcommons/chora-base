@@ -6,13 +6,25 @@
 
 ---
 
+## 📖 Quick Reference
+
+**New to SAP-004?** → Read **[README.md](README.md)** first (8-min read)
+
+The README provides:
+- 🚀 **Quick Start** - 8 CLI commands for running tests (test, smoke, coverage, verbose) with <60s local feedback
+- 📚 **Time Savings** - 90% bug prevention via TDD, 15-20 min saved per session (avoid manual testing)
+- 🎯 **4 Testing Patterns** - Async tests, parametrized tests, fixtures, mocking with pytest best practices
+- 🔧 **Coverage Standards** - 85% target (research-backed sweet spot balancing thoroughness vs maintenance)
+- 📊 **Success Metrics** - 95%+ bug detection, <60s test execution, ≥85% coverage, 90% CI pass rate
+- 🔗 **Integration** - Works with SAP-005 (CI/CD), SAP-006 (Quality Gates), SAP-012 (TDD), SAP-003 (Bootstrap), SAP-014 (MCP)
+
+This CLAUDE.md provides: Claude Code tool patterns (Write tests, Bash pytest, Edit fixes) for TDD workflows.
+
+---
+
 ## Quick Start for Claude
 
 This file provides **Claude Code-specific patterns** for pytest-based testing.
-
-**📖 New to SAP-004?** → Read **[README.md](README.md)** first (8-min read) for pytest commands, testing patterns, and coverage standards.
-
-**This CLAUDE.md provides**: Claude Code tool patterns (Write, Bash, Edit) for test creation, execution, debugging, and TDD workflows.
 
 ### First-Time Testing
 

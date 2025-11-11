@@ -42,16 +42,17 @@ This is the domain-specific AGENTS.md file for the inbox protocol (SAP-001). It 
 
 ## 📖 Quick Reference
 
-**New to SAP-001?** → Read **[README.md](README.md)** first (5-min read)
+**New to SAP-001?** → Read **[README.md](README.md)** first (8-min read)
 
 The README provides:
-- 🚀 **Quick Start** - 4 commands to get going in 2 minutes
-- 📚 **7 CLI Tools** - Complete command reference with examples
-- 🔗 **Integration Patterns** - Cross-SAP workflows with SAP-010, SAP-015, SAP-027
-- ⏱️ **SLA Guidelines** - Response time expectations (4h urgent → 1 week backlog)
-- 🔧 **Troubleshooting** - Common problems and solutions
+- 🚀 **Quick Start** - 5-minute setup with 4 CLI commands and coordination request examples
+- 📚 **Time Savings** - 60% coordination time reduction (2 hours → 45 min per request with formalized SLAs)
+- 🎯 **Type 1/2/3 Intake** - Structured coordination request taxonomy with priority-based routing
+- 🔧 **7 CLI Tools** - Complete command reference (install, query, respond, generate, status, validate, archive)
+- 📊 **SLA Guidelines** - Response time expectations (4h urgent, 48h default, 1-week backlog)
+- 🔗 **Integration** - Works with SAP-010 (Memory), SAP-015 (Tasks), SAP-027 (Dogfooding), SAP-013 (Metrics)
 
-**This AGENTS.md provides**: Agent-specific patterns for inbox triage, coordination request processing, and session startup routines.
+This AGENTS.md provides: Agent-specific patterns for inbox triage, coordination request processing, and session startup routines.
 
 ---
 
