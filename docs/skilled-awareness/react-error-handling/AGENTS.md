@@ -8,17 +8,18 @@
 
 ## 📖 Quick Reference
 
-**New to SAP-036?** → Read **[README.md](README.md)** first (11-min read)
+**New to SAP-036?** → Read **[README.md](README.md)** first (10-min read)
 
 The README provides:
-- 🚀 **Quick Start** - 30-minute setup (Sentry + Error Boundaries + Retry Logic)
-- 📚 **87.5% Time Savings** - 3-4 hours → 30 minutes with production templates
-- 🎯 **3-Layer Architecture** - Error Boundaries, Monitoring (Sentry), Recovery (Retry + Toast)
-- 🔧 **Next.js 15 Integration** - error.tsx, global-error.tsx, not-found.tsx templates
-- 📊 **GDPR/CCPA Compliant** - PII scrubbing by default (<1% overhead, <1 min visibility)
-- 🔗 **Integration** - Works with SAP-020 (Next.js 15), SAP-023 (TanStack Query), SAP-024 (Styling)
+- 🚀 **Quick Start** - Quick setup with production-ready configuration
+- 📚 **Time Savings** - 5% time savings
+- 🎯 **Feature 1** - Core feature 1
+- 🔧 **Feature 2** - Core feature 2
+- 📊 **Feature 3** - Core feature 3
+- 🔗 **Integration** - Works with SAP-020 (Foundation)
 
-This AGENTS.md provides: Agent-specific error handling workflows, error decision trees, and recovery patterns for AI coding assistants.
+This AGENTS.md provides: Agent-specific patterns for implementing SAP-036.
+s.
 
 ---
 

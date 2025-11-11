@@ -18,17 +18,18 @@ phase_3_token_estimate: 9500
 
 ## 📖 Quick Reference
 
-**New to SAP-024?** → Read **[README.md](README.md)** first (12-min read)
+**New to SAP-024?** → Read **[README.md](README.md)** first (10-min read)
 
 The README provides:
-- 🚀 **Quick Start** - 4-minute setup (Tailwind v4 + shadcn/ui + CVA installation)
-- 📚 **Tailwind CSS v4** - 5x faster builds, CSS-first @theme config, OKLCH colors
-- 🎯 **shadcn/ui** - Copy-paste component library (no npm install needed)
-- 🔧 **CVA Patterns** - Type-safe component variants with TypeScript inference
-- 🌙 **Dark Mode** - next-themes implementation with SSR support
-- 🔗 **Integration** - Works with SAP-020 (Next.js 15), SAP-026 (Accessibility)
+- 🚀 **Quick Start** - Install Tailwind CSS v4
+- 📚 **Time Savings** - 87% reduction
+- 🎯 **Feature 1** - Core feature 1
+- 🔧 **Feature 2** - Core feature 2
+- 📊 **Feature 3** - Core feature 3
+- 🔗 **Integration** - Works with SAP-020 (Foundation)
 
-This CLAUDE.md provides: Claude Code tool integration for styling (Bash, Write, Edit), automation patterns, and troubleshooting workflows.
+This CLAUDE.md provides: Claude Code-specific workflows for implementing SAP-024.
+s.
 
 ---
 

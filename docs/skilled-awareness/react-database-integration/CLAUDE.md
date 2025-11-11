@@ -8,17 +8,18 @@
 
 ## 📖 Quick Reference
 
-**New to SAP-034?** → Read **[README.md](README.md)** first (12-min read)
+**New to SAP-034?** → Read **[README.md](README.md)** first (10-min read)
 
 The README provides:
-- 🚀 **Quick Start** - 25-minute setup (Prisma or Drizzle + PostgreSQL)
-- 📚 **89.6% Time Savings** - 3-4 hours → 25 minutes with production templates
-- 🎯 **Multi-ORM Decision Framework** - Choose Prisma (DX) or Drizzle (performance) based on clear criteria
-- 🔧 **Type-Safe Queries** - 100% TypeScript inference from schema (zero manual types)
-- 📊 **Performance** - Drizzle 40% faster queries (~30ms vs ~50ms), 73% smaller bundle
-- 🔗 **Integration** - Works with SAP-020 (Next.js 15), SAP-033 (Auth), SAP-041 (Forms)
+- 🚀 **Quick Start** - Quick setup with production-ready configuration
+- 📚 **Time Savings** - 6% reduction
+- 🎯 **Feature 1** - Core feature 1
+- 🔧 **Feature 2** - Core feature 2
+- 📊 **Feature 3** - Core feature 3
+- 🔗 **Integration** - Works with SAP-020, SAP-023, SAP-033, SAP-035, SAP-036, SAP-041
 
-This CLAUDE.md provides: Claude Code tool integration for database setup (Write, Edit, Bash), ORM configuration workflows, and schema migration patterns.
+This CLAUDE.md provides: Claude Code-specific workflows for implementing SAP-034.
+s.
 
 ---
 

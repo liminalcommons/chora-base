@@ -18,17 +18,18 @@ phase_3_token_estimate: 14000
 
 ## 📖 Quick Reference
 
-**New to SAP-026?** → Read **[README.md](README.md)** first (13-min read)
+**New to SAP-026?** → Read **[README.md](README.md)** first (10-min read)
 
 The README provides:
-- 🚀 **Quick Start** - 4-minute setup (jsx-a11y, jest-axe/vitest-axe, react-focus-lock installation)
-- 📚 **WCAG 2.2 Level AA** - 9 new criteria (Focus Not Obscured, Target Size, Accessible Auth)
-- 🎯 **85% Automated Coverage** - eslint-plugin-jsx-a11y + axe-core catch most issues
-- 🔧 **Component Patterns** - Accessible modals, forms, buttons with code examples
-- 🧪 **Testing** - jest-axe/vitest-axe component testing with axe-core
-- 🔗 **Integration** - Works with SAP-020 (Next.js 15), SAP-021 (Testing), SAP-022 (Linting)
+- 🚀 **Quick Start** - Install accessibility dependencies
+- 📚 **Time Savings** - Significant time savings with battle-tested patterns
+- 🎯 **Feature 1** - 9 new criteria (October 2023) including Focus Not Obscured, Target Size, Accessible Auth
+- 🔧 **Feature 2** - eslint-plugin-jsx-a11y + axe-core catch most issues at build/test time
+- 📊 **Feature 3** - jest-axe/vitest-axe validates components against WCAG rules
+- 🔗 **Integration** - Works with SAP-005, SAP-020, SAP-021, SAP-022, SAP-024, SAP-025
 
-This AGENTS.md provides: Agent-specific accessibility workflows, automation patterns, and troubleshooting for AI coding assistants.
+This AGENTS.md provides: Agent-specific patterns for implementing SAP-026.
+s.
 
 ---
 
