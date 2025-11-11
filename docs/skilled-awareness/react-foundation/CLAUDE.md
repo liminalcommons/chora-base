@@ -29,14 +29,14 @@ phase_3_token_estimate: 10500
 **New to SAP-020?** → Read **[README.md](README.md)** first (10-min read)
 
 The README provides:
-- 🚀 **Quick Start** - 2 initialization commands (Next.js App Router, Vite SPA)
-- 📚 **React 19 Features** - RSC, Actions API, `use()` hook, ref as prop, concurrent features
-- 🎯 **Next.js 15 App Router** - File-based routing, special files, streaming SSR, edge runtime
-- 🔧 **TypeScript Strict Mode** - Catch 40% more errors, no `any` types, index signature safety
-- 📊 **Component Patterns** - Server components, client components, Server Actions
-- 🔧 **Troubleshooting** - 5 common problems (module errors, strict mode, client directive, slow HMR, build failures)
+- 🚀 **Quick Start** - 2 initialization commands (Next.js App Router, Vite SPA) with <5 minute setup
+- 📚 **Time Savings** - 93% setup time reduction (45 min vs 10 hours manual), 40-60% bundle size reduction with RSC
+- 🎯 **React 19 Features** - RSC, Actions API, `use()` hook, ref as prop, concurrent rendering
+- 🔧 **Next.js 15 App Router** - File-based routing, special files, streaming SSR, edge runtime, TypeScript strict mode
+- 📊 **Success Metrics** - Bundle size <200 KB, FCP <1.8s, LCP <2.5s, TBT <200ms, CLS <0.1
+- 🔗 **Integration** - Works with SAP-021 (Testing), SAP-022 (Linting), SAP-023 (State), SAP-024 (Styling), SAP-033 (Auth), SAP-034 (Database)
 
-**This CLAUDE.md provides**: Claude Code-specific workflows using Bash (scaffolding), Write (config), Edit (modifications).
+This CLAUDE.md provides: Claude Code-specific workflows using Bash (scaffolding), Write (config), Edit (modifications).
 
 ---
 

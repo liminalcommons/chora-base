@@ -9,7 +9,7 @@
 
 ---
 
-## 🚀 Quick Start (4 minutes)
+## Quick Start (5 minutes)
 
 ```bash
 # Install Tailwind CSS v4
@@ -515,7 +515,7 @@ export function cn(...inputs: ClassValue[]) {
 
 ## Troubleshooting
 
-### Problem: Tailwind classes not applying
+### Problem 1: Tailwind classes not applying
 
 **Symptom**: Tailwind classes have no effect on components
 
@@ -534,7 +534,7 @@ export function cn(...inputs: ClassValue[]) {
 
 ---
 
-### Problem: Dark mode not working
+### Problem 2: Dark mode not working
 
 **Symptom**: Theme toggle doesn't change colors
 
@@ -549,7 +549,7 @@ export function cn(...inputs: ClassValue[]) {
 
 ---
 
-### Problem: shadcn/ui components not found
+### Problem 3: shadcn/ui components not found
 
 **Symptom**: Import error when using `@/components/ui/button`
 
@@ -569,7 +569,7 @@ export function cn(...inputs: ClassValue[]) {
 
 ---
 
-### Problem: CVA TypeScript errors
+### Problem 4: CVA TypeScript errors
 
 **Symptom**: Type errors when using component variants
 
@@ -588,7 +588,7 @@ type ButtonProps = VariantProps<typeof buttonVariants> & {
 
 ---
 
-### Problem: Tailwind build slow despite v4
+### Problem 5: Tailwind build slow despite v4
 
 **Symptom**: Builds still take >500ms
 

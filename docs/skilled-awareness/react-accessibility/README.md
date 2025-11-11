@@ -6,7 +6,7 @@
 
 ---
 
-## 🚀 Quick Start (4 minutes)
+## Quick Start (5 minutes)
 
 ```bash
 # Install accessibility dependencies
@@ -48,7 +48,7 @@ export default [
 
 ---
 
-## 📖 What Is SAP-026?
+## What Is It?
 
 SAP-026 provides **WCAG 2.2 Level AA compliance patterns** for React applications. Achieve 85% automated accessibility coverage through ESLint linting, component testing with axe-core, and accessible component primitives from Radix UI, React Aria, or Headless UI.
 
@@ -63,7 +63,7 @@ SAP-026 provides **WCAG 2.2 Level AA compliance patterns** for React application
 
 ---
 
-## 🎯 When to Use
+## When to Use
 
 Use SAP-026 when you need to:
 
@@ -77,7 +77,7 @@ Use SAP-026 when you need to:
 
 ---
 
-## ✨ Key Features
+## Key Features
 
 - ✅ **WCAG 2.2 Level AA Compliance** - 9 new criteria (October 2023) including Focus Not Obscured, Target Size, Accessible Auth
 - ✅ **85% Automated Coverage** - eslint-plugin-jsx-a11y + axe-core catch most issues at build/test time
@@ -89,7 +89,7 @@ Use SAP-026 when you need to:
 
 ---
 
-## 📚 Quick Reference
+## Common Workflows
 
 ### WCAG 2.2 Level AA Targets
 
@@ -606,7 +606,7 @@ export function MyMenu() {
 
 ---
 
-## 🔗 Integration with Other SAPs
+## Integration
 
 | SAP | Integration | How It Works |
 |-----|-------------|--------------|
@@ -619,7 +619,7 @@ export function MyMenu() {
 
 ---
 
-## 🏆 Success Metrics
+## Success Metrics
 
 - **ESLint Coverage**: 85% of WCAG criteria (30+ rules enforced)
 - **Component Test Coverage**: 100% of custom components tested with axe-core
@@ -630,9 +630,9 @@ export function MyMenu() {
 
 ---
 
-## 🔧 Troubleshooting
+## Troubleshooting
 
-### Problem: ESLint jsx-a11y/alt-text Errors
+### Problem 1: ESLint jsx-a11y/alt-text Errors
 
 **Symptom**: `Missing alt attribute on <img>`
 
@@ -661,7 +661,7 @@ export function MyMenu() {
 
 ---
 
-### Problem: axe-core Color Contrast Violations
+### Problem 2: axe-core Color Contrast Violations
 
 **Symptom**: `Elements must meet enhanced color contrast ratio thresholds`
 
@@ -697,7 +697,7 @@ export function MyMenu() {
 
 ---
 
-### Problem: jest-axe/vitest-axe Fails with "Element is not focusable"
+### Problem 3: jest-axe/vitest-axe Fails with "Element is not focusable"
 
 **Symptom**: `Ensures elements with click handlers are focusable`
 
@@ -731,7 +731,7 @@ export function MyMenu() {
 
 ---
 
-### Problem: Focus Trap Not Working in Modal
+### Problem 4: Focus Trap Not Working in Modal
 
 **Symptom**: Tab key escapes modal, focusing elements behind overlay
 
@@ -764,7 +764,7 @@ import FocusLock from 'react-focus-lock';
 
 ---
 
-### Problem: Screen Reader Not Announcing Error Messages
+### Problem 5: Screen Reader Not Announcing Error Messages
 
 **Symptom**: Form error appears visually but screen reader silent
 
@@ -802,7 +802,7 @@ const errorId = 'email-error';
 
 ---
 
-## 📄 Learn More
+## Learn More
 
 - **[protocol-spec.md](protocol-spec.md)** - Complete accessibility specification (62KB, 31-min read)
 - **[AGENTS.md](AGENTS.md)** - Agent accessibility workflows (19KB, 10-min read)

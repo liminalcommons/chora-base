@@ -9,7 +9,7 @@
 
 ---
 
-## 🚀 Quick Start (3 minutes)
+## Quick Start (5 minutes)
 
 ```bash
 # Install testing dependencies
@@ -444,7 +444,7 @@ expect(element).toBeChecked()
 
 ## Troubleshooting
 
-### Problem: "document is not defined" error
+### Problem 1: "document is not defined" error
 
 **Symptom**: Tests fail with `ReferenceError: document is not defined`
 
@@ -467,7 +467,7 @@ import { render } from '@testing-library/react'
 
 ---
 
-### Problem: jest-dom matchers not available (toBeInTheDocument, etc.)
+### Problem 2: jest-dom matchers not available (toBeInTheDocument, etc.)
 
 **Symptom**: `TypeError: expect(...).toBeInTheDocument is not a function`
 
@@ -489,7 +489,7 @@ export default defineConfig({
 
 ---
 
-### Problem: "Unable to find role" errors
+### Problem 3: "Unable to find role" errors
 
 **Symptom**: `TestingLibraryElementError: Unable to find an accessible element with the role "button"`
 
@@ -518,7 +518,7 @@ screen.getByRole('button', { name: /login/i })  // Works
 
 ---
 
-### Problem: Tests timeout with async components
+### Problem 4: Tests timeout with async components
 
 **Symptom**: Tests fail with `Timeout - Async callback was not invoked within the 5000 ms timeout`
 
@@ -544,7 +544,7 @@ expect(name).toBeInTheDocument()
 
 ---
 
-### Problem: Coverage not reaching 80% threshold
+### Problem 5: Coverage not reaching 80% threshold
 
 **Symptom**: `vitest --coverage` fails with `Coverage thresholds not met`
 

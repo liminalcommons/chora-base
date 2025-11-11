@@ -9,7 +9,7 @@
 
 ---
 
-## 🚀 Quick Start (5 minutes)
+## Quick Start (5 minutes)
 
 ```bash
 # Install state management libraries
@@ -489,7 +489,7 @@ const { fields, append, remove } = useFieldArray({ control, name: 'items' })
 
 ## Troubleshooting
 
-### Problem: "QueryClient is not defined" error
+### Problem 1: "QueryClient is not defined" error
 
 **Symptom**: Error when using useQuery in components
 
@@ -513,7 +513,7 @@ export default function RootLayout({ children }) {
 
 ---
 
-### Problem: Zustand store not persisting to localStorage
+### Problem 2: Zustand store not persisting to localStorage
 
 **Symptom**: State resets on page reload despite persist middleware
 
@@ -534,7 +534,7 @@ export const useStore = create<Store>()(  // Note the extra ()
 
 ---
 
-### Problem: Form validation not working
+### Problem 3: Form validation not working
 
 **Symptom**: Form submits even with invalid data
 
@@ -557,7 +557,7 @@ console.log(errors)  // Should show validation errors
 
 ---
 
-### Problem: useQuery infinite re-renders
+### Problem 4: useQuery infinite re-renders
 
 **Symptom**: Component re-renders continuously with useQuery
 
@@ -585,7 +585,7 @@ const { data } = useQuery({
 
 ---
 
-### Problem: Zustand store not updating in other components
+### Problem 5: Zustand store not updating in other components
 
 **Symptom**: Store changes in one component don't reflect in others
 

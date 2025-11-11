@@ -9,7 +9,7 @@
 
 ---
 
-## 🚀 Quick Start (5 minutes)
+## Quick Start (5 minutes)
 
 ```bash
 # Option 1: Next.js 15 App Router (recommended for full-stack)
@@ -413,7 +413,7 @@ function Input({ ref, ...props }: InputProps & { ref?: Ref<HTMLInputElement> }) 
 
 ## Troubleshooting
 
-### Problem: "Module not found" errors after creating Next.js app
+### Problem 1: "Module not found" errors after creating Next.js app
 
 **Symptom**: `Error: Cannot find module '@/components/...'`
 
@@ -435,7 +435,7 @@ function Input({ ref, ...props }: InputProps & { ref?: Ref<HTMLInputElement> }) 
 
 ---
 
-### Problem: TypeScript strict mode errors overwhelming
+### Problem 2: TypeScript strict mode errors overwhelming
 
 **Symptom**: Hundreds of type errors after enabling `"strict": true`
 
@@ -460,7 +460,7 @@ function Input({ ref, ...props }: InputProps & { ref?: Ref<HTMLInputElement> }) 
 
 ---
 
-### Problem: "use client" directive needed everywhere
+### Problem 3: "use client" directive needed everywhere
 
 **Symptom**: Many components require `'use client'` directive
 
@@ -500,7 +500,7 @@ export default function DashboardPage() {
 
 ---
 
-### Problem: Slow development server (HMR takes >5 seconds)
+### Problem 4: Slow development server (HMR takes >5 seconds)
 
 **Symptom**: Changes take 5-10 seconds to reflect in browser
 
@@ -535,7 +535,7 @@ export default defineConfig({
 
 ---
 
-### Problem: Production build fails with type errors
+### Problem 5: Production build fails with type errors
 
 **Symptom**: `pnpm build` fails but `pnpm dev` works
 

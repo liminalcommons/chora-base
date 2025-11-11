@@ -8,7 +8,7 @@
 
 ---
 
-## 🚀 Quick Start (4 minutes)
+## Quick Start (5 minutes)
 
 ```bash
 # Install ESLint 9 + Prettier + React plugins
@@ -403,7 +403,7 @@ pnpm prettier --list-different .
 
 ## Troubleshooting
 
-### Problem: "Cannot find module '@eslint/js'" error
+### Problem 1: "Cannot find module '@eslint/js'" error
 
 **Symptom**: ESLint fails with module not found error
 
@@ -421,7 +421,7 @@ import js from '@eslint/js'  // Must be installed explicitly
 
 ---
 
-### Problem: ESLint running slow despite using ESLint 9
+### Problem 2: ESLint running slow despite using ESLint 9
 
 **Symptom**: `eslint .` takes >10s for incremental changes
 
@@ -442,7 +442,7 @@ parserOptions: {
 
 ---
 
-### Problem: Prettier and ESLint conflicts
+### Problem 3: Prettier and ESLint conflicts
 
 **Symptom**: ESLint errors for formatting issues that Prettier fixes
 
@@ -468,7 +468,7 @@ pnpm prettier --write .
 
 ---
 
-### Problem: "react-hooks/rules-of-hooks" false positives
+### Problem 4: "react-hooks/rules-of-hooks" false positives
 
 **Symptom**: ESLint error for valid hook usage in custom hooks
 
@@ -491,7 +491,7 @@ function useHelper() {
 
 ---
 
-### Problem: jsx-a11y errors overwhelming
+### Problem 5: jsx-a11y errors overwhelming
 
 **Symptom**: Hundreds of accessibility errors after initial setup
 

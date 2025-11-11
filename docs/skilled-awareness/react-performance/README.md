@@ -6,7 +6,7 @@
 
 ---
 
-## 🚀 Quick Start (5 minutes)
+## Quick Start (5 minutes)
 
 ```bash
 # Install performance dependencies
@@ -42,7 +42,7 @@ pnpm exec lhci autorun --config=lh-ci.json
 
 ---
 
-## 📖 What Is SAP-025?
+## What Is It?
 
 SAP-025 provides **performance optimization patterns** for React 19 + Next.js 15 applications. Achieve **90+ Lighthouse scores** for LCP, INP, and CLS through evidence-based optimization strategies: AVIF image formats, React Server Components, code splitting, and automated CI validation.
 
@@ -57,7 +57,7 @@ SAP-025 provides **performance optimization patterns** for React 19 + Next.js 15
 
 ---
 
-## 🎯 When to Use
+## When to Use
 
 Use SAP-025 when you need to:
 
@@ -71,7 +71,7 @@ Use SAP-025 when you need to:
 
 ---
 
-## ✨ Key Features
+## Key Features
 
 - ✅ **Core Web Vitals**: LCP ≤2.5s, INP ≤200ms, CLS ≤0.1 (Google Search ranking factors)
 - ✅ **React 19 Optimizations**: useDeferredValue, startTransition, React Server Components
@@ -83,7 +83,7 @@ Use SAP-025 when you need to:
 
 ---
 
-## 📚 Quick Reference
+## Common Workflows
 
 ### Core Web Vitals Targets
 
@@ -582,7 +582,7 @@ ANALYZE=true pnpm build
 
 ---
 
-## 🔗 Integration with Other SAPs
+## Integration
 
 | SAP | Integration | How It Works |
 |-----|-------------|--------------|
@@ -595,7 +595,7 @@ ANALYZE=true pnpm build
 
 ---
 
-## 🏆 Success Metrics
+## Success Metrics
 
 - **LCP**: ≤2.5s (Good), ≤4.0s (Needs Improvement), ≥4.0s (Poor)
 - **INP**: ≤200ms (Good), 200-500ms (Needs Improvement), ≥500ms (Poor)
@@ -606,9 +606,9 @@ ANALYZE=true pnpm build
 
 ---
 
-## 🔧 Troubleshooting
+## Troubleshooting
 
-### Problem: LCP >4.0s (Poor)
+### Problem 1: LCP >4.0s (Poor)
 
 **Symptom**: Lighthouse reports "Largest Contentful Paint is slow"
 
@@ -639,7 +639,7 @@ const HeavyChart = lazy(() => import('@/components/heavy-chart'))
 
 ---
 
-### Problem: INP >500ms (Poor)
+### Problem 2: INP >500ms (Poor)
 
 **Symptom**: Clicks/taps feel laggy, Lighthouse reports "Interaction to Next Paint is high"
 
@@ -667,7 +667,7 @@ const Dashboard = lazy(() => import('@/pages/dashboard'))
 
 ---
 
-### Problem: CLS >0.25 (Poor)
+### Problem 3: CLS >0.25 (Poor)
 
 **Symptom**: Content jumps during page load, Lighthouse reports "Cumulative Layout Shift is high"
 
@@ -699,7 +699,7 @@ if (isLoading) return <ProductSkeleton />
 
 ---
 
-### Problem: Lighthouse CI Failing in CI/CD
+### Problem 4: Lighthouse CI Failing in CI/CD
 
 **Symptom**: GitHub Actions workflow fails with "Lighthouse CI assertions failed"
 
@@ -730,7 +730,7 @@ pnpm exec bundlephobia <package-name>
 
 ---
 
-### Problem: AVIF Images Not Loading
+### Problem 5: AVIF Images Not Loading
 
 **Symptom**: Images fall back to JPEG even in modern browsers
 
@@ -761,7 +761,7 @@ module.exports = {
 
 ---
 
-## 📄 Learn More
+## Learn More
 
 - **[protocol-spec.md](protocol-spec.md)** - Complete performance specification (45KB, 23-min read)
 - **[AGENTS.md](AGENTS.md)** - Agent performance workflows (17KB, 9-min read)
