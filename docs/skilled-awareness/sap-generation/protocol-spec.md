@@ -111,9 +111,72 @@ sap-evaluator.py SHOULD use generation metadata to:
 
 ---
 
-### 2.2 SAP Generation Contract
+### 2.2 Template Variables for Quick Reference Sections
 
-**Generator Script**: `scripts/generate-sap.py` (to be implemented)
+**Added**: 2025-11-10 (Batch 11-15 Pattern Integration)
+
+The awareness-guide.j2 template now includes a standardized Quick Reference section (📖 Quick Reference) that provides 60-70% token savings for AI agents. This section requires the following optional fields in the `generation` section of sap-catalog.json:
+
+**Quick Reference Template Variables**:
+
+| Variable | Type | Required | Default | Description |
+|----------|------|----------|---------|-------------|
+| `quick_ref_read_time` | string | No | `"10-min"` | Estimated README reading time (e.g., "5-min", "15-min") |
+| `quick_ref_quick_start` | string | No | Placeholder | One-line Quick Start description with time estimate |
+| `quick_ref_time_savings` | string | No | Placeholder | Time savings metrics (e.g., "90% reduction (30h → 3h)") |
+| `quick_ref_feature_1_label` | string | No | `"Key Feature 1"` | Label for first key feature (e.g., "Type Safety") |
+| `quick_ref_feature_1` | string | No | Placeholder | Description of first key feature |
+| `quick_ref_feature_2_label` | string | No | `"Key Feature 2"` | Label for second key feature |
+| `quick_ref_feature_2` | string | No | Placeholder | Description of second key feature |
+| `quick_ref_feature_3_label` | string | No | `"Key Feature 3"` | Label for third key feature |
+| `quick_ref_feature_3` | string | No | Placeholder | Description of third key feature |
+| `quick_ref_purpose` | string | No | Auto-generated | Purpose statement for awareness-guide.md |
+
+**Example sap-catalog.json Entry with Quick Reference Fields**:
+
+```json
+{
+  "id": "SAP-042",
+  "name": "example-sap",
+  "version": "1.0.0",
+  "description": "Example SAP with Quick Reference fields",
+  "dependencies": ["SAP-000"],
+  "location": "docs/skilled-awareness/example-sap",
+  "generation": {
+    "owner": "Your Name",
+    "created_date": "2025-11-10",
+    "problem_statement": "...",
+    "solution_overview": "...",
+    "key_principles": [...],
+    "in_scope": [...],
+    "out_of_scope": [...],
+    "one_sentence_summary": "...",
+
+    "quick_ref_read_time": "8-min",
+    "quick_ref_quick_start": "5-minute setup with complete TypeScript examples",
+    "quick_ref_time_savings": "90% time reduction (30 hours → 3 hours)",
+    "quick_ref_feature_1_label": "Type Safety",
+    "quick_ref_feature_1": "100% TypeScript coverage with runtime validation",
+    "quick_ref_feature_2_label": "Performance",
+    "quick_ref_feature_2": "Zero-config caching with 95% hit rate",
+    "quick_ref_feature_3_label": "Developer Experience",
+    "quick_ref_feature_3": "IntelliSense support with comprehensive JSDoc"
+  }
+}
+```
+
+**Integration Note**: If quick_ref fields are omitted, the template uses placeholder text with TODO comments, allowing manual completion after generation.
+
+**Validation**: The Quick Reference section can be validated using:
+```bash
+python scripts/validate-quick-reference.py --sap SAP-042
+```
+
+---
+
+### 2.3 SAP Generation Contract
+
+**Generator Script**: `scripts/generate-sap.py`
 
 **Input Contract**:
 
