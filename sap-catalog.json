@@ -23,7 +23,11 @@
         "Awareness integration"
       ],
       "dependencies": [],
-      "tags": ["meta", "required", "foundational"],
+      "tags": [
+        "meta",
+        "required",
+        "foundational"
+      ],
       "author": "chora-base",
       "location": "docs/skilled-awareness/sap-framework",
       "artifacts": {
@@ -35,7 +39,8 @@
       },
       "system_files": [],
       "phase": "Phase 1",
-      "priority": "P0"
+      "priority": "P0",
+      "domain": "Infrastructure"
     },
     {
       "id": "SAP-001",
@@ -57,7 +62,12 @@
         "Governance and long-term maintenance patterns"
       ],
       "dependencies": [],
-      "tags": ["meta", "coordination", "ecosystem", "production-ready"],
+      "tags": [
+        "meta",
+        "coordination",
+        "ecosystem",
+        "production-ready"
+      ],
       "author": "chora-base",
       "location": "docs/skilled-awareness/inbox",
       "artifacts": {
@@ -76,7 +86,8 @@
         "scripts/inbox-status.py"
       ],
       "phase": "Phase 1",
-      "priority": "P0"
+      "priority": "P0",
+      "domain": "Infrastructure"
     },
     {
       "id": "SAP-002",
@@ -94,8 +105,14 @@
         "SAP Framework integration",
         "Universal foundation patterns"
       ],
-      "dependencies": ["SAP-000"],
-      "tags": ["meta", "reference", "example"],
+      "dependencies": [
+        "SAP-000"
+      ],
+      "tags": [
+        "meta",
+        "reference",
+        "example"
+      ],
       "author": "chora-base",
       "location": "docs/skilled-awareness/chora-base",
       "artifacts": {
@@ -107,7 +124,8 @@
       },
       "system_files": [],
       "phase": "Phase 1",
-      "priority": "P0"
+      "priority": "P0",
+      "domain": "Infrastructure"
     },
     {
       "id": "SAP-003",
@@ -124,8 +142,14 @@
         "Variable substitution",
         "Directory structure setup"
       ],
-      "dependencies": ["SAP-000"],
-      "tags": ["scaffolding", "generation", "setup"],
+      "dependencies": [
+        "SAP-000"
+      ],
+      "tags": [
+        "scaffolding",
+        "generation",
+        "setup"
+      ],
       "author": "chora-base",
       "location": "docs/skilled-awareness/project-bootstrap",
       "artifacts": {
@@ -139,7 +163,8 @@
         "static-template/**"
       ],
       "phase": "Phase 2",
-      "priority": "P0"
+      "priority": "P0",
+      "domain": "Developer Experience"
     },
     {
       "id": "SAP-004",
@@ -157,8 +182,16 @@
         "Async testing patterns",
         "6 test pattern templates"
       ],
-      "dependencies": ["SAP-000", "SAP-003"],
-      "tags": ["testing", "quality", "python", "pytest"],
+      "dependencies": [
+        "SAP-000",
+        "SAP-003"
+      ],
+      "tags": [
+        "testing",
+        "quality",
+        "python",
+        "pytest"
+      ],
       "author": "chora-base",
       "location": "docs/skilled-awareness/testing-framework",
       "artifacts": {
@@ -174,7 +207,8 @@
         "static-template/.coveragerc"
       ],
       "phase": "Phase 2",
-      "priority": "P0"
+      "priority": "P0",
+      "domain": "Developer Experience"
     },
     {
       "id": "SAP-005",
@@ -192,8 +226,16 @@
         "Dependency review",
         "Release automation"
       ],
-      "dependencies": ["SAP-000", "SAP-004"],
-      "tags": ["ci-cd", "github-actions", "automation", "quality"],
+      "dependencies": [
+        "SAP-000",
+        "SAP-004"
+      ],
+      "tags": [
+        "ci-cd",
+        "github-actions",
+        "automation",
+        "quality"
+      ],
       "author": "chora-base",
       "location": "docs/skilled-awareness/ci-cd-workflows",
       "artifacts": {
@@ -207,7 +249,8 @@
         "static-template/.github/workflows/"
       ],
       "phase": "Phase 2",
-      "priority": "P0"
+      "priority": "P0",
+      "domain": "Developer Experience"
     },
     {
       "id": "SAP-006",
@@ -225,8 +268,17 @@
         "Coverage enforcement",
         "Security scanning"
       ],
-      "dependencies": ["SAP-000", "SAP-004"],
-      "tags": ["quality", "linting", "type-checking", "ruff", "mypy"],
+      "dependencies": [
+        "SAP-000",
+        "SAP-004"
+      ],
+      "tags": [
+        "quality",
+        "linting",
+        "type-checking",
+        "ruff",
+        "mypy"
+      ],
       "author": "chora-base",
       "location": "docs/skilled-awareness/quality-gates",
       "artifacts": {
@@ -292,7 +344,8 @@
             "Pre-commit hooks run automatically on git commit after installation"
           ]
         }
-      }
+      },
+      "domain": "Developer Experience"
     },
     {
       "id": "SAP-007",
@@ -310,8 +363,14 @@
         "Test extraction from docs",
         "DOCUMENTATION_STANDARD.md (700 lines)"
       ],
-      "dependencies": ["SAP-000"],
-      "tags": ["documentation", "diataxis", "standards"],
+      "dependencies": [
+        "SAP-000"
+      ],
+      "tags": [
+        "documentation",
+        "diataxis",
+        "standards"
+      ],
       "author": "chora-base",
       "location": "docs/skilled-awareness/documentation-framework",
       "artifacts": {
@@ -331,7 +390,8 @@
         "scripts/generate_bdd_from_howto.py"
       ],
       "phase": "Phase 3",
-      "priority": "P1"
+      "priority": "P1",
+      "domain": "Developer Experience"
     },
     {
       "id": "SAP-008",
@@ -349,8 +409,16 @@
         "Safety contracts",
         "8 script categories"
       ],
-      "dependencies": ["SAP-000", "SAP-012"],
-      "tags": ["automation", "scripts", "justfile", "tooling"],
+      "dependencies": [
+        "SAP-000",
+        "SAP-012"
+      ],
+      "tags": [
+        "automation",
+        "scripts",
+        "justfile",
+        "tooling"
+      ],
       "author": "chora-base",
       "location": "docs/skilled-awareness/automation-scripts",
       "artifacts": {
@@ -365,7 +433,8 @@
         "justfile"
       ],
       "phase": "Phase 3",
-      "priority": "P1"
+      "priority": "P1",
+      "domain": "Developer Experience"
     },
     {
       "id": "SAP-009",
@@ -388,8 +457,15 @@
         "Context-aware suggestions (reactive/proactive)",
         "User preferences (100+ options)"
       ],
-      "dependencies": ["SAP-000", "SAP-007"],
-      "tags": ["agent-awareness", "ai-context", "documentation"],
+      "dependencies": [
+        "SAP-000",
+        "SAP-007"
+      ],
+      "tags": [
+        "agent-awareness",
+        "ai-context",
+        "documentation"
+      ],
       "author": "chora-base",
       "location": "docs/skilled-awareness/agent-awareness",
       "artifacts": {
@@ -406,7 +482,8 @@
         "static-template/CLAUDE.md"
       ],
       "phase": "Phase 3",
-      "priority": "P1"
+      "priority": "P1",
+      "domain": "Specialized"
     },
     {
       "id": "SAP-010",
@@ -424,8 +501,15 @@
         "Event schema v1.0",
         "30% reduction in repeated mistakes"
       ],
-      "dependencies": ["SAP-000"],
-      "tags": ["memory", "a-mem", "learning", "zettelkasten"],
+      "dependencies": [
+        "SAP-000"
+      ],
+      "tags": [
+        "memory",
+        "a-mem",
+        "learning",
+        "zettelkasten"
+      ],
       "author": "chora-base",
       "location": "docs/skilled-awareness/memory-system",
       "artifacts": {
@@ -470,7 +554,8 @@
             ".chora/memory/README.md documents A-MEM structure"
           ]
         }
-      }
+      },
+      "domain": "Specialized"
     },
     {
       "id": "SAP-011",
@@ -488,8 +573,14 @@
         "Non-root execution",
         "81% build context reduction"
       ],
-      "dependencies": ["SAP-000"],
-      "tags": ["docker", "containers", "deployment"],
+      "dependencies": [
+        "SAP-000"
+      ],
+      "tags": [
+        "docker",
+        "containers",
+        "deployment"
+      ],
       "author": "chora-base",
       "location": "docs/skilled-awareness/docker-operations",
       "artifacts": {
@@ -548,7 +639,8 @@
             "Skip image builds if project lacks dependencies or takes >2 minutes"
           ]
         }
-      }
+      },
+      "domain": "Developer Experience"
     },
     {
       "id": "SAP-012",
@@ -569,8 +661,19 @@
         "Sprint/release templates",
         "ANTI_PATTERNS.md (1,309 lines)"
       ],
-      "dependencies": ["SAP-000", "SAP-007"],
-      "tags": ["lifecycle", "documentation-driven", "diataxis", "bdd", "tdd", "process", "l3-workflow"],
+      "dependencies": [
+        "SAP-000",
+        "SAP-007"
+      ],
+      "tags": [
+        "lifecycle",
+        "documentation-driven",
+        "diataxis",
+        "bdd",
+        "tdd",
+        "process",
+        "l3-workflow"
+      ],
       "author": "chora-base",
       "location": "docs/skilled-awareness/development-lifecycle",
       "artifacts": {
@@ -584,7 +687,8 @@
         "docs/dev-docs/workflows/"
       ],
       "phase": "Phase 3",
-      "priority": "P1"
+      "priority": "P1",
+      "domain": "Specialized"
     },
     {
       "id": "SAP-013",
@@ -602,8 +706,15 @@
         "Sprint dashboards",
         "$109k/year savings estimate"
       ],
-      "dependencies": ["SAP-000"],
-      "tags": ["metrics", "roi", "tracking", "analytics"],
+      "dependencies": [
+        "SAP-000"
+      ],
+      "tags": [
+        "metrics",
+        "roi",
+        "tracking",
+        "analytics"
+      ],
       "author": "chora-base",
       "location": "docs/skilled-awareness/metrics-tracking",
       "artifacts": {
@@ -618,7 +729,9 @@
         "docs/project-docs/PROCESS_METRICS.md"
       ],
       "phase": "Phase 4",
-      "priority": "P2"
+      "priority": "P2",
+      "domain": "Specialized",
+      "complete": false
     },
     {
       "id": "SAP-014",
@@ -636,8 +749,18 @@
         "Testing strategies",
         "Deployment workflows"
       ],
-      "dependencies": ["SAP-000", "SAP-003", "SAP-004", "SAP-012"],
-      "tags": ["mcp", "fastmcp", "server-development", "technology-specific"],
+      "dependencies": [
+        "SAP-000",
+        "SAP-003",
+        "SAP-004",
+        "SAP-012"
+      ],
+      "tags": [
+        "mcp",
+        "fastmcp",
+        "server-development",
+        "technology-specific"
+      ],
       "author": "chora-base",
       "location": "docs/skilled-awareness/mcp-server-development",
       "artifacts": {
@@ -652,7 +775,8 @@
         "mcp-templates/"
       ],
       "phase": "Wave 3",
-      "priority": "P1"
+      "priority": "P1",
+      "domain": "Developer Experience"
     },
     {
       "id": "SAP-015",
@@ -673,8 +797,18 @@
         "Setup time ≤30 min (avg 9.9 min across 5 projects)",
         "Context re-establishment savings ≥20%"
       ],
-      "dependencies": ["SAP-000", "SAP-010"],
-      "tags": ["task-tracking", "beads", "memory", "multi-agent", "pilot", "l3-infrastructure"],
+      "dependencies": [
+        "SAP-000",
+        "SAP-010"
+      ],
+      "tags": [
+        "task-tracking",
+        "beads",
+        "memory",
+        "multi-agent",
+        "pilot",
+        "l3-infrastructure"
+      ],
       "author": "chora-base",
       "location": "docs/skilled-awareness/task-tracking",
       "artifacts": {
@@ -731,7 +865,8 @@
             "bd list command returns at least one task"
           ]
         }
-      }
+      },
+      "domain": "Specialized"
     },
     {
       "id": "SAP-016",
@@ -750,7 +885,12 @@
         "SAP audit workflow support"
       ],
       "dependencies": [],
-      "tags": ["quality", "validation", "documentation", "foundational"],
+      "tags": [
+        "quality",
+        "validation",
+        "documentation",
+        "foundational"
+      ],
       "author": "chora-base",
       "location": "docs/skilled-awareness/link-validation-reference-management",
       "artifacts": {
@@ -793,7 +933,8 @@
             "Add to CI/CD workflow (.github/workflows/) for automated validation"
           ]
         }
-      }
+      },
+      "domain": "Specialized"
     },
     {
       "id": "SAP-017",
@@ -811,8 +952,15 @@
         "Role-based patterns",
         "Content generation workflows"
       ],
-      "dependencies": ["SAP-003"],
-      "tags": ["chora-compose", "content-generation", "mcp", "ecosystem"],
+      "dependencies": [
+        "SAP-003"
+      ],
+      "tags": [
+        "chora-compose",
+        "content-generation",
+        "mcp",
+        "ecosystem"
+      ],
       "author": "chora-base",
       "location": "docs/skilled-awareness/chora-compose-integration",
       "artifacts": {
@@ -824,7 +972,8 @@
       },
       "system_files": [],
       "phase": "Wave 3",
-      "priority": "P1"
+      "priority": "P1",
+      "domain": "Advanced"
     },
     {
       "id": "SAP-018",
@@ -847,8 +996,19 @@
         "5 generators + BaseGenerator",
         "Config lifecycle tools"
       ],
-      "dependencies": ["SAP-000", "SAP-017"],
-      "tags": ["mcp-tools", "content-generation", "collections-architecture", "caching", "context-resolution", "generators", "telemetry"],
+      "dependencies": [
+        "SAP-000",
+        "SAP-017"
+      ],
+      "tags": [
+        "mcp-tools",
+        "content-generation",
+        "collections-architecture",
+        "caching",
+        "context-resolution",
+        "generators",
+        "telemetry"
+      ],
       "author": "Victor",
       "location": "docs/skilled-awareness/chora-compose-meta",
       "artifacts": {
@@ -860,7 +1020,8 @@
       },
       "system_files": [],
       "phase": "Active",
-      "priority": "P2"
+      "priority": "P2",
+      "domain": "Advanced"
     },
     {
       "id": "SAP-019",
@@ -878,8 +1039,16 @@
         "Timeline tracking and trend analysis",
         "Multi-format reporting (terminal, JSON, markdown, YAML)"
       ],
-      "dependencies": ["SAP-000"],
-      "tags": ["evaluation", "assessment", "roadmap", "planning", "meta"],
+      "dependencies": [
+        "SAP-000"
+      ],
+      "tags": [
+        "evaluation",
+        "assessment",
+        "roadmap",
+        "planning",
+        "meta"
+      ],
       "author": "chora-base",
       "location": "docs/skilled-awareness/sap-self-evaluation",
       "artifacts": {
@@ -894,7 +1063,8 @@
         "utils/sap_evaluation.py"
       ],
       "phase": "Wave 3",
-      "priority": "P1"
+      "priority": "P1",
+      "domain": "Specialized"
     },
     {
       "id": "SAP-020",
@@ -912,8 +1082,17 @@
         "Basic state management setup",
         "8-12 starter templates"
       ],
-      "dependencies": ["SAP-000", "SAP-003"],
-      "tags": ["react", "nextjs", "typescript", "foundation", "technology-specific"],
+      "dependencies": [
+        "SAP-000",
+        "SAP-003"
+      ],
+      "tags": [
+        "react",
+        "nextjs",
+        "typescript",
+        "foundation",
+        "technology-specific"
+      ],
       "author": "chora-base",
       "location": "docs/skilled-awareness/react-foundation",
       "artifacts": {
@@ -929,7 +1108,8 @@
         "templates/react/configs/"
       ],
       "phase": "Wave 4",
-      "priority": "P1"
+      "priority": "P1",
+      "domain": "Foundation"
     },
     {
       "id": "SAP-021",
@@ -947,8 +1127,19 @@
         "Component + hook test templates",
         "Integration testing patterns"
       ],
-      "dependencies": ["SAP-000", "SAP-004", "SAP-020"],
-      "tags": ["react", "testing", "vitest", "rtl", "msw", "quality"],
+      "dependencies": [
+        "SAP-000",
+        "SAP-004",
+        "SAP-020"
+      ],
+      "tags": [
+        "react",
+        "testing",
+        "vitest",
+        "rtl",
+        "msw",
+        "quality"
+      ],
       "author": "chora-base",
       "location": "docs/skilled-awareness/react-testing",
       "artifacts": {
@@ -962,7 +1153,8 @@
         "templates/react/testing/"
       ],
       "phase": "Wave 4",
-      "priority": "P1"
+      "priority": "P1",
+      "domain": "Foundation"
     },
     {
       "id": "SAP-022",
@@ -984,8 +1176,20 @@
         "Next.js 15 and Vite 7 variants",
         "8 templates + 5 documentation artifacts"
       ],
-      "dependencies": ["SAP-000", "SAP-006", "SAP-020"],
-      "tags": ["react", "eslint", "prettier", "linting", "quality", "typescript", "accessibility"],
+      "dependencies": [
+        "SAP-000",
+        "SAP-006",
+        "SAP-020"
+      ],
+      "tags": [
+        "react",
+        "eslint",
+        "prettier",
+        "linting",
+        "quality",
+        "typescript",
+        "accessibility"
+      ],
       "author": "chora-base",
       "location": "docs/skilled-awareness/react-linting",
       "artifacts": {
@@ -1007,7 +1211,8 @@
         "templates/react/linting/README.md"
       ],
       "phase": "Wave 4",
-      "priority": "P1"
+      "priority": "P1",
+      "domain": "Foundation"
     },
     {
       "id": "SAP-023",
@@ -1028,8 +1233,19 @@
         "localStorage persistence with migration",
         "Decision trees and anti-patterns guide"
       ],
-      "dependencies": ["SAP-000", "SAP-020"],
-      "tags": ["react", "state-management", "tanstack-query", "zustand", "forms", "zod", "typescript"],
+      "dependencies": [
+        "SAP-000",
+        "SAP-020"
+      ],
+      "tags": [
+        "react",
+        "state-management",
+        "tanstack-query",
+        "zustand",
+        "forms",
+        "zod",
+        "typescript"
+      ],
       "author": "chora-base",
       "location": "docs/skilled-awareness/react-state-management",
       "artifacts": {
@@ -1053,7 +1269,8 @@
         "templates/react/state-management/README.md"
       ],
       "phase": "Wave 4",
-      "priority": "P1"
+      "priority": "P1",
+      "domain": "User-Facing"
     },
     {
       "id": "SAP-024",
@@ -1071,8 +1288,17 @@
         "Responsive design templates",
         "CSS Modules escape hatch"
       ],
-      "dependencies": ["SAP-000", "SAP-020"],
-      "tags": ["react", "styling", "tailwind", "shadcn", "css"],
+      "dependencies": [
+        "SAP-000",
+        "SAP-020"
+      ],
+      "tags": [
+        "react",
+        "styling",
+        "tailwind",
+        "shadcn",
+        "css"
+      ],
       "author": "chora-base",
       "location": "docs/skilled-awareness/react-styling",
       "artifacts": {
@@ -1086,7 +1312,8 @@
         "templates/react/styling/"
       ],
       "phase": "Wave 4",
-      "priority": "P2"
+      "priority": "P2",
+      "domain": "User-Facing"
     },
     {
       "id": "SAP-025",
@@ -1104,8 +1331,16 @@
         "Font optimization (WOFF2)",
         "Lighthouse CI integration"
       ],
-      "dependencies": ["SAP-000", "SAP-020"],
-      "tags": ["react", "performance", "web-vitals", "optimization"],
+      "dependencies": [
+        "SAP-000",
+        "SAP-020"
+      ],
+      "tags": [
+        "react",
+        "performance",
+        "web-vitals",
+        "optimization"
+      ],
       "author": "chora-base",
       "location": "docs/skilled-awareness/react-performance",
       "artifacts": {
@@ -1119,7 +1354,8 @@
         "templates/react/performance/"
       ],
       "phase": "Wave 4",
-      "priority": "P2"
+      "priority": "P2",
+      "domain": "Advanced"
     },
     {
       "id": "SAP-026",
@@ -1137,8 +1373,18 @@
         "jest-axe/axe-core testing",
         "Focus management patterns"
       ],
-      "dependencies": ["SAP-000", "SAP-020", "SAP-021"],
-      "tags": ["react", "accessibility", "wcag", "a11y", "radix"],
+      "dependencies": [
+        "SAP-000",
+        "SAP-020",
+        "SAP-021"
+      ],
+      "tags": [
+        "react",
+        "accessibility",
+        "wcag",
+        "a11y",
+        "radix"
+      ],
       "author": "chora-base",
       "location": "docs/skilled-awareness/react-accessibility",
       "artifacts": {
@@ -1152,7 +1398,8 @@
         "templates/react/accessibility/"
       ],
       "phase": "Wave 4",
-      "priority": "P2"
+      "priority": "P2",
+      "domain": "Advanced"
     },
     {
       "id": "SAP-027",
@@ -1171,8 +1418,17 @@
         "Pilot documentation structure (weekly metrics, final summary)",
         "Template refinement workflow (TODO completion, production readiness)"
       ],
-      "dependencies": ["SAP-000", "SAP-029"],
-      "tags": ["dogfooding", "patterns", "pilot", "validation", "methodology"],
+      "dependencies": [
+        "SAP-000",
+        "SAP-029"
+      ],
+      "tags": [
+        "dogfooding",
+        "patterns",
+        "pilot",
+        "validation",
+        "methodology"
+      ],
       "author": "chora-base",
       "location": "docs/skilled-awareness/dogfooding-patterns",
       "artifacts": {
@@ -1220,7 +1476,8 @@
           "Automated pilot execution - Manual methodology, no automation tooling"
         ],
         "one_sentence_summary": "SAP-027 provides a formalized 5-week dogfooding pilot methodology for validating patterns through internal use, achieving GO decisions at 90% confidence (Week 4) and formalization at 100% confidence (Week 5) before ecosystem adoption."
-      }
+      },
+      "domain": "Specialized"
     },
     {
       "id": "SAP-028",
@@ -1240,8 +1497,18 @@
         "Migration protocols (token → trusted publishing)",
         "Template integration via pypi_auth_method variable"
       ],
-      "dependencies": ["SAP-003", "SAP-005"],
-      "tags": ["security", "publishing", "ci-cd", "pypi", "oidc", "production"],
+      "dependencies": [
+        "SAP-003",
+        "SAP-005"
+      ],
+      "tags": [
+        "security",
+        "publishing",
+        "ci-cd",
+        "pypi",
+        "oidc",
+        "production"
+      ],
       "author": "chora-base",
       "location": "docs/skilled-awareness/publishing-automation",
       "artifacts": {
@@ -1293,7 +1560,8 @@
           "Changelog generation - Covered by SAP-005 (CI/CD)"
         ],
         "one_sentence_summary": "SAP-028 provides secure PyPI publishing with OIDC trusted publishing as default, eliminating long-lived API tokens and enabling PEP 740 build attestations for all chora-base generated projects."
-      }
+      },
+      "domain": "Specialized"
     },
     {
       "id": "SAP-029",
@@ -1310,8 +1578,15 @@
         "INDEX.md auto-update",
         "Validation integration"
       ],
-      "dependencies": ["SAP-000"],
-      "tags": ["dogfooding", "automation", "templates", "productivity"],
+      "dependencies": [
+        "SAP-000"
+      ],
+      "tags": [
+        "dogfooding",
+        "automation",
+        "templates",
+        "productivity"
+      ],
       "author": "chora-base",
       "location": "docs/skilled-awareness/sap-generation",
       "artifacts": {
@@ -1358,19 +1633,55 @@
           "Custom template support - Future feature"
         ],
         "one_sentence_summary": "SAP-029 defines template-based SAP artifact generation to reduce creation time from 10 hours to 2 hours (80% savings) through Jinja2 templates, INDEX.md auto-update, and validation integration."
-      }
+      },
+      "domain": "Specialized"
     }
   ],
   "dependency_graph": {
-    "foundational": ["SAP-000", "SAP-016"],
-    "meta": ["SAP-001", "SAP-002", "SAP-019"],
-    "core_infrastructure": ["SAP-003", "SAP-004", "SAP-005", "SAP-006"],
-    "developer_experience": ["SAP-007", "SAP-008", "SAP-009"],
-    "advanced_features": ["SAP-010", "SAP-011", "SAP-012"],
-    "cross_repository": ["SAP-013"],
-    "technology_specific": ["SAP-014", "SAP-017", "SAP-018"],
-    "react_foundation": ["SAP-020", "SAP-021", "SAP-022"],
-    "react_advanced": ["SAP-023", "SAP-024", "SAP-025", "SAP-026"]
+    "foundational": [
+      "SAP-000",
+      "SAP-016"
+    ],
+    "meta": [
+      "SAP-001",
+      "SAP-002",
+      "SAP-019"
+    ],
+    "core_infrastructure": [
+      "SAP-003",
+      "SAP-004",
+      "SAP-005",
+      "SAP-006"
+    ],
+    "developer_experience": [
+      "SAP-007",
+      "SAP-008",
+      "SAP-009"
+    ],
+    "advanced_features": [
+      "SAP-010",
+      "SAP-011",
+      "SAP-012"
+    ],
+    "cross_repository": [
+      "SAP-013"
+    ],
+    "technology_specific": [
+      "SAP-014",
+      "SAP-017",
+      "SAP-018"
+    ],
+    "react_foundation": [
+      "SAP-020",
+      "SAP-021",
+      "SAP-022"
+    ],
+    "react_advanced": [
+      "SAP-023",
+      "SAP-024",
+      "SAP-025",
+      "SAP-026"
+    ]
   },
   "installation_order": [
     "SAP-000",
@@ -1400,7 +1711,6 @@
     "SAP-025",
     "SAP-026"
   ],
-
   "sap_sets": {
     "ecosystem": {
       "id": "ecosystem",
@@ -1409,10 +1719,26 @@
       "version": "2.0.0",
       "description": "Universal capabilities for any technology stack - meta, infrastructure, quality, memory, coordination",
       "saps": [
-        "SAP-000", "SAP-001", "SAP-002", "SAP-003", "SAP-004",
-        "SAP-005", "SAP-006", "SAP-007", "SAP-008", "SAP-009",
-        "SAP-010", "SAP-011", "SAP-012", "SAP-013", "SAP-015",
-        "SAP-016", "SAP-019", "SAP-027", "SAP-028", "SAP-029"
+        "SAP-000",
+        "SAP-001",
+        "SAP-002",
+        "SAP-003",
+        "SAP-004",
+        "SAP-005",
+        "SAP-006",
+        "SAP-007",
+        "SAP-008",
+        "SAP-009",
+        "SAP-010",
+        "SAP-011",
+        "SAP-012",
+        "SAP-013",
+        "SAP-015",
+        "SAP-016",
+        "SAP-019",
+        "SAP-027",
+        "SAP-028",
+        "SAP-029"
       ],
       "estimated_tokens": 125000,
       "estimated_hours": "3-5 days",
@@ -1451,13 +1777,30 @@
       ],
       "progressive_adoption_guide": {
         "minimal_quickstart": {
-          "saps": ["SAP-000", "SAP-001", "SAP-002", "SAP-009", "SAP-016"],
+          "saps": [
+            "SAP-000",
+            "SAP-001",
+            "SAP-002",
+            "SAP-009",
+            "SAP-016"
+          ],
           "description": "5 SAPs for quick ecosystem entry (3-5 hours)",
           "use_case": "First-time coordination, lightweight onboarding",
           "install_command": "install-sap.py SAP-000 SAP-001 SAP-002 SAP-009 SAP-016"
         },
         "production_core": {
-          "saps": ["SAP-000", "SAP-001", "SAP-002", "SAP-003", "SAP-004", "SAP-005", "SAP-006", "SAP-007", "SAP-009", "SAP-016"],
+          "saps": [
+            "SAP-000",
+            "SAP-001",
+            "SAP-002",
+            "SAP-003",
+            "SAP-004",
+            "SAP-005",
+            "SAP-006",
+            "SAP-007",
+            "SAP-009",
+            "SAP-016"
+          ],
           "description": "10 SAPs for production-ready projects (1-2 days)",
           "use_case": "Standalone projects, full development lifecycle",
           "install_command": "install-sap.py SAP-000 SAP-001 SAP-002 SAP-003 SAP-004 SAP-005 SAP-006 SAP-007 SAP-009 SAP-016"
@@ -1473,9 +1816,13 @@
         "Large token footprint (125k tokens) - consider progressive adoption via minimal/core subsets",
         "Includes 2 pilot SAPs (SAP-015 task-tracking, SAP-028 publishing-automation) - production promotion pending"
       ],
-      "tags": ["universal", "foundation", "ecosystem", "cross-domain"]
+      "tags": [
+        "universal",
+        "foundation",
+        "ecosystem",
+        "cross-domain"
+      ]
     },
-
     "domain-mcp": {
       "id": "domain-mcp",
       "name": "MCP Server Development",
@@ -1486,7 +1833,12 @@
         "SAP-014"
       ],
       "requires": {
-        "ecosystem": ["SAP-000", "SAP-003", "SAP-004", "SAP-012"],
+        "ecosystem": [
+          "SAP-000",
+          "SAP-003",
+          "SAP-004",
+          "SAP-012"
+        ],
         "rationale": "MCP development requires project scaffolding (SAP-003), testing (SAP-004), and lifecycle (SAP-012)"
       },
       "estimated_tokens": 10000,
@@ -1504,9 +1856,14 @@
         "Deployment workflows"
       ],
       "complete_setup_command": "install-sap.py --set ecosystem --set domain-mcp",
-      "tags": ["mcp", "fastmcp", "model-context-protocol", "claude", "domain-specific"]
+      "tags": [
+        "mcp",
+        "fastmcp",
+        "model-context-protocol",
+        "claude",
+        "domain-specific"
+      ]
     },
-
     "domain-react": {
       "id": "domain-react",
       "name": "React Development Suite",
@@ -1514,10 +1871,20 @@
       "version": "2.0.0",
       "description": "Modern React with Next.js 15, TypeScript, Vitest, and production best practices",
       "saps": [
-        "SAP-020", "SAP-021", "SAP-022", "SAP-023", "SAP-024", "SAP-025", "SAP-026"
+        "SAP-020",
+        "SAP-021",
+        "SAP-022",
+        "SAP-023",
+        "SAP-024",
+        "SAP-025",
+        "SAP-026"
       ],
       "requires": {
-        "ecosystem": ["SAP-000", "SAP-003", "SAP-004"],
+        "ecosystem": [
+          "SAP-000",
+          "SAP-003",
+          "SAP-004"
+        ],
         "rationale": "React projects require project scaffolding (SAP-003) and base testing framework (SAP-004)"
       },
       "estimated_tokens": 65000,
@@ -1543,9 +1910,14 @@
         "Requires Node.js 22.x LTS for optimal performance",
         "Tailwind v4 is in beta - check compatibility before production use"
       ],
-      "tags": ["react", "nextjs", "typescript", "frontend", "domain-specific"]
+      "tags": [
+        "react",
+        "nextjs",
+        "typescript",
+        "frontend",
+        "domain-specific"
+      ]
     },
-
     "domain-chora-compose": {
       "id": "domain-chora-compose",
       "name": "Chora-Compose Integration",
@@ -1553,10 +1925,13 @@
       "version": "2.0.0",
       "description": "Content generation with chora-compose MCP tools and Collections architecture",
       "saps": [
-        "SAP-017", "SAP-018"
+        "SAP-017",
+        "SAP-018"
       ],
       "requires": {
-        "ecosystem": ["SAP-003"],
+        "ecosystem": [
+          "SAP-003"
+        ],
         "rationale": "chora-compose integration benefits from project scaffolding patterns"
       },
       "estimated_tokens": 20000,
@@ -1578,10 +1953,15 @@
         "Event emission (OpenTelemetry) (SAP-018)"
       ],
       "complete_setup_command": "install-sap.py --set ecosystem --set domain-chora-compose",
-      "tags": ["chora-compose", "content-generation", "mcp", "collections", "domain-specific"]
+      "tags": [
+        "chora-compose",
+        "content-generation",
+        "mcp",
+        "collections",
+        "domain-specific"
+      ]
     }
   },
-
   "deprecated_sets": {
     "minimal-entry": {
       "deprecated_version": "1.0.0",

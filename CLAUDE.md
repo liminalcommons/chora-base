@@ -542,43 +542,117 @@ bash scripts/validate-awareness-links.sh
 
 ## Quick Reference: SAP Catalog
 
-### Core Infrastructure (Adopt First)
+**Organization**: 30 SAPs across 6 domains for progressive adoption
+
+**Domain Distribution**: Infrastructure (3) • Developer Experience (8) • Foundation (3) • User-Facing (2) • Advanced (4) • Specialized (10)
+
+---
+
+### Infrastructure Domain (Core Foundation - 3 SAPs)
+
+**Purpose**: Universal framework and coordination for any project
 
 | SAP | Name | Status | Description |
 |-----|------|--------|-------------|
-| SAP-000 | sap-framework | production | Foundation for all SAPs |
-| SAP-009 | agent-awareness | production | This nested awareness pattern |
-| SAP-001 | inbox | production | Cross-repo coordination |
-| SAP-010 | memory-system | production | Event-sourced agent memory |
+| SAP-000 | sap-framework | active | Core SAP framework and protocols |
+| SAP-001 | inbox | active | Cross-repo coordination protocol (90% effort reduction) |
+| SAP-002 | chora-base | active | Chora-base meta-package (dogfooding) |
 
-### Development Workflow
+---
 
-| SAP | Name | Status | Description |
-|-----|------|--------|-------------|
-| SAP-003 | project-bootstrap | draft | Scaffold new projects |
-| SAP-005 | ci-cd-workflows | production | GitHub Actions automation |
-| SAP-011 | docker-operations | production | Container management |
-| SAP-015 | task-tracking | pilot | Persistent task memory (beads) |
+### Developer Experience Domain (Development Tools - 8 SAPs)
 
-### SAP Ecosystem
+**Purpose**: Accelerate development with testing, CI/CD, quality gates, and tooling
 
 | SAP | Name | Status | Description |
 |-----|------|--------|-------------|
-| SAP-027 | dogfooding-patterns | production | Validate SAP adoption |
-| SAP-029 | sap-generation | production | Generate new SAPs |
-| SAP-028 | publishing-automation | draft | Automated SAP distribution |
+| SAP-003 | project-bootstrap | active | Copier-based project scaffolding |
+| SAP-004 | testing-framework | active | pytest + 85% coverage patterns |
+| SAP-005 | ci-cd-workflows | active | GitHub Actions automation |
+| SAP-006 | quality-gates | active | Pre-commit + ruff + mypy (200x faster) |
+| SAP-007 | documentation-framework | active | Diátaxis 4-domain architecture |
+| SAP-008 | automation-scripts | active | 25 scripts + justfile (30+ commands) |
+| SAP-011 | docker-operations | active | Multi-stage Dockerfiles (150-250MB) |
+| SAP-014 | mcp-server-development | active | FastMCP patterns + 11 templates |
 
-### Frontend Development (React Ecosystem)
+---
+
+### Foundation Domain (Technology Stacks - 3 SAPs)
+
+**Purpose**: Next.js 15 + TypeScript + Vitest foundation for React projects
 
 | SAP | Name | Status | Description |
 |-----|------|--------|-------------|
-| SAP-016 | link-validation | draft | Reference management |
-| SAP-017 | state-management | draft | React state patterns |
-| SAP-018 | form-validation | draft | Form handling |
-| SAP-026 | ui-component-library | draft | Design system |
-| SAP-030 | data-fetching | draft | API integration |
-| SAP-031 | routing-navigation | draft | Next.js routing |
-| SAP-032 | performance-optimization | draft | React performance |
+| SAP-020 | react-foundation | active | Next.js 15 + TypeScript (8-12h → 45min) |
+| SAP-021 | react-testing | active | Vitest v4 + RTL + MSW (80-90% coverage) |
+| SAP-022 | react-linting | active | ESLint 9 + Prettier 3 (182x faster) |
+
+---
+
+### User-Facing Domain (User Interactions - 2 SAPs)
+
+**Purpose**: State management and styling for user interfaces
+
+| SAP | Name | Status | Description |
+|-----|------|--------|-------------|
+| SAP-023 | react-state-management | active | TanStack Query v5 + Zustand v4 + RHF v7 + Zod |
+| SAP-024 | react-styling | active | Tailwind CSS v4 + shadcn/ui |
+
+---
+
+### Advanced Domain (Optimizations & Integrations - 4 SAPs)
+
+**Purpose**: Performance, accessibility, and advanced tool integrations
+
+| SAP | Name | Status | Description |
+|-----|------|--------|-------------|
+| SAP-017 | chora-compose-integration | active | Content generation (pip, MCP, CLI) |
+| SAP-018 | chora-compose-meta | active | 24 MCP tools + Collections architecture |
+| SAP-025 | react-performance | active | Core Web Vitals optimization |
+| SAP-026 | react-accessibility | active | WCAG 2.2 Level AA compliance |
+
+---
+
+### Specialized Domain (Meta-Capabilities - 10 SAPs)
+
+**Purpose**: Process patterns, memory, task tracking, and SAP ecosystem tools
+
+| SAP | Name | Status | Description |
+|-----|------|--------|-------------|
+| SAP-009 | agent-awareness | active | AGENTS.md + CLAUDE.md nested pattern |
+| SAP-010 | memory-system | active | A-MEM event-sourced memory (4 types) |
+| SAP-012 | development-lifecycle | active | 8-phase lifecycle (DDD→BDD→TDD) |
+| SAP-013 | metrics-tracking | active | ROI calculator ($109k/year savings) ⚠️ incomplete |
+| SAP-015 | task-tracking | pilot | Beads git-backed task memory |
+| SAP-016 | link-validation | active | Markdown link validation (internal + external) |
+| SAP-019 | sap-self-evaluation | active | SAP adoption assessment framework |
+| SAP-027 | dogfooding-patterns | active | 5-week pilot methodology |
+| SAP-028 | publishing-automation | pilot | PyPI OIDC trusted publishing |
+| SAP-029 | sap-generation | pilot | Template-based SAP generation (80% savings) |
+
+---
+
+### Domain Navigation Shortcuts
+
+**Building a Python MCP server?**
+→ Infrastructure + Developer Experience + SAP-014 (mcp-server-development)
+
+**Building a React app?**
+→ Infrastructure + Developer Experience + Foundation (SAP-020-022) + User-Facing (SAP-023-024)
+
+**Coordinating across repos?**
+→ Infrastructure (SAP-001 Inbox) + Specialized (SAP-015 Beads)
+
+**Improving process maturity?**
+→ Specialized domain (SAP-009, 010, 012, 015, 027)
+
+**Need performance optimization?**
+→ Advanced domain (SAP-025, 026)
+
+**Need content generation?**
+→ Advanced domain (SAP-017, 018 chora-compose)
+
+---
 
 **Full Catalog**: See [sap-catalog.json](sap-catalog.json) or [docs/skilled-awareness/INDEX.md](docs/skilled-awareness/INDEX.md)
 
