@@ -1,0 +1,330 @@
+[INFO] Initializing environment for https://github.com/astral-sh/ruff-pre-commit.
+[INFO] Initializing environment for https://github.com/pre-commit/mirrors-mypy.
+[INFO] Installing environment for https://github.com/pre-commit/pre-commit-hooks.
+[INFO] Once installed this environment will be reused.
+[INFO] This may take a few minutes...
+[INFO] Installing environment for https://github.com/astral-sh/ruff-pre-commit.
+[INFO] Once installed this environment will be reused.
+[INFO] This may take a few minutes...
+[INFO] Installing environment for https://github.com/pre-commit/mirrors-mypy.
+[INFO] Once installed this environment will be reused.
+[INFO] This may take a few minutes...
+check yaml...............................................................Failed
+- hook id: check-yaml
+- exit code: 1
+
+while scanning for the next token
+found character that cannot start any token
+  in ".github/workflows/docs-quality.yml", line 1, column 2
+while parsing a block mapping
+  in ".github/workflows/codeql.yml", line 44, column 11
+did not find expected key
+  in ".github/workflows/codeql.yml", line 44, column 37
+while parsing a block mapping
+  in ".github/workflows/release.yml", line 1, column 1
+did not find expected key
+  in ".github/workflows/release.yml", line 85, column 1
+while parsing a block mapping
+  in ".github/workflows/dependabot-automerge.yml", line 22, column 11
+did not find expected key
+  in ".github/workflows/dependabot-automerge.yml", line 22, column 31
+while scanning for the next token
+found character that cannot start any token
+  in "docker-compose.yml", line 8, column 2
+
+fix end of files.........................................................Failed
+- hook id: end-of-file-fixer
+- exit code: 1
+- files were modified by this hook
+
+Fixing .github/workflows/test.yml
+Fixing CLAUDE.md
+Fixing .gitignore
+Fixing .beads/metadata.json
+Fixing justfile
+Fixing src/week_3_ci_cd_quality_verification/server.py
+Fixing scripts/create-release.py
+Fixing .github/workflows/lint.yml
+Fixing .github/workflows/release.yml
+Fixing .env.example
+Fixing docs/user-docs/how-to-create-release.md
+Fixing ROADMAP.md
+Fixing src/week_3_ci_cd_quality_verification/mcp/__init__.py
+Fixing src/week_3_ci_cd_quality_verification/__init__.py
+Fixing scripts/bump-version.py
+Fixing README.md
+Fixing pyproject.toml
+Fixing tests/test_server.py
+
+trim trailing whitespace.................................................Failed
+- hook id: trailing-whitespace
+- exit code: 1
+- files were modified by this hook
+
+Fixing AGENTS.md
+
+check for added large files..............................................Passed
+ruff.....................................................................Failed
+- hook id: ruff
+- exit code: 1
+- files were modified by this hook
+
+scripts\bump-version.py:251:89: E501 Line too long (100 > 88)
+    |
+250 |     if dry_run:
+251 |         print(f"[DRY RUN] Would insert the following into CHANGELOG.md at line {insert_index + 1}:")
+    |                                                                                         ^^^^^^^^^^^^ E501
+252 |         print("---")
+253 |         print(new_section)
+    |
+
+scripts\create-release.py:254:89: E501 Line too long (93 > 88)
+    |
+252 |         print("CI/CD will automatically:")
+253 |         print("  1. Build multi-arch Docker images (amd64, arm64)")
+254 |         print("  2. Push to ghcr.io/sapverifier/week-3-ci-cd-quality-verification:{version}")
+    |                                                                                         ^^^^^ E501
+255 |         print("  3. Publish to PyPI: week-3-ci-cd-quality-verification=={version}")
+256 |         print("")
+    |
+
+scripts\create-release.py:267:89: E501 Line too long (97 > 88)
+    |
+265 |     """CLI entry point."""
+266 |     parser = argparse.ArgumentParser(
+267 |         description='Create GitHub release from CHANGELOG for Week 3 CI/CD Quality Verification',
+    |                                                                                         ^^^^^^^^^ E501
+268 |         epilog='Part of GAP-003: Unified Release Workflow. Requires gh CLI.'
+269 |     )
+    |
+
+src\week_3_ci_cd_quality_verification\__init__.py:1:89: E501 Line too long (113 > 88)
+  |
+1 | """Week 3 CI/CD Quality Verification - Week 3 CI/CD Quality Verification - MCP server for week3cicd operations"""
+  |                                                                                         ^^^^^^^^^^^^^^^^^^^^^^^^^ E501
+2 | 
+3 | __version__ = "0.1.0"
+  |
+
+src\week_3_ci_cd_quality_verification\mcp\__init__.py:10:20: F401 `typing.Optional` imported but unused; consider removing, adding to `__all__`, or using a redundant alias
+   |
+ 9 | import re
+10 | from typing import Optional
+   |                    ^^^^^^^^ F401
+11 | 
+12 | # === Namespace Configuration ===
+   |
+   = help: Remove unused import: `typing.Optional`
+
+src\week_3_ci_cd_quality_verification\mcp\__init__.py:106:89: E501 Line too long (104 > 88)
+    |
+104 |     if ":" not in full_name:
+105 |         raise ValueError(
+106 |             f"Tool name '{full_name}' missing namespace separator. Expected format: namespace:tool_name"
+    |                                                                                         ^^^^^^^^^^^^^^^^ E501
+107 |         )
+    |
+
+src\week_3_ci_cd_quality_verification\mcp\__init__.py:178:13: F524 `.format` call is missing argument(s) for placeholder(s): 2,19
+    |
+176 |       if not NAMESPACE_PATTERN.match(namespace):
+177 |           raise ValueError(
+178 |               "Invalid namespace: {}. Must be lowercase, 3-20 chars, alphanumeric only. Pattern: [a-z][a-z0-9]{2,19}".format(
+    |  _____________^
+179 | |                 namespace
+180 | |             )
+    | |_____________^ F524
+181 |           )
+    |
+
+src\week_3_ci_cd_quality_verification\mcp\__init__.py:178:89: E501 Line too long (123 > 88)
+    |
+176 |     if not NAMESPACE_PATTERN.match(namespace):
+177 |         raise ValueError(
+178 |             "Invalid namespace: {}. Must be lowercase, 3-20 chars, alphanumeric only. Pattern: [a-z][a-z0-9]{2,19}".format(
+    |                                                                                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ E501
+179 |                 namespace
+180 |             )
+    |
+
+src\week_3_ci_cd_quality_verification\mcp\__init__.py:197:89: E501 Line too long (103 > 88)
+    |
+195 |         }}> validate_tool_name("week3cicd:create_task")  # OK
+196 |         }}> validate_tool_name("CreateTask")  # Raises ValueError (missing namespace)
+197 |         }}> validate_tool_name("other:create_task", "week3cicd")  # Raises ValueError (wrong namespace)
+    |                                                                                         ^^^^^^^^^^^^^^^ E501
+198 |     """
+199 |     if not ENABLE_VALIDATION:
+    |
+
+src\week_3_ci_cd_quality_verification\mcp\__init__.py:204:89: E501 Line too long (150 > 88)
+    |
+202 |     if not TOOL_NAME_PATTERN.match(name):
+203 |         raise ValueError(
+204 |             f"Invalid tool name: {name}. Must match pattern: namespace:tool_name (snake_case). Example: {expected_namespace or NAMESPACE}:create_task"
+    |                                                                                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ E501
+205 |         )
+    |
+
+src\week_3_ci_cd_quality_verification\mcp\__init__.py:211:89: E501 Line too long (94 > 88)
+    |
+209 |         if actual_ns != expected_namespace:
+210 |             raise ValueError(
+211 |                 f"Wrong namespace in tool name. Expected: {expected_namespace}:*, got: {name}"
+    |                                                                                         ^^^^^^ E501
+212 |             )
+    |
+
+src\week_3_ci_cd_quality_verification\mcp\__init__.py:227:89: E501 Line too long (104 > 88)
+    |
+225 |     Example:
+226 |         }}> validate_resource_uri("week3cicd://templates/daily-report.md")  # OK
+227 |         }}> validate_resource_uri("/templates/daily-report.md")  # Raises ValueError (missing namespace)
+    |                                                                                         ^^^^^^^^^^^^^^^^ E501
+228 |         }}> validate_resource_uri("other://templates/report.md", "week3cicd")  # Raises ValueError (wrong namespace)
+229 |     """
+    |
+
+src\week_3_ci_cd_quality_verification\mcp\__init__.py:228:89: E501 Line too long (116 > 88)
+    |
+226 |         }}> validate_resource_uri("week3cicd://templates/daily-report.md")  # OK
+227 |         }}> validate_resource_uri("/templates/daily-report.md")  # Raises ValueError (missing namespace)
+228 |         }}> validate_resource_uri("other://templates/report.md", "week3cicd")  # Raises ValueError (wrong namespace)
+    |                                                                                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^ E501
+229 |     """
+230 |     if not ENABLE_VALIDATION:
+    |
+
+src\week_3_ci_cd_quality_verification\mcp\__init__.py:235:89: E501 Line too long (163 > 88)
+    |
+233 |     if not RESOURCE_URI_PATTERN.match(uri):
+234 |         raise ValueError(
+235 |             f"Invalid resource URI: {uri}. Must match pattern: namespace://type/id[?query]. Example: {expected_namespace or NAMESPACE}://templates/daily-report.md"
+    |                                                                                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ E501
+236 |         )
+    |
+
+src\week_3_ci_cd_quality_verification\mcp\__init__.py:242:89: E501 Line too long (98 > 88)
+    |
+240 |         if actual_ns != expected_namespace:
+241 |             raise ValueError(
+242 |                 f"Wrong namespace in resource URI. Expected: {expected_namespace}://*, got: {uri}"
+    |                                                                                         ^^^^^^^^^^ E501
+243 |             )
+    |
+
+src\week_3_ci_cd_quality_verification\server.py:144:89: E501 Line too long (95 > 88)
+    |
+142 |     This is the entry point registered in pyproject.toml:
+143 |         [project.scripts]
+144 |         week-3-ci-cd-quality-verification = "week_3_ci_cd_quality_verification.mcp.server:main"
+    |                                                                                         ^^^^^^^ E501
+145 |     """
+146 |     logger.info("Starting Week 3 CI/CD Quality Verification MCP server...")
+    |
+
+tests\test_server.py:66:89: E501 Line too long (91 > 88)
+   |
+64 |         """Verify validation rejects tool names with wrong namespace."""
+65 |         with pytest.raises(ValueError, match="namespace"):
+66 |             validate_tool_name("wrong:example_tool", expected_namespace=expected_namespace)
+   |                                                                                         ^^^ E501
+67 | 
+68 |     def test_make_resource_uri(self, expected_namespace):
+   |
+
+tests\test_server.py:82:89: E501 Line too long (103 > 88)
+   |
+80 |         """Verify validation rejects URIs with wrong scheme."""
+81 |         with pytest.raises(ValueError, match="scheme"):
+82 |             validate_resource_uri("wrong://capabilities/server", expected_namespace=expected_namespace)
+   |                                                                                         ^^^^^^^^^^^^^^^ E501
+   |
+
+tests\test_server.py:223:89: E501 Line too long (102 > 88)
+    |
+221 |         # FastMCP decorators wrap functions in FunctionTool objects
+222 |         # Verify the wrapped objects exist and have underlying functions
+223 |         assert hasattr(example_tool, 'fn'), "example_tool should be a FunctionTool with .fn attribute"
+    |                                                                                         ^^^^^^^^^^^^^^ E501
+224 |         assert hasattr(hello_world, 'fn'), "hello_world should be a FunctionTool with .fn attribute"
+225 |         assert callable(example_tool.fn)
+    |
+
+tests\test_server.py:224:89: E501 Line too long (100 > 88)
+    |
+222 |         # Verify the wrapped objects exist and have underlying functions
+223 |         assert hasattr(example_tool, 'fn'), "example_tool should be a FunctionTool with .fn attribute"
+224 |         assert hasattr(hello_world, 'fn'), "hello_world should be a FunctionTool with .fn attribute"
+    |                                                                                         ^^^^^^^^^^^^ E501
+225 |         assert callable(example_tool.fn)
+226 |         assert callable(hello_world.fn)
+    |
+
+tests\test_server.py:232:89: E501 Line too long (114 > 88)
+    |
+230 |         # FastMCP decorators wrap functions in FunctionResource objects
+231 |         # Verify the wrapped object exists and has underlying function
+232 |         assert hasattr(get_capabilities, 'fn'), "get_capabilities should be a FunctionResource with .fn attribute"
+    |                                                                                         ^^^^^^^^^^^^^^^^^^^^^^^^^^ E501
+233 |         assert callable(get_capabilities.fn)
+    |
+
+Found 55 errors (34 fixed, 21 remaining).
+
+ruff-format..............................................................Failed
+- hook id: ruff-format
+- files were modified by this hook
+
+6 files reformatted
+
+mypy.....................................................................Failed
+- hook id: mypy
+- exit code: 1
+
+src\week_3_ci_cd_quality_verification\mcp\__init__.py:178: error: Cannot find replacement for named format specifier "2,19"  [str-format]
+scripts\create-release.py:198: error: Incompatible default for argument "version" (default has type "None", argument has type "str")  [assignment]
+scripts\create-release.py:198: note: PEP 484 prohibits implicit Optional. Accordingly, mypy has changed its default to no_implicit_optional=True
+scripts\create-release.py:198: note: Use https://github.com/hauntsaninja/no_implicit_optional to automatically upgrade your codebase
+scripts\create-release.py:272: error: Function is missing a return type annotation  [no-untyped-def]
+scripts\create-release.py:272: note: Use "-> None" if function does not return a value
+scripts\create-release.py:295: error: Call to untyped function "main" in typed context  [no-untyped-call]
+src\week_3_ci_cd_quality_verification\server.py:62: error: Untyped decorator makes function "example_tool" untyped  [misc]
+src\week_3_ci_cd_quality_verification\server.py:93: error: Untyped decorator makes function "hello_world" untyped  [misc]
+src\week_3_ci_cd_quality_verification\server.py:110: error: Untyped decorator makes function "get_capabilities" untyped  [misc]
+scripts\bump-version.py:326: error: Function is missing a return type annotation  [no-untyped-def]
+scripts\bump-version.py:394: error: Function is missing a return type annotation  [no-untyped-def]
+scripts\bump-version.py:394: note: Use "-> None" if function does not return a value
+scripts\bump-version.py:416: error: Call to untyped function "main" in typed context  [no-untyped-call]
+tests\test_server.py:37: error: Function is missing a return type annotation  [no-untyped-def]
+tests\test_server.py:50: error: Function is missing a type annotation  [no-untyped-def]
+tests\test_server.py:54: error: Function is missing a type annotation  [no-untyped-def]
+tests\test_server.py:59: error: Function is missing a type annotation  [no-untyped-def]
+tests\test_server.py:65: error: Function is missing a type annotation  [no-untyped-def]
+tests\test_server.py:72: error: Function is missing a type annotation  [no-untyped-def]
+tests\test_server.py:77: error: Function is missing a type annotation  [no-untyped-def]
+tests\test_server.py:83: error: Function is missing a type annotation  [no-untyped-def]
+tests\test_server.py:104: error: Function is missing a type annotation  [no-untyped-def]
+tests\test_server.py:116: error: Function is missing a type annotation  [no-untyped-def]
+tests\test_server.py:126: error: Function is missing a type annotation  [no-untyped-def]
+tests\test_server.py:149: error: Function is missing a type annotation  [no-untyped-def]
+tests\test_server.py:163: error: Function is missing a type annotation  [no-untyped-def]
+tests\test_server.py:170: error: Function is missing a return type annotation  [no-untyped-def]
+tests\test_server.py:170: note: Use "-> None" if function does not return a value
+tests\test_server.py:182: error: Function is missing a type annotation  [no-untyped-def]
+tests\test_server.py:193: error: Function is missing a type annotation  [no-untyped-def]
+tests\test_server.py:203: error: Function is missing a return type annotation  [no-untyped-def]
+tests\test_server.py:203: note: Use "-> None" if function does not return a value
+tests\test_server.py:218: error: Function is missing a return type annotation  [no-untyped-def]
+tests\test_server.py:218: note: Use "-> None" if function does not return a value
+tests\test_server.py:222: error: Function is missing a return type annotation  [no-untyped-def]
+tests\test_server.py:222: note: Use "-> None" if function does not return a value
+tests\test_server.py:228: error: Function is missing a return type annotation  [no-untyped-def]
+tests\test_server.py:228: note: Use "-> None" if function does not return a value
+tests\test_server.py:241: error: Function is missing a return type annotation  [no-untyped-def]
+tests\test_server.py:241: note: Use "-> None" if function does not return a value
+tests\test_server.py:260: error: Function is missing a type annotation  [no-untyped-def]
+tests\test_server.py:276: error: Function is missing a type annotation  [no-untyped-def]
+tests\test_server.py:290: error: Function is missing a type annotation  [no-untyped-def]
+Found 34 errors in 5 files (checked 6 source files)
+

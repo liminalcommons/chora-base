@@ -24,7 +24,22 @@ phase_3_token_estimate: 10500
 
 ---
 
-## Quick Reference
+## 📖 Quick Reference
+
+**New to SAP-017?** → Read **[README.md](README.md)** first (5-min read)
+
+The README provides:
+- 🚀 **Quick Start** - Interactive modality selector (`select-modality.py`) + 4 modality quick starts
+- 📚 **4 Modalities** - pip (library), MCP (AI agents), CLI (interactive), Docker (team deployment)
+- 🎯 **Decision Trees** - Choose modality by role, use case, or team size
+- 📊 **Role-Based Workflows** - Developer, AI agent, team lead, DevOps paths
+- 🔧 **Troubleshooting** - 3 common problems (selector not found, import errors, MCP loading)
+
+**This AGENTS.md provides**: Agent-specific patterns for chora-compose integration, modality selection, and deployment workflows.
+
+---
+
+## Detailed Quick Reference
 
 ### When to Use
 

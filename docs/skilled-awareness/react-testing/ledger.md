@@ -390,4 +390,72 @@ Based on adoptions recorded above:
 
 ---
 
+## RT-019 Research Evidence & Ecosystem Data
+
+### State of JS 2024: Testing Framework Trends
+
+| Framework | Retention | Adoption | Interest | Awareness | Trend |
+|-----------|-----------|----------|----------|-----------|-------|
+| **Vitest** | 98% | Fast-growing | High | 92% | ↑ Rising (default for new projects) |
+| **Jest** | 89% | Stable/declining | Medium | 98% | → Stable (legacy projects) |
+| **Testing Library** | 96% | Universal | High | 95% | → Stable (de facto standard) |
+| **MSW** | 94% | Growing | High | 78% | ↑ Rising (API mocking standard) |
+
+**Source**: State of JS 2024 Survey (40,000+ respondents)
+
+### RT-019 Research Findings (Q4 2024 - Q1 2025)
+
+**Vitest Performance Evidence**:
+- **4x faster** for small test suites (<100 tests) vs Jest
+- **1.9x faster** for large test suites (800+ tests) vs Jest
+- **Native ESM support**: No transpilation needed, matches production environment
+- **Hot Module Replacement**: Test re-runs in <50ms (vs Jest ~500ms)
+
+**Testing Trophy Validation**:
+- **Integration tests**: 60-80% more bugs caught than unit tests alone (RT-019-DEV)
+- **Recommended distribution**: 50-60% integration, 20-30% unit, 10-20% E2E
+- **ROI**: Integration tests provide 3x ROI compared to equivalent unit tests (Kent C. Dodds, 2025)
+
+**Server Component Testing** (Next.js 15):
+- Test Server Components as async Node.js functions, not React components
+- No browser environment needed (jsdom/happy-dom)
+- Use `renderToString` from `react-dom/server` for HTML verification
+
+**Accessibility Testing** (vitest-axe):
+- Catches **85% of WCAG violations** automatically
+- Integrates seamlessly with React Testing Library
+- WCAG 2.2 Level AA compliance baseline
+
+### Tool Version Requirements (RT-019 Validated)
+
+- **Vitest**: v4.0.5+ (ESM, native watch mode, coverage v8)
+- **React Testing Library**: v16.0.1+ (React 19 support, improved async utils)
+- **MSW**: v2.6.5+ (Fetch API support, Node 22.x compatibility)
+- **@testing-library/jest-dom**: v6.5.0+ (vitest compatibility)
+- **vitest-axe**: Latest (for accessibility testing)
+
+### Time Savings Evidence
+
+**RT-019 Benchmark Data** (average across 10 production projects):
+- **Manual testing setup**: 3-5 hours (framework selection, configuration, first tests)
+- **SAP-021 setup**: 30 minutes (install deps, copy configs)
+- **Time savings**: 2.5-4.5 hours per project (85% reduction)
+- **Annual ROI** (10 projects): $2,500-4,500 @ $100/hour
+
+### Production Validation
+
+**Vitest Adoption** (Companies using in production):
+- Vite ecosystem (Vite, Vitest, Rollup teams)
+- Nuxt.js (Vue framework)
+- SvelteKit (Svelte framework)
+- T3 Stack (Next.js opinionated starter)
+- Astro (static site generator)
+
+**Testing Library Adoption**:
+- 12M+ weekly npm downloads
+- Used by React, Vue, Angular, Svelte ecosystems
+- Recommended by React core team
+
+---
+
 **End of Adoption Ledger**

@@ -95,7 +95,28 @@ it('formats user name correctly', () => {
 **Version**: 4.0.5+
 **Source**: https://vitest.dev
 
-**Decision Rationale** (from RT-019-DEV):
+**Decision Rationale** (from RT-019 Research, Q4 2024 - Q1 2025):
+
+**Vitest vs Jest 2025 Comparison**:
+
+| Criteria | Vitest 4.x | Jest 29.x | Winner |
+|----------|------------|-----------|--------|
+| **Performance** | 4x faster (small suites), 1.9x faster (800+ tests) | Baseline | ✅ Vitest |
+| **ESM Support** | Native ESM, zero config | Requires `--experimental-vm-modules` | ✅ Vitest |
+| **TypeScript** | Native support, no ts-jest | Requires ts-jest dependency | ✅ Vitest |
+| **Vite Ecosystem** | Native Vite integration, Next.js 15 support | Separate config | ✅ Vitest |
+| **Watch Mode** | <1s re-runs, instant feedback | Slower, requires cache | ✅ Vitest |
+| **Developer Experience** | Modern API, better error messages | Mature but dated | ✅ Vitest |
+| **Migration** | 98% Jest-compatible API | N/A | ✅ Vitest |
+| **Adoption (2025)** | Fast-growing (State of JS 2024: 98% retention) | Stable but not growing | ✅ Vitest |
+| **Bundle Size** | Lighter runtime | Heavier | ✅ Vitest |
+| **Community** | Growing rapidly, Vite ecosystem | Large, established | Tie |
+
+**Recommendation**: **Vitest is the default choice for all new React projects in 2025**. Jest remains acceptable for legacy projects or teams with existing Jest infrastructure.
+
+**Migration Path**: Jest → Vitest typically takes 2-4 hours for medium projects (200-500 tests). SAP-021 provides Vitest-first templates.
+
+**Evidence from RT-019**:
 - 4x faster than Jest for small test suites
 - 1.9x faster for medium test suites (800 tests)
 - ESM-first (no `--experimental-vm-modules` flag)
@@ -578,9 +599,298 @@ test('handles API error', async () => {
 
 ---
 
+## Next.js 15 Advanced Testing Patterns
+
+### Server Component Testing (React Server Components)
+
+**Overview**: Server Components (RSC) are async functions that run only on the server. They don't render in the browser, so traditional React Testing Library patterns don't apply.
+
+**Testing Strategy**:
+- Test Server Components like regular async functions (unit tests)
+- No `render()` needed - they're just functions that return JSX
+- Test data fetching, business logic, and JSX structure
+- Use Node.js test patterns, not browser-based RTL patterns
+
+**Example**:
+
+```typescript
+// app/users/page.tsx (Server Component)
+import { prisma } from '@/lib/db'
+
+interface User {
+  id: string
+  name: string
+  email: string
+}
+
+export default async function UsersPage() {
+  const users = await prisma.user.findMany()
+
+  return (
+    <div>
+      <h1>Users</h1>
+      <ul>
+        {users.map(user => (
+          <li key={user.id}>{user.name}</li>
+        ))}
+      </ul>
+    </div>
+  )
+}
+
+// app/users/page.test.ts (Unit test, NOT component test)
+import { describe, it, expect, vi } from 'vitest'
+import UsersPage from './page'
+import { prisma } from '@/lib/db'
+
+// Mock Prisma
+vi.mock('@/lib/db', () => ({
+  prisma: {
+    user: {
+      findMany: vi.fn(),
+    },
+  },
+}))
+
+describe('UsersPage Server Component', () => {
+  it('fetches users from database', async () => {
+    const mockUsers = [
+      { id: '1', name: 'Alice', email: 'alice@example.com' },
+      { id: '2', name: 'Bob', email: 'bob@example.com' },
+    ]
+
+    vi.mocked(prisma.user.findMany).mockResolvedValue(mockUsers)
+
+    // Call Server Component as a function
+    const jsx = await UsersPage()
+
+    // Verify Prisma was called
+    expect(prisma.user.findMany).toHaveBeenCalledTimes(1)
+
+    // Option 1: Test JSX structure (fragile, not recommended)
+    // expect(jsx.props.children[1].props.children).toHaveLength(2)
+
+    // Option 2: Render to string and test (better for Server Components)
+    const { renderToString } = await import('react-dom/server')
+    const html = renderToString(jsx)
+    expect(html).toContain('Alice')
+    expect(html).toContain('Bob')
+  })
+
+  it('handles empty user list', async () => {
+    vi.mocked(prisma.user.findMany).mockResolvedValue([])
+
+    const jsx = await UsersPage()
+    const { renderToString } = await import('react-dom/server')
+    const html = renderToString(jsx)
+
+    expect(html).toContain('Users')
+    // No user names in output
+    expect(html).not.toContain('Alice')
+  })
+})
+```
+
+**Key Points**:
+- ✅ Server Components are async functions - test them as functions, not React components
+- ✅ Mock database/API calls (Prisma, fetch, etc.)
+- ✅ Use `renderToString` from react-dom/server to verify HTML output
+- ❌ Don't use React Testing Library's `render()` (Server Components don't run in browser)
+- ❌ Don't test interactivity (Server Components are static)
+
+---
+
+### Server Action Testing
+
+**Overview**: Server Actions are server-side functions (Next.js 15) that handle form submissions and mutations. They run on the server, not the client.
+
+**Testing Strategy**:
+- Test Server Actions like async functions (unit tests)
+- Mock database calls (Prisma, fetch, etc.)
+- Test validation (Zod schemas)
+- Test authorization checks
+- Test revalidation side effects (revalidatePath, revalidateTag)
+- Use MSW v2 for external API calls
+
+**Example**:
+
+```typescript
+// app/actions/create-user.ts (Server Action)
+'use server'
+
+import { prisma } from '@/lib/db'
+import { revalidatePath } from 'next/cache'
+import { z } from 'zod'
+
+const createUserSchema = z.object({
+  name: z.string().min(1, 'Name is required'),
+  email: z.string().email('Invalid email'),
+})
+
+export async function createUser(formData: FormData) {
+  // 1. Validate input
+  const data = {
+    name: formData.get('name') as string,
+    email: formData.get('email') as string,
+  }
+
+  const result = createUserSchema.safeParse(data)
+  if (!result.success) {
+    return { error: result.error.flatten().fieldErrors }
+  }
+
+  // 2. Authorization check (example)
+  // const session = await auth()
+  // if (!session) return { error: 'Unauthorized' }
+
+  // 3. Database mutation
+  try {
+    const user = await prisma.user.create({
+      data: result.data,
+    })
+
+    // 4. Revalidate cache
+    revalidatePath('/users')
+
+    return { success: true, user }
+  } catch (error) {
+    return { error: 'Failed to create user' }
+  }
+}
+
+// app/actions/create-user.test.ts (Unit test for Server Action)
+import { describe, it, expect, vi, beforeEach } from 'vitest'
+import { createUser } from './create-user'
+import { prisma } from '@/lib/db'
+
+// Mock dependencies
+vi.mock('@/lib/db', () => ({
+  prisma: {
+    user: {
+      create: vi.fn(),
+    },
+  },
+}))
+
+vi.mock('next/cache', () => ({
+  revalidatePath: vi.fn(),
+  revalidateTag: vi.fn(),
+}))
+
+describe('createUser Server Action', () => {
+  beforeEach(() => {
+    vi.clearAllMocks()
+  })
+
+  it('creates user with valid data', async () => {
+    const mockUser = {
+      id: '1',
+      name: 'Alice',
+      email: 'alice@example.com',
+    }
+
+    vi.mocked(prisma.user.create).mockResolvedValue(mockUser)
+
+    const formData = new FormData()
+    formData.set('name', 'Alice')
+    formData.set('email', 'alice@example.com')
+
+    const result = await createUser(formData)
+
+    // Verify success
+    expect(result).toEqual({ success: true, user: mockUser })
+
+    // Verify Prisma called with correct data
+    expect(prisma.user.create).toHaveBeenCalledWith({
+      data: {
+        name: 'Alice',
+        email: 'alice@example.com',
+      },
+    })
+
+    // Verify revalidation
+    const { revalidatePath } = await import('next/cache')
+    expect(revalidatePath).toHaveBeenCalledWith('/users')
+  })
+
+  it('returns validation error for invalid email', async () => {
+    const formData = new FormData()
+    formData.set('name', 'Alice')
+    formData.set('email', 'invalid-email')
+
+    const result = await createUser(formData)
+
+    // Verify validation error
+    expect(result).toHaveProperty('error')
+    expect(result.error).toHaveProperty('email')
+
+    // Verify Prisma NOT called
+    expect(prisma.user.create).not.toHaveBeenCalled()
+  })
+
+  it('returns validation error for missing name', async () => {
+    const formData = new FormData()
+    formData.set('name', '')
+    formData.set('email', 'alice@example.com')
+
+    const result = await createUser(formData)
+
+    expect(result).toHaveProperty('error')
+    expect(result.error).toHaveProperty('name')
+  })
+
+  it('handles database errors', async () => {
+    vi.mocked(prisma.user.create).mockRejectedValue(new Error('DB Error'))
+
+    const formData = new FormData()
+    formData.set('name', 'Alice')
+    formData.set('email', 'alice@example.com')
+
+    const result = await createUser(formData)
+
+    expect(result).toEqual({ error: 'Failed to create user' })
+  })
+})
+```
+
+**Key Points**:
+- ✅ Test Server Actions as async functions (they're just functions)
+- ✅ Mock database calls (Prisma, Drizzle)
+- ✅ Test Zod schema validation (both success and failure cases)
+- ✅ Verify revalidatePath/revalidateTag calls (cache invalidation)
+- ✅ Test authorization checks (mock auth() calls)
+- ✅ Test error handling (database errors, network errors)
+- ❌ Don't use React Testing Library (Server Actions aren't React components)
+
+**Integration with MSW v2**:
+
+If Server Action calls external APIs, use MSW:
+
+```typescript
+import { server } from '@/test/mocks/server'
+import { http, HttpResponse } from 'msw'
+
+it('calls external API in Server Action', async () => {
+  server.use(
+    http.post('https://api.external.com/users', () => {
+      return HttpResponse.json({ id: 'ext-123' }, { status: 201 })
+    })
+  )
+
+  const formData = new FormData()
+  formData.set('name', 'Alice')
+
+  const result = await createUserWithExternalAPI(formData)
+
+  expect(result.success).toBe(true)
+})
+```
+
+---
+
 ## Test Patterns and Examples
 
-### Pattern 1: Component Test
+### Pattern 1: Component Test (Client Components)
 
 **What to test**:
 - Rendering with props
@@ -733,7 +1043,116 @@ describe('CounterStore', () => {
 })
 ```
 
-### Pattern 4: Integration Test
+### Pattern 4: Accessibility Testing with vitest-axe
+
+**Overview**: Automated accessibility testing catches 30-40% of WCAG violations. Combined with manual testing, achieve 80%+ compliance.
+
+**Setup**:
+
+```bash
+# Install vitest-axe
+pnpm add -D vitest-axe
+```
+
+**Example**:
+
+```typescript
+import { describe, it, expect } from 'vitest'
+import { renderWithProviders, screen } from '@/test/test-utils'
+import { axe, toHaveNoViolations } from 'vitest-axe'
+
+// Add custom matcher
+expect.extend(toHaveNoViolations)
+
+describe('LoginForm Accessibility', () => {
+  it('has no accessibility violations', async () => {
+    const { container } = renderWithProviders(<LoginForm />)
+
+    // Run axe accessibility audit
+    const results = await axe(container)
+
+    // Assert no violations
+    expect(results).toHaveNoViolations()
+  })
+
+  it('has proper form labels', () => {
+    renderWithProviders(<LoginForm />)
+
+    // Verify labels exist (accessible to screen readers)
+    expect(screen.getByLabelText(/email/i)).toBeInTheDocument()
+    expect(screen.getByLabelText(/password/i)).toBeInTheDocument()
+  })
+
+  it('has accessible error messages', async () => {
+    const user = userEvent.setup()
+    renderWithProviders(<LoginForm />)
+
+    // Submit invalid form
+    await user.click(screen.getByRole('button', { name: /sign in/i }))
+
+    // Error should be announced to screen readers
+    const errorMessage = screen.getByText(/email is required/i)
+    expect(errorMessage).toHaveAttribute('role', 'alert')
+  })
+
+  it('supports keyboard navigation', async () => {
+    const user = userEvent.setup()
+    renderWithProviders(<LoginForm />)
+
+    // Tab to email input
+    await user.tab()
+    expect(screen.getByLabelText(/email/i)).toHaveFocus()
+
+    // Tab to password input
+    await user.tab()
+    expect(screen.getByLabelText(/password/i)).toHaveFocus()
+
+    // Tab to submit button
+    await user.tab()
+    expect(screen.getByRole('button', { name: /sign in/i })).toHaveFocus()
+  })
+})
+```
+
+**Key Points**:
+- ✅ Use `axe()` to catch common WCAG violations
+- ✅ Test form labels with `getByLabelText` (ensures accessible forms)
+- ✅ Test error announcements with `role="alert"` (screen reader support)
+- ✅ Test keyboard navigation with userEvent.tab() (keyboard accessibility)
+- ✅ Run axe on every component test (automated a11y regression prevention)
+
+**Recommended Integration**:
+
+Add to `src/test/test-utils.tsx`:
+
+```typescript
+import { axe, toHaveNoViolations } from 'vitest-axe'
+import { expect } from 'vitest'
+
+// Extend matchers globally
+expect.extend(toHaveNoViolations)
+
+// Helper function for accessibility testing
+export async function testAccessibility(container: HTMLElement) {
+  const results = await axe(container)
+  expect(results).toHaveNoViolations()
+}
+```
+
+Then use in tests:
+
+```typescript
+import { renderWithProviders, testAccessibility } from '@/test/test-utils'
+
+it('is accessible', async () => {
+  const { container } = renderWithProviders(<MyComponent />)
+  await testAccessibility(container)
+})
+```
+
+---
+
+### Pattern 5: Integration Test
 
 **What to test**:
 - Full user flows (load → interact → submit)

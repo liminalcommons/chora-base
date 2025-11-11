@@ -1,0 +1,107 @@
+C:\Python312\Lib\site-packages\pytest_asyncio\plugin.py:208: PytestDeprecationWarning: The configuration option "asyncio_default_fixture_loop_scope" is unset.
+The event loop scope for asynchronous fixtures will default to the fixture caching scope. Future versions of pytest-asyncio will default the loop scope for asynchronous fixtures to function scope. Set the default fixture loop scope explicitly in order to avoid unexpected behavior in the future. Valid fixture loop scopes are: "function", "class", "module", "package", "session"
+
+  warnings.warn(PytestDeprecationWarning(_DEFAULT_FIXTURE_LOOP_SCOPE_UNSET))
+============================= test session starts =============================
+platform win32 -- Python 3.12.0, pytest-8.3.0, pluggy-1.6.0 -- C:\Python312\python.exe
+cachedir: .pytest_cache
+rootdir: C:\Users\victo\code\chora-base-SAP-Verification\verification-runs\2025-11-09-fast-setup-l1-fifth\generated-project
+configfile: pyproject.toml
+testpaths: tests
+plugins: anyio-4.11.0, asyncio-0.24.0, bdd-8.1.0, cov-6.0.0
+asyncio: mode=Mode.AUTO, default_loop_scope=None
+collecting ... collected 23 items
+
+tests/test_server.py::TestNamingConventions::test_namespace_constant PASSED [  4%]
+tests/test_server.py::TestNamingConventions::test_make_tool_name PASSED  [  8%]
+tests/test_server.py::TestNamingConventions::test_validate_tool_name_valid PASSED [ 13%]
+tests/test_server.py::TestNamingConventions::test_validate_tool_name_invalid_namespace PASSED [ 17%]
+tests/test_server.py::TestNamingConventions::test_make_resource_uri PASSED [ 21%]
+tests/test_server.py::TestNamingConventions::test_validate_resource_uri_valid PASSED [ 26%]
+tests/test_server.py::TestNamingConventions::test_validate_resource_uri_invalid_scheme FAILED [ 30%]
+tests/test_server.py::TestTools::test_example_tool_success PASSED        [ 34%]
+tests/test_server.py::TestTools::test_example_tool_empty_message PASSED  [ 39%]
+tests/test_server.py::TestTools::test_hello_world PASSED                 [ 43%]
+tests/test_server.py::TestResources::test_get_capabilities_structure PASSED [ 47%]
+tests/test_server.py::TestResources::test_get_capabilities_namespace PASSED [ 52%]
+tests/test_server.py::TestResources::test_get_capabilities_version PASSED [ 56%]
+tests/test_server.py::TestResources::test_get_capabilities_tools_list PASSED [ 60%]
+tests/test_server.py::TestResources::test_get_capabilities_resources_list PASSED [ 65%]
+tests/test_server.py::TestResources::test_get_capabilities_conventions PASSED [ 69%]
+tests/test_server.py::TestServerConfiguration::test_mcp_instance_exists PASSED [ 73%]
+tests/test_server.py::TestServerConfiguration::test_mcp_instance_name PASSED [ 78%]
+tests/test_server.py::TestServerConfiguration::test_server_tools_registered PASSED [ 82%]
+tests/test_server.py::TestServerConfiguration::test_server_resources_registered PASSED [ 86%]
+tests/test_server.py::TestIntegration::test_tool_resource_consistency PASSED [ 91%]
+tests/test_server.py::TestIntegration::test_namespace_consistency PASSED [ 95%]
+tests/test_server.py::TestIntegration::test_naming_validation_consistency PASSED [100%]
+
+================================== FAILURES ===================================
+_______ TestNamingConventions.test_validate_resource_uri_invalid_scheme _______
+
+self = <test_server.TestNamingConventions object at 0x000001F4DF85B110>
+expected_namespace = 'sapverify'
+
+    def test_validate_resource_uri_invalid_scheme(self, expected_namespace):
+        """Verify validation rejects URIs with wrong scheme."""
+        with pytest.raises(ValueError, match="scheme"):
+>           validate_resource_uri("wrong://capabilities/server", expected_namespace=expected_namespace)
+
+tests\test_server.py:78: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+uri = 'wrong://capabilities/server', expected_namespace = 'sapverify'
+
+    def validate_resource_uri(uri: str, expected_namespace: Optional[str] = None) -> None:
+        """Validate resource URI follows Chora MCP Conventions v1.0.
+    
+        Args:
+            uri: Resource URI (e.g., "sapverify://templates/daily-report.md")
+            expected_namespace: Expected namespace (defaults to NAMESPACE)
+    
+        Raises:
+            ValueError: If URI doesn't match pattern or wrong namespace
+    
+        Example:
+            }}> validate_resource_uri("sapverify://templates/daily-report.md")  # OK
+            }}> validate_resource_uri("/templates/daily-report.md")  # Raises ValueError (missing namespace)
+            }}> validate_resource_uri("other://templates/report.md", "sapverify")  # Raises ValueError (wrong namespace)
+        """
+        if not ENABLE_VALIDATION:
+            return
+    
+        if not RESOURCE_URI_PATTERN.match(uri):
+            raise ValueError(
+                "Invalid resource URI: {}. Must match pattern: namespace://type/id[?query]. Example: {}://templates/daily-report.md".format(
+                    uri, expected_namespace or NAMESPACE
+                )
+            )
+    
+        if expected_namespace:
+            actual_ns = uri.split("://", 1)[0]
+            if actual_ns != expected_namespace:
+>               raise ValueError(
+                    "Wrong namespace in resource URI. Expected: {}://*, got: {}".format(
+                        expected_namespace, uri
+                    )
+                )
+E               ValueError: Wrong namespace in resource URI. Expected: sapverify://*, got: wrong://capabilities/server
+
+src\sap_verification_test_server\mcp\__init__.py:253: ValueError
+
+During handling of the above exception, another exception occurred:
+
+self = <test_server.TestNamingConventions object at 0x000001F4DF85B110>
+expected_namespace = 'sapverify'
+
+    def test_validate_resource_uri_invalid_scheme(self, expected_namespace):
+        """Verify validation rejects URIs with wrong scheme."""
+>       with pytest.raises(ValueError, match="scheme"):
+E       AssertionError: Regex pattern did not match.
+E        Regex: 'scheme'
+E        Input: 'Wrong namespace in resource URI. Expected: sapverify://*, got: wrong://capabilities/server'
+
+tests\test_server.py:77: AssertionError
+=========================== short test summary info ===========================
+FAILED tests/test_server.py::TestNamingConventions::test_validate_resource_uri_invalid_scheme
+======================== 1 failed, 22 passed in 7.49s =========================

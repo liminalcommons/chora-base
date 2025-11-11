@@ -24,6 +24,22 @@ phase_3_token_estimate: 11500
 
 ---
 
+## 📖 Quick Reference
+
+**New to SAP-021?** → Read **[README.md](README.md)** first (10-min read)
+
+The README provides:
+- 🚀 **Quick Start** - 3-minute setup (Vitest + RTL + MSW installation) with complete test suite
+- 📚 **Time Savings** - 85% setup time reduction (30 min vs manual), 4x faster than Jest, 60-80% more bugs caught
+- 🎯 **React Testing Library** - Accessible queries, user event simulation, async testing patterns
+- 🔧 **MSW v2 API Mocking** - Network-level mocking with http handlers for API testing
+- 📊 **Coverage Thresholds** - 80% lines/functions, 75% branches with v8 provider
+- 🔗 **Integration** - Works with SAP-020 (Foundation), SAP-022 (Linting), SAP-023 (State), SAP-005 (CI/CD), SAP-039 (E2E)
+
+This AGENTS.md provides: Agent-specific patterns for React testing workflows.
+
+---
+
 ## Quick Reference
 
 ### When to Use

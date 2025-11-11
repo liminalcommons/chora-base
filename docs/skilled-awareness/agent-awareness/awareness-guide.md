@@ -1,9 +1,9 @@
 # Awareness Guide: Agent Awareness
 
 **SAP ID**: SAP-009
-**Version**: 1.1.0
+**Version**: 2.1.0
 **Target Audience**: AI agents
-**Last Updated**: 2025-10-31
+**Last Updated**: 2025-11-10
 
 ---
 
@@ -77,22 +77,199 @@
 
 ---
 
-## 4. Best Practices
+## 4. When to Split Awareness Files
+
+### 4.1 File Size Thresholds
+
+**Warning Threshold**: 1,000 lines (~5.6k tokens)
+**Critical Threshold**: 2,000 lines (~11.2k tokens)
+
+**Why this matters**: Large awareness files cause critical workflows to be buried and frequently missed by agents. The "meta-discoverability paradox" - by making everything discoverable in one place, we make nothing discoverable.
+
+**Token estimate calculation**: `lines × 5.6 avg tokens/line`
+
+### 4.2 Splitting Indicators
+
+You should split awareness files when you observe:
+
+✅ **File exceeds 1,000 lines** (warning zone)
+✅ **File exceeds 2,000 lines** (critical - must split immediately)
+✅ **Token estimate exceeds 10k** (beyond Phase 1 budget)
+✅ **Critical workflows buried >50%** into file
+✅ **Multiple distinct domains/concerns** in one file
+✅ **Agents report missing documented workflows** despite documentation existing
+✅ **File growth trajectory** suggests future problems
+
+### 4.3 Splitting Strategy
+
+**Step 1: Measure current state**
+```bash
+wc -l AGENTS.md CLAUDE.md
+# Calculate token estimate: lines × 5.6 avg tokens/line
+```
+
+**Step 2: Identify distinct domains**
+- What are the major topic areas?
+- What content clusters together naturally?
+- What workflows/processes are critical?
+
+**Step 3: Create "Critical Workflows" section**
+- Surface most important workflows at top of root file
+- Provide quick reference + links to full details
+- Use "⚠️" emoji for high visibility
+- Keep this section in root file (lines 20-100 typically)
+
+**Step 4: Extract domain content**
+```bash
+mkdir -p domain-name/
+# Extract relevant sections to nested files
+# Keep each file <500-800 lines
+```
+
+**Step 5: Update root file**
+- Add Critical Workflows section at top (after overview)
+- Replace detailed content with pointers to nested files
+- Update frontmatter: `nested_structure: true`
+- List `nested_files:` in frontmatter
+
+**Step 6: Update CLAUDE.md**
+- Add Critical Workflows section (coordinate with AGENTS.md)
+- Update navigation references
+- Reduce file to 600-800 lines
+
+**Step 7: Update cross-references**
+- README.md
+- Other documentation
+- Ensure all links work
+- Run link validation
+
+### 4.4 Recommended Domain Taxonomy
+
+**Common domains** (use these for consistency):
+- `/workflows/` or `/dev-process/` - Development workflows, sprint processes
+- `/saps/` - SAP catalog and quick references (if applicable)
+- `/features/` - Feature-specific patterns
+- `/integrations/` - Integration patterns with other tools/SAPs
+- `/getting-started/` - Onboarding and setup guides
+- Custom domains as needed for your project
+
+### 4.5 Critical Workflows Pattern
+
+**Location**: Immediately after project overview, before main content
+
+**Purpose**: Surface workflows that agents frequently miss
+
+**Structure**:
+```markdown
+## ⚠️ Critical Workflows (Read This First!)
+
+### [Workflow 1 Name]
+**When**: [Trigger condition]
+**Quick reference**: [Bash commands or steps]
+**Full details**: [Link to nested file with complete template]
+
+### [Workflow 2 Name]
+...
+```
+
+**Example** (from chora-workspace implementation):
+```markdown
+## ⚠️ Critical Workflows (Read This First!)
+
+### Sprint Completion Workflow
+**When**: End of sprint (every 2 weeks)
+**Quick reference**:
+bash
+just sprint-complete  # Generate report
+git add . && git commit -m "chore: Sprint N completion"
+
+**Full details**: [dev-process/AGENTS.md](dev-process/AGENTS.md#sprint-completion)
+
+### Git Commit Conventions
+**Format**: `type(scope): description`
+**Types**: feat, fix, docs, chore, refactor
+**Full spec**: [dev-process/AGENTS.md](dev-process/AGENTS.md#git-conventions)
+```
+
+### 4.6 Pattern Variations by Project Size
+
+**Small Projects (<500 lines)**:
+- **Don't split yet!** Keep monolithic structure
+- **Rationale**: Overhead of navigation outweighs benefits at small scale
+
+**Medium Projects (500-1,500 lines)**:
+- **Light split**: 2-3 nested files for major domains
+- **Example**:
+  ```
+  /AGENTS.md (root, 600 lines)
+  /workflows/AGENTS.md (400 lines)
+  /features/AGENTS.md (300 lines)
+  ```
+
+**Large Projects (1,500+ lines)**:
+- **Full split**: 5+ nested files following domain structure
+- **Example** (chora-workspace):
+  ```
+  /AGENTS.md (root, 839 lines)
+  /saps/AGENTS.md (600 lines)
+  /dev-process/AGENTS.md (450 lines)
+  /docs/AGENTS.md (300 lines)
+  /scripts/AGENTS.md (250 lines)
+  ```
+
+**Meta-Repositories (3,000+ lines before split)**:
+- **Extensive split**: Match project structure with awareness structure
+- **Principle**: "Nearest file wins" - agents read closest AGENTS.md for domain expertise
+
+### 4.7 Evidence from chora-workspace
+
+**Problem**: Root AGENTS.md was 2,766 lines (~15.4k tokens), sprint completion workflow buried at line 1,878 (66% into file), frequently missed by agents.
+
+**Solution**: Split into 3-tier nested structure with Critical Workflows section at top.
+
+**Results**:
+| Metric | Before | After | Improvement |
+|--------|--------|-------|-------------|
+| Root file size | 2,766 lines | 839 lines | **-70%** |
+| Token budget | ~15.4k | ~5.5k | **Within Phase 1** ✓ |
+| Workflow location | Line 1878 (66% buried) | Lines 32-50 (top 10%) | **Highly discoverable** ✓ |
+| Structure | Monolithic | Modular (3 files) | **Research-backed** ✓ |
+
+**Source**: COORD-2025-012 (chora-workspace coordination request)
+**Research**: "Agentic Coding Best Practices" (p. 5-6) - "Prefer single-file artifacts for components under 500 lines" and "use modular architecture with nested AGENTS.md files"
+
+### 4.8 Anti-Patterns to Avoid
+
+❌ **Splitting too early**: Don't split <500 lines - creates unnecessary navigation overhead
+❌ **Too many files**: Don't create 20+ nested files - defeats discoverability
+❌ **No root critical workflows**: Don't remove all content from root - must provide orientation
+❌ **Inconsistent structure**: Don't mix flat + nested randomly - follow pattern consistently
+❌ **Broken cross-references**: Don't forget to update all links after splitting
+❌ **No frontmatter indicators**: Don't skip `nested_structure: true` field - breaks tooling
+
+---
+
+## 5. Best Practices
 
 **DO**:
 - ✅ Read nearest awareness file first
 - ✅ Use progressive context loading
 - ✅ Create checkpoints every 5-10 interactions (Claude)
 - ✅ Follow token budgets
+- ✅ Split awareness files when they exceed 1,000 lines
+- ✅ Surface critical workflows at top of root file
+- ✅ Validate links after splitting
 
 **DON'T**:
 - ❌ Read entire project AGENTS.md for domain task
 - ❌ Load full context (50-200k) for simple tasks
 - ❌ Skip domain-specific awareness files
+- ❌ Let awareness files grow beyond 2,000 lines
+- ❌ Bury critical workflows deep in files
 
 ---
 
-## 5. Common Pitfalls
+## 6. Common Pitfalls
 
 ### Pitfall 1: Reading Entire Project AGENTS.md for Domain-Specific Task
 
@@ -307,7 +484,7 @@ Some patterns here...
 
 ---
 
-## 6. Installation
+## 7. Installation
 
 ### Quick Install
 
@@ -368,13 +545,13 @@ For custom installation paths or options, see:
 
 ---
 
-## 7. Bidirectional Translation Layer Integration (v1.1.0)
+## 8. Bidirectional Translation Layer Integration (v1.1.0)
 
 **For**: Generic agents (Claude, Cursor, etc.) and humans
 
 **Purpose**: Enable conversational interaction while executing procedurally through progressive formalization
 
-### 7.1 Discovery Workflow (3-Layer Progressive)
+### 8.1 Discovery Workflow (3-Layer Progressive)
 
 **Layer 1: Root AGENTS.md** - Agent loads root AGENTS.md, discovers 4 bidirectional tools, sees common patterns
 
@@ -386,7 +563,7 @@ For custom installation paths or options, see:
 
 **See**: [protocol-spec.md Section 6](protocol-spec.md) for complete contracts and specifications
 
-### 7.2 Quick Integration for Generic Agents
+### 8.2 Quick Integration for Generic Agents
 
 **Subprocess Invocation** (Recommended):
 ```python
@@ -407,7 +584,7 @@ suggestions = json.loads(result.stdout)
 
 **Graceful Degradation**: If tools unavailable, fall back to documented patterns in AGENTS.md and INTENT_PATTERNS.yaml
 
-### 7.3 Progressive Formalization
+### 8.3 Progressive Formalization
 
 **Stage 1 (Week 1)**: User says "show inbox" → Agent translates and executes
 
@@ -419,7 +596,7 @@ suggestions = json.loads(result.stdout)
 
 **Goal**: User learns systemic ontology at their own pace while system adapts to their style
 
-### 7.4 User Preferences
+### 8.4 User Preferences
 
 **Configuration**: `.chora/user-preferences.yaml` (100+ options)
 
@@ -431,7 +608,7 @@ suggestions = json.loads(result.stdout)
 
 **Adaptation**: Agents load preferences and adapt response style, confirmation behavior, explanation depth
 
-### 7.5 Maintenance
+### 8.5 Maintenance
 
 **Add Intent Pattern**: Edit `INTENT_PATTERNS.yaml`, test with `intent-router.py`, update domain AGENTS.md
 
@@ -441,7 +618,7 @@ suggestions = json.loads(result.stdout)
 
 ---
 
-## 8. Related Content
+## 9. Related Content
 
 ### Within This SAP (skilled-awareness/agent-awareness/)
 
@@ -517,6 +694,7 @@ suggestions = json.loads(result.stdout)
 ---
 
 **Version History**:
+- **2.1.0** (2025-11-10): Added Section 4 (When to Split Awareness Files) - file size thresholds, splitting strategy, Critical Workflows pattern, domain taxonomy, evidence from chora-workspace (COORD-2025-012); renumbered subsequent sections
 - **1.1.0** (2025-10-31): Added Section 7 (Bidirectional Translation Layer Integration) - discovery workflow, tool integration patterns, progressive formalization, user preferences, maintenance procedures; fixed SAP ID (SAP-011 → SAP-009)
 - **1.0.1** (2025-10-28): Fixed SAP ID (SAP-009 → SAP-011), added "When to Use" section, "Common Pitfalls" with Wave 2 learnings, enhanced "Related Content" with 4-domain coverage
 - **1.0.0** (2025-10-28): Initial awareness guide

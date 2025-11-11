@@ -7,6 +7,22 @@
 
 ---
 
+## 📖 Quick Reference
+
+**New to {{ id }}?** → Read **[README.md](README.md)** first ({{ quick_ref_read_time | default("10-min") }} read)
+
+The README provides:
+- 🚀 **Quick Start** - {{ quick_ref_quick_start | default("[Quick start description - e.g., '5-minute setup with complete examples']") }}
+- 📚 **Time Savings** - {{ quick_ref_time_savings | default("[Time savings metrics - e.g., '90% time reduction (30 hours → 3 hours)']") }}
+- 🎯 **{{ quick_ref_feature_1_label | default("Key Feature 1") }}** - {{ quick_ref_feature_1 | default("[Feature 1 description]") }}
+- 🔧 **{{ quick_ref_feature_2_label | default("Key Feature 2") }}** - {{ quick_ref_feature_2 | default("[Feature 2 description]") }}
+- 📊 **{{ quick_ref_feature_3_label | default("Key Feature 3") }}** - {{ quick_ref_feature_3 | default("[Feature 3 description]") }}
+- 🔗 **Integration** - Works with {% if dependencies and dependencies|length > 0 %}{{ dependencies | join(', ') }}{% else %}SAP-000 (SAP Framework){% endif %}
+
+This awareness-guide.md provides: {{ quick_ref_purpose | default("Agent-specific patterns, workflows, and decision trees for AI coding assistants using " + id + ".") }}
+
+---
+
 ## Quick Start for AI Agents
 
 ### One-Sentence Summary

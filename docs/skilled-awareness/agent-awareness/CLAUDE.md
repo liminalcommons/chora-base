@@ -24,6 +24,22 @@ phase_3_token_estimate: 10000
 
 ---
 
+## 📖 Quick Reference
+
+**New to SAP-009?** → Read **[README.md](README.md)** first (8-min read)
+
+The README provides:
+- 🚀 **Quick Start** - 5-minute guide to nested AGENTS.md/CLAUDE.md pattern with examples
+- 📚 **Time Savings** - 60-70% token reduction through progressive loading and domain-specific awareness files
+- 🎯 **5-Level Hierarchy** - Root → domain → SAP → feature → component navigation with "nearest file wins"
+- 🔧 **Progressive Loading** - Three phases (0-10k, 10-50k, 50-200k tokens) optimize context usage
+- 📊 **Universal Adoption** - 100% of 32+ SAPs use this pattern for agent discoverability
+- 🔗 **Integration** - Works with all SAPs (universal foundation for agent awareness)
+
+This CLAUDE.md provides: Claude Code-specific workflows using Read tool for progressive loading, domain-specific navigation patterns.
+
+---
+
 ## Quick Start for Claude
 
 This file provides **Claude Code-specific patterns** for using the AGENTS.md/CLAUDE.md awareness file system.

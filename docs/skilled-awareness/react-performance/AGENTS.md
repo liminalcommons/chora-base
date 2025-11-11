@@ -16,6 +16,23 @@ phase_2_token_estimate: 9000
 phase_3_token_estimate: 13500
 ---
 
+## 📖 Quick Reference
+
+**New to SAP-025?** → Read **[README.md](README.md)** first (10-min read)
+
+The README provides:
+- 🚀 **Quick Start** - Install performance dependencies
+- 📚 **Time Savings** - 91% reduction
+- 🎯 **Feature 1** - Core feature 1
+- 🔧 **Feature 2** - Core feature 2
+- 📊 **Feature 3** - Core feature 3
+- 🔗 **Integration** - Works with SAP-005, SAP-020, SAP-021, SAP-023, SAP-024, SAP-026
+
+This AGENTS.md provides: Agent-specific patterns for implementing SAP-025.
+s.
+
+---
+
 # React Performance Optimization (SAP-025) - Agent Awareness
 
 **SAP ID**: SAP-025

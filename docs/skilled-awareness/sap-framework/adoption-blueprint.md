@@ -304,7 +304,413 @@ git log -1 --oneline | grep "SAP Framework" && echo "✅ Changes committed"
 
 ---
 
-## 5. Validation
+## 5. L1 Requirement: Discoverability
+
+### Overview
+
+**Goal**: Make this SAP discoverable via root awareness files
+
+**Why This Matters**: Implementation quality is irrelevant if agents cannot discover the capability exists. Without strong discoverability, excellent implementations remain invisible, creating a "meta-discoverability paradox" where sophisticated patterns become liabilities instead of assets.
+
+**Success Criteria**:
+- Discoverability score ≥80/100 (see SAP-019 evaluation framework)
+- Agents can discover SAP in <5 minutes from root files
+- All touchpoints complete (README, AGENTS, CLAUDE, justfile, docs)
+
+**Time Investment**: 3-5 hours (one-time)
+**ROI**: 10-15 minutes saved per session per agent (break-even: 20-30 sessions)
+
+---
+
+### 5.1 README.md Section (30 points)
+
+**Requirement**: Add dedicated section to project README.md (30+ lines minimum)
+
+**For agents** (use Edit tool):
+1. Open: `README.md`
+2. Find appropriate section (e.g., "Features" or "Capabilities")
+3. Add section with this template:
+
+```markdown
+### [SAP Name]
+
+**When to use SAP-XXX**:
+- [Use case 1]
+- [Use case 2]
+- [Use case 3]
+- [Use case 4]
+- [Use case 5]
+
+**What you get**:
+- [Feature 1 with details]
+- [Feature 2 with details]
+- [Feature 3 with details]
+
+**Quick start**:
+\```bash
+# [Command 1 with comment]
+just command-1
+
+# [Command 2 with comment]
+just command-2
+
+# [Command 3 with comment]
+just command-3
+\```
+
+**Documentation**: [Link to docs or nested AGENTS.md]
+
+**ROI**: [Time saved or value delivered per session]
+```
+
+**Validation**:
+```bash
+# Check section exists and meets length requirement
+grep -A 40 "### SAP-XXX" README.md | wc -l
+# Target: ≥30 lines
+```
+
+---
+
+### 5.2 AGENTS.md Section (20 points)
+
+**Requirement**: Add dedicated section to project AGENTS.md (60+ lines minimum)
+
+**For agents** (use Edit tool):
+1. Open: `AGENTS.md`
+2. Find appropriate section (e.g., "Capabilities" or "Workflows")
+3. Add section with this template:
+
+```markdown
+### [SAP Name] (SAP-XXX)
+
+**When to use SAP-XXX**:
+- [Scenario 1 with context]
+- [Scenario 2 with context]
+- [Scenario 3 with context]
+- [Scenario 4 with context]
+- [Scenario 5 with context]
+
+**Quick-start approach** (recommended):
+\```bash
+# [Step 1 with explanation]
+just step-1
+
+# [Step 2 with explanation]
+just step-2
+
+# [Step 3 with explanation]
+just step-3
+\```
+
+**What you get**:
+- **[Feature 1 category]**: [Detailed explanation]
+- **[Feature 2 category]**: [Detailed explanation]
+- **[Feature 3 category]**: [Detailed explanation]
+
+**Example workflow**:
+\```bash
+# Scenario: [Complete use case description]
+
+# 1. [Step description]
+just command-1
+
+# 2. [Step description]
+just command-2
+
+# 3. [Step description]
+just command-3
+
+# Result: [Expected outcome]
+\```
+
+**Integration with other SAPs**:
+- **SAP-XXX ([name])**: [Integration pattern]
+- **SAP-YYY ([name])**: [Integration pattern]
+
+**Documentation**: [Links to detailed docs]
+
+**ROI**: [Time/value saved per session]
+```
+
+**Validation**:
+```bash
+# Check section exists and meets length requirement
+grep -A 70 "### SAP-XXX" AGENTS.md | wc -l
+# Target: ≥60 lines
+```
+
+---
+
+### 5.3 CLAUDE.md Coverage (15 points)
+
+**Requirement**: Add dedicated section OR ensure domain section has direct links (if using SAP-009 nested hierarchy)
+
+**Option A: Dedicated Section** (if SAP has Claude-specific patterns):
+```markdown
+### [SAP Name] Claude Workflows
+
+**Token budget guidance**:
+- Phase 1 (orientation): [X]k tokens
+- Phase 2 (implementation): [Y]k tokens
+
+**Claude-specific tips**:
+- [Tip 1 for Claude Code or Claude Desktop]
+- [Tip 2 for Claude Code or Claude Desktop]
+
+**Example workflow**:
+\```markdown
+User: "[Common request]"
+
+Claude:
+1. [Step 1 with tool usage]
+2. [Step 2 with tool usage]
+3. [Step 3 with tool usage]
+\```
+```
+
+**Option B: Domain Section with Direct Links** (if using nested hierarchy):
+```markdown
+### Domain X: [Domain Name] (path/)
+
+**Path**: [path/AGENTS.md](path/AGENTS.md) + [path/CLAUDE.md](path/CLAUDE.md)
+
+**Navigation tip**: Read domain-specific files for 60-70% token savings
+- [path/CLAUDE.md](path/CLAUDE.md) - Claude workflows (X-min, Yk tokens)
+- [path/AGENTS.md](path/AGENTS.md) - [Domain] patterns (X-min, Yk tokens)
+
+**Use when**:
+- [Scenario 1]
+- [Scenario 2]
+```
+
+**Validation**:
+```bash
+grep -i "SAP-XXX\|[sap-name]" CLAUDE.md && echo "✅ CLAUDE.md coverage exists"
+```
+
+---
+
+### 5.4 justfile Recipes (15 points)
+
+**Requirement**: Add ≥3 recipes with section header, comments, and examples
+
+**For agents** (use Edit tool):
+1. Open: `justfile`
+2. Add section with this template:
+
+```bash
+# ============================================================================
+# SAP-XXX: [SAP Name]
+# ============================================================================
+# [Brief description of SAP purpose, 1-2 sentences]
+# See: [Link to AGENTS.md or nested files]
+
+# [Recipe 1 description with details]
+# Example: just recipe-1 arg-value
+recipe-1 ARG="default":
+    @command {{ARG}}
+
+# [Recipe 2 description with details]
+# Example: just recipe-2 arg-value
+recipe-2 ARG="default":
+    @command {{ARG}}
+
+# [Recipe 3 description with details]
+# Example: just recipe-3
+recipe-3:
+    @command
+```
+
+**Best Practices**:
+- Section header with SAP reference (# === SAP-XXX: Name ===)
+- Section comment explaining SAP purpose
+- Inline comment for each recipe (# Description)
+- Usage example for complex recipes (# Example: just ...)
+- Default values for arguments when appropriate
+
+**Validation**:
+```bash
+# Check recipes exist
+grep -A 20 "SAP-XXX" justfile | grep "^[a-z]" | wc -l
+# Target: ≥3 recipes
+```
+
+---
+
+### 5.5 Documentation (10 points)
+
+**Requirement**: Create ≥1 how-to guide, organize per SAP-007 structure (if applicable)
+
+**For agents**:
+1. Create: `docs/how-to/using-[sap-name].md`
+2. Content template:
+
+```markdown
+# How to Use [SAP Name]
+
+**Audience**: Developers and AI agents
+**Time**: [X] minutes
+**Prerequisites**: [List]
+
+---
+
+## Quick Start
+
+[5-step quick start with commands]
+
+---
+
+## Common Tasks
+
+### Task 1: [Name]
+
+\```bash
+# [Commands with explanations]
+\```
+
+### Task 2: [Name]
+
+\```bash
+# [Commands with explanations]
+\```
+
+---
+
+## Troubleshooting
+
+**Problem**: [Common issue]
+**Solution**: [Fix]
+```
+
+**Optional** (for complex SAPs):
+- Create: `docs/explanation/understanding-[sap-name].md` (concept explanation)
+- Create: `docs/reference/[sap-name]-reference.md` (API/schema reference)
+
+**Validation**:
+```bash
+ls docs/how-to/using-[sap-name].md && echo "✅ How-to guide exists"
+```
+
+---
+
+### 5.6 Direct Links (Required if using SAP-009 nested hierarchy)
+
+**Requirement**: If SAP uses nested AGENTS.md/CLAUDE.md files, add direct links in root files
+
+**For agents** (use Edit tool):
+1. Update root CLAUDE.md domain section:
+
+```markdown
+### Domain X: [Domain Name] (path/)
+
+**Path**: [path/AGENTS.md](path/AGENTS.md) + [path/CLAUDE.md](path/CLAUDE.md)
+
+**Navigation tip**: Read domain-specific files for 60-70% token savings
+- [path/CLAUDE.md](path/CLAUDE.md) - Claude workflows (X-min, Yk tokens)
+- [path/AGENTS.md](path/AGENTS.md) - [Domain] patterns (X-min, Yk tokens)
+
+**Use when**:
+- [Working in path/ directory]
+- [Need domain-specific guidance]
+```
+
+2. Update root AGENTS.md to reference nested file:
+
+```markdown
+**For detailed patterns**: See [path/AGENTS.md](path/AGENTS.md)
+```
+
+**Validation**:
+```bash
+# Check links exist and are clickable
+grep -o "\[.*AGENTS.md\](.*AGENTS.md)" CLAUDE.md && echo "✅ Direct links exist"
+```
+
+---
+
+### 5.7 Validation Checklist
+
+Before marking L1 complete, verify all discoverability requirements:
+
+**Touchpoints Checklist**:
+- [ ] README.md section added (≥30 lines)
+- [ ] AGENTS.md section added (≥60 lines)
+- [ ] CLAUDE.md coverage exists (dedicated section OR domain links)
+- [ ] justfile recipes added (≥3 recipes with comments)
+- [ ] Documentation created (≥1 how-to guide)
+- [ ] Direct links added (if using nested hierarchy)
+
+**Quality Checklist**:
+- [ ] All code examples tested and working
+- [ ] All links are clickable and resolve correctly
+- [ ] No placeholder text (e.g., "TODO", "[TBD]")
+- [ ] Concrete examples provided (not abstract descriptions)
+- [ ] ROI statement included with quantified value
+
+**Discovery Test**:
+- [ ] Agent can find SAP by reading README.md alone (<2 min)
+- [ ] Agent can find SAP by reading AGENTS.md alone (<2 min)
+- [ ] Agent can discover recipes via `just --list` (<1 min)
+- [ ] Navigation time from root to SAP docs <5 min total
+
+**Validation Command**:
+```bash
+# Run discoverability audit (if available)
+just disc | grep SAP-XXX
+# Target: ≥80/100
+
+# Or manual validation
+echo "README.md: $(grep -A 40 '### SAP-XXX' README.md | wc -l) lines (target: ≥30)"
+echo "AGENTS.md: $(grep -A 70 '### SAP-XXX' AGENTS.md | wc -l) lines (target: ≥60)"
+echo "justfile recipes: $(grep -A 20 'SAP-XXX' justfile | grep '^[a-z]' | wc -l) (target: ≥3)"
+echo "How-to guide: $(ls docs/how-to/*[sap-name]* 2>/dev/null | wc -l) (target: ≥1)"
+```
+
+---
+
+### 5.8 The Meta-Discoverability Principle
+
+**Key Insight**: "The better the pattern, the worse the impact if undiscoverable"
+
+**Anti-Pattern** (common mistake):
+1. Implement SAP (excellent quality, 20 hours)
+2. Use SAP internally (works great)
+3. Mark L1 complete
+4. Discoverability score: 40/100
+5. Other agents can't find it
+6. ROI: $0 (invisible capability)
+
+**Correct Pattern**:
+1. Implement SAP (excellent quality, 20 hours)
+2. Add discoverability (README, AGENTS, justfile, 3-5 hours)
+3. Validate discoverability ≥80/100
+4. Mark L1 complete
+5. Natural adoption (agents discover via root files)
+6. ROI: Projected value realized from day 1
+
+**Time Investment**: 3-5 hours (12-20% overhead on implementation)
+**Returns**: 10-15 min saved per session per agent
+**Break-even**: 20-30 sessions (1-2 months for single agent)
+**12-Month ROI**: 250-400% (typical)
+
+---
+
+### 5.9 Discoverability for Advanced Patterns
+
+**Special Case: Nested Hierarchies (SAP-009)**
+
+If your SAP uses nested AGENTS.md/CLAUDE.md files:
+- **Requires higher discoverability** (target: ≥85/100 vs ≥80/100)
+- **Must include direct links** in root CLAUDE.md (not optional)
+- **Must state token savings** explicitly (e.g., "60-70% reduction")
+- **Must provide read time estimates** (e.g., "8-min, 5k tokens")
+
+**Rationale**: Without strong discoverability, navigation tax exceeds token savings, making the advanced pattern a net negative.
+
+---
+
+## 6. Validation
 
 ### Full Installation Checklist
 

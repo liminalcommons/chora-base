@@ -7,31 +7,20 @@
 
 ---
 
-## Quick Reference
+## 📖 Quick Reference
 
-### What is SAP Generation Automation?
+**New to SAP-029?** → Read **[README.md](README.md)** first (10-min read)
 
-**SAP Generation** = Template-based automation to create SAP artifacts (5 files) from metadata in 5 minutes vs 10 hours manual
+The README provides:
+- 🚀 **Quick Start** - Step 1: Add SAP to catalog (sap-catalog.json)
+- 📚 **Time Savings** - 70-80% SAP creation time reduction (1-2 hours vs 8-10 hours manual)
+- 🎯 **Feature 1** - 10 hours → 2 hours (automated boilerplate + focused manual fill)
+- 🔧 **Feature 2** - 5 templates for 5 artifacts (capability-charter, protocol-spec, awareness-guide, adoption-blueprint, ledger)
+- 📊 **Feature 3** - 9 fields capture essential metadata (problem, solution, principles, scope, summary)
+- 🔗 **Integration** - Works with SAP-000, SAP-004, SAP-005, SAP-007, SAP-016, SAP-027
 
-SAP-029 provides:
-- Jinja2 template system (5 templates for 5 artifacts)
-- MVP generation schema (9 fields from sap-catalog.json)
-- Generator script (`scripts/generate-sap.py`)
-- INDEX.md auto-update functionality
-- Validation integration with `sap-evaluator.py`
-
-### When to Use SAP Generation
-
-✅ **Use SAP-029 for**:
-- Creating new SAPs quickly with consistent structure
-- Scaffolding 5 artifacts (capability-charter, protocol-spec, awareness-guide, adoption-blueprint, ledger)
-- Reducing SAP creation time from 10 hours to ~2 hours (5x savings)
-- Ensuring structural consistency across SAP catalog
-
-❌ **Don't use for**:
-- Editing existing SAPs (use Edit tool directly)
-- Non-SAP documentation (use appropriate domain templates)
-- Full content generation (SAP-029 generates structure, you fill content)
+This AGENTS.md provides: Agent-specific patterns for implementing SAP-029.
+s.
 
 ---
 

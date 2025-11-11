@@ -7,6 +7,10 @@ This test suite validates:
 - Server initialization and configuration
 
 Run with: pytest tests/test_server.py
+
+Note: FastMCP decorators (@mcp.tool(), @mcp.resource()) wrap functions in
+FunctionTool/FunctionResource objects. To test the underlying functions,
+we access them via the .fn attribute.
 """
 
 import pytest
@@ -79,13 +83,18 @@ class TestNamingConventions:
 # ============================================================================
 
 class TestTools:
-    """Test MCP tool functionality."""
+    """Test MCP tool functionality.
+
+    Note: FastMCP @mcp.tool() decorator wraps functions in FunctionTool objects.
+    We access the underlying function via .fn attribute.
+    """
 
     @pytest.mark.asyncio
     async def test_example_tool_success(self, expected_namespace):
         """Verify example_tool returns expected response structure."""
         message = "Test message"
-        result = await example_tool(message)
+        # Access underlying function via .fn attribute
+        result = await example_tool.fn(message)
 
         assert result["status"] == "success"
         assert result["message"] == message
@@ -95,7 +104,8 @@ class TestTools:
     @pytest.mark.asyncio
     async def test_example_tool_empty_message(self, expected_namespace):
         """Verify example_tool handles empty message."""
-        result = await example_tool("")
+        # Access underlying function via .fn attribute
+        result = await example_tool.fn("")
 
         assert result["status"] == "success"
         assert result["message"] == ""
@@ -104,7 +114,8 @@ class TestTools:
     @pytest.mark.asyncio
     async def test_hello_world(self, expected_namespace):
         """Verify hello_world tool returns greeting."""
-        result = await hello_world()
+        # Access underlying function via .fn attribute
+        result = await hello_world.fn()
 
         assert isinstance(result, str)
         assert expected_namespace in result
@@ -116,12 +127,17 @@ class TestTools:
 # ============================================================================
 
 class TestResources:
-    """Test MCP resource functionality."""
+    """Test MCP resource functionality.
+
+    Note: FastMCP @mcp.resource() decorator wraps functions in FunctionResource objects.
+    We access the underlying function via .fn attribute.
+    """
 
     @pytest.mark.asyncio
     async def test_get_capabilities_structure(self, expected_namespace):
         """Verify capabilities resource returns expected structure."""
-        capabilities = await get_capabilities()
+        # Access underlying function via .fn attribute
+        capabilities = await get_capabilities.fn()
 
         # Verify required fields
         assert "name" in capabilities
@@ -134,13 +150,15 @@ class TestResources:
     @pytest.mark.asyncio
     async def test_get_capabilities_namespace(self, expected_namespace):
         """Verify capabilities reports correct namespace."""
-        capabilities = await get_capabilities()
+        # Access underlying function via .fn attribute
+        capabilities = await get_capabilities.fn()
         assert capabilities["namespace"] == expected_namespace
 
     @pytest.mark.asyncio
     async def test_get_capabilities_version(self):
         """Verify capabilities includes version information."""
-        capabilities = await get_capabilities()
+        # Access underlying function via .fn attribute
+        capabilities = await get_capabilities.fn()
         version = capabilities["version"]
 
         # Should be either installed version or dev fallback
@@ -151,7 +169,8 @@ class TestResources:
     @pytest.mark.asyncio
     async def test_get_capabilities_tools_list(self, expected_namespace):
         """Verify capabilities lists all available tools."""
-        capabilities = await get_capabilities()
+        # Access underlying function via .fn attribute
+        capabilities = await get_capabilities.fn()
         tools = capabilities["tools"]
 
         assert isinstance(tools, list)
@@ -161,7 +180,8 @@ class TestResources:
     @pytest.mark.asyncio
     async def test_get_capabilities_resources_list(self, expected_namespace):
         """Verify capabilities lists all available resources."""
-        capabilities = await get_capabilities()
+        # Access underlying function via .fn attribute
+        capabilities = await get_capabilities.fn()
         resources = capabilities["resources"]
 
         assert isinstance(resources, list)
@@ -170,7 +190,8 @@ class TestResources:
     @pytest.mark.asyncio
     async def test_get_capabilities_conventions(self):
         """Verify capabilities declares Chora MCP Conventions compliance."""
-        capabilities = await get_capabilities()
+        # Access underlying function via .fn attribute
+        capabilities = await get_capabilities.fn()
         assert "Chora MCP Conventions" in capabilities["conventions"]
 
 
@@ -193,15 +214,19 @@ class TestServerConfiguration:
 
     def test_server_tools_registered(self):
         """Verify tools are registered with FastMCP instance."""
-        # FastMCP decorators should register tools
-        # Actual validation happens via integration tests
-        # This is a basic sanity check
-        assert callable(example_tool)
-        assert callable(hello_world)
+        # FastMCP decorators wrap functions in FunctionTool objects
+        # Verify the wrapped objects exist and have underlying functions
+        assert hasattr(example_tool, 'fn'), "example_tool should be a FunctionTool with .fn attribute"
+        assert hasattr(hello_world, 'fn'), "hello_world should be a FunctionTool with .fn attribute"
+        assert callable(example_tool.fn)
+        assert callable(hello_world.fn)
 
     def test_server_resources_registered(self):
         """Verify resources are registered with FastMCP instance."""
-        assert callable(get_capabilities)
+        # FastMCP decorators wrap functions in FunctionResource objects
+        # Verify the wrapped object exists and has underlying function
+        assert hasattr(get_capabilities, 'fn'), "get_capabilities should be a FunctionResource with .fn attribute"
+        assert callable(get_capabilities.fn)
 
 
 # ============================================================================
@@ -214,7 +239,8 @@ class TestIntegration:
     @pytest.mark.asyncio
     async def test_tool_resource_consistency(self, expected_namespace):
         """Verify tools listed in capabilities match registered tools."""
-        capabilities = await get_capabilities()
+        # Access underlying function via .fn attribute
+        capabilities = await get_capabilities.fn()
         listed_tools = capabilities["tools"]
 
         # All decorated tools should be listed
@@ -229,12 +255,12 @@ class TestIntegration:
     @pytest.mark.asyncio
     async def test_namespace_consistency(self, expected_namespace):
         """Verify namespace is consistent across all components."""
-        # Check tool response
-        tool_result = await example_tool("test")
+        # Check tool response (access underlying function via .fn)
+        tool_result = await example_tool.fn("test")
         assert tool_result["namespace"] == expected_namespace
 
-        # Check capabilities
-        capabilities = await get_capabilities()
+        # Check capabilities (access underlying function via .fn)
+        capabilities = await get_capabilities.fn()
         assert capabilities["namespace"] == expected_namespace
 
         # Check NAMESPACE constant

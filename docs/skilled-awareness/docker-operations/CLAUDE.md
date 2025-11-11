@@ -24,6 +24,21 @@ phase_3_token_estimate: 12000
 
 ---
 
+## 📖 Quick Reference
+
+**New to SAP-011?** → Read **[README.md](README.md)** first (5-min read)
+
+The README provides:
+- 🚀 **Quick Start** - 5 commands to build and deploy in 2 minutes
+- 📚 **CLI Commands** - 8 docker-related justfile recipes
+- 🎯 **Multi-Stage Builds** - 40% smaller images with wheel distribution
+- ⚡ **CI Optimization** - 6x faster builds with layer caching
+- 🔧 **Troubleshooting** - 4 common problems with solutions
+
+**This CLAUDE.md provides**: Claude Code-specific workflows using Read, Edit, Bash, and Write tools for Docker operations.
+
+---
+
 ## Quick Start for Claude
 
 This file provides **Claude Code-specific patterns** for Docker operations.

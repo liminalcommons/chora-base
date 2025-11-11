@@ -9,7 +9,15 @@
 
 ## Overview
 
-This adoption blueprint provides a step-by-step guide to adopt SAP-024 (Tailwind CSS v4 + shadcn/ui + CVA) in your React 19 project. Estimated setup time: **30 minutes**.
+This adoption blueprint provides a step-by-step guide to adopt SAP-024 (Tailwind CSS v4 + shadcn/ui + CVA) in your React 19 project.
+
+**Estimated setup time**: **30 minutes**
+
+**Why SAP-024**:
+- **5x faster builds**: Tailwind v4 (~100ms vs ~500ms v3)
+- **100k+ stars**: shadcn/ui is the most popular React component library (2024)
+- **Zero-runtime**: Perfect React Server Components compatibility
+- **60-80% smaller bundles**: vs CSS-in-JS solutions
 
 ---
 
@@ -441,9 +449,11 @@ Use this checklist to verify SAP-024 is correctly installed:
 
 ### Performance
 - [ ] Production build succeeds (`npm run build`)
-- [ ] CSS bundle size <10KB (check build output)
+- [ ] CSS bundle size <10KB (check build output, typical: 6-8KB gzipped)
+- [ ] Build time ≤200ms (Tailwind v4 target: ~100ms, vs ~500ms v3)
 - [ ] Lighthouse Performance score ≥90
-- [ ] Lighthouse Accessibility score ≥90
+- [ ] Lighthouse Accessibility score ≥90 (WCAG 2.2 Level AA)
+- [ ] Zero runtime JavaScript from Tailwind (check bundle analysis)
 
 ---
 

@@ -2,22 +2,22 @@
 
 ## Current Status (2025-11-08)
 
-**Phase**: Fourth Iteration Ready ✅
+**Phase**: Fifth Iteration Ready ✅
 **Workflow**: Fast-Setup Workflow (Primary)
-**Latest Version**: v4.14.1 (boolean filter fix applied)
-**Status**: All 6 blockers resolved (4 original + 2 regressions)
-**Next Action**: Run fourth verification with v4.14.1 (Expected: GO)
+**Latest Version**: v4.14.2 (test template FastMCP compatibility fix applied)
+**Status**: All 7 blockers resolved (6 code + 1 test)
+**Next Action**: Run fifth verification with v4.14.2 (Expected: GO)
 
 ---
 
 ## What Just Happened
 
-### Complete Fix-Verify Cycle (4 Iterations)
+### Complete Fix-Verify Cycle (5 Iterations)
 
 **Iteration 1: Initial Verification (2025-11-08-13-14)** - v4.9.0
 - **Result**: CONDITIONAL NO-GO
 - **Time**: 12 minutes verification + 60 minutes fixes
-- **Blockers**: 4 critical issues identified
+- **Blockers**: 4 critical code generation issues
 - **Outcome**: v4.13.0 released with 3 fixes
 
 **Iteration 2: Re-Verification (2025-11-08-16-04)** - v4.13.0
@@ -33,10 +33,17 @@
 - **Progress**: 5 of 6 blockers resolved
 - **Outcome**: v4.14.1 released with boolean fix
 
-**Iteration 4: Pending** - v4.14.1
+**Iteration 4: Fourth Verification (2025-11-08-22-04)** - v4.14.1
+- **Result**: CONDITIONAL NO-GO (code 100%, tests 39%)
+- **Time**: 5 minutes verification + 30 minutes hot-fix
+- **Blockers**: 1 test template FastMCP incompatibility
+- **Progress**: All 6 code blockers verified resolved ✅, 1 new test blocker
+- **Outcome**: v4.14.2 released with test template fix
+
+**Iteration 5: Pending** - v4.14.2
 - **Expected Result**: GO
 - **Estimated Time**: 8-10 minutes
-- **All Blockers**: Resolved (4 original + 2 regressions = 6 total)
+- **All Blockers**: Resolved (6 code + 1 test = 7 total)
 
 ---
 
@@ -67,27 +74,45 @@
    - **Commits**: [d61a94d](https://github.com/liminalcommons/chora-base/commit/d61a94d), [89be4dd](https://github.com/liminalcommons/chora-base/commit/89be4dd)
    - **Release**: [v4.14.1](https://github.com/liminalcommons/chora-base/releases/tag/v4.14.1)
 
-**Methodology Updated**: [8216856](https://github.com/liminalcommons/chora-base/commit/8216856), [7d73a2e](https://github.com/liminalcommons/chora-base/commit/7d73a2e)
+### Test Template Issue
+
+**7. ✅ Test template FastMCP incompatibility** - Found in iteration 4 (v4.14.2)
+   - 14 of 23 tests fail (61% failure rate)
+   - TypeError: 'FunctionTool' object is not callable
+   - Tests tried to call decorated functions directly instead of accessing `.fn` attribute
+   - 30-minute fix (100% estimate accuracy)
+   - **Commits**: [df9e1a2](https://github.com/liminalcommons/chora-base/commit/df9e1a2), [985d5b3](https://github.com/liminalcommons/chora-base/commit/985d5b3)
+   - **Release**: [v4.14.2](https://github.com/liminalcommons/chora-base/releases/tag/v4.14.2)
+
+**Methodology Updated**: [8216856](https://github.com/liminalcommons/chora-base/commit/8216856), [7d73a2e](https://github.com/liminalcommons/chora-base/commit/7d73a2e), [7246eaf](https://github.com/liminalcommons/chora-base/commit/7246eaf)
 
 ---
 
-## Immediate Next Step: Fourth Verification
+## Immediate Next Step: Fifth Verification
 
 ### Goal
-Verify that all 6 blockers (4 original + 2 regressions) are resolved and fast-setup script now produces production-ready projects.
+Verify that all 7 blockers (6 code + 1 test) are resolved and fast-setup script now produces production-ready projects with 100% test pass rate.
 
 ### Expected Result
 **GO** decision with:
-- ✅ Script executes without errors (v4.14.1)
-- ✅ Test files generated (`tests/test_server.py` with 23+ test cases)
+- ✅ Script executes without errors (v4.14.2)
+- ✅ Code generation: 100% success
+- ✅ Test files generated (`tests/test_server.py` with 23 test cases)
 - ✅ All template variables substituted correctly
 - ✅ Works on Windows without encoding errors
 - ✅ Valid Python syntax in all generated code
 - ✅ Valid Python booleans (True/False, not true/false)
-- ✅ All tests pass, linting passes, build succeeds
+- ✅ Tests use FastMCP `.fn` attribute pattern correctly
+- ✅ **All 23 tests pass** (was 39%, now expected 100%)
+- ✅ Linting passes, build succeeds
 
 ### Systemic Improvement Recommended
-**Template Validation**: Consider implementing automated validation (1-2 hours) to prevent future regressions, as 100% of fix iterations introduced new template errors.
+**Automated Template Validation**: Implement validation pipeline (1-2 hours) to prevent future regressions:
+- Render templates with test data
+- Run `pytest` on generated projects
+- Validate syntax with `ast.parse()`
+- Test imports of generated modules
+- Would have prevented 3 of 7 blockers (2 syntax + 1 test incompatibility)
 
 ### How to Execute
 

@@ -40,6 +40,14 @@ phase_3_deep_dive:
 
 ---
 
+## 📖 Quick Reference
+
+**New to SAP-007?** → Read **[README.md](README.md)** first (8-min read) for Diátaxis framework, CLI commands, and Documentation-First workflow.
+
+**This CLAUDE.md provides**: Claude Code tool patterns (Write, Read, Edit) for creating docs, extracting tests, and L3 Documentation-First implementation.
+
+---
+
 ## 1. Quick Start for Claude
 
 ### What is Documentation Framework? (Claude perspective)

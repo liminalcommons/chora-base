@@ -7,6 +7,21 @@
 
 ---
 
+## 📖 Quick Reference
+
+**New to SAP-013?** → Read **[README.md](README.md)** first (5-min read)
+
+The README provides:
+- 🚀 **Quick Start** - 4 ways to track metrics (interactive, programmatic, summary, coverage)
+- 📚 **ClaudeROICalculator API** - Complete Python API with examples
+- 🎯 **4 Metric Categories** - Quality, Velocity, Process Adherence, Adoption
+- 📊 **CLI Commands** - track-claude-session, metrics-summary, coverage-metrics
+- 🔧 **Troubleshooting** - Import errors, red metrics, automation tips
+
+**This AGENTS.md provides**: Agent-specific patterns for metrics collection, ROI calculation, and integration workflows.
+
+---
+
 ## Progressive Context Loading
 
 ```yaml

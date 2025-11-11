@@ -2,7 +2,7 @@
 
 **Domain**: Development Lifecycle & Workflows
 **SAP**: SAP-012 (development-lifecycle)
-**Version**: 1.3.0
+**Version**: 1.5.0
 **Last Updated**: 2025-11-06
 
 ---
@@ -14,6 +14,23 @@ This is the domain-specific AGENTS.md file for the development lifecycle (SAP-01
 **Parent**: See [/AGENTS.md](/AGENTS.md) for project-level context
 
 **Pattern**: "Nearest File Wins" - This file provides development-lifecycle-specific context
+
+---
+
+## 📖 Quick Reference
+
+**New to SAP-012?** → Read **[README.md](README.md)** first (10-min read)
+
+The README provides:
+- 🚀 **Quick Start** - Phase 2: Create sprint plan
+- 📚 **Time Savings** - 40-80% defect reduction via Documentation-First + BDD + TDD, 60% debugging time reduction
+- 🎯 **Feature 1** - Vision → Planning → Requirements → Development → Testing → Review → Release → Monitoring
+- 🔧 **Feature 2** - Research-backed from BDD + TDD integration
+- 📊 **Feature 3** - Write how-to guides → Extract BDD → Implement with TDD
+- 🔗 **Integration** - Works with SAP-004, SAP-005, SAP-006, SAP-007, SAP-010, SAP-012
+
+This AGENTS.md provides: Agent-specific patterns for implementing SAP-012.
+e.
 
 ---
 

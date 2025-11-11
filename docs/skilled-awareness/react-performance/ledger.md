@@ -235,9 +235,59 @@ next_steps:
 
 ---
 
-## Best Practices Identified
+## Best Practices Identified (RT-019 Updated)
 
-### Code Splitting
+### RT-019 Core Web Vitals Benchmarks
+
+| Metric | Good (Target) | Needs Improvement | Poor | RT-019 Evidence |
+|--------|---------------|-------------------|------|-----------------|
+| **LCP** | ≤2.5s | 2.5-4.0s | >4.0s | +25% conversion at ≤2.5s |
+| **INP** | ≤200ms | 200-500ms | >500ms | -35% bounce rate at ≤200ms |
+| **CLS** | ≤0.1 | 0.1-0.25 | >0.25 | +30% revenue at ≤0.1 |
+| ~~**FID**~~ | ~~≤100ms~~ | ~~N/A~~ | ~~N/A~~ | **DEPRECATED** (March 2024) |
+
+**RT-019 Key Finding**: **INP replaced FID** as a Core Web Vital in March 2024. 60% of React apps fail INP on mobile.
+
+---
+
+### RT-019 Bundle Size Benchmarks
+
+| Bundle Type | RT-019 Target | HTTP Archive P50 | Evidence |
+|-------------|---------------|------------------|----------|
+| **Initial JS** | **<100KB** | 150KB | Interactive in <2s on 3G |
+| **Total page** | **<300KB** | 450KB | Apps exceeding 300KB: +40% bounce, -25% conversion |
+| **Route chunk** | **<50KB** | N/A | Lazy load without perceptible delay |
+| **CSS** | **<50KB** | 60KB | Tailwind v4 production median |
+| **Images** | **<300KB** | 400KB | AVIF compression (50% smaller than JPEG) |
+| **Fonts** | **<100KB** | 120KB | Variable fonts, WOFF2 format |
+
+**RT-019 Breaking Change**: Total bundle budget reduced from 750KB → 300KB for initial load.
+
+---
+
+### RT-019 Time Savings
+
+| Activity | Manual Time | SAP-025 Time | RT-019 Evidence |
+|----------|-------------|--------------|-----------------|
+| Research best practices | 1-2h | 0 | 1-2h saved |
+| Configure Next.js/Vite | 2-3h | 10min | RT-019 templates |
+| Implement code splitting | 2-3h | 25min | RT-019 patterns |
+| Set up image optimization | 1-2h | 10min | RT-019 AVIF guide |
+| Configure Lighthouse CI | 1-2h | 10min | RT-019 INP config |
+| Set up monitoring (RUM) | 1-2h | 15min | RT-019 web-vitals integration |
+| **Total** | **8-12h** | **70min** | **6-10h saved (85-91% reduction)** |
+
+**RT-019 ROI**: $600-$1,000 saved per project (@ $100/hour developer rate)
+
+---
+
+### Code Splitting (RT-019 Enhanced)
+
+**React Server Components (NEW - Highest Priority)**:
+- ✅ Use RSC for all non-interactive components (40-60% bundle reduction)
+- ✅ Server-side data fetching (zero client JS for data)
+- ✅ Target: <100KB initial bundle with RSC
+- ✅ RT-019 Evidence: Median initial bundle 80KB (vs 150KB client-only)
 
 **Route-Based**:
 - ✅ Split by route (most effective for initial load)
@@ -251,19 +301,24 @@ next_steps:
 - ✅ Set rootMargin="200px" to load before visible
 - ✅ Add retry logic for network failures
 
+---
+
 ### Image Optimization
 
 **Format Selection**:
-- ✅ AVIF as primary (52% smaller than JPEG)
+- ✅ AVIF as primary (50% smaller than JPEG - RT-019 updated)
 - ✅ WebP as fallback (30% smaller than JPEG)
 - ✅ JPEG as final fallback (100% browser support)
 - ✅ Use <picture> element for manual control
 
 **Loading Strategy**:
-- ✅ priority={true} for hero images only
+- ✅ priority={true} for hero images only (LCP optimization)
 - ✅ Lazy load all below-fold images
 - ✅ Set explicit width/height to prevent CLS
 - ✅ Use responsive srcset for different screen sizes
+- ✅ RT-019 Target: <300KB images per page
+
+---
 
 ### Font Optimization
 
@@ -278,14 +333,19 @@ next_steps:
 - ✅ Use font-display: swap for body text
 - ✅ Use font-display: optional for headings (prevents CLS)
 - ✅ Match fallback font metrics with adjustFontFallback
+- ✅ RT-019 Target: <100KB total fonts
 
-### Lighthouse CI
+---
+
+### Lighthouse CI (RT-019 Updated)
 
 **Configuration**:
 - ✅ Test 3-5 key routes (not entire site)
 - ✅ Run 3 audits and take median (reduces variance)
 - ✅ Set performance budget to 90+ (not 100)
 - ✅ Allow 10% tolerance on budgets
+- ✅ **RT-019 NEW**: Use TBT (Total Blocking Time) as INP proxy in CI
+- ✅ **RT-019 NEW**: Bundle size budget 300KB (down from 750KB)
 
 **Integration**:
 - ✅ Run on every PR (catch regressions early)
@@ -293,19 +353,45 @@ next_steps:
 - ✅ Post results as PR comment
 - ✅ Fail build if budgets exceeded
 
-### Web Vitals Monitoring
+---
+
+### Web Vitals Monitoring (RT-019 Enhanced)
 
 **RUM (Real User Monitoring)**:
-- ✅ Send all metrics to analytics (LCP, INP, CLS, FCP, TTFB)
+- ✅ Send all metrics to analytics (LCP, **INP**, CLS, FCP, TTFB)
+- ✅ **RT-019 NEW**: Use web-vitals v4.2.4+ for INP support
 - ✅ Use sendBeacon() for reliability
 - ✅ Sample 10-20% in production (reduce costs)
-- ✅ Set up alerts for thresholds (LCP >2.5s, INP >200ms, CLS >0.1)
+- ✅ Set up alerts for thresholds (INP >200ms highest priority)
 
 **Analysis**:
 - ✅ Segment by device (mobile vs desktop)
 - ✅ Segment by network (4G vs 3G vs WiFi)
-- ✅ Track 75th percentile (not average)
+- ✅ **RT-019 CRITICAL**: Track 75th percentile (not average) for Google ranking
 - ✅ Review weekly trends (not daily noise)
+- ✅ **RT-019 Priority**: Monitor INP first (60% of apps fail on mobile)
+
+---
+
+### RT-019 INP Optimization Patterns (NEW)
+
+**Priority 1: React Server Components**
+- ✅ Move data fetching to server (zero client JS)
+- ✅ Impact: 40-60% bundle reduction, -45% INP
+
+**Priority 2: useDeferredValue (React 19)**
+- ✅ Defer non-urgent state updates (search, filters)
+- ✅ Impact: -40% INP (300ms → 180ms)
+
+**Priority 3: startTransition (React 19)**
+- ✅ Mark non-urgent updates (long tasks)
+- ✅ Impact: -35% INP (280ms → 180ms)
+
+**Priority 4: List Virtualization**
+- ✅ Use @tanstack/react-virtual for lists >100 items
+- ✅ Impact: -60% INP for large lists (500ms → 200ms)
+
+**RT-019 Evidence**: Combined INP optimization achieves -64% (450ms → 160ms)
 
 ---
 

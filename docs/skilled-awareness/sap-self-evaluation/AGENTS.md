@@ -24,6 +24,23 @@ phase_3_token_estimate: 10000
 
 ---
 
+## 📖 Quick Reference
+
+**New to SAP-019?** → Read **[README.md](README.md)** first (10-min read)
+
+The README provides:
+- 🚀 **Quick Start** - Quick check: Is SAP-004 installed and functional? (30 seconds)
+- 📚 **Time Savings** - 15-20 min/sprint automated evaluation vs manual assessment, evidence-based decisions
+- 🎯 **Feature 1** - Three depth levels (30s quick check, 5min deep dive, 30min strategic analysis) adapt to available time
+- 🔧 **Feature 2** - Quick check validates file existence, command execution, and exit codes without LLM overhead
+- 📊 **Feature 3** - Deep dive analyzes actual content quality, integration depth, and usage patterns beyond automated checks
+- 🔗 **Integration** - Works with SAP-000 (Framework)
+
+This AGENTS.md provides: Agent-specific patterns for implementing SAP-019.
+n.
+
+---
+
 ## Quick Reference
 
 This file provides **agent-executable workflows** for self-evaluating SAP adoption depth across projects.

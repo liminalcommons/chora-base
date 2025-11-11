@@ -24,6 +24,22 @@ phase_3_token_estimate: 12000
 
 ---
 
+## 📖 Quick Reference
+
+**New to SAP-022?** → Read **[README.md](README.md)** first (11-min read)
+
+The README provides:
+- 🚀 **Quick Start** - 4-minute setup (ESLint 9 + Prettier 3 + 8 plugins) with flat config
+- 📚 **Time Savings** - 40% code review time reduction, 50% faster onboarding, 5 hours/month saved, ESLint 9 is 182x faster
+- 🎯 **React 19 + Next.js 15 Rules** - Server Components, Actions, new hooks validation
+- 🔧 **TypeScript Strict Linting** - projectService API (30-50% faster type checking)
+- 📊 **Accessibility** - WCAG 2.2 Level AA with jsx-a11y plugin (85%+ coverage)
+- 🔗 **Integration** - Works with SAP-020 (Foundation), SAP-021 (Testing), SAP-024 (Styling), SAP-005 (CI/CD), SAP-006 (Quality Gates)
+
+This AGENTS.md provides: Agent-specific patterns for React linting workflows.
+
+---
+
 ## Quick Start for Agents
 
 This SAP provides workflows for **React linting and formatting** with ESLint 9 flat config and Prettier 3.x.

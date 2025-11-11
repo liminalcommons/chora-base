@@ -1,9 +1,9 @@
 # Protocol Specification: Agent Awareness
 
 **SAP ID**: SAP-009
-**Version**: 1.1.0
-**Status**: Draft (Phase 3)
-**Last Updated**: 2025-10-31
+**Version**: 2.1.0
+**Status**: Active
+**Last Updated**: 2025-11-10
 
 ---
 
@@ -238,6 +238,90 @@ Load for complex refactoring:
 
 ---
 
+## 4.4 Critical Workflows Pattern (v2.1.0)
+
+**Purpose**: Surface frequently-missed workflows at the top of awareness files to solve the "meta-discoverability paradox"
+
+**Problem**: As awareness files grow (>1,000 lines), critical workflows get buried and agents miss them despite documentation existing
+
+**Solution**: Dedicated "⚠️ Critical Workflows (Read This First!)" section immediately after project overview
+
+**Location**: Root AGENTS.md and CLAUDE.md, lines 20-100 (after overview, before main content)
+
+**Structure**:
+```markdown
+## ⚠️ Critical Workflows (Read This First!)
+
+**Problem solved**: [Brief description of workflows agents frequently miss]
+
+### [Workflow 1 Name]
+**When**: [Trigger condition - when to use this workflow]
+**Quick reference**:
+bash
+# Commands or steps
+command-1
+command-2
+
+**Full details**: [Link to nested file with complete template]
+
+### [Workflow 2 Name]
+**When**: [Trigger condition]
+**Quick reference**:
+- Step 1
+- Step 2
+- Step 3
+
+**Full details**: [Link to detailed documentation]
+```
+
+**Example** (from chora-workspace implementation):
+```markdown
+## ⚠️ Critical Workflows (Read This First!)
+
+**Problem solved**: Sprint completion workflows were buried at line 1,878 (66% into file) and frequently missed by agents.
+
+### Sprint Completion Workflow
+**When**: End of sprint (every 2 weeks)
+**Quick reference**:
+bash
+just sprint-complete  # Generate report
+git add . && git commit -m "chore: Sprint N completion"
+
+**Full details**: [dev-process/AGENTS.md](dev-process/AGENTS.md#sprint-completion)
+
+### Git Commit Conventions
+**When**: Every commit
+**Quick reference**:
+bash
+git commit -m "type(scope): description"
+# Types: feat, fix, docs, chore, refactor, test
+
+**Full details**: [dev-process/AGENTS.md](dev-process/AGENTS.md#git-conventions)
+```
+
+**Content Selection Criteria**:
+- ✅ Workflows that agents have missed in past sessions
+- ✅ Workflows critical to project success (e.g., testing, quality gates)
+- ✅ Workflows with complex triggers (not obvious when to use)
+- ✅ Workflows referenced frequently (>5 times per sprint)
+- ❌ One-time setup tasks (put in getting-started guide)
+- ❌ Workflows that are already discoverable via file structure
+
+**Benefits**:
+- Workflows discoverable in top 10% of file (vs 50-70% buried)
+- Agent token usage reduced (workflows loaded in Phase 1)
+- Pattern visibility increased (emoji makes section stand out)
+- Navigation improved (quick ref + link to full details)
+
+**Evidence**: chora-workspace implementation achieved:
+- 70% file size reduction (2,766 → 839 lines)
+- Workflows moved from line 1,878 to lines 32-50
+- Sprint completion workflow no longer missed by agents
+
+**Source**: COORD-2025-012 (Nested Awareness Pattern - Meta-Discoverability Solution)
+
+---
+
 ## 5. Integration Patterns
 
 ### 5.1 With Documentation Framework (SAP-007)
@@ -271,6 +355,13 @@ progressive_loading:
 phase_1_token_estimate: 2500            # Estimated tokens for phase 1
 phase_2_token_estimate: 5000            # Estimated tokens for phase 2
 phase_3_token_estimate: 8500            # Estimated tokens for full file
+
+# Nested Structure Support (v2.1.0)
+nested_structure: true                  # Optional: true if this file has nested awareness files
+nested_files:                           # Optional: list of nested file paths (if nested_structure: true)
+  - "saps/AGENTS.md"
+  - "dev-process/AGENTS.md"
+  - "docs/AGENTS.md"
 ---
 ```
 
@@ -846,5 +937,6 @@ python scripts/sap-evaluator.py --deep SAP-009
 ---
 
 **Version History**:
+- **2.1.0** (2025-11-10): Added nested structure support - frontmatter fields (nested_structure, nested_files), Section 4.4 Critical Workflows Pattern, updated status to Active (COORD-2025-012)
 - **1.1.0** (2025-10-31): Added Section 6 (Bidirectional Translation Layer) - intent routing, glossary search, context-aware suggestions, user preferences, progressive formalization
 - **1.0.0** (2025-10-28): Initial protocol specification for agent-awareness

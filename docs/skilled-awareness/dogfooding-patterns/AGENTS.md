@@ -1,3 +1,20 @@
+## 📖 Quick Reference
+
+**New to SAP-027?** → Read **[README.md](README.md)** first (10-min read)
+
+The README provides:
+- 🚀 **Quick Start** - Week -1: Pre-pilot discovery (select candidate from intention inventory)
+- 📚 **Time Savings** - 6 weeks upfront validation → avoid 20-30 hours rework later, data-driven GO/NO-GO decisions
+- 🎯 **Feature 1** - Structured phases (Research → Build → Validate → Decide → Formalize)
+- 🔧 **Feature 2** - Objective decision framework (time ≥5x, satisfaction ≥85%, bugs = 0, adoption ≥2)
+- 📊 **Feature 3** - ≥30% Level A citations (standards, peer-reviewed papers)
+- 🔗 **Integration** - Works with SAP-000 (Framework)
+
+This AGENTS.md provides: Agent-specific patterns for implementing SAP-027.
+s.
+
+---
+
 # Dogfooding Patterns (SAP-027) - Agent Awareness
 
 **SAP ID**: SAP-027

@@ -6,6 +6,22 @@
 
 ---
 
+## 📖 Quick Reference
+
+**New to SAP-005?** → Read **[README.md](README.md)** first (8-min read)
+
+The README provides:
+- 🚀 **Quick Start** - 4 CLI commands for checking CI status (ci-status, ci-logs, ci-workflows, ci-trigger) with <5 min feedback
+- 📚 **Time Savings** - Automated quality gates catch 95%+ issues before merge, <5 min execution vs manual testing
+- 🎯 **10 Workflows** - Complete GitHub Actions inventory (test, lint, smoke, security, release, deployment)
+- 🔧 **6 CLI Commands** - ci-status, ci-logs, ci-retry, ci-workflows, ci-workflow-show, ci-trigger for workflow management
+- 📊 **Success Metrics** - <5 min feedback, 85%+ coverage enforced, 100% security scans, 80-90% cache hit rate
+- 🔗 **Integration** - Works with SAP-004 (Testing), SAP-006 (Quality Gates), SAP-028 (Publishing), SAP-011 (Docker)
+
+This CLAUDE.md provides: Claude Code tool patterns (Edit workflows, Bash gh commands, Read logs) for CI/CD automation.
+
+---
+
 ## Quick Start for Claude
 
 This file provides **Claude Code-specific patterns** for GitHub Actions workflows.

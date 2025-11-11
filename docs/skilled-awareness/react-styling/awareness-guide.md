@@ -45,17 +45,19 @@ Start: Need to style React components
 
 ### 2. Tailwind CSS vs CSS Modules vs CSS-in-JS
 
-| Factor | Tailwind CSS (SAP-024) | CSS Modules | CSS-in-JS |
+| Factor | Tailwind CSS v4 (SAP-024) | CSS Modules | CSS-in-JS |
 |--------|------------------------|-------------|-----------|
 | **Bundle Size** | 6-15KB | 20-50KB | 60-100KB |
 | **Runtime** | Zero (pure CSS) | Zero (pure CSS) | 5-15KB + parsing |
-| **RSC Compatibility** | Perfect | Perfect | Poor |
+| **RSC Compatibility** | Perfect (zero-JS) | Perfect | **Poor (incompatible)** |
+| **Build Speed** | **5x faster than v3** | Fast | Slower (runtime) |
 | **Learning Curve** | Moderate (utility classes) | Low (traditional CSS) | Steep (CSS-in-JS API) |
 | **Maintenance** | Single source (Tailwind) | Multiple CSS files | JavaScript files |
 | **Performance** | Fastest | Fast | Slower (runtime) |
 | **Dark Mode** | Built-in (`dark:`) | Manual | Manual/runtime |
 | **Responsive** | Built-in (`sm:`, `md:`) | Manual (`@media`) | Manual/runtime |
-| **Community** | Large (75% adoption) | Medium (20%) | Shrinking (10-15%) |
+| **Community** | **Growing (80% adoption)** | Medium (20%) | **Declining (10-15%)** |
+| **React 19 Support** | Full support | Full support | **Limited (RSC issues)** |
 
 **Use Tailwind CSS (SAP-024) when**:
 - ✅ Building new React 19 app (Next.js 15 or Vite 7)
@@ -71,9 +73,17 @@ Start: Need to style React components
 - ✅ Need CSS Grid with named areas
 
 **Use CSS-in-JS when**:
-- ✅ Need dynamic styles from JavaScript runtime
-- ✅ Already invested in CSS-in-JS ecosystem
-- ✅ Building component library (not application)
+- ⚠️ **CAUTION**: CSS-in-JS is declining due to React Server Components incompatibility
+- ⚠️ **Emotion, Styled Components**: Deprecation trend (State of CSS 2024)
+- ⚠️ **RSC Issues**: Runtime CSS generation doesn't work with Server Components
+- ✅ **Only if**: Legacy project migration or very specific runtime styling needs
+- 🔄 **Recommended**: Migrate to Tailwind v4 or CSS Modules
+
+**CSS-in-JS Deprecation Context** (RT-019 Research):
+- React Server Components (RSC) incompatible with runtime CSS generation
+- styled-components, Emotion declining in adoption (State of CSS 2024)
+- Zero-runtime solutions preferred: Tailwind v4, CSS Modules, vanilla-extract
+- **Migration path**: CSS-in-JS → Tailwind v4 typically 2-4 days for medium apps (see Migration Guides below)
 
 ---
 
@@ -725,6 +735,8 @@ npm uninstall @emotion/react @emotion/styled styled-components
 
 ### Migrating from Tailwind v3 to v4
 
+**Why Migrate**: Tailwind v4 provides **5x faster builds** (~100ms vs ~500ms), CSS-first configuration, and zero-runtime output for better React Server Components compatibility.
+
 **Step 1**: Update dependencies
 
 ```bash
@@ -742,7 +754,7 @@ module.exports = {
   },
 }
 
-// After (v4)
+// After (v4) - postcss.config.mjs
 export default {
   plugins: {
     '@tailwindcss/postcss': {},
@@ -786,12 +798,35 @@ module.exports = {
 }
 ```
 
+**Step 5**: Remove old config files
+
+```bash
+# Tailwind v4 uses CSS-first config, so remove:
+rm tailwind.config.js  # or .ts, .mjs
+# Keep only postcss.config.mjs
+```
+
 **Breaking Changes**:
 - `@tailwind` directives replaced with `@import "tailwindcss"`
 - JavaScript theme config replaced with CSS @theme directive
 - Automatic content detection (no `content: []` config needed in most cases)
+- OKLCH color space recommended (better perceptual uniformity than HSL)
+- Container queries native (no plugin needed)
 
-**Estimated Time**: 30 minutes
+**Performance Improvement**:
+- **5x faster builds**: ~100ms (v4) vs ~500ms (v3) for typical projects
+- **Smaller bundle**: Better tree-shaking with CSS-first approach
+- **Zero-JS config**: Faster parsing, better caching
+
+**Estimated Time**: 1-2 hours for medium projects (10-20 components)
+
+**Validation Checklist**:
+- [ ] Dev server starts without errors
+- [ ] All Tailwind classes still apply
+- [ ] Dark mode still works (test toggle)
+- [ ] Responsive breakpoints work (resize window)
+- [ ] Production build succeeds
+- [ ] Bundle size reduced or similar
 
 ---
 

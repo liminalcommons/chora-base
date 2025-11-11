@@ -24,6 +24,22 @@ phase_3_token_estimate: 8000
 
 ---
 
+## 📖 Quick Reference
+
+**New to SAP-016?** → Read **[README.md](README.md)** first (5-min read)
+
+The README provides:
+- 🚀 **Quick Start** - 2-minute setup with 5 validation commands (all, docs, path, CI, help)
+- 📚 **Time Savings** - 5-10 min saved per refactoring session (automated link checking), <5s validation for 87 files with 342 links
+- 🎯 **3 Validation Modes** - Full scan, changed files (git-aware), single file validation
+- 🔧 **3 Link Types** - Internal relative paths, anchor links (#sections), external HTTP/HTTPS
+- 📊 **4 Output Formats** - Human-readable, JSON, GitHub Actions annotations, JUnit XML
+- 🔗 **Integration** - Works with SAP-006 (Quality Gates), SAP-005 (CI/CD), SAP-007 (Documentation), SAP-009 (Agent Awareness)
+
+This CLAUDE.md provides: Claude Code-specific workflows using Bash (validation), Read (reports), Edit (fix broken links).
+
+---
+
 ## Quick Start for Claude
 
 This file provides **Claude Code-specific patterns** for validating markdown links.

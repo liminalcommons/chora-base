@@ -1,6 +1,6 @@
 ---
 sap_id: SAP-012
-version: 1.1.0
+version: 1.5.0
 status: active
 last_updated: 2025-11-06
 type: reference
@@ -21,6 +21,23 @@ phase_3_token_estimate: 11000
 **SAP ID**: SAP-012
 **Claude Compatibility**: Sonnet 4.5+
 **Last Updated**: 2025-11-04
+
+---
+
+## 📖 Quick Reference
+
+**New to SAP-012?** → Read **[README.md](README.md)** first (10-min read)
+
+The README provides:
+- 🚀 **Quick Start** - Phase 2: Create sprint plan
+- 📚 **Time Savings** - 40-80% defect reduction via Documentation-First + BDD + TDD, 60% debugging time reduction
+- 🎯 **Feature 1** - Vision → Planning → Requirements → Development → Testing → Review → Release → Monitoring
+- 🔧 **Feature 2** - Research-backed from BDD + TDD integration
+- 📊 **Feature 3** - Write how-to guides → Extract BDD → Implement with TDD
+- 🔗 **Integration** - Works with SAP-004, SAP-005, SAP-006, SAP-007, SAP-010, SAP-012
+
+This CLAUDE.md provides: Claude Code-specific workflows for implementing SAP-012.
+s.
 
 ---
 

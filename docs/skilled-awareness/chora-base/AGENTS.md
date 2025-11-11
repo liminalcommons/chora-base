@@ -52,6 +52,21 @@ phase_3_deep_understanding:
 
 ---
 
+## 📖 Quick Reference
+
+**New to SAP-002?** → Read **[README.md](README.md)** first (10-min read)
+
+The README provides:
+- 🚀 **Quick Start** - 4 commands for meta-information and structure verification
+- 🏗️ **Architecture** - Three-layer model (template → generated projects → ecosystem)
+- 📂 **SAP Categories** - 32+ SAPs organized by function (foundation, workflow, React, meta)
+- 🎓 **Progressive Loading** - Token-optimized context loading strategy (60-70% savings)
+- 🔍 **Dogfooding Demo** - How SAP-002 proves SAP framework expressiveness
+
+**This AGENTS.md provides**: Deep agent patterns for navigating the chora-base ecosystem, generating projects, and adopting SAPs.
+
+---
+
 ## 1. What is chora-base?
 
 **chora-base** is a comprehensive template repository and SAP framework for AI-agent-first development. It provides:

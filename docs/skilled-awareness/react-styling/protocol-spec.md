@@ -32,6 +32,18 @@ This protocol specification defines the technical standards, patterns, and imple
 
 ## Tailwind CSS v4 Configuration
 
+### Why Tailwind v4?
+
+**Tailwind CSS v4** (released December 2024) represents a major performance breakthrough:
+
+- **5x faster builds** compared to Tailwind v3 (~100ms vs ~500ms)
+- **CSS-first configuration** with `@theme` directive (zero JavaScript config)
+- **Zero-runtime** pure CSS output (perfect RSC compatibility)
+- **Native CSS features**: Container queries, cascade layers, OKLCH colors
+- **Automatic content detection** (no manual purge configuration)
+
+**Migration**: Tailwind v3 → v4 typically takes 1-2 hours for existing projects.
+
 ### Next.js 15 Setup
 
 **File**: `postcss.config.mjs`
@@ -714,6 +726,18 @@ import { Input } from "@/components/ui/input"
 ---
 
 ## shadcn/ui Integration
+
+### Why shadcn/ui?
+
+**shadcn/ui** has become the most popular React component library in 2024:
+
+- **100k+ GitHub stars** (most popular React component library)
+- **Copy-paste model**: Full source control, no npm dependency lock-in
+- **Built on Radix UI**: Accessibility (WAI-ARIA) built-in
+- **Tailwind v4 compatible**: Integrates seamlessly with modern Tailwind
+- **Customization-first**: Edit components directly (they're your code)
+
+**Alternative to npm-installed libraries**: Unlike Material-UI or Ant Design, shadcn/ui gives you full ownership of component code.
 
 ### Installation
 

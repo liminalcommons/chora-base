@@ -7,6 +7,22 @@
 
 ---
 
+## 📖 Quick Reference
+
+**New to SAP-014?** → Read **[README.md](README.md)** first (8-min read)
+
+The README provides:
+- 🚀 **Quick Start** - 6-step MCP development workflow (create → implement → test → configure → restart → use)
+- 📚 **Time Savings** - 80% faster setup (fast-setup vs manual), 100% protocol compliance (FastMCP), 90% namespace consistency
+- 🎯 **MCP Core Concepts** - Tools (functions AI calls), Resources (data AI reads), Prompts (interaction templates)
+- 🔧 **CLI Commands** - create-mcp-server, mcp-validate-namespace, mcp-claude-config, mcp-test for streamlined development
+- 📊 **Chora MCP Conventions v1.0** - namespace:tool_name pattern, namespace://type/id URIs for composability
+- 🔗 **Integration** - Works with SAP-003 (Bootstrap), SAP-004 (Testing), SAP-005 (CI/CD), SAP-011 (Docker)
+
+This CLAUDE.md provides: Claude Code workflows (Bash mcp commands, Write/Edit tool implementation, Read test logs).
+
+---
+
 ## Progressive Context Loading
 
 ```yaml

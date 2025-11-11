@@ -40,6 +40,14 @@ phase_3_deep_dive:
 
 ---
 
+## 📖 Quick Reference
+
+**New to SAP-006?** → Read **[README.md](README.md)** first (9-min read) for pre-commit hooks, CLI commands, and troubleshooting guide.
+
+**This CLAUDE.md provides**: Claude Code tool patterns (Bash, Edit) for quality gate setup, fixing violations, and integration workflows.
+
+---
+
 ## 1. Quick Start for Claude
 
 ### What is Quality Gates? (Claude perspective)

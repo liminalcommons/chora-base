@@ -6,22 +6,20 @@
 
 ---
 
-## Quick Start for Claude
+## 📖 Quick Reference
 
-This file provides **Claude Code-specific patterns** for generating SAPs using templates.
+**New to SAP-029?** → Read **[README.md](README.md)** first (10-min read)
 
-### First-Time SAP Generation
+The README provides:
+- 🚀 **Quick Start** - Step 1: Add SAP to catalog (sap-catalog.json)
+- 📚 **Time Savings** - 70-80% SAP creation time reduction (1-2 hours vs 8-10 hours manual)
+- 🎯 **Feature 1** - 10 hours → 2 hours (automated boilerplate + focused manual fill)
+- 🔧 **Feature 2** - 5 templates for 5 artifacts (capability-charter, protocol-spec, awareness-guide, adoption-blueprint, ledger)
+- 📊 **Feature 3** - 9 fields capture essential metadata (problem, solution, principles, scope, summary)
+- 🔗 **Integration** - Works with SAP-000, SAP-004, SAP-005, SAP-007, SAP-016, SAP-027
 
-1. Read [AGENTS.md](AGENTS.md) for generic SAP generation workflows
-2. Use this file for Claude Code tool integration (Bash, Write, Edit, WebSearch)
-3. Follow 5-step process: Research (Step 0) → Add to catalog → Generate → Fill content → Validate
-
-### Session Resumption
-
-- Check sap-catalog.json for SAP metadata
-- Use Bash tool for generation and validation commands
-- Use Edit tool to fill TODO comments in generated artifacts
-- Track progress with generated artifact count (5/5)
+This CLAUDE.md provides: Claude Code-specific workflows for implementing SAP-029.
+s.
 
 ---
 

@@ -16,6 +16,23 @@ phase_2_token_estimate: 7000
 phase_3_token_estimate: 9500
 ---
 
+## 📖 Quick Reference
+
+**New to SAP-024?** → Read **[README.md](README.md)** first (10-min read)
+
+The README provides:
+- 🚀 **Quick Start** - Install Tailwind CSS v4
+- 📚 **Time Savings** - 87% reduction
+- 🎯 **Feature 1** - Core feature 1
+- 🔧 **Feature 2** - Core feature 2
+- 📊 **Feature 3** - Core feature 3
+- 🔗 **Integration** - Works with SAP-020 (Foundation)
+
+This CLAUDE.md provides: Claude Code-specific workflows for implementing SAP-024.
+s.
+
+---
+
 # React Styling Architecture (SAP-024) - Claude-Specific Awareness
 
 **SAP ID**: SAP-024

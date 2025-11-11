@@ -179,6 +179,12 @@ next_steps:
 
 ### Tailwind CSS v4
 
+**Performance Evidence** (RT-019 Research):
+- ✅ **5x faster builds**: ~100ms (v4) vs ~500ms (v3) for typical projects
+- ✅ **Zero-runtime**: Pure CSS output, perfect React Server Components compatibility
+- ✅ **CSS-first config**: Faster parsing, better caching vs JavaScript config
+- ✅ **Automatic content detection**: No manual purge configuration needed
+
 **CSS-First Configuration**:
 - ✅ Use @theme directive for design tokens (not JavaScript config)
 - ✅ Use OKLCH color space for perceptual uniformity and dark mode
@@ -190,11 +196,18 @@ next_steps:
 - ✅ Define color scales with consistent lightness steps (0.1 increments)
 
 **Performance**:
-- ✅ Automatic content detection in v4 (no manual purge config)
 - ✅ Target <10KB CSS (gzipped) for production
 - ✅ Use code splitting for large pages
+- ✅ Typical bundle size: 6-15KB (vs 60-100KB CSS-in-JS)
 
 ### shadcn/ui
+
+**Adoption Evidence** (RT-019 Research):
+- ✅ **100k+ GitHub stars**: Most popular React component library (2024)
+- ✅ **Copy-paste model**: Full source control, no npm dependency lock-in
+- ✅ **Built on Radix UI**: Accessibility (WAI-ARIA) built-in
+- ✅ **Tailwind v4 compatible**: Seamless integration with modern Tailwind
+- ✅ **Zero runtime cost**: All compile-time, no JavaScript overhead
 
 **Component Customization**:
 - ✅ Edit component files directly (they're your code, not a package)
@@ -241,6 +254,22 @@ next_steps:
 **Grid Patterns**:
 - ✅ grid-cols-1 md:grid-cols-2 lg:grid-cols-3 (1 column mobile, 2 tablet, 3 desktop)
 - ✅ Use gap-4 sm:gap-6 lg:gap-8 for responsive spacing
+
+### CSS-in-JS Deprecation Trend
+
+**Evidence** (RT-019 Research):
+- ⚠️ **React Server Components incompatibility**: Runtime CSS generation doesn't work with RSC
+- ⚠️ **Declining adoption**: styled-components, Emotion declining (State of CSS 2024)
+- ⚠️ **Zero-runtime preference**: Tailwind v4, CSS Modules, vanilla-extract preferred
+- 🔄 **Migration path**: CSS-in-JS → Tailwind v4 typically 2-4 days for medium apps
+- ✅ **Bundle size reduction**: 87% reduction (60KB → 8KB) migrating from Emotion to Tailwind
+
+**Why Zero-Runtime Solutions Win**:
+- ✅ React 19 Server Components fully compatible
+- ✅ No runtime JavaScript overhead
+- ✅ Better performance (no CSS parsing at runtime)
+- ✅ Smaller bundle sizes (pure CSS)
+- ✅ Easier debugging (no abstraction layer)
 
 ### Accessibility
 

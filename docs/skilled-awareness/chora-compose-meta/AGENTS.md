@@ -24,7 +24,22 @@ phase_3_token_estimate: 11500
 
 ---
 
-## Quick Reference
+## 📖 Quick Reference
+
+**New to SAP-018?** → Read **[README.md](README.md)** first (5-min read)
+
+The README provides:
+- 🚀 **Quick Start** - 5 core commands (generate, list-generators, check-freshness, generate-collection)
+- 📚 **24 MCP Tools** - 7 categories (generation, config, storage, discovery, validation, collections, utility)
+- 🎯 **5 Generators** - demonstration, jinja2, template_fill, bdd_scenario, code_generation
+- 🏗️ **3-Tier Collections** - Content → Artifact → Collection architecture
+- 🔧 **Troubleshooting** - 2 common problems (generator not found, cache errors)
+
+**This AGENTS.md provides**: Agent-specific patterns for chora-compose Meta usage, custom generator development, and collections workflows.
+
+---
+
+## Detailed Quick Reference
 
 ### When to Use
 

@@ -6,6 +6,23 @@
 
 ---
 
+## 📖 Quick Reference
+
+**New to SAP-015?** → Read **[README.md](README.md)** first (10-min read)
+
+The README provides:
+- 🚀 **Quick Start** - Initialize beads in repository
+- 📚 **Time Savings** - Eliminates 10-15 min context re-establishment per session, persistent task memory across hours/days/weeks
+- 🎯 **Feature 1** - `.beads/issues.jsonl` (committed), `.beads/beads.db` (gitignored cache)
+- 🔧 **Feature 2** - Automatic ready-work detection (no blockers)
+- 📊 **Feature 3** - Share tasks via git push/pull
+- 🔗 **Integration** - Works with SAP-001, SAP-010, SAP-012, SAP-013, SAP-015, SAP-027
+
+This CLAUDE.md provides: Claude Code-specific workflows for implementing SAP-015.
+s.
+
+---
+
 ## Quick Start for Claude
 
 This file provides **Claude Code-specific patterns** for beads task tracking.

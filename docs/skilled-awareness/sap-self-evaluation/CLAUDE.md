@@ -24,6 +24,23 @@ phase_3_token_estimate: 11000
 
 ---
 
+## 📖 Quick Reference
+
+**New to SAP-019?** → Read **[README.md](README.md)** first (10-min read)
+
+The README provides:
+- 🚀 **Quick Start** - Quick check: Is SAP-004 installed and functional? (30 seconds)
+- 📚 **Time Savings** - 15-20 min/sprint automated evaluation vs manual assessment, evidence-based decisions
+- 🎯 **Feature 1** - Three depth levels (30s quick check, 5min deep dive, 30min strategic analysis) adapt to available time
+- 🔧 **Feature 2** - Quick check validates file existence, command execution, and exit codes without LLM overhead
+- 📊 **Feature 3** - Deep dive analyzes actual content quality, integration depth, and usage patterns beyond automated checks
+- 🔗 **Integration** - Works with SAP-000 (Framework)
+
+This CLAUDE.md provides: Claude Code-specific workflows for implementing SAP-019.
+).
+
+---
+
 ## Quick Start for Claude
 
 This file provides **Claude Code-specific patterns** for self-evaluating SAP adoption using Claude's tool suite (Bash, Read, Edit, Write).

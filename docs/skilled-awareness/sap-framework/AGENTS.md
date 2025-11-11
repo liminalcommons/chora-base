@@ -24,22 +24,19 @@ phase_3_token_estimate: 13000
 
 ---
 
-## Quick Reference
+## 📖 Quick Reference
 
-### When to Use
+**New to SAP-000?** → Read **[README.md](README.md)** first (10-min read)
 
-**Use SAP Framework (SAP-000) when**:
-- Creating a new capability package (generate 5 artifacts)
-- Installing a SAP into a project (follow adoption blueprint)
-- Upgrading a SAP to a new version (follow migration path)
-- Validating SAP structure (check required artifacts exist)
-- Understanding SAP versioning and governance
+The README provides:
+- 🚀 **Quick Start** - 30-minute guide to understanding SAP structure and generating your first SAP
+- 📚 **Time Savings** - 90% documentation time reduction (30 hours manual → 3 hours with templates)
+- 🎯 **Standardized Structure** - 5 required artifacts (capability-charter, protocol-spec, awareness-guide, adoption-blueprint, ledger)
+- 🔧 **Validation Automation** - Automated scripts enforce README structure, Quick Reference format, and link integrity
+- 📊 **Progressive Loading** - Three-tier token strategy (300-500 → 2-5k → 10-50k tokens) optimizes agent context usage
+- 🔗 **Integration** - Works with SAP-019 (Self-Evaluation), SAP-029 (Generation), SAP-016 (Link Validation)
 
-**Don't use when**:
-- Writing regular code documentation (use inline comments)
-- Creating one-off scripts (use automation-scripts SAP)
-- Documenting single functions (use docstrings)
-- Managing git history (use git directly)
+This AGENTS.md provides: Agent-specific workflows for creating, validating, and upgrading SAPs, including command-line patterns and troubleshooting decision trees.
 
 ### SAP Structure
 
@@ -435,6 +432,75 @@ git commit -m "feat(sap-025): Add new capability"
 ```
 
 **Why**: Build capability graph, enable discovery
+
+---
+
+### Practice 6: Discoverability-First Adoption
+
+**The Meta-Discoverability Principle**:
+
+> **"The better the pattern, the worse the impact if undiscoverable"**
+
+Implementation quality is irrelevant if agents cannot discover the capability exists. Without strong discoverability, excellent implementations remain invisible, creating a meta-discoverability paradox where sophisticated patterns become liabilities instead of assets.
+
+**Anti-Pattern** (common mistake):
+```
+Day 1:  Implement SAP (excellent quality, 20 hours)
+Day 2-30: Use SAP internally (works great)
+Day 30: Mark L1 complete
+Day 60: Run discoverability audit → 40/100
+Day 90: Other agents still can't find SAP
+ROI: $0 (invisible to others)
+```
+
+**Correct Pattern** (discoverability-first):
+```
+Day 1:  Implement SAP (excellent quality, 20 hours)
+Day 2:  Add discoverability (README, AGENTS, justfile, 3-5 hours)
+Day 2:  Validate discoverability ≥80/100
+Day 2:  Mark L1 complete
+Day 3+: Natural adoption (agents discover via root files)
+ROI: Projected value realized from day 1
+```
+
+**Time Investment**: 3-5 hours (12-20% overhead on implementation)
+**Returns**: 10-15 min saved per session per agent
+**Break-even**: 20-30 sessions (1-2 months for single agent)
+**12-Month ROI**: 250-400% (typical)
+
+**L1 Checklist** (before marking complete):
+```bash
+# 1. README.md dedicated section (≥30 lines)
+grep -A 40 "### SAP-XXX" README.md | wc -l  # Target: ≥30
+
+# 2. AGENTS.md dedicated section (≥60 lines)
+grep -A 70 "### SAP-XXX" AGENTS.md | wc -l  # Target: ≥60
+
+# 3. justfile recipes (≥3 with comments)
+grep -A 20 "SAP-XXX" justfile | grep "^[a-z]" | wc -l  # Target: ≥3
+
+# 4. Direct links (if nested hierarchy)
+grep -o "\[.*AGENTS.md\](.*AGENTS.md)" CLAUDE.md  # Should have links
+
+# 5. Discoverability audit
+python scripts/sap-evaluator.py --disc SAP-XXX  # Target: ≥80/100
+```
+
+**Why**: Without discoverability ≥80/100, other agents never find the SAP, resulting in zero adoption and negative ROI. Discoverability is a **prerequisite for L1 completion**, not an optional enhancement.
+
+**Special Case: Advanced Patterns**
+
+If your SAP uses advanced patterns (SAP-009 nested hierarchies, SAP-012 planning frameworks):
+- **Higher threshold**: ≥85/100 (vs ≥80/100 for standard SAPs)
+- **Required elements**:
+  - Explicit token savings statement (e.g., "60-70% reduction")
+  - Read time estimates (e.g., "8-min, 5k tokens")
+  - Direct links from root to nested files (not optional)
+  - "Navigation tip" sections
+
+**Rationale**: Without extra discoverability, navigation tax exceeds pattern benefits, making advanced patterns net negative.
+
+**Template**: See [discoverability-checklist.md](../templates/discoverability-checklist.md) for complete guidance.
 
 ---
 

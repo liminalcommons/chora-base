@@ -1,8 +1,8 @@
 # Adoption Blueprint: Agent Awareness
 
 **SAP ID**: SAP-009
-**Version**: 1.0.0
-**Last Updated**: 2025-10-28
+**Version**: 2.1.0
+**Last Updated**: 2025-11-10
 
 ---
 
@@ -80,9 +80,80 @@ cp chora-base/blueprints/CLAUDE.md.blueprint CLAUDE.md
 1. **Token Budgets** - Adjust for your project size
 2. **Checkpoint Patterns** - Project-specific checkpoints
 
-### Step 3: Create Nested Files (Optional)
+### Step 3: Assess File Size and Plan Structure (v2.1.0)
 
-**For domains with complex guidance**:
+**Check current or projected size**:
+```bash
+wc -l AGENTS.md CLAUDE.md
+# Calculate token estimate: lines × 5.6 avg tokens/line
+```
+
+**Decision Tree**:
+- **<500 lines**: Single file (optimal) - Skip to Step 4
+- **500-1,000 lines**: Monitor, prepare for potential split - Continue to Step 4
+- **1,000-2,000 lines**: Should split (warning zone) - Proceed to Step 3a
+- **>2,000 lines**: Must split immediately (critical zone) - Proceed to Step 3a
+
+**Step 3a: If Splitting Needed** (files >1,000 lines)
+
+**1. Identify distinct domains**:
+- What are the major topic areas in your project?
+- What content clusters together naturally?
+- What workflows/processes are critical and frequently missed?
+
+**2. Recommended domain taxonomy**:
+- `/workflows/` or `/dev-process/` - Development workflows, sprint processes
+- `/saps/` - SAP catalog and quick references (if applicable)
+- `/features/` - Feature-specific patterns
+- `/integrations/` - Integration patterns
+- `/getting-started/` - Onboarding guides
+- Custom domains as needed
+
+**3. Create nested directory structure**:
+```bash
+mkdir -p workflows/
+mkdir -p saps/
+mkdir -p features/
+```
+
+**4. Extract domain-specific content** to nested files:
+- Keep each nested file <500-800 lines
+- Maintain clear navigation links between files
+- Use "Nearest File Wins" principle
+
+**5. Add "Critical Workflows" section** to root file:
+- Location: Immediately after project overview (lines 20-100)
+- Include 3-5 most frequently-missed workflows
+- Provide quick reference + links to full details
+- Use "⚠️" emoji for visibility
+
+**6. Update frontmatter** in root files:
+```yaml
+---
+nested_structure: true
+nested_files:
+  - "workflows/AGENTS.md"
+  - "saps/AGENTS.md"
+  - "features/AGENTS.md"
+---
+```
+
+**7. Validate structure**:
+```bash
+# Check links are not broken
+python scripts/validate-awareness-links.sh
+
+# Verify file sizes
+wc -l AGENTS.md */AGENTS.md
+# Root should be <1,000 lines
+# Nested should be <800 lines each
+```
+
+**See**: [awareness-guide.md Section 4](awareness-guide.md#4-when-to-split-awareness-files) for complete splitting strategy and evidence from chora-workspace
+
+### Step 4: Create Nested Files (Optional - if not done in Step 3)
+
+**For domains with complex guidance** (and files <1,000 lines):
 - tests/AGENTS.md - Testing guide (~250 lines)
 - scripts/AGENTS.md - Script reference (~200 lines)
 - docker/AGENTS.md - Docker operations (~200 lines)
@@ -254,4 +325,5 @@ grep "Agent Awareness" AGENTS.md && echo "✅ AGENTS.md updated"
 ---
 
 **Version History**:
+- **2.1.0** (2025-11-10): Added Step 3 (Assess File Size and Plan Structure) - file size thresholds, splitting decision tree, domain taxonomy, Critical Workflows pattern, validation steps (COORD-2025-012)
 - **1.0.0** (2025-10-28): Initial adoption blueprint
