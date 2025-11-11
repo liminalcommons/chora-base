@@ -53,6 +53,30 @@ validate-links PATH=".":
 check-sap-awareness SAP_PATH:
     python scripts/check-sap-awareness-integration.py {{SAP_PATH}}
 
+# Validate Quick Reference sections in SAP documentation (Batch 11-15 pattern)
+validate-quick-refs:
+    python scripts/validate-quick-reference.py
+
+# Validate Quick Reference for specific SAP
+validate-quick-ref SAP_ID:
+    python scripts/validate-quick-reference.py --sap {{SAP_ID}}
+
+# Validate README structure in SAP documentation (9-section pattern)
+validate-readme-structure:
+    python scripts/validate-readme-structure.py
+
+# Validate README structure for specific SAP
+validate-readme SAP_ID:
+    python scripts/validate-readme-structure.py --sap {{SAP_ID}}
+
+# Validate all SAP documentation (Quick Refs + README structure)
+validate-sap-docs:
+    @echo "Validating Quick Reference sections..."
+    @python scripts/validate-quick-reference.py --summary-only
+    @echo ""
+    @echo "Validating README structure..."
+    @python scripts/validate-readme-structure.py --summary-only
+
 # Rollback template migration (restore from .backup files)
 rollback-migration:
     python scripts/rollback-migration.py
@@ -1103,6 +1127,31 @@ validate-awareness-structure FILE="AGENTS.md":
 # Example: just validate-awareness-links
 validate-awareness-links:
     @python scripts/validate-awareness-links.py 2>/dev/null || echo "Awareness link validation not available (SAP-009 not fully installed)"
+
+# Validate nested awareness structure (SAP-009 v2.1.0)
+# Checks file size, frontmatter, nested files, Critical Workflows section
+# Example: just validate-nested-awareness docs/skilled-awareness/react-form-validation/awareness-guide.md
+validate-nested-awareness PATH:
+    python scripts/validate-nested-awareness.py {{PATH}}
+
+# Validate nested awareness with summary only
+# Example: just validate-nested-awareness-summary docs/skilled-awareness/
+validate-nested-awareness-summary PATH:
+    python scripts/validate-nested-awareness.py --summary {{PATH}}
+
+# Validate nested awareness with JSON output
+# Example: just validate-nested-awareness-json docs/skilled-awareness/
+validate-nested-awareness-json PATH:
+    python scripts/validate-nested-awareness.py --json {{PATH}}
+
+# Validate all Tier 1 SAPs (completed in Phase 3)
+# Example: just validate-tier1-saps
+validate-tier1-saps:
+    @echo "Validating Tier 1 SAPs (Phase 3 completed SAPs)..."
+    python scripts/validate-nested-awareness.py --summary \
+        docs/skilled-awareness/react-form-validation \
+        docs/skilled-awareness/react-authentication \
+        docs/skilled-awareness/react-database-integration
 
 # Create domain-specific AGENTS.md from template
 # Example: just create-domain-awareness tests
