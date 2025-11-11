@@ -9,20 +9,19 @@
 
 ---
 
-## Quick Reference (30-Second Overview)
+## 📖 Quick Reference
 
-**SAP-039** provides production-ready end-to-end (E2E) testing for React applications with two modern frameworks:
+**New to SAP-039?** → Read **[README.md](README.md)** first (10-min read)
 
-1. **Playwright** (62k stars) - Cross-browser (Chrome, Firefox, Safari, Edge, mobile), TypeScript-first, 3x faster than Selenium
-2. **Cypress** (46k stars) - Time-travel debugging, developer experience, 10M downloads/month
+The README provides:
+- 🚀 **Quick Start** - 45-minute setup with framework decision tree for Playwright or Cypress
+- 📚 **Time Savings** - 90.6% reduction (45 min vs 6-8 hours manual), 90% flakiness reduction, 10x faster test execution
+- 🎯 **2 Framework Options** - Playwright (cross-browser, mobile, 3x faster) or Cypress (time-travel debugging, 10M downloads/month)
+- 🔧 **Authentication Testing** - Page Objects, session persistence, login/signup/OAuth flows with 100% coverage
+- 📊 **Visual Regression** - Screenshot comparison (Playwright native, Cypress plugins), <5% false positives
+- 🔗 **Integration** - Works with SAP-020 (Foundation), SAP-021 (Testing), SAP-033 (Auth), SAP-041 (Forms)
 
-**Time Savings**: 6-8h → 45min (90.6% reduction)
-**Key Features**: 90% flakiness reduction, <5min test suite, authentication flow testing, API mocking, visual regression
-
-**When to Use**:
-- Need Safari/mobile testing → Playwright
-- Need time-travel debugging → Cypress
-- Either framework works → Personal preference
+This AGENTS.md provides: Agent-specific patterns for E2E testing workflows.
 
 ---
 

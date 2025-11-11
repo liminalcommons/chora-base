@@ -8,16 +8,19 @@
 
 ---
 
-## Quick Reference for Claude
+## 📖 Quick Reference
 
-### What This SAP Provides
+**New to SAP-039?** → Read **[README.md](README.md)** first (10-min read)
 
-SAP-039 enables **end-to-end (E2E) testing** for React applications with two modern frameworks:
+The README provides:
+- 🚀 **Quick Start** - 45-minute setup with framework decision tree for Playwright or Cypress
+- 📚 **Time Savings** - 90.6% reduction (45 min vs 6-8 hours manual), 90% flakiness reduction, 10x faster test execution
+- 🎯 **2 Framework Options** - Playwright (cross-browser, mobile, 3x faster) or Cypress (time-travel debugging, 10M downloads/month)
+- 🔧 **Authentication Testing** - Page Objects, session persistence, login/signup/OAuth flows with 100% coverage
+- 📊 **Visual Regression** - Screenshot comparison (Playwright native, Cypress plugins), <5% false positives
+- 🔗 **Integration** - Works with SAP-020 (Foundation), SAP-021 (Testing), SAP-033 (Auth), SAP-041 (Forms)
 
-1. **Playwright** - Cross-browser (Chrome, Firefox, Safari, Edge, mobile), 3x faster than Selenium, 62k GitHub stars
-2. **Cypress** - Time-travel debugging, developer experience, 10M downloads/month, 46k stars
-
-**Time savings**: 90.6% (6-8h → 45min)
+This CLAUDE.md provides: Claude Code-specific workflows for E2E testing.
 
 ---
 

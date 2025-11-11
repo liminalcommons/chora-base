@@ -8,32 +8,19 @@
 
 ---
 
-## Quick Reference
+## 📖 Quick Reference
 
-### What This SAP Does
+**New to SAP-038?** → Read **[README.md](README.md)** first (10-min read)
 
-Provides **internationalization (i18n)** for React applications using two battle-tested libraries:
+The README provides:
+- 🚀 **Quick Start** - 4-step setup (35 minutes) with library decision tree for next-intl or react-i18next
+- 📚 **Time Savings** - 88.3% reduction (35 min vs 4-6 hours manual), type-safe translations with TypeScript inference
+- 🎯 **2 Library Options** - next-intl (Next.js 15 native, 14KB) or react-i18next (framework-agnostic, 22KB)
+- 🔧 **Locale Routing** - Middleware-based routing (/en/, /es/, /ar/) with automatic locale detection
+- 📊 **RTL Support** - CSS logical properties, Tailwind RTL, Arabic/Hebrew/Farsi support with auto-direction switching
+- 🔗 **Integration** - Works with SAP-020 (Foundation), SAP-041 (Forms), SAP-026 (Accessibility), SAP-031 (Routing)
 
-1. **next-intl** - Next.js 15 native, Server Component support, type-safe, 14KB gzipped
-2. **react-i18next** - Framework-agnostic, mature ecosystem, 8k stars, 3M weekly downloads, 22KB gzipped
-
-**Core Capabilities**:
-- Library decision matrix (2 libraries, 3-question tree)
-- Locale routing (middleware-based, /en/, /es/, /ar/)
-- RTL support (CSS logical properties, Tailwind, Arabic/Hebrew/Farsi)
-- Type-safe translations (TypeScript inference from message files)
-- Pluralization (CLDR rules, 6 categories, all languages)
-- Number/date formatting (Intl API, locale-aware)
-- SEO optimization (hreflang tags, locale sitemaps)
-- Translation management (POEditor, Crowdin integration)
-
----
-
-### Time Savings
-
-**Manual i18n implementation**: 4-6 hours
-**With SAP-038**: 35 minutes
-**Savings**: 88.3%
+This AGENTS.md provides: Agent-specific patterns for implementing internationalization workflows.
 
 ---
 

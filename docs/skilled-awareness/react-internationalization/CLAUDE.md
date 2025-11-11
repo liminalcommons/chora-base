@@ -8,16 +8,19 @@
 
 ---
 
-## Quick Reference for Claude
+## 📖 Quick Reference
 
-### What This SAP Provides
+**New to SAP-038?** → Read **[README.md](README.md)** first (10-min read)
 
-SAP-038 enables **internationalization (i18n)** in React applications with two battle-tested libraries:
+The README provides:
+- 🚀 **Quick Start** - 4-step setup (35 minutes) with library decision tree for next-intl or react-i18next
+- 📚 **Time Savings** - 88.3% reduction (35 min vs 4-6 hours manual), type-safe translations with TypeScript inference
+- 🎯 **2 Library Options** - next-intl (Next.js 15 native, 14KB) or react-i18next (framework-agnostic, 22KB)
+- 🔧 **Locale Routing** - Middleware-based routing (/en/, /es/, /ar/) with automatic locale detection
+- 📊 **RTL Support** - CSS logical properties, Tailwind RTL, Arabic/Hebrew/Farsi support with auto-direction switching
+- 🔗 **Integration** - Works with SAP-020 (Foundation), SAP-041 (Forms), SAP-026 (Accessibility), SAP-031 (Routing)
 
-1. **next-intl** - Next.js 15 native, Server Component support, type-safe, 14KB gzipped
-2. **react-i18next** - Framework-agnostic, mature ecosystem, 8k stars, 3M downloads, 22KB gzipped
-
-**Time savings**: 88.3% (4-6h → 35min)
+This CLAUDE.md provides: Claude Code-specific workflows for implementing internationalization.
 
 ---
 

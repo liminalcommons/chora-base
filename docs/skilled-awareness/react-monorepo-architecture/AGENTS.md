@@ -9,21 +9,19 @@
 
 ---
 
-## Quick Reference (30-Second Overview)
+## 📖 Quick Reference
 
-**SAP-040** provides production-ready monorepo architecture for React applications with three modern tools:
+**New to SAP-040?** → Read **[README.md](README.md)** first (10-min read)
 
-1. **Turborepo** (15k stars) - Fastest, simple, Vercel Remote Cache (free), Next.js-optimized
-2. **Nx** (22k stars) - Powerful, code generation, enterprise-grade, 500h/mo free cloud
-3. **pnpm workspaces** (28k stars) - Baseline, lightweight, fast installs, no orchestration
+The README provides:
+- 🚀 **Quick Start** - 50-minute setup with tool decision tree for Turborepo, Nx, or pnpm workspaces
+- 📚 **Time Savings** - 93.1% reduction (50 min vs 8-12 hours manual), 90% build time reduction with remote caching
+- 🎯 **3 Tool Options** - Turborepo (fastest, free cache), Nx (code generation, enterprise), pnpm workspaces (baseline)
+- 🔧 **Shared Packages** - @acme/ui, @acme/utils, @acme/config with workspace protocol for zero version conflicts
+- 📊 **Remote Caching** - Vercel Remote Cache (Turborepo free), Nx Cloud (500h/mo free), 10x CI/CD speedup
+- 🔗 **Integration** - Works with SAP-020 (Foundation), SAP-021 (Testing), SAP-024 (Styling), SAP-028 (Publishing)
 
-**Time Savings**: 8-12h → 50min (93.1% reduction)
-**Key Features**: 90% build time reduction (remote cache), zero version conflicts, shared packages, affected detection
-
-**When to Use**:
-- Need shared packages (web + mobile + admin) → Turborepo
-- Need code generation (nx generate @nx/react:component) → Nx
-- Need baseline linking (2-5 packages, no orchestration) → pnpm workspaces
+This AGENTS.md provides: Agent-specific patterns for monorepo architecture workflows.
 
 ---
 
