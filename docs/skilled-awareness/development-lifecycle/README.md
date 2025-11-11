@@ -6,7 +6,7 @@
 
 ---
 
-## 🚀 Quick Start (2 minutes)
+## Quick Start (5 minutes)
 
 ```bash
 # Phase 2: Create sprint plan
@@ -37,7 +37,7 @@ just prepare-release                              # Changelog, tag, build
 
 ---
 
-## 📖 What Is SAP-012?
+## What Is It?
 
 SAP-012 provides the **8-phase development lifecycle** from Vision (months) → Planning (weeks) → Requirements (days) → Development (days-weeks) → Testing (hours-days) → Review (hours-days) → Release (hours) → Monitoring (continuous). It integrates **DDD → BDD → TDD** methodologies into a unified workflow, achieving 40-80% defect reduction through Documentation-First development.
 
@@ -45,7 +45,7 @@ SAP-012 provides the **8-phase development lifecycle** from Vision (months) → 
 
 ---
 
-## 🎯 When to Use
+## When to Use
 
 Use SAP-012 when you need to:
 
@@ -59,7 +59,7 @@ Use SAP-012 when you need to:
 
 ---
 
-## ✨ Key Features
+## Key Features
 
 - ✅ **8-Phase Lifecycle** - Vision → Planning → Requirements → Development → Testing → Review → Release → Monitoring
 - ✅ **40-80% Defect Reduction** - Research-backed from BDD + TDD integration
@@ -72,7 +72,7 @@ Use SAP-012 when you need to:
 
 ---
 
-## 📚 Quick Reference
+## Common Workflows
 
 ### 8 Lifecycle Phases
 
@@ -288,7 +288,7 @@ just create-sprint-plan $(date +%Y-%m-%d)  # Phase 2 planning
 
 ---
 
-## 🔗 Integration with Other SAPs
+## Integration
 
 | SAP | Integration | How It Works |
 |-----|-------------|--------------|
@@ -332,7 +332,7 @@ echo '{"timestamp":"'$(date -Iseconds)'","event_type":"milestone","description":
 
 ---
 
-## 🏆 Success Metrics
+## Success Metrics
 
 - **Defect Reduction**: 40-80% fewer bugs (research-backed from BDD + TDD)
 - **Velocity Maintenance**: No slowdown vs pure TDD (L3 pattern eliminates doc debt)
@@ -343,9 +343,9 @@ echo '{"timestamp":"'$(date -Iseconds)'","event_type":"milestone","description":
 
 ---
 
-## 🔧 Troubleshooting
+## Troubleshooting
 
-**Problem**: BDD scenarios failing even though unit tests pass
+### Problem 1: BDD Scenarios Failing Even Though Unit Tests Pass
 
 **Solution**: This is expected during TDD implementation. BDD scenarios test user-facing behavior (integration level), while unit tests verify components. Continue TDD cycles until BDD scenarios turn GREEN:
 ```bash
@@ -358,7 +358,7 @@ just tdd-cycle tests/test_integration.py
 
 ---
 
-**Problem**: Documentation-First feels slow (Phase 3)
+### Problem 2: Documentation-First Feels Slow (Phase 3)
 
 **Solution**: L3 pattern saves 60% time overall despite upfront documentation cost. Benefits:
 - **Stakeholder alignment** - Catch requirement issues before coding
@@ -370,7 +370,7 @@ just tdd-cycle tests/test_integration.py
 
 ---
 
-**Problem**: TDD cycles take too long (Phase 4)
+### Problem 3: TDD Cycles Take Too Long (Phase 4)
 
 **Solution**: Use smoke tests for fast feedback during development:
 ```bash
@@ -387,7 +387,7 @@ pytest --lf                              # Re-run last failures only
 
 ---
 
-**Problem**: Phase 5 quality gates blocking commits
+### Problem 4: Phase 5 Quality Gates Blocking Commits
 
 **Solution**: Fix issues locally before committing:
 ```bash
@@ -405,7 +405,7 @@ git add . && git commit -m "Add feature"
 
 ---
 
-## 📄 Learn More
+## Learn More
 
 - **[protocol-spec.md](protocol-spec.md)** - Complete 8-phase lifecycle specification (72KB, 40-min read)
 - **[AGENTS.md](AGENTS.md)** - Agent-specific lifecycle workflows (18KB, 10-min read)
