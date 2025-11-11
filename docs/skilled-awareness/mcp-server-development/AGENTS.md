@@ -9,16 +9,17 @@
 
 ## 📖 Quick Reference
 
-**New to SAP-014?** → Read **[README.md](README.md)** first (5-min read)
+**New to SAP-014?** → Read **[README.md](README.md)** first (8-min read)
 
 The README provides:
 - 🚀 **Quick Start** - 6-step MCP development workflow (create → implement → test → configure → restart → use)
-- 📚 **MCP Core Concepts** - Tools (functions), Resources (data), Prompts (templates)
-- 🎯 **Chora MCP Conventions v1.0** - namespace:tool_name pattern, namespace://type/id URIs
-- 🔧 **CLI Commands** - create-mcp-server, mcp-validate-namespace, mcp-claude-config, mcp-test
-- 📝 **Troubleshooting** - 4 common problems (server not loading, parameter validation, namespace validation, resource URIs)
+- 📚 **Time Savings** - 80% faster setup (fast-setup vs manual), 100% protocol compliance (FastMCP), 90% namespace consistency
+- 🎯 **MCP Core Concepts** - Tools (functions AI calls), Resources (data AI reads), Prompts (interaction templates)
+- 🔧 **CLI Commands** - create-mcp-server, mcp-validate-namespace, mcp-claude-config, mcp-test for streamlined development
+- 📊 **Chora MCP Conventions v1.0** - namespace:tool_name pattern, namespace://type/id URIs for composability
+- 🔗 **Integration** - Works with SAP-003 (Bootstrap), SAP-004 (Testing), SAP-005 (CI/CD), SAP-011 (Docker)
 
-**This AGENTS.md provides**: Agent-specific patterns for MCP server development, tool/resource implementation, and client integration.
+This AGENTS.md provides: Agent-specific patterns for MCP server development, tool/resource implementation, and client integration.
 
 ---
 

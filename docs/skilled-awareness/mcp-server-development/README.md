@@ -7,7 +7,7 @@
 
 ---
 
-## 🚀 Quick Start (2 minutes)
+## Quick Start (5 minutes)
 
 ```bash
 # Create MCP server from template (fast-setup)
@@ -36,7 +36,7 @@ just mcp-claude-config task-manager-mcp ~/projects/task-manager-mcp task_manager
 
 ---
 
-## 📖 What Is SAP-014?
+## What Is It?
 
 SAP-014 provides **MCP server development** using FastMCP library (Python SDK) + Chora MCP Conventions v1.0 (namespace:tool_name pattern). It enables AI assistants like Claude to call custom tools, read resources, and use prompts through the Model Context Protocol.
 
@@ -44,7 +44,7 @@ SAP-014 provides **MCP server development** using FastMCP library (Python SDK) +
 
 ---
 
-## 🎯 When to Use
+## When to Use
 
 Use SAP-014 when you need to:
 
@@ -58,7 +58,7 @@ Use SAP-014 when you need to:
 
 ---
 
-## ✨ Key Features
+## Key Features
 
 - ✅ **FastMCP SDK** - Official Python library for MCP protocol compliance
 - ✅ **Chora MCP Conventions v1.0** - namespace:tool_name pattern (90% adoption)
@@ -73,7 +73,7 @@ Use SAP-014 when you need to:
 
 ---
 
-## 📚 Quick Reference
+## Common Workflows
 
 ### MCP Core Concepts
 
@@ -423,7 +423,7 @@ just mcp-help
 
 ---
 
-## 🔗 Integration with Other SAPs
+## Integration
 
 | SAP | Integration | How It Works |
 |-----|-------------|--------------|
@@ -467,7 +467,7 @@ docker run -d task-mcp:latest
 
 ---
 
-## 🏆 Success Metrics
+## Success Metrics
 
 - **Setup Time**: 1-2 minutes (vs 30-60 minutes manual) - 80% faster
 - **Protocol Compliance**: 100% (FastMCP handles all MCP 2024-11-05 details)
@@ -477,9 +477,9 @@ docker run -d task-mcp:latest
 
 ---
 
-## 🔧 Troubleshooting
+## Troubleshooting
 
-**Problem**: MCP server not loading in Claude Desktop
+### Problem 1:MCP server not loading in Claude Desktop
 
 **Solution**: Check config path and syntax:
 ```bash
@@ -503,7 +503,7 @@ tail -f ~/Library/Logs/Claude/mcp*.log
 
 ---
 
-**Problem**: Tool parameters not validated correctly
+### Problem 2:Tool parameters not validated correctly
 
 **Solution**: Ensure type hints + docstrings follow FastMCP patterns:
 ```python
@@ -540,7 +540,7 @@ def create_task(title: str, priority: int = 3) -> dict:
 
 ---
 
-**Problem**: Namespace validation fails
+### Problem 3:Namespace validation fails
 
 **Solution**: Check namespace against Chora MCP Conventions v1.0 rules:
 ```bash
@@ -558,7 +558,7 @@ just mcp-validate-namespace mynamespace
 
 ---
 
-**Problem**: Resource URIs not working
+### Problem 4:Resource URIs not working
 
 **Solution**: Use `make_resource_uri()` helper from `mcp.py`:
 ```python
@@ -580,7 +580,7 @@ def get_template() -> str:
 
 ---
 
-## 📄 Learn More
+## Learn More
 
 - **[protocol-spec.md](protocol-spec.md)** - Complete MCP technical specification (51KB, 25-min read)
 - **[AGENTS.md](AGENTS.md)** - Agent MCP workflows (26KB, 13-min read)

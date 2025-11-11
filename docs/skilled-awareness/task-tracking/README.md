@@ -6,7 +6,7 @@
 
 ---
 
-## 🚀 Quick Start (2 minutes)
+## Quick Start (5 minutes)
 
 ```bash
 # Initialize beads in repository
@@ -36,7 +36,7 @@ bd list --status open --priority high --json
 
 ---
 
-## 📖 What Is SAP-015?
+## What Is It?
 
 SAP-015 provides **git-native task tracking** using the `bd` CLI tool (beads). It stores tasks in `.beads/issues.jsonl` (committed to git) with SQLite cache (`.beads/beads.db`, gitignored) for fast queries. AI agents can find ready work, manage dependencies, and coordinate across sessions spanning hours, days, or weeks.
 
@@ -44,7 +44,7 @@ SAP-015 provides **git-native task tracking** using the `bd` CLI tool (beads). I
 
 ---
 
-## 🎯 When to Use
+## When to Use
 
 Use SAP-015 when you need to:
 
@@ -58,7 +58,7 @@ Use SAP-015 when you need to:
 
 ---
 
-## ✨ Key Features
+## Key Features
 
 - ✅ **Git-Native Storage** - `.beads/issues.jsonl` (committed), `.beads/beads.db` (gitignored cache)
 - ✅ **Dependency-Aware** - Automatic ready-work detection (no blockers)
@@ -72,7 +72,7 @@ Use SAP-015 when you need to:
 
 ---
 
-## 📚 Quick Reference
+## Common Workflows
 
 ### Core Commands
 
@@ -411,7 +411,7 @@ bd show PROJ-001 --json | jq .status
 
 ---
 
-## 🔗 Integration with Other SAPs
+## Integration
 
 | SAP | Integration | How It Works |
 |-----|-------------|--------------|
@@ -450,7 +450,7 @@ bd list --status closed --created-after 2025-11-01 | wc -l
 
 ---
 
-## 🏆 Success Metrics
+## Success Metrics
 
 - **Session Startup**: 2-5 minutes saved per session (ready-work vs manual discovery)
 - **Context Restoration**: 80-90% faster than re-reading docs
@@ -460,9 +460,9 @@ bd list --status closed --created-after 2025-11-01 | wc -l
 
 ---
 
-## 🔧 Troubleshooting
+## Troubleshooting
 
-**Problem**: `.beads/` directory doesn't exist
+### Problem 1: .beads/ Directory Doesn't Exist
 
 **Solution**: Initialize beads in repository:
 ```bash
@@ -472,7 +472,7 @@ bd init
 
 ---
 
-**Problem**: `bd ready` shows no tasks despite open tasks
+### Problem 2: bd ready Shows No Tasks Despite Open Tasks
 
 **Solution**: Check for blocking dependencies:
 ```bash
@@ -485,7 +485,7 @@ bd unblock PROJ-002 --blocked-by PROJ-001
 
 ---
 
-**Problem**: SQLite cache out of sync with JSONL
+### Problem 3: SQLite Cache Out of Sync with JSONL
 
 **Solution**: Beads auto-syncs every 5 seconds, but manual sync available:
 ```bash
@@ -499,7 +499,7 @@ bd list  # Regenerates cache
 
 ---
 
-**Problem**: Multi-agent task ID collisions
+### Problem 4: Multi-Agent Task ID Collisions
 
 **Solution**: Upgrade to beads v0.20.1+ for hash-based IDs:
 ```bash
@@ -515,7 +515,7 @@ pip install --upgrade beads
 
 ---
 
-## 📄 Learn More
+## Learn More
 
 - **[protocol-spec.md](protocol-spec.md)** - Complete beads technical specification (26KB, 13-min read)
 - **[AGENTS.md](AGENTS.md)** - Agent beads workflows (20KB, 10-min read)

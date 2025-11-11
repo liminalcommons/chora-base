@@ -33,16 +33,17 @@ tags:
 
 ## 📖 Quick Reference
 
-**New to SAP-015?** → Read **[README.md](README.md)** first (5-min read)
+**New to SAP-015?** → Read **[README.md](README.md)** first (8-min read)
 
 The README provides:
-- 🚀 **Quick Start** - 6 core commands (init, create, ready, update, close, list)
-- 📚 **Workflow Patterns** - Session startup, multi-session work, dependency management, multi-agent coordination
-- 🎯 **12+ CLI Commands** - Complete `bd` command reference with JSON output
-- 🔗 **Integration Patterns** - Cross-SAP workflows (SAP-001, SAP-010, SAP-012, SAP-013)
-- 🔧 **Troubleshooting** - 4 common problems (no .beads/, no ready work, sync issues, ID collisions)
+- 🚀 **Quick Start** - 6 core commands (init, create, ready, update, close, list) for git-backed task tracking
+- 📚 **Time Savings** - 30-45 min saved per session via persistent context, automated ready-work detection
+- 🎯 **12+ CLI Commands** - Complete `bd` command reference with JSON output for programmatic access
+- 🔧 **Workflow Patterns** - Session startup, multi-session work, dependency management, multi-agent coordination
+- 📊 **Success Metrics** - 70-80% context restoration time savings, 90%+ multi-agent coordination accuracy
+- 🔗 **Integration** - Works with SAP-001 (Inbox), SAP-010 (Memory), SAP-012 (Lifecycle), SAP-013 (Metrics)
 
-**This AGENTS.md provides**: Agent-specific patterns for beads workflows, ready-work detection, and multi-agent coordination.
+This AGENTS.md provides: Agent-specific patterns for beads workflows, ready-work detection, and multi-agent coordination.
 
 ---
 

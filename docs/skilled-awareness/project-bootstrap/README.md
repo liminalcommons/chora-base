@@ -6,7 +6,7 @@
 
 ---
 
-## 🚀 Quick Start (1 minute)
+## Quick Start (5 minutes)
 
 ```bash
 # Create new MCP server project from chora-base template
@@ -30,7 +30,7 @@ python scripts/create-model-mcp-server.py \
 
 ---
 
-## 📖 What Is SAP-003?
+## What Is It?
 
 SAP-003 provides **zero-dependency project generation** using a blueprint-based templating system. It orchestrates copying static template files, renaming package directories, processing variable substitution, and initializing git repositories—all using only Python stdlib (no Copier, Cookiecutter, or Jinja2).
 
@@ -38,7 +38,7 @@ SAP-003 provides **zero-dependency project generation** using a blueprint-based 
 
 ---
 
-## 🎯 When to Use
+## When to Use
 
 Use SAP-003 when you need to:
 
@@ -52,7 +52,7 @@ Use SAP-003 when you need to:
 
 ---
 
-## ✨ Key Features
+## Key Features
 
 - ✅ **Zero Dependencies** - Uses only Python stdlib (no external templating libraries)
 - ✅ **Blueprint-Based** - Simple `{{ var }}` substitution (human and machine readable)
@@ -66,7 +66,7 @@ Use SAP-003 when you need to:
 
 ---
 
-## 📚 Quick Reference
+## Common Workflows
 
 ### 1 Primary Command
 
@@ -100,7 +100,7 @@ python scripts/create-model-mcp-server.py
 
 ---
 
-## 🔗 Integration with Other SAPs
+## Integration
 
 | SAP | Integration | How It Works |
 |-----|-------------|--------------|
@@ -237,7 +237,7 @@ my-project/
 
 ---
 
-## 🏆 Success Metrics
+## Success Metrics
 
 - **Setup Time**: 1-2 minutes (vs 30-60 minutes manual)
 - **Quality Gate Compliance**: 100% out-of-the-box (pytest 85%+ coverage, ruff, mypy pass)
@@ -248,7 +248,7 @@ my-project/
 
 ---
 
-## 📄 Learn More
+## Learn More
 
 - **[protocol-spec.md](protocol-spec.md)** - Complete technical specification (generation flow, validation, blueprints) (32KB)
 - **[AGENTS.md](AGENTS.md)** - AI agent patterns for project generation (19KB, 10-min read)
@@ -259,9 +259,9 @@ my-project/
 
 ---
 
-## 🔧 Troubleshooting
+## Troubleshooting
 
-**Problem**: `create-mcp-server` fails with "Output directory already exists"
+### Problem 1:`create-mcp-server` fails with "Output directory already exists"
 
 **Solution**: Choose a different output path or remove existing directory:
 ```bash
@@ -274,7 +274,7 @@ just create-mcp-server "Weather MCP" weather ~/projects/weather-mcp-v2
 
 ---
 
-**Problem**: Invalid namespace error (must be 3-20 chars, lowercase, alphanumeric)
+### Problem 2:Invalid namespace error (must be 3-20 chars, lowercase, alphanumeric)
 
 **Solution**: Choose valid namespace:
 ```bash
@@ -291,7 +291,7 @@ just create-mcp-server "Weather MCP" weathermcp ~/output
 
 ---
 
-**Problem**: Generated project fails pytest
+### Problem 3:Generated project fails pytest
 
 **Solution**: This should NOT happen (100% quality gate compliance guaranteed). If it does, report bug:
 ```bash
@@ -304,7 +304,7 @@ gh issue create --title "[SAP-003] Generated project fails pytest" --body "..."
 
 ---
 
-**Problem**: Want to customize template before generation
+### Problem 4:Want to customize template before generation
 
 **Solution**: Edit static-template/ or blueprints/ in chora-base before running generation:
 ```bash
