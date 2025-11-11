@@ -8,6 +8,22 @@
 
 ---
 
+## 📖 Quick Reference
+
+**New to SAP-037?** → Read **[README.md](README.md)** first (10-min read)
+
+The README provides:
+- 🚀 **Quick Start** - 40-minute setup with 4 real-time providers (Socket.IO, SSE, Pusher, Ably)
+- 📚 **Time Savings** - 80% WebSocket setup time reduction (40 min vs 5-7 hours manual), 90.5% savings with production-ready patterns
+- 🎯 **Provider Decision Matrix** - Cost, performance, scalability comparison for choosing the right solution
+- 🔧 **TanStack Query Integration** - Real-time invalidation, optimistic updates, offline handling
+- 📊 **Conflict Resolution** - LWW, OT, CRDTs patterns for handling concurrent updates
+- 🔗 **Integration** - Works with SAP-020 (Foundation), SAP-023 (State), SAP-034 (Database)
+
+This CLAUDE.md provides: Claude Code-specific workflows for real-time synchronization implementation.
+
+---
+
 ## Quick Reference for Claude
 
 ### What This SAP Provides
