@@ -10,13 +10,16 @@
 
 This specification defines the evaluation protocol for assessing SAP (Skilled Awareness Pattern) adoption depth, identifying gaps, and generating actionable improvement roadmaps.
 
+**Standards Authority**: All SAP standards (required artifacts, documentation patterns, quality requirements) are defined in **[SAP-000 (SAP Framework)](../sap-framework/protocol-spec.md)**. This protocol (SAP-019) validates compliance with those standards through automated checks and scoring frameworks.
+
 ### Protocol Goals
 
 1. **Progressive Assessment**: Quick check (30s) → Deep dive (5min) → Strategic analysis (30min)
 2. **LLM-Executable**: Structured prompts enable AI agents to self-assess
 3. **Actionable Output**: Concrete next steps, not just scores
-4. **Tracking Over Time**: Version-controlled reports, event timeline
-5. **Integration-Ready**: Feeds into SAP-013 metrics, sprint planning, roadmaps
+4. **Standards Validation**: Validate compliance with SAP-000 requirements (README structure, Quick Reference format, link integrity, version consistency)
+5. **Tracking Over Time**: Version-controlled reports, event timeline
+6. **Integration-Ready**: Feeds into SAP-013 metrics, sprint planning, roadmaps
 
 ### Key Concepts
 
@@ -220,20 +223,23 @@ class SprintPlan:
 
 **Purpose**: Rapid assessment of installation status and basic validation (30 seconds).
 
+**Standards Reference**: This protocol validates compliance with **[SAP-000 section 2.1 (Required Artifacts)](../sap-framework/protocol-spec.md#21-required-artifacts)** and **[section 2.6 (Cross-Cutting Quality Requirements)](../sap-framework/protocol-spec.md#26-cross-cutting-quality-requirements)**.
+
 **Inputs**:
 - `sap_id: str` - SAP to evaluate
 - `repo_root: Path` - Repository root directory
 
 **Process**:
 1. **Check installation**: Does `docs/skilled-awareness/<sap-name>/` exist?
-2. **Validate artifacts**: Are all 5 required files present?
+2. **Validate artifacts**: Are all 5 required files present? (see SAP-000 section 2.1)
    - capability-charter.md
    - protocol-spec.md
-   - awareness-guide.md
+   - awareness-guide.md (or AGENTS.md)
    - adoption-blueprint.md
    - ledger.md
 3. **Run validation commands**: Execute quick checks from protocol-spec.md
-4. **Assess level**: Based on validation results, determine Level 0/1/2/3
+4. **Validate quality gates**: Run README validation, Quick Reference validation, link integrity checks (see SAP-000 section 2.6.1)
+5. **Assess level**: Based on validation results, determine Level 0/1/2/3
 
 **Outputs**:
 - `EvaluationResult` with automated validation results
@@ -733,6 +739,8 @@ projected_outcomes:
 **Rationale**: Implementation quality is irrelevant if agents cannot discover the capability exists. This protocol measures how easily agents can find and understand SAP capabilities from root files (README.md, AGENTS.md, CLAUDE.md, justfile).
 
 **Key Principle**: "The better the pattern, the worse the impact if undiscoverable" - advanced patterns (like SAP-009 nested hierarchies) require proportionally higher discoverability.
+
+**Standards Reference**: This protocol validates compliance with the discoverability requirements defined in **[SAP-000 section 2.6.4 (Discoverability Requirements)](../sap-framework/protocol-spec.md#264-discoverability-requirements)**. SAP-000 is the authoritative source for all SAP standards. The scoring criteria below operationalize those requirements with specific metrics and validation commands.
 
 #### 3.5.1 Discoverability Scoring Framework
 

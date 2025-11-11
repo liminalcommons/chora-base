@@ -98,15 +98,38 @@ scope: <scope>             # Vision | Planning | Implementation | All
 
 #### 2.2.4 Awareness Guide Schema
 
-**Required Sections**:
-1. Quick Reference (common commands, patterns)
-2. Agent Context Loading (what to read, what to skip)
-3. Common Workflows (step-by-step agent execution)
-4. Troubleshooting (common issues, solutions)
-5. Integration (with other capabilities, tools)
-6. Best Practices (agent-specific patterns)
+The awareness guide artifact optimizes for **agent readability** and provides execution patterns for AI assistants. The file SHOULD be named based on the target agent platform:
 
-**Template**: See [document-templates.md](../document-templates.md#awareness-guide)
+**File Naming Convention**:
+- `awareness-guide.md` - Generic awareness guide for all AI agents (default)
+- `AGENTS.md` - Generic awareness guide (alternative naming, preferred for brevity)
+- `CLAUDE.md` - Claude-specific patterns and optimizations
+
+**When to Use Which File**:
+- **Use `AGENTS.md`** (or `awareness-guide.md`) for:
+  - Generic agent patterns that work across platforms (Claude, GitHub Copilot, Cursor, etc.)
+  - Core workflows and decision trees
+  - Platform-agnostic execution patterns
+
+- **Use `CLAUDE.md`** for:
+  - Claude Code-specific workflows (VSCode extension patterns)
+  - Claude Desktop-specific patterns (chat interface)
+  - Claude-optimized token usage patterns
+  - Tool use examples specific to Claude's capabilities
+
+**SAPs MAY include both files**:
+- `AGENTS.md` - Generic patterns (primary)
+- `CLAUDE.md` - Claude-specific optimizations (supplemental)
+
+**Required Sections** (in AGENTS.md or awareness-guide.md):
+1. **Quick Reference** - Standardized format (see section 2.5)
+2. **Agent Context Loading** - Progressive loading strategy (what to read, what to skip)
+3. **Common Workflows** - Step-by-step agent execution patterns
+4. **Troubleshooting** - Common issues and solutions
+5. **Integration** - How to combine with other capabilities
+6. **Best Practices** - Agent-specific do's and don'ts
+
+**Template**: See [document-templates.md](../document-templates.md#awareness-guide) or `templates/sap/awareness-guide.j2`
 
 #### 2.2.5 Adoption Blueprint Schema
 
@@ -177,6 +200,609 @@ SAPs MAY include infrastructure files:
 ```
 
 **Example**: [inbox SAP infrastructure](../inbox/)
+
+### 2.4 SAP README.md Standard
+
+In addition to the 5 required artifacts, every SAP SHOULD include a **README.md** file in its root directory. The README serves as the primary entry point for human readers and provides a comprehensive overview of the capability.
+
+#### 2.4.1 Purpose
+
+The README.md file:
+- Provides a **quick overview** for users evaluating the SAP
+- Offers a **structured introduction** following the 9-section pattern
+- Serves as the **primary navigation hub** linking to all 5 core artifacts
+- Optimizes for **human readability** (vs awareness-guide.md optimized for agents)
+- Enables **progressive disclosure** of information (overview → details → implementation)
+
+#### 2.4.2 Required Sections
+
+Every README.md MUST include these 9 sections in order:
+
+| Section | Required | Purpose |
+|---------|----------|---------|
+| **1. Header** | Yes | SAP ID and name (e.g., `# SAP-020: React Foundation`) |
+| **2. What Is It?** | Yes | 2-3 paragraph overview of the capability and its purpose |
+| **3. When to Use** | Yes | Use cases, anti-patterns, decision criteria |
+| **4. Quick Start** | Yes | Time-boxed getting started guide (5-60 minutes) |
+| **5. Key Features** | Yes | 5+ feature bullets with emoji markers (✅) |
+| **6. Common Workflows** or **Quick Reference** | Yes | Usage patterns, examples, or command reference |
+| **7. Integration** | Yes | Table of related SAPs and how they work together |
+| **8. Success Metrics** | Yes | Measurable outcomes and ROI indicators |
+| **9. Troubleshooting** | Yes | 3+ common problem scenarios with solutions |
+| **10. Learn More** | Yes | Links to core artifacts and external resources |
+
+#### 2.4.3 Quality Gates
+
+The README.md MUST meet these quality gates:
+
+**Quick Start Time** (Section 4):
+- MUST specify time estimate (e.g., "5 minutes", "30 minutes", "1 hour")
+- Time range: 5-60 minutes (below 5 min = too shallow, above 60 min = split into tutorial)
+- Example: `## Quick Start (15 minutes)` ✅
+- Anti-pattern: `## Quick Start (1-2 minutes)` ❌ (unrealistic)
+
+**Key Features** (Section 5):
+- MUST include 5 or more feature bullets
+- Each bullet SHOULD use emoji marker (✅, 🚀, 📚, 🎯, 🔧, 📊, etc.)
+- Each bullet SHOULD be 1-2 sentences (concise)
+- Example:
+  ```markdown
+  ## Key Features
+
+  ✅ **Type-Safe Database Access** - Full TypeScript support with Prisma Client
+  🚀 **Zero-Config Setup** - Works out-of-the-box with sensible defaults
+  📚 **Migration System** - Version-controlled schema changes
+  🎯 **Multi-Provider Support** - PostgreSQL, MySQL, SQLite, MongoDB
+  🔧 **Developer Experience** - Prisma Studio for visual data management
+  ```
+
+**Integration Table** (Section 7):
+- MUST include table of related SAPs
+- SHOULD specify relationship type (Required, Recommended, Optional)
+- Example:
+  ```markdown
+  ## Integration
+
+  | SAP | Relationship | Description |
+  |-----|--------------|-------------|
+  | SAP-020 | Required | Next.js 15 foundation for database integration |
+  | SAP-033 | Recommended | Authentication with database-backed sessions |
+  | SAP-041 | Optional | Form validation with Zod schemas matching database models |
+  ```
+
+**Troubleshooting Scenarios** (Section 9):
+- MUST include 3 or more problem scenarios
+- Each scenario SHOULD follow format: Problem → Cause → Solution
+- Example:
+  ```markdown
+  ## Troubleshooting
+
+  ### Migration Fails with "Relation already exists"
+
+  **Problem**: `prisma migrate dev` fails with PostgreSQL error "relation already exists"
+
+  **Cause**: Database schema is out of sync with migration history
+
+  **Solution**:
+  1. Reset the database: `npx prisma migrate reset`
+  2. Re-run migrations: `npx prisma migrate dev`
+  3. Seed data if needed: `npx prisma db seed`
+  ```
+
+#### 2.4.4 Validation
+
+The README.md standard is enforced via validation script:
+
+```bash
+# Validate all SAPs
+python scripts/validate-readme-structure.py --summary-only
+
+# Validate specific SAP
+python scripts/validate-readme-structure.py --sap react-database-integration
+
+# JSON output for CI/CD
+python scripts/validate-readme-structure.py --json
+```
+
+**Validation Checks**:
+- ✅ All 9 required sections present
+- ✅ Quick Start time specified (5-60 min range)
+- ✅ 5+ Key Features bullets
+- ✅ Integration table present
+- ✅ 3+ Troubleshooting scenarios
+- ✅ Links to core artifacts valid
+
+**Scoring**:
+- 100/100 = All requirements met
+- 90-99 = Minor issues (missing optional elements)
+- Below 90 = Major gaps (missing required sections)
+
+#### 2.4.5 Example
+
+**Compliant README.md**: [SAP-034 (React Database Integration)](../react-database-integration/README.md)
+
+This README demonstrates:
+- Clear 9-section structure
+- Quick Start with 20-minute time estimate
+- 7 Key Features with emoji bullets (exceeds 5 minimum)
+- Integration table with 6 related SAPs
+- 5 Troubleshooting scenarios (exceeds 3 minimum)
+- Comprehensive Learn More section
+
+**Validation Score**: 100/100
+
+#### 2.4.6 README.md vs Awareness Guide
+
+**When to use README.md**:
+- Primary entry point for human readers
+- Overview and evaluation (deciding whether to adopt)
+- Quick reference for common workflows
+- Narrative format with context and rationale
+
+**When to use awareness-guide.md (or AGENTS.md)**:
+- Agent-specific execution patterns
+- Progressive context loading strategies
+- Decision trees and automation workflows
+- Concise, token-optimized format
+
+Both files MAY reference each other. Example:
+- README.md: "For agent-specific patterns, see [AGENTS.md](AGENTS.md)"
+- AGENTS.md: "For human-readable overview, see [README.md](README.md)"
+
+#### 2.4.7 README.md Template
+
+SAP generation (SAP-029) SHOULD include README.md template with:
+- All 9 required sections with placeholder content
+- Quality gate markers (Quick Start time, emoji bullets, table structure)
+- TODO comments for SAP creator to complete
+
+**Location**: `templates/sap/README.j2` (to be added to SAP-029)
+
+### 2.5 Quick Reference Format Standard
+
+The **Quick Reference** section provides a standardized, token-optimized summary that appears in both README.md and AGENTS.md/CLAUDE.md files. This format was established in Batches 11-15 and provides **60-70% token savings** for agents by front-loading essential information.
+
+#### 2.5.1 Purpose
+
+The Quick Reference section:
+- **Front-loads navigation**: Points agents to README.md for comprehensive overview
+- **Summarizes value**: Highlights time savings, key features, and integrations
+- **Optimizes tokens**: Provides essential context in ~15-20 lines (vs 500+ line README)
+- **Standardizes discovery**: Consistent format across all SAPs enables pattern recognition
+- **Progressive disclosure**: Agents read Quick Reference → decide whether to read full README
+
+**ROI**: 60-70% token reduction (agents can skip README.md if Quick Reference sufficient)
+
+#### 2.5.2 Required Format
+
+Every Quick Reference section MUST follow this structure:
+
+**1. Emoji Header**:
+```markdown
+## 📖 Quick Reference
+```
+- MUST use 📖 (open book) emoji
+- MUST use "Quick Reference" heading (not "Overview" or "Summary")
+
+**2. New User Prompt**:
+```markdown
+**New to SAP-XXX?** → Read **[README.md](README.md)** first (X-min read)
+```
+- MUST include "New to SAP-XXX?" prompt (replace XXX with SAP ID)
+- MUST link to README.md
+- MUST specify reading time estimate (e.g., "8-min read", "12-min read")
+
+**3. README Summary** (6 emoji bullets):
+```markdown
+The README provides:
+- 🚀 **Quick Start** - [Quick start description with time estimate]
+- 📚 **Time Savings** - [Time savings metrics - e.g., "90% reduction (30h → 3h)"]
+- 🎯 **[Feature 1 Name]** - [Feature 1 description]
+- 🔧 **[Feature 2 Name]** - [Feature 2 description]
+- 📊 **[Feature 3 Name]** - [Feature 3 description]
+- 🔗 **Integration** - Works with [List of SAP IDs]
+```
+- MUST include exactly 6 bullets with emoji markers (🚀📚🎯🔧📊🔗)
+- Bullet 1 (🚀): Quick Start description with time estimate
+- Bullet 2 (📚): Time savings metrics (quantified ROI)
+- Bullets 3-5 (🎯🔧📊): Three key features (use feature names from README.md section 5)
+- Bullet 6 (🔗): Integration with other SAPs (list SAP IDs)
+
+**4. Purpose Statement**:
+```markdown
+This [AGENTS.md|CLAUDE.md|awareness-guide.md] provides: [Purpose]
+```
+- MUST state the purpose of the current file
+- SHOULD differentiate from README.md
+- Example: "This AGENTS.md provides: Agent-specific patterns, workflows, and decision trees for AI coding assistants using SAP-034."
+
+#### 2.5.3 Quality Gates
+
+**Emoji Markers**:
+- MUST use 📖 for section header
+- MUST use 🚀📚🎯🔧📊🔗 for 6 bullets (in this order)
+- MAY substitute 🎯🔧📊 with other emoji if semantically appropriate (e.g., 🔐 for security)
+
+**Time Savings Bullet** (📚):
+- MUST include quantified time savings
+- SHOULD use format: "X% reduction" or "X hours → Y hours"
+- Example: "90% time reduction (30 hours → 3 hours)" ✅
+- Anti-pattern: "Saves time" ❌ (not quantified)
+
+**Integration Bullet** (🔗):
+- MUST list specific SAP IDs (e.g., "SAP-020, SAP-033, SAP-034")
+- SHOULD match dependencies from sap-catalog.json
+- Example: "Works with SAP-020, SAP-033, SAP-034" ✅
+- Anti-pattern: "Works with other SAPs" ❌ (not specific)
+
+**Purpose Statement**:
+- MUST be present at the end
+- SHOULD be 1-2 sentences
+- Example: "This AGENTS.md provides: Agent-specific execution patterns and decision trees for adopting SAP-034." ✅
+
+#### 2.5.4 Examples
+
+**Compliant Quick Reference** (SAP-034 AGENTS.md):
+```markdown
+## 📖 Quick Reference
+
+**New to SAP-034?** → Read **[README.md](README.md)** first (12-min read)
+
+The README provides:
+- 🚀 **Quick Start** - 20-minute setup with complete Prisma or Drizzle examples
+- 📚 **Time Savings** - 90% time reduction (30 hours manual → 3 hours with SAP-034)
+- 🎯 **Type Safety** - 100% TypeScript coverage with runtime validation
+- 🔧 **Multi-Provider** - PostgreSQL, MySQL, SQLite, MongoDB support
+- 📊 **Developer Experience** - Prisma Studio, Drizzle Studio, migration tooling
+- 🔗 **Integration** - Works with SAP-020, SAP-033, SAP-041
+
+This AGENTS.md provides: Agent-specific patterns for database integration, including ORM selection, schema design workflows, and migration execution patterns.
+```
+
+**Compliant Quick Reference** (SAP-020 CLAUDE.md):
+```markdown
+## 📖 Quick Reference
+
+**New to SAP-020?** → Read **[README.md](README.md)** first (10-min read)
+
+The README provides:
+- 🚀 **Quick Start** - 15-minute Next.js 15 setup with App Router
+- 📚 **Time Savings** - 85% reduction (20 hours baseline → 3 hours with SAP-020)
+- 🎯 **Server Components** - React 19 Server Components by default
+- 🔧 **App Router** - File-based routing with layouts and templates
+- 📊 **Performance** - Automatic code splitting and optimized bundles
+- 🔗 **Integration** - Foundation for SAP-021 through SAP-041
+
+This CLAUDE.md provides: Claude Code-specific workflows for Next.js development, including VSCode tool usage, file navigation patterns, and progressive context loading.
+```
+
+#### 2.5.5 Validation
+
+The Quick Reference format is enforced via validation script:
+
+```bash
+# Validate all SAPs
+python scripts/validate-quick-reference.py --summary-only
+
+# Validate specific SAP
+python scripts/validate-quick-reference.py --sap react-database-integration
+
+# JSON output for CI/CD
+python scripts/validate-quick-reference.py --json
+```
+
+**Validation Checks**:
+- ✅ 📖 emoji header present
+- ✅ "New to SAP-XXX?" prompt present
+- ✅ README.md link present with time estimate
+- ✅ "The README provides:" section present
+- ✅ 6 emoji bullets present (🚀📚🎯🔧📊🔗)
+- ✅ Time savings quantified in 📚 bullet
+- ✅ Integration list matches dependencies in 🔗 bullet
+- ✅ Purpose statement present
+
+**Scoring**:
+- 100/100 = All elements present, proper formatting
+- 80-99 = Minor issues (missing time estimate, generic descriptions)
+- Below 80 = Major gaps (missing emoji, <6 bullets, no purpose statement)
+
+#### 2.5.6 Token Savings Analysis
+
+**Without Quick Reference**:
+- Agent must read full README.md (~500-1000 lines, ~10-15k tokens)
+- Total: 10-15k tokens per SAP
+
+**With Quick Reference**:
+- Agent reads Quick Reference (~15-20 lines, ~300-500 tokens)
+- Reads README.md only if needed
+- Total: 300-500 tokens (if Quick Reference sufficient)
+
+**Savings**: 60-70% token reduction for routine agent queries
+
+**Use Case Example**:
+- User: "Does SAP-034 support PostgreSQL?"
+- Agent reads Quick Reference → sees "Multi-Provider" bullet → answers without reading README
+- Tokens used: 500 (vs 12,000 with full README read)
+- **96% token savings**
+
+#### 2.5.7 Template Variables (SAP-029)
+
+SAP generation templates (SAP-029) SHOULD include Quick Reference template variables:
+
+**Template Variables** (in `awareness-guide.j2`):
+```jinja2
+quick_ref_read_time: "10-min"           # README reading time
+quick_ref_quick_start: "[description]"  # Quick Start bullet
+quick_ref_time_savings: "[metrics]"     # Time savings bullet
+quick_ref_feature_1_label: "Feature 1"  # Feature 1 name
+quick_ref_feature_1: "[description]"    # Feature 1 description
+quick_ref_feature_2_label: "Feature 2"  # Feature 2 name
+quick_ref_feature_2: "[description]"    # Feature 2 description
+quick_ref_feature_3_label: "Feature 3"  # Feature 3 name
+quick_ref_feature_3: "[description]"    # Feature 3 description
+quick_ref_purpose: "[purpose]"          # Purpose statement
+```
+
+**Example** (sap-catalog.json):
+```json
+{
+  "id": "SAP-042",
+  "generation": {
+    "quick_ref_read_time": "8-min",
+    "quick_ref_quick_start": "5-minute setup with TypeScript examples",
+    "quick_ref_time_savings": "90% reduction (30 hours → 3 hours)",
+    "quick_ref_feature_1_label": "Type Safety",
+    "quick_ref_feature_1": "100% TypeScript coverage with runtime validation"
+  }
+}
+```
+
+**Auto-Generation**: When generating new SAPs with `scripts/generate-sap.py`, the Quick Reference section is auto-populated with these variables.
+
+**Documentation**: See [SAP-029 protocol-spec.md](../sap-generation/protocol-spec.md#template-variables-for-quick-reference-sections) for complete template variable reference.
+
+### 2.6 Cross-Cutting Quality Requirements
+
+All SAPs MUST meet these cross-cutting quality requirements regardless of status (Draft, Pilot, Active). These requirements ensure discoverability, maintainability, and usability across the entire SAP ecosystem.
+
+#### 2.6.1 Validation Compliance
+
+Every SAP MUST pass all applicable validation scripts:
+
+**README Structure Validation**:
+```bash
+python scripts/validate-readme-structure.py --sap <sap-name>
+```
+**Requirements**:
+- ✅ All 9 required sections present (see section 2.4.2)
+- ✅ Quick Start time: 5-60 minutes
+- ✅ Key Features: 5+ emoji bullets
+- ✅ Integration table present
+- ✅ Troubleshooting: 3+ scenarios
+- ✅ **Target Score**: 100/100 for Active SAPs, ≥90/100 for Pilot/Draft
+
+**Quick Reference Validation**:
+```bash
+python scripts/validate-quick-reference.py --sap <sap-name>
+```
+**Requirements**:
+- ✅ 📖 emoji header present
+- ✅ "New to SAP-XXX?" prompt with README link
+- ✅ 6 emoji bullets (🚀📚🎯🔧📊🔗)
+- ✅ Time savings quantified
+- ✅ Integration list matches dependencies
+- ✅ Purpose statement present
+- ✅ **Target Score**: 100/100 for Active SAPs, ≥80/100 for Pilot/Draft
+
+**Link Integrity Validation**:
+```bash
+python scripts/validate-links.py --path docs/skilled-awareness/<sap-name>/
+```
+**Requirements**:
+- ✅ All internal links resolve correctly
+- ✅ All artifact cross-references valid
+- ✅ All external links return HTTP 200 (when possible)
+- ✅ No broken links in production SAPs
+- ✅ **Target**: 0 broken links for Active SAPs
+
+#### 2.6.2 Progressive Loading Compliance
+
+Every SAP MUST support progressive loading to optimize token usage for agents:
+
+**Three-Tier Loading Strategy**:
+
+**Tier 1: Quick Reference (300-500 tokens)**:
+- README.md Quick Reference section (if present)
+- AGENTS.md Quick Reference section
+- CLAUDE.md Quick Reference section (if present)
+- **Use Case**: Quick queries, capability discovery, integration checks
+- **Example**: "Does SAP-034 support PostgreSQL?" → Read Quick Reference only
+
+**Tier 2: Full README (2-5k tokens)**:
+- Complete README.md with all 9 sections
+- **Use Case**: Evaluating adoption, understanding workflows, troubleshooting
+- **Example**: "How do I set up SAP-034?" → Read Quick Start section
+
+**Tier 3: Complete Documentation (10-50k tokens)**:
+- protocol-spec.md - Technical contracts and APIs
+- adoption-blueprint.md - Step-by-step installation
+- awareness-guide.md (or AGENTS.md) - Complete agent patterns
+- capability-charter.md - Design rationale
+- ledger.md - Adoption history
+- **Use Case**: Implementation, debugging, contribution
+- **Example**: "Implement SAP-034 database integration" → Read protocol-spec + adoption-blueprint
+
+**Progressive Loading Requirements**:
+- ✅ Quick Reference MUST be sufficient for 60-70% of agent queries
+- ✅ README.md MUST link to all 5 core artifacts (progressive disclosure)
+- ✅ AGENTS.md MUST reference README.md for human-readable overview
+- ✅ Protocol-spec MUST be self-contained (no external dependencies for understanding)
+
+#### 2.6.3 Version Consistency
+
+All SAP artifacts MUST maintain version consistency:
+
+**YAML Frontmatter Consistency**:
+```yaml
+---
+sap_id: SAP-XXX            # MUST match across all 5 artifacts
+version: X.Y.Z             # MUST match across all 5 artifacts
+status: <status>           # MUST match across all 5 artifacts
+last_updated: YYYY-MM-DD   # MUST match across all 5 artifacts
+---
+```
+
+**Version Alignment Requirements**:
+- ✅ All 5 core artifacts MUST have identical `sap_id`, `version`, `status`, `last_updated`
+- ✅ README.md SHOULD display version and status prominently
+- ✅ sap-catalog.json MUST match SAP frontmatter versions
+- ✅ When bumping version, update ALL artifacts simultaneously
+
+**Version Validation**:
+```bash
+# Check version consistency across artifacts
+python scripts/validate-sap-versions.py --sap <sap-name>
+```
+
+**Penalties for Inconsistency**:
+- Version mismatch → SAP status downgraded to Draft
+- Status mismatch → SAP excluded from catalog
+- Catalog mismatch → CI/CD pipeline fails
+
+#### 2.6.4 Discoverability Requirements
+
+Every SAP MUST be discoverable through multiple entry points:
+
+**Entry Points** (in priority order):
+1. **README.md** - Primary human entry point (What Is It? When to Use? Quick Start)
+2. **AGENTS.md** (or awareness-guide.md) - Primary agent entry point (Quick Reference, Workflows)
+3. **CLAUDE.md** - Claude-specific optimizations (optional)
+4. **sap-catalog.json** - Machine-readable catalog entry
+5. **INDEX.md** - Ecosystem-wide SAP registry
+
+**Discoverability Requirements**:
+- ✅ README.md MUST exist and be 100% compliant (section 2.4)
+- ✅ AGENTS.md (or awareness-guide.md) MUST exist and include Quick Reference (section 2.5)
+- ✅ sap-catalog.json MUST include SAP entry with metadata (id, name, status, version, description, dependencies)
+- ✅ INDEX.md MUST include SAP row in Active SAPs table
+- ✅ All entry points MUST link to each other (README ↔ AGENTS.md ↔ catalog ↔ INDEX)
+
+**Navigation Pattern**:
+```
+User/Agent discovers SAP
+   ↓
+   ├─ Human? → README.md (9 sections) → protocol-spec.md (if implementing)
+   │
+   └─ Agent? → AGENTS.md (Quick Reference) → README.md (if needed) → protocol-spec.md (if implementing)
+```
+
+#### 2.6.5 Documentation Quality
+
+**Production SAP Requirements** (Status: Active):
+- ✅ No TODO comments in artifacts (use GitHub Issues for tracking)
+- ✅ No placeholder text (e.g., "[Description]", "[TBD]")
+- ✅ All code examples tested and verified
+- ✅ All commands executable (no pseudo-code in instructions)
+- ✅ All links validated (0 broken links)
+- ✅ All metrics quantified (no vague claims like "saves time")
+- ✅ All examples include expected output
+
+**Pilot/Draft SAP Allowances**:
+- ⚠️ TODO comments allowed (with GitHub Issue links)
+- ⚠️ Placeholder text allowed (marked with "DRAFT:")
+- ⚠️ Untested examples allowed (marked with "UNTESTED:")
+- ⚠️ Pseudo-code allowed in early prototypes
+
+**Quality Gates** (enforced in CI/CD):
+```bash
+# Pre-merge validation (all SAPs)
+python scripts/validate-readme-structure.py --all
+python scripts/validate-quick-reference.py --all
+python scripts/validate-links.py --all
+
+# Pre-release validation (Active SAPs only)
+python scripts/validate-production-quality.py --status active
+```
+
+#### 2.6.6 Cross-SAP Integration
+
+SAPs that integrate with other SAPs MUST document integration patterns:
+
+**Integration Documentation Requirements**:
+- ✅ **README.md section 7**: Integration table listing all related SAPs
+- ✅ **AGENTS.md/CLAUDE.md**: Integration workflows (how to combine SAPs)
+- ✅ **protocol-spec.md section 7**: Technical dependencies (APIs, data models)
+- ✅ **adoption-blueprint.md**: Installation order for dependent SAPs
+
+**Integration Table Format** (README.md section 7):
+```markdown
+## Integration
+
+| SAP | Relationship | Description |
+|-----|--------------|-------------|
+| SAP-000 | Required | SAP Framework provides core structure |
+| SAP-020 | Required | Next.js 15 foundation for database integration |
+| SAP-033 | Recommended | Authentication with database-backed sessions |
+| SAP-041 | Optional | Form validation with Zod schemas |
+```
+
+**Relationship Types**:
+- **Required**: SAP cannot function without this dependency
+- **Recommended**: SAP works better with this dependency (80%+ use cases need it)
+- **Optional**: SAP can optionally integrate with this dependency (20-80% use cases)
+- **Compatible**: SAP works alongside this dependency (no direct integration)
+
+**Integration Validation**:
+- ✅ Integration table MUST match `dependencies` in sap-catalog.json
+- ✅ All listed SAPs MUST exist in catalog
+- ✅ Circular dependencies MUST be documented and justified
+
+#### 2.6.7 Accessibility
+
+All SAP artifacts MUST be accessible to both humans and agents:
+
+**Format Requirements**:
+- ✅ Primary format: Markdown (.md)
+- ✅ Structured data: YAML frontmatter + JSON/YAML configs
+- ✅ Code examples: Fenced code blocks with language tags
+- ✅ Tables: GitHub-flavored Markdown tables
+- ✅ Links: Relative paths preferred over absolute URLs
+
+**Readability Requirements**:
+- ✅ Headings: Hierarchical structure (## → ### → ####)
+- ✅ Lists: Bulleted or numbered lists for sequences
+- ✅ Emphasis: Bold for key terms, code for commands/filenames
+- ✅ Code blocks: Include language tag for syntax highlighting
+- ✅ Tables: Use for structured comparisons
+
+**Agent Parsing Requirements**:
+- ✅ YAML frontmatter: Valid YAML syntax
+- ✅ JSON configs: Valid JSON syntax (validate with `jq`)
+- ✅ Links: Standard Markdown link syntax `[text](url)`
+- ✅ Code blocks: Triple backticks with language tag
+- ✅ Lists: Consistent indentation (2 or 4 spaces)
+
+#### 2.6.8 Compliance Summary
+
+**Minimum Requirements for SAP Status**:
+
+| Requirement | Draft | Pilot | Active |
+|-------------|-------|-------|--------|
+| **5 Core Artifacts** | ✅ Exists | ✅ Exists | ✅ Exists |
+| **README.md** | ⚠️ ≥70/100 | ✅ ≥90/100 | ✅ 100/100 |
+| **Quick Reference** | ⚠️ ≥60/100 | ✅ ≥80/100 | ✅ 100/100 |
+| **Link Integrity** | ⚠️ <10 broken | ⚠️ <5 broken | ✅ 0 broken |
+| **Version Consistency** | ⚠️ Best effort | ✅ Required | ✅ Required |
+| **TODO Comments** | ✅ Allowed | ⚠️ With issues | ❌ Forbidden |
+| **Placeholder Text** | ✅ Allowed | ⚠️ Minimal | ❌ Forbidden |
+| **Integration Docs** | ⚠️ Basic | ✅ Complete | ✅ Complete |
+| **Validation Passing** | ⚠️ 70% | ✅ 90% | ✅ 100% |
+
+**Status Promotion Gates**:
+- **Draft → Pilot**: ≥70% validation passing, 1+ adopter in ledger
+- **Pilot → Active**: ≥90% validation passing, 3+ adopters, no critical issues
+- **Active → Deprecated**: Migration path documented, 6-month deprecation notice
+- **Deprecated → Archived**: All adopters migrated, links updated
 
 ---
 

@@ -24,22 +24,19 @@ phase_3_token_estimate: 13000
 
 ---
 
-## Quick Reference
+## 📖 Quick Reference
 
-### When to Use
+**New to SAP-000?** → Read **[README.md](README.md)** first (10-min read)
 
-**Use SAP Framework (SAP-000) when**:
-- Creating a new capability package (generate 5 artifacts)
-- Installing a SAP into a project (follow adoption blueprint)
-- Upgrading a SAP to a new version (follow migration path)
-- Validating SAP structure (check required artifacts exist)
-- Understanding SAP versioning and governance
+The README provides:
+- 🚀 **Quick Start** - 30-minute guide to understanding SAP structure and generating your first SAP
+- 📚 **Time Savings** - 90% documentation time reduction (30 hours manual → 3 hours with templates)
+- 🎯 **Standardized Structure** - 5 required artifacts (capability-charter, protocol-spec, awareness-guide, adoption-blueprint, ledger)
+- 🔧 **Validation Automation** - Automated scripts enforce README structure, Quick Reference format, and link integrity
+- 📊 **Progressive Loading** - Three-tier token strategy (300-500 → 2-5k → 10-50k tokens) optimizes agent context usage
+- 🔗 **Integration** - Works with SAP-019 (Self-Evaluation), SAP-029 (Generation), SAP-016 (Link Validation)
 
-**Don't use when**:
-- Writing regular code documentation (use inline comments)
-- Creating one-off scripts (use automation-scripts SAP)
-- Documenting single functions (use docstrings)
-- Managing git history (use git directly)
+This AGENTS.md provides: Agent-specific workflows for creating, validating, and upgrading SAPs, including command-line patterns and troubleshooting decision trees.
 
 ### SAP Structure
 
