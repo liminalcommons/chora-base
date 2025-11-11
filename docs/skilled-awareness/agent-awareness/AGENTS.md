@@ -7,6 +7,22 @@
 
 ---
 
+## 📖 Quick Reference
+
+**New to SAP-009?** → Read **[README.md](README.md)** first (8-min read)
+
+The README provides:
+- 🚀 **Quick Start** - 5-minute guide to nested AGENTS.md/CLAUDE.md pattern with examples
+- 📚 **Time Savings** - 60-70% token reduction through progressive loading and domain-specific awareness files
+- 🎯 **5-Level Hierarchy** - Root → domain → SAP → feature → component navigation with "nearest file wins"
+- 🔧 **Progressive Loading** - Three phases (0-10k, 10-50k, 50-200k tokens) optimize context usage
+- 📊 **Universal Adoption** - 100% of 32+ SAPs use this pattern for agent discoverability
+- 🔗 **Integration** - Works with all SAPs (universal foundation for agent awareness)
+
+This AGENTS.md provides: Agent-specific patterns for nested awareness navigation, progressive loading workflows, and "nearest file wins" discovery.
+
+---
+
 ## Overview
 
 This is the domain-specific AGENTS.md file for agent awareness (SAP-009). It provides context for agents working with the AGENTS.md pattern, bidirectional translation layer, and agent discovery mechanisms.

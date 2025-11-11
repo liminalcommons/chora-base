@@ -6,7 +6,7 @@
 
 ---
 
-## 🚀 Quick Start (2 minutes)
+## Quick Start (5 minutes)
 
 ```bash
 # 1. Check inbox status
@@ -26,7 +26,7 @@ just inbox-generate
 
 ---
 
-## 📖 What Is SAP-001?
+## What Is It?
 
 SAP-001 provides a **production-ready coordination protocol** for managing cross-repository work across the Liminal Commons ecosystem. It standardizes intake, routing, and lifecycle management for strategic proposals, coordination requests, and implementation tasks—all stored in Git with no external services required.
 
@@ -34,7 +34,7 @@ SAP-001 provides a **production-ready coordination protocol** for managing cross
 
 ---
 
-## 🎯 When to Use
+## When to Use
 
 Use SAP-001 when you need to:
 
@@ -48,7 +48,7 @@ Use SAP-001 when you need to:
 
 ---
 
-## ✨ Key Features
+## Key Features
 
 - ✅ **Git-Native** - All state lives in repository, no external services required (350KB total)
 - ✅ **3 Intake Types** - Strategic proposals, coordination requests, implementation tasks with distinct review cadences
@@ -61,7 +61,7 @@ Use SAP-001 when you need to:
 
 ---
 
-## 📚 Quick Reference
+## Common Workflows
 
 ### 5 CLI Tools
 
@@ -120,7 +120,7 @@ just inbox-events 20
 
 ---
 
-## 🔗 Integration with Other SAPs
+## Integration
 
 | SAP | Integration | How It Works |
 |-----|-------------|--------------|
@@ -149,7 +149,7 @@ just inbox-respond COORD-2025-011 completed
 
 ---
 
-## 📂 Directory Structure
+## Directory Structure
 
 ```
 inbox/
@@ -168,7 +168,7 @@ inbox/
 
 ---
 
-## 🎓 Lifecycle Workflow
+## Lifecycle Workflow
 
 ```mermaid
 graph LR
@@ -190,7 +190,7 @@ graph LR
 
 ---
 
-## ⏱️ SLA Guidelines
+## SLA Guidelines
 
 | Priority | Response Time | Use Case | Example |
 |----------|--------------|----------|---------|
@@ -204,7 +204,7 @@ graph LR
 
 ---
 
-## 🏆 Success Metrics
+## Success Metrics
 
 - **Coordination Effort**: 90% reduction (from hours of back-and-forth to minutes of structured exchange)
 - **Response Time**: 48h median response (vs weeks without protocol)
@@ -213,7 +213,7 @@ graph LR
 
 ---
 
-## 📄 Learn More
+## Learn More
 
 - **[protocol-spec.md](protocol-spec.md)** - Complete technical specification (JSON schemas, CLI contracts, event formats)
 - **[AGENTS.md](AGENTS.md)** - AI agent patterns for inbox triage and task processing (8-min read)
@@ -224,9 +224,11 @@ graph LR
 
 ---
 
-## 🔧 Troubleshooting
+## Troubleshooting
 
-**Problem**: `inbox-status` command fails with "Inbox protocol not installed"
+### Problem 1: Inbox Protocol Not Installed
+
+**Symptom**: `inbox-status` command fails with "Inbox protocol not installed"
 
 **Solution**: Run installation script:
 ```bash
@@ -235,7 +237,9 @@ python scripts/install-inbox-protocol.py
 
 ---
 
-**Problem**: Coordination request JSON validation fails
+### Problem 2: JSON Validation Failure
+
+**Symptom**: Coordination request JSON validation fails
 
 **Solution**: Check schema compliance:
 ```bash
@@ -248,7 +252,9 @@ python scripts/validate-coordination-schema.py inbox/incoming/coordination/my-re
 
 ---
 
-**Problem**: Missing trace IDs in coordination events
+### Problem 3: Missing Trace IDs
+
+**Symptom**: Missing trace IDs in coordination events
 
 **Solution**: Ensure trace ID is set when creating coordination requests:
 ```json
@@ -261,7 +267,7 @@ python scripts/validate-coordination-schema.py inbox/incoming/coordination/my-re
 
 ---
 
-## 📞 Support
+## Support
 
 - **Documentation**: Read [protocol-spec.md](protocol-spec.md) for complete technical reference
 - **Issues**: Report bugs via GitHub issues with `[SAP-001]` prefix

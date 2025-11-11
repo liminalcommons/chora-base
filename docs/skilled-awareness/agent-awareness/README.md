@@ -6,7 +6,7 @@
 
 ---
 
-## 🚀 Quick Start (2 minutes)
+## Quick Start (5 minutes)
 
 ```bash
 # Read root awareness (project overview)
@@ -26,7 +26,7 @@ bash scripts/validate-awareness-links.sh
 
 ---
 
-## 📖 What Is SAP-009?
+## What Is It?
 
 SAP-009 provides the **nested AGENTS.md/CLAUDE.md pattern** with 5-level hierarchy (root → domain → SAP → feature → component) for progressive context loading. The "nearest file wins" principle enables agents to navigate efficiently, loading only necessary context and achieving 60-70% token savings vs reading all documentation upfront.
 
@@ -34,7 +34,7 @@ SAP-009 provides the **nested AGENTS.md/CLAUDE.md pattern** with 5-level hierarc
 
 ---
 
-## 🎯 When to Use
+## When to Use
 
 Use SAP-009 when you need to:
 
@@ -48,7 +48,7 @@ Use SAP-009 when you need to:
 
 ---
 
-## ✨ Key Features
+## Key Features
 
 - ✅ **5-Level Hierarchy** - root → domain → SAP → feature → component
 - ✅ **"Nearest File Wins"** - Read closest AGENTS.md/CLAUDE.md for context
@@ -60,7 +60,7 @@ Use SAP-009 when you need to:
 
 ---
 
-## 📚 Quick Reference
+## Common Workflows
 
 ### 5-Level Hierarchy
 
@@ -124,7 +124,7 @@ docs/skilled-awareness/             ← Level 2: Domain (SAP capabilities)
 
 ---
 
-## 🔗 Integration with Other SAPs
+## Integration
 
 | SAP | Integration | How It Works |
 |-----|-------------|--------------|
@@ -136,7 +136,7 @@ docs/skilled-awareness/             ← Level 2: Domain (SAP capabilities)
 
 ---
 
-## 🏆 Success Metrics
+## Success Metrics
 
 - **Token Savings**: 60-70% via domain-specific awareness files
 - **Coverage**: 100% of SAPs have AGENTS.md/awareness-guide.md
@@ -145,7 +145,56 @@ docs/skilled-awareness/             ← Level 2: Domain (SAP capabilities)
 
 ---
 
-## 📄 Learn More
+## Troubleshooting
+
+### Problem 1: Awareness File Not Found
+
+**Symptom**: Agent navigates to expected location but AGENTS.md or CLAUDE.md doesn't exist
+
+**Cause**: Awareness file not created for that domain/SAP/feature level
+
+**Fix**:
+1. Check if domain has awareness file: `ls docs/skilled-awareness/AGENTS.md`
+2. If missing, create using adoption-blueprint.md guidance
+3. Validate structure: `bash scripts/validate-awareness-links.sh`
+
+**Validation**: File exists and contains required 7 sections
+
+---
+
+### Problem 2: Token Limit Exceeded During Progressive Loading
+
+**Symptom**: Agent loads too much context and hits 200k token limit
+
+**Cause**: Loading Phase 3 (Comprehensive) when Phase 1 (Essential) would suffice
+
+**Fix**:
+1. Use progressive loading phases:
+   - Phase 1 (0-10k tokens): Root + domain AGENTS.md only
+   - Phase 2 (10-50k tokens): Add SAP-specific awareness
+   - Phase 3 (50-200k tokens): Only for complex implementations
+2. Apply "nearest file wins" - read domain-specific file instead of root
+
+**Validation**: Token usage stays within budget for task complexity
+
+---
+
+### Problem 3: Circular Navigation Loop
+
+**Symptom**: Agent navigates root → domain → root → domain repeatedly
+
+**Cause**: Unclear navigation hints or missing domain-specific awareness
+
+**Fix**:
+1. Add clear "Next Steps" section to root AGENTS.md pointing to domains
+2. Create domain-specific CLAUDE.md with explicit navigation tree
+3. Use file path breadcrumbs: "You are in: /docs/skilled-awareness/"
+
+**Validation**: Agent reaches target file in ≤3 navigation steps
+
+---
+
+## Learn More
 
 - **[protocol-spec.md](protocol-spec.md)** - Complete nested awareness specification
 - **[AGENTS.md](AGENTS.md)** - Generic agent navigation patterns (17KB)

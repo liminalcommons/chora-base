@@ -17,7 +17,12 @@
       "Bash(fi)",
       "Bash([ ! -f \"$dir/awareness-guide.md\" ])",
       "Bash(then basename \"$dir\")",
-      "Bash(do if [ ! -f \"$dir/AGENTS.md\" ])"
+      "Bash(do if [ ! -f \"$dir/AGENTS.md\" ])",
+      "Bash(for sap in agent-awareness inbox testing-framework ci-cd-workflows development-lifecycle task-tracking mcp-server-development project-bootstrap)",
+      "Bash(do)",
+      "Bash(if [ -f \"docs/skilled-awareness/$sap/README.md\" ])",
+      "Bash(then)",
+      "Bash(else)"
     ],
     "deny": [],
     "ask": []
