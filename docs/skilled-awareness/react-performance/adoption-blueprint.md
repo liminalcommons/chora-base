@@ -20,6 +20,8 @@ This blueprint provides a **60-minute setup guide** for adopting SAP-025 in your
 - Lighthouse CI Setup: 10 minutes
 - Validation & Testing: 5 minutes
 
+**RT-019 Research Validation**: This setup guide incorporates findings from the RT-019 React Research Initiative, including INP optimization (replaced FID in March 2024), React Server Components performance patterns, and bundle size budgets validated across production deployments.
+
 ---
 
 ## Prerequisites (10 minutes)
@@ -79,16 +81,18 @@ ls -la next.config.ts middleware.ts instrumentation.ts
 ```bash
 cd $YOUR_PROJECT
 
-# Core dependencies
-npm install web-vitals
+# Core dependencies (RT-019: v4.2.4+ required for INP support)
+npm install web-vitals@^4.2.4
 
 # Dev dependencies for bundle analysis
 npm install -D webpack-bundle-analyzer
 ```
 
+**RT-019 Note**: web-vitals v4.2.4+ is required for INP (Interaction to Next Paint) support, which replaced FID in March 2024.
+
 **Verification**:
 ```bash
-# Verify installation
+# Verify installation (ensure web-vitals >= 4.2.4)
 npm list web-vitals webpack-bundle-analyzer
 ```
 
@@ -300,7 +304,7 @@ cp path/to/templates/vite/.env.example $YOUR_PROJECT/.env.example
 cd $YOUR_PROJECT
 
 # Core dependencies
-npm install web-vitals
+npm install web-vitals@^4.2.4
 
 # Dev dependencies
 npm install -D rollup-plugin-visualizer vite-plugin-compression2

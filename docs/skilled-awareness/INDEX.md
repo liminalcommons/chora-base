@@ -2,16 +2,16 @@
 
 **Purpose**: Central registry of all capabilities packaged as SAPs in chora-base.
 
-**Last Updated**: 2025-11-03
+**Last Updated**: 2025-11-09
 **Framework Version**: 1.0.0
 
 ---
 
 ## Overview
 
-This index tracks all **30 capabilities** identified for SAP packaging across 4 roadmap phases + Wave 2 + Wave 3 + Wave 4 (React) + Immediate.
+This index tracks all **40 capabilities** identified for SAP packaging across 4 roadmap phases + Wave 2 + Wave 3 + Wave 4 (React) + Week 5-6 Foundation + Week 7-8 User-Facing + Week 9-10 Advanced Patterns + Week 11-12 Advanced Patterns Part 2 + Immediate.
 
-**Current Coverage**: 28/30 SAPs (93%) - Wave 4 in progress
+**Current Coverage**: 37/40 SAPs (92.5%) - Week 11-12 Advanced Patterns Part 2 in progress
 
 **Target Coverage**:
 - Phase 1: 3/14 (21%) ✅ Complete
@@ -24,7 +24,7 @@ This index tracks all **30 capabilities** identified for SAP packaging across 4 
 
 ## Active SAPs
 
-**Awareness Integration Status**: ✅ 24/24 PASS (100%) - SAP-028 Publishing Automation Added (2025-11-02)
+**Awareness Integration Status**: ✅ 33/33 PASS (100%) - Week 11-12 Advanced Patterns Part 2 SAPs Added (2025-11-09): SAP-039 (react-e2e-testing), SAP-040 (react-monorepo-architecture)
 
 | SAP ID | Capability | Version | Status | Phase | Awareness | Location | Dependencies |
 |--------| 2025-11-03 | SAP-027 (dogfooding-patterns) generated - Formalized 5-week dogfooding pilot methodology for validating patterns through internal use before ecosystem adoption | Claude Code |
@@ -39,10 +39,10 @@ This index tracks all **30 capabilities** identified for SAP packaging across 4 
 | SAP-006 | quality-gates | 1.0.0 | Draft | Phase 2 | ✅ 4/4 | [quality-gates/](quality-gates/) | SAP-000, SAP-004 |
 | SAP-007 | documentation-framework | 1.0.0 | Draft | Phase 3 | ✅ 4/4 | [documentation-framework/](documentation-framework/) | SAP-000 |
 | SAP-008 | automation-scripts | 1.0.0 | Draft | Phase 3 | ✅ 4/4 | [automation-scripts/](automation-scripts/) | SAP-000, SAP-012 |
-| SAP-009 | agent-awareness | 1.1.0 | Draft | Phase 3 | ✅ 4/4 | [agent-awareness/](agent-awareness/) | SAP-000, SAP-007 |
+| SAP-009 | agent-awareness | 2.1.0 | Active | Phase 3 | ✅ 5/5 | [agent-awareness/](agent-awareness/) | SAP-000, SAP-007 |
 | SAP-010 | memory-system | 1.0.0 | Draft | Phase 3 | ✅ 4/4 | [memory-system/](memory-system/) | SAP-000 |
 | SAP-011 | docker-operations | 1.0.0 | Draft | Phase 3 | ✅ 4/4 | [docker-operations/](docker-operations/) | SAP-000 |
-| SAP-012 | development-lifecycle | 1.0.0 | Draft | Phase 3 | ✅ 4/4 | [development-lifecycle/](development-lifecycle/) | SAP-000 |
+| SAP-012 | development-lifecycle | 1.5.0 | Active | Phase 3 | ✅ 5/5 | [development-lifecycle/](development-lifecycle/) | SAP-000 |
 | SAP-013 | metrics-tracking | 1.0.0 | Draft | Phase 4 | ✅ 4/4 | [metrics-tracking/](metrics-tracking/) | SAP-000 |
 | SAP-014 | mcp-server-development | 1.0.0 | Active | Wave 3 | ✅ 4/4 | [mcp-server-development/](mcp-server-development/) | SAP-000, SAP-003, SAP-004, SAP-012 |
 | SAP-015 | task-tracking | 1.0.0 | Pilot | Phase 1 | - | [task-tracking/](task-tracking/) | SAP-000 |
@@ -56,7 +56,16 @@ This index tracks all **30 capabilities** identified for SAP packaging across 4 
 | SAP-023 | react-state-management | 1.0.0 | Active | Wave 4 | ✅ 5/5 | [react-state-management/](react-state-management/) | SAP-000, SAP-020 |
 | SAP-024 | react-styling | 1.0.0 | Active | Wave 4 | ✅ 5/5 | [react-styling/](react-styling/) | SAP-000, SAP-020 |
 | SAP-025 | react-performance | 1.0.0 | Active | Wave 4 | ✅ 5/5 | [react-performance/](react-performance/) | SAP-000, SAP-020 |
-| SAP-026 | react-accessibility | 1.0.0 | Planned | Wave 4 | - | [react-accessibility/](react-accessibility/) | SAP-000, SAP-020, SAP-021 |
+| SAP-026 | react-accessibility | 1.0.0 | Active | Wave 4 | ✅ 5/5 | [react-accessibility/](react-accessibility/) | SAP-000, SAP-020, SAP-021 |
+| SAP-033 | react-authentication | 1.0.0 | Pilot | Week 5-6 Foundation | ✅ 5/5 | [react-authentication/](react-authentication/) | SAP-000, SAP-020, SAP-034 |
+| SAP-034 | react-database-integration | 1.0.0 | Pilot | Week 5-6 Foundation | ✅ 5/5 | [react-database-integration/](react-database-integration/) | SAP-000, SAP-020 |
+| SAP-041 | react-form-validation | 1.0.0 | Pilot | Week 5-6 Foundation | ✅ 5/5 | [react-form-validation/](react-form-validation/) | SAP-000, SAP-020, SAP-033 |
+| SAP-035 | react-file-upload | 1.0.0 | Pilot | Week 7-8 User-Facing | ✅ 5/5 | [react-file-upload/](react-file-upload/) | SAP-000, SAP-020, SAP-033, SAP-034 |
+| SAP-036 | react-error-handling | 1.0.0 | Pilot | Week 7-8 User-Facing | ✅ 5/5 | [react-error-handling/](react-error-handling/) | SAP-000, SAP-020 |
+| SAP-037 | react-realtime-synchronization | 1.0.0 | Pilot | Week 9-10 Advanced Part 1 | ✅ 5/5 | [react-realtime-synchronization/](react-realtime-synchronization/) | SAP-000, SAP-020, SAP-023, SAP-034 |
+| SAP-038 | react-internationalization | 1.0.0 | Pilot | Week 9-10 Advanced Part 1 | ✅ 5/5 | [react-internationalization/](react-internationalization/) | SAP-000, SAP-020, SAP-041 |
+| SAP-039 | react-e2e-testing | 1.0.0 | Pilot | Week 11-12 Advanced Part 2 | ✅ 5/5 | [react-e2e-testing/](react-e2e-testing/) | SAP-000, SAP-020, SAP-021, SAP-033 |
+| SAP-040 | react-monorepo-architecture | 1.0.0 | Pilot | Week 11-12 Advanced Part 2 | ✅ 5/5 | [react-monorepo-architecture/](react-monorepo-architecture/) | SAP-000, SAP-020, SAP-003 |
 | SAP-028 | publishing-automation | 1.0.0 | Active | Immediate | ✅ 5/5 | [publishing-automation/](publishing-automation/) | SAP-003, SAP-005 |
 | SAP-029 | sap-generation | 1.0.0 | Pilot | Pilot | - | [sap-generation/](sap-generation/) | SAP-000 |
 | SAP-027 | dogfooding-patterns | 1.0.0 | Active | Formalization | - | [dogfooding-patterns/](dogfooding-patterns/) | SAP-000, SAP-029 |
@@ -244,11 +253,11 @@ SAP-016 (link-validation) [FOUNDATIONAL - WAVE 2]
 - **Key Features**: Idempotent scripts, justfile unified interface, safety contracts (error handling, rollback), 8 script categories
 
 #### SAP-009: agent-awareness
-- **Purpose**: AGENTS.md/CLAUDE.md patterns, nested awareness files, bidirectional translation layer
-- **Includes**: AGENTS.md.blueprint (~900 lines), CLAUDE.md.blueprint (~450 lines), 5 domain AGENTS.md files (~1,100 lines), 3 foundation tools (intent-router.py, chora-search.py, suggest-next.py with inbox integration)
-- **Status**: ✅ Draft (v1.1.0 complete - COORD-2025-004)
-- **Scope**: Implementation
-- **Key Features**: Dual-file pattern (AGENTS + CLAUDE), "Nearest File Wins", progressive context loading (200k tokens), bidirectional translation (conversational ↔ formal), 3-layer discovery (root AGENTS.md → domain AGENTS.md → INTENT_PATTERNS.yaml), user preferences (100+ options)
+- **Purpose**: AGENTS.md/CLAUDE.md patterns, nested awareness structure with file size thresholds, Critical Workflows pattern, automated validation tooling
+- **Includes**: AGENTS.md.blueprint (~900 lines), CLAUDE.md.blueprint (~450 lines), 5 domain AGENTS.md files (~1,100 lines), 3 foundation tools (intent-router.py, chora-search.py, suggest-next.py with inbox integration), validation script (scripts/validate-nested-awareness.py, 549 lines), 4 justfile recipes
+- **Status**: ✅ Active (v2.1.0 complete - Phase 3 + Phase 4, COORD-2025-012)
+- **Scope**: Implementation + Tooling
+- **Key Features**: Nested awareness hierarchy with domain-specific files, file size thresholds (1k warning, 2k critical), Critical Workflows pattern (lines 20-100), automated validation (127 files in seconds), 7-step splitting strategy, frontmatter schema (nested_structure, nested_files), 59% average file size reduction (proven in 3 Tier 1 SAPs), dual-file pattern (AGENTS + CLAUDE), "Nearest File Wins", progressive context loading (Phase 1/2/3), bidirectional translation (conversational ↔ formal), user preferences (100+ options)
 
 ### Advanced Features (3 capabilities)
 
@@ -269,11 +278,11 @@ SAP-016 (link-validation) [FOUNDATIONAL - WAVE 2]
 - **Current Adopter Pain**: "No documented lifecycle for enabling/disabling Docker options; inconsistent adoption"
 
 #### SAP-012: development-lifecycle
-- **Purpose**: DDD → BDD → TDD workflow, 8-phase lifecycle (Vision → Monitoring), sprint planning
-- **Includes**: 6 workflow docs (5,285 lines), sprint/release templates, process metrics, ANTI_PATTERNS.md (1,309 lines)
-- **Status**: ✅ Draft (all 5 artifacts complete, Phase 3 Batch 2)
+- **Purpose**: DDD → BDD → TDD workflow, 8-phase lifecycle (Vision → Monitoring), Light+ Planning Model, sprint planning
+- **Includes**: 6 workflow docs (5,285 lines), sprint/release templates, process metrics, ANTI_PATTERNS.md (1,309 lines), LIGHT_PLUS_REFERENCE.md (v1.5.0)
+- **Status**: ✅ Active (v1.5.0, all 5 artifacts complete, Phase 3 Batch 2)
 - **Scope**: All (includes vision/strategy, planning, implementation)
-- **Key Features**: 8-phase lifecycle, DDD→BDD→TDD integration, 40-80% defect reduction (research-backed), decision trees
+- **Key Features**: 8-phase lifecycle, Light+ Planning (4 constructs: Strategy → Releases → Features → Tasks), DDD→BDD→TDD integration, 40-80% defect reduction (research-backed), decision trees
 
 ### Cross-Repository (1 capability)
 
@@ -416,6 +425,12 @@ SAP-016 (link-validation) [FOUNDATIONAL - WAVE 2]
 
 | Date | Change | Author |
 |------|--------|--------|
+| 2025-11-09 | Week 11-12 Advanced Patterns Part 2: SAP-039 (react-e2e-testing), SAP-040 (react-monorepo-architecture) added - Playwright + Cypress, Turborepo + Nx + pnpm (92.5% coverage, 37/40 SAPs) | Claude Code |
+| 2025-11-09 | Week 9-10 Advanced Patterns Part 1: SAP-037 (react-realtime-synchronization), SAP-038 (react-internationalization) added - WebSockets + 3 alternatives, next-intl + react-i18next (92% coverage, 35/38 SAPs) | Claude Code |
+| 2025-11-10 | SAP-012 v1.5.0 version synchronization: All 7 artifacts synchronized to v1.5.0 (Light+ Planning Model, Vision Synthesis, CLAUDE.md), catalog and index updated (Priority 1 audit action complete) | Claude Code |
+| 2025-11-10 | SAP-009 v2.1.0 complete: Nested awareness pattern with file size thresholds (1k/2k), Critical Workflows sections, automated validation tooling (validate-nested-awareness.py), 59% token reduction in 3 Tier 1 SAPs (Phase 3 + Phase 4 complete, 16h total) | Claude Code |
+| 2025-11-09 | Week 7-8 User-Facing: SAP-035 (react-file-upload), SAP-036 (react-error-handling) added - UploadThing + 3 storage alternatives, Next.js 15 Error Boundaries + Sentry (92% coverage, 33/36 SAPs) | Claude Code |
+| 2025-11-09 | Week 5-6 Foundation: SAP-033 (react-authentication), SAP-034 (react-database-integration), SAP-041 (react-form-validation) added - NextAuth.js v5, Prisma/Drizzle ORMs, React Hook Form + Zod (91% coverage, 31/34 SAPs) | Claude Code |
 | 2025-11-02 | SAP-028 (publishing-automation) complete - Secure PyPI publishing with OIDC trusted publishing as default, eliminating long-lived API tokens (93% coverage, 26/28 SAPs) | Claude Code |
 | 2025-11-01 | Wave 4: SAP-025 (react-performance) complete - Core Web Vitals optimization with Next.js 15 + Vite 7 templates (92% coverage, 24/26 SAPs) | Claude Code |
 | 2025-11-01 | Wave 4: SAP-022 (react-linting) complete - ESLint 9 + Prettier 3 + pre-commit hooks (81% coverage, 21/26 SAPs) | Claude Code |

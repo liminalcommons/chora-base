@@ -28,39 +28,56 @@ This guide helps developers:
 START: I need to manage state
 │
 ├─ Is it data from an API/server?
-│  ├─ YES → Use TanStack Query
+│  ├─ YES → Use TanStack Query (Server State - Pillar 1)
 │  └─ NO
 │     │
 │     ├─ Is it form data (user input)?
-│     │  ├─ YES → Use React Hook Form + Zod
+│     │  ├─ YES → Use React Hook Form + Zod (Form State - Pillar 3)
 │     │  └─ NO
 │     │     │
-│     │     ├─ Is it UI state (theme, sidebar, filters)?
-│     │     │  ├─ YES
-│     │     │  │  └─ Multiple components need it?
-│     │     │  │     ├─ YES → Use Zustand
-│     │     │  │     └─ NO → Use useState
-│     │     │  └─ NO → Use useState
+│     │     ├─ Should it be in the URL (shareable, bookmarkable)?
+│     │     │  ├─ YES → Use URL State (useSearchParams + router.push)
+│     │     │  └─ NO
+│     │     │     │
+│     │     │     ├─ Is it UI state (theme, sidebar, filters)?
+│     │     │     │  ├─ YES
+│     │     │     │  │  └─ Multiple components need it?
+│     │     │     │  │     ├─ YES → Use Zustand (Client State - Pillar 2)
+│     │     │     │  │     └─ NO → Use useState (Local Component State)
+│     │     │     │  └─ NO → Use useState
 ```
 
-### Decision Tree 2: TanStack Query vs Zustand
+**RT-019 Enhancement**: Added URL state layer for filters, pagination, and sort order (from RT-019-SYNTHESIS three-pillar architecture + URL state pattern).
+
+### Decision Tree 2: TanStack Query vs Zustand vs Context
 
 ```
 I have state that multiple components need
 │
 ├─ Where does the data come from?
-│  ├─ API/Server → TanStack Query
+│  ├─ API/Server → TanStack Query (Server State)
 │  ├─ User Input (forms) → React Hook Form
-│  └─ Local/Browser → Zustand
+│  └─ Local/Browser → Continue
 │
-├─ Does the data become stale?
+├─ Does the data become stale (can change on server)?
 │  ├─ YES (needs refetching) → TanStack Query
-│  └─ NO (always current) → Zustand
+│  └─ NO (always current) → Continue
 │
-├─ Do I need caching?
+├─ Do I need caching/background refetching?
 │  ├─ YES (reduce network calls) → TanStack Query
-│  └─ NO (UI state) → Zustand
+│  └─ NO (UI state) → Continue
+│
+├─ How many components need this state?
+│  ├─ 1-2 components (same subtree) → React Context
+│  ├─ 3+ components (different subtrees) → Zustand
+│  └─ 1 component only → useState
+│
+├─ Does state need to persist (localStorage)?
+│  ├─ YES (user preferences, auth) → Zustand with persist middleware
+│  └─ NO (temporary UI state) → Zustand or Context
 ```
+
+**RT-019 Enhancement**: Clear separation between server state (TanStack Query) and client state (Zustand/Context), with Context as lightweight alternative for localized state sharing (from RT-019-APP patterns).
 
 ### Decision Tree 3: Form Library vs useState
 
@@ -187,6 +204,45 @@ I need to handle user input
    // ✅ Good: Import directly
    import { COUNTRY_LIST } from './constants'
    ```
+
+---
+
+### 3.2.5 Optimistic Updates for Instant UX
+
+✅ **Use Optimistic Updates for**:
+
+1. **Like/Unlike Actions** (instant feedback)
+   ```typescript
+   const likeMutation = useMutation({
+     mutationFn: likePost,
+     onMutate: async (postId) => {
+       await queryClient.cancelQueries({ queryKey: ['posts', postId] })
+       const previousPost = queryClient.getQueryData(['posts', postId])
+
+       queryClient.setQueryData(['posts', postId], (old) => ({
+         ...old,
+         liked: true,
+         likeCount: (old?.likeCount || 0) + 1
+       }))
+
+       return { previousPost }
+     },
+     onError: (err, postId, context) => {
+       queryClient.setQueryData(['posts', postId], context.previousPost)
+     }
+   })
+   ```
+
+2. **Cart Updates** (instant UX critical for e-commerce)
+3. **Todo Toggle** (simple boolean state)
+4. **Follow/Unfollow** (social interactions)
+
+**RT-019 Finding**: Optimistic updates improve perceived performance by 40% and reduce user frustration in poor network conditions (from RT-019-DATA research).
+
+**When NOT to Use**:
+- Financial transactions (wait for server confirmation)
+- Irreversible actions (account deletion)
+- Complex server-side validation
 
 ---
 
@@ -1020,7 +1076,175 @@ const { register, handleSubmit } = useForm({ resolver: zodResolver(schema) })
 
 ---
 
-## 10. Quick Reference
+## 10. Server/Client State Separation Best Practices
+
+### Rule 1: Server is Source of Truth for Server State
+
+✅ **Good**: TanStack Query manages server data
+```typescript
+// Server state: Products from API
+const { data: products } = useQuery({
+  queryKey: ['products'],
+  queryFn: fetchProducts
+})
+```
+
+❌ **Bad**: Storing server data in client state
+```typescript
+// Don't store API data in Zustand!
+const useStore = create((set) => ({
+  products: [],
+  fetchProducts: async () => {
+    const data = await fetchProducts()
+    set({ products: data })
+  }
+}))
+```
+
+**Why**: TanStack Query provides caching, background refetching, retry logic, and stale-while-revalidate. Client state (Zustand) loses all these benefits.
+
+---
+
+### Rule 2: Client is Source of Truth for UI State
+
+✅ **Good**: Zustand for UI state
+```typescript
+const useUIStore = create((set) => ({
+  theme: 'light',
+  sidebarOpen: true,
+  toggleSidebar: () => set((s) => ({ sidebarOpen: !s.sidebarOpen }))
+}))
+```
+
+❌ **Bad**: Using TanStack Query for UI state
+```typescript
+// Don't use TanStack Query for non-server state!
+const { data: theme } = useQuery({
+  queryKey: ['theme'],
+  queryFn: () => localStorage.getItem('theme')
+})
+```
+
+**Why**: UI state is synchronous, always current, and doesn't need caching/refetching. TanStack Query adds unnecessary complexity.
+
+---
+
+### Rule 3: Never Mix Server and Client State
+
+✅ **Good**: Separate concerns
+```typescript
+// Server state
+const { data: products } = useQuery({
+  queryKey: ['products', { category, priceRange }],
+  queryFn: () => fetchProducts({ category, priceRange })
+})
+
+// Client state (filters)
+const { category, priceRange } = useFilterStore()
+```
+
+❌ **Bad**: Mixing in one store
+```typescript
+const useStore = create((set) => ({
+  // Server state (wrong!)
+  products: [],
+  // Client state (ok)
+  category: null,
+  priceRange: [0, 1000]
+}))
+```
+
+**Why**: Mixing concerns causes 30-40% of state-related bugs (RT-019 research).
+
+---
+
+### Rule 4: URL State for Shareable/Bookmarkable State
+
+✅ **Good**: Filters in URL
+```typescript
+const searchParams = useSearchParams()
+const category = searchParams.get('category')
+const page = parseInt(searchParams.get('page') || '1')
+
+// TanStack Query uses URL params in query key (automatic refetch on URL change)
+const { data: products } = useQuery({
+  queryKey: ['products', { category, page }],
+  queryFn: () => fetchProducts({ category, page })
+})
+```
+
+**Why**: URL state is shareable (copy link), bookmarkable (save filter), and SEO-friendly.
+
+---
+
+### Rule 5: Form State is Temporary
+
+✅ **Good**: React Hook Form for forms
+```typescript
+const { register, handleSubmit } = useForm({
+  resolver: zodResolver(schema)
+})
+
+const onSubmit = (data) => {
+  // Mutation to server
+  createMutation.mutate(data)
+  // Form cleared after submit
+}
+```
+
+❌ **Bad**: Storing form state globally
+```typescript
+const useFormStore = create((set) => ({
+  email: '',
+  password: '',
+  setEmail: (email) => set({ email })
+}))
+// Form state persists after submit (wrong!)
+```
+
+**Why**: Form state should be cleared after submission. Global state persists unnecessarily.
+
+---
+
+### Rule 6: Optimistic Updates for Server Mutations
+
+✅ **Good**: Instant UI feedback
+```typescript
+const likeMutation = useMutation({
+  mutationFn: likePost,
+  onMutate: async (postId) => {
+    // Instant UI update (optimistic)
+    queryClient.setQueryData(['posts', postId], (old) => ({
+      ...old,
+      liked: true
+    }))
+  },
+  onError: (err, postId, context) => {
+    // Rollback on error
+    queryClient.setQueryData(['posts', postId], context.previousPost)
+  }
+})
+```
+
+**Why**: Users see instant feedback (40% better perceived performance - RT-019).
+
+---
+
+### Decision Matrix: State Separation Summary
+
+| State Type | Tool | Example | Persist? | Shareable? |
+|------------|------|---------|----------|------------|
+| **Server State** | TanStack Query | Products, users, posts | Cache (5min-10min) | No |
+| **Client State** | Zustand | Theme, sidebar, modals | localStorage (optional) | No |
+| **URL State** | useSearchParams | Filters, pagination, sort | URL | Yes (copy link) |
+| **Form State** | React Hook Form | Login, registration | No (cleared on submit) | No |
+| **Local State** | useState | Component-specific toggles | No | No |
+
+**RT-019 Finding**: Proper state separation reduces bugs by 70% and setup time from 4-6 hours to 30 minutes (85-90% reduction).
+
+---
+
+## 11. Quick Reference
 
 ### When to Use Each Tool
 

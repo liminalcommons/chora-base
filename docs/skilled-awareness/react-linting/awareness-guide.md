@@ -350,7 +350,35 @@ export default [
 
 ## Decision Trees
 
-### Decision Tree 1: Should I Use SAP-022?
+### Decision Tree 1: Should I Migrate to ESLint 9? (NEW - from RT-019)
+
+**CRITICAL DECISION**: ESLint 9 flat config is the NEW STANDARD. ESLint 8 is LEGACY.
+
+```
+START: Are you using ESLint 8 (.eslintrc)?
+├─ NO (using ESLint 9) → ✅ You're good! Skip to next decision tree
+└─ YES (using ESLint 8) → Want 182x faster linting?
+    ├─ NO → ⚠️ Still migrate (ESLint 10 will remove .eslintrc)
+    └─ YES → How many custom plugins/rules?
+        ├─ 0-3 plugins → ✅ Migrate now (30-60 min)
+        ├─ 4-10 plugins → ✅ Migrate now, verify plugin compatibility (1-2 hours)
+        └─ >10 plugins → ⚠️ Audit plugins first, then migrate (2-4 hours)
+```
+
+**Decision Factors**:
+
+| Factor | Migrate Now | Wait |
+|--------|-------------|------|
+| **ESLint version** | ESLint 8 (.eslintrc) | N/A - must migrate |
+| **Performance need** | Incremental lint >2s | N/A - migrate anyway |
+| **Plugin compatibility** | All plugins support flat config | Some plugins don't support flat config yet |
+| **Team availability** | 30-60 min available | No time (but schedule soon!) |
+
+**Key Insight from RT-019**: The 182x performance improvement (9,100ms → 50ms for incremental lint) is so significant that migration pays for itself in 1 week of development.
+
+---
+
+### Decision Tree 2: Should I Use SAP-022?
 
 ```
 START: Do you have a React project?
@@ -959,49 +987,181 @@ rules: {
 
 ---
 
-### Scenario 2: Migrate from ESLint 8 (eslintrc) to ESLint 9 (Flat Config)
+### Scenario 2: Migrate from ESLint 8 (eslintrc) to ESLint 9 (Flat Config) [PRIORITY - from RT-019]
 
 **Starting Point**: React project with `.eslintrc.json` or `.eslintrc.js`.
+
+**Why Migrate**: **182x faster incremental linting** (9,100ms → 50ms), future-proof (ESLint 10 removes .eslintrc)
 
 **Migration Steps**:
 
 **Step 1**: Backup existing config
 ```bash
 cp .eslintrc.json .eslintrc.json.backup
+cp .eslintignore .eslintignore.backup
 ```
 
 **Step 2**: Install ESLint 9 dependencies
 ```bash
+# Remove ESLint 8 packages
+pnpm remove eslint @typescript-eslint/parser @typescript-eslint/eslint-plugin
+
+# Install ESLint 9 (combined typescript-eslint package)
 pnpm add -D eslint@^9.26.0 typescript-eslint@^8.32.0
-pnpm remove @typescript-eslint/parser @typescript-eslint/eslint-plugin
 ```
 
-**Step 3**: Copy SAP-022 `eslint.config.mjs` (Next.js or Vite)
+**Step 3**: Convert .eslintrc to flat config
 
-**Step 4**: Delete old config
-```bash
-rm .eslintrc.json
+**Old .eslintrc.js (ESLint 8)**:
+```javascript
+module.exports = {
+  extends: [
+    'eslint:recommended',
+    'plugin:react/recommended',
+    'plugin:@typescript-eslint/recommended',
+    'prettier',
+  ],
+  plugins: ['react', '@typescript-eslint', 'react-hooks'],
+  env: {
+    browser: true,
+    es2021: true,
+  },
+  rules: {
+    'react-hooks/rules-of-hooks': 'error',
+  },
+}
 ```
 
-**Step 5**: Test new config
+**New eslint.config.mjs (ESLint 9 Flat Config)**:
+```javascript
+import js from '@eslint/js'
+import tseslint from 'typescript-eslint'
+import reactPlugin from 'eslint-plugin-react'
+import reactHooksPlugin from 'eslint-plugin-react-hooks'
+import prettierConfig from 'eslint-config-prettier'
+import globals from 'globals'
+
+export default tseslint.config(
+  // Global ignores (replaces .eslintignore)
+  {
+    ignores: ['**/node_modules/**', '**/.next/**', '**/dist/**'],
+  },
+
+  // Base configs (replaces extends)
+  js.configs.recommended,
+  ...tseslint.configs.recommendedTypeChecked,
+  reactPlugin.configs.flat.recommended,
+
+  // Global settings (replaces env)
+  {
+    languageOptions: {
+      globals: {
+        ...globals.browser,
+        ...globals.es2021,
+      },
+      parserOptions: {
+        projectService: true, // NEW in v8 - 30-50% faster!
+        tsconfigRootDir: import.meta.dirname,
+      },
+    },
+  },
+
+  // React Hooks (replaces plugins)
+  {
+    plugins: {
+      'react-hooks': reactHooksPlugin,
+    },
+    rules: {
+      'react-hooks/rules-of-hooks': 'error',
+    },
+  },
+
+  // Prettier integration (MUST be last)
+  prettierConfig,
+)
+```
+
+**Key Changes**:
+- ❌ `extends` → ✅ Import and spread configs (`...tseslint.configs.recommended`)
+- ❌ `plugins: []` → ✅ `plugins: {}` (object instead of array)
+- ❌ `env` → ✅ `languageOptions.globals`
+- ❌ `.eslintignore` → ✅ `ignores: []` in flat config
+- ❌ `@typescript-eslint/parser` → ✅ `typescript-eslint` (combined package)
+- ✅ **NEW**: `projectService: true` (30-50% faster than old `project` option)
+
+**Step 4**: Delete old config files
 ```bash
+rm .eslintrc.js .eslintrc.json .eslintrc
+rm .eslintignore
+```
+
+**Step 5**: Update VS Code settings
+```json
+// .vscode/settings.json
+{
+  "eslint.useFlatConfig": true  // Required for ESLint 9
+}
+```
+
+**Step 6**: Test migration
+```bash
+# Test linting
 pnpm lint
+
 # Fix any violations
 pnpm lint:fix
+
+# Verify 182x performance improvement (watch mode)
+# Before: ~9,100ms for incremental lint
+# After: ~50ms for incremental lint
 ```
 
-**Step 6**: Update CI scripts (if needed)
+**Step 7**: Update CI scripts (if needed)
 ```yaml
 # .github/workflows/ci.yml
 # No changes needed (ESLint 9 uses same CLI)
 ```
 
-**Timeline**: 1-2 hours (depends on existing violations)
+**Timeline**: 30-60 minutes (depends on custom plugins)
 
-**Common Issues**:
-- Plugins may need flat config versions (check plugin docs)
-- `extends` no longer works (use array spread `...config`)
-- `env` replaced by `languageOptions.globals`
+**Performance Validation** (from RT-019):
+```bash
+# Test incremental lint speed
+# 1. Make a small change in a file
+# 2. Run lint in watch mode
+# 3. Should see ~50ms lint time (vs ~9,100ms before)
+```
+
+**Common Migration Issues**:
+
+**Issue 1: "Cannot find module '@typescript-eslint/parser'"**
+- **Cause**: ESLint 9 uses `typescript-eslint` combined package
+- **Fix**: Install `typescript-eslint@^8.32.0` (not separate parser/plugin)
+
+**Issue 2: "extends is not allowed"**
+- **Cause**: Flat config doesn't support `extends`
+- **Fix**: Import configs and spread: `...tseslint.configs.recommended`
+
+**Issue 3: "env is not allowed"**
+- **Cause**: Flat config uses `languageOptions.globals`
+- **Fix**: `languageOptions: { globals: { ...globals.browser } }`
+
+**Issue 4: Plugins not found**
+- **Cause**: Some plugins may not have flat config support yet
+- **Fix**: Check plugin docs for flat config compatibility
+
+**Migration Checklist**:
+- [ ] Backup .eslintrc and .eslintignore
+- [ ] Install ESLint 9.26.0+ and typescript-eslint@^8.32.0
+- [ ] Create eslint.config.mjs with flat config
+- [ ] Convert extends → imported configs
+- [ ] Convert plugins array → plugins object
+- [ ] Convert env → languageOptions.globals
+- [ ] Convert .eslintignore → ignores in flat config
+- [ ] Remove old .eslintrc files
+- [ ] Update VS Code settings (eslint.useFlatConfig: true)
+- [ ] Test with pnpm lint
+- [ ] Verify 182x performance improvement
 
 ---
 

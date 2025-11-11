@@ -32,11 +32,20 @@ This document specifies the technical contracts, architecture patterns, and guar
 - `ref` as prop (no more `forwardRef`)
 - Concurrent features (Suspense, startTransition, useDeferredValue)
 
+**Server-First Architecture**: React 19 + Next.js 15 emphasize server-first rendering with progressive enhancement. Server Components are default, client components require explicit `'use client'` directive.
+
 ### Next.js App Router Specification
 
-**Version**: 15.5.x (October 2024+)
+**Version**: 15.5.x (October 2024+) → 15.1+ (Q1 2025 features)
 **Source**: https://nextjs.org/docs
 **Architecture**: File-based routing with React Server Components as default
+
+**Next.js 15.1+ Enhancements**:
+- Enhanced Server Actions with improved type inference
+- Edge runtime optimizations for faster cold starts
+- Streaming improvements with finer-grained Suspense boundaries
+- Turbopack dev mode stabilization (5x faster dev server)
+- Improved type safety across client/server boundaries
 
 **Core Conventions**:
 ```
@@ -481,6 +490,75 @@ function Sidebar() {
   return <button onClick={toggle}>Toggle</button>
 }
 ```
+
+**Server Actions Pattern** (Next.js 15.1+ enhanced):
+```typescript
+// app/actions/posts.ts
+'use server'
+
+import { revalidatePath } from 'next/cache'
+import { redirect } from 'next/navigation'
+import { z } from 'zod'
+import { prisma } from '@/lib/db'
+
+// Schema-first validation
+const CreatePostSchema = z.object({
+  title: z.string().min(1, 'Title is required'),
+  content: z.string().min(10, 'Content must be at least 10 characters'),
+  published: z.boolean().default(false),
+})
+
+export async function createPost(formData: FormData) {
+  // Server-side validation
+  const validated = CreatePostSchema.parse({
+    title: formData.get('title'),
+    content: formData.get('content'),
+    published: formData.get('published') === 'on',
+  })
+
+  // Database operation
+  const post = await prisma.post.create({
+    data: validated,
+  })
+
+  // Revalidate cache
+  revalidatePath('/posts')
+
+  // Redirect on success
+  redirect(`/posts/${post.id}`)
+}
+
+// app/posts/new/page.tsx
+'use client'
+
+import { useFormStatus } from 'react-dom'
+import { createPost } from '@/app/actions/posts'
+
+function SubmitButton() {
+  const { pending } = useFormStatus()
+  return (
+    <button type="submit" disabled={pending}>
+      {pending ? 'Creating...' : 'Create Post'}
+    </button>
+  )
+}
+
+export default function NewPostPage() {
+  return (
+    <form action={createPost}>
+      <input name="title" required />
+      <textarea name="content" required />
+      <label>
+        <input type="checkbox" name="published" />
+        Publish immediately
+      </label>
+      <SubmitButton />
+    </form>
+  )
+}
+```
+
+**Progressive Enhancement**: Form works without JavaScript (native HTML submission), enhanced with client-side pending states.
 
 ### State Management Architecture
 

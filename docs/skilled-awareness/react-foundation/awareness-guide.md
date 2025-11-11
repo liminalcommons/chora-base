@@ -416,7 +416,33 @@ function selectStateManagement(needs: StateNeeds) {
 
 ---
 
-### Decision Tree 4: Server Component vs Client Component (Next.js)
+### Decision Tree 4: Pages Router vs App Router Migration
+
+```
+Do you have an existing Next.js project?
+├─ NO (new project) → Use App Router (Next.js 15) ✅
+└─ YES → Continue
+   ├─ Currently on Pages Router?
+   │  └─ YES → Continue
+   │     ├─ Need Server Components, streaming, layouts?
+   │     │  └─ YES → Migrate to App Router ✅
+   │     ├─ Project stable, no new features planned?
+   │     │  └─ YES → Stay on Pages Router (low risk) ⚠️
+   │     ├─ Team capacity for migration (1-2 weeks)?
+   │     │  └─ NO → Stay on Pages Router temporarily ⏳
+   │     └─ Default → Plan gradual migration (incremental adoption) 🔄
+   └─ Already on App Router → Continue using App Router ✅
+```
+
+**Migration Strategy**:
+- **Incremental**: Next.js 13+ supports both routers simultaneously
+- **Timeline**: 1-2 weeks for medium apps (10-50 pages)
+- **Risk**: Low (Pages Router still supported, but deprecated)
+- **Benefit**: Access to Server Components, improved performance, better DX
+
+---
+
+### Decision Tree 5: Server Component vs Client Component (Next.js)
 
 ```
 Does this component need...
@@ -447,6 +473,36 @@ export function PostList({ posts }: { posts: Post[] }) {
   return <input onChange={(e) => setFilter(e.target.value)} />
 }
 ```
+
+**Server Component Best Practices** (RT-019 Research):
+
+1. **Data Fetching in Server Components**:
+   - Direct database queries (no API layer needed)
+   - Parallel data fetching with `Promise.all()`
+   - Type-safe from database to UI (Prisma → TypeScript → React)
+   - No waterfalls (fetch in layout + page simultaneously)
+
+2. **Server Component Benefits**:
+   - **Zero client JavaScript** for static content
+   - **40-60% bundle size reduction** vs. client-only rendering
+   - **SEO-friendly** (fully rendered HTML)
+   - **Faster Time to Interactive** (TTI)
+
+3. **Client/Server Boundary Management**:
+   - Pass serializable data from Server → Client (no functions, no class instances)
+   - Use Server Actions for server mutations (not REST API endpoints)
+   - Minimize `'use client'` boundaries (keep as deep as possible)
+   - Share types between server and client (monorepo pattern)
+
+4. **Progressive Enhancement**:
+   - Forms work without JavaScript (native HTML submission)
+   - Server Actions degrade gracefully
+   - Loading states with `loading.tsx` (Suspense boundaries)
+   - Error handling with `error.tsx` (Error boundaries)
+
+**Common Mistake**: Marking everything `'use client'` to avoid thinking about boundaries. This defeats the purpose of RSC.
+
+**Performance Impact**: Unnecessary `'use client'` increases bundle size by 40-100KB per component tree.
 
 ---
 
@@ -735,7 +791,106 @@ npm run dev  # Running in 45 minutes from project idea
 
 ---
 
-### Integration 5: SAP-009 (Agent Awareness)
+### Integration 5: SAP-033 (Authentication & Authorization) - FUTURE
+
+**Connection**: SAP-020 provides foundation, SAP-033 adds production-ready auth.
+
+**Workflow**:
+1. Install SAP-020 (Next.js 15 project)
+2. Install SAP-033 (NextAuth v5, Clerk, or Supabase Auth)
+3. Secure routes with middleware patterns
+4. Implement RBAC for authorization
+
+**Example**:
+```typescript
+// middleware.ts (from SAP-033)
+import { auth } from '@/auth'
+
+export default auth((req) => {
+  if (!req.auth && req.nextUrl.pathname !== '/login') {
+    return Response.redirect(new URL('/login', req.url))
+  }
+})
+
+export const config = {
+  matcher: ['/((?!api|_next/static|_next/image|favicon.ico).*)'],
+}
+```
+
+**Status**: SAP-033 in development (planned Week 5-6)
+**Cross-Reference**: Will be linked when SAP-033 is created
+
+---
+
+### Integration 6: SAP-034 (Database Integration) - FUTURE
+
+**Connection**: SAP-020 for frontend, SAP-034 for full-stack data layer.
+
+**Workflow**:
+1. Install SAP-020 (Next.js 15 foundation)
+2. Install SAP-034 (Prisma or Drizzle ORM)
+3. Use Server Components for direct database queries
+4. Implement type-safe data fetching
+
+**Example**:
+```typescript
+// app/posts/page.tsx (Server Component)
+import { prisma } from '@/lib/db' // from SAP-034
+
+export default async function PostsPage() {
+  const posts = await prisma.post.findMany({
+    orderBy: { createdAt: 'desc' },
+    take: 10,
+  })
+
+  return <PostList posts={posts} />
+}
+```
+
+**Status**: SAP-034 in development (planned Week 5-6)
+**Cross-Reference**: Will be linked when SAP-034 is created
+
+---
+
+### Integration 7: SAP-018 (Form Validation) - ENHANCED
+
+**Connection**: SAP-020 provides foundation, SAP-018 provides production-grade forms.
+
+**Workflow**:
+1. Install SAP-020 (Next.js 15 project)
+2. Install SAP-018 (React Hook Form + Zod, enhanced version)
+3. Build forms with Server Action submission
+4. Implement WCAG 2.2 Level AA compliance
+
+**Example**:
+```typescript
+// app/contact/page.tsx
+'use client'
+import { useForm } from 'react-hook-form' // from SAP-018
+import { zodResolver } from '@hookform/resolvers/zod'
+import { z } from 'zod'
+
+const contactSchema = z.object({
+  name: z.string().min(1, 'Name is required'),
+  email: z.string().email('Invalid email'),
+  message: z.string().min(10, 'Message must be at least 10 characters'),
+})
+
+export default function ContactPage() {
+  const { register, handleSubmit, formState: { errors } } = useForm({
+    resolver: zodResolver(contactSchema)
+  })
+
+  // Server Action submission...
+}
+```
+
+**Status**: SAP-018 major update planned (Week 5-6)
+**Cross-Reference**: [SAP-018 (current version)](../form-validation/) - will be significantly enhanced
+
+---
+
+### Integration 8: SAP-009 (Agent Awareness)
 
 **Connection**: SAP-020 React projects should include AGENTS.md for AI agent guidance.
 

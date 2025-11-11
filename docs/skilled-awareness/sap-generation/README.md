@@ -6,7 +6,7 @@
 
 ---
 
-## 🚀 Quick Start (3 minutes)
+## Quick Start (5 minutes)
 
 ```bash
 # Step 1: Add SAP to catalog (sap-catalog.json)
@@ -42,7 +42,7 @@ python scripts/generate-sap-batch.py SAP-030 SAP-031 SAP-032
 
 ---
 
-## 📖 What Is SAP-029?
+## What Is It?
 
 SAP-029 provides **automated SAP artifact generation** using Jinja2 templates and an MVP schema. Eliminates repetitive boilerplate (80% of SAP creation time) by generating 5 standardized artifacts from 9-field catalog entries, allowing focus on domain-specific content.
 
@@ -58,7 +58,7 @@ SAP-029 provides **automated SAP artifact generation** using Jinja2 templates an
 
 ---
 
-## 🎯 When to Use
+## When to Use
 
 Use SAP-029 when you need to:
 
@@ -72,7 +72,7 @@ Use SAP-029 when you need to:
 
 ---
 
-## ✨ Key Features
+## Key Features
 
 - ✅ **80% Time Savings** - 10 hours → 2 hours (automated boilerplate + focused manual fill)
 - ✅ **Jinja2 Templates** - 5 templates for 5 artifacts (capability-charter, protocol-spec, awareness-guide, adoption-blueprint, ledger)
@@ -84,7 +84,7 @@ Use SAP-029 when you need to:
 
 ---
 
-## 📚 Quick Reference
+## Common Workflows
 
 ### SAP Generation Workflow
 
@@ -373,7 +373,7 @@ just validate-sap SAP-030
 
 ---
 
-## 🔗 Integration with Other SAPs
+## Integration
 
 | SAP | Integration | How It Works |
 |-----|-------------|--------------|
@@ -386,7 +386,7 @@ just validate-sap SAP-030
 
 ---
 
-## 🏆 Success Metrics
+## Success Metrics
 
 - **Time Savings**: 80% reduction (10 hours → 2 hours per SAP, 8 hours saved)
 - **Batch Efficiency**: 16 SAPs generated in 32 hours (vs 160 hours manual, 128 hours saved)
@@ -397,9 +397,9 @@ just validate-sap SAP-030
 
 ---
 
-## 🔧 Troubleshooting
+## Troubleshooting
 
-### Problem: SAP Not Found in Catalog
+### Problem 1: SAP Not Found in Catalog
 
 **Symptom**: `python scripts/generate-sap.py SAP-030` fails with "SAP-030 not found in sap-catalog.json"
 
@@ -432,7 +432,7 @@ python scripts/generate-sap.py SAP-030
 
 ---
 
-### Problem: Template Syntax Error
+### Problem 2: Template Syntax Error
 
 **Symptom**: `jinja2.exceptions.TemplateSyntaxError: unexpected end of statement`
 
@@ -467,7 +467,7 @@ python scripts/generate-sap.py SAP-030
 
 ---
 
-### Problem: Generation Metadata Not Updated
+### Problem 3: Generation Metadata Not Updated
 
 **Symptom**: Manual edits made but `regeneration_safe: true` (should be `false`)
 
@@ -505,7 +505,7 @@ python scripts/generate-sap.py SAP-030 --force --template-version 1.2.0
 
 ---
 
-### Problem: Batch Generation Fails Partially
+### Problem 4: Batch Generation Fails Partially
 
 **Symptom**: `python scripts/generate-sap-batch.py SAP-030 SAP-031 SAP-032` generates SAP-030 successfully but fails on SAP-031
 
@@ -537,7 +537,7 @@ python scripts/sap-evaluator.py SAP-030 SAP-031 SAP-032
 
 ---
 
-### Problem: INDEX.md Not Updated After Generation
+### Problem 5: INDEX.md Not Updated After Generation
 
 **Symptom**: SAP-030 generated successfully but not listed in `docs/skilled-awareness/INDEX.md`
 
@@ -570,7 +570,7 @@ python scripts/generate-sap.py SAP-030 --update-index
 
 ---
 
-## 📄 Learn More
+## Learn More
 
 - **[protocol-spec.md](protocol-spec.md)** - SAP generation specification (30KB, 15-min read, pilot status)
 - **[AGENTS.md](AGENTS.md)** - Agent generation workflows (25KB, 12-min read)

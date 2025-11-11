@@ -1,10 +1,10 @@
 {
   "version": "5.1.0",
-  "updated": "2025-11-09",
+  "updated": "2025-11-10",
   "sap_sets_version": "2.0.0",
   "sap_sets_architecture": "domain-based",
   "description": "Machine-readable catalog of all Skilled Awareness Packages in chora-base with domain-based set architecture and discoverability tracking",
-  "total_saps": 34,
+  "total_saps": 40,
   "schema_enhancements": {
     "v5.1.0": {
       "date": "2025-11-09",
@@ -504,16 +504,22 @@
       "name": "agent-awareness",
       "full_name": "Agent Awareness System",
       "status": "active",
-      "version": "1.1.0",
+      "version": "2.1.0",
       "included_by_default": false,
       "size_kb": 125,
-      "description": "AGENTS.md/CLAUDE.md patterns with bidirectional translation layer, 5 domain AGENTS.md files, and inbox protocol integration",
+      "description": "AGENTS.md/CLAUDE.md patterns with nested awareness structure, file size thresholds, Critical Workflows pattern, automated validation tooling, and 59% token reduction proven in 3 Tier 1 SAPs",
       "capabilities": [
         "Dual-file pattern (AGENTS + CLAUDE)",
-        "Nested awareness hierarchy (5 domain AGENTS.md files)",
+        "Nested awareness hierarchy with domain-specific files",
+        "File size thresholds (1k warning, 2k critical)",
+        "Critical Workflows pattern (lines 20-100)",
+        "Automated validation script (scripts/validate-nested-awareness.py)",
+        "Frontmatter schema (nested_structure, nested_files)",
+        "7-step splitting strategy",
         "Nearest file wins",
-        "Progressive context loading",
+        "Progressive context loading (Phase 1/2/3)",
         "200k token budget management",
+        "59% average file size reduction (proven in Phase 3)",
         "Bidirectional translation (conversational ↔ formal)",
         "Intent routing (confidence thresholds)",
         "Glossary search (fuzzy matching)",
@@ -724,7 +730,7 @@
       "name": "development-lifecycle",
       "full_name": "Development Lifecycle",
       "status": "active",
-      "version": "1.2.0",
+      "version": "1.5.0",
       "included_by_default": false,
       "size_kb": 180,
       "description": "8-phase lifecycle (Vision → Monitoring) with Documentation-Driven Development, L3 Documentation-First workflow, Diataxis framework, and BDD → TDD integration",
@@ -1504,6 +1510,477 @@
       "dependents": []
     },
     {
+      "id": "SAP-033",
+      "name": "react-authentication",
+      "full_name": "React Authentication & Authorization",
+      "status": "pilot",
+      "version": "1.0.0",
+      "included_by_default": false,
+      "size_kb": 181,
+      "description": "NextAuth.js v5 + 3 alternative providers (Clerk, Supabase Auth, Auth0) for authentication with 93.75% time savings",
+      "capabilities": [
+        "NextAuth.js v5 (Auth.js) configuration",
+        "Clerk 7-minute rapid setup",
+        "Supabase Auth tight integration",
+        "Auth0 enterprise SSO/SAML",
+        "RBAC patterns with TypeScript",
+        "Middleware route protection (Next.js 15)",
+        "Session management (JWT vs database)",
+        "4-way provider decision matrix"
+      ],
+      "dependencies": [
+        "SAP-000",
+        "SAP-020",
+        "SAP-034"
+      ],
+      "tags": [
+        "react",
+        "authentication",
+        "nextauth",
+        "clerk",
+        "supabase",
+        "auth0",
+        "rbac",
+        "security"
+      ],
+      "author": "chora-base",
+      "location": "docs/skilled-awareness/react-authentication",
+      "artifacts": {
+        "capability_charter": true,
+        "protocol_spec": true,
+        "awareness_guide": true,
+        "adoption_blueprint": true,
+        "ledger": true
+      },
+      "system_files": [
+        "templates/react/authentication/"
+      ],
+      "phase": "Week 5-6 Foundation",
+      "priority": "P1",
+      "dependents": [
+        "SAP-041"
+      ]
+    },
+    {
+      "id": "SAP-034",
+      "name": "react-database-integration",
+      "full_name": "React Database Integration",
+      "status": "pilot",
+      "version": "1.0.0",
+      "included_by_default": false,
+      "size_kb": 181,
+      "description": "Prisma ORM + Drizzle ORM dual approach for Next.js with decision matrix and 89.6% time savings",
+      "capabilities": [
+        "Prisma ORM setup (default, DX-focused)",
+        "Drizzle ORM setup (performance alternative)",
+        "Decision matrix: Prisma vs Drizzle",
+        "Migration workflow patterns",
+        "Type-safe query patterns",
+        "Row-Level Security (RLS) for Supabase/PostgreSQL",
+        "PostgreSQL: Most popular for Next.js apps"
+      ],
+      "dependencies": [
+        "SAP-000",
+        "SAP-020"
+      ],
+      "tags": [
+        "react",
+        "database",
+        "prisma",
+        "drizzle",
+        "orm",
+        "postgresql",
+        "typescript"
+      ],
+      "author": "chora-base",
+      "location": "docs/skilled-awareness/react-database-integration",
+      "artifacts": {
+        "capability_charter": true,
+        "protocol_spec": true,
+        "awareness_guide": true,
+        "adoption_blueprint": true,
+        "ledger": true
+      },
+      "system_files": [
+        "templates/react/database/"
+      ],
+      "phase": "Week 5-6 Foundation",
+      "priority": "P1",
+      "dependents": [
+        "SAP-033",
+        "SAP-041"
+      ]
+    },
+    {
+      "id": "SAP-041",
+      "name": "react-form-validation",
+      "full_name": "React Form Validation",
+      "status": "pilot",
+      "version": "1.0.0",
+      "included_by_default": false,
+      "size_kb": 237,
+      "description": "React Hook Form + Zod + Server Actions for type-safe, accessible forms with 88.9% time savings",
+      "capabilities": [
+        "React Hook Form API and patterns",
+        "Zod schema-first validation",
+        "TypeScript type inference from schemas",
+        "Server Action integration (useFormStatus, useFormState, useActionState)",
+        "Client + server dual validation",
+        "WCAG 2.2 Level AA accessibility patterns",
+        "Progressive enhancement (works without JS)",
+        "Multi-step form wizards",
+        "Optimistic updates with useOptimistic",
+        "Form complexity decision matrix (4 tiers)"
+      ],
+      "dependencies": [
+        "SAP-000",
+        "SAP-020",
+        "SAP-033"
+      ],
+      "tags": [
+        "react",
+        "forms",
+        "validation",
+        "react-hook-form",
+        "zod",
+        "typescript",
+        "accessibility",
+        "server-actions"
+      ],
+      "author": "chora-base",
+      "location": "docs/skilled-awareness/react-form-validation",
+      "artifacts": {
+        "capability_charter": true,
+        "protocol_spec": true,
+        "awareness_guide": true,
+        "adoption_blueprint": true,
+        "ledger": true
+      },
+      "system_files": [
+        "templates/react/forms/"
+      ],
+      "phase": "Week 5-6 Foundation",
+      "priority": "P1",
+      "dependents": []
+    },
+    {
+      "id": "SAP-035",
+      "name": "react-file-upload",
+      "full_name": "React File Upload & Storage",
+      "status": "pilot",
+      "version": "1.0.0",
+      "included_by_default": false,
+      "size_kb": 235,
+      "description": "UploadThing + 3 alternatives (Vercel Blob, Supabase Storage, AWS S3) for secure file uploads with 91.7% time savings",
+      "capabilities": [
+        "UploadThing setup (Next.js-first, type-safe, free 2GB tier)",
+        "Vercel Blob Storage (edge-optimized, global CDN)",
+        "Supabase Storage (RLS support, image transformations)",
+        "AWS S3 with presigned URLs (enterprise, 11 nines durability)",
+        "Client + server file validation (MIME, magic bytes, size)",
+        "Virus scanning with ClamAV (malware protection)",
+        "Progress indicators and chunked uploads",
+        "Image optimization with sharp.js (WebP, AVIF, resizing)",
+        "CDN integration for global delivery",
+        "4-way provider decision matrix"
+      ],
+      "dependencies": [
+        "SAP-000",
+        "SAP-020",
+        "SAP-033",
+        "SAP-034"
+      ],
+      "tags": [
+        "react",
+        "file-upload",
+        "uploadthing",
+        "vercel-blob",
+        "supabase-storage",
+        "aws-s3",
+        "image-optimization",
+        "security",
+        "virus-scanning"
+      ],
+      "author": "chora-base",
+      "location": "docs/skilled-awareness/react-file-upload",
+      "artifacts": {
+        "capability_charter": true,
+        "protocol_spec": true,
+        "awareness_guide": true,
+        "adoption_blueprint": true,
+        "ledger": true
+      },
+      "system_files": [
+        "templates/react/file-upload/"
+      ],
+      "phase": "Week 7-8 User-Facing",
+      "priority": "P1",
+      "dependents": []
+    },
+    {
+      "id": "SAP-036",
+      "name": "react-error-handling",
+      "full_name": "React Error Handling & Monitoring",
+      "status": "pilot",
+      "version": "1.0.0",
+      "included_by_default": false,
+      "size_kb": 197,
+      "description": "Next.js 15 Error Boundaries + Sentry + react-error-boundary for production error handling with 87.5% time savings",
+      "capabilities": [
+        "Next.js 15 error boundaries (error.tsx, global-error.tsx, not-found.tsx)",
+        "Sentry error tracking (<1% overhead with 10% sampling)",
+        "react-error-boundary for reusable boundaries",
+        "Error recovery patterns (retry with exponential backoff)",
+        "Toast notifications for transient errors (react-hot-toast)",
+        "GDPR/CCPA compliant PII scrubbing",
+        "TanStack Query error handling",
+        "Network error detection (navigator.onLine)",
+        "Custom 404/500 error pages"
+      ],
+      "dependencies": [
+        "SAP-000",
+        "SAP-020"
+      ],
+      "tags": [
+        "react",
+        "error-handling",
+        "sentry",
+        "monitoring",
+        "error-boundaries",
+        "production",
+        "gdpr",
+        "ccpa"
+      ],
+      "author": "chora-base",
+      "location": "docs/skilled-awareness/react-error-handling",
+      "artifacts": {
+        "capability_charter": true,
+        "protocol_spec": true,
+        "awareness_guide": true,
+        "adoption_blueprint": true,
+        "ledger": true
+      },
+      "system_files": [
+        "templates/react/error-handling/"
+      ],
+      "phase": "Week 7-8 User-Facing",
+      "priority": "P0",
+      "dependents": []
+    },
+    {
+      "id": "SAP-037",
+      "name": "react-realtime-synchronization",
+      "full_name": "React Real-Time Data Synchronization",
+      "status": "pilot",
+      "version": "1.0.0",
+      "included_by_default": false,
+      "size_kb": 212,
+      "description": "WebSockets (Socket.IO) + SSE + Pusher + Ably for real-time features with 90.5% time savings",
+      "capabilities": [
+        "WebSockets with Socket.IO (60k GitHub stars, bidirectional, auto-reconnect)",
+        "Server-Sent Events (SSE) with native EventSource API (unidirectional, simple)",
+        "Pusher managed service (100 connections free, 6ms global latency)",
+        "Ably enterprise-grade (6M messages/month free, 99.999% uptime SLA)",
+        "TanStack Query integration (real-time invalidation, optimistic updates)",
+        "Reconnection strategies (exponential backoff, heartbeat checks)",
+        "Offline handling (queue mutations, sync on reconnect)",
+        "Conflict resolution (last-write-wins, operational transforms, CRDTs)",
+        "Presence tracking (online users, typing indicators, cursors)",
+        "4-way provider decision matrix"
+      ],
+      "dependencies": [
+        "SAP-000",
+        "SAP-020",
+        "SAP-023",
+        "SAP-034"
+      ],
+      "tags": [
+        "react",
+        "realtime",
+        "websockets",
+        "socket-io",
+        "sse",
+        "pusher",
+        "ably",
+        "collaboration",
+        "presence"
+      ],
+      "author": "chora-base",
+      "location": "docs/skilled-awareness/react-realtime-synchronization",
+      "artifacts": {
+        "capability_charter": true,
+        "protocol_spec": true,
+        "awareness_guide": true,
+        "adoption_blueprint": true,
+        "ledger": true
+      },
+      "system_files": [
+        "templates/react/realtime/"
+      ],
+      "phase": "Week 9-10 Advanced Patterns Part 1",
+      "priority": "P2",
+      "dependents": []
+    },
+    {
+      "id": "SAP-038",
+      "name": "react-internationalization",
+      "full_name": "React Internationalization (i18n)",
+      "status": "pilot",
+      "version": "1.0.0",
+      "included_by_default": false,
+      "size_kb": 170,
+      "description": "next-intl + react-i18next for multilingual React apps with RTL support and 88.3% time savings",
+      "capabilities": [
+        "next-intl setup (Next.js 15 native, Server Component support, type-safe)",
+        "react-i18next setup (8k GitHub stars, mature ecosystem, flexible)",
+        "Locale routing (middleware-based, /en/, /es/, /ar/)",
+        "RTL support (Arabic, Hebrew, Farsi - right-to-left layouts)",
+        "Pluralization (CLDR rules, context-aware translations)",
+        "Number/date formatting (Intl API, locale-aware)",
+        "Translation management (POEditor, Crowdin, Lokalise integration)",
+        "SEO optimization (hreflang tags, locale sitemaps, Search Console)",
+        "Dynamic language switching (user preference, browser detection)",
+        "2-library decision matrix"
+      ],
+      "dependencies": [
+        "SAP-000",
+        "SAP-020",
+        "SAP-041"
+      ],
+      "tags": [
+        "react",
+        "i18n",
+        "internationalization",
+        "next-intl",
+        "react-i18next",
+        "rtl",
+        "localization",
+        "translation",
+        "seo"
+      ],
+      "author": "chora-base",
+      "location": "docs/skilled-awareness/react-internationalization",
+      "artifacts": {
+        "capability_charter": true,
+        "protocol_spec": true,
+        "awareness_guide": true,
+        "adoption_blueprint": true,
+        "ledger": true
+      },
+      "system_files": [
+        "templates/react/i18n/"
+      ],
+      "phase": "Week 9-10 Advanced Patterns Part 1",
+      "priority": "P2",
+      "dependents": []
+    },
+    {
+      "id": "SAP-039",
+      "name": "react-e2e-testing",
+      "full_name": "React End-to-End Testing",
+      "status": "pilot",
+      "version": "1.0.0",
+      "included_by_default": false,
+      "size_kb": 175,
+      "description": "Playwright + Cypress for E2E testing with 90.6% time savings and flakiness prevention",
+      "capabilities": [
+        "Playwright setup (62k GitHub stars, cross-browser, TypeScript-first)",
+        "Cypress setup (46k GitHub stars, 10M downloads/month, time-travel debugging)",
+        "Visual regression testing (Percy for Cypress, Playwright built-in)",
+        "Test organization patterns (Page Object Model, fixtures, helpers)",
+        "CI/CD integration (GitHub Actions, parallel execution, sharding)",
+        "Authentication flow testing (session persistence)",
+        "API mocking (Playwright/Cypress intercept, MSW integration)",
+        "Database seeding for E2E tests",
+        "Auto-retry and flakiness prevention (90% reduction)",
+        "2-tool decision matrix"
+      ],
+      "dependencies": [
+        "SAP-000",
+        "SAP-020",
+        "SAP-021",
+        "SAP-033"
+      ],
+      "tags": [
+        "react",
+        "e2e-testing",
+        "playwright",
+        "cypress",
+        "testing",
+        "visual-regression",
+        "ci-cd",
+        "automation"
+      ],
+      "author": "chora-base",
+      "location": "docs/skilled-awareness/react-e2e-testing",
+      "artifacts": {
+        "capability_charter": true,
+        "protocol_spec": true,
+        "awareness_guide": true,
+        "adoption_blueprint": true,
+        "ledger": true
+      },
+      "system_files": [
+        "templates/react/e2e-testing/"
+      ],
+      "phase": "Week 11-12 Advanced Patterns Part 2",
+      "priority": "P2",
+      "dependents": []
+    },
+    {
+      "id": "SAP-040",
+      "name": "react-monorepo-architecture",
+      "full_name": "React Monorepo Setup & Architecture",
+      "status": "pilot",
+      "version": "1.0.0",
+      "included_by_default": false,
+      "size_kb": 168,
+      "description": "Turborepo + Nx + pnpm workspaces for monorepo architecture with 93.1% time savings",
+      "capabilities": [
+        "Turborepo setup (15k GitHub stars, fastest, Vercel-backed)",
+        "Nx setup (22k GitHub stars, powerful, enterprise-grade, code generation)",
+        "pnpm workspaces setup (28k GitHub stars, baseline, lightweight)",
+        "Shared packages architecture (@acme/ui, @acme/utils, @acme/config, @acme/tsconfig)",
+        "Remote caching (Vercel Remote Cache free, Nx Cloud 500 hrs/month free)",
+        "Dependency management (workspace:* protocol, hoisting strategies)",
+        "Versioning and publishing (changesets for coordinated releases)",
+        "Task orchestration (pipeline configuration, cache strategies)",
+        "Build time reduction (90% with remote caching)",
+        "3-tool decision matrix"
+      ],
+      "dependencies": [
+        "SAP-000",
+        "SAP-020",
+        "SAP-003"
+      ],
+      "tags": [
+        "react",
+        "monorepo",
+        "turborepo",
+        "nx",
+        "pnpm",
+        "architecture",
+        "caching",
+        "versioning",
+        "changesets"
+      ],
+      "author": "chora-base",
+      "location": "docs/skilled-awareness/react-monorepo-architecture",
+      "artifacts": {
+        "capability_charter": true,
+        "protocol_spec": true,
+        "awareness_guide": true,
+        "adoption_blueprint": true,
+        "ledger": true
+      },
+      "system_files": [
+        "templates/react/monorepo/"
+      ],
+      "phase": "Week 11-12 Advanced Patterns Part 2",
+      "priority": "P2",
+      "dependents": []
+    },
+    {
       "id": "SAP-027",
       "name": "dogfooding-patterns",
       "full_name": "Dogfooding Patterns",
@@ -1908,7 +2385,16 @@
     "SAP-023",
     "SAP-024",
     "SAP-025",
-    "SAP-026"
+    "SAP-026",
+    "SAP-034",
+    "SAP-033",
+    "SAP-041",
+    "SAP-036",
+    "SAP-035",
+    "SAP-037",
+    "SAP-038",
+    "SAP-039",
+    "SAP-040"
   ],
   "sap_sets": {
     "ecosystem": {
@@ -1958,7 +2444,7 @@
         "Quality gates with ruff and mypy (SAP-006)",
         "Documentation framework with Diátaxis (SAP-007)",
         "Automation scripts (25 scripts + justfile) (SAP-008)",
-        "Agent awareness via AGENTS.md + CLAUDE.md (SAP-009)",
+        "Agent awareness with nested structure, Critical Workflows, and automated validation (SAP-009 v2.1.0)",
         "Memory system with A-MEM event logging (SAP-010)",
         "Docker operations with multi-stage builds (SAP-011)",
         "Development lifecycle (8-phase DDD/BDD/TDD) (SAP-012)",
@@ -2078,7 +2564,16 @@
         "SAP-023",
         "SAP-024",
         "SAP-025",
-        "SAP-026"
+        "SAP-026",
+        "SAP-033",
+        "SAP-034",
+        "SAP-035",
+        "SAP-036",
+        "SAP-037",
+        "SAP-038",
+        "SAP-039",
+        "SAP-040",
+        "SAP-041"
       ],
       "requires": {
         "ecosystem": [
@@ -2104,7 +2599,16 @@
         "TanStack Query v5 + Zustand v4 + React Hook Form v7 + Zod (SAP-023)",
         "Tailwind CSS v4 + shadcn/ui component library (SAP-024)",
         "Core Web Vitals optimization (LCP, INP, CLS) (SAP-025)",
-        "WCAG 2.2 Level AA accessibility compliance (SAP-026)"
+        "WCAG 2.2 Level AA accessibility compliance (SAP-026)",
+        "NextAuth.js v5 + 3 alternative providers (Clerk, Supabase Auth, Auth0) (SAP-033)",
+        "Prisma ORM + Drizzle ORM dual approach with decision matrix (SAP-034)",
+        "UploadThing + 3 storage alternatives (Vercel Blob, Supabase, AWS S3) with security validation (SAP-035)",
+        "Next.js 15 Error Boundaries + Sentry monitoring with GDPR/CCPA compliance (SAP-036)",
+        "WebSockets + SSE + Pusher + Ably for real-time collaboration (SAP-037)",
+        "next-intl + react-i18next for i18n with RTL support (SAP-038)",
+        "Playwright + Cypress for E2E testing with flakiness prevention (SAP-039)",
+        "Turborepo + Nx + pnpm for monorepo architecture with 90% build reduction (SAP-040)",
+        "React Hook Form + Zod + Server Actions for accessible forms (SAP-041)"
       ],
       "complete_setup_command": "install-sap.py --set ecosystem --set domain-react",
       "warnings": [

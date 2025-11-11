@@ -11,9 +11,11 @@
 
 ## Executive Summary
 
-SAP-024 provides production-ready styling templates for React 19 applications using **Tailwind CSS v4**, **shadcn/ui**, and **CVA (Class Variance Authority)**. This SAP reduces styling setup time from 2-4 hours to 30 minutes (85% reduction) and delivers 60-80% smaller bundles than CSS-in-JS solutions.
+SAP-024 provides production-ready styling templates for React 19 applications using **Tailwind CSS v4** (5x faster builds), **shadcn/ui** (100k+ stars), and **CVA (Class Variance Authority)**. This SAP reduces styling setup time from 2-4 hours to 30 minutes (85% reduction) and delivers 60-80% smaller bundles than CSS-in-JS solutions.
 
-**Key Value**: Instant access to battle-tested styling patterns with zero-runtime overhead, RSC compatibility, and WCAG 2.2 accessibility foundation.
+**Key Value**: Instant access to battle-tested styling patterns with **zero-runtime overhead**, **React Server Components compatibility**, and **WCAG 2.2 accessibility foundation**.
+
+**RT-019 Research Validation**: Tailwind v4 + shadcn/ui are the industry-standard choices for React styling in 2024-2025, with strong ecosystem adoption and proven performance benefits.
 
 ---
 
@@ -138,9 +140,10 @@ SAP-024 provides:
 
 **Intentional Limitations**:
 - shadcn/ui components are starting templates, not comprehensive library
-- Tailwind v4 is in beta (stable release expected Q1 2025)
+- Tailwind v4 released December 2024 (now stable for production use)
 - No opinionated color palette (neutral baseline provided)
 - No custom Tailwind plugins (add as needed per project)
+- CSS-in-JS not recommended (React Server Components incompatibility)
 
 ---
 
@@ -252,13 +255,21 @@ SAP-024 integrates seamlessly with SAP-020 (React Foundation):
 | Factor | Tailwind v4 (SAP-024) | CSS-in-JS |
 |--------|----------------------|-----------|
 | **Bundle Size** | 6-15KB | 60-100KB |
+| **Build Performance** | **5x faster** (~100ms) | Slower (runtime parsing) |
 | **Runtime Overhead** | Zero (pure CSS) | 5-15KB runtime + parsing |
-| **RSC Compatibility** | Perfect (no client JS) | Poor (requires client bundle) |
-| **Performance** | Faster (no runtime) | Slower (runtime parsing) |
+| **RSC Compatibility** | Perfect (no client JS) | **Poor (incompatible with RSC)** |
+| **Performance** | Fastest (zero runtime) | Slower (runtime parsing) |
 | **Developer Experience** | Fast iteration | Slower (context switching) |
 | **Learning Curve** | Moderate (utility classes) | Steep (CSS-in-JS API) |
-| **Community Size** | Large (75% adoption) | Shrinking (10-15%) |
-| **Future-proofing** | Strong (v4 trajectory) | Uncertain (declining usage) |
+| **Community Size** | **Growing (80% adoption)** | **Declining (10-15%)** |
+| **React 19 Support** | Full support | **Limited (RSC issues)** |
+| **Future-proofing** | Strong (v4 trajectory) | **Uncertain (deprecation trend)** |
+
+**RT-019 Research Evidence**:
+- **React Server Components incompatibility**: CSS-in-JS runtime generation doesn't work with RSC
+- **Declining adoption**: styled-components, Emotion declining (State of CSS 2024)
+- **Zero-runtime preference**: Tailwind v4, CSS Modules, vanilla-extract preferred
+- **Migration path**: CSS-in-JS → Tailwind v4 typically 2-4 days for medium apps (87% bundle reduction)
 
 ### Tailwind CSS v4 vs CSS Modules
 
@@ -314,6 +325,8 @@ SAP-024 integrates seamlessly with SAP-020 (React Foundation):
 - **SAP-021** (React Testing) - Component testing with Vitest + RTL
 - **SAP-022** (React Linting) - ESLint 9 + Prettier formatting
 - **SAP-023** (React State Management) - TanStack Query + Zustand (for dynamic styling based on state)
+- **SAP-026** (React Accessibility) - WCAG 2.2 Level AA compliance, accessible component patterns
+- **SAP-040** (Monorepo Architecture) - FUTURE, shared styling across packages in monorepo
 
 ### External Dependencies
 

@@ -13,7 +13,56 @@ This guide provides comprehensive awareness for AI agents and developers working
 
 **Audience**: AI agents (Claude Code, GPT-4, etc.), developers testing React applications
 **Prerequisite SAPs**: SAP-000 (SAP Framework), SAP-020 (React Foundation)
-**Complementary SAPs**: SAP-022 (Linting), SAP-005 (CI/CD), SAP-026 (Accessibility Testing)
+**Complementary SAPs**: SAP-022 (Linting), SAP-005 (CI/CD), SAP-026 (Accessibility Testing), SAP-039 (E2E Testing - future)
+
+---
+
+## Testing Philosophy: The Testing Trophy
+
+**From RT-019 Research**: Modern testing strategy emphasizes the **Testing Trophy** (Kent C. Dodds, 2025), not the traditional testing pyramid.
+
+```
+        End-to-End Tests (10-20%)
+       /\       Playwright, Cypress
+      /  \      • Highest confidence
+     /____\     • Slowest, most expensive
+    /      \    • Test critical user flows
+   /________\
+  Integration Tests (50-60%) ← **HIGHEST ROI**
+ /          \   React Testing Library + MSW
+/__________\   • Test how components work together
+  Unit Tests (20-30%)
+ /__________\   Vitest + React Testing Library
+/____________\  • Test isolated logic
+Static Analysis (100%)
+TypeScript + ESLint + Prettier
+• Catch errors before runtime
+```
+
+**Why Trophy > Pyramid**:
+- Integration tests catch **60-80% more bugs** than unit tests alone
+- Integration tests test **realistic user behavior** (components + API + state)
+- Integration tests are **easier to maintain** (less brittle than unit tests)
+- Static analysis (TypeScript) catches many issues that unit tests would
+
+**SAP-021 Focus**:
+- ✅ Static Analysis (100%) - TypeScript strict mode (from SAP-020)
+- ✅ Unit Tests (20-30%) - Vitest + React Testing Library
+- ✅ Integration Tests (50-60%) - **Primary focus of SAP-021**
+- ❌ E2E Tests (10-20%) - Future SAP-039 with Playwright
+
+**Recommended Distribution** (from RT-019):
+- **50-60% Integration tests**: Components + API + State (MSW + TanStack Query + Zustand)
+- **20-30% Unit tests**: Pure functions, complex hooks, utilities
+- **10-20% E2E tests**: Critical user flows (future SAP-039)
+
+**Vitest as Default Choice (2025)**:
+
+Based on RT-019 research and State of JS 2024:
+- **Vitest**: Default for all new React projects (4x faster, native ESM, 98% retention)
+- **Jest**: Legacy projects only (still widely used but not recommended for new projects)
+
+**Migration**: Jest → Vitest typically takes 2-4 hours for medium projects (200-500 tests)
 
 ---
 

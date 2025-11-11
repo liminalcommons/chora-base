@@ -1,6 +1,6 @@
 ---
 sap_id: SAP-012
-version: 1.1.0
+version: 1.5.0
 status: Active
 last_updated: 2025-11-06
 type: how-to
@@ -705,11 +705,11 @@ AGENTS.md serves as the **discoverability layer** for installed SAPs. Without th
 
 8-phase development lifecycle with integrated DDD→BDD→TDD workflow.
 
-**Documentation**: [docs/skilled-awareness/development-lifecycle/](docs/skilled-awareness/development-lifecycle/)
+**Documentation**: [development-lifecycle/](./)
 
 **Quick Start**:
-- Read: [adoption-blueprint.md](docs/skilled-awareness/development-lifecycle/adoption-blueprint.md)
-- Guide: [awareness-guide.md](docs/skilled-awareness/development-lifecycle/awareness-guide.md)
+- Read: [adoption-blueprint.md](adoption-blueprint.md)
+- Guide: [awareness-guide.md](awareness-guide.md)
 
 **Key Phases**:
 - Documentation-Driven Design (DDD): Write docs first

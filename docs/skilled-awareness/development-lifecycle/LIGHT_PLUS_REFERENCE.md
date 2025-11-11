@@ -1,3 +1,12 @@
+---
+sap_id: SAP-012
+version: 1.5.0
+status: Active
+last_updated: 2025-11-06
+type: reference
+audience: developers, ai-agents
+---
+
 # Light+ Planning Model - Quick Reference
 
 **Part of SAP-012: Development Lifecycle**

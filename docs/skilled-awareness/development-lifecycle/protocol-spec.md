@@ -1,9 +1,9 @@
 # Protocol Specification: Development Lifecycle
 
 **SAP ID**: SAP-012
-**Version**: 1.2.0
+**Version**: 1.5.0
 **Status**: Active
-**Last Updated**: 2025-11-08
+**Last Updated**: 2025-11-06
 
 ---
 

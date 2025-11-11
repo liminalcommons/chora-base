@@ -35,12 +35,13 @@ This Adoption Blueprint provides **step-by-step instructions** for installing an
 
 1. [Quick Start (New Projects)](#quick-start-new-projects)
 2. [Standard Installation (Existing Projects)](#standard-installation-existing-projects)
-3. [Next.js 15 Installation](#nextjs-15-installation)
-4. [Vite 7 Installation](#vite-7-installation)
-5. [VS Code Setup](#vs-code-setup)
-6. [Verification Steps](#verification-steps)
-7. [Troubleshooting](#troubleshooting)
-8. [Customization Guide](#customization-guide)
+3. [**Migration from ESLint 8 to ESLint 9** (PRIORITY - from RT-019)](#migration-from-eslint-8-to-eslint-9)
+4. [Next.js 15 Installation](#nextjs-15-installation)
+5. [Vite 7 Installation](#vite-7-installation)
+6. [VS Code Setup](#vs-code-setup)
+7. [Verification Steps](#verification-steps)
+8. [Troubleshooting](#troubleshooting)
+9. [Customization Guide](#customization-guide)
 
 ---
 
@@ -248,6 +249,400 @@ git commit -m "chore: Add SAP-022 linting infrastructure"
 ### Total Time: ~15 minutes for fresh projects
 
 ✅ You're done! SAP-022 is fully installed.
+
+---
+
+## Migration from ESLint 8 to ESLint 9
+
+**CRITICAL**: If you're using ESLint 8 (.eslintrc), **migrate to ESLint 9 NOW** for:
+- **182x faster incremental linting** (9,100ms → 50ms) - RT-019 validated
+- **Future-proof**: ESLint 10 will remove .eslintrc support entirely
+- **Better TypeScript**: typescript-eslint v8 projectService API (30-50% faster)
+
+**Estimated Time**: 30-60 minutes
+
+---
+
+### Phase 1: Pre-Migration (5 minutes)
+
+#### Step M1.1: Check Current ESLint Version
+
+```bash
+# Check current ESLint version
+pnpm list eslint
+# If ESLint 8.x or older, continue with migration
+# If ESLint 9.x, skip to "Standard Installation"
+```
+
+---
+
+#### Step M1.2: Backup Current Configuration
+
+```bash
+# Backup .eslintrc config
+cp .eslintrc.js .eslintrc.js.backup
+cp .eslintrc.json .eslintrc.json.backup 2>/dev/null || true
+cp .eslintrc .eslintrc.backup 2>/dev/null || true
+
+# Backup .eslintignore
+cp .eslintignore .eslintignore.backup 2>/dev/null || true
+
+# Create git commit (safety net)
+git add .
+git commit -m "backup: Save ESLint 8 config before migrating to ESLint 9"
+```
+
+**Time**: 2 minutes
+
+---
+
+### Phase 2: Uninstall ESLint 8 (5 minutes)
+
+#### Step M2.1: Remove ESLint 8 Packages
+
+```bash
+# Remove ESLint 8 and old typescript-eslint packages
+pnpm remove eslint \
+  @typescript-eslint/parser \
+  @typescript-eslint/eslint-plugin
+
+# Remove old plugin versions (if installed)
+pnpm remove \
+  eslint-plugin-react \
+  eslint-plugin-react-hooks \
+  eslint-config-prettier
+```
+
+**Why**: ESLint 9 requires new package structure (typescript-eslint combined package)
+
+**Time**: 2 minutes
+
+---
+
+### Phase 3: Install ESLint 9 (5 minutes)
+
+#### Step M3.1: Install ESLint 9 and Plugins
+
+```bash
+# Install ESLint 9 core
+pnpm add -D eslint@^9.26.0 @eslint/js@^9.26.0
+
+# Install typescript-eslint v8 (combined package)
+pnpm add -D typescript-eslint@^8.32.0
+
+# Install React plugins
+pnpm add -D \
+  eslint-plugin-react@^7.37.5 \
+  eslint-plugin-react-hooks@^7.0.1 \
+  eslint-plugin-react-refresh@^0.4.24 \
+  eslint-plugin-jsx-a11y@^6.10.2
+
+# Install Prettier integration
+pnpm add -D eslint-config-prettier@^9.1.0
+
+# Install globals utility
+pnpm add -D globals@^16.1.0
+```
+
+**For Next.js projects, also install**:
+```bash
+pnpm add -D eslint-config-next@^15.5.0
+```
+
+**Time**: 3 minutes
+
+---
+
+### Phase 4: Convert Config to Flat Format (15-30 minutes)
+
+#### Step M4.1: Create ESLint 9 Flat Config
+
+**Old .eslintrc.js (ESLint 8 - DEPRECATED)**:
+```javascript
+module.exports = {
+  extends: [
+    'eslint:recommended',
+    'plugin:react/recommended',
+    'plugin:@typescript-eslint/recommended',
+    'prettier',
+  ],
+  plugins: ['react', '@typescript-eslint', 'react-hooks'],
+  env: {
+    browser: true,
+    es2021: true,
+  },
+  rules: {
+    'react-hooks/rules-of-hooks': 'error',
+    'react-hooks/exhaustive-deps': 'warn',
+  },
+}
+```
+
+**New eslint.config.mjs (ESLint 9 Flat Config - NEW STANDARD)**:
+
+```javascript
+import js from '@eslint/js'
+import tseslint from 'typescript-eslint'
+import reactPlugin from 'eslint-plugin-react'
+import reactHooksPlugin from 'eslint-plugin-react-hooks'
+import reactRefreshPlugin from 'eslint-plugin-react-refresh'
+import jsxA11yPlugin from 'eslint-plugin-jsx-a11y'
+import prettierConfig from 'eslint-config-prettier'
+import globals from 'globals'
+
+export default tseslint.config(
+  // Global ignores (replaces .eslintignore)
+  {
+    ignores: [
+      '**/node_modules/**',
+      '**/.next/**',
+      '**/build/**',
+      '**/dist/**',
+      '**/.turbo/**',
+      '**/coverage/**',
+    ],
+  },
+
+  // Base configs (replaces extends)
+  js.configs.recommended,
+  ...tseslint.configs.recommendedTypeChecked,
+  reactPlugin.configs.flat.recommended,
+  reactPlugin.configs.flat['jsx-runtime'],
+  jsxA11yPlugin.flatConfigs.recommended,
+
+  // React settings
+  {
+    settings: {
+      react: {
+        version: 'detect',
+      },
+    },
+  },
+
+  // Global settings (replaces env)
+  {
+    languageOptions: {
+      globals: {
+        ...globals.browser,
+        ...globals.es2021,
+      },
+      parserOptions: {
+        projectService: true, // NEW in v8 - 30-50% faster!
+        tsconfigRootDir: import.meta.dirname,
+      },
+    },
+  },
+
+  // React Hooks rules (replaces plugins)
+  {
+    plugins: {
+      'react-hooks': reactHooksPlugin,
+    },
+    rules: {
+      'react-hooks/rules-of-hooks': 'error',
+      'react-hooks/exhaustive-deps': 'warn',
+    },
+  },
+
+  // React Refresh rules (for Vite)
+  {
+    plugins: {
+      'react-refresh': reactRefreshPlugin,
+    },
+    rules: {
+      'react-refresh/only-export-components': [
+        'warn',
+        { allowConstantExport: true },
+      ],
+    },
+  },
+
+  // Prettier integration (MUST be last)
+  prettierConfig,
+)
+```
+
+**Key Changes from .eslintrc to Flat Config**:
+- ❌ `extends` → ✅ Import and spread configs (`...tseslint.configs.recommended`)
+- ❌ `plugins: []` → ✅ `plugins: {}` (object instead of array)
+- ❌ `env` → ✅ `languageOptions.globals`
+- ❌ `.eslintignore` → ✅ `ignores: []` in flat config
+- ❌ `@typescript-eslint/parser` + `@typescript-eslint/eslint-plugin` → ✅ `typescript-eslint` (combined)
+- ✅ **NEW**: `projectService: true` (30-50% faster, auto-discovers tsconfig.json)
+
+**Time**: 15-20 minutes (copying + customizing)
+
+---
+
+#### Step M4.2: Remove Old Config Files
+
+```bash
+# Delete old ESLint 8 config files
+rm .eslintrc.js .eslintrc.json .eslintrc 2>/dev/null || true
+rm .eslintignore 2>/dev/null || true
+```
+
+**Important**: Backups remain in `.backup` files if rollback needed.
+
+**Time**: 1 minute
+
+---
+
+### Phase 5: Update VS Code Settings (5 minutes)
+
+#### Step M5.1: Enable ESLint 9 Flat Config in VS Code
+
+Create or update `.vscode/settings.json`:
+
+```json
+{
+  // Enable ESLint 9 flat config
+  "eslint.useFlatConfig": true,
+
+  // Auto-fix on save
+  "editor.codeActionsOnSave": {
+    "source.fixAll.eslint": "explicit"
+  },
+
+  // Format on save with Prettier
+  "editor.formatOnSave": true,
+  "editor.defaultFormatter": "esbenp.prettier-vscode",
+
+  // File-specific formatters
+  "[javascript]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+  "[javascriptreact]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+  "[typescript]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+  "[typescriptreact]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  }
+}
+```
+
+**Time**: 3 minutes
+
+---
+
+### Phase 6: Test Migration (5 minutes)
+
+#### Step M6.1: Run ESLint 9
+
+```bash
+# Test linting
+pnpm lint
+
+# Expected output:
+# - ESLint 9 runs (check version in output)
+# - No "flat config required" errors
+# - May show new violations (ESLint 9 stricter)
+
+# Auto-fix violations
+pnpm lint:fix
+```
+
+**If errors occur**: See [Troubleshooting](#migration-troubleshooting) section below.
+
+**Time**: 3 minutes
+
+---
+
+#### Step M6.2: Verify 182x Performance Improvement
+
+**Before ESLint 9** (from backup):
+```bash
+# Typical ESLint 8 incremental lint: ~9,100ms (9 seconds!)
+```
+
+**After ESLint 9**:
+```bash
+# Make a small change to a file
+echo "// test" >> src/App.tsx
+
+# Run lint
+time pnpm lint
+
+# Expected: ~50ms for incremental lint (182x faster!)
+# If still slow, check for old cached files
+```
+
+**Validation**: If lint time is <100ms, migration succeeded!
+
+**Time**: 2 minutes
+
+---
+
+### Phase 7: Commit Migration (5 minutes)
+
+#### Step M7.1: Commit ESLint 9 Migration
+
+```bash
+# Add all changes
+git add .
+
+# Commit migration
+git commit -m "feat: Migrate to ESLint 9 flat config (182x faster linting)
+
+- Migrate from ESLint 8 (.eslintrc) to ESLint 9 (flat config)
+- Install typescript-eslint v8 with projectService API
+- Performance: 9,100ms → 50ms for incremental linting
+- Update VS Code settings for flat config support
+- Backups: .eslintrc.js.backup, .eslintignore.backup
+
+Ref: SAP-022 RT-019 research"
+```
+
+**Time**: 2 minutes
+
+---
+
+### Migration Checklist
+
+Use this checklist to ensure successful migration:
+
+- [ ] Backup .eslintrc and .eslintignore
+- [ ] Check current ESLint version (pnpm list eslint)
+- [ ] Uninstall ESLint 8 and @typescript-eslint packages
+- [ ] Install ESLint 9.26.0+ and typescript-eslint@^8.32.0
+- [ ] Create eslint.config.mjs with flat config
+- [ ] Convert extends → imported configs
+- [ ] Convert plugins array → plugins object
+- [ ] Convert env → languageOptions.globals
+- [ ] Convert .eslintignore → ignores in flat config
+- [ ] Add projectService: true (30-50% faster)
+- [ ] Remove old .eslintrc files
+- [ ] Update VS Code settings (eslint.useFlatConfig: true)
+- [ ] Test with pnpm lint
+- [ ] Verify 182x performance improvement (<100ms incremental)
+- [ ] Commit migration with descriptive message
+
+---
+
+### Migration Troubleshooting
+
+**Issue 1: "Cannot find module '@typescript-eslint/parser'"**
+- **Cause**: Old package installed, should use `typescript-eslint` combined package
+- **Fix**: `pnpm remove @typescript-eslint/parser @typescript-eslint/eslint-plugin && pnpm add -D typescript-eslint@^8.32.0`
+
+**Issue 2: "extends is not allowed"**
+- **Cause**: Used .eslintrc syntax in flat config
+- **Fix**: Replace `extends: ['...']` with imported configs: `...tseslint.configs.recommended`
+
+**Issue 3: "env is not allowed"**
+- **Cause**: Used .eslintrc `env` property in flat config
+- **Fix**: Replace with `languageOptions: { globals: { ...globals.browser } }`
+
+**Issue 4: "Linting still slow (>1s)"**
+- **Cause**: Old cache files or wrong config
+- **Fix**: `rm -rf node_modules/.cache/eslint && pnpm lint`
+
+**Issue 5: "TypeError: Cannot read property 'config'"**
+- **Cause**: Plugin not compatible with flat config
+- **Fix**: Check plugin docs for flat config version, or remove plugin temporarily
 
 ---
 

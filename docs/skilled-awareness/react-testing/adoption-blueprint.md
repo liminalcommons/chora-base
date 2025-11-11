@@ -15,6 +15,8 @@ This blueprint provides step-by-step instructions for adopting the React Testing
 **Complexity**: Intermediate (requires React knowledge from SAP-020)
 **Prerequisites**: Existing React project from SAP-020, Node.js 22.x, pnpm/npm
 
+**RT-019 Research Validation**: This setup uses **Vitest v4** as the default choice (4x faster than Jest, 98% retention - State of JS 2024) and implements the **Testing Trophy** philosophy (50-60% integration tests for highest ROI).
+
 ---
 
 ## Prerequisites

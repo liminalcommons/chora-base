@@ -8,16 +8,18 @@
 
 ---
 
-## 🚀 Quick Start (30 seconds)
+## Quick Start (5 minutes)
+
+Evaluate SAP adoption with three progressive depth levels:
 
 ```bash
-# Quick check: Is SAP-004 installed and functional?
+# Quick check: Is SAP-004 installed and functional? (30 seconds)
 python scripts/sap-evaluator.py --quick SAP-004
 
-# Deep dive: Detailed gap analysis with action plan
+# Deep dive: Detailed gap analysis with action plan (5 minutes)
 python scripts/sap-evaluator.py --deep SAP-004
 
-# Strategic analysis: Roadmap for all SAPs
+# Strategic analysis: Roadmap for all SAPs (30 minutes)
 python scripts/sap-evaluator.py --strategic
 
 # Export JSON for CI/CD integration
@@ -82,6 +84,14 @@ SAP-019 provides a **progressive evaluation protocol** for assessing SAP adoptio
 ---
 
 ## Key Features
+
+- ✅ **Progressive Evaluation** - Three depth levels (30s quick check, 5min deep dive, 30min strategic analysis) adapt to available time
+- ✅ **Automated Validation** - Quick check validates file existence, command execution, and exit codes without LLM overhead
+- ✅ **LLM Content Analysis** - Deep dive analyzes actual content quality, integration depth, and usage patterns beyond automated checks
+- ✅ **Actionable Output** - Concrete steps with tool, file path, content, and validation commands (not just scores)
+- ✅ **4-Level Adoption Framework** - Clear progression from Level 0 (not installed) to Level 3 (fully automated and optimized)
+- ✅ **Gap Prioritization** - Impact × effort scoring identifies highest-ROI improvements across all SAPs
+- ✅ **CI/CD Integration** - JSON export enables automated validation in GitHub Actions with exit codes for pass/fail
 
 ### 3 Evaluation Depths
 
@@ -267,7 +277,7 @@ priority_score = impact_score / effort_score  # Higher = more important
 
 ## Troubleshooting
 
-### Problem: Quick check passes but deep dive finds gaps
+### Problem 1: Quick check passes but deep dive finds gaps
 
 **Symptom**: Quick check shows "✅ Level 2" but deep dive identifies integration gaps
 
@@ -279,7 +289,7 @@ priority_score = impact_score / effort_score  # Higher = more important
 
 ---
 
-### Problem: Action steps too generic ("improve coverage")
+### Problem 2: Action steps too generic ("improve coverage")
 
 **Symptom**: Recommended actions lack concrete file paths or content
 
@@ -304,7 +314,7 @@ Content: |
 
 ---
 
-### Problem: Strategic analysis shows low ROI (<3x)
+### Problem 3: Strategic analysis shows low ROI (<3x)
 
 **Symptom**: Roadmap suggests many SAP adoptions but estimated effort > time saved
 
@@ -322,7 +332,7 @@ High ROI: Installing SAP-015 (Task Tracking) for multi-session work
 
 ---
 
-### Problem: Evaluation fails with "SAP not found"
+### Problem 4: Evaluation fails with "SAP not found"
 
 **Symptom**: `python scripts/sap-evaluator.py --quick SAP-004` → "SAP-004 not found"
 
@@ -345,7 +355,7 @@ docs/skilled-awareness/testing-framework/
 
 ---
 
-### Problem: Deep dive takes >5 minutes
+### Problem 5: Deep dive takes >5 minutes
 
 **Symptom**: LLM analysis hangs or times out
 
