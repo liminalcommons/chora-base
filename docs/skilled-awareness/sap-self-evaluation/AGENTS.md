@@ -26,17 +26,18 @@ phase_3_token_estimate: 10000
 
 ## 📖 Quick Reference
 
-**New to SAP-019?** → Read **[README.md](README.md)** first (8-min read)
+**New to SAP-019?** → Read **[README.md](README.md)** first (10-min read)
 
 The README provides:
-- 🚀 **Quick Start** - 4 evaluation commands (quick, deep, strategic, JSON export) with 30s to 30min depth levels
+- 🚀 **Quick Start** - Quick check: Is SAP-004 installed and functional? (30 seconds)
 - 📚 **Time Savings** - 15-20 min/sprint automated evaluation vs manual assessment, evidence-based decisions
-- 🎯 **4 Adoption Levels** - Level 0/1/2/3 per SAP with completion percentage
-- 🔧 **4 Gap Types** - Installation, Integration, Quality, Optimization gaps with priority scoring
-- 📊 **Data Models** - EvaluationResult, Gap, Action, AdoptionRoadmap for structured evaluation
-- 🔗 **Integration** - Works with SAP-013 (Metrics), SAP-015 (Tasks), SAP-012 (Lifecycle), SAP-027 (Dogfooding), SAP-000 (Framework)
+- 🎯 **Feature 1** - Three depth levels (30s quick check, 5min deep dive, 30min strategic analysis) adapt to available time
+- 🔧 **Feature 2** - Quick check validates file existence, command execution, and exit codes without LLM overhead
+- 📊 **Feature 3** - Deep dive analyzes actual content quality, integration depth, and usage patterns beyond automated checks
+- 🔗 **Integration** - Works with SAP-000 (Framework)
 
-This AGENTS.md provides: Agent-specific patterns for SAP evaluation workflows, gap prioritization, and roadmap generation.
+This AGENTS.md provides: Agent-specific patterns for implementing SAP-019.
+n.
 
 ---
 

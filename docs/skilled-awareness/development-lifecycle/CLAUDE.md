@@ -29,14 +29,15 @@ phase_3_token_estimate: 11000
 **New to SAP-012?** → Read **[README.md](README.md)** first (10-min read)
 
 The README provides:
-- 🚀 **Quick Start** - 6 commands for Documentation-First → BDD → TDD workflow with 8-phase lifecycle
-- 📚 **Time Savings** - 40-80% defect reduction, 60% time savings via L3 Documentation-First pattern
-- 🎯 **8 Phases** - Vision → Planning → Requirements → Development → Testing → Review → Release → Monitoring
-- 🔧 **L3 Documentation-First** - How-to guides → Extracted BDD → Automated TDD implementation
-- 📊 **Success Metrics** - 40-80% defect reduction, 60% debugging time savings, 80-90% process adherence
-- 🔗 **Integration** - Works with SAP-004 (Testing), SAP-005 (CI/CD), SAP-006 (Quality Gates), SAP-015 (Tasks)
+- 🚀 **Quick Start** - Phase 2: Create sprint plan
+- 📚 **Time Savings** - 40-80% defect reduction via Documentation-First + BDD + TDD, 60% debugging time reduction
+- 🎯 **Feature 1** - Vision → Planning → Requirements → Development → Testing → Review → Release → Monitoring
+- 🔧 **Feature 2** - Research-backed from BDD + TDD integration
+- 📊 **Feature 3** - Write how-to guides → Extract BDD → Implement with TDD
+- 🔗 **Integration** - Works with SAP-004, SAP-005, SAP-006, SAP-007, SAP-010, SAP-012
 
-This CLAUDE.md provides: Claude Code tool integration (Read templates, Edit files, Bash testing, Write documentation) for lifecycle workflows.
+This CLAUDE.md provides: Claude Code-specific workflows for implementing SAP-012.
+s.
 
 ---
 

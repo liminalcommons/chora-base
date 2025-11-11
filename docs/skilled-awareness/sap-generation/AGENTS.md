@@ -9,17 +9,18 @@
 
 ## 📖 Quick Reference
 
-**New to SAP-029?** → Read **[README.md](README.md)** first (14-min read)
+**New to SAP-029?** → Read **[README.md](README.md)** first (10-min read)
 
 The README provides:
-- 🚀 **Quick Start** - 3-minute overview (add to catalog → generate → fill TODOs → validate)
-- 📚 **80% Time Savings** - 10 hours → 2 hours (automated boilerplate + focused manual fill)
-- 🎯 **Jinja2 Templates** - 5 templates for 5 artifacts with MVP generation schema (9 fields)
-- 🔧 **Batch Generation** - Generate multiple SAPs with single command
-- 📊 **Generation Metadata** - Track todos_remaining, completion_percent, regeneration_safe
-- 🔗 **Integration** - Works with SAP-000 (Framework), SAP-027 (Dogfooding), SAP-004 (Testing)
+- 🚀 **Quick Start** - Step 1: Add SAP to catalog (sap-catalog.json)
+- 📚 **Time Savings** - 70-80% SAP creation time reduction (1-2 hours vs 8-10 hours manual)
+- 🎯 **Feature 1** - 10 hours → 2 hours (automated boilerplate + focused manual fill)
+- 🔧 **Feature 2** - 5 templates for 5 artifacts (capability-charter, protocol-spec, awareness-guide, adoption-blueprint, ledger)
+- 📊 **Feature 3** - 9 fields capture essential metadata (problem, solution, principles, scope, summary)
+- 🔗 **Integration** - Works with SAP-000, SAP-004, SAP-005, SAP-007, SAP-016, SAP-027
 
-This AGENTS.md provides: Agent-specific generation workflows, batch patterns, and troubleshooting for AI coding assistants.
+This AGENTS.md provides: Agent-specific patterns for implementing SAP-029.
+s.
 
 ---
 

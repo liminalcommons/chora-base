@@ -1,16 +1,17 @@
 ## 📖 Quick Reference
 
-**New to SAP-027?** → Read **[README.md](README.md)** first (13-min read)
+**New to SAP-027?** → Read **[README.md](README.md)** first (10-min read)
 
 The README provides:
-- 🚀 **Quick Start** - 3-minute overview (pre-pilot discovery, research, build, validate, decide, formalize)
-- 📚 **6-Week Methodology** - Research (Week 0) → Build (Weeks 1-3) → Validate (Week 4) → Decide/Formalize (Weeks 4-5)
-- 🎯 **GO/NO-GO Criteria** - Time ≥5x, satisfaction ≥85%, bugs = 0, adoption ≥2 (data-driven decisions)
-- 🔧 **Evidence-Based Research** - ≥30% Level A citations (standards, peer-reviewed papers)
-- 📊 **ROI Analysis** - Break-even calculation (hours invested vs hours saved)
-- 🔗 **Integration** - Works with SAP-010 (Memory), SAP-001 (Inbox), SAP-013 (Metrics)
+- 🚀 **Quick Start** - Week -1: Pre-pilot discovery (select candidate from intention inventory)
+- 📚 **Time Savings** - 6 weeks upfront validation → avoid 20-30 hours rework later, data-driven GO/NO-GO decisions
+- 🎯 **Feature 1** - Structured phases (Research → Build → Validate → Decide → Formalize)
+- 🔧 **Feature 2** - Objective decision framework (time ≥5x, satisfaction ≥85%, bugs = 0, adoption ≥2)
+- 📊 **Feature 3** - ≥30% Level A citations (standards, peer-reviewed papers)
+- 🔗 **Integration** - Works with SAP-000 (Framework)
 
-This CLAUDE.md provides: Claude Code tool integration for dogfooding (Bash, Write, Edit), pilot tracking, and troubleshooting workflows.
+This CLAUDE.md provides: Claude Code-specific workflows for implementing SAP-027.
+s.
 
 ---
 

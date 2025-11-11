@@ -36,11 +36,11 @@ tags:
 
 The README provides:
 - 🚀 **Quick Start** - 2-minute setup (log events, query logs, create knowledge notes)
-- 📚 **Event-Sourced Memory** - JSONL logs for development, coordination, testing, errors
-- 🎯 **Knowledge Graph** - Zettelkasten-style notes with wikilinks
-- 🔧 **Trace Correlation** - Link events across SAPs (inbox, beads, memory)
-- 📊 **Agent Profiles** - Persistent preferences and context across sessions
-- 🔗 **Integration** - Works with SAP-001 (Inbox), SAP-015 (Beads), all SAPs (event logging)
+- 📚 **Time Savings** - Eliminates 10-15 min context restoration per session, enables cross-session continuity (hours, days, weeks)
+- 🎯 **Event-Sourced Memory** - JSONL logs for development, coordination, testing, errors with append-only history
+- 🔧 **Knowledge Graph** - Zettelkasten-style notes with wikilinks for long-term knowledge capture
+- 📊 **Trace Correlation** - Link events across SAPs via trace_id (e.g., COORD-2025-011, BATCH-8)
+- 🔗 **Integration** - Works with SAP-001 (Inbox), SAP-015 (Beads), SAP-013 (Metrics), all SAPs (event logging)
 
 This AGENTS.md provides: Generic agent patterns for memory operations, event logging workflows, and knowledge note creation for AI coding assistants.
 

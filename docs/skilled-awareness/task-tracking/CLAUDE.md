@@ -8,17 +8,18 @@
 
 ## 📖 Quick Reference
 
-**New to SAP-015?** → Read **[README.md](README.md)** first (8-min read)
+**New to SAP-015?** → Read **[README.md](README.md)** first (10-min read)
 
 The README provides:
-- 🚀 **Quick Start** - 6 core commands (init, create, ready, update, close, list) for git-backed task tracking
-- 📚 **Time Savings** - 30-45 min saved per session via persistent context, automated ready-work detection
-- 🎯 **12+ CLI Commands** - Complete `bd` command reference with JSON output for programmatic access
-- 🔧 **Workflow Patterns** - Session startup, multi-session work, dependency management, multi-agent coordination
-- 📊 **Success Metrics** - 70-80% context restoration time savings, 90%+ multi-agent coordination accuracy
-- 🔗 **Integration** - Works with SAP-001 (Inbox), SAP-010 (Memory), SAP-012 (Lifecycle), SAP-013 (Metrics)
+- 🚀 **Quick Start** - Initialize beads in repository
+- 📚 **Time Savings** - Eliminates 10-15 min context re-establishment per session, persistent task memory across hours/days/weeks
+- 🎯 **Feature 1** - `.beads/issues.jsonl` (committed), `.beads/beads.db` (gitignored cache)
+- 🔧 **Feature 2** - Automatic ready-work detection (no blockers)
+- 📊 **Feature 3** - Share tasks via git push/pull
+- 🔗 **Integration** - Works with SAP-001, SAP-010, SAP-012, SAP-013, SAP-015, SAP-027
 
-This CLAUDE.md provides: Claude Code tool patterns (Bash bd commands, Read JSON, Edit issues.jsonl) for beads workflows.
+This CLAUDE.md provides: Claude Code-specific workflows for implementing SAP-015.
+s.
 
 ---
 

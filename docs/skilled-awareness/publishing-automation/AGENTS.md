@@ -9,17 +9,18 @@
 
 ## 📖 Quick Reference
 
-**New to SAP-028?** → Read **[README.md](README.md)** first (12-min read)
+**New to SAP-028?** → Read **[README.md](README.md)** first (10-min read)
 
 The README provides:
-- 🚀 **Quick Start** - 3-minute overview (OIDC vs token vs manual publishing)
-- 📚 **OIDC Trusted Publishing** - Eliminates API tokens, 95%+ credential theft risk reduction
-- 🎯 **GitHub Actions Integration** - Tag-based releases (v1.0.0 → automatic publish)
-- 🔧 **PEP 740 Attestations** - Build provenance for supply chain security
-- 📊 **Migration Protocol** - Token → OIDC migration (10-minute process)
-- 🔗 **Integration** - Works with SAP-003 (Bootstrap), SAP-005 (CI/CD), SAP-008 (Automation)
+- 🚀 **Quick Start** - Option 1: OIDC Trusted Publishing (Recommended)
+- 📚 **Time Savings** - 90% release time reduction (automated vs manual), consistent versioning with changesets
+- 🎯 **Feature 1** - No API tokens, GitHub authenticates directly with PyPI
+- 🔧 **Feature 2** - Backward compatibility for PyPI instances without OIDC support
+- 📊 **Feature 3** - Publish on git tag push (v1.0.0 → automatic release)
+- 🔗 **Integration** - Works with SAP-000 (Framework)
 
-This AGENTS.md provides: Agent-specific publishing workflows, automation patterns, and troubleshooting for AI coding assistants.
+This AGENTS.md provides: Agent-specific patterns for implementing SAP-028.
+s.
 
 ---
 
