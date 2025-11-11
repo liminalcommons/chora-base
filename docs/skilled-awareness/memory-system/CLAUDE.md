@@ -24,6 +24,22 @@ phase_3_token_estimate: 11000
 
 ---
 
+## 📖 Quick Reference
+
+**New to SAP-010?** → Read **[README.md](README.md)** first (5-min read)
+
+The README provides:
+- 🚀 **Quick Start** - 2-minute setup (log events, query logs, create knowledge notes)
+- 📚 **Event-Sourced Memory** - JSONL logs for development, coordination, testing, errors
+- 🎯 **Knowledge Graph** - Zettelkasten-style notes with wikilinks
+- 🔧 **Trace Correlation** - Link events across SAPs (inbox, beads, memory)
+- 📊 **Agent Profiles** - Persistent preferences and context across sessions
+- 🔗 **Integration** - Works with SAP-001 (Inbox), SAP-015 (Beads), all SAPs (event logging)
+
+This CLAUDE.md provides: Claude Code tool integration for memory operations (Read, Bash), event logging patterns, and knowledge note workflows.
+
+---
+
 ## Quick Start for Claude
 
 This file provides **Claude Code-specific patterns** for using A-MEM cross-session memory.

@@ -30,7 +30,23 @@ tags:
 
 ---
 
-## Quick Reference
+## 📖 Quick Reference
+
+**New to SAP-010?** → Read **[README.md](README.md)** first (5-min read)
+
+The README provides:
+- 🚀 **Quick Start** - 2-minute setup (log events, query logs, create knowledge notes)
+- 📚 **Event-Sourced Memory** - JSONL logs for development, coordination, testing, errors
+- 🎯 **Knowledge Graph** - Zettelkasten-style notes with wikilinks
+- 🔧 **Trace Correlation** - Link events across SAPs (inbox, beads, memory)
+- 📊 **Agent Profiles** - Persistent preferences and context across sessions
+- 🔗 **Integration** - Works with SAP-001 (Inbox), SAP-015 (Beads), all SAPs (event logging)
+
+This AGENTS.md provides: Generic agent patterns for memory operations, event logging workflows, and knowledge note creation for AI coding assistants.
+
+---
+
+## Quick Reference (Detailed)
 
 ### When to Use
 
