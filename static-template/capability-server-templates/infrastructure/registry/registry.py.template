@@ -338,15 +338,18 @@ class ServiceRegistry:
             "timestamp": datetime.utcnow().isoformat()
         }
 
-    def mark_unhealthy(self, service_id: UUID) -> bool:
+    def mark_unhealthy(self, service_id: UUID, reason: Optional[str] = None) -> bool:
         """Mark a service as unhealthy.
 
         Args:
             service_id: Service ID to mark unhealthy
+            reason: Optional reason for marking unhealthy (stored in metadata)
 
         Returns:
             True if marked, False if not found
         """
+        if service_id in self._services and reason:
+            self._services[service_id].metadata["error"] = reason
         return self.update_status(service_id, ServiceStatus.UNHEALTHY)
 
     def check_timeouts(self) -> List[UUID]:
@@ -383,6 +386,7 @@ class ServiceRegistry:
             if time_since_heartbeat > self._heartbeat_timeout * 2:
                 # No heartbeat for 2x timeout - mark unhealthy
                 service.status = ServiceStatus.UNHEALTHY
+                service.metadata["error"] = f"Heartbeat timeout: {time_since_heartbeat.total_seconds()}s"
             elif time_since_heartbeat > self._heartbeat_timeout:
                 # No heartbeat for 1x timeout - mark degraded
                 service.status = ServiceStatus.DEGRADED

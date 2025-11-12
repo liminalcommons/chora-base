@@ -517,8 +517,8 @@ class TestEdgeCases:
     async def test_zero_timeout_not_allowed(self):
         """Test circuit breaker doesn't allow zero timeout."""
         # This should work (positive timeout)
-        cb = CircuitBreaker(request_timeout=0.1)
-        assert cb.request_timeout == 0.1
+        cb = CircuitBreaker(timeout_seconds=0.1)
+        assert cb.timeout_seconds == 0.1
 
     @pytest.mark.asyncio
     async def test_function_with_arguments(self, circuit_breaker):
