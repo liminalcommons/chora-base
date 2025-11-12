@@ -120,7 +120,61 @@ cat docs/dev-docs/workflows/DOCUMENTATION_MIGRATION_WORKFLOW.md
 
 ---
 
-### Workflow 4: Researching Technical Decisions
+### Workflow 4: Track Development Tasks with Beads (SAP-015)
+
+**Steps**:
+1. Check for unblocked tasks: `bd ready --json`
+2. Claim task: `bd update {id} --status in_progress --assignee {your-name}`
+3. Work on task using TDD/BDD/DDD workflows (from static-template)
+4. Add progress comments: `bd comment {id} "Completed X, working on Y"`
+5. Run quality gates before commit: `just pre-merge`
+6. Close task: `bd close {id} --reason "Implemented and tested"`
+
+**Example**:
+```bash
+# 1. Find work
+bd ready --json
+# Output: [{"id": "chora-base-abc", "title": "Add SAP-033", "priority": 0}]
+
+# 2. Claim task
+bd update chora-base-abc --status in_progress --assignee alice
+
+# 3. Work on task (TDD workflow)
+# - Write failing test
+# - Implement feature
+# - Run tests: pytest
+# - Refactor
+
+# 4. Add progress
+bd comment chora-base-abc "Implemented authentication flow, adding tests"
+
+# 5. Quality gates
+just pre-merge  # Runs test + lint + format + type-check
+
+# 6. Close task
+bd close chora-base-abc --reason "Implemented SAP-033 authentication with 90% test coverage"
+```
+
+**Why Use Beads**: Persistent task memory across sessions eliminates context re-establishment. Perfect for multi-day features or bug fixes.
+
+**Integration with Pre-Commit Hooks (SAP-006)**:
+```bash
+# Before commit, always run quality gates
+just pre-merge
+
+# If hooks fail, fix issues then re-run
+ruff check --fix src/
+mypy src/
+just pre-merge
+
+# Then commit
+git add .
+git commit -m "feat(sap-033): Add authentication capability"
+```
+
+---
+
+### Workflow 5: Researching Technical Decisions
 
 **Steps**:
 1. Check [research/](research/) directory for existing investigations

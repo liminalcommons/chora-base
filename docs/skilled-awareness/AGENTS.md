@@ -1,8 +1,8 @@
 # Skilled Awareness (SAP Registry) - Agent Awareness
 
 **Domain**: Skilled Awareness Packages (SAPs)
-**Total SAPs**: 30+ capabilities
-**Last Updated**: 2025-11-04
+**Total SAPs**: 45 capabilities
+**Last Updated**: 2025-11-12
 
 ---
 
@@ -207,12 +207,25 @@ bash scripts/validate-links.sh
 
 ---
 
+### Capability Server Architecture (6 SAPs)
+
+| SAP | Name | Status | Description |
+|-----|------|--------|-------------|
+| **SAP-042** | interface-design | pilot | Core/interface separation, 80% coupling reduction |
+| **SAP-043** | multi-interface | pilot | CLI/REST/MCP patterns, 75% time savings |
+| **SAP-044** | registry | pilot | Service mesh with capability discovery |
+| **SAP-045** | bootstrap | pilot | Dependency-ordered startup, 90% failure reduction |
+| **SAP-046** | composition | pilot | Saga orchestration, circuit breakers, event bus |
+| **SAP-047** | capability-server-template | pilot | Jinja2-based template, 5-min setup (2,271% ROI) |
+
+---
+
 ### Technology-Specific (3 SAPs)
 
 | SAP | Name | Status | Description |
 |-----|------|--------|-------------|
 | **SAP-011** | docker-operations | production | Multi-stage builds, compose |
-| **SAP-014** | mcp-server-development | draft | MCP server scaffolding |
+| **SAP-014** | mcp-server-development | deprecated | MCP server scaffolding (use SAP-047) |
 | **SAP-029** | sap-generation | pilot | Template-based SAP generation |
 
 ---
@@ -267,13 +280,26 @@ SAP-000 (sap-framework) [FOUNDATIONAL]
    ├─→ SAP-012 (development-lifecycle)
    ├─→ SAP-013 (metrics-tracking)
    ├─→ SAP-015 (task-tracking)
-   └─→ SAP-027 (dogfooding-patterns)
+   ├─→ SAP-027 (dogfooding-patterns)
+   ├─→ SAP-042 (interface-design)
+   │      ↓
+   │      ├─→ SAP-043 (multi-interface)
+   │      ├─→ SAP-044 (registry)
+   │      │      ↓
+   │      │      └─→ SAP-045 (bootstrap)
+   │      └─→ SAP-046 (composition) [depends on SAP-042, SAP-044]
+   │             ↓
+   │             └─→ SAP-047 (capability-server-template)
+   │                    [depends on SAP-042 through SAP-046]
+   └─→ SAP-029 (sap-generation)
 ```
 
 **Key Dependencies**:
 - **SAP-000** is foundational; all SAPs depend on it
 - **SAP-003 → SAP-004**: Testing depends on project structure
 - **SAP-004 → SAP-005, SAP-006**: CI/CD and quality depend on testing
+- **SAP-042 → SAP-043, SAP-044, SAP-046**: Interface design is foundation for capability servers
+- **SAP-047**: Capability server template integrates SAP-042 through SAP-046
 
 ---
 

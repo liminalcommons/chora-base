@@ -132,7 +132,124 @@ vim PLAN-2025-11-04-SAP-009-FULL.md
 
 ---
 
-### Workflow 4: Auditing Project Structure
+### Workflow 4: Sprint Planning with Beads (SAP-015)
+
+**Steps**:
+1. Review backlog: `bd list --status open --priority 0,1 --json`
+2. Create sprint epic: `bd create "Sprint N: Goals" --type epic --priority 0`
+3. Decompose into tasks with estimated effort
+4. Add task dependencies: `bd dep add {dependent_id} {prerequisite_id}`
+5. Track sprint progress: `bd ready --json` (shows unblocked work)
+6. Sprint retrospective: Review closed tasks, update velocity
+
+**Example**:
+```bash
+# 1. Review backlog
+bd list --status open --priority 0,1 --json
+# Output: 15 high-priority tasks
+
+# 2. Create sprint epic
+bd create "Sprint 5: SAP-042 Capability Server Architecture" \
+    --type epic \
+    --priority 0 \
+    --description "Implement core/interface separation patterns"
+
+# 3. Decompose into tasks
+bd create "Design interface contracts" --priority 0 --parent {epic_id}
+bd create "Implement core logic" --priority 0 --parent {epic_id}
+bd create "Create integration tests" --priority 1 --parent {epic_id}
+bd create "Update documentation" --priority 1 --parent {epic_id}
+
+# 4. Add dependencies
+bd dep add {implement_id} {design_id}       # Core depends on design
+bd dep add {tests_id} {implement_id}        # Tests depend on implementation
+bd dep add {docs_id} {tests_id}             # Docs depend on tests passing
+
+# 5. Track sprint progress daily
+bd ready --json
+# Shows only unblocked tasks (respects dependencies)
+
+# 6. Sprint retrospective
+bd list --status closed --updated-after "2025-11-05" --json
+# Review: 12/15 tasks completed, 3 rolled to next sprint
+```
+
+**Why Use Beads for Sprints**:
+- Dependency management: Ensures tasks are done in correct order
+- Progress visibility: `bd ready` shows what's unblocked now
+- Historical tracking: Velocity calculated from closed tasks
+- Cross-session memory: Sprint context preserved between planning sessions
+
+**Integration with Sprint Documents**:
+```bash
+# Link sprint plan to beads epic
+vim docs/project-docs/sprints/sprint-5-plan.md
+# Add: "Epic ID: chora-base-xyz"
+
+# Reference beads tasks in sprint retrospective
+bd list --status closed --parent {epic_id} --json > sprint-5-completed.json
+```
+
+---
+
+### Workflow 5: Coordinate Cross-Repo Work with Inbox (SAP-001)
+
+**Steps**:
+1. Check active coordination requests: `cat inbox/coordination/active.jsonl`
+2. Triage coordination: Assign priority, estimate effort
+3. Decompose into beads tasks (SAP-015 integration)
+4. Track progress via beads: `bd ready --json`
+5. Update coordination status in active.jsonl
+6. Archive completed coordination: Move to `archived.jsonl`
+
+**Example**:
+```bash
+# 1. Check active requests
+cat inbox/coordination/active.jsonl
+# Output: COORD-2025-003: v1.9.0 docs update (overdue)
+
+# 2. Triage coordination
+# Priority: P1 (overdue)
+# Effort: 2-3 hours
+# Assignee: Documentation team
+
+# 3. Decompose into beads tasks
+bd create "COORD-2025-003: v1.9.0 Docs Update" \
+    --type epic \
+    --priority 1 \
+    --description "Update chora-compose documentation for v1.9.0 release"
+
+bd create "Review v1.9.0 changelog" --priority 1 --parent {epic_id}
+bd create "Update API docs" --priority 1 --parent {epic_id}
+bd create "Update migration guide" --priority 1 --parent {epic_id}
+bd create "Review and merge PR" --priority 1 --parent {epic_id}
+
+# 4. Track progress
+bd ready --json  # Shows unblocked COORD-2025-003 tasks
+
+# 5. Update coordination status
+vim inbox/coordination/active.jsonl
+# Change: "status": "in_progress"
+# Add: "beads_epic": "chora-base-xyz"
+
+# 6. Archive when complete
+# (Move entry from active.jsonl to archived.jsonl)
+```
+
+**Why Integrate Inbox + Beads**:
+- **Inbox**: Broadcast coordination requests across repos (decoupled)
+- **Beads**: Decompose coordination into actionable tasks with dependencies
+- **Pattern**: Coordination epic → Task breakdown → Dependency tracking → Progress updates
+
+**Coordination Protocol (SAP-001)**:
+- Sender broadcasts coordination request to `inbox/coordination/active.jsonl`
+- Receiver creates beads epic from coordination
+- Receiver tracks progress via beads, updates coordination status
+- When complete, receiver archives coordination request
+
+---
+
+### Workflow 6: Auditing Project Structure
 
 **Steps**:
 1. Navigate to [audits/](audits/) or [inventory/](inventory/) directory

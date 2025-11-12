@@ -32,7 +32,7 @@ last_updated: 2025-11-10
 
 ```bash
 # ✅ CORRECT: Generate new project from template
-python scripts/create-model-mcp-server.py \
+python scripts/create-capability-server.py \
     --name "Your Project Name" \
     --namespace yournamespace \
     --output ~/projects/your-project
@@ -216,7 +216,7 @@ Before writing Python scripts, read: [scripts/AGENTS.md](scripts/AGENTS.md) for 
 - **Primary Users**: Human developers and AI agents generating/maintaining Python projects
 - **Technology Stack**: Static scaffolding (`static-template/`), Skilled Awareness Packages (SAPs)
 - **Current Version**: v1.9.3 (see [CHANGELOG.md](CHANGELOG.md))
-- **SAP Count**: 30+ capabilities (see [saps/AGENTS.md](saps/AGENTS.md))
+- **SAP Count**: 45 capabilities (see [saps/AGENTS.md](saps/AGENTS.md))
 
 ### Key Concepts
 
@@ -287,7 +287,7 @@ Before writing Python scripts, read: [scripts/AGENTS.md](scripts/AGENTS.md) for 
 → **Action**: Use fast-setup script (see Critical Workflow #1 above)
 
 ```bash
-python scripts/create-model-mcp-server.py \
+python scripts/create-capability-server.py \
     --name "Project Name" \
     --namespace namespace \
     --output ~/projects/output
@@ -380,7 +380,7 @@ chora-base/
 │
 ├── scripts/                        # Automation scripts
 │   ├── AGENTS.md                   # Script patterns + cross-platform
-│   ├── create-model-mcp-server.py  # Fast-setup script
+│   ├── create-capability-server.py  # Fast-setup script
 │   ├── install-sap.py              # SAP installation
 │   ├── sap-validate.py             # SAP validation
 │   └── ... (25 scripts)
@@ -420,7 +420,7 @@ SAPs are **complete, installable capability bundles** with clear contracts and a
 
 **For complete SAP catalog and quick references**, see **[saps/AGENTS.md](saps/AGENTS.md)**.
 
-**Key SAPs** (most commonly used):
+**Core Infrastructure & Development** (most commonly used):
 
 | SAP | Name | Status | Description |
 |-----|------|--------|-------------|
@@ -433,7 +433,27 @@ SAPs are **complete, installable capability bundles** with clear contracts and a
 | SAP-009 | agent-awareness | production | Nested AGENTS.md pattern |
 | SAP-015 | task-tracking | pilot | Beads persistent tasks |
 
-**See**: [saps/AGENTS.md](saps/AGENTS.md) for all 30+ SAPs
+**Capability Server Architecture** (NEW - pilot):
+
+| SAP | Name | Status | Description |
+|-----|------|--------|-------------|
+| SAP-042 | interface-design | pilot | Core/interface separation (80% coupling reduction) |
+| SAP-043 | multi-interface | pilot | CLI/REST/MCP patterns (75% time savings) |
+| SAP-044 | registry | pilot | Service discovery with manifests |
+| SAP-045 | bootstrap | pilot | Startup orchestration (90% failure reduction) |
+| SAP-046 | composition | pilot | Saga, circuit breaker, events (1,141% ROI) |
+| SAP-047 | capability-server-template | pilot | Jinja2-based template (2,271% ROI, 5-min setup) |
+
+**React Foundation** (pilot):
+
+| SAP | Name | Status | Description |
+|-----|------|--------|-------------|
+| SAP-020 | react-foundation | active | Next.js 15 + TypeScript (8-12h → 45min) |
+| SAP-033 | react-authentication | pilot | NextAuth/Clerk/Supabase (93.75% time savings) |
+| SAP-034 | react-database-integration | pilot | Prisma/Drizzle + PostgreSQL (89.6% savings) |
+| SAP-041 | react-form-validation | pilot | React Hook Form + Zod (88.9% savings) |
+
+**See**: [saps/AGENTS.md](saps/AGENTS.md) for all 45 SAPs
 
 ---
 
@@ -551,7 +571,7 @@ chora-base uses **Diátaxis 4-domain documentation architecture**:
 ### Task 1: Create New Project
 
 ```bash
-python scripts/create-model-mcp-server.py \
+python scripts/create-capability-server.py \
     --name "Project Name" \
     --namespace namespace \
     --output ~/projects/output
@@ -606,6 +626,55 @@ shutil.rmtree(Path("temp"))
 ```
 
 **See**: Critical Workflow #2, [scripts/AGENTS.md](scripts/AGENTS.md)
+
+### Task 7: Track Work Across Sessions (SAP-015)
+
+```bash
+# Check for unblocked tasks
+bd ready --json
+
+# Claim a task
+bd update {task-id} --status in_progress --assignee {your-name}
+
+# Add progress comments
+bd comment {task-id} "Completed X, working on Y"
+
+# Close completed task
+bd close {task-id} --reason "Implemented and tested feature"
+
+# List open tasks
+bd list --status open --json
+```
+
+**Why Use Beads**: Persistent task memory across sessions eliminates context re-establishment overhead. Perfect for multi-session work.
+
+**See**: [docs/skilled-awareness/task-tracking/AGENTS.md](docs/skilled-awareness/task-tracking/AGENTS.md)
+
+### Task 8: Coordinate Cross-Repo Work (SAP-001)
+
+```bash
+# Check active coordination requests
+cat inbox/coordination/active.jsonl
+
+# Decompose coordination into tasks (with SAP-015)
+bd create "COORD-XXX: Epic Title" --priority 0 --type epic
+bd create "Subtask 1" --priority 0 --parent {epic-id}
+bd create "Subtask 2" --priority 1 --parent {epic-id}
+
+# Add dependencies
+bd dep add {subtask2-id} {subtask1-id}
+
+# Update coordination status
+vim inbox/coordination/active.jsonl
+# (Mark progress, update status)
+
+# Archive completed coordination
+mv inbox/coordination/{file}.jsonl inbox/coordination/archived.jsonl
+```
+
+**Why Use Inbox**: Broadcast coordination protocol for multi-repo workflows. Reduces coordination overhead by 90%.
+
+**See**: [docs/skilled-awareness/inbox/AGENTS.md](docs/skilled-awareness/inbox/AGENTS.md)
 
 ---
 

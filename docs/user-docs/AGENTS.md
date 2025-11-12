@@ -447,7 +447,7 @@ grep -r "{error}" docs/user-docs/
 - [../../ROADMAP.md](../../ROADMAP.md) - Product roadmap
 
 **SAP-Specific**:
-- [../skilled-awareness/](../skilled-awareness/) - All 30+ SAP capabilities
+- [../skilled-awareness/](../skilled-awareness/) - All 45 SAP capabilities
 - Each SAP has adoption-blueprint.md for installation
 
 **Related Domains**:

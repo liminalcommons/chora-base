@@ -217,6 +217,91 @@ Claude:
 
 ---
 
+#### Workflow 4: Using Beads for Persistent Memory (SAP-015)
+
+```markdown
+User: "Continue working on the feature from yesterday"
+
+Claude:
+1. Check if SAP-015 adopted: ls .beads/
+2. If yes: bd ready --json to find unblocked work
+3. Read task details: bd show {id} --json
+4. Update status: bd update {id} --status in_progress --assignee claude
+5. Work on task, add progress comments: bd comment {id} "Status update"
+6. Close when done: bd close {id} --reason "Completed X"
+```
+
+**Progressive Loading**: Phase 1 (read .beads/ dir), execute commands
+
+**Why This Matters**: Beads eliminates session amnesia. Claude can resume exactly where left off with full task context, no user re-explanation needed.
+
+**Key Commands**:
+- `bd ready --json`: Find unblocked work (respects dependencies)
+- `bd show {id} --json`: Get full task details (description, history, dependencies)
+- `bd comment {id} "..."`: Add progress notes (visible to future sessions)
+- `bd close {id} --reason "..."`: Complete task with closure reason
+
+---
+
+#### Workflow 5: Coordinating via Inbox (SAP-001)
+
+```markdown
+User: "Check if there are any coordination requests for chora-base"
+
+Claude:
+1. Check active requests: cat inbox/coordination/active.jsonl
+2. Parse coordination details (sender, task, deadline, status)
+3. If coordination requires work:
+   - Create epic task in beads: bd create "COORD-XXX: Title" --type epic
+   - Decompose into subtasks with dependencies
+   - Track progress via beads
+4. Update coordination status in active.jsonl
+5. When complete, archive to inbox/coordination/archived.jsonl
+```
+
+**Progressive Loading**: Phase 1 (check active.jsonl), Phase 2 (read protocol-spec.md if complex)
+
+**Why This Matters**: Inbox provides broadcast coordination across repos without tight coupling. One repo broadcasts, others respond asynchronously.
+
+**Integration with Beads**: Inbox + Beads pattern is standard:
+- Inbox: Cross-repo coordination requests
+- Beads: Decompose coordination into tasks, track execution
+
+---
+
+#### Workflow 6: Generating Capability Servers (SAP-047)
+
+```markdown
+User: "Generate a new capability server for data analysis"
+
+Claude:
+1. Read docs/skilled-awareness/capability-server-template/AGENTS.md (Phase 1)
+2. Confirm parameters with user:
+   - Name: "Analyzer"
+   - Namespace: "chora"
+   - Enable MCP? Yes/No
+   - Enable Saga? Yes/No
+   - Enable circuit breaker? Yes/No
+3. Execute generation script via Bash tool:
+   python scripts/create-capability-server.py \
+       --name "Analyzer" \
+       --namespace chora \
+       --description "AI code analysis service" \
+       --enable-mcp \
+       --enable-saga \
+       --output ~/projects/analyzer
+4. Verify generated structure
+5. Report success to user with next steps
+```
+
+**Progressive Loading**: Phase 1 (AGENTS.md quick ref), Phase 2 (adoption-blueprint.md if issues)
+
+**Why This Matters**: SAP-047 reduces capability server setup from 40-60 hours to 5 minutes. Template includes multi-interface support (CLI, REST, MCP), startup orchestration, composition patterns.
+
+**Key Pattern**: Uses Jinja2-based generation (not Cookiecutter), matches chora-base's create-model-mcp-server.py pattern.
+
+---
+
 ## Claude-Specific Tips
 
 ### Tip 1: Use JSON Output for Structured Data
