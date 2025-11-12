@@ -11,7 +11,7 @@ Note: This infrastructure module is optional and only included when
 
 from .circuit_breaker import CircuitBreaker, CircuitBreakerOpen, CircuitBreakerTimeout, CircuitState
 from .event_bus import Event, EventBus, EventHandler, get_event_bus
-from .saga import Saga, SagaContext, SagaStep, SagaStatus, create_saga
+from .saga import Saga, SagaContext, SagaStep, SagaStatus, create_saga, create_entity_saga
 
 __all__ = [
     # Circuit Breaker
@@ -30,4 +30,5 @@ __all__ = [
     "SagaStep",
     "SagaStatus",
     "create_saga",
+    "create_entity_saga",
 ]

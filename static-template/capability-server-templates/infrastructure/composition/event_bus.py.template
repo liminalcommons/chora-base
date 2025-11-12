@@ -249,10 +249,20 @@ class EventBus:
             Dictionary with event bus statistics
         """
         total_handlers = sum(len(handlers) for handlers in self._handlers.values())
+
+        # Count events by type and source
+        events_by_type: Dict[str, int] = {}
+        events_by_source: Dict[str, int] = {}
+        for event in self._event_history:
+            events_by_type[event.event_type] = events_by_type.get(event.event_type, 0) + 1
+            events_by_source[event.source] = events_by_source.get(event.source, 0) + 1
+
         return {
             "event_types": len(self._handlers),
             "total_subscribers": total_handlers,
             "total_events": len(self._event_history),
+            "events_by_type": events_by_type,
+            "events_by_source": events_by_source,
             "max_history_size": self._max_history_size,
             "subscribers_by_type": {
                 event_type: len(handlers)

@@ -318,11 +318,23 @@ class ServiceRegistry:
             count = len([s for s in self._services.values() if s.status == status])
             by_status[status.value] = count
 
+        # Count services by type and interface
+        services_by_type: Dict[str, int] = {}
+        services_by_interface: Dict[str, int] = {}
+        for service in self._services.values():
+            # Count by type
+            services_by_type[service.service_type] = services_by_type.get(service.service_type, 0) + 1
+            # Count by interface
+            for interface in service.interfaces:
+                services_by_interface[interface] = services_by_interface.get(interface, 0) + 1
+
         return {
             "total_services": total,
             "by_status": by_status,
-            "healthy": by_status.get(ServiceStatus.HEALTHY.value, 0),
-            "unhealthy": by_status.get(ServiceStatus.UNHEALTHY.value, 0),
+            "healthy_services": by_status.get(ServiceStatus.HEALTHY.value, 0),
+            "unhealthy_services": by_status.get(ServiceStatus.UNHEALTHY.value, 0),
+            "services_by_type": services_by_type,
+            "services_by_interface": services_by_interface,
             "timestamp": datetime.utcnow().isoformat()
         }
 
