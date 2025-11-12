@@ -108,6 +108,26 @@ class ServiceRegistration(BaseModel):
         }
     }
 
+    def to_dict(self) -> Dict[str, Any]:
+        """Convert registration to dictionary.
+
+        Returns:
+            Dictionary representation of registration
+        """
+        return {
+            "service_id": str(self.service_id),
+            "service_name": self.service_name,
+            "service_type": self.service_type,
+            "version": self.version,
+            "capabilities": self.capabilities,
+            "interfaces": self.interfaces,
+            "endpoints": self.endpoints,
+            "metadata": self.metadata,
+            "status": self.status.value,
+            "registered_at": self.registered_at.isoformat(),
+            "last_heartbeat": self.last_heartbeat.isoformat()
+        }
+
 
 # ============================================================================
 # Service Registry
@@ -233,7 +253,8 @@ class ServiceRegistry:
         self,
         service_type: Optional[str] = None,
         status: Optional[ServiceStatus] = None,
-        capability: Optional[str] = None
+        capability: Optional[str] = None,
+        interface: Optional[str] = None
     ) -> List[ServiceRegistration]:
         """List services with optional filtering.
 
@@ -241,6 +262,7 @@ class ServiceRegistry:
             service_type: Filter by service type
             status: Filter by status
             capability: Filter by capability
+            interface: Filter by interface
 
         Returns:
             List of service registrations
@@ -257,6 +279,9 @@ class ServiceRegistry:
 
         if capability:
             services = [s for s in services if capability in s.capabilities]
+
+        if interface:
+            services = [s for s in services if interface in s.interfaces]
 
         return services
 
@@ -300,6 +325,38 @@ class ServiceRegistry:
             "unhealthy": by_status.get(ServiceStatus.UNHEALTHY.value, 0),
             "timestamp": datetime.utcnow().isoformat()
         }
+
+    def mark_unhealthy(self, service_id: UUID) -> bool:
+        """Mark a service as unhealthy.
+
+        Args:
+            service_id: Service ID to mark unhealthy
+
+        Returns:
+            True if marked, False if not found
+        """
+        return self.update_status(service_id, ServiceStatus.UNHEALTHY)
+
+    def check_timeouts(self) -> List[UUID]:
+        """Check for services with stale heartbeats.
+
+        Returns:
+            List of service IDs marked unhealthy or degraded
+        """
+        self._check_heartbeats()
+        return [
+            service_id
+            for service_id, service in self._services.items()
+            if service.status in (ServiceStatus.UNHEALTHY, ServiceStatus.DEGRADED)
+        ]
+
+    def get_stats(self) -> Dict[str, Any]:
+        """Get registry statistics.
+
+        Returns:
+            Registry statistics
+        """
+        return self.health_check()
 
     def _check_heartbeats(self):
         """Check all services for stale heartbeats and update status."""
