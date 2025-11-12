@@ -145,6 +145,14 @@ class CircuitBreaker:
         self._success_count = 0
         self._last_failure_time = None
 
+    def get_state(self) -> CircuitState:
+        """Get current circuit state (method wrapper for state property)."""
+        return self.state
+
+    def get_stats(self) -> dict:
+        """Get circuit breaker statistics (alias for get_metrics)."""
+        return self.get_metrics()
+
     def get_metrics(self) -> dict:
         """Get circuit breaker metrics.
 

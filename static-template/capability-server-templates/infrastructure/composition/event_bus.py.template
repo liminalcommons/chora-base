@@ -68,6 +68,21 @@ class Event(BaseModel):
         }
     }
 
+    def to_dict(self) -> Dict[str, Any]:
+        """Convert event to dictionary.
+
+        Returns:
+            Dictionary representation of event
+        """
+        return {
+            "event_id": str(self.event_id),
+            "event_type": self.event_type,
+            "source": self.source,
+            "data": self.data,
+            "metadata": self.metadata,
+            "timestamp": self.timestamp.isoformat()
+        }
+
 
 # ============================================================================
 # Event Handler Type
@@ -193,12 +208,14 @@ class EventBus:
     def get_history(
         self,
         event_type: Optional[str] = None,
+        source: Optional[str] = None,
         limit: int = 100
     ) -> List[Event]:
         """Get event history.
 
         Args:
             event_type: Optional filter by event type
+            source: Optional filter by event source
             limit: Maximum events to return
 
         Returns:
@@ -208,6 +225,9 @@ class EventBus:
 
         if event_type:
             events = [e for e in events if e.event_type == event_type]
+
+        if source:
+            events = [e for e in events if e.source == source]
 
         return list(reversed(events[-limit:]))
 
@@ -221,6 +241,24 @@ class EventBus:
             Number of subscribers
         """
         return len(self._handlers.get(event_type, []))
+
+    def get_stats(self) -> Dict[str, Any]:
+        """Get event bus statistics.
+
+        Returns:
+            Dictionary with event bus statistics
+        """
+        total_handlers = sum(len(handlers) for handlers in self._handlers.values())
+        return {
+            "event_types": len(self._handlers),
+            "total_subscribers": total_handlers,
+            "event_history_count": len(self._event_history),
+            "max_history_size": self._max_history_size,
+            "subscriptions_by_type": {
+                event_type: len(handlers)
+                for event_type, handlers in self._handlers.items()
+            }
+        }
 
     def clear_history(self):
         """Clear event history."""
