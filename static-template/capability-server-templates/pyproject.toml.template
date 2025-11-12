@@ -49,7 +49,7 @@ dependencies = [
     "uvicorn[standard]>=0.27.0,<1.0.0",
 
 {% if enable_mcp %}    # MCP dependencies
-    "mcp>=1.0.0,<2.0.0",  # Model Context Protocol SDK
+    "fastmcp>=0.4.0,<1.0.0",  # FastMCP framework (high-level MCP SDK)
 
 {% endif %}{% if enable_registry %}    # Registry dependencies (optional)
     "httpx>=0.27.0,<1.0.0",  # For HTTP-based service discovery

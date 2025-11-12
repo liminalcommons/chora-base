@@ -9,13 +9,14 @@ Note: This infrastructure module is optional and only included when
 --enable-composition flag is used.
 """
 
-from .circuit_breaker import CircuitBreaker, CircuitState
+from .circuit_breaker import CircuitBreaker, CircuitBreakerOpen, CircuitState
 from .event_bus import Event, EventBus, EventHandler, get_event_bus
-from .saga import Saga, SagaStep, SagaStatus, create_saga
+from .saga import Saga, SagaContext, SagaStep, SagaStatus, create_saga
 
 __all__ = [
     # Circuit Breaker
     "CircuitBreaker",
+    "CircuitBreakerOpen",
     "CircuitState",
     # Event Bus
     "Event",
@@ -24,6 +25,7 @@ __all__ = [
     "get_event_bus",
     # Saga
     "Saga",
+    "SagaContext",
     "SagaStep",
     "SagaStatus",
     "create_saga",
