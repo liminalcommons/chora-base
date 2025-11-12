@@ -54,8 +54,8 @@ class SagaStep(BaseModel):
         exclude=True
     )
 
-    timeout_seconds: int = Field(
-        30,
+    timeout_seconds: float = Field(
+        30.0,
         description="Step timeout in seconds"
     )
 
