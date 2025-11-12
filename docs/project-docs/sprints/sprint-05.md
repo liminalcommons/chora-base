@@ -166,7 +166,7 @@ This sprint addresses user feedback: "lets make sure we are using our process an
      - docs/skilled-awareness/testing-framework/AGENTS.md (SAP-004 user signals)
      - docs/skilled-awareness/agent-awareness/AGENTS.md (SAP-009 user signals)
      - docs/skilled-awareness/development-lifecycle/AGENTS.md (SAP-012 user signals)
-     - docs/skilled-awareness/metrics-framework/AGENTS.md (SAP-013 user signals)
+     - docs/skilled-awareness/metrics-tracking/AGENTS.md (SAP-013 user signals)
      - Each file: Add user signal patterns mapping conversational input → formal actions
    - **Dependencies**: Task 4.2 complete
 

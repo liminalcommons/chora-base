@@ -456,7 +456,6 @@ git config core.hooksPath .githooks
 
 ## Related Documentation
 
-- [Cross-Platform Fundamentals (SAP-030)](../../skilled-awareness/cross-platform-fundamentals/)
 - [Windows Compatibility Summary](../../project-docs/windows-compatibility-summary.md)
 - [Bash to Python Migration](../../user-docs/how-to/bash-to-python-migration.md)
 - [Bash Scripts README](../../../scripts/BASH_SCRIPTS_README.md)

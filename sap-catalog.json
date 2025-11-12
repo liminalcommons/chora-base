@@ -730,8 +730,7 @@
       ],
       "phase": "Phase 4",
       "priority": "P2",
-      "domain": "Specialized",
-      "complete": false
+      "domain": "Specialized"
     },
     {
       "id": "SAP-014",

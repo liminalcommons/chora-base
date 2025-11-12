@@ -122,15 +122,17 @@ These SAPs have README.md but are missing Quick Reference sections:
 - **Status**: Pilot
 - **Action Needed**: Create complete documentation (~400-600 lines total)
 
-### Special Cases: Template/Placeholder Directories (5 directories)
-These are not actual SAPs but template/placeholder directories:
-- cross-platform-ci-cd-quality-gates
-- cross-platform-fundamentals
-- cross-platform-python-environments
-- example-capability
-- templates
+### Special Cases: Template/Placeholder Directories (REMOVED)
 
-**No Action Needed**: These are development scaffolding, not production SAPs
+**NOTE (2025-11-11)**: These placeholder directories have been removed in Feature 7 (SAP-DISCO-V5):
+- ~~cross-platform-ci-cd-quality-gates~~
+- ~~cross-platform-fundamentals~~
+- ~~cross-platform-python-environments~~
+- ~~example-capability~~
+- ~~templates~~
+- ~~metrics-framework~~
+
+**Action Taken**: Removed 6 placeholder directories (24 files) that were development scaffolding, not production SAPs
 
 ---
 
@@ -337,11 +339,6 @@ Checked 10 random SAPs for compliance with Batch 11-12 pattern:
 | SAP-039 | react-e2e-testing | 507 | Y | Y | ✅ |
 | SAP-040 | react-monorepo-architecture | 435 | Y | Y | ✅ |
 | SAP-041 | react-form-validation | 506 | N | Y | ⚠️ |
-| - | cross-platform-ci-cd-quality-gates | 0 | N | N | 🚫 |
-| - | cross-platform-fundamentals | 0 | N | N | 🚫 |
-| - | cross-platform-python-environments | 0 | N | N | 🚫 |
-| - | example-capability | 0 | N | N | 🚫 |
-| - | templates | 0 | N | N | 🚫 |
 
 ---
 

@@ -53,7 +53,6 @@ Before migrating, answer:
 ### 3. Reference Documentation
 
 Read these SAPs first:
-- [SAP-030: Cross-Platform Fundamentals](../../skilled-awareness/cross-platform-fundamentals/awareness-guide.md)
 - [SAP-008: Automation Scripts](../../skilled-awareness/automation-scripts/protocol-spec.md#23-cross-platform-support)
 
 ---
@@ -542,9 +541,6 @@ Migration is complete when:
 ## Related Resources
 
 **SAPs**:
-- [SAP-030: Cross-Platform Fundamentals](../../skilled-awareness/cross-platform-fundamentals/awareness-guide.md) - Core patterns
-- [SAP-031: Python Environments](../../skilled-awareness/cross-platform-python-environments/awareness-guide.md) - Python setup
-- [SAP-032: CI/CD Quality Gates](../../skilled-awareness/cross-platform-ci-cd-quality-gates/awareness-guide.md) - Multi-OS testing
 - [SAP-008: Automation Scripts](../../skilled-awareness/automation-scripts/protocol-spec.md) - Script standards
 
 **Tools**:
