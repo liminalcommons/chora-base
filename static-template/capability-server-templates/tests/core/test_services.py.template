@@ -22,7 +22,7 @@ from {{ package_name }}.core.models import (
 )
 from {{ package_name }}.core.services import (
     {{ capability_name_pascal }}Service,
-    create_{{ capability_name_lower }}_service,
+    create_{{ capability_name_snake }}_service,
 )
 
 
@@ -57,7 +57,7 @@ class TestServiceFactory:
 
     def test_create_service(self):
         """Test factory creates service instance."""
-        service = create_{{ capability_name_lower }}_service()
+        service = create_{{ capability_name_snake }}_service()
         assert service is not None
         assert isinstance(service, {{ capability_name_pascal }}Service)
 

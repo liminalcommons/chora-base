@@ -402,7 +402,7 @@ class {{ capability_name_pascal }}ConfigError({{ capability_name_pascal }}Error)
 # ============================================================================
 
 
-def is_{{ capability_name_lower }}_error(exc: Exception) -> bool:
+def is_{{ capability_name_snake }}_error(exc: Exception) -> bool:
     """Check if exception is a {{ capability_name }} error.
 
     Args:

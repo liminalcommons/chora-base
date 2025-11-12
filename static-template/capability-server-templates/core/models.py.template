@@ -79,7 +79,7 @@ class {{ capability_name_pascal }}Request({{ capability_name_pascal }}BaseModel)
         ...,
         min_length=1,
         max_length=200,
-        description="Name of the {{ capability_name_lower }} entity",
+        description="Name of the {{ capability_name_snake }} entity",
         examples=["Example {{ capability_name }}"]
     )
 
@@ -87,7 +87,7 @@ class {{ capability_name_pascal }}Request({{ capability_name_pascal }}BaseModel)
         None,
         max_length=2000,
         description="Optional description",
-        examples=["A detailed description of this {{ capability_name_lower }}"]
+        examples=["A detailed description of this {{ capability_name_snake }}"]
     )
 
     metadata: Dict[str, Any] = Field(
@@ -107,7 +107,7 @@ class {{ capability_name_pascal }}Request({{ capability_name_pascal }}BaseModel)
 class {{ capability_name_pascal }}Entity(TimestampedModel):
     """Core domain entity for {{ capability_name }}.
 
-    This model represents a {{ capability_name_lower }} entity with full
+    This model represents a {{ capability_name_snake }} entity with full
     lifecycle tracking (id, timestamps, status).
     """
 
@@ -172,7 +172,7 @@ class {{ capability_name_pascal }}Response({{ capability_name_pascal }}BaseModel
 
     entity: {{ capability_name_pascal }}Entity = Field(
         ...,
-        description="The {{ capability_name_lower }} entity"
+        description="The {{ capability_name_snake }} entity"
     )
 
     message: Optional[str] = Field(
@@ -194,7 +194,7 @@ class {{ capability_name_pascal }}ListResponse({{ capability_name_pascal }}BaseM
 
     entities: List[{{ capability_name_pascal }}Entity] = Field(
         default_factory=list,
-        description="List of {{ capability_name_lower }} entities"
+        description="List of {{ capability_name_snake }} entities"
     )
 
     total: int = Field(

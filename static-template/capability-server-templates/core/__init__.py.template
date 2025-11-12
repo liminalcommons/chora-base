@@ -29,7 +29,7 @@ from .models import (
 from .services import (
     {{ capability_name_pascal }}Service,
     {{ capability_name_pascal }}ServiceBase,
-    create_{{ capability_name_lower }}_service,
+    create_{{ capability_name_snake }}_service,
 )
 
 __all__ = [
@@ -43,7 +43,7 @@ __all__ = [
     # Services
     "{{ capability_name_pascal }}Service",
     "{{ capability_name_pascal }}ServiceBase",
-    "create_{{ capability_name_lower }}_service",
+    "create_{{ capability_name_snake }}_service",
     # Exceptions
     "{{ capability_name_pascal }}Error",
     "{{ capability_name_pascal }}ValidationError",

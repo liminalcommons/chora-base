@@ -11,7 +11,7 @@ from typing import Optional
 
 import click
 
-from {{ package_name }}.core import create_{{ capability_name_lower }}_service
+from {{ package_name }}.core import create_{{ capability_name_snake }}_service
 from .commands import cli as cli_app
 from .formatters import OutputFormat
 
@@ -40,7 +40,7 @@ def cli(ctx: click.Context, format: str):
     ctx.obj["format"] = OutputFormat(format.lower())
 
     # Create service instance (shared across commands in this invocation)
-    ctx.obj["service"] = create_{{ capability_name_lower }}_service()
+    ctx.obj["service"] = create_{{ capability_name_snake }}_service()
 
 
 # Import and register command groups

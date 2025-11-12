@@ -236,6 +236,17 @@ def derive_capability_name_lower(capability_name: str) -> str:
     return capability_name.lower()
 
 
+def derive_capability_name_snake(capability_name: str) -> str:
+    """Derive snake_case name for Python identifiers.
+
+    Example: "Task Manager" -> "task_manager"
+    Example: "Chora Capability Server Template" -> "chora_capability_server_template"
+    """
+    # Normalize whitespace and replace with underscores
+    words = capability_name.split()
+    return '_'.join(word.lower() for word in words)
+
+
 # ============================================================================
 # DIRECTORY STRUCTURE FUNCTIONS
 # ============================================================================
@@ -1171,6 +1182,7 @@ def main():
         "capability_name": args.name,  # Human-readable name (e.g., "Task Manager")
         "capability_name_pascal": derive_capability_name_pascal(args.name),  # PascalCase (e.g., "TaskManager")
         "capability_name_lower": derive_capability_name_lower(args.name),  # lowercase (e.g., "task manager")
+        "capability_name_snake": derive_capability_name_snake(args.name),  # snake_case (e.g., "task_manager")
         "project_name": args.name,  # Legacy compatibility
         "project_slug": project_slug,  # Filesystem-safe slug
         "package_name": package_name,  # Python package name

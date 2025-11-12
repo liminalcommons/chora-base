@@ -20,7 +20,7 @@ from {{ package_name }}.core.exceptions import (
     {{ capability_name_pascal }}ValidationError,
     get_error_code,
     get_error_details,
-    is_{{ capability_name_lower }}_error,
+    is_{{ capability_name_snake }}_error,
 )
 
 
@@ -344,15 +344,15 @@ class Test{{ capability_name_pascal }}ConfigError:
 class TestHelperFunctions:
     """Test helper utility functions."""
 
-    def test_is_{{ capability_name_lower }}_error_true(self):
+    def test_is_{{ capability_name_snake }}_error_true(self):
         """Test is_error returns True for domain errors."""
         error = {{ capability_name_pascal }}ValidationError("Test")
-        assert is_{{ capability_name_lower }}_error(error) is True
+        assert is_{{ capability_name_snake }}_error(error) is True
 
-    def test_is_{{ capability_name_lower }}_error_false(self):
+    def test_is_{{ capability_name_snake }}_error_false(self):
         """Test is_error returns False for non-domain errors."""
         error = ValueError("Test")
-        assert is_{{ capability_name_lower }}_error(error) is False
+        assert is_{{ capability_name_snake }}_error(error) is False
 
     def test_get_error_code_for_domain_error(self):
         """Test get_error_code for domain error."""

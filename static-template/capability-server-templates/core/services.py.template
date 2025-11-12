@@ -45,7 +45,7 @@ class {{ capability_name_pascal }}ServiceBase(ABC):
         self,
         request: {{ capability_name_pascal }}Request
     ) -> {{ capability_name_pascal }}Response:
-        """Create a new {{ capability_name_lower }} entity.
+        """Create a new {{ capability_name_snake }} entity.
 
         Args:
             request: Request containing entity data
@@ -61,7 +61,7 @@ class {{ capability_name_pascal }}ServiceBase(ABC):
 
     @abstractmethod
     async def get(self, entity_id: UUID) -> {{ capability_name_pascal }}Entity:
-        """Retrieve a {{ capability_name_lower }} entity by ID.
+        """Retrieve a {{ capability_name_snake }} entity by ID.
 
         Args:
             entity_id: Unique identifier
@@ -79,7 +79,7 @@ class {{ capability_name_pascal }}ServiceBase(ABC):
         self,
         filters: Optional[{{ capability_name_pascal }}Filter] = None
     ) -> {{ capability_name_pascal }}ListResponse:
-        """List {{ capability_name_lower }} entities with optional filtering.
+        """List {{ capability_name_snake }} entities with optional filtering.
 
         Args:
             filters: Optional filter criteria
@@ -95,7 +95,7 @@ class {{ capability_name_pascal }}ServiceBase(ABC):
         entity_id: UUID,
         request: {{ capability_name_pascal }}Request
     ) -> {{ capability_name_pascal }}Response:
-        """Update an existing {{ capability_name_lower }} entity.
+        """Update an existing {{ capability_name_snake }} entity.
 
         Args:
             entity_id: Entity to update
@@ -112,7 +112,7 @@ class {{ capability_name_pascal }}ServiceBase(ABC):
 
     @abstractmethod
     async def delete(self, entity_id: UUID) -> None:
-        """Delete a {{ capability_name_lower }} entity.
+        """Delete a {{ capability_name_snake }} entity.
 
         Args:
             entity_id: Entity to delete
@@ -186,7 +186,7 @@ class {{ capability_name_pascal }}Service({{ capability_name_pascal }}ServiceBas
 
         except Exception as e:
             raise {{ capability_name_pascal }}Error(
-                f"Failed to create {{ capability_name_lower }}: {str(e)}"
+                f"Failed to create {{ capability_name_snake }}: {str(e)}"
             ) from e
 
     async def get(self, entity_id: UUID) -> {{ capability_name_pascal }}Entity:
@@ -359,7 +359,7 @@ class {{ capability_name_pascal }}Service({{ capability_name_pascal }}ServiceBas
 # ============================================================================
 
 
-def create_{{ capability_name_lower }}_service() -> {{ capability_name_pascal }}ServiceBase:
+def create_{{ capability_name_snake }}_service() -> {{ capability_name_pascal }}ServiceBase:
     """Create and configure a {{ capability_name }} service instance.
 
     This factory function enables dependency injection and makes it easy

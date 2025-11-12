@@ -18,7 +18,7 @@ from {{ package_name }}.core import (
     {{ capability_name_pascal }}Response,
     {{ capability_name_pascal }}ListResponse,
     {{ capability_name_pascal }}Status,
-    create_{{ capability_name_lower }}_service,
+    create_{{ capability_name_snake }}_service,
 )
 from .models import (
     CreateEntityRequest,
@@ -50,7 +50,7 @@ def get_service():
 
     This is a dependency that can be overridden for testing.
     """
-    return create_{{ capability_name_lower }}_service()
+    return create_{{ capability_name_snake }}_service()
 
 
 # ============================================================================
@@ -63,7 +63,7 @@ def get_service():
     response_model=EntityResponse,
     status_code=http_status.HTTP_201_CREATED,
     summary="Create new entity",
-    description="Create a new {{ capability_name_lower }} entity with the provided data."
+    description="Create a new {{ capability_name_snake }} entity with the provided data."
 )
 async def create_entity(request: CreateEntityRequest) -> EntityResponse:
     """Create a new entity.
@@ -107,7 +107,7 @@ async def create_entity(request: CreateEntityRequest) -> EntityResponse:
     "/entities/{entity_id}",
     response_model={{ capability_name_pascal }}Entity,
     summary="Get entity by ID",
-    description="Retrieve a {{ capability_name_lower }} entity by its unique identifier."
+    description="Retrieve a {{ capability_name_snake }} entity by its unique identifier."
 )
 async def get_entity(entity_id: UUID) -> {{ capability_name_pascal }}Entity:
     """Get entity by ID.
@@ -135,7 +135,7 @@ async def get_entity(entity_id: UUID) -> {{ capability_name_pascal }}Entity:
     "/entities",
     response_model=EntityListResponse,
     summary="List entities",
-    description="List {{ capability_name_lower }} entities with optional filtering and pagination."
+    description="List {{ capability_name_snake }} entities with optional filtering and pagination."
 )
 async def list_entities(
     status: Optional[{{ capability_name_pascal }}Status] = Query(
@@ -204,7 +204,7 @@ async def list_entities(
     "/entities/{entity_id}",
     response_model=EntityResponse,
     summary="Update entity",
-    description="Update an existing {{ capability_name_lower }} entity."
+    description="Update an existing {{ capability_name_snake }} entity."
 )
 async def update_entity(
     entity_id: UUID,
@@ -253,7 +253,7 @@ async def update_entity(
     "/entities/{entity_id}",
     response_model=EntityResponse,
     summary="Partially update entity",
-    description="Update specific fields of an existing {{ capability_name_lower }} entity."
+    description="Update specific fields of an existing {{ capability_name_snake }} entity."
 )
 async def patch_entity(
     entity_id: UUID,
@@ -307,7 +307,7 @@ async def patch_entity(
     "/entities/{entity_id}",
     status_code=http_status.HTTP_204_NO_CONTENT,
     summary="Delete entity",
-    description="Delete a {{ capability_name_lower }} entity."
+    description="Delete a {{ capability_name_snake }} entity."
 )
 async def delete_entity(entity_id: UUID):
     """Delete an entity.
@@ -335,7 +335,7 @@ async def delete_entity(entity_id: UUID):
     "/entities/{entity_id}/status",
     response_model=EntityResponse,
     summary="Update entity status",
-    description="Update the status of a {{ capability_name_lower }} entity."
+    description="Update the status of a {{ capability_name_snake }} entity."
 )
 async def update_status(
     entity_id: UUID,

@@ -66,7 +66,7 @@ async def create_command(
     description: Optional[str],
     metadata: tuple
 ):
-    """Create a new {{ capability_name_lower }} entity.
+    """Create a new {{ capability_name_snake }} entity.
 
     Example:
         {{ package_name }} create "My Task" -d "Description" -m priority=high -m tags=important
@@ -123,7 +123,7 @@ async def create_command(
 @click.pass_context
 @async_command
 async def get_command(ctx: click.Context, entity_id: str):
-    """Get a {{ capability_name_lower }} entity by ID.
+    """Get a {{ capability_name_snake }} entity by ID.
 
     Example:
         {{ package_name }} get 123e4567-e89b-12d3-a456-426614174000
@@ -192,7 +192,7 @@ async def list_command(
     offset: int,
     limit: int
 ):
-    """List {{ capability_name_lower }} entities with optional filtering.
+    """List {{ capability_name_snake }} entities with optional filtering.
 
     Example:
         {{ package_name }} list
@@ -279,7 +279,7 @@ async def update_command(
     description: Optional[str],
     metadata: tuple
 ):
-    """Update a {{ capability_name_lower }} entity.
+    """Update a {{ capability_name_snake }} entity.
 
     At least one update field must be provided.
 
@@ -364,7 +364,7 @@ async def update_command(
 @click.pass_context
 @async_command
 async def delete_command(ctx: click.Context, entity_id: str, yes: bool):
-    """Delete a {{ capability_name_lower }} entity.
+    """Delete a {{ capability_name_snake }} entity.
 
     Example:
         {{ package_name }} delete 123e4567-e89b-12d3-a456-426614174000

@@ -10,7 +10,7 @@ Note: This interface is optional and only included when --enable-mcp flag is use
 
 from fastmcp import FastMCP
 
-from {{ package_name }}.core import create_{{ capability_name_lower }}_service
+from {{ package_name }}.core import create_{{ capability_name_snake }}_service
 from .tools import register_tools
 from .resources import register_resources
 
