@@ -252,9 +252,9 @@ class EventBus:
         return {
             "event_types": len(self._handlers),
             "total_subscribers": total_handlers,
-            "event_history_count": len(self._event_history),
+            "total_events": len(self._event_history),
             "max_history_size": self._max_history_size,
-            "subscriptions_by_type": {
+            "subscribers_by_type": {
                 event_type: len(handlers)
                 for event_type, handlers in self._handlers.items()
             }
