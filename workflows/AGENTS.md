@@ -276,13 +276,13 @@ git checkout v1.9.3
 **Example**: Generating test projects
 ```bash
 # Minimal project
-python scripts/create-model-mcp-server.py \
+python scripts/create-capability-server.py \
   --name "Minimal Test" \
   --namespace mintest \
   --output /tmp/minimal
 
 # Full-featured project
-python scripts/create-model-mcp-server.py \
+python scripts/create-capability-server.py \
   --name "Full Featured Test" \
   --namespace fulltest \
   --output /tmp/full
@@ -361,17 +361,17 @@ just pre-merge
 2. **Full-Featured Python Project**: All optional features enabled
 3. **Library Project**: No CLI, yes docs, yes tests
 4. **CLI Tool Project**: Yes CLI, yes tests
-5. **MCP Server** (with SAP-014): MCP-specific features, optional memory/Docker
+5. **Capability Server** (with SAP-047): Multi-interface (CLI/REST/MCP), optional registry/bootstrap/composition
 
 **Example**: Testing combinations
 ```bash
 # Test minimal project (no optional features)
-python scripts/create-model-mcp-server.py \
+python scripts/create-capability-server.py \
   --name "Minimal" --namespace min --output /tmp/min
 cd /tmp/min && pytest
 
 # Test full-featured project (all optional features)
-python scripts/create-model-mcp-server.py \
+python scripts/create-capability-server.py \
   --name "Full" --namespace full --output /tmp/full
 # Enable all features when prompted
 cd /tmp/full && pytest
@@ -746,7 +746,7 @@ just integration                    # Full integration test suite
 - **SAP-006 (Quality Gates)**: `just pre-merge` orchestrates all gates
 - **SAP-005 (CI/CD)**: Scripts power GitHub Actions workflows
 - **SAP-007 (Documentation)**: Documentation scripts validate Diátaxis
-- **SAP-014 (MCP Server)**: MCP-specific automation scripts
+- **SAP-047 (Capability Server Template)**: Multi-interface server generation scripts
 
 ### ROI Metrics
 
@@ -1088,7 +1088,7 @@ docker-compose top myproject
 
 - **SAP-005 (CI/CD)**: GitHub Actions uses Dockerfile.test for testing
 - **SAP-010 (Memory)**: Volume mounts for .chora/memory persistence
-- **SAP-014 (MCP Server)**: MCP server containerization
+- **SAP-047 (Capability Server Template)**: Multi-interface capability server containerization
 - **SAP-003 (Bootstrap)**: Docker artifacts included in fast-setup
 
 ### ROI Metrics

@@ -89,5 +89,14 @@
       "author": "chora-base-team",
       "note": "Timeline: Wave 5 completion Q1 2026 (v4.1.0). Pilot testing invitation extended to chora-workspace. Awaiting feedback on set composition and pilot interest."
     }
-  ]
+  ],
+  "light_plus_metadata": {
+    "intention_id": null,
+    "evidence_level": "B",
+    "user_demand_score": 8,
+    "effort_estimate_hours": 8,
+    "vision_wave_assignment": null,
+    "assigned_to_roadmap": "2026-Q1",
+    "status": "responded_deferred"
+  }
 }

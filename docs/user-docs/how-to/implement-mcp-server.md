@@ -1,14 +1,45 @@
 # How to Implement an MCP Server
 
-**Last Updated**: 2025-10-29
-**Time Estimate**: 30-60 minutes (first server)
-**Difficulty**: Intermediate
+**Last Updated**: 2025-11-12
+**Time Estimate**: 5 minutes (using SAP-047 template)
+**Difficulty**: Beginner
+
+---
+
+## ⚠️ RECOMMENDED APPROACH
+
+**For new projects, use SAP-047 (Capability Server Template) instead of this guide.**
+
+**Quick start**:
+```bash
+python scripts/create-capability-server.py \
+    --name "YourCapability" \
+    --namespace yournamespace \
+    --enable-mcp \
+    --output ~/projects/your-capability
+```
+
+**Benefits of SAP-047**:
+- 5-minute setup vs 30-60 minutes manual
+- Multi-interface support (CLI, REST, MCP)
+- Production-ready architectural patterns
+- Comprehensive documentation and tests included
+
+**See**: [SAP-047 Adoption Blueprint](../../skilled-awareness/capability-server-template/adoption-blueprint.md)
+
+---
+
+## Legacy Manual Implementation (SAP-014)
+
+This guide describes the legacy manual approach to implementing MCP-only servers. For reference only.
+
+**Status**: This approach is deprecated as of 2025-11-12. Use SAP-047 for new projects.
 
 ---
 
 ## Overview
 
-This guide walks you through implementing your first MCP server from scratch. For detailed reference, see [SAP-014 Adoption Blueprint](../../skilled-awareness/mcp-server-development/adoption-blueprint.md).
+This guide walks you through implementing your first MCP server from scratch. For detailed reference, see [SAP-014 Adoption Blueprint](../../skilled-awareness/mcp-server-development/adoption-blueprint.md) (deprecated).
 
 ---
 

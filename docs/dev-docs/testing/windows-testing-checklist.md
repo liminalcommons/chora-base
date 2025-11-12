@@ -19,7 +19,7 @@ Run these essential tests to verify basic Windows compatibility:
 python scripts/validate-windows-compat.py --scripts-only
 
 # 2. Test fast-setup
-python scripts/create-model-mcp-server.py --help
+python scripts/create-capability-server.py --help
 
 # 3. Test SAP listing (emoji output)
 python scripts/install-sap.py --list
@@ -62,7 +62,7 @@ Default Encoding: utf-8 or cp1252 (both work after our fixes)
 ### Test 1.1: Fast-Setup Script
 
 ```powershell
-python scripts/create-model-mcp-server.py --help
+python scripts/create-capability-server.py --help
 ```
 
 **Expected**:
@@ -121,7 +121,7 @@ python scripts/generate-sap.py SAP-999 --dry-run
 mkdir C:\test-chora-output -ErrorAction SilentlyContinue
 
 # Create project with emojis in description
-python scripts/create-model-mcp-server.py --name "Test Server" --output C:\test-chora-output\test-proj --namespace testns --description "Test with emoji: 🚀"
+python scripts/create-capability-server.py --name "Test Server" --output C:\test-chora-output\test-proj --namespace testns --description "Test with emoji: 🚀"
 ```
 
 **Expected**:
@@ -171,7 +171,7 @@ if (Test-Path .chora\memory\events\development.jsonl) {
 ### Test 3.1: Absolute Windows Paths
 
 ```powershell
-python scripts/create-model-mcp-server.py --name "Path Test" --output C:\Users\Public\test-mcp --namespace pathtest
+python scripts/create-capability-server.py --name "Path Test" --output C:\Users\Public\test-mcp --namespace pathtest
 ```
 
 **Expected**:
@@ -188,7 +188,7 @@ Remove-Item -Recurse -Force C:\Users\Public\test-mcp
 ### Test 3.2: User Profile Path
 
 ```powershell
-python scripts/create-model-mcp-server.py --name "Profile Test" --output $env:USERPROFILE\Desktop\test-mcp --namespace proftest
+python scripts/create-capability-server.py --name "Profile Test" --output $env:USERPROFILE\Desktop\test-mcp --namespace proftest
 ```
 
 **Expected**:
@@ -303,7 +303,7 @@ del scripts\test-new.sh
 ### Test 7.1: Intentional Error with Emoji
 
 ```powershell
-python scripts/create-model-mcp-server.py --name "Test" --output C:\nonexistent\path\project --namespace test
+python scripts/create-capability-server.py --name "Test" --output C:\nonexistent\path\project --namespace test
 ```
 
 **Expected**:
@@ -317,7 +317,7 @@ python scripts/create-model-mcp-server.py --name "Test" --output C:\nonexistent\
 
 ```powershell
 # Temporarily rename jinja2 (if you're brave!)
-# python scripts/create-model-mcp-server.py --help
+# python scripts/create-capability-server.py --help
 ```
 
 **Expected**:
@@ -381,7 +381,7 @@ jobs:
           python-version: '3.11'
       - run: pip install -r requirements.txt
       - run: python scripts/validate-windows-compat.py
-      - run: python scripts/create-model-mcp-server.py --help
+      - run: python scripts/create-capability-server.py --help
       - run: python scripts/install-sap.py --list
 ```
 

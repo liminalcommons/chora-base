@@ -109,7 +109,7 @@ Decide on your project details:
 - **Author Email**: Your email address
 - **GitHub Username**: Your GitHub handle
 
-**Auto-Derived** (create-model-mcp-server.py will calculate):
+**Auto-Derived** (create-capability-server.py will calculate):
 - **Project Slug**: Kebab-case (e.g., "mcp-github" from "MCP GitHub")
 - **Package Name**: Snake_case (e.g., "mcp_github" from "mcp-github")
 - **MCP Namespace**: No separators (e.g., "github" from "mcp_github")
@@ -137,7 +137,7 @@ Derived:
 Use the fast-setup script to create a "model citizen" MCP server with all chora-base infrastructure:
 
 ```bash
-python scripts/create-model-mcp-server.py \
+python scripts/create-capability-server.py \
     --name "MCP GitHub" \
     --namespace github \
     --output ~/projects/mcp-github
@@ -162,7 +162,7 @@ import subprocess
 
 # Run fast-setup script
 result = subprocess.run([
-    "python", "scripts/create-model-mcp-server.py",
+    "python", "scripts/create-capability-server.py",
     "--name", "MCP GitHub",
     "--namespace", "github",
     "--output", "/path/to/mcp-github",
@@ -174,7 +174,7 @@ print(result.stdout)
 
 **Historical Note**:
 - setup.py removed in Wave 3 Phase 5 (Oct 29, 2025, commit f7e5f26)
-- Replaced with create-model-mcp-server.py in v4.9.0 (Nov 6, 2025)
+- Replaced with create-capability-server.py in v4.9.0 (Nov 6, 2025)
 - New approach: Dynamic template rendering with decision profiles
 
 **Output** (expected):
@@ -273,7 +273,7 @@ Validating generated project...
 
 **Automated Validation (v4.9.0+)**:
 
-The create-model-mcp-server.py script automatically runs validation after generation. To manually re-validate:
+The create-capability-server.py script automatically runs validation after generation. To manually re-validate:
 
 ```bash
 cd /path/to/mcp-github
@@ -323,7 +323,7 @@ python /path/to/chora-base/scripts/validate-model-citizen.py --format json
 
 **All checks pass**: ✅ Generation successful, proceed to development
 
-**Any check fails**: Re-run create-model-mcp-server.py or fix issues manually
+**Any check fails**: Re-run create-capability-server.py or fix issues manually
 
 ### Step 5: Initial Development Setup
 

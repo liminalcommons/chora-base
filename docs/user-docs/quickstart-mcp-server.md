@@ -1,26 +1,29 @@
-# Quickstart: Create Your First MCP Server
+# Quickstart: Create Your First Capability Server (with MCP)
 
-**Time to First Server**: 5-10 minutes
+**Time to First Server**: 5 minutes
 
-This guide shows the fastest way to create a production-ready MCP server using chora-base's "model citizen" template.
+This guide shows the fastest way to create a production-ready **capability server with multi-interface support** (CLI, REST, and MCP) using chora-base's SAP-047 (Capability Server Template).
+
+**⚠️ SAP-014 Deprecation**: This guide replaces the old MCP-only approach (SAP-014). SAP-047 provides multi-interface capability servers vs. MCP-only servers.
 
 ---
 
 ## What You'll Get
 
-A fully-configured MCP server with:
+A production-ready capability server with MCP interface:
 
-- ✅ **FastMCP server** - Production-ready MCP implementation
+- ✅ **Multi-interface support** - CLI, REST, and MCP (SAP-043)
+- ✅ **Core/interface separation** - Clean architecture (SAP-042)
+- ✅ **Service registry** - Manifest-based discovery (SAP-044)
+- ✅ **Bootstrap startup** - Dependency-ordered initialization (SAP-045)
+- ✅ **Composition patterns** - Saga, circuit breaker, events (SAP-046)
 - ✅ **Task tracking** - Beads for multi-session memory (SAP-015)
 - ✅ **Testing** - pytest with 85% coverage target (SAP-004)
 - ✅ **CI/CD** - GitHub Actions workflows (SAP-005)
 - ✅ **Quality gates** - ruff, mypy, pre-commit hooks (SAP-006)
-- ✅ **Documentation** - Diátaxis 4-domain structure (SAP-007)
-- ✅ **Agent awareness** - AGENTS.md + CLAUDE.md (SAP-009)
-- ✅ **Memory system** - A-MEM event logging (SAP-010)
-- ✅ **Coordination** - Inbox for cross-repo work (SAP-001)
+- ✅ **Documentation** - Comprehensive AGENTS.md, API.md, CLI.md (SAP-007, 009)
 
-**Total setup time**: 5-10 minutes (vs. 30-40 minutes manual setup)
+**Total setup time**: 5 minutes (vs. 40-60 hours manual setup)
 
 ---
 
@@ -47,9 +50,10 @@ cd chora-base
 ## Step 2: Run Fast-Setup Script
 
 ```bash
-python scripts/create-model-mcp-server.py \
-    --name "Weather MCP Server" \
+python scripts/create-capability-server.py \
+    --name "Weather" \
     --namespace weather \
+    --enable-mcp \
     --output ~/projects/weather-mcp
 ```
 
@@ -65,7 +69,7 @@ python scripts/create-model-mcp-server.py \
 **Output**:
 ```
 ================================================================================
-✅ Model Citizen MCP Server Created Successfully!
+✅ Model Citizen Capability Server Created Successfully!
 ================================================================================
 
 📁 Location: /Users/you/projects/weather-mcp
@@ -302,9 +306,9 @@ pytest --cov=weather_mcp
 
 ## Summary
 
-You've created a production-ready MCP server in **5-10 minutes** with:
+You've created a production-ready **capability server with MCP interface** in **5-10 minutes** with:
 
-1. ✅ FastMCP server scaffold
+1. ✅ Multi-interface architecture (CLI, REST, MCP)
 2. ✅ Full testing infrastructure
 3. ✅ CI/CD pipelines
 4. ✅ Quality gates (ruff, mypy)
@@ -322,7 +326,10 @@ You've created a production-ready MCP server in **5-10 minutes** with:
 
 ## Resources
 
-- **SAP-014 (MCP Server Development)**: [docs/skilled-awareness/mcp-server-development/](../skilled-awareness/mcp-server-development/)
+- **SAP-047 (Capability Server Template)**: [docs/skilled-awareness/capability-server-template/](../skilled-awareness/capability-server-template/)
+- **SAP-042 (Interface Design)**: [docs/skilled-awareness/interface-design/](../skilled-awareness/interface-design/)
+- **SAP-043 (Multi-Interface)**: [docs/skilled-awareness/multi-interface/](../skilled-awareness/multi-interface/)
+- **SAP-014 (MCP Server Development)**: ⚠️ **DEPRECATED** - Use SAP-047 instead
 - **SAP-003 (Project Bootstrap)**: [docs/skilled-awareness/project-bootstrap/](../skilled-awareness/project-bootstrap/)
 - **Chora MCP Conventions v1.0**: [docs/standards/CHORA_MCP_CONVENTIONS_v1.0.md](../standards/CHORA_MCP_CONVENTIONS_v1.0.md)
 - **FastMCP Documentation**: [FastMCP API Reference](reference/fastmcp-api-reference.md)

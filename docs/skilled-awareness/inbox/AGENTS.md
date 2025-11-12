@@ -1,8 +1,8 @@
 ---
 sap_id: SAP-001
-version: 1.1.0
+version: 1.2.0
 status: active
-last_updated: 2025-10-31
+last_updated: 2025-11-11
 type: quick_reference
 audience: all_agents
 complexity: intermediate
@@ -25,8 +25,8 @@ tags:
 
 **Domain**: Inbox Coordination
 **SAP**: SAP-001 (inbox-protocol)
-**Version**: 1.1.0
-**Last Updated**: 2025-10-31
+**Version**: 1.2.0
+**Last Updated**: 2025-11-11
 
 ---
 
@@ -225,6 +225,220 @@ This domain AGENTS.md file integrates with the bidirectional translation layer (
 
 ---
 
+## Integration with SAP-012 (Light+ Framework)
+
+SAP-001 coordination requests serve as a primary input source for SAP-012 Light+ strategic planning, specifically feeding into **Phase 1.1 Discovery** to populate the intention inventory.
+
+### Light+ Integration Overview
+
+**What is Light+?**
+- 4-level planning construct hierarchy (Strategy → Releases → Features → Tasks)
+- Quarterly vision synthesis process
+- Evidence-based Wave 1/Wave 2 assignment criteria
+- Connects coordination requests to strategic roadmap
+
+**How Inbox Feeds Light+:**
+1. **Coordination requests** created in `inbox/coordination/` (SAP-001)
+2. **Phase 1.1 Discovery** reads active COORDs quarterly (SAP-012)
+3. **Intention analysis** extracts user need, evidence level, effort (SAP-012)
+4. **Wave assignment** determines Q4 (Wave 1) vs Q1 (Wave 2) (SAP-012)
+5. **Backlog cascade** creates beads epics from intentions (SAP-015)
+
+### User Signal Patterns for Light+ Integration
+
+| User Says | Formal Action | Tool/Command | Notes |
+|-----------|---------------|--------------|-------|
+| "run Phase 1.1 Discovery" | analyze_coords_as_intentions | Read active.jsonl + extract intentions | Quarterly workflow |
+| "analyze COORD as intention" | categorize_intention_evidence_level | Assess priority/urgency/source → A/B/C | Manual analysis |
+| "assign COORD to Wave 1" | update_coord_wave_assignment | jq '.light_plus_metadata.vision_wave_assignment = 1' | After wave criteria applied |
+| "find Wave 1 COORDs" | query_coords_by_wave | jq 'select(.light_plus_metadata.vision_wave_assignment == 1)' | Retrospective query |
+| "calculate COORD lead time" | measure_coord_to_shipped_time | Track created → shipped dates | Performance metric |
+| "what COORDs became roadmap items" | trace_coord_to_roadmap | Query intention_id linkage | Impact analysis |
+
+### Evidence Level Assessment Patterns
+
+**Pattern: Categorize COORD as Intention Evidence Level**
+
+```bash
+# Agent workflow for evidence level assessment
+
+# 1. Read COORD metadata
+priority=$(jq -r '.priority' inbox/coordination/COORD-2025-NNN.json)
+urgency=$(jq -r '.urgency' inbox/coordination/COORD-2025-NNN.json)
+requesting_repo=$(jq -r '.requesting_repo' inbox/coordination/COORD-2025-NNN.json)
+
+# 2. Apply evidence level rules
+if [[ "$priority" == "P0" || "$priority" == "P1" ]] && \
+   [[ "$urgency" == "blocks_sprint" || "$urgency" == "next_sprint" ]] && \
+   [[ "$requesting_repo" != *"chora-base"* ]]; then
+    evidence_level="A"  # Direct user feedback (external partner)
+elif [[ "$priority" == "P1" || "$priority" == "P2" ]] && \
+     [[ "$urgency" == "next_sprint" ]]; then
+    evidence_level="B"  # Inferred need (team request)
+else
+    evidence_level="C"  # Hypothetical (internal improvement)
+fi
+
+# 3. Update COORD with evidence level
+jq ".light_plus_metadata.evidence_level = \"$evidence_level\"" \
+    inbox/coordination/COORD-2025-NNN.json > tmp.json && \
+    mv tmp.json inbox/coordination/COORD-2025-NNN.json
+```
+
+### Quarterly Vision Synthesis Workflow
+
+**Pattern: Run Phase 1.1 Discovery for Quarterly Planning**
+
+```bash
+# Agent workflow at start of quarter (e.g., 2025-Q4)
+
+# 1. Read all active COORDs
+cat inbox/coordination/active.jsonl | jq 'select(.status == "active")' > /tmp/active_coords.jsonl
+
+# 2. For each COORD, create intention entry
+while read -r coord; do
+    coord_id=$(echo "$coord" | jq -r '.request_id')
+    title=$(echo "$coord" | jq -r '.title')
+    priority=$(echo "$coord" | jq -r '.priority')
+    urgency=$(echo "$coord" | jq -r '.urgency')
+    effort=$(echo "$coord" | jq -r '.estimated_effort // "unknown"')
+
+    # Derive evidence level (use pattern above)
+    evidence_level="B"  # Simplified; use full logic
+
+    # Calculate user demand score
+    affected_saps_count=$(echo "$coord" | jq -r '.affects_saps | length')
+    affected_domains_count=$(echo "$coord" | jq -r '.affects_domains | length')
+    user_demand=$((affected_saps_count * 3 + affected_domains_count * 2))
+
+    # Create intention inventory entry
+    echo "{
+        \"intention_id\": \"INT-2025-$(date +%s)\",
+        \"source\": \"$coord_id\",
+        \"description\": \"$title\",
+        \"evidence_level\": \"$evidence_level\",
+        \"user_demand\": $user_demand,
+        \"effort_hours\": \"$effort\"
+    }" >> .chora/planning/intentions/2025-Q4.jsonl
+done < /tmp/active_coords.jsonl
+
+# 3. Apply Wave 1 criteria (see SAP-012 protocol-spec.md for full criteria)
+# Evidence A+B ≥ 70%, user_demand ≥ 10, effort < 50h
+
+# 4. Update COORDs with wave assignments
+jq '.light_plus_metadata.vision_wave_assignment = 1' \
+    inbox/coordination/COORD-2025-NNN.json > tmp.json && \
+    mv tmp.json inbox/coordination/COORD-2025-NNN.json
+```
+
+### Wave Assignment Decision Tree
+
+**Agent Decision Pattern:**
+
+```
+Is COORD priority P0 or P1?
+├─ YES: Is urgency "blocks_sprint" or "next_sprint"?
+│   ├─ YES: Is requesting_repo external (not chora-base)?
+│   │   ├─ YES: Evidence Level A → Wave 1 candidate
+│   │   └─ NO: Evidence Level B → Wave 1 or 2 (check criteria)
+│   └─ NO: Evidence Level B → Wave 1 or 2 (check criteria)
+└─ NO: Is priority P2 and urgency "next_sprint"?
+    ├─ YES: Evidence Level B → Wave 1 or 2 (check criteria)
+    └─ NO: Evidence Level C → Wave 2 candidate (or deferred)
+
+Apply Wave 1 Criteria:
+- Evidence A+B ≥ 70% of total intentions?
+- User demand score ≥ 10?
+- Effort estimate < 50 hours?
+- Aligns with strategic themes?
+    ├─ ALL YES → Assign to Wave 1
+    └─ ANY NO → Defer to Wave 2
+```
+
+### Traceability Queries
+
+**Pattern: Track COORD through Light+ Pipeline**
+
+```bash
+# 1. Find intention created from COORD
+intention_id=$(jq -r '.light_plus_metadata.intention_id' inbox/coordination/COORD-2025-003.json)
+
+# 2. Find beads epic created from intention
+beads_epic=$(grep -r "$intention_id" .beads/issues.jsonl | jq -r '.id')
+
+# 3. Find all tasks spawned from epic
+beads_tasks=$(jq "select(.epic_id == \"$beads_epic\")" .beads/issues.jsonl)
+
+# 4. Calculate lead time
+created_date=$(jq -r '.created' inbox/coordination/COORD-2025-003.json)
+shipped_date=$(git log --grep="COORD-2025-003" --date=short --format="%ad" | head -1)
+lead_time_days=$(( ($(date -d "$shipped_date" +%s) - $(date -d "$created_date" +%s)) / 86400 ))
+
+echo "COORD-2025-003 → $intention_id → $beads_epic → $beads_tasks (lead time: $lead_time_days days)"
+```
+
+### Common Workflows
+
+**Workflow 1: Quarterly Phase 1.1 Discovery**
+1. User: "Run Phase 1.1 Discovery for Q4 2025"
+2. Agent reads active COORDs from `inbox/coordination/active.jsonl`
+3. Agent extracts intentions (description, evidence level, user demand, effort)
+4. Agent creates intention inventory in `.chora/planning/intentions/2025-Q4.jsonl`
+5. Agent updates COORDs with `light_plus_metadata.intention_id`
+
+**Workflow 2: COORD Wave Assignment**
+1. User: "Assign COORD-2025-003 to Wave 1"
+2. Agent applies Wave 1 criteria (evidence level, user demand, effort, alignment)
+3. Agent updates COORD: `jq '.light_plus_metadata.vision_wave_assignment = 1'`
+4. Agent emits `coordination_request_updated` event to `events.jsonl`
+5. Agent responds to requesting repo with wave assignment decision
+
+**Workflow 3: COORD Lead Time Analysis**
+1. User: "Calculate lead time for COORD-2025-003"
+2. Agent reads `created` field from COORD JSON
+3. Agent finds shipped date via `git log --grep="COORD-2025-003"`
+4. Agent calculates days: `(shipped - created) / 86400`
+5. Agent reports: "COORD-2025-003 lead time: 14 days"
+
+### Integration Benefits
+
+**For Strategic Planning:**
+- Coordination requests drive evidence-based roadmap decisions
+- Transparent Wave 1 vs Wave 2 assignment criteria
+- Traceability from ecosystem need → shipped feature
+
+**For Ecosystem Partners:**
+- Visibility into how COORDs become roadmap items
+- Predictable SLA for wave assignment decisions (quarterly review)
+- Accountability via lead time metrics
+
+**For Retrospectives:**
+- Measure % of shipped features sourced from ecosystem coordination
+- Identify bottlenecks (COORDs stuck in discovery > 14 days)
+- Evidence-based process improvements
+
+### Light+ Metadata Schema
+
+**Optional COORD fields (v1.2.0+):**
+
+```json
+{
+  "light_plus_metadata": {
+    "intention_id": "INT-2025-005",
+    "evidence_level": "A",
+    "user_demand_score": 12,
+    "effort_estimate_hours": 24,
+    "vision_wave_assignment": 1,
+    "assigned_to_roadmap": "2025-Q4",
+    "status": "in_wave_1"
+  }
+}
+```
+
+**See**: [protocol-spec.md Section 15](protocol-spec.md#15-light-planning-framework-integration) for complete Light+ integration specification
+
+---
+
 ## Related SAPs
 
 - **SAP-000** (sap-framework): Defines SAP structure and governance
@@ -235,5 +449,6 @@ This domain AGENTS.md file integrates with the bidirectional translation layer (
 ---
 
 **Version History**:
+- **1.2.0** (2025-11-11): Added Light+ Framework Integration section (SAP-012), user signal patterns, workflows, decision trees
 - **1.1.0** (2025-10-31): Added User Signal Patterns section for bidirectional translation layer integration
 - **1.0.0** (2025-10-31): Initial domain AGENTS.md for inbox protocol

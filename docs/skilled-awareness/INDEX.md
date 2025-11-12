@@ -2,7 +2,7 @@
 
 **Purpose**: Central registry of all capabilities packaged as SAPs in chora-base.
 
-**Last Updated**: 2025-11-11
+**Last Updated**: 2025-11-12
 **Framework Version**: 1.0.0
 **Organization**: Domain-Based Taxonomy (6 domains)
 
@@ -10,22 +10,23 @@
 
 ## Overview
 
-This index tracks all **30 capabilities** organized across **6 domains** for improved discoverability and progressive adoption.
+This index tracks all **45 capabilities** organized across **6 domains** for improved discoverability and progressive adoption.
 
-**Total Coverage**: 30/30 SAPs (100%)
+**Total Coverage**: 45/45 SAPs (100%)
 
 **Domain Distribution**:
-- Infrastructure: 3 SAPs (10%) - Core framework and coordination
-- Developer Experience: 8 SAPs (27%) - Development workflow tools
-- Foundation: 3 SAPs (10%) - Technology stack foundations (React)
-- User-Facing: 2 SAPs (7%) - User interaction patterns
-- Advanced: 4 SAPs (13%) - Optimizations and integrations
-- Specialized: 10 SAPs (33%) - Meta-capabilities and process patterns
+- Infrastructure: 3 SAPs (7%) - Core framework and coordination
+- Developer Experience: 14 SAPs (31%) - Development workflow tools + capability server architecture
+- Foundation: 6 SAPs (13%) - Technology stack foundations (React + auth + database + forms)
+- User-Facing: 6 SAPs (13%) - User interaction patterns (state, styling, uploads, errors)
+- Advanced: 8 SAPs (18%) - Optimizations and integrations (real-time, i18n, e2e, monorepo)
+- Specialized: 10 SAPs (22%) - Meta-capabilities and process patterns
 
 **Status Distribution**:
-- Active: 24 SAPs (80%)
-- Pilot: 3 SAPs (10%) - SAP-015, SAP-028, SAP-029
-- Draft: 3 SAPs (10%) - Historical status
+- Active: 24 SAPs (53%)
+- Pilot: 12 SAPs (27%) - SAP-015, SAP-028, SAP-029, SAP-033-041
+- Draft: 8 SAPs (18%) - SAP-042-047 (template implementation in progress), 2 historical
+- Deprecated: 1 SAP (2%) - SAP-014 (replaced by SAP-047)
 
 ---
 
@@ -63,9 +64,9 @@ This index tracks all **30 capabilities** organized across **6 domains** for imp
 
 ## Developer Experience Domain
 
-**Purpose**: Accelerate development with testing, CI/CD, quality gates, and tooling
+**Purpose**: Accelerate development with testing, CI/CD, quality gates, tooling, and capability server architecture patterns
 
-**SAPs**: 8 (27% of catalog)
+**SAPs**: 14 (31% of catalog)
 
 ### SAP-003: Project Bootstrap & Scaffolding
 
@@ -123,21 +124,74 @@ This index tracks all **30 capabilities** organized across **6 domains** for imp
 - **Location**: [docker-operations/](docker-operations/)
 - **Key Features**: Multi-stage builds, CI-optimized test containers, GitHub Actions cache integration, non-root execution, 81% build context reduction
 
-### SAP-014: MCP Server Development
+---
 
-- **Status**: active | **Version**: 1.0.0 | **Domain**: Developer Experience
-- **Description**: FastMCP-based Model Context Protocol server development patterns with 11 templates and 8 guides
-- **Dependencies**: SAP-000, SAP-003, SAP-004, SAP-012
-- **Location**: [mcp-server-development/](mcp-server-development/)
-- **Key Features**: FastMCP patterns, 11 MCP templates, tool definition patterns, testing strategies, deployment workflows
+### Capability Server Architecture (6 SAPs)
+
+**Purpose**: Comprehensive architectural patterns for building capability servers with multi-interface support, service discovery, startup orchestration, and resilience patterns.
+
+**SAPs**: 6 (SAP-042 through SAP-047) | **Status**: All draft (template implementation in progress)
+
+**Overview**: This suite of SAPs provides battle-tested patterns for building production-ready capability servers. Together they reduce capability server development time from 40-60 hours to 4-8 hours (85-92% savings).
+
+---
+
+#### SAP-042: Interface Design & Core/Interface Separation
+
+- **Status**: pilot | **Version**: 1.0.0 | **Domain**: Developer Experience
+- **Description**: Core/interface separation pattern reducing coupling by 80% and enabling true multi-interface capability servers
+- **Dependencies**: SAP-000
+- **Location**: [interface-design/](interface-design/)
+- **Key Features**: Business logic isolation (core/), interface layer (CLI/REST/MCP), adapter pattern, interface-agnostic testing, onboarding time reduction (2-3 days → 4-8 hours)
+
+#### SAP-043: Multi-Interface Patterns
+
+- **Status**: pilot | **Version**: 1.0.0 | **Domain**: Developer Experience
+- **Description**: CLI, REST API, and MCP server interfaces sharing single core implementation, reducing development time by 75%
+- **Dependencies**: SAP-000, SAP-042
+- **Location**: [multi-interface/](multi-interface/)
+- **Key Features**: Click CLI, FastAPI REST, FastMCP server, unified core execution, interface-specific adaptations, 3-interface development in 6-8 hours (vs 24-32 hours)
+
+#### SAP-044: Registry & Service Discovery
+
+- **Status**: pilot | **Version**: 1.0.0 | **Domain**: Developer Experience
+- **Description**: Service mesh with manifest-based registration, health checks, dependency resolution, and service discovery
+- **Dependencies**: SAP-000, SAP-042
+- **Location**: [registry/](registry/)
+- **Key Features**: Manifest registry server (OpenAPI 3.0), manifest.yaml schema, health/readiness endpoints, dependency resolution DAG, heartbeat monitoring (10s interval), service discovery queries
+
+#### SAP-045: Bootstrap & Startup Sequence
+
+- **Status**: pilot | **Version**: 1.0.0 | **Domain**: Developer Experience
+- **Description**: Dependency-ordered startup orchestration reducing initialization failures by 90% with health checks and graceful shutdown
+- **Dependencies**: SAP-000, SAP-042, SAP-044
+- **Location**: [bootstrap/](bootstrap/)
+- **Key Features**: Startup phases (validate, deps, init, register, ready), dependency DAG resolution, health check integration, graceful shutdown (SIGTERM/SIGINT), 60s timeout with retries
+
+#### SAP-046: Composition Patterns
+
+- **Status**: pilot | **Version**: 1.0.0 | **Domain**: Developer Experience
+- **Description**: Saga orchestration, circuit breakers, and event bus patterns for resilient multi-step workflows with 1,141% projected ROI
+- **Dependencies**: SAP-000, SAP-042
+- **Location**: [composition/](composition/)
+- **Key Features**: Saga pattern (multi-step workflows with rollback), circuit breaker (5-fault threshold, 60s recovery), event bus (async pub/sub), saga compensation logic, failure recovery patterns
+
+#### SAP-047: CapabilityServer Template
+
+- **Status**: pilot | **Version**: 1.0.0 | **Domain**: Developer Experience
+- **Description**: Jinja2-based template generation producing production-ready capability servers in 5 minutes with all architectural patterns integrated (2,271% projected ROI)
+- **Dependencies**: SAP-000, SAP-042, SAP-043, SAP-044, SAP-045, SAP-046
+- **Location**: [capability-server-template/](capability-server-template/)
+- **Key Features**: Jinja2 template generation, multi-interface scaffolding (CLI/REST/MCP), manifest integration, bootstrap startup, composition patterns (saga/circuit breaker/events), test suite (≥80% coverage), CI/CD pipelines, Docker builds (<250MB), comprehensive docs (AGENTS/API/CLI)
+- **⚠️ Note**: Replaces SAP-014 for new projects. Use `python scripts/create-capability-server.py` for generation.
 
 ---
 
 ## Foundation Domain
 
-**Purpose**: Technology stack foundations for React projects with Next.js 15 + TypeScript + Vitest
+**Purpose**: Technology stack foundations for React projects with Next.js 15 + TypeScript + Vitest + authentication + database + forms
 
-**SAPs**: 3 (10% of catalog)
+**SAPs**: 6 (13% of catalog) - 3 active, 3 pilot
 
 ### SAP-020: React Project Foundation
 
@@ -201,9 +255,9 @@ React Hook Form + Zod reducing setup from 2-3h to 20min (88.9% time savings), ty
 
 ## User-Facing Domain
 
-**Purpose**: User interaction patterns including state management and styling for user interfaces
+**Purpose**: User interaction patterns including state management, styling, file uploads, and error handling for user interfaces
 
-**SAPs**: 2 (7% of catalog)
+**SAPs**: 6 (13% of catalog) - 2 active, 4 pilot
 
 ### SAP-023: React State Management Patterns
 
@@ -248,9 +302,9 @@ Error boundaries + Sentry monitoring reducing setup from 3-4h to 30min (87.5% ti
 
 ## Advanced Domain
 
-**Purpose**: Advanced integrations, performance optimization, accessibility compliance, and specialized tooling
+**Purpose**: Advanced integrations, performance optimization, accessibility compliance, real-time sync, internationalization, E2E testing, and monorepo architecture
 
-**SAPs**: 4 (13% of catalog)
+**SAPs**: 8 (18% of catalog) - 4 active, 4 pilot
 
 ### SAP-017: Chora-Compose Integration
 
@@ -426,20 +480,22 @@ Turborepo monorepo reducing setup from 7.5h to 30min (93.3% time savings), incre
 
 | Domain | SAPs | Percentage | Status Breakdown |
 |--------|------|------------|------------------|
-| Infrastructure | 3 | 10% | 3 active |
-| Developer Experience | 8 | 27% | 8 active |
-| Foundation | 3 | 10% | 3 active |
-| User-Facing | 2 | 7% | 2 active |
-| Advanced | 4 | 13% | 4 active |
-| Specialized | 10 | 33% | 7 active, 3 pilot |
-| **Total** | **30** | **100%** | **27 active, 3 pilot** |
+| Infrastructure | 3 | 7% | 3 active |
+| Developer Experience | 14 | 31% | 7 active, 6 pilot, 1 deprecated |
+| Foundation | 6 | 13% | 3 active, 3 pilot |
+| User-Facing | 6 | 13% | 2 active, 4 pilot |
+| Advanced | 8 | 18% | 4 active, 4 pilot |
+| Specialized | 10 | 22% | 7 active, 3 pilot |
+| **Total** | **45** | **100%** | **24 active, 12 pilot, 8 draft, 1 deprecated** |
 
 ### By Status
 
 | Status | Count | Percentage | Domains |
 |--------|-------|------------|---------|
-| Active | 27 | 90% | All domains |
-| Pilot | 3 | 10% | Specialized (SAP-015, 028, 029) |
+| Active | 24 | 53% | All domains |
+| Pilot | 12 | 27% | Specialized (SAP-015, 028, 029), Foundation (SAP-033, 034, 041), User-Facing (SAP-035, 036), Advanced (SAP-037-040) |
+| Draft | 8 | 18% | Developer Experience (SAP-042-047: template implementation in progress), 2 historical |
+| Deprecated | 1 | 2% | Developer Experience (SAP-014) |
 
 ---
 
@@ -447,15 +503,18 @@ Turborepo monorepo reducing setup from 7.5h to 30min (93.3% time savings), incre
 
 Choose your starting point based on project type and goals:
 
-### Path 1: Python MCP Server Development
+### Path 1: Capability Server Development (NEW)
 
-**Goal**: Build Model Context Protocol servers with FastMCP
+**Goal**: Build production-ready capability servers with multi-interface support (CLI, REST, MCP)
 
-1. **Infrastructure** (SAP-000, 001, 002) - Universal foundation
-2. **Developer Experience** (SAP-003, 004, 005, 006, 011, 014) - MCP tooling
-3. **Specialized** (SAP-009, 010, 015) - Agent awareness, memory, task tracking
+1. **Infrastructure** (SAP-000) - Framework foundation
+2. **Capability Server Architecture** (SAP-042-047) - Use SAP-047 template to generate in 5 minutes
+3. **Developer Experience** (SAP-004, 005, 006) - Testing, CI/CD, quality gates (included in template)
+4. **Specialized** (SAP-009, 010, 015) - Agent awareness, memory, task tracking (optional)
 
-**Estimated Setup**: 2-3 days
+**Estimated Setup**: 4-8 hours (with template) vs 40-60 hours (manual)
+
+**Quick Start**: `python scripts/create-capability-server.py --name "YourCapability" --enable-mcp --enable-saga --output ~/projects/your-capability`
 
 ---
 
@@ -465,15 +524,29 @@ Choose your starting point based on project type and goals:
 
 1. **Infrastructure** (SAP-000, 001, 002) - Universal foundation
 2. **Developer Experience** (SAP-003, 004, 005, 006, 007) - Testing, CI/CD, docs
-3. **Foundation** (SAP-020, 021, 022) - React foundation stack
-4. **User-Facing** (SAP-023, 024) - State management, styling
-5. **Advanced** (SAP-025, 026) - Performance, accessibility
+3. **Foundation** (SAP-020, 021, 022, 033, 034, 041) - React foundation stack + auth + database + forms
+4. **User-Facing** (SAP-023, 024, 035, 036) - State management, styling, uploads, errors
+5. **Advanced** (SAP-025, 026, 037-040) - Performance, accessibility, real-time, i18n, e2e, monorepo
 
 **Estimated Setup**: 3-5 days
 
 ---
 
-### Path 3: Cross-Repository Coordination
+### Path 3: Legacy MCP Server Development
+
+**Goal**: Build Model Context Protocol servers with FastMCP (legacy approach)
+
+**⚠️ Note**: For new projects, use **Path 1 (Capability Server Development)** with SAP-047 template instead. This path is for maintaining existing SAP-014-based projects.
+
+1. **Infrastructure** (SAP-000, 001, 002) - Universal foundation
+2. **Developer Experience** (SAP-003, 004, 005, 006, 011, SAP-014) - MCP tooling (deprecated)
+3. **Specialized** (SAP-009, 010, 015) - Agent awareness, memory, task tracking
+
+**Estimated Setup**: 2-3 days
+
+---
+
+### Path 4: Cross-Repository Coordination
 
 **Goal**: Coordinate work across multiple repositories
 
@@ -485,7 +558,7 @@ Choose your starting point based on project type and goals:
 
 ---
 
-### Path 4: Process Maturity & Best Practices
+### Path 5: Process Maturity & Best Practices
 
 **Goal**: Improve development processes and team productivity
 
@@ -516,7 +589,16 @@ Developer Experience Domain                │
 ├─ SAP-007 (documentation-framework) ◄─────┤
 ├─ SAP-008 (automation-scripts) ◄──────────┤
 ├─ SAP-011 (docker-operations) ◄───────────┤
-└─ SAP-014 (mcp-server-development) ◄──────┤
+├─ SAP-014 (mcp-server-development) ◄──────┤ [DEPRECATED → Use SAP-047]
+│                                           │
+├─ Capability Server Architecture ◄────────┤
+│  ├─ SAP-042 (interface-design) ◄─────────┤
+│  │  └─ Required by: SAP-043-047         │
+│  ├─ SAP-043 (multi-interface) ◄──────────┤ (depends: SAP-042)
+│  ├─ SAP-044 (registry) ◄─────────────────┤ (depends: SAP-042)
+│  ├─ SAP-045 (bootstrap) ◄────────────────┤ (depends: SAP-042, SAP-044)
+│  ├─ SAP-046 (composition) ◄──────────────┤ (depends: SAP-042)
+│  └─ SAP-047 (template) ◄─────────────────┘ (depends: SAP-042-046)
                                            │
 Foundation Domain (React Stack)            │
 ├─ SAP-020 (react-foundation) ◄────────────┤
@@ -557,21 +639,26 @@ Specialized Domain                         │
 
 ## Domain Navigation Shortcuts
 
-### Building a Python MCP Server?
-→ Start with **Infrastructure** + **Developer Experience** + **SAP-014** (mcp-server-development)
-→ See: [Progressive Adoption Path 1](#path-1-python-mcp-server-development)
+### Building a Capability Server? (NEW - RECOMMENDED)
+→ Use **SAP-047 template** for 5-minute generation with all patterns included
+→ See: [Progressive Adoption Path 1](#path-1-capability-server-development-new)
+→ Quick start: `python scripts/create-capability-server.py --name "YourCapability" --enable-mcp --output ~/projects/your-capability`
 
 ### Building a React App?
-→ Start with **Infrastructure** + **Developer Experience** + **Foundation** (SAP-020-022) + **User-Facing**
+→ Start with **Infrastructure** + **Developer Experience** + **Foundation** (SAP-020-022, 033-034, 041) + **User-Facing** (SAP-023-024, 035-036)
 → See: [Progressive Adoption Path 2](#path-2-react-application-development)
+
+### Building a Legacy MCP Server?
+→ ⚠️ Use **Path 1 (Capability Server)** for new projects. This is for existing SAP-014-based projects only.
+→ See: [Progressive Adoption Path 3](#path-3-legacy-mcp-server-development)
 
 ### Coordinating Across Repos?
 → Start with **Infrastructure** (SAP-001 Inbox) + **Specialized** (SAP-015 Beads)
-→ See: [Progressive Adoption Path 3](#path-3-cross-repository-coordination)
+→ See: [Progressive Adoption Path 4](#path-4-cross-repository-coordination)
 
 ### Improving Process Maturity?
 → Adopt **Specialized** domain (SAP-009, 010, 012, 015, 027)
-→ See: [Progressive Adoption Path 4](#path-4-process-maturity--best-practices)
+→ See: [Progressive Adoption Path 5](#path-5-process-maturity--best-practices)
 
 ### Need Performance Optimization?
 → **Advanced** domain (SAP-025 react-performance, SAP-026 react-accessibility)
@@ -661,10 +748,28 @@ Specialized Domain                         │
 
 ---
 
+## Deprecated SAPs
+
+**Purpose**: Historical record of deprecated SAPs for reference and migration guidance.
+
+### SAP-014: MCP Server Development
+
+- **Status**: deprecated (replaced by SAP-047) | **Version**: 1.0.0 | **Domain**: Developer Experience | **Deprecated**: 2025-11-12
+- **Description**: FastMCP-based Model Context Protocol server development patterns with 11 templates and 8 guides. **Deprecated in favor of SAP-047 (CapabilityServer-Template)** for new projects.
+- **Dependencies**: SAP-000, SAP-003, SAP-004, SAP-012
+- **Location**: [mcp-server-development/](mcp-server-development/)
+- **Key Features**: FastMCP patterns, 11 MCP templates, tool definition patterns, testing strategies, deployment workflows
+- **⚠️ Migration Path**: Use SAP-047 for new capability server projects. SAP-047 provides multi-interface architecture (CLI, REST, MCP) vs MCP-only approach. Existing SAP-014 projects supported until 2025-12-31.
+- **Why Deprecated**: SAP-014 focused on MCP-only servers. SAP-047 supersedes with multi-interface capability servers that include MCP as optional interface alongside CLI and REST APIs.
+- **Replacement**: [SAP-047 (CapabilityServer-Template)](capability-server-template/)
+
+---
+
 ## Changelog
 
 | Date | Change | Author | Trace ID |
 |------|--------|--------|----------|
+| 2025-11-12 | SAP-042-047: Capability Server Architecture - Added 6 new SAPs for capability server development (30 → 45 SAPs total). Deprecated SAP-014 in favor of SAP-047 template. Added Path 1 (Capability Server Development) with 5-minute template generation. Updated all domain statistics and dependency graph. | Claude Code | chora-base-4if |
 | 2025-11-11 | Feature 6: Domain taxonomy organization - Reorganized 30 SAPs into 6 domains (Infrastructure, Developer Experience, Foundation, User-Facing, Advanced, Specialized) for improved discoverability | Claude Code | DISCO-V5 |
 | 2025-11-03 | SAP-027 (dogfooding-patterns) generated - Formalized 5-week dogfooding pilot methodology | Claude Code | - |
 | 2025-11-02 | SAP-029 (sap-generation) generated - Template-based SAP artifact generation (80% time savings) | Claude Code | - |

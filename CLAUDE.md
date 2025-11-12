@@ -1,9 +1,9 @@
 # Chora-Base: Claude Agent Awareness (Root)
 
 **Project**: chora-base
-**Version**: 4.10.0
+**Version**: 5.0.0
 **Claude Compatibility**: Sonnet 4.5+
-**Last Updated**: 2025-11-06
+**Last Updated**: 2025-11-12
 
 ---
 
@@ -18,15 +18,18 @@
 **✅ YES** → Use the fast-setup script (recommended):
 
 ```bash
-python scripts/create-model-mcp-server.py \
-    --name "Your Project Name" \
+python scripts/create-capability-server.py \
+    --name "Your Capability Name" \
     --namespace yournamespace \
+    --enable-mcp \
     --output ~/projects/your-project
 ```
 
-**What happens**: 1-2 minutes of automated setup creating a fully-configured model citizen MCP server with all chora-base infrastructure (testing, CI/CD, quality gates, beads, inbox, A-MEM, documentation).
+**What happens**: 5 minutes of automated setup creating a production-ready capability server with multi-interface support (CLI, REST, optional MCP) and all chora-base infrastructure (testing, CI/CD, quality gates, beads, inbox, A-MEM, documentation).
 
-**See**: [README.md](README.md#-start-here-ai-agent-quick-decision-tree) or [Quickstart Guide](docs/user-docs/quickstart-mcp-server.md)
+**See**: [README.md](README.md#-start-here-ai-agent-quick-decision-tree) | [SAP-047 (Capability Server Template)](docs/skilled-awareness/capability-server-template/)
+
+**⚠️ SAP-014 Deprecation**: If you see references to SAP-014 (mcp-server-development) or `create-model-mcp-server.py` in older documentation, these have been **deprecated**. Use SAP-047 (capability-server-template) and `create-capability-server.py --enable-mcp` instead. SAP-047 provides multi-interface capability servers (CLI, REST, optional MCP) vs MCP-only.
 
 ---
 
@@ -542,9 +545,9 @@ bash scripts/validate-awareness-links.sh
 
 ## Quick Reference: SAP Catalog
 
-**Organization**: 39 SAPs across 6 domains for progressive adoption
+**Organization**: 45 SAPs across 6 domains for progressive adoption
 
-**Domain Distribution**: Infrastructure (3) • Developer Experience (8) • Foundation (6) • User-Facing (4) • Advanced (8) • Specialized (10)
+**Domain Distribution**: Infrastructure (3) • Developer Experience (14) • Foundation (6) • User-Facing (4) • Advanced (8) • Specialized (10)
 
 ---
 
@@ -560,9 +563,9 @@ bash scripts/validate-awareness-links.sh
 
 ---
 
-### Developer Experience Domain (Development Tools - 8 SAPs)
+### Developer Experience Domain (Development Tools - 14 SAPs)
 
-**Purpose**: Accelerate development with testing, CI/CD, quality gates, and tooling
+**Purpose**: Accelerate development with testing, CI/CD, quality gates, tooling, and capability server architecture
 
 | SAP | Name | Status | Description |
 |-----|------|--------|-------------|
@@ -573,7 +576,13 @@ bash scripts/validate-awareness-links.sh
 | SAP-007 | documentation-framework | active | Diátaxis 4-domain architecture |
 | SAP-008 | automation-scripts | active | 25 scripts + justfile (30+ commands) |
 | SAP-011 | docker-operations | active | Multi-stage Dockerfiles (150-250MB) |
-| SAP-014 | mcp-server-development | active | FastMCP patterns + 11 templates |
+| SAP-014 | mcp-server-development | deprecated | FastMCP patterns (use SAP-047) |
+| SAP-042 | interface-design | pilot | Core/interface separation (80% coupling reduction) |
+| SAP-043 | multi-interface | pilot | CLI/REST/MCP patterns (75% time savings) |
+| SAP-044 | registry | pilot | Service mesh with capability discovery |
+| SAP-045 | bootstrap | pilot | Dependency-ordered startup (90% failure reduction) |
+| SAP-046 | composition | pilot | Saga orchestration + circuit breakers + event bus (1,141% ROI) |
+| SAP-047 | capability-server-template | pilot | Cookiecutter template (5-min setup, 2,271% ROI) |
 
 ---
 
@@ -643,8 +652,9 @@ bash scripts/validate-awareness-links.sh
 
 ### Domain Navigation Shortcuts
 
-**Building a Python MCP server?**
-→ Infrastructure + Developer Experience + SAP-014 (mcp-server-development)
+**Building a capability server?**
+→ Use SAP-047 (capability-server-template) - 5-minute setup with `scripts/create-capability-server.py`
+→ Infrastructure + Developer Experience (SAP-042-047: multi-interface, registry, bootstrap, composition)
 
 **Building a React app?**
 → Infrastructure + Developer Experience + Foundation (SAP-020-022) + User-Facing (SAP-023-024)

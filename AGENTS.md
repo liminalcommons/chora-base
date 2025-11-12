@@ -5,9 +5,8 @@ nested_files:
   - "workflows/AGENTS.md"
   - "getting-started/AGENTS.md"
   - "scripts/AGENTS.md"
-  - "tests/AGENTS.md"
 version: 2.0.0
-last_updated: 2025-11-10
+last_updated: 2025-11-12
 ---
 
 # AGENTS.md - chora-base Template Repository
@@ -215,7 +214,7 @@ Before writing Python scripts, read: [scripts/AGENTS.md](scripts/AGENTS.md) for 
 - **Repository Type**: Template repository (generates other projects, NOT a project itself)
 - **Primary Users**: Human developers and AI agents generating/maintaining Python projects
 - **Technology Stack**: Static scaffolding (`static-template/`), Skilled Awareness Packages (SAPs)
-- **Current Version**: v1.9.3 (see [CHANGELOG.md](CHANGELOG.md))
+- **Current Version**: v5.0.0 (see [CHANGELOG.md](CHANGELOG.md))
 - **SAP Count**: 45 capabilities (see [saps/AGENTS.md](saps/AGENTS.md))
 
 ### Key Concepts
@@ -237,12 +236,39 @@ Before writing Python scripts, read: [scripts/AGENTS.md](scripts/AGENTS.md) for 
 ```
 /AGENTS.md (you are here) - Root navigation + critical workflows
 │
-├─ saps/AGENTS.md          - SAP catalog and quick references (30+ SAPs)
-├─ workflows/AGENTS.md     - Development processes and automation
-├─ getting-started/AGENTS.md - Onboarding guide for new contributors
-├─ scripts/AGENTS.md       - Script patterns and cross-platform requirements
-└─ tests/AGENTS.md         - Testing patterns and validation
+├─ getting-started/AGENTS.md     - Onboarding guide for new contributors
+├─ saps/AGENTS.md                - SAP catalog and quick references (45 SAPs)
+├─ workflows/AGENTS.md           - Development processes and automation
+├─ scripts/AGENTS.md             - Script patterns and cross-platform requirements
+│
+└─ docs/                         - Domain-specific documentation
+   ├─ skilled-awareness/         - SAP capabilities (45 SAPs)
+   │  ├─ AGENTS.md               - SAP catalog and adoption patterns
+   │  ├─ CLAUDE.md               - Claude-specific SAP navigation
+   │  └─ {sap-name}/             - Individual SAP directories
+   │     ├─ AGENTS.md            - SAP-specific patterns
+   │     ├─ capability-charter.md
+   │     ├─ protocol-spec.md
+   │     ├─ adoption-blueprint.md
+   │     └─ ledger.md
+   │
+   ├─ dev-docs/                  - Developer documentation
+   │  ├─ AGENTS.md               - Development patterns
+   │  ├─ CLAUDE.md               - Claude development workflows
+   │  └─ ... (architecture, contributing, etc.)
+   │
+   ├─ user-docs/                 - User-facing documentation
+   │  ├─ AGENTS.md               - User guidance patterns
+   │  ├─ CLAUDE.md               - Claude user support
+   │  └─ ... (getting started, tutorials, reference)
+   │
+   └─ project-docs/              - Project management
+      ├─ AGENTS.md               - Project coordination patterns
+      ├─ CLAUDE.md               - Claude project navigation
+      └─ ... (plans, decisions, retrospectives)
 ```
+
+**Principle**: "Nearest file wins" - navigate from root → domain → capability → feature, progressively loading context as needed.
 
 ### When to Use Each File
 
@@ -270,11 +296,29 @@ Before writing Python scripts, read: [scripts/AGENTS.md](scripts/AGENTS.md) for 
 - User needs cross-platform patterns
 - User asks "how do I write scripts?"
 
-**Use [tests/AGENTS.md](tests/AGENTS.md) when**:
-- User wants to write tests
-- User wants to run test suite
-- User wants to validate template
-- User asks "how do I test?"
+**Use [docs/skilled-awareness/AGENTS.md](docs/skilled-awareness/AGENTS.md) when**:
+- User wants comprehensive SAP catalog with full metadata
+- User needs SAP adoption patterns and integration examples
+- User asks "how do SAPs work together?"
+- User wants to navigate to specific SAP documentation
+
+**Use [docs/dev-docs/AGENTS.md](docs/dev-docs/AGENTS.md) when**:
+- User wants to understand chora-base architecture
+- User wants to contribute to chora-base development
+- User asks "how is chora-base built?"
+- User needs design decisions and technical details
+
+**Use [docs/user-docs/AGENTS.md](docs/user-docs/AGENTS.md) when**:
+- User wants tutorials and how-to guides
+- User needs reference documentation
+- User asks "how do I use feature X?"
+- User wants FAQ and troubleshooting
+
+**Use [docs/project-docs/AGENTS.md](docs/project-docs/AGENTS.md) when**:
+- User wants to see project roadmap and plans
+- User wants to understand governance and decisions
+- User asks "what's the project status?"
+- User wants to coordinate work across the project
 
 ---
 

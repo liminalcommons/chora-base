@@ -1,8 +1,8 @@
 ---
 sap_id: SAP-001
-version: 1.0.0
+version: 1.2.0
 status: active
-last_updated: 2025-11-04
+last_updated: 2025-11-11
 type: reference
 audience: claude_code
 complexity: intermediate
@@ -19,8 +19,9 @@ phase_3_token_estimate: 9500
 # Inbox Protocol (SAP-001) - Claude-Specific Awareness
 
 **SAP ID**: SAP-001
+**Version**: 1.2.0
 **Claude Compatibility**: Sonnet 4.5+
-**Last Updated**: 2025-11-04
+**Last Updated**: 2025-11-11
 
 ---
 
@@ -200,6 +201,285 @@ Claude (response to user):
    - inbox/coordination/ECOSYSTEM_STATUS.yaml"
 
 Result: Coordination request triaged and accepted
+```
+
+---
+
+### Workflow 4: Analyzing COORDs as Intentions for Light+ Planning
+
+```markdown
+User: "Run Phase 1.1 Discovery for Q4 2025"
+
+Claude (Phase 1: Read Active COORDs - 0-10k tokens):
+1. Read active coordination requests:
+   Bash: cat inbox/coordination/active.jsonl | jq 'select(.status == "active")'
+
+2. Parse each COORD to extract:
+   - request_id, title, description
+   - priority (P0/P1/P2), urgency (blocks_sprint/next_sprint/backlog)
+   - requesting_repo (determines external vs internal)
+   - affects_saps, affects_domains (user demand indicators)
+   - estimated_effort (effort hours)
+
+Claude (Phase 2: Categorize Evidence Level - 10-20k tokens):
+3. For each COORD, apply evidence level rules:
+
+   Evidence Level A (Direct feedback):
+   - P0 or P1 priority
+   - blocks_sprint or next_sprint urgency
+   - External repo (not chora-base)
+   Example: COORD-2025-006 from ecosystem-manifest (P1, next_sprint) → Level A
+
+   Evidence Level B (Inferred need):
+   - P1 or P2 priority
+   - next_sprint urgency
+   - Internal team request
+   Example: COORD-2025-003 from chora-workspace (P2, next_sprint) → Level B
+
+   Evidence Level C (Hypothetical):
+   - P2 or P3 priority
+   - backlog urgency
+   - Technical debt or refactoring
+   Example: COORD-2025-012 internal refactoring (P3, backlog) → Level C
+
+Claude (Phase 3: Calculate User Demand - 20-30k tokens):
+4. Calculate user demand score:
+   user_demand = (affects_saps.length × 3) + (affects_domains.length × 2)
+
+   Example:
+   - COORD affects 2 SAPs + 3 domains → 2×3 + 3×2 = 12 (high demand)
+   - COORD affects 0 SAPs + 1 domain → 0×3 + 1×2 = 2 (low demand)
+
+Claude (Phase 4: Create Intention Inventory - 30-40k tokens):
+5. Create .chora/planning/intentions/ directory if needed:
+   Bash: mkdir -p .chora/planning/intentions
+
+6. For each COORD, create intention entry:
+   Bash: echo '{
+     "intention_id": "INT-2025-005",
+     "source": "COORD-2025-003",
+     "description": "Update SAP-019 verification documentation",
+     "evidence_level": "A",
+     "user_demand": 12,
+     "effort_hours": 18
+   }' >> .chora/planning/intentions/2025-Q4.jsonl
+
+Claude (Phase 5: Update COORDs with Metadata - 40-50k tokens):
+7. Update each COORD with Light+ metadata:
+   Read inbox/coordination/COORD-2025-003.json
+
+   Edit inbox/coordination/COORD-2025-003.json
+   # Add light_plus_metadata object:
+   "light_plus_metadata": {
+     "intention_id": "INT-2025-005",
+     "evidence_level": "A",
+     "user_demand_score": 12,
+     "effort_estimate_hours": 18,
+     "vision_wave_assignment": null,
+     "assigned_to_roadmap": null,
+     "status": "discovery"
+   }
+
+Claude (Phase 6: Log Discovery Event - 50-55k tokens):
+8. Log Phase 1.1 Discovery completion:
+   Bash: echo '{
+     "timestamp": "2025-11-11T10:00:00Z",
+     "event_type": "light_plus_phase_1_1_discovery",
+     "quarter": "2025-Q4",
+     "coords_analyzed": 8,
+     "intentions_created": 8,
+     "evidence_breakdown": {"A": 3, "B": 4, "C": 1}
+   }' >> inbox/coordination/events.jsonl
+
+Claude (response to user):
+"✅ Phase 1.1 Discovery Complete (Q4 2025):
+
+   **COORDs Analyzed**: 8 active coordination requests
+
+   **Intentions Created**: 8
+   - Evidence Level A: 3 (direct user feedback)
+   - Evidence Level B: 4 (inferred needs)
+   - Evidence Level C: 1 (hypothetical)
+
+   **High-Demand Intentions** (≥10 score):
+   - INT-2025-005: SAP-019 verification (demand: 12, effort: 18h)
+   - INT-2025-007: React state management (demand: 15, effort: 24h)
+
+   **Next Steps**:
+   1. Run Phase 1.2 Analysis to apply Wave 1 criteria
+   2. Assign intentions to Wave 1 (Q4) or Wave 2 (Q1)
+   3. Update COORDs with wave assignments
+
+   **Files Updated**:
+   - Created: .chora/planning/intentions/2025-Q4.jsonl (8 intentions)
+   - Updated: 8 COORD files with light_plus_metadata
+   - Logged: inbox/coordination/events.jsonl"
+
+Result: Coordination requests analyzed as intentions, ready for Wave assignment
+```
+
+---
+
+### Workflow 5: Assigning COORDs to Wave 1/Wave 2
+
+```markdown
+User: "Apply Wave 1 criteria and assign intentions"
+
+Claude (Phase 1: Read Intention Inventory - 0-10k tokens):
+1. Read intention inventory:
+   Bash: cat .chora/planning/intentions/2025-Q4.jsonl | jq -s '.'
+
+2. Calculate Wave 1 criteria compliance:
+   - Count Evidence A+B intentions
+   - Check if Evidence A+B ≥ 70% of total
+   - Filter intentions with user_demand ≥ 10
+   - Filter intentions with effort < 50h
+
+Claude (Phase 2: Apply Wave 1 Criteria - 10-20k tokens):
+3. For each intention, check criteria:
+
+   Wave 1 Criteria (ALL must be true):
+   - Evidence Level A or B
+   - User demand score ≥ 10
+   - Effort estimate < 50 hours
+   - Aligns with strategic themes
+
+   Example:
+   INT-2025-005: Evidence A, demand 12, effort 18h → Wave 1 ✅
+   INT-2025-012: Evidence C, demand 3, effort 60h → Wave 2 ❌
+
+Claude (Phase 3: Update COORDs - 20-40k tokens):
+4. For each COORD source, update wave assignment:
+
+   Wave 1 assignments:
+   Read inbox/coordination/COORD-2025-003.json
+   Edit inbox/coordination/COORD-2025-003.json
+   # Update light_plus_metadata:
+   "vision_wave_assignment": 1,
+   "assigned_to_roadmap": "2025-Q4",
+   "status": "in_wave_1"
+
+   Wave 2 deferrals:
+   Read inbox/coordination/COORD-2025-012.json
+   Edit inbox/coordination/COORD-2025-012.json
+   # Update light_plus_metadata:
+   "vision_wave_assignment": 2,
+   "assigned_to_roadmap": "2026-Q1",
+   "status": "wave_2_candidate"
+
+Claude (Phase 4: Log Wave Assignments - 40-45k tokens):
+5. Log Wave 1/2 assignments:
+   Bash: echo '{
+     "timestamp": "2025-11-11T11:00:00Z",
+     "event_type": "light_plus_wave_assignment",
+     "quarter": "2025-Q4",
+     "wave_1_count": 5,
+     "wave_2_count": 3,
+     "evidence_a_b_percent": 75
+   }' >> inbox/coordination/events.jsonl
+
+Claude (response to user):
+"✅ Wave Assignment Complete (Q4 2025):
+
+   **Wave 1 (Q4 2025)**: 5 intentions
+   - INT-2025-005: SAP-019 verification (18h)
+   - INT-2025-007: React state management (24h)
+   - INT-2025-010: Fast-setup integration (32h)
+   - INT-2025-014: Inbox SLA tracking (16h)
+   - INT-2025-018: Documentation templates (12h)
+   Total effort: 102 hours
+
+   **Wave 2 (Q1 2026)**: 3 intentions (deferred)
+   - INT-2025-012: Performance refactoring (60h, epic-sized)
+   - INT-2025-015: ML-based analytics (85h, requires pilot)
+   - INT-2025-019: Cross-org security (40h, low demand: 4)
+
+   **Criteria Met**:
+   - Evidence A+B: 75% (≥70% ✅)
+   - Wave 1 capacity: 102h (< 120h target ✅)
+   - Strategic alignment: All Wave 1 support ecosystem maturity theme ✅
+
+   **Next Steps**:
+   1. Communicate wave assignments to requesting repos (SLA: 48h)
+   2. Run Phase 1.4 Backlog Cascade to create beads epics
+   3. Update ROADMAP.md with Wave 1 themes
+
+   **Files Updated**:
+   - Updated: 8 COORD files with wave assignments
+   - Logged: inbox/coordination/events.jsonl"
+
+Result: COORDs assigned to Wave 1 (Q4) or Wave 2 (Q1) based on evidence criteria
+```
+
+---
+
+### Workflow 6: Tracing COORD Lead Time
+
+```markdown
+User: "Calculate lead time for COORD-2025-003"
+
+Claude (Phase 1: Read COORD Created Date - 0-5k tokens):
+1. Read COORD to get created timestamp:
+   Read inbox/coordination/COORD-2025-003.json
+   Extract: "created": "2025-10-15T14:30:00Z"
+
+Claude (Phase 2: Find Shipped Date - 5-10k tokens):
+2. Search git history for COORD completion:
+   Bash: git log --all --grep="COORD-2025-003" --date=short --format="%ad %s" | head -10
+
+3. Identify shipped commit (look for "ship", "merge", "release"):
+   Example output:
+   2025-10-29 feat: ship SAP-019 verification [COORD-2025-003]
+   2025-10-25 test: add verification tests [COORD-2025-003]
+   2025-10-20 docs: update SAP-019 docs [COORD-2025-003]
+
+4. Extract shipped date: 2025-10-29
+
+Claude (Phase 3: Calculate Lead Time - 10-15k tokens):
+5. Calculate days between created and shipped:
+   created: 2025-10-15
+   shipped: 2025-10-29
+   lead_time: 14 days
+
+6. Trace through Light+ phases:
+   - Created: 2025-10-15 (COORD-2025-003)
+   - Discovery: 2025-10-16 (INT-2025-005)
+   - Wave 1 Assignment: 2025-10-17
+   - Backlog Cascade: 2025-10-18 (beads epic created)
+   - Implementation: 2025-10-20 to 2025-10-28
+   - Shipped: 2025-10-29
+
+Claude (response to user):
+"✅ COORD-2025-003 Lead Time Analysis:
+
+   **Overall Lead Time**: 14 days (2025-10-15 → 2025-10-29)
+
+   **Phase Breakdown**:
+   - Coordination → Intention: 1 day (Phase 1.1 Discovery)
+   - Intention → Wave 1: 1 day (Phase 1.2 Analysis)
+   - Wave 1 → Backlog: 1 day (Phase 1.4 Cascade)
+   - Backlog → Implementation: 2 days (sprint planning)
+   - Implementation → Shipped: 9 days (actual work)
+
+   **Comparison to Target**:
+   - Target lead time: 21 days
+   - Actual: 14 days
+   - Performance: 33% faster ✅
+
+   **Traceability Chain**:
+   - COORD-2025-003 (SAP-019 verification)
+   - → INT-2025-005 (Evidence Level A, demand 12)
+   - → Wave 1 assignment (met all criteria)
+   - → beads-epic-042 (18h estimated)
+   - → 4 tasks completed (beads-task-101 to 104)
+   - → Shipped in v4.12.0
+
+   **Bottleneck Analysis**:
+   - Planning overhead: 4 days (29% of lead time)
+   - Implementation: 9 days (64% of lead time)
+   - No blockers encountered ✅"
+
+Result: Complete lead time analysis with phase breakdown and traceability
 ```
 
 ---

@@ -2,9 +2,24 @@
 
 **SAP ID**: SAP-014
 **Version**: 1.0.0
-**Status**: Active
+**Status**: ⚠️ **DEPRECATED** (as of 2025-11-12)
 **Created**: 2025-10-29
 **Category**: Technology-Specific SAP (First of its kind)
+
+---
+
+## ⚠️ DEPRECATION NOTICE
+
+**SAP-014 is deprecated as of 2025-11-12. Use SAP-047 (Capability Server Template) for new projects.**
+
+**Replacement**: [SAP-047 (Capability Server Template)](../capability-server-template/)
+
+**Why deprecated?** SAP-047 provides:
+- Multi-interface support (CLI, REST, MCP) vs MCP-only
+- Production-ready architectural patterns (SAP-042-047)
+- 2,271% ROI (5 minutes vs 40-60 hours)
+
+**Support timeline**: SAP-014 supported until 2025-12-31 for existing projects only.
 
 ---
 

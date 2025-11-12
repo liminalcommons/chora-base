@@ -34,11 +34,21 @@ Before writing Python scripts, read: [scripts/AGENTS.md](../scripts/AGENTS.md) f
 ✅ **YES** → Use the fast-setup script:
 
 ```bash
-python scripts/create-model-mcp-server.py \
+python scripts/create-capability-server.py \
     --name "Your Project Name" \
     --namespace yournamespace \
+    --enable-mcp \
     --output ~/projects/your-project
 ```
+
+**⚠️ SAP-014 Deprecation**: The old `create-model-mcp-server.py` script and SAP-014 (mcp-server-development) have been **deprecated**. Use SAP-047 (capability-server-template) instead, which provides multi-interface support (CLI, REST, optional MCP).
+
+**SAP Dependencies**: SAP-047 automatically includes:
+- **SAP-042** (Interface Design) - Core/interface separation patterns
+- **SAP-043** (Multi-Interface) - CLI, REST, and optional MCP interfaces
+- **SAP-044** (Registry) - Service discovery (optional)
+- **SAP-045** (Bootstrap) - Self-provisioning (optional)
+- **SAP-046** (Composition) - Service orchestration (optional)
 
 **Documentation**:
 - [README.md](../README.md) - Complete instructions
@@ -47,7 +57,7 @@ python scripts/create-model-mcp-server.py \
 **Time Estimate**: 5-10 minutes to fully-configured project
 
 **What You Get**:
-- Production-ready MCP server
+- Production-ready capability server with multi-interface support (CLI, REST, optional MCP)
 - Testing framework (pytest, 85%+ coverage gate)
 - CI/CD workflows (GitHub Actions)
 - Quality gates (pre-commit hooks: ruff, mypy, black)
@@ -72,7 +82,7 @@ python scripts/create-model-mcp-server.py \
 **Key Directories**:
 - `static-template/` - Files copied to generated projects
 - `docs/skilled-awareness/` - SAP documentation (30+ capabilities)
-- `scripts/` - Automation scripts (create-model-mcp-server.py, install-sap.py, etc.)
+- `scripts/` - Automation scripts (create-capability-server.py, install-sap.py, etc.)
 - `blueprints/` - Blueprint templates for generated projects
 
 ---
@@ -408,7 +418,7 @@ Summary: 1/2 SAPs passed validation
 
 ```bash
 # Use fast-setup script (1-2 minutes)
-python scripts/create-model-mcp-server.py \
+python scripts/create-capability-server.py \
     --name "Weather Data MCP" \
     --namespace weatherdata \
     --output ~/projects/weather-mcp

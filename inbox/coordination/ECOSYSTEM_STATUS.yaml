@@ -11,6 +11,8 @@ repositories:
     status: active
     version: v4.1.2
     inbox_protocol_adopted: true
+    inbox_protocol_version: 1.2.0
+    inbox_adoption_level: Level 3
     active_work:
       - id: coord-005
         title: "Peer Review: Ecosystem Coordination SAPs Proposal"

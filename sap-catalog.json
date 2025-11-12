@@ -1,10 +1,10 @@
 {
-  "version": "5.1.0",
-  "updated": "2025-11-11",
+  "version": "5.2.0",
+  "updated": "2025-11-12",
   "sap_sets_version": "2.0.0",
   "sap_sets_architecture": "domain-based",
   "description": "Machine-readable catalog of all Skilled Awareness Packages in chora-base with domain-based set architecture",
-  "total_saps": 39,
+  "total_saps": 45,
   "saps": [
     {
       "id": "SAP-000",
@@ -357,9 +357,9 @@
       "version": "1.0.0",
       "included_by_default": false,
       "size_kb": 112,
-      "description": "Diátaxis-based 4-domain documentation architecture with frontmatter schema and test extraction",
+      "description": "Di\u00e1taxis-based 4-domain documentation architecture with frontmatter schema and test extraction",
       "capabilities": [
-        "Diátaxis 4-domain structure",
+        "Di\u00e1taxis 4-domain structure",
         "Frontmatter schema validation",
         "Executable how-to guides",
         "Test extraction from docs",
@@ -453,7 +453,7 @@
         "Nearest file wins",
         "Progressive context loading",
         "200k token budget management",
-        "Bidirectional translation (conversational ↔ formal)",
+        "Bidirectional translation (conversational \u2194 formal)",
         "Intent routing (confidence thresholds)",
         "Glossary search (fuzzy matching)",
         "Context-aware suggestions (reactive/proactive)",
@@ -652,13 +652,13 @@
       "version": "1.2.0",
       "included_by_default": false,
       "size_kb": 180,
-      "description": "8-phase lifecycle (Vision → Monitoring) with Documentation-Driven Development, L3 Documentation-First workflow, Diataxis framework, and BDD → TDD integration",
+      "description": "8-phase lifecycle (Vision \u2192 Monitoring) with Documentation-Driven Development, L3 Documentation-First workflow, Diataxis framework, and BDD \u2192 TDD integration",
       "capabilities": [
         "8-phase development lifecycle",
         "Documentation-Driven Development (L2/L3 patterns)",
-        "Documentation-First workflow (L3+): Executable how-tos → BDD extraction",
+        "Documentation-First workflow (L3+): Executable how-tos \u2192 BDD extraction",
         "Diataxis framework integration (4 doc types)",
-        "BDD → TDD integration",
+        "BDD \u2192 TDD integration",
         "40-80% defect reduction",
         "Sprint/release templates",
         "ANTI_PATTERNS.md (1,309 lines)"
@@ -738,11 +738,18 @@
       "id": "SAP-014",
       "name": "mcp-server-development",
       "full_name": "MCP Server Development",
-      "status": "active",
+      "status": "deprecated",
       "version": "1.0.0",
       "included_by_default": false,
       "size_kb": 234,
-      "description": "FastMCP-based Model Context Protocol server development patterns with 11 templates and 8 guides",
+      "description": "FastMCP-based Model Context Protocol server development patterns with 11 templates and 8 guides (DEPRECATED: Use SAP-047 capability-server-template for new projects)",
+      "deprecation": {
+        "date": "2025-11-12",
+        "replacement": "SAP-047",
+        "reason": "Superseded by SAP-047 (capability-server-template) which provides Cookiecutter-based template generation for complete capability servers with multi-interface support (CLI/REST/MCP), composition patterns, and 5-minute setup",
+        "migration_path": "For new projects: use SAP-047 template. For existing SAP-014 projects: continue using SAP-014 until 2025-12-31, then migrate to SAP-047 architecture",
+        "support_end_date": "2025-12-31"
+      },
       "capabilities": [
         "FastMCP patterns",
         "11 MCP templates",
@@ -795,8 +802,8 @@
         "Dependency tracking (blocks/depends relationships)",
         "A-MEM integration (bidirectional traceability)",
         "CLI interface (bd create/list/update/close/dep)",
-        "Setup time ≤30 min (avg 9.9 min across 5 projects)",
-        "Context re-establishment savings ≥20%"
+        "Setup time \u226430 min (avg 9.9 min across 5 projects)",
+        "Context re-establishment savings \u226520%"
       ],
       "dependencies": [
         "SAP-000",
@@ -1453,18 +1460,18 @@
           "Zero critical bugs across 2 generated SAPs (SAP-029, SAP-028)"
         ],
         "business_impact": "Without dogfooding methodology:\n\n- Pattern risk: Untested patterns fail in ecosystem, wasting integration effort (5-10h per adopter)\n- Trust erosion: Failed recommendations reduce ecosystem confidence in future patterns\n- Missed optimization: No feedback loop to refine patterns before wide adoption\n- ROI uncertainty: Unknown break-even point discourages pattern investment\n- Methodological debt: Each new pilot reinvents validation approach",
-        "solution_overview": "SAP-027 provides a formalized dogfooding pilot methodology for validating patterns through internal use before ecosystem adoption.\n\nKey capabilities: 3-phase pilot design (build, validate, decide), GO/NO-GO criteria framework (≥5x time savings, ≥85% satisfaction, 0 critical bugs, 2+ adoption cases), ROI analysis templates, metrics collection structure, pilot documentation patterns.\n\nSetup time: 5-week pilot (expandable to 8 weeks), GO decision at Week 4, formalization at Week 5.",
+        "solution_overview": "SAP-027 provides a formalized dogfooding pilot methodology for validating patterns through internal use before ecosystem adoption.\n\nKey capabilities: 3-phase pilot design (build, validate, decide), GO/NO-GO criteria framework (\u22655x time savings, \u226585% satisfaction, 0 critical bugs, 2+ adoption cases), ROI analysis templates, metrics collection structure, pilot documentation patterns.\n\nSetup time: 5-week pilot (expandable to 8 weeks), GO decision at Week 4, formalization at Week 5.",
         "key_principles": [
           "Internal validation first: Test patterns through dogfooding before ecosystem recommendation",
           "Quantified success criteria: GO/NO-GO thresholds based on time savings, satisfaction, quality",
-          "Progressive validation: Week 4 GO decision (90% confidence) → Week 5 formalization (100% confidence)",
+          "Progressive validation: Week 4 GO decision (90% confidence) \u2192 Week 5 formalization (100% confidence)",
           "ROI transparency: Break-even analysis shows investment vs savings curve",
           "Documentation rigor: Weekly metrics + final summary provide reproducible methodology",
           "Template refinement: TODO completion makes artifacts production-ready before formalization"
         ],
         "in_scope": [
           "3-phase pilot framework (build weeks 1-3, validate week 4, decide week 5)",
-          "GO/NO-GO criteria (time savings ≥5x, satisfaction ≥85%, bugs = 0, adoption ≥2 cases)",
+          "GO/NO-GO criteria (time savings \u22655x, satisfaction \u226585%, bugs = 0, adoption \u22652 cases)",
           "Metrics templates (time tracking, validation reports, satisfaction surveys)",
           "ROI analysis method (setup cost, per-use savings, break-even calculation)",
           "Pilot documentation structure (weekly logs, cross-comparison, final summary)",
@@ -1495,7 +1502,7 @@
         "Manual publishing (local development)",
         "PEP 740 attestations for build provenance",
         "GitHub Actions workflow integration",
-        "Migration protocols (token → trusted publishing)",
+        "Migration protocols (token \u2192 trusted publishing)",
         "Template integration via pypi_auth_method variable"
       ],
       "dependencies": [
@@ -1537,22 +1544,22 @@
           "chora-compose migrated to trusted publishing (zero security incidents)"
         ],
         "business_impact": "Without publishing automation defaults:\n\n- Security risk: Long-lived tokens in GitHub Secrets vulnerable to leakage\n- Operational burden: Manual token rotation, expiry management, permission audits\n- Compliance gaps: No build provenance (PEP 740), limited audit trail\n- Developer friction: Additional setup steps, secret configuration, troubleshooting\n- Ecosystem inconsistency: Generated projects use outdated publishing patterns",
-        "solution_overview": "SAP-028 provides secure PyPI publishing with OIDC trusted publishing as the default method for all chora-base generated projects.\n\nKey capabilities: OIDC trusted publishing (zero secrets), token-based fallback (backward compat), PEP 740 attestations (build provenance), GitHub Actions release workflow, template variable (pypi_auth_method), migration guide (token → OIDC).\n\nSetup time: 5 minutes for new projects (PyPI publisher configuration), 15 minutes for migrations.",
+        "solution_overview": "SAP-028 provides secure PyPI publishing with OIDC trusted publishing as the default method for all chora-base generated projects.\n\nKey capabilities: OIDC trusted publishing (zero secrets), token-based fallback (backward compat), PEP 740 attestations (build provenance), GitHub Actions release workflow, template variable (pypi_auth_method), migration guide (token \u2192 OIDC).\n\nSetup time: 5 minutes for new projects (PyPI publisher configuration), 15 minutes for migrations.",
         "key_principles": [
           "Security-first: OIDC trusted publishing as default (zero secrets)",
-          "Zero trust: Fine-grained GitHub → PyPI trust relationship per repository",
+          "Zero trust: Fine-grained GitHub \u2192 PyPI trust relationship per repository",
           "Provenance: PEP 740 attestations for supply chain security",
           "Backward compatible: Token-based publishing still supported for legacy workflows",
           "Template-driven: pypi_auth_method variable controls publishing method",
-          "Migration support: Clear upgrade path from token → trusted publishing"
+          "Migration support: Clear upgrade path from token \u2192 trusted publishing"
         ],
         "in_scope": [
-          "OIDC trusted publishing configuration (GitHub Actions → PyPI)",
+          "OIDC trusted publishing configuration (GitHub Actions \u2192 PyPI)",
           "Token-based publishing fallback (PYPI_API_TOKEN secret)",
           "PEP 740 attestation generation (build provenance)",
           "Release workflow template (.github/workflows/release.yml)",
           "PyPI setup documentation (PYPI_SETUP.md)",
-          "Migration guide (token → trusted publishing)"
+          "Migration guide (token \u2192 trusted publishing)"
         ],
         "out_of_scope": [
           "Non-PyPI registries (Artifactory, Nexus) - Future enhancement",
@@ -2019,6 +2026,308 @@
       "phase": "Phase 2",
       "priority": "P1",
       "domain": "Foundation"
+    },
+    {
+      "id": "SAP-042",
+      "name": "interface-design",
+      "full_name": "Interface Design Patterns",
+      "status": "draft",
+      "version": "1.0.0",
+      "included_by_default": false,
+      "size_kb": 145,
+      "description": "Core/interface separation pattern reducing coupling by 80%, enabling multi-interface capability servers with shared business logic",
+      "capabilities": [
+        "Core/interface architectural separation",
+        "Business logic isolation (pure Python, no I/O)",
+        "Multi-interface support (CLI, REST, MCP, GraphQL)",
+        "Dependency injection patterns",
+        "Interface adapter templates",
+        "Testing strategy (core: unit tests, interfaces: integration tests)"
+      ],
+      "dependencies": [
+        "SAP-000"
+      ],
+      "tags": [
+        "architecture",
+        "design-patterns",
+        "capability-server",
+        "separation-of-concerns"
+      ],
+      "author": "chora-base",
+      "location": "docs/skilled-awareness/interface-design",
+      "artifacts": {
+        "capability_charter": true,
+        "protocol_spec": true,
+        "awareness_guide": true,
+        "adoption_blueprint": true,
+        "ledger": true
+      },
+      "system_files": [],
+      "phase": "Phase 1",
+      "priority": "P0",
+      "domain": "Developer Experience",
+      "notes": [
+        {
+          "date": "2025-11-12",
+          "note": "Status reverted from 'pilot' to 'draft' - template implementation in progress. Documentation complete, awaiting template build and verification."
+        }
+      ]
+    },
+    {
+      "id": "SAP-043",
+      "name": "multi-interface",
+      "full_name": "Multi-Interface Capability Servers",
+      "status": "draft",
+      "version": "1.0.0",
+      "included_by_default": false,
+      "size_kb": 185,
+      "description": "Multi-interface patterns (CLI/REST/MCP) with FastAPI, Click, and FastMCP integration, reducing interface development time by 75%",
+      "capabilities": [
+        "CLI interface (Click framework)",
+        "REST API interface (FastAPI + OpenAPI)",
+        "MCP server interface (FastMCP + Claude Desktop)",
+        "GraphQL interface (Strawberry)",
+        "Shared core capability pattern",
+        "Unified error handling across interfaces",
+        "Interface-specific authentication/authorization"
+      ],
+      "dependencies": [
+        "SAP-000",
+        "SAP-042"
+      ],
+      "tags": [
+        "multi-interface",
+        "cli",
+        "rest-api",
+        "mcp",
+        "capability-server"
+      ],
+      "author": "chora-base",
+      "location": "docs/skilled-awareness/multi-interface",
+      "artifacts": {
+        "capability_charter": true,
+        "protocol_spec": true,
+        "awareness_guide": true,
+        "adoption_blueprint": true,
+        "ledger": true
+      },
+      "system_files": [],
+      "phase": "Phase 1",
+      "priority": "P0",
+      "domain": "Developer Experience",
+      "notes": [
+        {
+          "date": "2025-11-12",
+          "note": "Status reverted from 'pilot' to 'draft' - template implementation in progress. Documentation complete, awaiting template build and verification."
+        }
+      ]
+    },
+    {
+      "id": "SAP-044",
+      "name": "registry",
+      "full_name": "Capability Registry & Discovery",
+      "status": "draft",
+      "version": "1.0.0",
+      "included_by_default": false,
+      "size_kb": 165,
+      "description": "Service mesh with capability manifest registry, discovery API, and health monitoring, enabling dynamic service composition",
+      "capabilities": [
+        "Capability manifest schema (YAML)",
+        "Centralized registry with REST API",
+        "Service discovery and health checks",
+        "Capability metadata and versioning",
+        "Dynamic service composition",
+        "Dependency tracking and validation",
+        "Load balancing and failover support"
+      ],
+      "dependencies": [
+        "SAP-000",
+        "SAP-042"
+      ],
+      "tags": [
+        "service-mesh",
+        "registry",
+        "discovery",
+        "capability-server",
+        "health-monitoring"
+      ],
+      "author": "chora-base",
+      "location": "docs/skilled-awareness/registry",
+      "artifacts": {
+        "capability_charter": true,
+        "protocol_spec": true,
+        "awareness_guide": true,
+        "adoption_blueprint": true,
+        "ledger": true
+      },
+      "system_files": [],
+      "phase": "Phase 1",
+      "priority": "P0",
+      "domain": "Developer Experience",
+      "notes": [
+        {
+          "date": "2025-11-12",
+          "note": "Status reverted from 'pilot' to 'draft' - template implementation in progress. Documentation complete, awaiting template build and verification."
+        }
+      ]
+    },
+    {
+      "id": "SAP-045",
+      "name": "bootstrap",
+      "full_name": "Bootstrap & Startup Sequence",
+      "status": "draft",
+      "version": "1.0.0",
+      "included_by_default": false,
+      "size_kb": 155,
+      "description": "Dependency-ordered startup with registry registration, config loading, and graceful shutdown, reducing startup failures by 90%",
+      "capabilities": [
+        "Dependency-ordered startup (topological sort)",
+        "Config loading with validation (YAML/env vars)",
+        "Registry registration and health endpoint setup",
+        "Graceful shutdown with cleanup hooks",
+        "Startup failure recovery and retry logic",
+        "Development vs production mode configuration",
+        "Hot reload support for development"
+      ],
+      "dependencies": [
+        "SAP-000",
+        "SAP-044"
+      ],
+      "tags": [
+        "bootstrap",
+        "startup",
+        "configuration",
+        "capability-server",
+        "lifecycle-management"
+      ],
+      "author": "chora-base",
+      "location": "docs/skilled-awareness/bootstrap",
+      "artifacts": {
+        "capability_charter": true,
+        "protocol_spec": true,
+        "awareness_guide": true,
+        "adoption_blueprint": true,
+        "ledger": true
+      },
+      "system_files": [],
+      "phase": "Phase 1",
+      "priority": "P0",
+      "domain": "Developer Experience",
+      "notes": [
+        {
+          "date": "2025-11-12",
+          "note": "Status reverted from 'pilot' to 'draft' - template implementation in progress. Documentation complete, awaiting template build and verification."
+        }
+      ]
+    },
+    {
+      "id": "SAP-046",
+      "name": "composition",
+      "full_name": "Capability Composition Patterns",
+      "status": "draft",
+      "version": "1.0.0",
+      "included_by_default": false,
+      "size_kb": 195,
+      "description": "Saga orchestration, circuit breakers, and event bus for complex multi-step workflows, reducing integration costs by 85% (1,141% ROI)",
+      "capabilities": [
+        "Saga orchestration with compensation logic",
+        "Circuit breaker pattern (fail-fast resilience)",
+        "Event bus with CloudEvents 1.0 standard",
+        "Dependency resolution (topological sort)",
+        "Idempotency patterns with request IDs",
+        "Exponential backoff retry logic with jitter",
+        "Distributed tracing with OpenTelemetry"
+      ],
+      "dependencies": [
+        "SAP-000",
+        "SAP-042",
+        "SAP-044"
+      ],
+      "tags": [
+        "composition",
+        "saga-pattern",
+        "circuit-breaker",
+        "event-bus",
+        "capability-server",
+        "resilience"
+      ],
+      "author": "chora-base",
+      "location": "docs/skilled-awareness/composition",
+      "artifacts": {
+        "capability_charter": true,
+        "protocol_spec": true,
+        "awareness_guide": true,
+        "adoption_blueprint": true,
+        "ledger": true
+      },
+      "system_files": [],
+      "phase": "Phase 2",
+      "priority": "P1",
+      "domain": "Developer Experience",
+      "notes": [
+        {
+          "date": "2025-11-12",
+          "note": "Status reverted from 'pilot' to 'draft' - template implementation in progress. Documentation complete, awaiting template build and verification."
+        }
+      ]
+    },
+    {
+      "id": "SAP-047",
+      "name": "capability-server-template",
+      "full_name": "Capability Server Template (Cookiecutter)",
+      "status": "draft",
+      "version": "1.0.0",
+      "included_by_default": false,
+      "size_kb": 225,
+      "description": "Cookiecutter template generating production-ready capability servers in 5 minutes, reducing development time from 40-60h to 4-8h (2,271% ROI)",
+      "capabilities": [
+        "Cookiecutter project template generation",
+        "Multi-interface support (CLI/REST/MCP) from SAP-043",
+        "Manifest registry integration from SAP-044",
+        "Bootstrap startup sequence from SAP-045",
+        "Composition patterns (Saga/circuit breaker/events) from SAP-046",
+        "Test suite scaffolding (\u226580% coverage)",
+        "CI/CD pipelines (GitHub Actions)",
+        "Docker multi-stage builds (<250MB)",
+        "Pre-commit hooks and quality gates",
+        "Complete documentation (AGENTS.md, API.md, CLI.md)"
+      ],
+      "dependencies": [
+        "SAP-000",
+        "SAP-042",
+        "SAP-043",
+        "SAP-044",
+        "SAP-045",
+        "SAP-046"
+      ],
+      "tags": [
+        "template",
+        "cookiecutter",
+        "capability-server",
+        "scaffolding",
+        "production-ready"
+      ],
+      "author": "chora-base",
+      "location": "docs/skilled-awareness/capability-server-template",
+      "artifacts": {
+        "capability_charter": true,
+        "protocol_spec": true,
+        "awareness_guide": true,
+        "adoption_blueprint": true,
+        "ledger": true
+      },
+      "system_files": [
+        "templates/capability-server/"
+      ],
+      "phase": "Phase 2",
+      "priority": "P0",
+      "domain": "Developer Experience",
+      "notes": [
+        {
+          "date": "2025-11-12",
+          "note": "Status reverted from 'pilot' to 'draft' - template implementation in progress. Documentation complete, awaiting template build and verification."
+        }
+      ]
     }
   ],
   "dependency_graph": {
@@ -2140,7 +2449,7 @@
         "Testing framework with pytest and 85%+ coverage (SAP-004)",
         "CI/CD workflows with GitHub Actions (SAP-005)",
         "Quality gates with ruff and mypy (SAP-006)",
-        "Documentation framework with Diátaxis (SAP-007)",
+        "Documentation framework with Di\u00e1taxis (SAP-007)",
         "Automation scripts (25 scripts + justfile) (SAP-008)",
         "Agent awareness via AGENTS.md + CLAUDE.md (SAP-009)",
         "Memory system with A-MEM event logging (SAP-010)",

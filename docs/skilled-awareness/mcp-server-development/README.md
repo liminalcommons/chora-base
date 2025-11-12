@@ -1,9 +1,23 @@
 # SAP-014: MCP Server Development
 
-**Version:** 1.0.0 | **Status:** Draft | **Maturity:** Pilot
+**Version:** 1.0.0 | **Status:** ⚠️ **DEPRECATED** (as of 2025-11-12) | **Maturity:** Pilot
 **Protocol Version:** MCP 2024-11-05 | **FastMCP:** >=0.2.0 | **Chora Conventions:** v1.0
 
-> Build Model Context Protocol (MCP) servers with FastMCP + Chora MCP Conventions v1.0—80% faster setup (1-2 min vs 30-60 min), 100% protocol compliance, and 90% namespace consistency.
+---
+
+## ⚠️ DEPRECATION NOTICE
+
+**SAP-014 is deprecated as of 2025-11-12. For new projects, use SAP-047 (Capability Server Template).**
+
+**Migration Guide**:
+- **New projects**: Use `scripts/create-capability-server.py --enable-mcp` (5-minute setup)
+- **Existing projects**: Continue using SAP-014 until 2025-12-31 (supported)
+- **Migration path**: See [SAP-047 Documentation](../capability-server-template/)
+
+**Why SAP-047?**
+- Multi-interface support (CLI, REST, MCP) vs MCP-only
+- Production-ready architectural patterns (registry, bootstrap, composition)
+- 2,271% ROI (5 minutes vs 40-60 hours manual setup)
 
 ---
 

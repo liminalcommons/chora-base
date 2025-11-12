@@ -1,10 +1,10 @@
 # Cross-Repository Inbox Skilled Awareness Package
 ## Protocol Specification
 
-**Version:** 1.1.0
-**Status:** Active (ecosystem adoption phase)
+**Version:** 1.2.0
+**Status:** Active (Level 3 - Production)
 **Maintainer:** Capability Owner (Victor Piper)
-**Last Updated:** 2025-11-02  
+**Last Updated:** 2025-11-11  
 
 ---
 
@@ -743,6 +743,30 @@ python scripts/update-coordination-status.py \
 
 ## Appendix A: Changelog
 
+### v1.2.0 (2025-11-11)
+
+**Added**:
+- Section 15: Light+ Planning Framework Integration
+  - Coordination requests as intentions (Evidence Level A/B/C)
+  - Wave assignment criteria (Wave 1/Wave 2)
+  - Schema enhancements (light_plus_metadata object)
+  - Query patterns for retrospectives
+  - Integration workflows and operational patterns
+
+**Changed**:
+- Updated version from 1.1.0 to 1.2.0
+- Status changed from "Active (ecosystem adoption phase)" to "Active (Level 3 - Production)"
+- Fixed section numbering (13.6 → 14.6, 13.7 → 14.7)
+
+**Rationale**:
+- Light+ integration connects coordination requests to strategic planning
+- Evidence-based intention categorization enables data-driven roadmap decisions
+- Wave assignment provides transparency for ecosystem partners
+- Traceability from COORD → intention → Wave → shipped enables lead time metrics
+- Level 3 status reflects production-ready state with 60x ROI
+
+---
+
 ### v1.1.0 (2025-11-02)
 
 **Added**:
@@ -751,13 +775,12 @@ python scripts/update-coordination-status.py \
 - Section 10: Adoption Strategy & Rollout
 - Section 11: Governance & Long-Term Maintenance
 - Section 12: Future Enhancements (Roadmap)
+- Section 14: CHORA_TRACE_ID Propagation Protocol (GAP-001 resolution)
 - Appendix A: Changelog
 
 **Changed**:
 - Updated version from 1.0.0 to 1.1.0
 - Status changed from "Draft" to "Active (ecosystem adoption phase)"
-- Added last updated date
-- Added Section 13: CHORA_TRACE_ID Propagation Protocol (GAP-001 resolution)
 
 **Rationale**:
 - Opinionated tooling enables seamless ecosystem adoption
@@ -913,7 +936,7 @@ grep 'mcp-taskmgr-2025-003' metrics/*.csv
 
 **Compatibility**: Trace propagation is **optional** - repos can adopt incrementally without breaking existing workflows.
 
-### 13.6 Related Documents
+### 14.6 Related Documents
 
 - [Workflow Continuity Gap Report](../../../project-docs/workflow-continuity-gap-report.md) - GAP-001 details
 - [Context Flow Diagram](../../../project-docs/context-flow-diagram.md) - CHORA_TRACE_ID flow visualization
@@ -922,7 +945,7 @@ grep 'mcp-taskmgr-2025-003' metrics/*.csv
 
 ---
 
-## 13.7. Self-Evaluation Criteria
+### 14.7 Self-Evaluation Criteria
 
 ### Awareness File Requirements (SAP-009 Phase 4)
 
@@ -955,6 +978,287 @@ python scripts/sap-evaluator.py --deep SAP-001
 - AGENTS.md: User signal pattern tables (Inbox Operations, Coordination Requests, Ecosystem Status)
 - CLAUDE.md: 3 Claude Code workflows (Show Status with Read, Create Request with Write/Bash, Triage with Edit)
 - Rationale: AGENTS.md uses pattern tables for intent translation, CLAUDE.md focuses on Read/Write/Edit/Bash tool patterns
+
+---
+
+## 15. Light+ Planning Framework Integration
+
+**Purpose**: Document how SAP-001 coordination requests feed into SAP-012 Light+ strategic planning framework, enabling coordination-driven product development.
+
+### 15.1 Overview
+
+The **Light+ framework** (SAP-012) is a 4-level planning construct hierarchy that defines **WHAT** we build, while the 8-phase lifecycle defines **HOW**. SAP-001 coordination requests serve as a primary input source for strategic planning in Phase 1.1 Discovery.
+
+**Light+ Planning Levels**:
+1. **Strategy** (Quarterly) - ROADMAP.md, vision statements, strategic themes
+2. **Releases** (Sprint-based) - Sprint planning, version milestones, velocity tracking
+3. **Features** (Per feature) - DDD/BDD/TDD workflow, feature specifications
+4. **Tasks** (Daily) - Beads task tracking (SAP-015), 2-8 hour chunks
+
+**Integration Point**: Coordination requests from `inbox/coordination/active.jsonl` are analyzed during **Phase 1.1 Discovery** to populate the intention inventory, which drives strategic theme development.
+
+---
+
+### 15.2 Coordination Requests as Intentions
+
+**Definition**: An **intention** is a user need or strategic opportunity that may become part of the product roadmap. Coordination requests represent formalized intentions from ecosystem partners.
+
+**Phase 1.1 Discovery Workflow**:
+```bash
+# 1. Read active coordination requests
+cat inbox/coordination/active.jsonl
+
+# 2. For each COORD, extract intention characteristics:
+#    - User need (from description, context)
+#    - Evidence level (from source, priority, urgency)
+#    - Effort estimate (from estimated_effort field)
+#    - User demand (from requesting_repo, affected domains)
+
+# 3. Add to intention inventory
+echo '{
+  "intention_id": "INT-2025-001",
+  "source": "COORD-2025-003",
+  "description": "Update SAP-019 verification documentation",
+  "evidence_level": "A",
+  "user_demand": 8,
+  "effort_hours": 12
+}' >> .chora/planning/intentions/2025-Q4.jsonl
+```
+
+**Evidence Level Mapping**:
+
+| COORD Characteristics | Evidence Level | Wave Assignment |
+|----------------------|----------------|-----------------|
+| P0/P1 priority + urgent + external partner | **Level A** (Direct feedback) | Wave 1 candidate |
+| P1/P2 priority + next_sprint + team request | **Level B** (Inferred need) | Wave 1 or 2 |
+| P2/P3 priority + backlog + internal improvement | **Level C** (Hypothetical) | Wave 2 candidate |
+
+---
+
+### 15.3 Evidence Level Categorization
+
+**Level A: Direct User Feedback** (Coordination from external partners):
+- Coordination requests from ecosystem repos (ecosystem-manifest, mcp-orchestration)
+- High urgency (`blocks_sprint` or `next_sprint`)
+- Clear user impact documented in `context.rationale`
+- **Example**: `COORD-2025-006` (ecosystem-manifest requesting SAP-019 update)
+
+**Level B: Inferred User Need** (Internal coordination):
+- Coordination requests from chora-base internal teams
+- Medium priority (P1-P2)
+- Supports documented user workflows
+- **Example**: `COORD-2025-003` (chora-workspace requesting documentation improvements)
+
+**Level C: Hypothetical** (Strategic improvements):
+- Coordination requests for technical debt, refactoring
+- Low priority (P3) or deferred
+- No direct user request, but supports long-term goals
+- **Example**: `COORD-2025-012` (internal refactoring for performance optimization)
+
+---
+
+### 15.4 Coordination Schema Enhancements for Light+
+
+**New Optional Fields** (v1.2.0+):
+
+```json
+{
+  "request_id": "COORD-2025-010",
+  "title": "Add React state management SAP",
+  "priority": "P1",
+  "urgency": "next_sprint",
+
+  // Light+ integration metadata (optional)
+  "light_plus_metadata": {
+    "intention_id": "INT-2025-005",
+    "evidence_level": "A",
+    "user_demand_score": 12,
+    "effort_estimate_hours": 24,
+    "vision_wave_assignment": 1,
+    "assigned_to_roadmap": "2025-Q4",
+    "status": "in_wave_1"
+  },
+
+  // Existing relationship metadata
+  "relationships": {
+    "spawns_tasks": ["chora-base-react-state-001"],
+    "blocks": [],
+    "blocked_by": []
+  }
+}
+```
+
+**Field Definitions**:
+- `intention_id`: Link to intention inventory entry
+- `evidence_level`: A/B/C categorization (derived from COORD characteristics)
+- `user_demand_score`: Calculated from requesting_repo count, affected_domains, affected_saps
+- `effort_estimate_hours`: Mapped from COORD `estimated_effort` field
+- `vision_wave_assignment`: 1 (Q4), 2 (Q1), or null (not assigned)
+- `assigned_to_roadmap`: Quarter assigned (2025-Q4, 2026-Q1)
+- `status`: Tracking through Light+ phases (discovery, analysis, wave_1, wave_2, backlog)
+
+---
+
+### 15.5 Wave Assignment Criteria
+
+**Wave 1 Criteria** (High Priority Intentions):
+- Evidence Level A+B ≥ 70% of total intentions
+- User demand score ≥ 10 (ecosystem-wide need)
+- Effort estimate < 50 hours per intention
+- Alignment with strategic themes (e.g., "SAP ecosystem maturity")
+
+**Wave 2 Criteria** (Deferred or Validation-Needed):
+- Evidence Level C or low user demand (<5)
+- Effort estimate > 50 hours (epic-sized)
+- Requires pilot validation (via SAP-027 dogfooding)
+- Strategic "bet" on future direction
+
+**Example Wave Assignment**:
+```
+COORD-2025-003: Evidence A, demand 12, effort 18h → Wave 1
+COORD-2025-007: Evidence B, demand 8, effort 32h → Wave 1
+COORD-2025-012: Evidence C, demand 3, effort 60h → Wave 2 (pilot first)
+```
+
+---
+
+### 15.6 Query Patterns for Retrospectives
+
+**Find all COORDs that became Wave 1 intentions**:
+```bash
+jq 'select(.light_plus_metadata.vision_wave_assignment == 1)' inbox/coordination/*.json
+```
+
+**Calculate lead time (COORD created → shipped)**:
+```bash
+# 1. Find COORD creation date
+created=$(jq -r '.created' inbox/coordination/COORD-2025-003.json)
+
+# 2. Find shipped date (from A-MEM events or git tags)
+shipped=$(git log --grep="COORD-2025-003" --date=short --format="%ad" | head -1)
+
+# 3. Calculate days
+echo "Lead time: $(( ($(date -d "$shipped" +%s) - $(date -d "$created" +%s)) / 86400 )) days"
+```
+
+**Find bottlenecks (COORDs stuck in discovery phase)**:
+```bash
+jq 'select(.light_plus_metadata.status == "discovery" and
+    (.created | fromdateiso8601) < (now - 14*86400))' \
+    inbox/coordination/*.json
+```
+
+---
+
+### 15.7 Integration Workflows
+
+**Workflow 1: COORD Created → Phase 1.1 Discovery**
+
+1. **User creates coordination request** (via `generate-coordination-request.py`)
+2. **Inbox triage** (sprint planning): Accept/reject decision, priority assignment
+3. **Phase 1.1 Discovery** (quarterly): Read active COORDs, extract intentions
+4. **Intention analysis**: Categorize evidence level, calculate user demand
+5. **Add to intention inventory**: Create INT entry linked to COORD
+6. **Update COORD**: Add `light_plus_metadata.intention_id` field
+
+**Workflow 2: Intention → Wave Assignment → Backlog**
+
+1. **Phase 1.2 Analysis**: Apply Wave 1 criteria to intention inventory
+2. **Wave assignment**: Intentions meeting criteria → Wave 1
+3. **Phase 1.4 Backlog Cascade**: Create beads epic from Wave 1 intentions
+4. **Update COORD**: Set `vision_wave_assignment: 1` and `status: in_wave_1`
+5. **Traceability**: Epic metadata includes `from_coord: "COORD-2025-003"`
+
+**Workflow 3: Quarterly Review → COORD Status Update**
+
+1. **Quarterly vision synthesis**: Run Phase 1.1-1.4 workflow
+2. **For each COORD**: Update `light_plus_metadata.status` based on wave assignment
+3. **Communicate decisions**: Send coordination responses to requesting repos
+4. **SLA compliance**: Acknowledge COORD decisions within SLA (48h default)
+
+---
+
+### 15.8 Operational Patterns for AI Agents
+
+**Agent Workflow: Analyze COORDs as Intentions**
+
+```markdown
+User: "Run Phase 1.1 Discovery for Q4 2025"
+
+Agent:
+1. Read active coordination requests:
+   cat inbox/coordination/active.jsonl | jq 'select(.status == "active")'
+
+2. For each COORD, extract:
+   - Description → intention description
+   - Priority/urgency → evidence level (A/B/C)
+   - Requesting_repo + affected_domains → user demand score
+   - Estimated_effort → effort hours
+
+3. Create intention inventory entry:
+   echo '{
+     "intention_id": "INT-2025-NNN",
+     "source": "COORD-2025-XXX",
+     "evidence_level": "A",
+     "user_demand": 12,
+     "effort_hours": 24
+   }' >> .chora/planning/intentions/2025-Q4.jsonl
+
+4. Update COORD with Light+ metadata:
+   jq '.light_plus_metadata.intention_id = "INT-2025-NNN"' \
+      inbox/coordination/COORD-2025-XXX.json > tmp.json && \
+      mv tmp.json inbox/coordination/COORD-2025-XXX.json
+```
+
+**Agent Workflow: Quarterly COORD Status Update**
+
+```markdown
+User: "Update COORD status after Wave 1 assignment"
+
+Agent:
+1. Read Wave 1 assignments from ROADMAP.md
+
+2. For each intention in Wave 1:
+   - Find source COORD via intention_id
+   - Update COORD status: active → in_wave_1
+   - Set vision_wave_assignment: 1
+
+3. For COORDs not in Wave 1:
+   - Update status: active → wave_2_candidate
+   - Add rationale: "Deferred to Wave 2 due to capacity constraints"
+
+4. Emit coordination_request_updated events to events.jsonl
+```
+
+---
+
+### 15.9 Benefits of Light+ Integration
+
+**For Product Planning**:
+- Coordination requests drive strategic planning (evidence-based roadmap)
+- Clear prioritization framework (Wave 1 vs Wave 2 criteria)
+- Traceability from ecosystem need → shipped feature
+
+**For Ecosystem Partners**:
+- Transparency: See how coordination requests become roadmap items
+- Predictability: Understand Wave 1 vs Wave 2 assignment criteria
+- Accountability: Track lead time from COORD → delivery
+
+**For Retrospectives**:
+- Measure lead time (coordination → production)
+- Identify bottlenecks (COORDs stuck in discovery phase)
+- Calculate % of shipped features sourced from ecosystem coordination
+- Evidence-based process improvements
+
+---
+
+### 15.10 Related Documents
+
+- [SAP-012: Development Lifecycle](../development-lifecycle/protocol-spec.md) - Light+ framework specification
+- [SAP-015: Task Tracking](../task-tracking/protocol-spec.md) - Beads epic creation from intentions
+- [SAP-010: Memory System](../memory-system/protocol-spec.md) - A-MEM event correlation
+- [SAP-027: Dogfooding Patterns](../dogfooding-patterns/protocol-spec.md) - Wave 2 validation methodology
+- [LIGHT_PLUS_REFERENCE.md](../../../docs/dev-docs/LIGHT_PLUS_REFERENCE.md) - Quick reference guide
 
 ---
 

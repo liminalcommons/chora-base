@@ -54,5 +54,14 @@
     ],
     "sprint": "2025-W44",
     "milestone": "cross-repo-integration-v1"
+  },
+  "light_plus_metadata": {
+    "intention_id": null,
+    "evidence_level": "B",
+    "user_demand_score": 6,
+    "effort_estimate_hours": 3,
+    "vision_wave_assignment": null,
+    "assigned_to_roadmap": null,
+    "status": "pending_discovery"
   }
 }

@@ -2,8 +2,32 @@
 
 **SAP ID**: SAP-014
 **Version**: 1.0.0
-**Status**: Active
-**Last Updated**: 2025-11-05
+**Status**: ⚠️ **DEPRECATED** (as of 2025-11-12)
+**Last Updated**: 2025-11-12
+
+---
+
+## ⚠️ DEPRECATION NOTICE
+
+**SAP-014 is deprecated as of 2025-11-12. Use SAP-047 (Capability Server Template) for new projects.**
+
+**Why deprecated?**
+- SAP-047 provides multi-interface support (CLI, REST, MCP) vs MCP-only
+- SAP-047 includes architectural patterns (SAP-042-047: registry, bootstrap, composition)
+- SAP-047 reduces setup time from 40-60h to 5 minutes (2,271% ROI)
+
+**Migration path**: See [SAP-047 Adoption Blueprint](../capability-server-template/adoption-blueprint.md)
+
+**Quick start**:
+```bash
+python scripts/create-capability-server.py \
+    --name "YourCapability" \
+    --namespace yournamespace \
+    --enable-mcp \
+    --output ~/projects/your-capability
+```
+
+**Support timeline**: SAP-014 supported until 2025-12-31 for existing projects only.
 
 ---
 

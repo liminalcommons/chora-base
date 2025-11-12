@@ -10,8 +10,8 @@ MCP)[\[1\]](file://file_000000005ec871f58573317ae4f9fe20#:~:text=,a%20component%
 This research consolidates best practices from cloud and software
 industry leaders -- including AWS, Kubernetes, Docker, Terraform, and
 more -- to inform a prescriptive architecture for capability servers. It
-also outlines how to document these practices in **Structured Autonomous
-Practice (SAP)** guides to accelerate adoption in the chora ecosystem.
+also outlines how to document these practices in **Skilled Awareness
+Package (SAP)** guides to accelerate adoption in the chora ecosystem.
 
 **Key Findings:** Each research area revealed critical patterns and
 recommendations:
@@ -123,7 +123,7 @@ recommendations:
 
 - **SAP Development & Adoption:** To maximize adoption of these
   patterns, we propose a structured documentation framework --
-  **Structured Autonomous Practices (SAPs)** -- for capability server
+  **Skilled Awareness Packages (SAPs)** -- for capability server
   development. A SAP is a bundle of guidance artifacts (charter,
   specification, guide for AI agents, adoption blueprint, etc.) that
   standardize knowledge
@@ -3774,8 +3774,8 @@ ensuring reliability and manageability in a distributed system.
 
 ## Part 6: SAP Development Framework and Templates
 
-Finally, we focus on how to structure SAPs (Structured Autonomous
-Practices) themselves for capability servers, how to encourage adoption
+Finally, we focus on how to structure SAPs (Skilled Awareness
+Packages) themselves for capability servers, how to encourage adoption
 tiers, and provide code templates, aligning all the research findings
 into actionable documentation and scaffolding for developers.
 
@@ -3800,7 +3800,7 @@ structure as requested.)*
 
 ## Part 6: SAP Development Framework and Templates
 
-Developing Structured Autonomous Practices (SAPs) for capability servers
+Developing Skilled Awareness Packages (SAPs) for capability servers
 is a disciplined way to capture and disseminate all the patterns and
 recommendations we've discussed. In this part, we outline how to create
 high-quality SAP documents and supporting materials (code templates,
@@ -4177,7 +4177,7 @@ various authoritative sources and can be found in an Excel sheet in
 domain capability (e.g., orchestration, registry, etc.), with standard
 interfaces and
 self-description[\[1\]](file://file_000000005ec871f58573317ae4f9fe20#:~:text=,a%20component%20that). -
-*Structured Autonomous Practice (SAP)*: A documentation and template
+*Skilled Awareness Package (SAP)*: A documentation and template
 package that encapsulates best practices, patterns, and code scaffolding
 for a particular aspect of the
 architecture[\[18\]](file://file_000000005ec871f58573317ae4f9fe20#:~:text=,capability%20package%20with%20standardized%20documentation). -

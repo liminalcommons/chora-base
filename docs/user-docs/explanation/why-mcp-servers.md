@@ -1,16 +1,22 @@
 # Why MCP Servers?
 
 **Document Type**: Explanation
-**Last Updated**: 2025-10-29
+**Last Updated**: 2025-11-12
 **Status**: Active
+
+---
+
+## Context: MCP as One Interface Type
+
+**Note**: This document focuses on the Model Context Protocol (MCP) as one interface type for capability servers. For production use, consider **capability servers** (SAP-047) which support multiple interfaces (CLI, REST, and optionally MCP) rather than MCP-only servers.
+
+**For implementation**: See [SAP-047: Capability Server Template](../../skilled-awareness/capability-server-template/) (recommended) or [SAP-014: MCP Server Development](../../skilled-awareness/mcp-server-development/) (deprecated, legacy MCP-only)
 
 ---
 
 ## Overview
 
-This document explains the Model Context Protocol (MCP), why it exists, and when you should use MCP servers versus alternative approaches. It provides conceptual understanding rather than implementation details.
-
-**For implementation**: See [SAP-014: MCP Server Development](../../skilled-awareness/mcp-server-development/)
+This document explains the Model Context Protocol (MCP), why it exists, and when you should use MCP as an interface for your capability servers. It provides conceptual understanding rather than implementation details
 
 ---
 
@@ -60,7 +66,7 @@ The Model Context Protocol (MCP) is an open protocol that standardizes how AI as
 ### After MCP
 
 **With MCP**:
-1. Build MCP server with task management tools (1-2 hours using SAP-014)
+1. Build capability server with MCP interface (5 minutes using SAP-047)
 2. Configure Claude Desktop to connect to server (1 minute)
 3. Claude automatically discovers tools: `taskmanager:create_task`, `taskmanager:list_tasks`
 4. Claude knows parameter types, descriptions, return values
@@ -182,7 +188,7 @@ Claude can:
 **Why MCP**:
 - ✅ No hosting required (runs locally)
 - ✅ No authentication complexity (trusted environment)
-- ✅ Fast to build (30-60 min with SAP-014)
+- ✅ Fast to build (5 min with SAP-047)
 - ✅ Native integration with Claude Desktop
 
 **Examples**:
@@ -369,7 +375,8 @@ Claude Desktop
 ## Related Documentation
 
 **chora-base**:
-- [SAP-014: MCP Server Development](../../skilled-awareness/mcp-server-development/) - Implementation guide
+- [SAP-047: Capability Server Template](../../skilled-awareness/capability-server-template/) - Recommended implementation guide
+- [SAP-014: MCP Server Development](../../skilled-awareness/mcp-server-development/) - Legacy MCP-only guide (deprecated)
 - [MCP Protocol Reference](../reference/mcp-protocol-spec.md) - Protocol details
 - [FastMCP API Reference](../reference/fastmcp-api-reference.md) - Python SDK
 - [Chora MCP Conventions v1.0](../../standards/CHORA_MCP_CONVENTIONS_v1.0.md) - Naming standards

@@ -2,8 +2,18 @@
 
 **SAP ID**: SAP-014
 **Version**: 1.0.0
-**Status**: Active
-**Last Updated**: 2025-11-05
+**Status**: ⚠️ **DEPRECATED** (as of 2025-11-12)
+**Last Updated**: 2025-11-12
+
+---
+
+## ⚠️ DEPRECATION NOTICE
+
+**SAP-014 is deprecated. Use SAP-047 (Capability Server Template) for new projects.**
+
+**Quick migration**: `python scripts/create-capability-server.py --enable-mcp`
+
+See [SAP-047 Documentation](../capability-server-template/) for details.
 
 ---
 

@@ -13,7 +13,7 @@
 just create-mcp-server "Weather MCP" weather ~/projects/weather-mcp
 
 # Or use Python script directly
-python scripts/create-model-mcp-server.py \
+python scripts/create-capability-server.py \
     --name "Weather MCP" \
     --namespace weather \
     --output ~/projects/weather-mcp
@@ -89,13 +89,13 @@ just create-mcp-server "Database Query" dbquery ~/projects/dbquery-mcp
 
 ```bash
 # Full command with all options
-python scripts/create-model-mcp-server.py \
+python scripts/create-capability-server.py \
     --name "Weather MCP" \
     --namespace weather \
     --output ~/projects/weather-mcp
 
 # Interactive mode (prompts for inputs)
-python scripts/create-model-mcp-server.py
+python scripts/create-capability-server.py
 ```
 
 ---
