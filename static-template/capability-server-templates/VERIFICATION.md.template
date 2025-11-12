@@ -1,0 +1,516 @@
+# {{ capability_name }} - Verification Guide
+
+**Generated from**: chora-base 5.0.0 (SAP-047 Capability Server Template)
+**Project**: {{ package_name }}
+**Namespace**: {{ namespace }}
+**Generated**: {{ "{{" }} timestamp {{ "}}" }}
+
+---
+
+## Purpose
+
+This guide enables autonomous verification of your capability server project through L1-L4 verification levels, following the comprehensive plan in chora-base.
+
+**For Claude Code**: This document provides a self-contained verification workflow. You can execute this plan autonomously by following the sections below.
+
+---
+
+## Quick Verification Checklist
+
+### L1: Configured (Basic Generation)
+- [ ] All expected files generated (~80 files)
+- [ ] Core layer present (models, business logic)
+- [ ] Interface layers present{% if enable_mcp %} (CLI, REST, MCP){% else %} (CLI, REST){% endif %}
+{% if enable_registry %}- [ ] Registry service configured{% endif %}
+{% if enable_bootstrap %}- [ ] Bootstrap orchestration configured{% endif %}
+{% if enable_composition %}- [ ] Composition patterns configured{% endif %}
+{% if include_beads %}- [ ] Beads task tracking configured{% endif %}
+{% if include_inbox %}- [ ] Inbox coordination configured{% endif %}
+{% if include_memory %}- [ ] A-MEM memory system configured{% endif %}
+- [ ] Dependencies installable (`pip install -e ".[dev]"`)
+- [ ] Project structure matches capability server architecture
+
+### L2: Usage (Comprehensive Testing)
+- [ ] **Quality Gates**: All pass
+  - [ ] Ruff linting: `ruff check .` (0 errors)
+  - [ ] Ruff formatting: `ruff format --check .` (0 errors)
+  - [ ] Mypy type checking: `mypy {{ package_name }}` (0 errors)
+  - [ ] Pytest tests: `pytest` (all pass)
+  - [ ] Coverage: `pytest --cov={{ package_name }}` (≥85%)
+- [ ] **CLI Interface**: All commands work
+  - [ ] `{{ package_name }} --version`
+  - [ ] `{{ package_name }} --help`
+  - [ ] `{{ package_name }} health`
+- [ ] **REST API Interface**: All endpoints work
+  - [ ] Health endpoint: `GET /health`
+  - [ ] API documentation: `GET /docs`
+  - [ ] Capability endpoints functional
+{% if enable_mcp %}- [ ] **MCP Interface**: Server functional
+  - [ ] MCP server starts: `{{ package_name }}-mcp`
+  - [ ] Tools discoverable
+  - [ ] Tools executable
+{% endif %}
+{% if enable_registry %}- [ ] **Registry Service**: Registration and discovery work
+  - [ ] Service registration
+  - [ ] Health monitoring
+  - [ ] Service discovery
+{% endif %}
+{% if enable_bootstrap %}- [ ] **Bootstrap Orchestration**: Dependency-ordered startup
+  - [ ] Dependencies resolve correctly
+  - [ ] Startup order correct
+  - [ ] Rollback on failure
+{% endif %}
+{% if enable_composition %}- [ ] **Composition Patterns**: All patterns functional
+  - [ ] Saga pattern (rollback on failure)
+  - [ ] Circuit breaker (fail-fast)
+  - [ ] Event bus (pub/sub)
+{% endif %}
+{% if include_beads %}- [ ] **Beads Task Tracking**: CLI functional
+  - [ ] `bd init` creates `.beads/`
+  - [ ] `bd create` adds tasks
+  - [ ] `bd list` shows tasks
+{% endif %}
+{% if include_inbox %}- [ ] **Inbox Coordination**: Protocol works
+  - [ ] `inbox/coordination/` directory exists
+  - [ ] Can create coordination requests
+  - [ ] Can process requests
+{% endif %}
+{% if include_memory %}- [ ] **A-MEM Memory**: Event storage works
+  - [ ] `.chora/memory/events/` directory exists
+  - [ ] Can record events
+  - [ ] Can query events
+{% endif %}
+
+### L3: Active (Best Practices)
+- [ ] **Architecture Validation**:
+  - [ ] Core/interface separation verified (0 circular dependencies)
+  - [ ] Dependency injection pattern followed
+  - [ ] All interfaces implement AbstractInterface
+- [ ] **Docker Deployment**:
+  - [ ] Docker image builds: `docker build -t {{ package_name }} .`
+  - [ ] Image size reasonable (<300MB)
+  - [ ] Container runs: `docker run -p 8000:8000 {{ package_name }}`
+  - [ ] Health check passes in container
+- [ ] **Documentation Complete**:
+  - [ ] README.md updated with project specifics
+  - [ ] API documentation generated
+  - [ ] Architecture diagrams present
+  - [ ] User guides updated
+
+### L4: Deep (Optimization)
+- [ ] **User Simulation** (<15 minutes):
+  - [ ] New developer can set up in <5 min
+  - [ ] Can execute basic workflow in <10 min
+  - [ ] Documentation is clear and complete
+- [ ] **Performance Metrics**:
+  - [ ] Docker build: <180s
+  - [ ] Test execution: <30s
+  - [ ] Coverage: ≥85%
+  - [ ] Image size: <300MB
+  - [ ] API startup: <3s
+  - [ ] Response time: <100ms (health endpoint)
+{% if enable_composition %}- [ ] **Advanced Patterns**:
+  - [ ] Circuit breaker triggers on N failures
+  - [ ] Saga rollback on failure
+  - [ ] Event bus propagates events
+{% endif %}
+{% if enable_registry %}- [ ] **Registry Patterns**:
+  - [ ] Service registration within 1s of startup
+  - [ ] Health checks every 30s
+  - [ ] Deregistration on shutdown
+{% endif %}
+{% if enable_bootstrap %}- [ ] **Bootstrap Patterns**:
+  - [ ] Dependency graph is acyclic
+  - [ ] Startup completes in <5s
+  - [ ] Rollback on any service failure
+{% endif %}
+
+---
+
+## Verification Commands
+
+### Setup
+```bash
+# Clone the repository (if verification in separate repo)
+git clone https://github.com/{{ github_username }}/{{ package_name }}.git
+cd {{ package_name }}
+
+# Install dependencies
+python -m pip install --upgrade pip
+pip install -e ".[dev]"
+{% if include_beads %}
+# Initialize beads (if using SAP-015)
+bd init
+{% endif %}
+```
+
+### L1: Basic Verification
+```bash
+# File count
+FILE_COUNT=$(find . -type f | wc -l)
+echo "📁 Files generated: $FILE_COUNT (expected: ~80)"
+
+# Core layer
+test -d {{ package_name }}/core && echo "✅ Core directory" || echo "❌ Core missing"
+test -f {{ package_name }}/core/models.py && echo "✅ Core models" || echo "❌ Models missing"
+test -f {{ package_name }}/core/service.py && echo "✅ Core service" || echo "❌ Service missing"
+
+# Interface layers
+test -d {{ package_name }}/interfaces/cli && echo "✅ CLI interface" || echo "❌ CLI missing"
+test -d {{ package_name }}/interfaces/rest && echo "✅ REST interface" || echo "❌ REST missing"
+{% if enable_mcp %}test -d {{ package_name }}/interfaces/mcp && echo "✅ MCP interface" || echo "❌ MCP missing"
+{% endif %}
+{% if enable_registry %}# Registry
+test -d {{ package_name }}/infrastructure/registry && echo "✅ Registry service" || echo "❌ Registry missing"
+{% endif %}
+{% if enable_bootstrap %}# Bootstrap
+test -d {{ package_name }}/infrastructure/bootstrap && echo "✅ Bootstrap orchestration" || echo "❌ Bootstrap missing"
+{% endif %}
+{% if enable_composition %}# Composition
+test -d {{ package_name }}/infrastructure/composition && echo "✅ Composition patterns" || echo "❌ Composition missing"
+{% endif %}
+# Dependencies
+pip install -e ".[dev]" && echo "✅ Dependencies installed" || echo "❌ Install failed"
+```
+
+### L2: Quality Gates
+```bash
+# Ruff linting
+ruff check . && echo "✅ Ruff lint passed" || echo "❌ Ruff lint failed"
+
+# Ruff formatting
+ruff format --check . && echo "✅ Ruff format passed" || echo "❌ Ruff format failed"
+
+# Mypy type checking
+mypy {{ package_name }} && echo "✅ Mypy passed" || echo "❌ Mypy failed"
+
+# Pytest tests
+pytest && echo "✅ Tests passed" || echo "❌ Tests failed"
+
+# Coverage
+pytest --cov={{ package_name }} --cov-report=term-missing && echo "✅ Coverage ≥85%" || echo "❌ Coverage <85%"
+```
+
+### L2: Interface Testing
+```bash
+# CLI Interface
+{{ package_name }} --version && echo "✅ CLI version" || echo "❌ CLI version failed"
+{{ package_name }} health && echo "✅ CLI health" || echo "❌ CLI health failed"
+
+# REST API Interface (start in background)
+uvicorn {{ package_name }}.interfaces.rest.app:app --host 0.0.0.0 --port 8000 &
+API_PID=$!
+sleep 3
+
+# Test health endpoint
+curl -f http://localhost:8000/health && echo "✅ REST health" || echo "❌ REST health failed"
+
+# Test API docs
+curl -f http://localhost:8000/docs && echo "✅ REST docs" || echo "❌ REST docs failed"
+
+# Cleanup
+kill $API_PID
+{% if enable_mcp %}
+# MCP Interface
+{{ package_name }}-mcp --version && echo "✅ MCP version" || echo "❌ MCP version failed"
+{% endif %}
+```
+
+{% if enable_registry or enable_bootstrap or enable_composition %}### L2: Infrastructure Testing
+```bash
+{% if enable_registry %}# Registry Service
+python -c "from {{ package_name }}.infrastructure.registry import RegistryService; r = RegistryService(); print('✅ Registry imports')" || echo "❌ Registry import failed"
+{% endif %}
+{% if enable_bootstrap %}# Bootstrap Orchestration
+python -c "from {{ package_name }}.infrastructure.bootstrap import Bootstrap; b = Bootstrap(); print('✅ Bootstrap imports')" || echo "❌ Bootstrap import failed"
+{% endif %}
+{% if enable_composition %}# Composition Patterns
+python -c "from {{ package_name }}.infrastructure.composition.saga import Saga; print('✅ Saga imports')" || echo "❌ Saga import failed"
+python -c "from {{ package_name }}.infrastructure.composition.circuit_breaker import CircuitBreaker; print('✅ Circuit breaker imports')" || echo "❌ Circuit breaker import failed"
+python -c "from {{ package_name }}.infrastructure.composition.event_bus import EventBus; print('✅ Event bus imports')" || echo "❌ Event bus import failed"
+{% endif %}
+```
+{% endif %}
+
+### L3: Docker Deployment
+```bash
+# Build Docker image
+docker build -t {{ package_name }}:test . && echo "✅ Docker build" || echo "❌ Docker build failed"
+
+# Check image size
+IMAGE_SIZE=$(docker images {{ package_name }}:test --format "{{ "{{" }}.Size{{ "}}" }}")
+echo "📦 Image size: $IMAGE_SIZE (target: <300MB)"
+
+# Run container
+docker run -d --name {{ package_name }}-test -p 8000:8000 {{ package_name }}:test
+sleep 5
+
+# Test health in container
+curl -f http://localhost:8000/health && echo "✅ Container health" || echo "❌ Container health failed"
+
+# Cleanup
+docker stop {{ package_name }}-test
+docker rm {{ package_name }}-test
+```
+
+### L4: Performance Metrics
+```bash
+# Docker build time
+time docker build -t {{ package_name }}:perf . | tee build.log
+BUILD_TIME=$(grep "real" build.log | awk '{print $2}')
+echo "🚀 Docker build: $BUILD_TIME (target: <180s)"
+
+# Test execution time
+time pytest > test.log
+TEST_TIME=$(grep "real" test.log | awk '{print $2}')
+echo "🧪 Test execution: $TEST_TIME (target: <30s)"
+
+# Coverage
+pytest --cov={{ package_name }} --cov-report=term | grep "TOTAL"
+echo "📊 Coverage (target: ≥85%)"
+
+# API startup time
+time uvicorn {{ package_name }}.interfaces.rest.app:app --host 0.0.0.0 --port 8000 &
+API_PID=$!
+STARTUP_TIME=$(ps -p $API_PID -o etime= | awk '{print $1}')
+echo "⚡ API startup: $STARTUP_TIME (target: <3s)"
+kill $API_PID
+
+# Response time (health endpoint)
+curl -w "@curl-format.txt" -o /dev/null -s http://localhost:8000/health
+echo "⏱️ Response time (target: <100ms)"
+```
+
+---
+
+## Comprehensive Verification Plan
+
+**Full Plan**: See [PLAN-2025-11-12-SAP-047-PHASE-6-L4-VERIFICATION.md](https://github.com/liminalcommons/chora-base/blob/main/docs/project-docs/plans/PLAN-2025-11-12-SAP-047-PHASE-6-L4-VERIFICATION.md) in chora-base repository.
+
+**Day 15 (L1)**: Basic generation verification
+**Day 16 (L2)**: Interface testing + quality gates
+**Day 17 (L3)**: Architecture validation + Docker deployment
+**Day 18 (L4)**: User simulation + performance metrics
+
+---
+
+## Claude Code Instructions
+
+**If you are Claude Code verifying this project**, follow these steps:
+
+### Step 1: Read Context
+1. Read this file (VERIFICATION.md) for verification workflow
+2. Read [CLAUDE.md](CLAUDE.md) for project navigation
+3. Read [README.md](README.md) for project overview
+
+### Step 2: Execute L1 Verification
+1. Run the L1 verification commands above
+2. Document results in `.chora/verification/l1-report.md`
+3. Mark L1 checklist items as complete
+
+### Step 3: Execute L2 Verification
+1. Run quality gate commands
+2. Test all interfaces (CLI, REST{% if enable_mcp %}, MCP{% endif %})
+{% if enable_registry or enable_bootstrap or enable_composition %}3. Test infrastructure patterns{% endif %}
+4. Document results in `.chora/verification/l2-report.md`
+5. Mark L2 checklist items as complete
+
+### Step 4: Execute L3 Verification
+1. Validate architecture (core/interface separation)
+2. Build and test Docker image
+3. Document results in `.chora/verification/l3-report.md`
+4. Mark L3 checklist items as complete
+
+### Step 5: Execute L4 Verification
+1. Run user simulation (time yourself)
+2. Collect performance metrics
+{% if enable_composition or enable_registry or enable_bootstrap %}3. Test advanced patterns{% endif %}
+4. Document results in `.chora/verification/l4-report.md`
+5. Mark L4 checklist items as complete
+
+### Step 6: GO/NO-GO Decision
+**Criteria for GO**:
+- All L1-L4 checklist items complete
+- All quality gates pass
+- All interfaces functional
+- Performance metrics meet targets
+- Documentation complete
+
+**If GO**: Proceed to GitHub template repository setup and production release.
+
+**If NO-GO**: Document blockers, create issues in chora-base, iterate.
+
+---
+
+## Report Templates
+
+### L1 Report Template
+```markdown
+# L1 Verification Report: {{ capability_name }}
+
+**Date**: [YYYY-MM-DD]
+**Verified by**: [Claude Code / Human]
+**Duration**: [X] minutes
+
+## File Generation
+- Total files: [X] (expected: ~80)
+- Core layer: ✅/❌
+- Interface layers: ✅/❌{% if enable_registry %}
+- Registry service: ✅/❌{% endif %}{% if enable_bootstrap %}
+- Bootstrap orchestration: ✅/❌{% endif %}{% if enable_composition %}
+- Composition patterns: ✅/❌{% endif %}
+
+## Dependencies
+- Installation: ✅/❌
+- No errors: ✅/❌
+
+## L1 Result
+- [ ] PASS - All L1 criteria met
+- [ ] FAIL - Blockers: [list blockers]
+```
+
+### L2 Report Template
+```markdown
+# L2 Verification Report: {{ capability_name }}
+
+**Date**: [YYYY-MM-DD]
+**Verified by**: [Claude Code / Human]
+**Duration**: [X] minutes
+
+## Quality Gates
+- Ruff lint: ✅/❌
+- Ruff format: ✅/❌
+- Mypy: ✅/❌
+- Pytest: ✅/❌ ([X] passed, [X] failed)
+- Coverage: ✅/❌ ([X]%)
+
+## Interface Testing
+- CLI: ✅/❌
+- REST API: ✅/❌{% if enable_mcp %}
+- MCP: ✅/❌{% endif %}{% if enable_registry %}
+
+## Infrastructure Testing
+- Registry: ✅/❌{% endif %}{% if enable_bootstrap %}
+- Bootstrap: ✅/❌{% endif %}{% if enable_composition %}
+- Composition: ✅/❌{% endif %}
+
+## L2 Result
+- [ ] PASS - All L2 criteria met
+- [ ] FAIL - Blockers: [list blockers]
+```
+
+### L3 Report Template
+```markdown
+# L3 Verification Report: {{ capability_name }}
+
+**Date**: [YYYY-MM-DD]
+**Verified by**: [Claude Code / Human]
+**Duration**: [X] minutes
+
+## Architecture Validation
+- Core/interface separation: ✅/❌
+- Dependency injection: ✅/❌
+- Circular dependencies: ✅/❌ (0 found)
+
+## Docker Deployment
+- Build success: ✅/❌
+- Build time: [X]s (target: <180s)
+- Image size: [X]MB (target: <300MB)
+- Container runs: ✅/❌
+- Health check: ✅/❌
+
+## Documentation
+- README.md: ✅/❌
+- API docs: ✅/❌
+- Architecture diagrams: ✅/❌
+
+## L3 Result
+- [ ] PASS - All L3 criteria met
+- [ ] FAIL - Blockers: [list blockers]
+```
+
+### L4 Report Template
+```markdown
+# L4 Verification Report: {{ capability_name }}
+
+**Date**: [YYYY-MM-DD]
+**Verified by**: [Claude Code / Human]
+**Duration**: [X] minutes
+
+## User Simulation
+- Setup time: [X] min (target: <5 min)
+- Workflow time: [X] min (target: <10 min)
+- Total: [X] min (target: <15 min)
+
+## Performance Metrics
+| Metric | Target | Actual | Status |
+|--------|--------|--------|--------|
+| Docker build | <180s | [X]s | ✅/❌ |
+| Test execution | <30s | [X]s | ✅/❌ |
+| Coverage | ≥85% | [X]% | ✅/❌ |
+| Image size | <300MB | [X]MB | ✅/❌ |
+| API startup | <3s | [X]s | ✅/❌ |
+| Response time | <100ms | [X]ms | ✅/❌ |
+{% if enable_composition or enable_registry or enable_bootstrap %}
+## Advanced Patterns{% if enable_composition %}
+- Circuit breaker: ✅/❌
+- Saga rollback: ✅/❌
+- Event bus: ✅/❌{% endif %}{% if enable_registry %}
+- Registry registration: ✅/❌
+- Health checks: ✅/❌{% endif %}{% if enable_bootstrap %}
+- Bootstrap startup: ✅/❌
+- Dependency resolution: ✅/❌{% endif %}
+{% endif %}
+## L4 Result
+- [ ] PASS - All L4 criteria met
+- [ ] FAIL - Blockers: [list blockers]
+```
+
+---
+
+## Success Criteria Summary
+
+**GO Decision**: All criteria met
+**NO-GO Decision**: Any criterion fails
+
+| Level | Criterion | Status |
+|-------|-----------|--------|
+| L1 | ~80 files generated | ⬜ |
+| L1 | All layers present | ⬜ |
+| L1 | Dependencies install | ⬜ |
+| L2 | Quality gates pass | ⬜ |
+| L2 | All interfaces work | ⬜ |
+| L2 | Coverage ≥85% | ⬜ |
+| L3 | Architecture valid | ⬜ |
+| L3 | Docker deploys | ⬜ |
+| L3 | Documentation complete | ⬜ |
+| L4 | User simulation <15 min | ⬜ |
+| L4 | Performance targets met | ⬜ |
+| L4 | Advanced patterns work | ⬜ |
+
+---
+
+## Related Documentation
+
+- **Comprehensive Plan**: [PLAN-2025-11-12-SAP-047-PHASE-6-L4-VERIFICATION.md](https://github.com/liminalcommons/chora-base/blob/main/docs/project-docs/plans/PLAN-2025-11-12-SAP-047-PHASE-6-L4-VERIFICATION.md)
+- **chora-base Repository**: [https://github.com/liminalcommons/chora-base](https://github.com/liminalcommons/chora-base)
+- **SAP-047 Documentation**: [docs/skilled-awareness/capability-server-template/](https://github.com/liminalcommons/chora-base/tree/main/docs/skilled-awareness/capability-server-template)
+- **Generator Script**: [scripts/create-capability-server.py](https://github.com/liminalcommons/chora-base/blob/main/scripts/create-capability-server.py)
+
+---
+
+## Feedback and Issues
+
+**Found issues during verification?**
+1. Document in `.chora/verification/issues.md`
+2. Create GitHub issue in chora-base: [https://github.com/liminalcommons/chora-base/issues](https://github.com/liminalcommons/chora-base/issues)
+3. Tag with `SAP-047` and `verification`
+
+**Questions or improvements?**
+- Open discussion in chora-base repository
+- Reference this verification run
+
+---
+
+**Generated by**: chora-base 5.0.0 SAP-047 Capability Server Template
+**Last Updated**: {{ "{{" }} timestamp {{ "}}" }}

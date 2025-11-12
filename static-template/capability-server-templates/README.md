@@ -406,9 +406,21 @@ python scripts/create-capability-server.py \
   - Updated variables dict with new template variables: `capability_name`, `capability_name_pascal`, `capability_name_lower`, `namespace`
   - Updated success message to reflect multi-interface architecture with usage examples for CLI, REST, and optional MCP
 
-### 🚧 Phase 6: Verification (Planned)
-- **Duration**: Days 15-18
-- **Scope**: L1-L4 SAP verification, test project generation
+### ✅ Phase 6: Verification Documentation (Complete)
+- **Duration**: Day 15 (actual: 2025-11-12)
+- **Scope**: L1-L4 verification documentation for autonomous Claude Code execution
+- **Deliverables**:
+  - Created comprehensive verification plan: [PLAN-2025-11-12-SAP-047-PHASE-6-L4-VERIFICATION.md](../../docs/project-docs/plans/PLAN-2025-11-12-SAP-047-PHASE-6-L4-VERIFICATION.md)
+  - Created VERIFICATION.md.template (561 lines): Self-contained L1-L4 verification guide for generated projects
+  - Created CLAUDE.md.template (583 lines): Navigation and awareness guide for Claude Code
+  - Updated create-capability-server.py: Added CHORA_BASE_VERSION 5.0.0, current_date variable, new template mappings
+  - Fixed template variable consistency (include_beads/inbox/memory)
+  - Tested template generation successfully
+
+### 🚧 Phase 6b: Verification Execution (Pending)
+- **Duration**: Days 16-18
+- **Scope**: Execute L1-L4 verification in separate repository (liminalcommons/chora-capability-server-template)
+- **Prerequisites**: Push chora-base changes, generate full profile project, open in separate IDE window
 
 ### 🚧 Phase 7: Promotion (Planned)
 - **Duration**: Days 19-21 + 5 weeks
@@ -490,7 +502,8 @@ When adding new templates:
 - **0.3.0** (2025-11-12): Phase 3 complete - Infrastructure templates (registry, bootstrap, composition + 210+ tests)
 - **0.4.0** (2025-11-12): Phase 4 complete - Documentation & configuration templates (AGENTS.md, CLI.md, API.md, ARCHITECTURE.md, pyproject.toml, setup.py, README.md, Dockerfile, docker-compose.yml, CI/CD workflows)
 - **0.5.0** (2025-11-12): Phase 5 complete - Script integration (complete rewrite of `create-capability-server.py` with 50+ template mappings, new CLI flags, decision profiles, validation)
+- **0.6.0** (2025-11-12): Phase 6 complete - Verification documentation (PLAN-2025-11-12-SAP-047-PHASE-6-L4-VERIFICATION.md, VERIFICATION.md.template, CLAUDE.md.template, chora-base 5.0.0 version updates)
 
 ---
 
-**Next Steps**: Phase 6 - Verification (L1-L4 SAP verification, test project generation)
+**Next Steps**: Phase 6b - Execute L1-L4 verification in liminalcommons/chora-capability-server-template (separate IDE window/session)

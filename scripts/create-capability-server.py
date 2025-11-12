@@ -82,8 +82,8 @@ except ImportError:
 # CONSTANTS
 # ============================================================================
 
-VERSION = "2.0.0"  # SAP-047 capability server templates (Phases 1-4 complete)
-CHORA_BASE_VERSION = "4.10.0"
+VERSION = "2.0.0"  # SAP-047 capability server templates (Phases 1-5 complete, Phase 6 verification)
+CHORA_BASE_VERSION = "5.0.0"  # Released: includes capability server architecture suite (SAP-042-047)
 
 # Template variables that can be customized via profiles
 DEFAULT_CONFIG = {
@@ -449,6 +449,8 @@ def render_templates(chora_base_dir: Path, output_dir: Path, variables: Dict[str
     # Documentation
     template_mappings.update({
         "AGENTS.md.template": "AGENTS.md",
+        "CLAUDE.md.template": "CLAUDE.md",
+        "VERIFICATION.md.template": "VERIFICATION.md",
         "CLI.md.template": "CLI.md",
         "API.md.template": "API.md",
         "ARCHITECTURE.md.template": "ARCHITECTURE.md",
@@ -1185,6 +1187,9 @@ def main():
 
         # Configuration (includes enable_* flags)
         **profile_config,
+
+        # Timestamps
+        "current_date": datetime.now().strftime("%Y-%m-%d"),
     }
 
     # Print summary

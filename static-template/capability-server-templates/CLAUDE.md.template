@@ -1,0 +1,646 @@
+# {{ capability_name }} - Claude Agent Awareness
+
+**Generated from**: chora-base 5.0.0 (SAP-047 Capability Server Template)
+**Project**: {{ package_name }}
+**Namespace**: {{ namespace }}
+**Architecture**: Capability Server with{% if enable_mcp %} CLI + REST + MCP{% else %} CLI + REST{% endif %} interfaces
+
+---
+
+## ⚠️ CRITICAL: Read This First!
+
+This project was generated from **chora-base 5.0.0** using the **SAP-047 Capability Server Template** generator. It follows the capability server architecture pattern with:
+
+- **Core/Interface Separation** (SAP-042): Business logic isolated from interface implementations
+- **Multi-Interface Support** (SAP-043):{% if enable_mcp %} CLI, REST API, and MCP server{% else %} CLI and REST API{% endif %}
+{% if enable_registry %}- **Service Registry** (SAP-044): Service discovery and health monitoring{% endif %}
+{% if enable_bootstrap %}- **Bootstrap Orchestration** (SAP-045): Dependency-ordered startup with rollback{% endif %}
+{% if enable_composition %}- **Composition Patterns** (SAP-046): Saga, circuit breaker, event bus{% endif %}
+{% if include_beads %}- **Task Tracking** (SAP-015): Beads git-backed task memory{% endif %}
+{% if include_inbox %}- **Coordination Protocol** (SAP-001): Cross-repo inbox coordination{% endif %}
+{% if include_memory %}- **Event Memory** (SAP-010): A-MEM event-sourced history{% endif %}
+
+---
+
+## Quick Start for Claude Code
+
+### First-Time Setup
+
+1. **Read this file** (CLAUDE.md) for project overview and navigation
+2. **Read [VERIFICATION.md](VERIFICATION.md)** for verification workflow (if verifying)
+3. **Read [README.md](README.md)** for user-facing documentation
+4. **Read architecture documentation** in `docs/architecture/` for deep understanding
+
+### Verification Workflow
+
+**If you are verifying this project**:
+1. Follow [VERIFICATION.md](VERIFICATION.md) for L1-L4 verification steps
+2. See comprehensive plan: [PLAN-2025-11-12-SAP-047-PHASE-6-L4-VERIFICATION.md](https://github.com/liminalcommons/chora-base/blob/main/docs/project-docs/plans/PLAN-2025-11-12-SAP-047-PHASE-6-L4-VERIFICATION.md)
+3. Document results in `.chora/verification/` directory
+
+### Development Workflow
+
+**If you are developing new features**:
+1. Core business logic goes in `{{ package_name }}/core/`
+2. Interface implementations go in `{{ package_name }}/interfaces/`
+3. Infrastructure patterns go in `{{ package_name }}/infrastructure/`
+4. Tests go in `tests/` (mirror the package structure)
+5. Follow TDD: write tests first, then implementation
+
+---
+
+## Architecture Overview
+
+### Project Structure
+
+```
+{{ package_name }}/
+├── core/                          # Business logic (interface-agnostic)
+│   ├── models.py                  # Domain models (Pydantic)
+│   ├── service.py                 # Core service implementation
+│   └── interface.py               # Abstract interface definition
+│
+├── interfaces/                    # Interface implementations
+│   ├── cli/                       # CLI interface (Click)
+│   │   └── commands.py
+│   ├── rest/                      # REST API interface (FastAPI)
+│   │   └── app.py
+{% if enable_mcp %}│   └── mcp/                       # MCP server interface (FastMCP)
+│       └── server.py
+{% endif %}│
+{% if enable_registry or enable_bootstrap or enable_composition %}├── infrastructure/                # Infrastructure patterns
+{% if enable_registry %}│   ├── registry/                  # Service registry (SAP-044)
+│   │   ├── service.py
+│   │   └── models.py
+{% endif %}{% if enable_bootstrap %}│   ├── bootstrap/                 # Bootstrap orchestration (SAP-045)
+│   │   ├── orchestrator.py
+│   │   └── dependencies.py
+{% endif %}{% if enable_composition %}│   └── composition/               # Composition patterns (SAP-046)
+│       ├── saga.py                # Saga pattern (rollback)
+│       ├── circuit_breaker.py     # Circuit breaker (fail-fast)
+│       └── event_bus.py           # Event bus (pub/sub)
+{% endif %}│
+{% endif %}├── tests/                         # Test suite (mirrors package)
+│   ├── unit/                      # Unit tests
+│   ├── integration/               # Integration tests
+│   └── conftest.py                # Pytest fixtures
+│
+{% if include_beads %}├── .beads/                        # Task tracking (SAP-015)
+│   ├── issues.jsonl               # Task source of truth
+│   └── metadata.json              # Beads metadata
+│
+{% endif %}{% if include_inbox %}├── inbox/                         # Coordination protocol (SAP-001)
+│   └── coordination/              # Coordination requests
+│
+{% endif %}{% if include_memory %}├── .chora/                        # A-MEM memory (SAP-010)
+│   └── memory/                    # Event-sourced history
+│       └── events/
+│
+{% endif %}├── docs/                          # Documentation
+│   ├── architecture/              # Architecture docs
+│   ├── api/                       # API reference
+│   └── guides/                    # User guides
+│
+├── Dockerfile                     # Multi-stage Docker build
+├── pyproject.toml                 # Python package configuration
+└── README.md                      # User-facing documentation
+```
+
+---
+
+## Capability Server Architecture (SAP-042)
+
+### Core/Interface Separation
+
+**Core Layer** (`{{ package_name }}/core/`):
+- **Purpose**: Business logic, domain models, service implementation
+- **Dependencies**: Pure Python, Pydantic, domain-specific libraries
+- **No dependencies on**: Click, FastAPI, FastMCP, or any interface libraries
+- **Testing**: Unit tests with fast execution
+
+**Interface Layer** (`{{ package_name }}/interfaces/`):
+- **Purpose**: Expose core functionality via CLI, REST, MCP
+- **Dependencies**: Click, FastAPI, FastMCP, etc.
+- **Pattern**: Each interface imports core and adapts to its protocol
+- **Testing**: Integration tests verifying interface contracts
+
+**Benefits**:
+- 80% reduction in coupling
+- Easy to add new interfaces
+- Fast unit testing (no interface overhead)
+- Clear separation of concerns
+
+---
+
+## Multi-Interface Support (SAP-043)
+
+This project provides{% if enable_mcp %} 3{% else %} 2{% endif %} interfaces to the same core capability:
+
+### 1. CLI Interface (Click)
+```bash
+# Installation
+pip install {{ package_name }}
+
+# Usage
+{{ package_name }} --help
+{{ package_name }} health
+```
+
+**When to use**: Command-line scripting, automation, CI/CD pipelines
+
+---
+
+### 2. REST API Interface (FastAPI)
+```bash
+# Start server
+uvicorn {{ package_name }}.interfaces.rest.app:app --host 0.0.0.0 --port 8000
+
+# Usage
+curl http://localhost:8000/health
+curl http://localhost:8000/docs  # Swagger UI
+```
+
+**When to use**: HTTP clients, web applications, microservices integration
+
+---
+{% if enable_mcp %}
+### 3. MCP Interface (FastMCP)
+```bash
+# Start MCP server
+{{ package_name }}-mcp
+
+# Usage (via Claude Desktop or other MCP clients)
+# Add to claude_desktop_config.json:
+{
+  "mcpServers": {
+    "{{ package_name }}": {
+      "command": "{{ package_name }}-mcp"
+    }
+  }
+}
+```
+
+**When to use**: Claude Desktop integration, AI agent workflows, tool calling
+
+---
+{% endif %}
+
+**All interfaces share the same core service**, ensuring consistency across CLI, REST{% if enable_mcp %}, and MCP{% endif %}.
+
+---
+
+{% if enable_registry or enable_bootstrap or enable_composition %}## Infrastructure Patterns
+
+{% if enable_registry %}### Service Registry (SAP-044)
+
+**Purpose**: Service discovery and health monitoring in distributed systems
+
+**Usage**:
+```python
+from {{ package_name }}.infrastructure.registry import RegistryService
+
+registry = RegistryService()
+registry.register("{{ package_name }}", "http://localhost:8000")
+services = registry.discover("{{ package_name }}")
+```
+
+**Benefits**:
+- Dynamic service discovery
+- Health monitoring (30s intervals)
+- Automatic deregistration on failure
+- Zero-config for new services
+
+---
+{% endif %}
+{% if enable_bootstrap %}### Bootstrap Orchestration (SAP-045)
+
+**Purpose**: Dependency-ordered startup with rollback on failure
+
+**Usage**:
+```python
+from {{ package_name }}.infrastructure.bootstrap import Bootstrap
+
+bootstrap = Bootstrap()
+bootstrap.add_service("database", depends_on=[])
+bootstrap.add_service("api", depends_on=["database"])
+bootstrap.start_all()  # Starts in correct order
+```
+
+**Benefits**:
+- 90% reduction in startup failures
+- Automatic rollback on any service failure
+- Dependency graph validation (no cycles)
+- Graceful shutdown
+
+---
+{% endif %}
+{% if enable_composition %}### Composition Patterns (SAP-046)
+
+#### Saga Pattern (Rollback)
+```python
+from {{ package_name }}.infrastructure.composition.saga import Saga
+
+saga = Saga()
+saga.add_step(create_order, compensate=cancel_order)
+saga.add_step(charge_payment, compensate=refund_payment)
+saga.execute()  # Rollback on failure
+```
+
+#### Circuit Breaker (Fail-Fast)
+```python
+from {{ package_name }}.infrastructure.composition.circuit_breaker import CircuitBreaker
+
+cb = CircuitBreaker(failure_threshold=5, timeout=60)
+result = cb.call(external_api_call)  # Fails fast after 5 failures
+```
+
+#### Event Bus (Pub/Sub)
+```python
+from {{ package_name }}.infrastructure.composition.event_bus import EventBus
+
+bus = EventBus()
+bus.subscribe("order_created", send_email)
+bus.publish("order_created", order_data)
+```
+
+**Benefits**:
+- 1,141% ROI on composition patterns
+- Saga: Automatic rollback on failure
+- Circuit breaker: Prevents cascading failures
+- Event bus: Decoupled service communication
+
+---
+{% endif %}
+{% endif %}
+
+{% if include_beads or include_inbox or include_memory %}## Ecosystem SAPs
+
+{% if include_beads %}### Beads Task Tracking (SAP-015)
+
+**Purpose**: Git-backed persistent task memory across sessions
+
+**Usage**:
+```bash
+# Initialize (already done in generated project)
+bd init
+
+# Create task
+bd create "Implement user authentication" --priority high
+
+# List tasks
+bd list --status open
+
+# Update task
+bd update {id} --status in_progress
+
+# Close task
+bd close {id} --reason "Implemented OAuth2 flow"
+```
+
+**Benefits**:
+- Persistent memory across Claude Code sessions
+- Git-committed task history (`.beads/issues.jsonl`)
+- Zero context re-establishment overhead
+- Rich querying and filtering
+
+---
+{% endif %}
+{% if include_inbox %}### Inbox Coordination Protocol (SAP-001)
+
+**Purpose**: Cross-repo coordination with 90% effort reduction
+
+**Usage**:
+```bash
+# Coordination requests are stored in inbox/coordination/
+# Format: JSONL with coordination, handoff, feedback types
+
+# Example coordination request:
+{
+  "id": "COORD-2025-001",
+  "type": "coordination",
+  "from": "chora-base",
+  "to": "{{ package_name }}",
+  "request": "Implement new authentication flow"
+}
+```
+
+**Benefits**:
+- Asynchronous coordination between repos
+- Event-sourced history of requests
+- Support for coordination, handoff, feedback
+- Reduces coordination overhead by 90%
+
+---
+{% endif %}
+{% if include_memory %}### A-MEM Event Memory (SAP-010)
+
+**Purpose**: Event-sourced memory for agent context and learning
+
+**Usage**:
+```python
+from {{ package_name }}.memory import record_event, query_events
+
+# Record event
+record_event(
+    event_type="feature_implemented",
+    data={"feature": "authentication", "duration": "2h"}
+)
+
+# Query events
+events = query_events(event_type="feature_implemented")
+```
+
+**Benefits**:
+- Event-sourced history (`.chora/memory/events/`)
+- 4 memory types: working, episodic, semantic, procedural
+- Correlation with beads tasks
+- Learning from past events
+
+---
+{% endif %}
+{% endif %}
+
+## Development Guidelines
+
+### 1. Core Business Logic
+
+**All business logic goes in `{{ package_name }}/core/`**:
+- Models: Pydantic models in `core/models.py`
+- Service: Business logic in `core/service.py`
+- Interface: Abstract interface in `core/interface.py`
+
+**Example**:
+```python
+# {{ package_name }}/core/models.py
+from pydantic import BaseModel
+
+class CapabilityRequest(BaseModel):
+    """Request model for capability execution."""
+    input: str
+
+class CapabilityResponse(BaseModel):
+    """Response model for capability execution."""
+    output: str
+
+# {{ package_name }}/core/service.py
+from .models import CapabilityRequest, CapabilityResponse
+from .interface import AbstractCapabilityService
+
+class CapabilityService(AbstractCapabilityService):
+    """Core business logic (interface-agnostic)."""
+
+    def execute(self, request: CapabilityRequest) -> CapabilityResponse:
+        # Business logic here
+        return CapabilityResponse(output=f"Processed: {request.input}")
+```
+
+---
+
+### 2. Interface Implementations
+
+**Each interface adapts core to its protocol**:
+
+**CLI** (`{{ package_name }}/interfaces/cli/commands.py`):
+```python
+import click
+from {{ package_name }}.core.service import CapabilityService
+from {{ package_name }}.core.models import CapabilityRequest
+
+@click.command()
+@click.argument("input")
+def execute(input: str):
+    """Execute capability via CLI."""
+    service = CapabilityService()
+    request = CapabilityRequest(input=input)
+    response = service.execute(request)
+    click.echo(response.output)
+```
+
+**REST** (`{{ package_name }}/interfaces/rest/app.py`):
+```python
+from fastapi import FastAPI
+from {{ package_name }}.core.service import CapabilityService
+from {{ package_name }}.core.models import CapabilityRequest, CapabilityResponse
+
+app = FastAPI()
+service = CapabilityService()
+
+@app.post("/execute")
+def execute(request: CapabilityRequest) -> CapabilityResponse:
+    """Execute capability via REST API."""
+    return service.execute(request)
+```
+{% if enable_mcp %}
+**MCP** (`{{ package_name }}/interfaces/mcp/server.py`):
+```python
+from mcp import FastMCP
+from {{ package_name }}.core.service import CapabilityService
+from {{ package_name }}.core.models import CapabilityRequest
+
+mcp = FastMCP("{{ capability_name }}")
+service = CapabilityService()
+
+@mcp.tool()
+def execute(input: str) -> str:
+    """Execute capability via MCP."""
+    request = CapabilityRequest(input=input)
+    response = service.execute(request)
+    return response.output
+```
+{% endif %}
+
+---
+
+### 3. Testing Strategy
+
+**Unit Tests** (`tests/unit/`):
+- Test core business logic in isolation
+- Fast execution (<5s for all unit tests)
+- No interface dependencies
+
+**Integration Tests** (`tests/integration/`):
+- Test interface implementations
+- Verify CLI commands, REST endpoints{% if enable_mcp %}, MCP tools{% endif %}
+- Slower execution (database, network, etc.)
+
+**Coverage Target**: ≥85%
+
+---
+
+### 4. Quality Gates
+
+**Pre-commit hooks** (automated):
+```bash
+# Ruff linting
+ruff check .
+
+# Ruff formatting
+ruff format .
+
+# Mypy type checking
+mypy {{ package_name }}
+```
+
+**Run manually**:
+```bash
+# All quality gates
+pre-commit run --all-files
+
+# Tests
+pytest
+
+# Coverage
+pytest --cov={{ package_name }} --cov-report=term-missing
+```
+
+---
+
+### 5. Docker Deployment
+
+**Build**:
+```bash
+docker build -t {{ package_name }}:latest .
+```
+
+**Run CLI**:
+```bash
+docker run --rm {{ package_name }}:latest {{ package_name }} --help
+```
+
+**Run REST API**:
+```bash
+docker run -d -p 8000:8000 {{ package_name }}:latest
+curl http://localhost:8000/health
+```
+
+---
+
+## Verification Workflow
+
+**If you are Claude Code verifying this project**, see [VERIFICATION.md](VERIFICATION.md) for:
+- L1-L4 verification checklists
+- Command snippets for each verification level
+- Report templates
+- Success criteria
+
+**Comprehensive Plan**: [PLAN-2025-11-12-SAP-047-PHASE-6-L4-VERIFICATION.md](https://github.com/liminalcommons/chora-base/blob/main/docs/project-docs/plans/PLAN-2025-11-12-SAP-047-PHASE-6-L4-VERIFICATION.md)
+
+---
+
+## Common Tasks for Claude Code
+
+### Task: Add New CLI Command
+
+1. Define in `{{ package_name }}/interfaces/cli/commands.py`:
+```python
+@click.command()
+def my_command():
+    """My new command."""
+    click.echo("Hello!")
+```
+
+2. Add to CLI group in same file
+3. Test: `{{ package_name }} my-command`
+4. Add test in `tests/integration/test_cli.py`
+
+---
+
+### Task: Add New REST Endpoint
+
+1. Define in `{{ package_name }}/interfaces/rest/app.py`:
+```python
+@app.get("/my-endpoint")
+def my_endpoint():
+    """My new endpoint."""
+    return {"message": "Hello!"}
+```
+
+2. Test: `curl http://localhost:8000/my-endpoint`
+3. Add test in `tests/integration/test_rest.py`
+
+---
+{% if enable_mcp %}
+### Task: Add New MCP Tool
+
+1. Define in `{{ package_name }}/interfaces/mcp/server.py`:
+```python
+@mcp.tool()
+def my_tool(param: str) -> str:
+    """My new tool."""
+    return f"Hello {param}!"
+```
+
+2. Test via Claude Desktop or MCP inspector
+3. Add test in `tests/integration/test_mcp.py`
+
+---
+{% endif %}
+
+### Task: Add Core Business Logic
+
+1. Define models in `{{ package_name }}/core/models.py`
+2. Implement logic in `{{ package_name }}/core/service.py`
+3. Update abstract interface in `{{ package_name }}/core/interface.py`
+4. Adapt all interfaces (CLI, REST{% if enable_mcp %}, MCP{% endif %}) to use new logic
+5. Add unit tests in `tests/unit/test_service.py`
+
+---
+
+### Task: Add New Feature Flag
+
+1. Add to `pyproject.toml` optional dependencies
+2. Add conditional import in relevant module
+3. Document in README.md
+4. Add test coverage for both enabled/disabled states
+
+---
+
+## Related Documentation
+
+### In This Repository
+- [README.md](README.md) - User-facing documentation
+- [VERIFICATION.md](VERIFICATION.md) - Verification workflow (L1-L4)
+- [docs/architecture/](docs/architecture/) - Architecture documentation
+- [docs/api/](docs/api/) - API reference
+- [docs/guides/](docs/guides/) - User guides
+
+### In chora-base Repository
+- **Comprehensive Verification Plan**: [PLAN-2025-11-12-SAP-047-PHASE-6-L4-VERIFICATION.md](https://github.com/liminalcommons/chora-base/blob/main/docs/project-docs/plans/PLAN-2025-11-12-SAP-047-PHASE-6-L4-VERIFICATION.md)
+- **chora-base**: [https://github.com/liminalcommons/chora-base](https://github.com/liminalcommons/chora-base)
+- **SAP-042 (Interface Design)**: [docs/skilled-awareness/interface-design/](https://github.com/liminalcommons/chora-base/tree/main/docs/skilled-awareness/interface-design)
+- **SAP-043 (Multi-Interface)**: [docs/skilled-awareness/multi-interface/](https://github.com/liminalcommons/chora-base/tree/main/docs/skilled-awareness/multi-interface)
+{% if enable_registry %}- **SAP-044 (Registry)**: [docs/skilled-awareness/registry/](https://github.com/liminalcommons/chora-base/tree/main/docs/skilled-awareness/registry){% endif %}
+{% if enable_bootstrap %}- **SAP-045 (Bootstrap)**: [docs/skilled-awareness/bootstrap/](https://github.com/liminalcommons/chora-base/tree/main/docs/skilled-awareness/bootstrap){% endif %}
+{% if enable_composition %}- **SAP-046 (Composition)**: [docs/skilled-awareness/composition/](https://github.com/liminalcommons/chora-base/tree/main/docs/skilled-awareness/composition){% endif %}
+- **SAP-047 (Capability Server Template)**: [docs/skilled-awareness/capability-server-template/](https://github.com/liminalcommons/chora-base/tree/main/docs/skilled-awareness/capability-server-template)
+
+---
+
+## Support and Issues
+
+**Found a bug or have a question?**
+1. Check existing issues: [https://github.com/{{ github_username }}/{{ package_name }}/issues](https://github.com/{{ github_username }}/{{ package_name }}/issues)
+2. Create new issue if not found
+
+**Generator issues?**
+- Report in chora-base: [https://github.com/liminalcommons/chora-base/issues](https://github.com/liminalcommons/chora-base/issues)
+- Tag with `SAP-047`
+
+---
+
+## Version History
+
+- **1.0.0** (Initial Release): Generated from chora-base 5.0.0
+  - Capability server architecture (SAP-042-047)
+  - {% if enable_mcp %}CLI + REST + MCP interfaces{% else %}CLI + REST interfaces{% endif %}
+{% if enable_registry %}  - Service registry (SAP-044){% endif %}
+{% if enable_bootstrap %}  - Bootstrap orchestration (SAP-045){% endif %}
+{% if enable_composition %}  - Composition patterns (SAP-046){% endif %}
+{% if include_beads %}  - Beads task tracking (SAP-015){% endif %}
+{% if include_inbox %}  - Inbox coordination (SAP-001){% endif %}
+{% if include_memory %}  - A-MEM event memory (SAP-010){% endif %}
+
+---
+
+**Generated by**: chora-base 5.0.0 SAP-047 Capability Server Template
+**Last Updated**: {{ "{{" }} timestamp {{ "}}" }}
