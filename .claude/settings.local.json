@@ -59,7 +59,15 @@
       "Bash(git log:*)",
       "Bash(python scripts/create-capability-server.py:*)",
       "Bash(python -m py_compile:*)",
-      "Bash(python scripts/validate-links.py:*)"
+      "Bash(python scripts/validate-links.py:*)",
+      "Bash(echo:*)",
+      "Bash(chmod:*)",
+      "Bash(bash:*)",
+      "Bash(python -m venv:*)",
+      "Bash(source:*)",
+      "Bash(pip install:*)",
+      "Bash(find:*)",
+      "Bash(python:*)"
     ],
     "deny": [],
     "ask": []

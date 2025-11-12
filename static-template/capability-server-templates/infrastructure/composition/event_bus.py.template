@@ -90,11 +90,15 @@ class EventBus:
     integrate with message brokers (RabbitMQ, Kafka, etc.).
     """
 
-    def __init__(self):
-        """Initialize event bus."""
+    def __init__(self, max_history: int = 1000):
+        """Initialize event bus.
+
+        Args:
+            max_history: Maximum number of events to keep in history
+        """
         self._handlers: Dict[str, List[EventHandler]] = {}
         self._event_history: List[Event] = []
-        self._max_history_size = 1000
+        self._max_history_size = max_history
 
     def subscribe(self, event_type: str, handler: EventHandler):
         """Subscribe to events of a specific type.

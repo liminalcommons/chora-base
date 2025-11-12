@@ -30,7 +30,7 @@ def circuit_breaker():
         failure_threshold=3,
         recovery_timeout_seconds=1,
         success_threshold=2,
-        request_timeout=1.0
+        timeout_seconds=1.0
     )
 
 
@@ -41,7 +41,7 @@ def fast_circuit_breaker():
         failure_threshold=2,
         recovery_timeout_seconds=0.1,
         success_threshold=1,
-        request_timeout=0.5
+        timeout_seconds=0.5
     )
 
 
