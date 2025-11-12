@@ -165,6 +165,40 @@ This index tracks all **30 capabilities** organized across **6 domains** for imp
 
 ---
 
+### SAP-033: React Authentication & Authorization
+
+**Path**: [docs/skilled-awareness/react-authentication](docs/skilled-awareness/react-authentication)
+
+Production-ready authentication with 4 providers (NextAuth v5, Clerk, Supabase Auth, Auth0) reducing setup from 3-4h to 15min (93.75% time savings)
+
+**Status**: 🟡 Pilot
+**Version**: 1.0.0
+
+---
+
+### SAP-034: React Database Integration
+
+**Path**: [docs/skilled-awareness/react-database-integration](docs/skilled-awareness/react-database-integration)
+
+PostgreSQL integration with Prisma/Drizzle ORM decision framework reducing setup from 3-4h to 25min (89.6% time savings)
+
+**Status**: 🟡 Pilot
+**Version**: 1.0.0
+
+---
+
+### SAP-041: React Form Validation
+
+**Path**: [docs/skilled-awareness/react-form-validation](docs/skilled-awareness/react-form-validation)
+
+React Hook Form + Zod reducing setup from 2-3h to 20min (88.9% time savings), type-safe validation, WCAG 2.2 Level AA accessibility
+
+**Status**: 🟡 Pilot
+**Version**: 1.0.0
+
+---
+
+
 ## User-Facing Domain
 
 **Purpose**: User interaction patterns including state management and styling for user interfaces
@@ -188,6 +222,29 @@ This index tracks all **30 capabilities** organized across **6 domains** for imp
 - **Key Features**: Tailwind CSS v4 (CSS-first), shadcn/ui installation + components, component variant patterns (CVA), responsive design templates, CSS Modules escape hatch
 
 ---
+
+### SAP-035: React File Upload & Storage
+
+**Path**: [docs/skilled-awareness/react-file-upload](docs/skilled-awareness/react-file-upload)
+
+File upload with 4 providers (UploadThing, Vercel Blob, Supabase Storage, AWS S3) reducing setup from 6h to 30min (91.7% time savings)
+
+**Status**: 🟡 Pilot
+**Version**: 1.0.0
+
+---
+
+### SAP-036: React Error Handling
+
+**Path**: [docs/skilled-awareness/react-error-handling](docs/skilled-awareness/react-error-handling)
+
+Error boundaries + Sentry monitoring reducing setup from 3-4h to 30min (87.5% time savings), GDPR/CCPA compliant PII scrubbing
+
+**Status**: 🟡 Pilot
+**Version**: 1.0.0
+
+---
+
 
 ## Advanced Domain
 
@@ -228,6 +285,51 @@ This index tracks all **30 capabilities** organized across **6 domains** for imp
 - **Key Features**: WCAG 2.2 Level AA compliance, eslint-plugin-jsx-a11y (85% coverage), Radix UI accessible components, jest-axe/axe-core testing, focus management patterns
 
 ---
+
+### SAP-037: React Real-Time Synchronization
+
+**Path**: [docs/skilled-awareness/react-realtime-synchronization](docs/skilled-awareness/react-realtime-synchronization)
+
+WebSocket/real-time with 4 providers (Socket.IO, Pusher, Ably, Supabase Realtime) reducing setup from 7h to 30min (92.9% time savings)
+
+**Status**: 🟡 Pilot
+**Version**: 1.0.0
+
+---
+
+### SAP-038: React Internationalization (i18n)
+
+**Path**: [docs/skilled-awareness/react-internationalization](docs/skilled-awareness/react-internationalization)
+
+next-intl framework reducing setup from 5h to 30min (90% time savings), 20+ languages, Server Components support, type-safe translations
+
+**Status**: 🟡 Pilot
+**Version**: 1.0.0
+
+---
+
+### SAP-039: React E2E Testing
+
+**Path**: [docs/skilled-awareness/react-e2e-testing](docs/skilled-awareness/react-e2e-testing)
+
+Playwright E2E testing reducing setup from 3.5h to 30min (85.7% time savings), cross-browser support, parallel execution, CI/CD integration
+
+**Status**: 🟡 Pilot
+**Version**: 1.0.0
+
+---
+
+### SAP-040: React Monorepo Architecture
+
+**Path**: [docs/skilled-awareness/react-monorepo-architecture](docs/skilled-awareness/react-monorepo-architecture)
+
+Turborepo monorepo reducing setup from 7.5h to 30min (93.3% time savings), incremental builds, remote caching, pnpm workspaces
+
+**Status**: 🟡 Pilot
+**Version**: 1.0.0
+
+---
+
 
 ## Specialized Domain
 

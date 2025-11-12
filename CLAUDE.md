@@ -542,9 +542,9 @@ bash scripts/validate-awareness-links.sh
 
 ## Quick Reference: SAP Catalog
 
-**Organization**: 30 SAPs across 6 domains for progressive adoption
+**Organization**: 39 SAPs across 6 domains for progressive adoption
 
-**Domain Distribution**: Infrastructure (3) • Developer Experience (8) • Foundation (3) • User-Facing (2) • Advanced (4) • Specialized (10)
+**Domain Distribution**: Infrastructure (3) • Developer Experience (8) • Foundation (6) • User-Facing (4) • Advanced (8) • Specialized (10)
 
 ---
 
@@ -577,32 +577,37 @@ bash scripts/validate-awareness-links.sh
 
 ---
 
-### Foundation Domain (Technology Stacks - 3 SAPs)
+### Foundation Domain (Technology Stacks - 6 SAPs)
 
-**Purpose**: Next.js 15 + TypeScript + Vitest foundation for React projects
+**Purpose**: Next.js 15 + TypeScript + Vitest foundation for React projects with authentication, database, and form validation
 
 | SAP | Name | Status | Description |
 |-----|------|--------|-------------|
 | SAP-020 | react-foundation | active | Next.js 15 + TypeScript (8-12h → 45min) |
 | SAP-021 | react-testing | active | Vitest v4 + RTL + MSW (80-90% coverage) |
 | SAP-022 | react-linting | active | ESLint 9 + Prettier 3 (182x faster) |
+| SAP-033 | react-authentication | pilot | NextAuth v5/Clerk/Supabase/Auth0 (3-4h → 15min, 93.75% savings) |
+| SAP-034 | react-database-integration | pilot | Prisma/Drizzle + PostgreSQL (3-4h → 25min, 89.6% savings) |
+| SAP-041 | react-form-validation | pilot | React Hook Form + Zod (2-3h → 20min, 88.9% savings) |
 
 ---
 
-### User-Facing Domain (User Interactions - 2 SAPs)
+### User-Facing Domain (User Interactions - 4 SAPs)
 
-**Purpose**: State management and styling for user interfaces
+**Purpose**: State management, styling, file uploads, and error handling for user interfaces
 
 | SAP | Name | Status | Description |
 |-----|------|--------|-------------|
 | SAP-023 | react-state-management | active | TanStack Query v5 + Zustand v4 + RHF v7 + Zod |
 | SAP-024 | react-styling | active | Tailwind CSS v4 + shadcn/ui |
+| SAP-035 | react-file-upload | pilot | UploadThing/Vercel Blob/Supabase/S3 (6h → 30min, 91.7% savings) |
+| SAP-036 | react-error-handling | pilot | Error boundaries + Sentry (3-4h → 30min, 87.5% savings) |
 
 ---
 
-### Advanced Domain (Optimizations & Integrations - 4 SAPs)
+### Advanced Domain (Optimizations & Integrations - 8 SAPs)
 
-**Purpose**: Performance, accessibility, and advanced tool integrations
+**Purpose**: Performance, accessibility, real-time, i18n, testing, monorepos, and advanced tool integrations
 
 | SAP | Name | Status | Description |
 |-----|------|--------|-------------|
@@ -610,6 +615,10 @@ bash scripts/validate-awareness-links.sh
 | SAP-018 | chora-compose-meta | active | 24 MCP tools + Collections architecture |
 | SAP-025 | react-performance | active | Core Web Vitals optimization |
 | SAP-026 | react-accessibility | active | WCAG 2.2 Level AA compliance |
+| SAP-037 | react-realtime-synchronization | pilot | Socket.IO/Pusher/Ably/Supabase (7h → 30min, 92.9% savings) |
+| SAP-038 | react-internationalization | pilot | next-intl 20+ languages (5h → 30min, 90% savings) |
+| SAP-039 | react-e2e-testing | pilot | Playwright cross-browser (3.5h → 30min, 85.7% savings) |
+| SAP-040 | react-monorepo-architecture | pilot | Turborepo + pnpm (7.5h → 30min, 93.3% savings) |
 
 ---
 
