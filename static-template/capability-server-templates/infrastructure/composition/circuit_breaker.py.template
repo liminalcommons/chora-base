@@ -37,6 +37,14 @@ class CircuitBreakerOpen(Exception):
         super().__init__(self.message)
 
 
+class CircuitBreakerTimeout(Exception):
+    """Raised when circuit breaker operation times out."""
+
+    def __init__(self, message: str = "Circuit breaker operation timed out"):
+        self.message = message
+        super().__init__(self.message)
+
+
 # ============================================================================
 # Circuit Breaker Implementation
 # ============================================================================
@@ -98,7 +106,7 @@ class CircuitBreaker:
 
         Raises:
             CircuitBreakerOpen: If circuit is open
-            TimeoutError: If request times out
+            CircuitBreakerTimeout: If request times out
             Exception: If function raises exception
         """
         self._check_state_transition()
@@ -123,7 +131,7 @@ class CircuitBreaker:
         except asyncio.TimeoutError as e:
             # Timeout counts as failure
             self._on_failure()
-            raise TimeoutError(f"Request timed out after {self.request_timeout}s") from e
+            raise CircuitBreakerTimeout(f"Request timed out after {self.request_timeout}s") from e
 
         except Exception as e:
             # Failure - record it
