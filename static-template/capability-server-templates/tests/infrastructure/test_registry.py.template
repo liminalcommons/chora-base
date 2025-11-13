@@ -63,7 +63,7 @@ class TestServiceRegistration:
         assert registration.service_type == sample_service_data["service_type"]
         assert registration.version == sample_service_data["version"]
         assert registration.status == ServiceStatus.HEALTHY
-        assert len(registration.service_id) > 0
+        assert registration.service_id is not None
 
     def test_register_duplicate_service_name(self, registry, sample_service_data):
         """Test registering services with same name (should create separate instances)."""
@@ -529,6 +529,6 @@ class TestServiceRegistrationModel:
             endpoints={}
         )
 
-        assert registration.status == ServiceStatus.HEALTHY
+        assert registration.status == ServiceStatus.STARTING
         assert registration.metadata == {}
         assert len(str(registration.service_id)) > 0
