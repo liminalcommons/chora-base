@@ -214,7 +214,7 @@ Before writing Python scripts, read: [scripts/AGENTS.md](scripts/AGENTS.md) for 
 - **Repository Type**: Template repository (generates other projects, NOT a project itself)
 - **Primary Users**: Human developers and AI agents generating/maintaining Python projects
 - **Technology Stack**: Static scaffolding (`static-template/`), Skilled Awareness Packages (SAPs)
-- **Current Version**: v5.0.0 (see [CHANGELOG.md](CHANGELOG.md))
+- **Current Version**: v5.1.0 (see [CHANGELOG.md](CHANGELOG.md))
 - **SAP Count**: 45 capabilities (see [saps/AGENTS.md](saps/AGENTS.md))
 
 ### Key Concepts

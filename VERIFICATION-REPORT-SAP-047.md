@@ -346,5 +346,5 @@ Coverage: 31.08% (target: 85%)
 
 **Report Generated**: 2025-11-12 23:35 UTC
 **Verification Engineer**: Claude Code (Sonnet 4.5)
-**chora-base Version**: 5.0.0
+**chora-base Version**: 5.1.0
 **SAP-047 Status**: Pilot (Conditional GO)

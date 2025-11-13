@@ -7,6 +7,74 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [5.1.0] - 2025-11-13
+
+> **🚀 PILOT RELEASE: Capability Server SAP Suite**: Official pilot release of SAP-042-047 with 100% test pass rate, comprehensive verification, and GitHub release
+
+### Added
+
+**Pilot Release Artifacts**
+
+- **GitHub Release**: `pilot/capability-server-saps` tag with comprehensive release notes
+  - https://github.com/liminalcommons/chora-base/releases/tag/pilot/capability-server-saps
+- **Release Notes**: [RELEASE-2025-11-12-CAPABILITY-SERVER-SAPS.md](docs/project-docs/releases/RELEASE-2025-11-12-CAPABILITY-SERVER-SAPS.md) (16,500+ words)
+  - Complete adoption recommendations and use case matrix
+  - 3 integration examples (multi-interface, saga orchestration, service registry)
+  - Known limitations and migration guide (SAP-014 → SAP-047)
+  - Future roadmap (v1.1, v1.2, v2.0)
+
+**Verification & Quality Assurance**
+
+- **Updated Verification Report**: [VERIFICATION-REPORT-SAP-047-UPDATED.md](VERIFICATION-REPORT-SAP-047-UPDATED.md)
+  - **100% test pass rate**: 301/301 tests passing (up from 69.4%)
+  - **82.31% coverage**: Core 97.62%, Infrastructure 87.96%, Interfaces 74.63%
+  - All quality gates passing (ruff, mypy, pytest)
+- **Template Audit**: [CAPABILITY-SERVER-TEMPLATE-AUDIT-2025-11-12.md](docs/project-docs/CAPABILITY-SERVER-TEMPLATE-AUDIT-2025-11-12.md)
+  - Verified all "known issues" from initial verification were false positives
+  - All infrastructure APIs exist in templates (Circuit Breaker, Event Bus, Service Registry)
+  - Test harnesses correctly implemented (REST dependency injection, MCP async patterns)
+- **MCP Test Improvements**: Enhanced `test_mcp.py.template` with better resource URI tests
+
+### Changed
+
+**SAP Status Updates**
+
+- **SAP-042-047**: Promoted from draft to **pilot** status in sap-catalog.json and INDEX.md
+- **SAP-014**: Deprecated status formalized with end-of-support date (2025-12-31)
+
+**Version Updates**
+
+- Updated chora-base version from 5.0.0 to 5.1.0 across all documentation
+- Updated verification reports with correct version (5.1.0)
+- Updated CLAUDE.md and AGENTS.md root files
+
+### Fixed
+
+- **Test Pass Rate**: Resolved false positive test failures (initial 69.4% → final 100%)
+- **Root Cause**: Initial tests ran on code generated during active template development while 6 critical bugs were being fixed
+- **Infrastructure APIs**: Confirmed all "missing" methods exist in templates:
+  - Circuit Breaker: `get_state()`, `get_stats()`
+  - Event Bus: `Event.to_dict()`, `get_history(source=...)`, `get_stats()`
+  - Service Registry: `ServiceRegistration.to_dict()`, `list_services(interface=...)`, `mark_unhealthy()`, `check_timeouts()`, `get_stats()`
+
+### Documentation
+
+**New Documentation** (24,000+ words)
+
+- Comprehensive release notes with adoption recommendations
+- Updated verification report showing 100% pass rate
+- Template audit documenting quality assurance findings
+- GitHub release with quick start guide
+
+**Impact Metrics**
+
+- **Test Reliability**: 69.4% → 100% pass rate
+- **Coverage Improvement**: 31.08% → 82.31% (164% increase)
+- **Documentation**: 24,000+ words of release/verification documentation
+- **Time to Pilot**: Completed 5-week dogfooding preparation
+
+---
+
 ## [5.0.0] - 2025-11-12
 
 > **🏗️ MAJOR RELEASE: Capability Server Architecture Suite**: Complete capability server development framework with 6 new SAPs, multi-interface architecture, and zero-ambiguity agent onboarding

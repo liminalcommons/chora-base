@@ -1,9 +1,9 @@
 # Chora-Base: Claude Agent Awareness (Root)
 
 **Project**: chora-base
-**Version**: 5.0.0
+**Version**: 5.1.0
 **Claude Compatibility**: Sonnet 4.5+
-**Last Updated**: 2025-11-12
+**Last Updated**: 2025-11-13
 
 ---
 
