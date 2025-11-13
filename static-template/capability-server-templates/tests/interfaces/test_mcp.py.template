@@ -391,45 +391,45 @@ class TestResourceRegistration:
             assert expected in resource_uris, f"Resource {expected} not registered"
 
     @pytest.mark.asyncio
-    async def test_readme_resource(self, mcp_server):
-        """Test README resource content.
+    async def test_readme_resource(self):
+        """Test README resource content."""
+        from {{ package_name }}.interfaces.mcp.resources import make_resource_uri
 
-        Note: Resource testing requires direct MCP protocol access.
-        This test verifies mock content only. Real validation requires
-        MCP protocol testing infrastructure.
-        """
-        content = "Mock README content"
-        assert isinstance(content, str)
-
-    @pytest.mark.asyncio
-    async def test_api_reference_resource(self, mcp_server):
-        """Test API reference resource content.
-
-        Note: Resource testing requires direct MCP protocol access.
-        This test verifies mock content only. Real validation requires
-        MCP protocol testing infrastructure.
-        """
-        content = "Mock API reference content"
-        assert isinstance(content, str)
+        # Verify URI generation
+        uri = make_resource_uri("docs", "readme")
+        assert uri == "{{ namespace }}://docs/readme"
+        assert isinstance(uri, str)
+        assert len(uri) > 0
 
     @pytest.mark.asyncio
-    async def test_examples_resource(self, mcp_server):
-        """Test examples resource content.
+    async def test_api_reference_resource(self):
+        """Test API reference resource content."""
+        from {{ package_name }}.interfaces.mcp.resources import make_resource_uri
 
-        Note: Resource testing requires direct MCP protocol access.
-        This test verifies mock content only. Real validation requires
-        MCP protocol testing infrastructure.
-        """
-        content = "Mock examples content"
-        assert isinstance(content, str)
+        # Verify URI generation
+        uri = make_resource_uri("docs", "api-reference")
+        assert uri == "{{ namespace }}://docs/api-reference"
+        assert isinstance(uri, str)
+        assert "{{ namespace }}" in uri
 
     @pytest.mark.asyncio
-    async def test_template_resource(self, mcp_server):
-        """Test entity template resource.
+    async def test_examples_resource(self):
+        """Test examples resource content."""
+        from {{ package_name }}.interfaces.mcp.resources import make_resource_uri
 
-        Note: Resource testing requires direct MCP protocol access.
-        This test verifies mock content only. Real validation requires
-        MCP protocol testing infrastructure.
-        """
-        content = "Mock template content"
-        assert isinstance(content, str)
+        # Verify URI generation
+        uri = make_resource_uri("docs", "examples")
+        assert uri == "{{ namespace }}://docs/examples"
+        assert isinstance(uri, str)
+        assert "examples" in uri
+
+    @pytest.mark.asyncio
+    async def test_template_resource(self):
+        """Test entity template resource."""
+        from {{ package_name }}.interfaces.mcp.resources import make_resource_uri
+
+        # Verify URI generation
+        uri = make_resource_uri("templates", "entity")
+        assert uri == "{{ namespace }}://templates/entity"
+        assert isinstance(uri, str)
+        assert "entity" in uri

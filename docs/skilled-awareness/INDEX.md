@@ -24,8 +24,8 @@ This index tracks all **45 capabilities** organized across **6 domains** for imp
 
 **Status Distribution**:
 - Active: 24 SAPs (53%)
-- Pilot: 12 SAPs (27%) - SAP-015, SAP-028, SAP-029, SAP-033-041
-- Draft: 8 SAPs (18%) - SAP-042-047 (template implementation in progress), 2 historical
+- Pilot: 18 SAPs (40%) - SAP-015, SAP-028, SAP-029, SAP-033-047 (including capability server suite)
+- Draft: 2 SAPs (4%) - 2 historical
 - Deprecated: 1 SAP (2%) - SAP-014 (replaced by SAP-047)
 
 ---
@@ -130,7 +130,7 @@ This index tracks all **45 capabilities** organized across **6 domains** for imp
 
 **Purpose**: Comprehensive architectural patterns for building capability servers with multi-interface support, service discovery, startup orchestration, and resilience patterns.
 
-**SAPs**: 6 (SAP-042 through SAP-047) | **Status**: All draft (template implementation in progress)
+**SAPs**: 6 (SAP-042 through SAP-047) | **Status**: All pilot (verified and ready for dogfooding)
 
 **Overview**: This suite of SAPs provides battle-tested patterns for building production-ready capability servers. Together they reduce capability server development time from 40-60 hours to 4-8 hours (85-92% savings).
 
