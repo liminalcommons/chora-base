@@ -340,12 +340,28 @@ def create_directory_structure(output_dir: Path, package_name: str, config: Dict
 def copy_static_template(chora_base_dir: Path, output_dir: Path, config: Dict[str, Any]) -> None:
     """Copy static template files (non-Jinja2 files).
 
-    Note: For capability servers (SAP-047), all files are Jinja2 templates.
-    This function is kept for future extensibility but currently does nothing.
+    Copies ecosystem SAPs and other static files that don't need templating:
+    - .beads/ - Task tracking (SAP-015)
+    - .chora/ - Agent memory (SAP-010)
+    - inbox/ - Cross-repo coordination (SAP-001)
     """
-    # All capability server files are Jinja2 templates (.template files)
-    # No static files to copy
-    pass
+    static_dir = chora_base_dir / "static-template"
+
+    # Ecosystem SAP directories to copy
+    ecosystem_saps = [
+        ".beads",
+        ".chora",
+        "inbox",
+    ]
+
+    for sap_dir in ecosystem_saps:
+        source = static_dir / sap_dir
+        if source.exists():
+            dest = output_dir / sap_dir
+            shutil.copytree(source, dest, dirs_exist_ok=True)
+            print(f"   ✅ Copied {sap_dir}/ (ecosystem SAP)")
+        else:
+            print(f"   ⚠️  Skipped {sap_dir}/ (not found in static-template)")
 
 
 # ============================================================================
