@@ -47,7 +47,61 @@ COPY {{ package_name }}/ ./{{ package_name }}/
 RUN pip install --no-cache-dir .
 
 # ============================================================================
-# Stage 2: Runtime
+# Stage 2: Development (optional)
+# ============================================================================
+# Build development image: docker build --target development -t {{ package_name }}:dev .
+
+FROM python:3.11-slim AS development
+
+# Install runtime and development dependencies
+RUN apt-get update && apt-get install -y \
+    curl \
+    git \
+    vim \
+    && rm -rf /var/lib/apt/lists/*
+
+# Create non-root user
+RUN useradd --create-home --shell /bin/bash appuser
+
+# Set working directory
+WORKDIR /app
+
+# Copy virtual environment from builder
+COPY --from=builder /opt/venv /opt/venv
+
+# Copy application code
+COPY --from=builder /build/{{ package_name }} /app/{{ package_name }}
+
+# Copy development dependencies
+COPY --from=builder /build/pyproject.toml /app/
+
+# Set ownership
+RUN chown -R appuser:appuser /app
+
+# Switch to non-root user
+USER appuser
+
+# Activate virtual environment
+ENV PATH="/opt/venv/bin:$PATH"
+
+# Set Python environment variables
+ENV PYTHONUNBUFFERED=1 \
+    PYTHONDONTWRITEBYTECODE=1 \
+    PIP_NO_CACHE_DIR=1 \
+    PIP_DISABLE_PIP_VERSION_CHECK=1
+
+# Set development environment
+ENV {{ package_name.upper() }}_ENV=development \
+    {{ package_name.upper() }}_LOG_LEVEL=DEBUG
+
+# Expose API port
+EXPOSE 8000
+
+# Default command for development: shell
+CMD ["/bin/bash"]
+
+# ============================================================================
+# Stage 3: Runtime (default)
 # ============================================================================
 
 FROM python:3.11-slim AS runtime
@@ -105,53 +159,3 @@ CMD ["uvicorn", "{{ package_name }}.interfaces.rest:app", "--host", "0.0.0.0", "
 # API (production): docker run {{ package_name }}:latest gunicorn {{ package_name }}.interfaces.rest:app --workers 4 --worker-class uvicorn.workers.UvicornWorker --bind 0.0.0.0:8000
 {% if enable_mcp %}# MCP: docker run {{ package_name }}:latest {{ namespace }}-mcp
 {% endif %}
-# ============================================================================
-# Build Arguments (optional)
-# ============================================================================
-
-# Usage:
-# docker build --build-arg PYTHON_VERSION=3.12 -t {{ package_name }}:latest .
-
-ARG PYTHON_VERSION=3.11
-ARG APP_VERSION=0.1.0
-
-# Labels (OCI image spec)
-LABEL org.opencontainers.image.title="{{ capability_name }}" \
-      org.opencontainers.image.description="Multi-interface capability server (CLI/REST{% if enable_mcp %}/MCP{% endif %})" \
-      org.opencontainers.image.version="${APP_VERSION}" \
-      org.opencontainers.image.authors="your.email@example.com" \
-      org.opencontainers.image.source="https://github.com/yourusername/{{ package_name }}" \
-      org.opencontainers.image.licenses="MIT"
-
-# ============================================================================
-# Development Image (optional)
-# ============================================================================
-
-# Build development image:
-# docker build --target development -t {{ package_name }}:dev .
-
-FROM runtime AS development
-
-USER root
-
-# Install development dependencies
-RUN apt-get update && apt-get install -y \
-    git \
-    vim \
-    && rm -rf /var/lib/apt/lists/*
-
-# Copy development dependencies
-COPY --from=builder /build/pyproject.toml /app/
-
-# Install dev dependencies
-RUN /opt/venv/bin/pip install --no-cache-dir -e ".[dev]"
-
-# Switch back to non-root user
-USER appuser
-
-# Set development environment
-ENV {{ package_name.upper() }}_ENV=development \
-    {{ package_name.upper() }}_LOG_LEVEL=DEBUG
-
-# Default command for development: shell
-CMD ["/bin/bash"]
