@@ -68,7 +68,11 @@
       "Bash(pip install:*)",
       "Bash(find:*)",
       "Bash(python:*)",
-      "Bash(pytest:*)"
+      "Bash(pytest:*)",
+      "Bash(venv/bin/pip install:*)",
+      "Bash(venv/bin/pytest:*)",
+      "Bash(most 200 characters\"\n- test_description_max_length: Expected \"max_length\" but got \"String should)",
+      "Bash(have at most 2000 characters\"\n\n**Root Cause**: Tests checked for custom error messages but Pydantic v2\ngenerates standardized error messages with different phrasing.\n\n**Solution**: Updated test assertions to match Pydantic v2''s actual error\nmessage format:\n- Check for \"at least 1 character\" or \"string_too_short\" (min_length)\n- Check for \"at most N characters\" or \"string_too_long\" (max_length)\n- Added explanatory comments for clarity\n\n**Result**: +3 tests passing (219→222/222 core+infrastructure = 100%) ✅\n\n**Files Modified**:\n- static-template/.../test_models.py.template (lines 63-65, 80-82, 93-95)\n\n**Impact**: All core and infrastructure tests now pass (100%). Interface tests\nstill have 44 failures from known API signature issues.\n\n🤖 Generated with [Claude Code](https://claude.com/claude-code)\n\nCo-Authored-By: Claude <noreply@anthropic.com>\nEOF\n)\")"
     ],
     "deny": [],
     "ask": []
