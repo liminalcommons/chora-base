@@ -60,7 +60,9 @@ class Test{{ capability_name_pascal }}Request:
         with pytest.raises(ValidationError) as exc_info:
             {{ capability_name_pascal }}Request(name="")
 
-        assert "Name cannot be empty" in str(exc_info.value)
+        # Pydantic v2 error message: "String should have at least 1 character"
+        error_str = str(exc_info.value).lower()
+        assert "at least 1 character" in error_str or "string_too_short" in error_str
 
     def test_name_validation_whitespace_only(self):
         """Test that whitespace-only name raises validation error."""
@@ -75,7 +77,9 @@ class Test{{ capability_name_pascal }}Request:
         with pytest.raises(ValidationError) as exc_info:
             {{ capability_name_pascal }}Request(name=long_name)
 
-        assert "max_length" in str(exc_info.value).lower()
+        # Pydantic v2 error message: "String should have at most 200 characters"
+        error_str = str(exc_info.value).lower()
+        assert "at most 200 characters" in error_str or "string_too_long" in error_str
 
     def test_description_max_length(self):
         """Test description maximum length validation."""
@@ -86,7 +90,9 @@ class Test{{ capability_name_pascal }}Request:
                 description=long_desc
             )
 
-        assert "max_length" in str(exc_info.value).lower()
+        # Pydantic v2 error message: "String should have at most 2000 characters"
+        error_str = str(exc_info.value).lower()
+        assert "at most 2000 characters" in error_str or "string_too_long" in error_str
 
     def test_json_serialization(self):
         """Test model can be serialized to JSON."""
