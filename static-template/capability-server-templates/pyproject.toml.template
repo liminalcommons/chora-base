@@ -141,8 +141,8 @@ markers = [
     "slow: Slow tests (skip with -m 'not slow')",
 ]
 
-# Timeout for tests
-timeout = 60
+# Timeout for tests (requires pytest-timeout plugin)
+# timeout = 60
 
 # Parallel execution
 # Run with: pytest -n auto
