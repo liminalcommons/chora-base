@@ -159,6 +159,7 @@ class Bootstrap:
 
         Raises:
             RuntimeError: If bootstrap already started
+            ValueError: If dependency resolution fails (circular or missing dependency)
         """
         if self._phase not in (BootstrapPhase.INITIALIZING, BootstrapPhase.STOPPED):
             raise RuntimeError(f"Cannot start from phase {self._phase}")
@@ -168,7 +169,7 @@ class Bootstrap:
         failed_components = {}
 
         try:
-            # Resolve startup order
+            # Resolve startup order (let ValueError propagate for validation errors)
             startup_order = self._resolve_dependencies()
 
             # Start components in order
@@ -209,8 +210,13 @@ class Bootstrap:
                 duration_seconds=duration
             )
 
+        except ValueError:
+            # Dependency resolution error (circular or missing) - propagate to caller
+            self._phase = BootstrapPhase.FAILED
+            raise
+
         except Exception as e:
-            # Unexpected error during bootstrap
+            # Unexpected error during component startup
             self._phase = BootstrapPhase.FAILED
             await self._rollback()
 

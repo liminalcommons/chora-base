@@ -67,7 +67,8 @@
       "Bash(source:*)",
       "Bash(pip install:*)",
       "Bash(find:*)",
-      "Bash(python:*)"
+      "Bash(python:*)",
+      "Bash(pytest:*)"
     ],
     "deny": [],
     "ask": []
