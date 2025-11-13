@@ -219,7 +219,7 @@ class EventBus:
             limit: Maximum events to return
 
         Returns:
-            List of events (most recent first)
+            List of events (sorted by timestamp, oldest first)
         """
         events = self._event_history
 
@@ -229,7 +229,9 @@ class EventBus:
         if source:
             events = [e for e in events if e.source == source]
 
-        return list(reversed(events[-limit:]))
+        # Sort by timestamp to ensure chronological order
+        sorted_events = sorted(events, key=lambda e: e.timestamp)
+        return sorted_events[-limit:]
 
     def get_subscribers(self, event_type: str) -> int:
         """Get number of subscribers for event type.
