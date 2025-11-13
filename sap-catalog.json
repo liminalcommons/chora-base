@@ -2031,7 +2031,7 @@
       "id": "SAP-042",
       "name": "interface-design",
       "full_name": "Interface Design Patterns",
-      "status": "draft",
+      "status": "pilot",
       "version": "1.0.0",
       "included_by_default": false,
       "size_kb": 145,
@@ -2070,6 +2070,10 @@
         {
           "date": "2025-11-12",
           "note": "Status reverted from 'pilot' to 'draft' - template implementation in progress. Documentation complete, awaiting template build and verification."
+        },
+        {
+          "date": "2025-11-12",
+          "note": "Status promoted to 'pilot' - template implementation complete. L3/L4 verification passed (301/301 tests, Docker deployment validated, performance benchmarks passed)."
         }
       ]
     },
@@ -2077,7 +2081,7 @@
       "id": "SAP-043",
       "name": "multi-interface",
       "full_name": "Multi-Interface Capability Servers",
-      "status": "draft",
+      "status": "pilot",
       "version": "1.0.0",
       "included_by_default": false,
       "size_kb": 185,
@@ -2119,6 +2123,10 @@
         {
           "date": "2025-11-12",
           "note": "Status reverted from 'pilot' to 'draft' - template implementation in progress. Documentation complete, awaiting template build and verification."
+        },
+        {
+          "date": "2025-11-12",
+          "note": "Status promoted to 'pilot' - template implementation complete. L3/L4 verification passed (301/301 tests, Docker deployment validated, performance benchmarks passed)."
         }
       ]
     },
@@ -2126,7 +2134,7 @@
       "id": "SAP-044",
       "name": "registry",
       "full_name": "Capability Registry & Discovery",
-      "status": "draft",
+      "status": "pilot",
       "version": "1.0.0",
       "included_by_default": false,
       "size_kb": 165,
@@ -2168,6 +2176,10 @@
         {
           "date": "2025-11-12",
           "note": "Status reverted from 'pilot' to 'draft' - template implementation in progress. Documentation complete, awaiting template build and verification."
+        },
+        {
+          "date": "2025-11-12",
+          "note": "Status promoted to 'pilot' - template implementation complete. L3/L4 verification passed (301/301 tests, Docker deployment validated, performance benchmarks passed)."
         }
       ]
     },
@@ -2175,7 +2187,7 @@
       "id": "SAP-045",
       "name": "bootstrap",
       "full_name": "Bootstrap & Startup Sequence",
-      "status": "draft",
+      "status": "pilot",
       "version": "1.0.0",
       "included_by_default": false,
       "size_kb": 155,
@@ -2217,6 +2229,10 @@
         {
           "date": "2025-11-12",
           "note": "Status reverted from 'pilot' to 'draft' - template implementation in progress. Documentation complete, awaiting template build and verification."
+        },
+        {
+          "date": "2025-11-12",
+          "note": "Status promoted to 'pilot' - template implementation complete. L3/L4 verification passed (301/301 tests, Docker deployment validated, performance benchmarks passed)."
         }
       ]
     },
@@ -2224,7 +2240,7 @@
       "id": "SAP-046",
       "name": "composition",
       "full_name": "Capability Composition Patterns",
-      "status": "draft",
+      "status": "pilot",
       "version": "1.0.0",
       "included_by_default": false,
       "size_kb": 195,
@@ -2268,6 +2284,10 @@
         {
           "date": "2025-11-12",
           "note": "Status reverted from 'pilot' to 'draft' - template implementation in progress. Documentation complete, awaiting template build and verification."
+        },
+        {
+          "date": "2025-11-12",
+          "note": "Status promoted to 'pilot' - template implementation complete. L3/L4 verification passed (301/301 tests, Docker deployment validated, performance benchmarks passed)."
         }
       ]
     },
@@ -2275,7 +2295,7 @@
       "id": "SAP-047",
       "name": "capability-server-template",
       "full_name": "Capability Server Template (Cookiecutter)",
-      "status": "draft",
+      "status": "pilot",
       "version": "1.0.0",
       "included_by_default": false,
       "size_kb": 225,
@@ -2326,6 +2346,10 @@
         {
           "date": "2025-11-12",
           "note": "Status reverted from 'pilot' to 'draft' - template implementation in progress. Documentation complete, awaiting template build and verification."
+        },
+        {
+          "date": "2025-11-12",
+          "note": "Status promoted to 'pilot' - template implementation complete. L3/L4 verification passed (301/301 tests, Docker deployment validated, performance benchmarks passed). Ecosystem SAPs (inbox, beads, A-MEM) integrated successfully."
         }
       ]
     }
