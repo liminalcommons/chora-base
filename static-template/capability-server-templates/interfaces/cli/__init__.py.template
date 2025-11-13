@@ -40,7 +40,9 @@ def cli(ctx: click.Context, format: str):
     ctx.obj["format"] = OutputFormat(format.lower())
 
     # Create service instance (shared across commands in this invocation)
-    ctx.obj["service"] = create_{{ capability_name_snake }}_service()
+    # Allow injecting service for testing (if obj already has service, use it)
+    if "service" not in ctx.obj:
+        ctx.obj["service"] = create_{{ capability_name_snake }}_service()
 
 
 # Import and register command groups

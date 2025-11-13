@@ -22,9 +22,31 @@ from {{ package_name }}.core import {{ capability_name_pascal }}Status
 
 
 @pytest.fixture
-def runner():
-    """Create CLI test runner."""
-    return CliRunner()
+def service():
+    """Create shared service instance for CLI tests."""
+    from {{ package_name }}.core import create_{{ capability_name_snake }}_service
+    return create_{{ capability_name_snake }}_service()
+
+
+@pytest.fixture
+def runner(service):
+    """Create CLI test runner with shared service instance.
+
+    The service is injected via obj parameter to ensure entities persist
+    across multiple CLI invocations within the same test.
+    """
+    class RunnerWithService:
+        def __init__(self, service):
+            self._runner = CliRunner()
+            self._service = service
+
+        def invoke(self, cli, args, **kwargs):
+            # Inject service via obj if not already provided
+            if 'obj' not in kwargs:
+                kwargs['obj'] = {'service': self._service}
+            return self._runner.invoke(cli, args, **kwargs)
+
+    return RunnerWithService(service)
 
 
 # ============================================================================
