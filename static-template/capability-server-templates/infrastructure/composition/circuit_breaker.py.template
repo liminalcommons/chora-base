@@ -80,7 +80,7 @@ class CircuitBreaker:
         self.failure_threshold = failure_threshold
         self.recovery_timeout = timedelta(seconds=recovery_timeout_seconds)
         self.success_threshold = success_threshold
-        self.request_timeout = timeout_seconds
+        self.timeout_seconds = timeout_seconds
 
         self._state = CircuitState.CLOSED
         self._failure_count = 0
@@ -121,7 +121,7 @@ class CircuitBreaker:
             # Execute with timeout
             result = await asyncio.wait_for(
                 func(*args, **kwargs),
-                timeout=self.request_timeout
+                timeout=self.timeout_seconds
             )
 
             # Success - record it
@@ -131,7 +131,7 @@ class CircuitBreaker:
         except asyncio.TimeoutError as e:
             # Timeout counts as failure
             self._on_failure()
-            raise CircuitBreakerTimeout(f"Request timed out after {self.request_timeout}s") from e
+            raise CircuitBreakerTimeout(f"Request timed out after {self.timeout_seconds}s") from e
 
         except Exception as e:
             # Failure - record it
@@ -182,11 +182,12 @@ class CircuitBreaker:
             if self._success_count >= self.success_threshold:
                 self._state = CircuitState.CLOSED
                 self._failure_count = 0
-                self._success_count = 0
+                # Keep success_count for stats tracking
                 self._last_failure_time = None
 
         elif self._state == CircuitState.CLOSED:
-            # Reset failure count on success in closed state
+            # Track successes and reset failure count on success in closed state
+            self._success_count += 1
             self._failure_count = 0
 
     def _on_failure(self):
