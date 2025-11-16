@@ -1,0 +1,42 @@
+apiVersion: chora.dev/v1
+kind: Capability
+metadata:
+  dc_identifier: chora.awareness.sap_generation
+  dc_identifier_legacy: SAP-029
+  dc_title: SAP Generation Automation
+  dc_description: Template-based SAP artifact generation to reduce creation time from
+    10 hours to 2 hours (80% savings)
+  dc_type: Pattern
+  dc_hasVersion: 1.0.0
+  dc_creator: chora-base
+  dc_date: '2025-11-15'
+  dc_format: text/markdown
+  dc_subject:
+  - dogfooding
+  - automation
+  - templates
+  - productivity
+dc_relation:
+  requires:
+  - capability: chora.infrastructure.sap_framework
+    relationship: prerequisite
+chora_pattern:
+  artifacts:
+  - type: capability_charter
+    path: docs/skilled-awareness/sap-generation\capability-charter.md
+    format: text/markdown
+  - type: protocol_specification
+    path: docs/skilled-awareness/sap-generation\protocol-spec.md
+    format: text/markdown
+  - type: awareness_guide
+    path: docs/skilled-awareness/sap-generation\AGENTS.md
+    format: text/markdown
+  - type: awareness_guide
+    path: docs/skilled-awareness/sap-generation\awareness-guide.md
+    format: text/markdown
+  - type: adoption_blueprint
+    path: docs/skilled-awareness/sap-generation\adoption-blueprint.md
+    format: text/markdown
+  - type: adoption_ledger
+    path: docs/skilled-awareness/sap-generation\ledger.md
+    format: text/markdown

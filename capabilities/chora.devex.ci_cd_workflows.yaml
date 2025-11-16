@@ -1,0 +1,44 @@
+apiVersion: chora.dev/v1
+kind: Capability
+metadata:
+  dc_identifier: chora.devex.ci_cd_workflows
+  dc_identifier_legacy: SAP-005
+  dc_title: CI/CD Workflows
+  dc_description: GitHub Actions workflows for testing, linting, security, and release
+    automation
+  dc_type: Pattern
+  dc_hasVersion: 1.0.0
+  dc_creator: chora-base
+  dc_date: '2025-11-15'
+  dc_format: text/markdown
+  dc_subject:
+  - ci-cd
+  - github-actions
+  - automation
+  - quality
+dc_relation:
+  requires:
+  - capability: chora.infrastructure.sap_framework
+    relationship: prerequisite
+  - capability: chora.devex.testing_framework
+    relationship: prerequisite
+chora_pattern:
+  artifacts:
+  - type: capability_charter
+    path: docs/skilled-awareness/ci-cd-workflows\capability-charter.md
+    format: text/markdown
+  - type: protocol_specification
+    path: docs/skilled-awareness/ci-cd-workflows\protocol-spec.md
+    format: text/markdown
+  - type: awareness_guide
+    path: docs/skilled-awareness/ci-cd-workflows\AGENTS.md
+    format: text/markdown
+  - type: awareness_guide
+    path: docs/skilled-awareness/ci-cd-workflows\awareness-guide.md
+    format: text/markdown
+  - type: adoption_blueprint
+    path: docs/skilled-awareness/ci-cd-workflows\adoption-blueprint.md
+    format: text/markdown
+  - type: adoption_ledger
+    path: docs/skilled-awareness/ci-cd-workflows\ledger.md
+    format: text/markdown

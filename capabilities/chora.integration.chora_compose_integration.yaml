@@ -1,0 +1,42 @@
+apiVersion: chora.dev/v1
+kind: Capability
+metadata:
+  dc_identifier: chora.integration.chora_compose_integration
+  dc_identifier_legacy: SAP-017
+  dc_title: Chora-Compose Integration
+  dc_description: How to adopt chora-compose for content generation (pip, MCP, CLI)
+    with role-based usage patterns
+  dc_type: Pattern
+  dc_hasVersion: 1.0.0
+  dc_creator: chora-base
+  dc_date: '2025-11-15'
+  dc_format: text/markdown
+  dc_subject:
+  - chora-compose
+  - content-generation
+  - mcp
+  - ecosystem
+dc_relation:
+  requires:
+  - capability: chora.devex.project_bootstrap
+    relationship: prerequisite
+chora_pattern:
+  artifacts:
+  - type: capability_charter
+    path: docs/skilled-awareness/chora-compose-integration\capability-charter.md
+    format: text/markdown
+  - type: protocol_specification
+    path: docs/skilled-awareness/chora-compose-integration\protocol-spec.md
+    format: text/markdown
+  - type: awareness_guide
+    path: docs/skilled-awareness/chora-compose-integration\AGENTS.md
+    format: text/markdown
+  - type: awareness_guide
+    path: docs/skilled-awareness/chora-compose-integration\awareness-guide.md
+    format: text/markdown
+  - type: adoption_blueprint
+    path: docs/skilled-awareness/chora-compose-integration\adoption-blueprint.md
+    format: text/markdown
+  - type: adoption_ledger
+    path: docs/skilled-awareness/chora-compose-integration\ledger.md
+    format: text/markdown

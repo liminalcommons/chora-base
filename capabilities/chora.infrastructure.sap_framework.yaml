@@ -1,0 +1,37 @@
+apiVersion: chora.dev/v1
+kind: Capability
+metadata:
+  dc_identifier: chora.infrastructure.sap_framework
+  dc_identifier_legacy: SAP-000
+  dc_title: SAP Framework
+  dc_description: Core SAP framework and protocols defining how Skilled Awareness
+    Packages work
+  dc_type: Pattern
+  dc_hasVersion: 1.0.0
+  dc_creator: chora-base
+  dc_date: '2025-11-15'
+  dc_format: text/markdown
+  dc_subject:
+  - meta
+  - required
+  - foundational
+chora_pattern:
+  artifacts:
+  - type: capability_charter
+    path: docs/skilled-awareness/sap-framework\capability-charter.md
+    format: text/markdown
+  - type: protocol_specification
+    path: docs/skilled-awareness/sap-framework\protocol-spec.md
+    format: text/markdown
+  - type: awareness_guide
+    path: docs/skilled-awareness/sap-framework\AGENTS.md
+    format: text/markdown
+  - type: awareness_guide
+    path: docs/skilled-awareness/sap-framework\awareness-guide.md
+    format: text/markdown
+  - type: adoption_blueprint
+    path: docs/skilled-awareness/sap-framework\adoption-blueprint.md
+    format: text/markdown
+  - type: adoption_ledger
+    path: docs/skilled-awareness/sap-framework\ledger.md
+    format: text/markdown

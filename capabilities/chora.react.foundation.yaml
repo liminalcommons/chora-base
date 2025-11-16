@@ -1,0 +1,45 @@
+apiVersion: chora.dev/v1
+kind: Capability
+metadata:
+  dc_identifier: chora.react.foundation
+  dc_identifier_legacy: SAP-020
+  dc_title: React Project Foundation
+  dc_description: Next.js 15 + TypeScript foundation stack with App Router, RSC, and
+    modern React patterns reducing setup from 8-12h to 45min
+  dc_type: Pattern
+  dc_hasVersion: 1.0.0
+  dc_creator: chora-base
+  dc_date: '2025-11-15'
+  dc_format: text/markdown
+  dc_subject:
+  - react
+  - nextjs
+  - typescript
+  - foundation
+  - technology-specific
+dc_relation:
+  requires:
+  - capability: chora.infrastructure.sap_framework
+    relationship: prerequisite
+  - capability: chora.devex.project_bootstrap
+    relationship: prerequisite
+chora_pattern:
+  artifacts:
+  - type: capability_charter
+    path: docs/skilled-awareness/react-foundation\capability-charter.md
+    format: text/markdown
+  - type: protocol_specification
+    path: docs/skilled-awareness/react-foundation\protocol-spec.md
+    format: text/markdown
+  - type: awareness_guide
+    path: docs/skilled-awareness/react-foundation\AGENTS.md
+    format: text/markdown
+  - type: awareness_guide
+    path: docs/skilled-awareness/react-foundation\awareness-guide.md
+    format: text/markdown
+  - type: adoption_blueprint
+    path: docs/skilled-awareness/react-foundation\adoption-blueprint.md
+    format: text/markdown
+  - type: adoption_ledger
+    path: docs/skilled-awareness/react-foundation\ledger.md
+    format: text/markdown

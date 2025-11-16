@@ -1,0 +1,45 @@
+apiVersion: chora.dev/v1
+kind: Capability
+metadata:
+  dc_identifier: chora.react.styling
+  dc_identifier_legacy: SAP-024
+  dc_title: React Styling Architecture
+  dc_description: Tailwind CSS v4 + shadcn/ui component library with RSC compatibility
+    and responsive design patterns
+  dc_type: Pattern
+  dc_hasVersion: 1.0.0
+  dc_creator: chora-base
+  dc_date: '2025-11-15'
+  dc_format: text/markdown
+  dc_subject:
+  - react
+  - styling
+  - tailwind
+  - shadcn
+  - css
+dc_relation:
+  requires:
+  - capability: chora.infrastructure.sap_framework
+    relationship: prerequisite
+  - capability: chora.react.foundation
+    relationship: prerequisite
+chora_pattern:
+  artifacts:
+  - type: capability_charter
+    path: docs/skilled-awareness/react-styling\capability-charter.md
+    format: text/markdown
+  - type: protocol_specification
+    path: docs/skilled-awareness/react-styling\protocol-spec.md
+    format: text/markdown
+  - type: awareness_guide
+    path: docs/skilled-awareness/react-styling\AGENTS.md
+    format: text/markdown
+  - type: awareness_guide
+    path: docs/skilled-awareness/react-styling\awareness-guide.md
+    format: text/markdown
+  - type: adoption_blueprint
+    path: docs/skilled-awareness/react-styling\adoption-blueprint.md
+    format: text/markdown
+  - type: adoption_ledger
+    path: docs/skilled-awareness/react-styling\ledger.md
+    format: text/markdown

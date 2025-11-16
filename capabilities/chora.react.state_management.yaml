@@ -1,0 +1,48 @@
+apiVersion: chora.dev/v1
+kind: Capability
+metadata:
+  dc_identifier: chora.react.state_management
+  dc_identifier_legacy: SAP-023
+  dc_title: React State Management Patterns
+  dc_description: Three-pillar state architecture (server/client/form) with TanStack
+    Query v5 + Zustand v4 + React Hook Form v7 + Zod, reducing setup from 4-6h to
+    30min (85-90% savings)
+  dc_type: Pattern
+  dc_hasVersion: 1.0.0
+  dc_creator: chora-base
+  dc_date: '2025-11-15'
+  dc_format: text/markdown
+  dc_subject:
+  - react
+  - state-management
+  - tanstack-query
+  - zustand
+  - forms
+  - zod
+  - typescript
+dc_relation:
+  requires:
+  - capability: chora.infrastructure.sap_framework
+    relationship: prerequisite
+  - capability: chora.react.foundation
+    relationship: prerequisite
+chora_pattern:
+  artifacts:
+  - type: capability_charter
+    path: docs/skilled-awareness/react-state-management\capability-charter.md
+    format: text/markdown
+  - type: protocol_specification
+    path: docs/skilled-awareness/react-state-management\protocol-spec.md
+    format: text/markdown
+  - type: awareness_guide
+    path: docs/skilled-awareness/react-state-management\AGENTS.md
+    format: text/markdown
+  - type: awareness_guide
+    path: docs/skilled-awareness/react-state-management\awareness-guide.md
+    format: text/markdown
+  - type: adoption_blueprint
+    path: docs/skilled-awareness/react-state-management\adoption-blueprint.md
+    format: text/markdown
+  - type: adoption_ledger
+    path: docs/skilled-awareness/react-state-management\ledger.md
+    format: text/markdown

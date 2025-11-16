@@ -18,9 +18,9 @@ metadata:
   - pytest
 dc_relation:
   requires:
-  - capability: chora.SAP-000
+  - capability: chora.infrastructure.sap_framework
     relationship: prerequisite
-  - capability: chora.SAP-003
+  - capability: chora.devex.project_bootstrap
     relationship: prerequisite
 chora_pattern:
   artifacts:

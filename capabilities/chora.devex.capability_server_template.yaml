@@ -32,21 +32,21 @@ chora_service:
       install_command: pip install chora-capability-server-template
 dc_relation:
   requires:
-  - capability: chora.SAP-000
+  - capability: chora.infrastructure.sap_framework
     version: ^1.0.0
     relationship: runtime
-  - capability: chora.SAP-042
+  - capability: chora.devex.interface_design
     version: ^1.0.0
     relationship: runtime
-  - capability: chora.SAP-043
+  - capability: chora.devex.multi_interface
     version: ^1.0.0
     relationship: runtime
-  - capability: chora.SAP-044
+  - capability: chora.devex.registry
     version: ^1.0.0
     relationship: runtime
-  - capability: chora.SAP-045
+  - capability: chora.devex.bootstrap
     version: ^1.0.0
     relationship: runtime
-  - capability: chora.SAP-046
+  - capability: chora.devex.composition
     version: ^1.0.0
     relationship: runtime

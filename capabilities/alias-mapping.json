@@ -6,6 +6,56 @@
       "status": "deprecated",
       "sunset_date": "2026-06-01"
     },
+    "SAP-012": {
+      "namespace": "chora.awareness.development_lifecycle",
+      "status": "deprecated",
+      "sunset_date": "2026-06-01"
+    },
+    "SAP-027": {
+      "namespace": "chora.awareness.dogfooding_patterns",
+      "status": "deprecated",
+      "sunset_date": "2026-06-01"
+    },
+    "SAP-016": {
+      "namespace": "chora.awareness.link_validation_reference_management",
+      "status": "deprecated",
+      "sunset_date": "2026-06-01"
+    },
+    "SAP-010": {
+      "namespace": "chora.awareness.memory_system",
+      "status": "deprecated",
+      "sunset_date": "2026-06-01"
+    },
+    "SAP-013": {
+      "namespace": "chora.awareness.metrics_tracking",
+      "status": "deprecated",
+      "sunset_date": "2026-06-01"
+    },
+    "SAP-028": {
+      "namespace": "chora.awareness.publishing_automation",
+      "status": "deprecated",
+      "sunset_date": "2026-06-01"
+    },
+    "SAP-029": {
+      "namespace": "chora.awareness.sap_generation",
+      "status": "deprecated",
+      "sunset_date": "2026-06-01"
+    },
+    "SAP-019": {
+      "namespace": "chora.awareness.sap_self_evaluation",
+      "status": "deprecated",
+      "sunset_date": "2026-06-01"
+    },
+    "SAP-015": {
+      "namespace": "chora.awareness.task_tracking",
+      "status": "deprecated",
+      "sunset_date": "2026-06-01"
+    },
+    "SAP-008": {
+      "namespace": "chora.devex.automation_scripts",
+      "status": "deprecated",
+      "sunset_date": "2026-06-01"
+    },
     "SAP-045": {
       "namespace": "chora.devex.bootstrap",
       "status": "deprecated",
@@ -16,13 +66,48 @@
       "status": "deprecated",
       "sunset_date": "2026-06-01"
     },
+    "SAP-005": {
+      "namespace": "chora.devex.ci_cd_workflows",
+      "status": "deprecated",
+      "sunset_date": "2026-06-01"
+    },
+    "SAP-046": {
+      "namespace": "chora.devex.composition",
+      "status": "deprecated",
+      "sunset_date": "2026-06-01"
+    },
+    "SAP-011": {
+      "namespace": "chora.devex.docker_operations",
+      "status": "deprecated",
+      "sunset_date": "2026-06-01"
+    },
+    "SAP-007": {
+      "namespace": "chora.devex.documentation_framework",
+      "status": "deprecated",
+      "sunset_date": "2026-06-01"
+    },
     "SAP-042": {
       "namespace": "chora.devex.interface_design",
       "status": "deprecated",
       "sunset_date": "2026-06-01"
     },
+    "SAP-014": {
+      "namespace": "chora.devex.mcp_server_development",
+      "status": "deprecated",
+      "sunset_date": "2026-06-01"
+    },
     "SAP-043": {
       "namespace": "chora.devex.multi_interface",
+      "status": "deprecated",
+      "sunset_date": "2026-06-01"
+    },
+    "SAP-003": {
+      "namespace": "chora.devex.project_bootstrap",
+      "status": "deprecated",
+      "sunset_date": "2026-06-01"
+    },
+    "SAP-006": {
+      "namespace": "chora.devex.quality_gates",
       "status": "deprecated",
       "sunset_date": "2026-06-01"
     },
@@ -36,8 +121,108 @@
       "status": "deprecated",
       "sunset_date": "2026-06-01"
     },
+    "SAP-002": {
+      "namespace": "chora.infrastructure.chora_base",
+      "status": "deprecated",
+      "sunset_date": "2026-06-01"
+    },
+    "SAP-001": {
+      "namespace": "chora.infrastructure.inbox",
+      "status": "deprecated",
+      "sunset_date": "2026-06-01"
+    },
+    "SAP-000": {
+      "namespace": "chora.infrastructure.sap_framework",
+      "status": "deprecated",
+      "sunset_date": "2026-06-01"
+    },
+    "SAP-017": {
+      "namespace": "chora.integration.chora_compose_integration",
+      "status": "deprecated",
+      "sunset_date": "2026-06-01"
+    },
+    "SAP-018": {
+      "namespace": "chora.integration.chora_compose_meta",
+      "status": "deprecated",
+      "sunset_date": "2026-06-01"
+    },
+    "SAP-026": {
+      "namespace": "chora.integration.react_accessibility",
+      "status": "deprecated",
+      "sunset_date": "2026-06-01"
+    },
+    "SAP-039": {
+      "namespace": "chora.integration.react_e2e_testing",
+      "status": "deprecated",
+      "sunset_date": "2026-06-01"
+    },
+    "SAP-038": {
+      "namespace": "chora.integration.react_internationalization",
+      "status": "deprecated",
+      "sunset_date": "2026-06-01"
+    },
+    "SAP-040": {
+      "namespace": "chora.integration.react_monorepo_architecture",
+      "status": "deprecated",
+      "sunset_date": "2026-06-01"
+    },
+    "SAP-025": {
+      "namespace": "chora.integration.react_performance",
+      "status": "deprecated",
+      "sunset_date": "2026-06-01"
+    },
+    "SAP-037": {
+      "namespace": "chora.integration.react_realtime_synchronization",
+      "status": "deprecated",
+      "sunset_date": "2026-06-01"
+    },
+    "SAP-033": {
+      "namespace": "chora.react.authentication",
+      "status": "deprecated",
+      "sunset_date": "2026-06-01"
+    },
+    "SAP-034": {
+      "namespace": "chora.react.database_integration",
+      "status": "deprecated",
+      "sunset_date": "2026-06-01"
+    },
+    "SAP-036": {
+      "namespace": "chora.react.error_handling",
+      "status": "deprecated",
+      "sunset_date": "2026-06-01"
+    },
+    "SAP-035": {
+      "namespace": "chora.react.file_upload",
+      "status": "deprecated",
+      "sunset_date": "2026-06-01"
+    },
     "SAP-041": {
       "namespace": "chora.react.form_validation",
+      "status": "deprecated",
+      "sunset_date": "2026-06-01"
+    },
+    "SAP-020": {
+      "namespace": "chora.react.foundation",
+      "status": "deprecated",
+      "sunset_date": "2026-06-01"
+    },
+    "SAP-022": {
+      "namespace": "chora.react.linting",
+      "status": "deprecated",
+      "sunset_date": "2026-06-01"
+    },
+    "SAP-023": {
+      "namespace": "chora.react.state_management",
+      "status": "deprecated",
+      "sunset_date": "2026-06-01"
+    },
+    "SAP-024": {
+      "namespace": "chora.react.styling",
+      "status": "deprecated",
+      "sunset_date": "2026-06-01"
+    },
+    "SAP-021": {
+      "namespace": "chora.react.testing",
       "status": "deprecated",
       "sunset_date": "2026-06-01"
     }

@@ -1,0 +1,41 @@
+apiVersion: chora.dev/v1
+kind: Capability
+metadata:
+  dc_identifier: chora.awareness.task_tracking
+  dc_identifier_legacy: SAP-015
+  dc_title: Task Tracking with Beads
+  dc_description: Git-backed persistent task memory for multi-agent coordination with
+    hash-based collision-free IDs, dependency tracking, and A-MEM integration
+  dc_type: Service
+  dc_hasVersion: 1.1.0
+  dc_creator: chora-base
+  dc_date: '2025-11-15'
+  dc_format: application/x-executable
+  dc_subject:
+  - task-tracking
+  - beads
+  - memory
+  - multi-agent
+  - pilot
+  - l3-infrastructure
+chora_service:
+  interfaces:
+  - cli
+  - mcp
+  health:
+    endpoint: /health
+    interval: 10
+    timeout: 5
+    heartbeat_ttl: 30
+  distribution:
+    pypi:
+      package_name: chora-task-tracking
+      install_command: pip install chora-task-tracking
+dc_relation:
+  requires:
+  - capability: chora.infrastructure.sap_framework
+    version: ^1.0.0
+    relationship: runtime
+  - capability: chora.awareness.memory_system
+    version: ^1.0.0
+    relationship: runtime

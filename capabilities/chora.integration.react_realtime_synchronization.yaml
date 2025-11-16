@@ -1,0 +1,43 @@
+apiVersion: chora.dev/v1
+kind: Capability
+metadata:
+  dc_identifier: chora.integration.react_realtime_synchronization
+  dc_identifier_legacy: SAP-037
+  dc_title: React Real-Time Synchronization
+  dc_description: WebSocket/real-time with 4 providers (Socket.IO, Pusher, Ably, Supabase
+    Realtime) reducing setup from 7h to 30min (92.9% time savings), sub-100ms latency,
+    100k+ concurrent connections
+  dc_type: Pattern
+  dc_hasVersion: 1.0.0
+  dc_creator: chora-base
+  dc_date: '2025-11-15'
+  dc_format: text/markdown
+  dc_subject:
+  - react
+  - nextjs
+  - realtime
+  - websockets
+  - technology-specific
+dc_relation:
+  requires:
+  - capability: chora.infrastructure.sap_framework
+    relationship: prerequisite
+  - capability: chora.react.foundation
+    relationship: prerequisite
+chora_pattern:
+  artifacts:
+  - type: capability_charter
+    path: docs/skilled-awareness/react-realtime-synchronization\capability-charter.md
+    format: text/markdown
+  - type: protocol_specification
+    path: docs/skilled-awareness/react-realtime-synchronization\protocol-spec.md
+    format: text/markdown
+  - type: awareness_guide
+    path: docs/skilled-awareness/react-realtime-synchronization\AGENTS.md
+    format: text/markdown
+  - type: adoption_blueprint
+    path: docs/skilled-awareness/react-realtime-synchronization\adoption-blueprint.md
+    format: text/markdown
+  - type: adoption_ledger
+    path: docs/skilled-awareness/react-realtime-synchronization\ledger.md
+    format: text/markdown

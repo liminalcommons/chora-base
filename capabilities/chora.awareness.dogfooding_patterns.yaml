@@ -1,0 +1,45 @@
+apiVersion: chora.dev/v1
+kind: Capability
+metadata:
+  dc_identifier: chora.awareness.dogfooding_patterns
+  dc_identifier_legacy: SAP-027
+  dc_title: Dogfooding Patterns
+  dc_description: Formalized 5-week dogfooding pilot methodology for validating patterns
+    through internal use before ecosystem adoption
+  dc_type: Pattern
+  dc_hasVersion: 1.0.0
+  dc_creator: chora-base
+  dc_date: '2025-11-15'
+  dc_format: text/markdown
+  dc_subject:
+  - dogfooding
+  - patterns
+  - pilot
+  - validation
+  - methodology
+dc_relation:
+  requires:
+  - capability: chora.infrastructure.sap_framework
+    relationship: prerequisite
+  - capability: chora.awareness.sap_generation
+    relationship: prerequisite
+chora_pattern:
+  artifacts:
+  - type: capability_charter
+    path: docs/skilled-awareness/dogfooding-patterns\capability-charter.md
+    format: text/markdown
+  - type: protocol_specification
+    path: docs/skilled-awareness/dogfooding-patterns\protocol-spec.md
+    format: text/markdown
+  - type: awareness_guide
+    path: docs/skilled-awareness/dogfooding-patterns\AGENTS.md
+    format: text/markdown
+  - type: awareness_guide
+    path: docs/skilled-awareness/dogfooding-patterns\awareness-guide.md
+    format: text/markdown
+  - type: adoption_blueprint
+    path: docs/skilled-awareness/dogfooding-patterns\adoption-blueprint.md
+    format: text/markdown
+  - type: adoption_ledger
+    path: docs/skilled-awareness/dogfooding-patterns\ledger.md
+    format: text/markdown

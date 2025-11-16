@@ -1,0 +1,38 @@
+apiVersion: chora.dev/v1
+kind: Capability
+metadata:
+  dc_identifier: chora.awareness.link_validation_reference_management
+  dc_identifier_legacy: SAP-016
+  dc_title: Link Validation & Reference Management
+  dc_description: Automated markdown link validation (internal + external) preventing
+    broken documentation references
+  dc_type: Pattern
+  dc_hasVersion: 1.0.0
+  dc_creator: chora-base
+  dc_date: '2025-11-15'
+  dc_format: text/markdown
+  dc_subject:
+  - quality
+  - validation
+  - documentation
+  - foundational
+chora_pattern:
+  artifacts:
+  - type: capability_charter
+    path: docs/skilled-awareness/link-validation-reference-management\capability-charter.md
+    format: text/markdown
+  - type: protocol_specification
+    path: docs/skilled-awareness/link-validation-reference-management\protocol-spec.md
+    format: text/markdown
+  - type: awareness_guide
+    path: docs/skilled-awareness/link-validation-reference-management\AGENTS.md
+    format: text/markdown
+  - type: awareness_guide
+    path: docs/skilled-awareness/link-validation-reference-management\awareness-guide.md
+    format: text/markdown
+  - type: adoption_blueprint
+    path: docs/skilled-awareness/link-validation-reference-management\adoption-blueprint.md
+    format: text/markdown
+  - type: adoption_ledger
+    path: docs/skilled-awareness/link-validation-reference-management\ledger.md
+    format: text/markdown

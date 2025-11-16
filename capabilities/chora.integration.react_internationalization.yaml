@@ -1,0 +1,43 @@
+apiVersion: chora.dev/v1
+kind: Capability
+metadata:
+  dc_identifier: chora.integration.react_internationalization
+  dc_identifier_legacy: SAP-038
+  dc_title: React Internationalization (i18n)
+  dc_description: next-intl framework reducing setup from 5h to 30min (90% time savings),
+    20+ languages, Server Components support, type-safe translations, locale-based
+    routing, SEO optimization
+  dc_type: Pattern
+  dc_hasVersion: 1.0.0
+  dc_creator: chora-base
+  dc_date: '2025-11-15'
+  dc_format: text/markdown
+  dc_subject:
+  - react
+  - nextjs
+  - i18n
+  - internationalization
+  - technology-specific
+dc_relation:
+  requires:
+  - capability: chora.infrastructure.sap_framework
+    relationship: prerequisite
+  - capability: chora.react.foundation
+    relationship: prerequisite
+chora_pattern:
+  artifacts:
+  - type: capability_charter
+    path: docs/skilled-awareness/react-internationalization\capability-charter.md
+    format: text/markdown
+  - type: protocol_specification
+    path: docs/skilled-awareness/react-internationalization\protocol-spec.md
+    format: text/markdown
+  - type: awareness_guide
+    path: docs/skilled-awareness/react-internationalization\AGENTS.md
+    format: text/markdown
+  - type: adoption_blueprint
+    path: docs/skilled-awareness/react-internationalization\adoption-blueprint.md
+    format: text/markdown
+  - type: adoption_ledger
+    path: docs/skilled-awareness/react-internationalization\ledger.md
+    format: text/markdown

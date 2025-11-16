@@ -1,0 +1,32 @@
+apiVersion: chora.dev/v1
+kind: Capability
+metadata:
+  dc_identifier: chora.infrastructure.inbox
+  dc_identifier_legacy: SAP-001
+  dc_title: Inbox Coordination Protocol
+  dc_description: Production-ready cross-repo coordination protocol with 5 CLI tools,
+    AI-powered generation (60x ROI), Light+ planning integration, and formalized SLAs
+    reducing coordination effort by 90%
+  dc_type: Service
+  dc_hasVersion: 1.2.0
+  dc_creator: chora-base
+  dc_date: '2025-11-15'
+  dc_format: application/x-executable
+  dc_subject:
+  - meta
+  - coordination
+  - ecosystem
+  - production-ready
+chora_service:
+  interfaces:
+  - cli
+  - mcp
+  health:
+    endpoint: /health
+    interval: 10
+    timeout: 5
+    heartbeat_ttl: 30
+  distribution:
+    pypi:
+      package_name: chora-inbox
+      install_command: pip install chora-inbox

@@ -32,7 +32,9 @@
       "Bash(done)",
       "Bash(python scripts/registry-lookup.py:*)",
       "Bash(python scripts/validate-cross-type-deps.py:*)",
-      "Bash(git add:*)"
+      "Bash(git add:*)",
+      "Bash(git commit:*)",
+      "Bash(python scripts/update-dependency-namespaces.py:*)"
     ],
     "deny": [],
     "ask": []

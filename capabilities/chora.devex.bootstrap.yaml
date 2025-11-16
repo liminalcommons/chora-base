@@ -32,9 +32,9 @@ chora_service:
       install_command: pip install chora-bootstrap
 dc_relation:
   requires:
-  - capability: chora.SAP-000
+  - capability: chora.infrastructure.sap_framework
     version: ^1.0.0
     relationship: runtime
-  - capability: chora.SAP-044
+  - capability: chora.devex.registry
     version: ^1.0.0
     relationship: runtime

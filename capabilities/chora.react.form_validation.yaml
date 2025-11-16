@@ -20,9 +20,9 @@ metadata:
   - technology-specific
 dc_relation:
   requires:
-  - capability: chora.SAP-000
+  - capability: chora.infrastructure.sap_framework
     relationship: prerequisite
-  - capability: chora.SAP-020
+  - capability: chora.react.foundation
     relationship: prerequisite
 chora_pattern:
   artifacts:

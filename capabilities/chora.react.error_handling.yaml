@@ -1,0 +1,43 @@
+apiVersion: chora.dev/v1
+kind: Capability
+metadata:
+  dc_identifier: chora.react.error_handling
+  dc_identifier_legacy: SAP-036
+  dc_title: React Error Handling
+  dc_description: Error boundaries + Sentry monitoring reducing setup from 3-4h to
+    30min (87.5% time savings), GDPR/CCPA compliant PII scrubbing, retry logic, production
+    error tracking
+  dc_type: Pattern
+  dc_hasVersion: 1.0.0
+  dc_creator: chora-base
+  dc_date: '2025-11-15'
+  dc_format: text/markdown
+  dc_subject:
+  - react
+  - nextjs
+  - error-handling
+  - monitoring
+  - technology-specific
+dc_relation:
+  requires:
+  - capability: chora.infrastructure.sap_framework
+    relationship: prerequisite
+  - capability: chora.react.foundation
+    relationship: prerequisite
+chora_pattern:
+  artifacts:
+  - type: capability_charter
+    path: docs/skilled-awareness/react-error-handling\capability-charter.md
+    format: text/markdown
+  - type: protocol_specification
+    path: docs/skilled-awareness/react-error-handling\protocol-spec.md
+    format: text/markdown
+  - type: awareness_guide
+    path: docs/skilled-awareness/react-error-handling\AGENTS.md
+    format: text/markdown
+  - type: adoption_blueprint
+    path: docs/skilled-awareness/react-error-handling\adoption-blueprint.md
+    format: text/markdown
+  - type: adoption_ledger
+    path: docs/skilled-awareness/react-error-handling\ledger.md
+    format: text/markdown

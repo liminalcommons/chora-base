@@ -1,0 +1,43 @@
+apiVersion: chora.dev/v1
+kind: Capability
+metadata:
+  dc_identifier: chora.integration.react_monorepo_architecture
+  dc_identifier_legacy: SAP-040
+  dc_title: React Monorepo Architecture
+  dc_description: Turborepo monorepo reducing setup from 7.5h to 30min (93.3% time
+    savings), incremental builds, remote caching, pnpm workspaces (70% faster, 50%
+    less disk space)
+  dc_type: Pattern
+  dc_hasVersion: 1.0.0
+  dc_creator: chora-base
+  dc_date: '2025-11-15'
+  dc_format: text/markdown
+  dc_subject:
+  - react
+  - nextjs
+  - monorepo
+  - turborepo
+  - technology-specific
+dc_relation:
+  requires:
+  - capability: chora.infrastructure.sap_framework
+    relationship: prerequisite
+  - capability: chora.react.foundation
+    relationship: prerequisite
+chora_pattern:
+  artifacts:
+  - type: capability_charter
+    path: docs/skilled-awareness/react-monorepo-architecture\capability-charter.md
+    format: text/markdown
+  - type: protocol_specification
+    path: docs/skilled-awareness/react-monorepo-architecture\protocol-spec.md
+    format: text/markdown
+  - type: awareness_guide
+    path: docs/skilled-awareness/react-monorepo-architecture\AGENTS.md
+    format: text/markdown
+  - type: adoption_blueprint
+    path: docs/skilled-awareness/react-monorepo-architecture\adoption-blueprint.md
+    format: text/markdown
+  - type: adoption_ledger
+    path: docs/skilled-awareness/react-monorepo-architecture\ledger.md
+    format: text/markdown

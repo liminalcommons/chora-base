@@ -17,9 +17,9 @@ metadata:
   - documentation
 dc_relation:
   requires:
-  - capability: chora.SAP-000
+  - capability: chora.infrastructure.sap_framework
     relationship: prerequisite
-  - capability: chora.SAP-007
+  - capability: chora.devex.documentation_framework
     relationship: prerequisite
 chora_pattern:
   artifacts:

@@ -1,0 +1,49 @@
+apiVersion: chora.dev/v1
+kind: Capability
+metadata:
+  dc_identifier: chora.devex.mcp_server_development
+  dc_identifier_legacy: SAP-014
+  dc_title: MCP Server Development
+  dc_description: 'FastMCP-based Model Context Protocol server development patterns
+    with 11 templates and 8 guides (DEPRECATED: Use SAP-047 capability-server-template
+    for new projects)'
+  dc_type: Pattern
+  dc_hasVersion: 1.0.0
+  dc_creator: chora-base
+  dc_date: '2025-11-15'
+  dc_format: text/markdown
+  dc_subject:
+  - mcp
+  - fastmcp
+  - server-development
+  - technology-specific
+dc_relation:
+  requires:
+  - capability: chora.infrastructure.sap_framework
+    relationship: prerequisite
+  - capability: chora.devex.project_bootstrap
+    relationship: prerequisite
+  - capability: chora.devex.testing_framework
+    relationship: prerequisite
+  - capability: chora.awareness.development_lifecycle
+    relationship: prerequisite
+chora_pattern:
+  artifacts:
+  - type: capability_charter
+    path: docs/skilled-awareness/mcp-server-development\capability-charter.md
+    format: text/markdown
+  - type: protocol_specification
+    path: docs/skilled-awareness/mcp-server-development\protocol-spec.md
+    format: text/markdown
+  - type: awareness_guide
+    path: docs/skilled-awareness/mcp-server-development\AGENTS.md
+    format: text/markdown
+  - type: awareness_guide
+    path: docs/skilled-awareness/mcp-server-development\awareness-guide.md
+    format: text/markdown
+  - type: adoption_blueprint
+    path: docs/skilled-awareness/mcp-server-development\adoption-blueprint.md
+    format: text/markdown
+  - type: adoption_ledger
+    path: docs/skilled-awareness/mcp-server-development\ledger.md
+    format: text/markdown

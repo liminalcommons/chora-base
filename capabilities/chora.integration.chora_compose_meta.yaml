@@ -1,0 +1,48 @@
+apiVersion: chora.dev/v1
+kind: Capability
+metadata:
+  dc_identifier: chora.integration.chora_compose_meta
+  dc_identifier_legacy: SAP-018
+  dc_title: chora-compose Meta
+  dc_description: 'Complete technical specification: 24 MCP tools, Collections architecture
+    (3-tier model), 5 generators, context resolution (6 sources), event emission for
+    advanced adoption'
+  dc_type: Pattern
+  dc_hasVersion: 2.0.0
+  dc_creator: Victor
+  dc_date: '2025-11-15'
+  dc_format: text/markdown
+  dc_subject:
+  - mcp-tools
+  - content-generation
+  - collections-architecture
+  - caching
+  - context-resolution
+  - generators
+  - telemetry
+dc_relation:
+  requires:
+  - capability: chora.infrastructure.sap_framework
+    relationship: prerequisite
+  - capability: chora.integration.chora_compose_integration
+    relationship: prerequisite
+chora_pattern:
+  artifacts:
+  - type: capability_charter
+    path: docs/skilled-awareness/chora-compose-meta\capability-charter.md
+    format: text/markdown
+  - type: protocol_specification
+    path: docs/skilled-awareness/chora-compose-meta\protocol-spec.md
+    format: text/markdown
+  - type: awareness_guide
+    path: docs/skilled-awareness/chora-compose-meta\AGENTS.md
+    format: text/markdown
+  - type: awareness_guide
+    path: docs/skilled-awareness/chora-compose-meta\awareness-guide.md
+    format: text/markdown
+  - type: adoption_blueprint
+    path: docs/skilled-awareness/chora-compose-meta\adoption-blueprint.md
+    format: text/markdown
+  - type: adoption_ledger
+    path: docs/skilled-awareness/chora-compose-meta\ledger.md
+    format: text/markdown
