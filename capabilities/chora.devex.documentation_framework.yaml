@@ -32,4 +32,4 @@ dc_relation:
   requires:
   - capability: chora.infrastructure.sap_framework
     version: ^1.0.0
-    relationship: runtime
+    relationship: prerequisite

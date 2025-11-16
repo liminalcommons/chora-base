@@ -1,0 +1,243 @@
+# Capability Manifest: Capability Registry & Service Discovery
+#
+# SAP-048: Formalizes agent awareness patterns for querying and monitoring
+# the Chora distributed capability registry built on etcd.
+#
+# This is a Pattern-type capability (documentation-based, no runtime service).
+
+# Dublin Core Metadata (ISO 15836:2009)
+metadata:
+  dc_identifier: chora.awareness.capability_registry_discovery
+  dc_title: Capability Registry & Service Discovery
+  dc_description: >
+    Formalizes agent awareness patterns for discovering and querying capabilities
+    from the Chora distributed registry. Provides standardized patterns for
+    capability discovery, dependency resolution, service health monitoring,
+    and artifact search using etcd as the backend.
+  dc_creator: Chora Ecosystem
+  dc_date: '2025-11-16'
+  dc_format: application/yaml
+  dc_type: Pattern
+  dc_subject:
+    - registry
+    - service-discovery
+    - etcd
+    - agent-awareness
+    - health-monitoring
+    - dependency-resolution
+  dc_coverage: Global
+  dc_rights: MIT License
+
+# Chora Extensions
+chora_version: 1.0.0
+chora_status: draft
+chora_namespace: chora.awareness.capability_registry_discovery
+chora_sap_id: SAP-048
+chora_legacy_identifier: SAP-048
+
+# Capability Type: Pattern (documentation-based)
+# Note: No chora_service block - this is a Pattern-type capability
+
+# Dependencies
+dc_relation:
+  requires:
+    # Prerequisite: Registry infrastructure must exist
+    - capability: chora.devex.registry
+      relationship: prerequisite
+      description: Provides etcd-based registry infrastructure
+
+    # Prerequisite: SAP framework (all SAPs depend on SAP-000)
+    - capability: chora.infrastructure.sap_framework
+      relationship: prerequisite
+      description: Defines capability schema and artifact structure
+
+  extends:
+    # Extends: Agent awareness patterns
+    - capability: chora.awareness.agent_awareness
+      relationship: extends
+      description: Builds on existing agent awareness patterns
+
+  optional:
+    # Optional: Task tracking integration (tag tasks with capability namespaces)
+    - capability: chora.awareness.task_tracking
+      relationship: optional
+      description: Tag beads tasks with capability namespaces for tracking
+
+    # Optional: Namespace resolution (resolve legacy SAP-XXX identifiers)
+    - capability: chora.awareness.namespace_resolution
+      relationship: optional
+      description: Resolve legacy identifiers before querying registry
+      note: SAP-049 not yet created (planned)
+
+# Documentation Artifacts (5 required)
+artifacts:
+  capability_charter:
+    path: docs/skilled-awareness/capability-registry-discovery/capability-charter.md
+    description: Problem statement and solution design
+
+  protocol_spec:
+    path: docs/skilled-awareness/capability-registry-discovery/protocol-spec.md
+    description: Complete technical specification of etcd schema and query patterns
+
+  awareness_guide:
+    path: docs/skilled-awareness/capability-registry-discovery/AGENTS.md
+    description: Agent-specific patterns and workflows
+
+  adoption_blueprint:
+    path: docs/skilled-awareness/capability-registry-discovery/adoption-blueprint.md
+    description: Step-by-step installation and integration guide
+
+  ledger:
+    path: docs/skilled-awareness/capability-registry-discovery/ledger.md
+    description: Adoption tracking and version history
+
+# Infrastructure Requirements
+infrastructure:
+  etcd:
+    description: 3-node etcd cluster for distributed registry
+    required: true
+    version: '>=3.5.0'
+
+  gitops_sync:
+    description: GitOps sync service to populate registry from Git
+    required: true
+    service: chora.devex.gitops_sync
+
+  heartbeat:
+    description: Heartbeat service for Service-type capability health monitoring
+    required: true
+    service: chora.devex.registry_heartbeat
+
+  artifact_indexing:
+    description: Script to index SAP artifacts to etcd
+    required: true
+    script: scripts/index-sap-artifacts.py
+
+# Client Libraries
+client_libraries:
+  python:
+    library: etcd3
+    version: '>=0.12.0'
+    install: pip install etcd3
+
+  go:
+    library: go.etcd.io/etcd/client/v3
+    version: '>=3.5.0'
+    install: go get go.etcd.io/etcd/client/v3
+
+  bash:
+    library: etcdctl
+    version: '>=3.5.0'
+    install: Included in etcd Docker image
+
+# Agent Patterns (Quick Reference)
+agent_patterns:
+  - name: List All Capabilities
+    description: Query registry for all capabilities
+    code: |
+      from registry_client import RegistryClient
+      registry = RegistryClient()
+      capabilities = registry.list_capabilities()
+
+  - name: Check Service Health
+    description: Verify Service-type capability is healthy
+    code: |
+      health = registry.check_service_health('chora.devex.registry')
+      if health['healthy']:
+          # Use service
+
+  - name: Resolve Dependencies
+    description: Traverse dependency graph
+    code: |
+      deps = registry.get_dependencies('chora.awareness.task_tracking')
+
+  - name: Search Documentation
+    description: Full-text search through SAP artifacts
+    code: |
+      results = registry.search_artifacts("health monitoring", limit=5)
+
+  - name: Watch for Changes
+    description: Monitor registry for real-time updates
+    code: |
+      for event in etcd.watch_prefix('/chora/capabilities/'):
+          # Handle event
+
+# Performance Characteristics
+performance:
+  query_latency:
+    metadata_read: 5ms
+    prefix_query: 20ms
+    health_check: 5ms
+    artifact_search: 50ms
+
+  throughput:
+    reads: 12000 ops/sec
+    writes: 1500 ops/sec
+
+  scalability:
+    max_capabilities: 10000
+    max_artifacts: 50000
+    max_concurrent_queries: 1000
+
+# Metrics and Monitoring
+metrics:
+  registry_queries_per_day:
+    target: 100
+    description: Number of registry queries per day
+
+  health_checks_per_day:
+    target: 50
+    description: Number of service health checks per day
+
+  artifact_searches_per_day:
+    target: 10
+    description: Number of artifact searches per day
+
+  query_response_time:
+    target: 10ms
+    description: Average query response time
+
+  service_uptime:
+    target: 99.9%
+    description: Registry infrastructure uptime
+
+# Adoption Status
+adoption:
+  status: Not Yet Adopted
+  target_date: '2025-11-23'
+  blockers: []
+  dependencies_met: true
+
+  progress:
+    infrastructure_deployed: true
+    artifacts_indexed: true
+    agent_integration: false
+    validation_tests: false
+    documentation_review: false
+    dogfooding_period: false
+    production_ready: false
+
+# Related Capabilities
+related:
+  - chora.devex.registry  # Registry infrastructure
+  - chora.awareness.agent_awareness  # Agent awareness patterns
+  - chora.infrastructure.sap_framework  # SAP framework
+  - chora.awareness.task_tracking  # Task tracking (optional integration)
+
+# Tags for Discovery
+tags:
+  - registry
+  - etcd
+  - service-discovery
+  - health-monitoring
+  - agent-patterns
+  - infrastructure
+  - awareness
+
+# Contact and Support
+maintainer:
+  name: Chora Ecosystem
+  contact: TBD
+
+# License
+license: MIT

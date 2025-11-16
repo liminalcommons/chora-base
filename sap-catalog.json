@@ -1,10 +1,10 @@
 {
   "version": "5.2.0",
-  "updated": "2025-11-12",
+  "updated": "2025-11-16",
   "sap_sets_version": "2.0.0",
   "sap_sets_architecture": "domain-based",
   "description": "Machine-readable catalog of all Skilled Awareness Packages in chora-base with domain-based set architecture",
-  "total_saps": 45,
+  "total_saps": 48,
   "saps": [
     {
       "id": "SAP-000",
@@ -2350,6 +2350,163 @@
         {
           "date": "2025-11-12",
           "note": "Status promoted to 'pilot' - template implementation complete. L3/L4 verification passed (301/301 tests, Docker deployment validated, performance benchmarks passed). Ecosystem SAPs (inbox, beads, A-MEM) integrated successfully."
+        }
+      ]
+    },
+    {
+      "id": "SAP-048",
+      "name": "capability-registry-discovery",
+      "full_name": "Capability Registry & Service Discovery",
+      "status": "draft",
+      "version": "1.0.0",
+      "included_by_default": false,
+      "size_kb": 95,
+      "description": "Formalizes agent awareness patterns for discovering and querying capabilities from the Chora distributed registry. Provides standardized patterns for capability discovery, dependency resolution, service health monitoring, and artifact search using etcd.",
+      "capabilities": [
+        "Capability discovery (list all capabilities by type/domain/status)",
+        "Service health monitoring (check TTL lease status)",
+        "Dependency resolution (traverse dependency graph)",
+        "Artifact search (full-text search through SAP documentation)",
+        "Event monitoring (watch etcd for real-time registry changes)",
+        "Registry query patterns (Python/Go/Bash examples)",
+        "Metadata caching strategies",
+        "Performance optimization patterns"
+      ],
+      "dependencies": [
+        "SAP-000",
+        "SAP-009",
+        "SAP-047"
+      ],
+      "tags": [
+        "registry",
+        "service-discovery",
+        "etcd",
+        "agent-awareness",
+        "health-monitoring",
+        "dependency-resolution"
+      ],
+      "author": "chora-base",
+      "location": "docs/skilled-awareness/capability-registry-discovery",
+      "artifacts": {
+        "capability_charter": true,
+        "protocol_spec": true,
+        "awareness_guide": true,
+        "adoption_blueprint": true,
+        "ledger": true
+      },
+      "system_files": [],
+      "phase": "Phase 2",
+      "priority": "P1",
+      "domain": "Awareness",
+      "notes": [
+        {
+          "date": "2025-11-16",
+          "note": "Initial SAP creation. Formalizes registry discovery patterns for agents to query etcd-based capability registry. Infrastructure deployed (etcd cluster, GitOps sync, heartbeat service, artifact indexing). Pending dogfooding period."
+        }
+      ]
+    },
+    {
+      "id": "SAP-049",
+      "name": "namespace-resolution",
+      "full_name": "Namespace Resolution & Ontology Navigation",
+      "status": "draft",
+      "version": "1.0.0",
+      "included_by_default": false,
+      "size_kb": 85,
+      "description": "Formalizes agent awareness patterns for resolving legacy SAP-XXX identifiers to modern chora.domain.capability namespaces. Provides standardized patterns for backward compatibility, alias resolution, deprecation warnings, and ontology exploration during the 6-month transition period (sunset: 2026-06-01).",
+      "capabilities": [
+        "Alias resolution (SAP-XXX → modern namespace)",
+        "Deprecation warning generation (days until sunset)",
+        "Ontology navigation (find capabilities by domain)",
+        "Migration guidance and progress tracking",
+        "Reverse lookup (namespace → SAP-XXX)",
+        "Input normalization (SAP-015, sap-015, 015, SAP015)",
+        "Fallback to local file (no API dependency)",
+        "Warning escalation (info → warning → error → fatal)"
+      ],
+      "dependencies": [
+        "SAP-000",
+        "SAP-009"
+      ],
+      "tags": [
+        "namespace-resolution",
+        "alias-mapping",
+        "backward-compatibility",
+        "deprecation",
+        "migration",
+        "ontology"
+      ],
+      "author": "chora-base",
+      "location": "docs/skilled-awareness/namespace-resolution",
+      "artifacts": {
+        "capability_charter": true,
+        "protocol_spec": true,
+        "awareness_guide": true,
+        "adoption_blueprint": true,
+        "ledger": true
+      },
+      "system_files": [
+        "capabilities/alias-mapping.json",
+        "services/alias-redirect/"
+      ],
+      "phase": "Phase 2",
+      "priority": "P1",
+      "domain": "Awareness",
+      "notes": [
+        {
+          "date": "2025-11-16",
+          "note": "Initial SAP creation. Formalizes patterns for resolving legacy SAP-XXX identifiers to modern namespaces during 6-month transition period (sunset: 2026-06-01). Includes alias mapping file (45 aliases), REST API service (optional), and fallback to local file."
+        }
+      ]
+    },
+    {
+      "id": "SAP-050",
+      "name": "sap-adoption-verification",
+      "full_name": "SAP Adoption Verification & Quality Assurance",
+      "status": "draft",
+      "version": "1.0.0",
+      "included_by_default": false,
+      "size_kb": 90,
+      "description": "Formalizes agent awareness patterns for validating SAP structure, completeness, and quality. Provides automated verification patterns, quality gates for status promotion (draft → pilot → production), and adoption metrics tracking.",
+      "capabilities": [
+        "Structure verification (validate 5 required artifacts)",
+        "Completeness verification (check required sections)",
+        "Link validation (detect broken cross-references)",
+        "Quality gate evaluation (objective criteria for status promotion)",
+        "Adoption metrics tracking (usage, feedback, issues)",
+        "Python CLI tool (sap-verify)",
+        "CI/CD integration patterns",
+        "Pre-commit hook patterns"
+      ],
+      "dependencies": [
+        "SAP-000",
+        "SAP-009"
+      ],
+      "tags": [
+        "sap-verification",
+        "quality-gates",
+        "adoption-metrics",
+        "structure-validation",
+        "link-validation",
+        "completeness-checking"
+      ],
+      "author": "chora-base",
+      "location": "docs/skilled-awareness/sap-adoption-verification",
+      "artifacts": {
+        "capability_charter": true,
+        "protocol_spec": true,
+        "awareness_guide": true,
+        "adoption_blueprint": true,
+        "ledger": true
+      },
+      "system_files": [],
+      "phase": "Phase 2",
+      "priority": "P1",
+      "domain": "Developer Experience",
+      "notes": [
+        {
+          "date": "2025-11-16",
+          "note": "Initial SAP creation. Formalizes SAP quality assurance patterns. Provides automated verification tool (sap_verify.py) for structure, completeness, and link validation. Defines objective quality gates for status promotion (draft → pilot → production). Pending dogfooding on all 47 SAPs."
         }
       ]
     }

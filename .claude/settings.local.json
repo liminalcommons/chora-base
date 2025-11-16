@@ -34,7 +34,15 @@
       "Bash(python scripts/validate-cross-type-deps.py:*)",
       "Bash(git add:*)",
       "Bash(git commit:*)",
-      "Bash(python scripts/update-dependency-namespaces.py:*)"
+      "Bash(python scripts/update-dependency-namespaces.py:*)",
+      "Bash(python scripts/fix-relationship-types.py:*)",
+      "Bash(if [ -d \".beads\" ])",
+      "Bash(then echo \"Beads is adopted\")",
+      "Bash(BEADS_DIR=.beads ~/bin/bd.exe ready:*)",
+      "Bash(else echo \"Beads not adopted yet\")",
+      "Bash(fi)",
+      "Bash(python scripts/update-doc-links.py:*)",
+      "Bash(python:*)"
     ],
     "deny": [],
     "ask": []

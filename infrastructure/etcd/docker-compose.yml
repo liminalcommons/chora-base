@@ -1,0 +1,194 @@
+version: '3.8'
+
+# 3-Node etcd Cluster for Chora Registry
+#
+# Features:
+# - 3-node Raft consensus cluster
+# - Health checks and monitoring
+# - Persistent volumes
+# - Optimized for <10ms latency, 10k reads/sec
+# - Auto-compaction and defragmentation
+#
+# Usage:
+#   docker-compose up -d
+#   docker-compose ps
+#   docker-compose logs -f
+
+services:
+  etcd1:
+    image: quay.io/coreos/etcd:v3.5.10
+    container_name: etcd1
+    hostname: etcd1
+    environment:
+      - ETCD_NAME=etcd1
+      - ETCD_INITIAL_ADVERTISE_PEER_URLS=http://etcd1:2380
+      - ETCD_LISTEN_PEER_URLS=http://0.0.0.0:2380
+      - ETCD_LISTEN_CLIENT_URLS=http://0.0.0.0:2379
+      - ETCD_ADVERTISE_CLIENT_URLS=http://etcd1:2379
+      - ETCD_INITIAL_CLUSTER_TOKEN=chora-registry-cluster
+      - ETCD_INITIAL_CLUSTER=etcd1=http://etcd1:2380,etcd2=http://etcd2:2380,etcd3=http://etcd3:2380
+      - ETCD_INITIAL_CLUSTER_STATE=new
+      - ETCD_DATA_DIR=/etcd-data
+      # Performance optimizations
+      - ETCD_HEARTBEAT_INTERVAL=100
+      - ETCD_ELECTION_TIMEOUT=1000
+      - ETCD_QUOTA_BACKEND_BYTES=8589934592  # 8GB
+      - ETCD_AUTO_COMPACTION_MODE=periodic
+      - ETCD_AUTO_COMPACTION_RETENTION=1h
+      # Logging
+      - ETCD_LOG_LEVEL=info
+    ports:
+      - "2379:2379"
+      - "2380:2380"
+    volumes:
+      - etcd1-data:/etcd-data
+    networks:
+      - chora-network
+    healthcheck:
+      test: ["CMD", "etcdctl", "endpoint", "health"]
+      interval: 10s
+      timeout: 3s
+      retries: 3
+      start_period: 30s
+    restart: unless-stopped
+
+  etcd2:
+    image: quay.io/coreos/etcd:v3.5.10
+    container_name: etcd2
+    hostname: etcd2
+    environment:
+      - ETCD_NAME=etcd2
+      - ETCD_INITIAL_ADVERTISE_PEER_URLS=http://etcd2:2380
+      - ETCD_LISTEN_PEER_URLS=http://0.0.0.0:2380
+      - ETCD_LISTEN_CLIENT_URLS=http://0.0.0.0:2379
+      - ETCD_ADVERTISE_CLIENT_URLS=http://etcd2:2379
+      - ETCD_INITIAL_CLUSTER_TOKEN=chora-registry-cluster
+      - ETCD_INITIAL_CLUSTER=etcd1=http://etcd1:2380,etcd2=http://etcd2:2380,etcd3=http://etcd3:2380
+      - ETCD_INITIAL_CLUSTER_STATE=new
+      - ETCD_DATA_DIR=/etcd-data
+      # Performance optimizations
+      - ETCD_HEARTBEAT_INTERVAL=100
+      - ETCD_ELECTION_TIMEOUT=1000
+      - ETCD_QUOTA_BACKEND_BYTES=8589934592  # 8GB
+      - ETCD_AUTO_COMPACTION_MODE=periodic
+      - ETCD_AUTO_COMPACTION_RETENTION=1h
+      # Logging
+      - ETCD_LOG_LEVEL=info
+    ports:
+      - "2389:2379"
+      - "2390:2380"
+    volumes:
+      - etcd2-data:/etcd-data
+    networks:
+      - chora-network
+    healthcheck:
+      test: ["CMD", "etcdctl", "endpoint", "health"]
+      interval: 10s
+      timeout: 3s
+      retries: 3
+      start_period: 30s
+    restart: unless-stopped
+
+  etcd3:
+    image: quay.io/coreos/etcd:v3.5.10
+    container_name: etcd3
+    hostname: etcd3
+    environment:
+      - ETCD_NAME=etcd3
+      - ETCD_INITIAL_ADVERTISE_PEER_URLS=http://etcd3:2380
+      - ETCD_LISTEN_PEER_URLS=http://0.0.0.0:2380
+      - ETCD_LISTEN_CLIENT_URLS=http://0.0.0.0:2379
+      - ETCD_ADVERTISE_CLIENT_URLS=http://etcd3:2379
+      - ETCD_INITIAL_CLUSTER_TOKEN=chora-registry-cluster
+      - ETCD_INITIAL_CLUSTER=etcd1=http://etcd1:2380,etcd2=http://etcd2:2380,etcd3=http://etcd3:2380
+      - ETCD_INITIAL_CLUSTER_STATE=new
+      - ETCD_DATA_DIR=/etcd-data
+      # Performance optimizations
+      - ETCD_HEARTBEAT_INTERVAL=100
+      - ETCD_ELECTION_TIMEOUT=1000
+      - ETCD_QUOTA_BACKEND_BYTES=8589934592  # 8GB
+      - ETCD_AUTO_COMPACTION_MODE=periodic
+      - ETCD_AUTO_COMPACTION_RETENTION=1h
+      # Logging
+      - ETCD_LOG_LEVEL=info
+    ports:
+      - "2399:2379"
+      - "2400:2380"
+    volumes:
+      - etcd3-data:/etcd-data
+    networks:
+      - chora-network
+    healthcheck:
+      test: ["CMD", "etcdctl", "endpoint", "health"]
+      interval: 10s
+      timeout: 3s
+      retries: 3
+      start_period: 30s
+    restart: unless-stopped
+
+  # Optional: etcd web UI for monitoring
+  etcd-ui:
+    image: evildecay/etcdkeeper:latest
+    container_name: etcd-ui
+    ports:
+      - "8080:8080"
+    environment:
+      - ETCD_ENDPOINTS=http://etcd1:2379,http://etcd2:2379,http://etcd3:2379
+    networks:
+      - chora-network
+    depends_on:
+      - etcd1
+      - etcd2
+      - etcd3
+    restart: unless-stopped
+
+  # GitOps sync service
+  gitops-sync:
+    build:
+      context: ../..
+      dockerfile: services/gitops-sync/Dockerfile
+    container_name: gitops-sync
+    volumes:
+      # Mount capabilities directory (read-only)
+      - ../../capabilities:/app/capabilities:ro
+    environment:
+      - LOG_LEVEL=info
+    networks:
+      - chora-network
+    depends_on:
+      - etcd1
+      - etcd2
+      - etcd3
+    restart: unless-stopped
+
+  # Heartbeat service (Service-type capabilities only)
+  heartbeat:
+    build:
+      context: ../../services/registry-heartbeat
+      dockerfile: Dockerfile
+    container_name: registry-heartbeat
+    volumes:
+      # Mount capabilities directory (read-only)
+      - ../../capabilities:/app/capabilities:ro
+    environment:
+      - LOG_LEVEL=info
+    networks:
+      - chora-network
+    depends_on:
+      - etcd1
+      - etcd2
+      - etcd3
+      - gitops-sync
+    restart: unless-stopped
+
+volumes:
+  etcd1-data:
+    driver: local
+  etcd2-data:
+    driver: local
+  etcd3-data:
+    driver: local
+
+networks:
+  chora-network:
+    driver: bridge

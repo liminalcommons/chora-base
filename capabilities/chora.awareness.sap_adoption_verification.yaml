@@ -1,0 +1,200 @@
+# Capability Manifest: SAP Adoption Verification & Quality Assurance
+# Namespace: chora.awareness.sap_adoption_verification
+# Legacy ID: SAP-050
+# Type: Pattern
+# Version: 1.0.0
+# Status: draft
+
+metadata:
+  dc_identifier: chora.awareness.sap_adoption_verification
+  dc_title: SAP Adoption Verification & Quality Assurance
+  dc_description: >
+    Formalized agent awareness patterns for validating SAP structure, completeness,
+    and quality. Provides automated verification patterns, quality gates for status
+    promotion (draft → pilot → production), and adoption metrics tracking.
+  dc_creator: Claude (AI Agent)
+  dc_contributor:
+    - Victor (Project Lead)
+  dc_date: '2025-11-16'
+  dc_type: Pattern
+  dc_format: application/vnd.chora.sap+markdown
+  dc_language: en
+  dc_coverage: Global
+  dc_rights: MIT License
+
+  # Chora-specific extensions
+  chora_version: 1.0.0
+  chora_status: draft
+  chora_maturity: experimental
+  chora_legacy_id: SAP-050
+  chora_namespace: chora.awareness.sap_adoption_verification
+  chora_category: Developer Experience
+  chora_subcategory: Quality Assurance
+  chora_tags:
+    - sap-verification
+    - quality-gates
+    - adoption-metrics
+    - structure-validation
+    - link-validation
+    - completeness-checking
+
+# Relationships
+dc_relation:
+  requires:
+    - capability: chora.infrastructure.sap_framework
+      relationship: prerequisite
+      namespace: chora.infrastructure.sap_framework
+      legacy_id: SAP-000
+      reason: Defines SAP structure requirements (5 artifacts)
+
+    - capability: chora.awareness.agent_awareness
+      relationship: prerequisite
+      namespace: chora.awareness.agent_awareness
+      legacy_id: SAP-009
+      reason: Defines AGENTS.md/awareness-guide.md patterns
+
+    - capability: chora.quality.link_validation_reference_management
+      relationship: prerequisite
+      namespace: chora.quality.link_validation_reference_management
+      legacy_id: SAP-016
+      reason: Provides link validation via scripts/validate-links.py (used by verify_links())
+
+  recommends:
+    - capability: chora.awareness.dogfooding_patterns
+      relationship: complements
+      namespace: chora.awareness.dogfooding_patterns
+      legacy_id: SAP-027
+      reason: Quality gates validate dogfooding evidence
+
+    - capability: chora.awareness.sap_generation
+      relationship: complements
+      namespace: chora.awareness.sap_generation
+      legacy_id: SAP-029
+      reason: Generated SAPs should pass verification
+
+  supports:
+    - capability: chora.devex.ci_cd_workflows
+      relationship: enhances
+      namespace: chora.devex.ci_cd_workflows
+      legacy_id: SAP-005
+      reason: Verification can run in CI/CD pipelines
+
+# Documentation
+dc_source:
+  capability_charter: docs/skilled-awareness/sap-adoption-verification/capability-charter.md
+  protocol_spec: docs/skilled-awareness/sap-adoption-verification/protocol-spec.md
+  awareness_guide: docs/skilled-awareness/sap-adoption-verification/AGENTS.md
+  adoption_blueprint: docs/skilled-awareness/sap-adoption-verification/adoption-blueprint.md
+  ledger: docs/skilled-awareness/sap-adoption-verification/ledger.md
+
+# Technical metadata
+technical:
+  implementation_language: python
+  python_version: '>=3.9'
+  dependencies:
+    - pyyaml
+  cli_commands:
+    - sap-verify structure <sap-name>
+    - sap-verify completeness <sap-name>
+    - sap-verify links <sap-name>
+    - sap-verify quality-gate <sap-name> --target-status=<pilot|production>
+    - sap-verify adoption <sap-name>
+
+  verification_patterns:
+    - name: Structure Verification
+      description: Validate 5 required artifacts exist
+      target_pass_rate: 100%
+
+    - name: Completeness Verification
+      description: Check required sections in artifacts
+      target_pass_rate: 100%
+
+    - name: Link Validation
+      description: Detect broken cross-references
+      target_pass_rate: '>95%'
+
+    - name: Quality Gate Evaluation
+      description: Objective criteria for status promotion
+      gates:
+        - pilot: structure + completeness + links + dogfooding + feedback
+        - production: pilot + ≥3 adoptions + metrics + 4 weeks stability
+
+    - name: Adoption Metrics
+      description: Track SAP usage and effectiveness
+      metrics:
+        - adoptions_count
+        - feedback_entries
+        - issues_reported
+        - version_count
+
+# Quality Gates
+quality_gates:
+  pilot:
+    structure_validation: required
+    completeness_validation: required
+    broken_links: '<=3'
+    dogfooding_evidence: required
+    feedback_entries: '>=1'
+
+  production:
+    structure_validation: required
+    completeness_validation: required
+    broken_links: '0'
+    dogfooding_evidence: required
+    feedback_entries: '>=3'
+    adoptions: '>=3'
+    metrics_tracked: required
+    stability_period_weeks: 4
+
+# Adoption tracking
+adoption:
+  status: not_adopted
+  target_adoption_date: '2025-11-23'
+  dogfooding_period_days: 7
+
+  adoption_checklist:
+    - task: Install Python dependencies (pyyaml)
+      status: pending
+    - task: Create sap_verify.py helper module
+      status: pending
+    - task: Test verification on all 47 SAPs
+      status: pending
+    - task: Fix failing SAPs
+      status: pending
+    - task: Add to CI/CD pipeline
+      status: pending
+    - task: Run dogfooding period
+      status: pending
+    - task: Promote to production
+      status: pending
+
+  blockers: []
+
+# Metrics
+metrics:
+  target_week1:
+    saps_verified: 47
+    structure_pass_rate: '>95%'
+    completeness_pass_rate: '>90%'
+    link_validation_pass_rate: '>95%'
+    verification_time_per_sap: '<5s'
+
+  target_month1:
+    saps_promoted_to_pilot: '>=5'
+    quality_gate_automations: '>=3'
+    broken_links_fixed: '>=20'
+
+# Version history
+versions:
+  - version: 1.0.0
+    date: '2025-11-16'
+    status: draft
+    changes:
+      - Initial SAP creation
+      - Defined 5 core verification patterns
+      - Created complete protocol specification
+      - Documented agent workflows
+      - Provided adoption blueprint with Python helper module
+    contributors:
+      - Claude (AI Agent)
+      - Victor (Project Lead)

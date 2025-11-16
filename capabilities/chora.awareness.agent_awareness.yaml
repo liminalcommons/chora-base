@@ -20,7 +20,7 @@ dc_relation:
   - capability: chora.infrastructure.sap_framework
     relationship: prerequisite
   - capability: chora.devex.documentation_framework
-    relationship: prerequisite
+    relationship: runtime
 chora_pattern:
   artifacts:
   - type: capability_charter

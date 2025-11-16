@@ -34,7 +34,7 @@ dc_relation:
   requires:
   - capability: chora.infrastructure.sap_framework
     version: ^1.0.0
-    relationship: runtime
+    relationship: prerequisite
   - capability: chora.devex.interface_design
     version: ^1.0.0
     relationship: runtime
@@ -49,4 +49,4 @@ dc_relation:
     relationship: runtime
   - capability: chora.devex.composition
     version: ^1.0.0
-    relationship: runtime
+    relationship: prerequisite

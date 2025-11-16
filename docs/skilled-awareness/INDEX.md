@@ -2,7 +2,7 @@
 
 **Purpose**: Central registry of all capabilities packaged as SAPs in chora-base.
 
-**Last Updated**: 2025-11-12
+**Last Updated**: 2025-11-16
 **Framework Version**: 1.0.0
 **Organization**: Domain-Based Taxonomy (6 domains)
 
@@ -10,22 +10,22 @@
 
 ## Overview
 
-This index tracks all **45 capabilities** organized across **6 domains** for improved discoverability and progressive adoption.
+This index tracks all **48 capabilities** organized across **6 domains** for improved discoverability and progressive adoption.
 
-**Total Coverage**: 45/45 SAPs (100%)
+**Total Coverage**: 48/48 SAPs (100%)
 
 **Domain Distribution**:
-- Infrastructure: 3 SAPs (7%) - Core framework and coordination
-- Developer Experience: 14 SAPs (31%) - Development workflow tools + capability server architecture
+- Infrastructure: 3 SAPs (6%) - Core framework and coordination
+- Developer Experience: 15 SAPs (31%) - Development workflow tools + capability server architecture
 - Foundation: 6 SAPs (13%) - Technology stack foundations (React + auth + database + forms)
 - User-Facing: 6 SAPs (13%) - User interaction patterns (state, styling, uploads, errors)
-- Advanced: 8 SAPs (18%) - Optimizations and integrations (real-time, i18n, e2e, monorepo)
-- Specialized: 10 SAPs (22%) - Meta-capabilities and process patterns
+- Advanced: 8 SAPs (17%) - Optimizations and integrations (real-time, i18n, e2e, monorepo)
+- Specialized: 12 SAPs (25%) - Meta-capabilities, process patterns, and awareness systems
 
 **Status Distribution**:
-- Active: 24 SAPs (53%)
-- Pilot: 18 SAPs (40%) - SAP-015, SAP-028, SAP-029, SAP-033-047 (including capability server suite)
-- Draft: 2 SAPs (4%) - 2 historical
+- Active: 24 SAPs (50%)
+- Pilot: 18 SAPs (38%) - SAP-015, SAP-028, SAP-029, SAP-033-047 (including capability server suite)
+- Draft: 5 SAPs (10%) - SAP-048, SAP-049, SAP-050 (new), 2 historical
 - Deprecated: 1 SAP (2%) - SAP-014 (replaced by SAP-047)
 
 ---
@@ -66,7 +66,7 @@ This index tracks all **45 capabilities** organized across **6 domains** for imp
 
 **Purpose**: Accelerate development with testing, CI/CD, quality gates, tooling, and capability server architecture patterns
 
-**SAPs**: 14 (31% of catalog)
+**SAPs**: 15 (31% of catalog)
 
 ### SAP-003: Project Bootstrap & Scaffolding
 
@@ -184,6 +184,30 @@ This index tracks all **45 capabilities** organized across **6 domains** for imp
 - **Location**: [capability-server-template/](capability-server-template/)
 - **Key Features**: Jinja2 template generation, multi-interface scaffolding (CLI/REST/MCP), manifest integration, bootstrap startup, composition patterns (saga/circuit breaker/events), test suite (≥80% coverage), CI/CD pipelines, Docker builds (<250MB), comprehensive docs (AGENTS/API/CLI)
 - **⚠️ Note**: Replaces SAP-014 for new projects. Use `python scripts/create-capability-server.py` for generation.
+
+#### SAP-048: Capability Registry & Service Discovery
+
+- **Status**: draft | **Version**: 1.0.0 | **Domain**: Awareness
+- **Description**: Formalizes agent awareness patterns for discovering and querying capabilities from the Chora distributed registry built on etcd. Provides standardized patterns for capability discovery, dependency resolution, service health monitoring, and artifact search.
+- **Dependencies**: SAP-000, SAP-009, SAP-047
+- **Location**: [capability-registry-discovery/](capability-registry-discovery/)
+- **Key Features**: Capability discovery (list all capabilities by type/domain/status), service health monitoring (check TTL lease status), dependency resolution (traverse dependency graph), artifact search (full-text search through SAP documentation), event monitoring (watch etcd for real-time registry changes), registry query patterns (Python/Go/Bash examples)
+
+#### SAP-049: Namespace Resolution & Ontology Navigation
+
+- **Status**: draft | **Version**: 1.0.0 | **Domain**: Awareness
+- **Description**: Formalizes agent awareness patterns for resolving legacy SAP-XXX identifiers to modern chora.domain.capability namespaces. Provides standardized patterns for backward compatibility, alias resolution, deprecation warnings, and ontology exploration during the 6-month transition period (sunset: 2026-06-01).
+- **Dependencies**: SAP-000, SAP-009
+- **Location**: [namespace-resolution/](namespace-resolution/)
+- **Key Features**: Alias resolution (SAP-XXX → modern namespace), deprecation warning generation (days until sunset), ontology navigation (find capabilities by domain), migration guidance and progress tracking, reverse lookup (namespace → SAP-XXX), input normalization (SAP-015, sap-015, 015, SAP015), fallback to local file (no API dependency)
+
+#### SAP-050: SAP Adoption Verification & Quality Assurance
+
+- **Status**: draft | **Version**: 1.0.0 | **Domain**: Developer Experience
+- **Description**: Formalizes agent awareness patterns for validating SAP structure, completeness, and quality. Provides automated verification patterns, quality gates for status promotion (draft → pilot → production), and adoption metrics tracking.
+- **Dependencies**: SAP-000, SAP-009
+- **Location**: [sap-adoption-verification/](sap-adoption-verification/)
+- **Key Features**: Structure verification (validate 5 required artifacts), completeness verification (check required sections), link validation (detect broken cross-references), quality gate evaluation (objective criteria for status promotion), adoption metrics tracking (usage, feedback, issues), Python CLI tool (sap-verify), CI/CD integration patterns, pre-commit hook patterns
 
 ---
 
@@ -387,9 +411,9 @@ Turborepo monorepo reducing setup from 7.5h to 30min (93.3% time savings), incre
 
 ## Specialized Domain
 
-**Purpose**: Meta-capabilities, process patterns, memory systems, task tracking, and SAP ecosystem tools
+**Purpose**: Meta-capabilities, process patterns, memory systems, task tracking, awareness systems, and SAP ecosystem tools
 
-**SAPs**: 10 (33% of catalog)
+**SAPs**: 12 (26% of catalog)
 
 ### SAP-009: Agent Awareness System
 

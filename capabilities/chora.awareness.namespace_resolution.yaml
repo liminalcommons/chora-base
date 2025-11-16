@@ -1,0 +1,241 @@
+# Capability Manifest: Namespace Resolution & Ontology Navigation
+#
+# SAP-049: Formalizes agent awareness patterns for resolving legacy SAP-XXX
+# identifiers to modern chora.domain.capability namespaces and navigating
+# the ecosystem ontology during the 6-month transition period (sunset: 2026-06-01).
+#
+# This is a Pattern-type capability (documentation-based, no runtime service).
+
+# Dublin Core Metadata (ISO 15836:2009)
+metadata:
+  dc_identifier: chora.awareness.namespace_resolution
+  dc_title: Namespace Resolution & Ontology Navigation
+  dc_description: >
+    Formalizes agent awareness patterns for resolving legacy SAP-XXX identifiers
+    to modern chora.domain.capability namespaces. Provides standardized patterns
+    for backward compatibility, alias resolution, deprecation warnings, and
+    ontology exploration during the 6-month transition period (sunset: 2026-06-01).
+  dc_creator: Chora Ecosystem
+  dc_date: '2025-11-16'
+  dc_format: application/yaml
+  dc_type: Pattern
+  dc_subject:
+    - namespace-resolution
+    - alias-mapping
+    - deprecation
+    - backward-compatibility
+    - ontology-navigation
+    - migration
+  dc_coverage: Global
+  dc_rights: MIT License
+
+# Chora Extensions
+chora_version: 1.0.0
+chora_status: draft
+chora_namespace: chora.awareness.namespace_resolution
+chora_sap_id: SAP-049
+chora_legacy_identifier: SAP-049
+
+# Capability Type: Pattern (documentation-based)
+# Note: No chora_service block - this is a Pattern-type capability
+
+# Dependencies
+dc_relation:
+  requires:
+    # Prerequisite: Alias mapping file (created during ontology migration)
+    - capability: chora.infrastructure.sap_framework
+      relationship: prerequisite
+      description: Defines namespace format and SAP schema
+
+  extends:
+    # Extends: Agent awareness patterns
+    - capability: chora.awareness.agent_awareness
+      relationship: extends
+      description: Builds on existing agent awareness patterns
+
+  optional:
+    # Optional: Registry discovery (resolve identifier, then query registry)
+    - capability: chora.awareness.capability_registry_discovery
+      relationship: optional
+      description: Query registry using resolved modern namespace
+      note: SAP-048 created 2025-11-16
+
+# Documentation Artifacts (5 required)
+artifacts:
+  capability_charter:
+    path: docs/skilled-awareness/namespace-resolution/capability-charter.md
+    description: Problem statement and solution design
+
+  protocol_spec:
+    path: docs/skilled-awareness/namespace-resolution/protocol-spec.md
+    description: Complete technical specification of alias mapping format and REST API
+
+  awareness_guide:
+    path: docs/skilled-awareness/namespace-resolution/AGENTS.md
+    description: Agent-specific patterns and workflows
+
+  adoption_blueprint:
+    path: docs/skilled-awareness/namespace-resolution/adoption-blueprint.md
+    description: Step-by-step installation and integration guide
+
+  ledger:
+    path: docs/skilled-awareness/namespace-resolution/ledger.md
+    description: Adoption tracking and version history
+
+# Infrastructure Requirements
+infrastructure:
+  alias_mapping_file:
+    description: Machine-readable SAP-XXX → namespace mappings
+    required: true
+    path: capabilities/alias-mapping.json
+    total_aliases: 45
+
+  alias_redirect_service:
+    description: FastAPI REST API for alias resolution
+    required: false
+    path: services/alias-redirect/app.py
+    note: Optional - fallback to local file available
+
+  namespace_reference:
+    description: Human-readable reference table
+    required: false
+    path: docs/ontology/SAP-NAMESPACE-REFERENCE.md
+
+# Client Libraries
+client_libraries:
+  python:
+    library: requests (for API) or json (for local file)
+    version: 'built-in'
+    install: pip install requests (optional)
+
+# Agent Patterns (Quick Reference)
+agent_patterns:
+  - name: Resolve Legacy Identifier
+    description: Resolve SAP-XXX to modern namespace
+    code: |
+      from alias_resolver import AliasResolver
+      resolver = AliasResolver()
+      result = resolver.resolve('SAP-015')
+      namespace = result['namespace']
+
+  - name: Detect in User Input
+    description: Scan user input for SAP-XXX pattern
+    code: |
+      import re
+      sap_ids = re.findall(r'SAP-(\d{3})', user_input)
+
+  - name: Provide Deprecation Warning
+    description: Warn user about deprecated identifier
+    code: |
+      if result['deprecated']:
+          print(f"⚠️ {result['deprecation_warning']}")
+
+  - name: Find Capabilities by Domain
+    description: List all capabilities in a domain
+    code: |
+      domain_caps = find_capabilities_by_domain('devex')
+
+  - name: Reverse Lookup
+    description: Find SAP-XXX for modern namespace
+    code: |
+      sap_id = reverse_lookup('chora.awareness.task_tracking')  # SAP-015
+
+# Performance Characteristics
+performance:
+  resolution_latency:
+    api: 10ms
+    local_file: 5ms
+
+  supported_formats:
+    - SAP-XXX (standard)
+    - sap-xxx (lowercase)
+    - XXX (number only)
+    - SAPXXX (no hyphen)
+
+  caching:
+    ttl: 60s
+    description: Client-side cache to reduce API load
+
+# Deprecation Timeline
+deprecation:
+  transition_start: '2025-11-15'
+  sunset_date: '2026-06-01'
+  transition_duration_days: 197
+
+  warning_escalation:
+    - period: '6-3 months'
+      level: info
+      behavior: Log deprecation notice, continue operation
+
+    - period: '3-1 month'
+      level: warning
+      behavior: Show yellow warning in CLI/UI, continue operation
+
+    - period: '<1 month'
+      level: error
+      behavior: Show red error in CLI/UI, continue with loud warning
+
+    - period: 'post-sunset'
+      level: fatal
+      behavior: Return HTTP 410 Gone, refuse to resolve
+
+# Metrics and Monitoring
+metrics:
+  legacy_id_detections_per_day:
+    target: 20
+    description: Number of SAP-XXX identifiers detected in user input
+
+  alias_resolutions_per_day:
+    target: 50
+    description: Number of alias resolutions performed
+
+  deprecation_warnings_shown:
+    target: 20
+    description: Number of deprecation warnings shown to users
+
+  modern_namespace_adoption:
+    target: 90%
+    description: Percentage of references using modern namespaces (by sunset)
+
+  migration_completion:
+    target: 75%
+    description: Percentage of users who have migrated (by sunset)
+
+# Adoption Status
+adoption:
+  status: Not Yet Adopted
+  target_date: '2025-11-23'
+  blockers: []
+  dependencies_met: true
+
+  progress:
+    infrastructure_exists: true
+    agent_integration: false
+    validation_tests: false
+    documentation_review: false
+    dogfooding_period: false
+    production_ready: false
+
+# Related Capabilities
+related:
+  - chora.awareness.capability_registry_discovery  # SAP-048: Query registry using resolved namespace
+  - chora.awareness.agent_awareness  # SAP-009: Agent awareness patterns
+  - chora.infrastructure.sap_framework  # SAP-000: SAP framework and namespace format
+
+# Tags for Discovery
+tags:
+  - namespace-resolution
+  - alias-mapping
+  - backward-compatibility
+  - deprecation
+  - migration
+  - ontology
+  - agent-patterns
+
+# Contact and Support
+maintainer:
+  name: Chora Ecosystem
+  contact: TBD
+
+# License
+license: MIT
