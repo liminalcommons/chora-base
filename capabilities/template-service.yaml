@@ -1,0 +1,352 @@
+# Service-Type Capability Template
+#
+# This template provides a complete structure for Service-type capabilities.
+# Service-type capabilities are runtime servers with multi-interface support (CLI/REST/MCP).
+#
+# Usage:
+#   1. Copy this template: cp capabilities/template-service.yaml capabilities/chora.domain.capability.yaml
+#   2. Replace all placeholder values marked with TODO
+#   3. Remove optional sections if not needed
+#   4. Validate: python scripts/validate-capability.py capabilities/chora.domain.capability.yaml
+#   5. Commit: git add capabilities/chora.domain.capability.yaml && git commit
+#
+# Documentation:
+#   - Dublin Core Schema: docs/ontology/dublin-core-schema.md
+#   - Namespace Spec: docs/ontology/namespace-spec.md
+#   - Capability Types: docs/ontology/capability-types.md
+#   - Migration Guide: docs/ontology/migration-guide.md
+
+apiVersion: chora.dev/v1
+kind: Capability
+
+metadata:
+  #############################################################################
+  # REQUIRED: Dublin Core Core Elements
+  #############################################################################
+
+  # Unique namespace identifier (3-level hierarchical format)
+  # Format: chora.{domain}.{capability}
+  # Example: chora.registry.lookup
+  # Validation: Must be globally unique, lowercase, snake_case
+  dc_identifier: chora.domain.capability  # TODO: Replace with actual namespace
+
+  # Human-readable display name (10-100 characters)
+  # Example: "Service Registry & Discovery"
+  # Validation: Title Case, descriptive, unique
+  dc_title: "Service Display Name"  # TODO: Replace with service title
+
+  # One-sentence summary (20-250 characters)
+  # Example: "Service mesh with capability discovery, health monitoring, and dependency resolution"
+  # Validation: 1-2 sentences, describes what (not how)
+  dc_description: "Brief one-sentence description of what this service does"  # TODO: Replace with description
+
+  # Capability type (FIXED for Service-type)
+  # Validation: Must be exactly "Service" (case-sensitive, quoted)
+  dc_type: "Service"
+
+  # Semantic version (SemVer 2.0.0)
+  # Format: "MAJOR.MINOR.PATCH"
+  # Example: "1.0.0", "2.3.1", "1.0.0-beta.1"
+  # Validation: SemVer format, quoted string
+  dc_hasVersion: "1.0.0"  # TODO: Set initial version
+
+  #############################################################################
+  # OPTIONAL: Dublin Core Extended Elements
+  #############################################################################
+
+  # Author or team responsible for service
+  # Example: "Chora Core Team"
+  # Repeatable: Yes (can be array)
+  dc_creator: "Chora Core Team"  # TODO: Replace with author/team name
+
+  # Publication or creation date (ISO 8601)
+  # Format: "YYYY-MM-DD"
+  # Example: "2025-11-15"
+  dc_date: "2025-11-15"  # TODO: Set publication date
+
+  # MIME type for Service-type capabilities (FIXED)
+  # Validation: Must be "application/x-executable" for services
+  dc_format: "application/x-executable"
+
+  # Keywords for discovery and search
+  # Repeatable: Yes (array of strings)
+  # Example: ["service discovery", "health monitoring", "registry"]
+  dc_subject:
+    - "keyword1"  # TODO: Add relevant keywords
+    - "keyword2"
+    - "keyword3"
+
+  # Additional contributors (beyond dc_creator)
+  # Repeatable: Yes (array)
+  # Optional: Remove if not needed
+  # dc_contributor:
+  #   - "Jane Doe <jane@example.com>"
+  #   - "Bob Smith <bob@example.com>"
+
+  # Publishing organization
+  # Optional: Remove if not needed
+  # dc_publisher: "Chora Ecosystem"
+
+  # License information
+  # Example: "MIT License", "Apache-2.0"
+  # Optional: Remove if not needed
+  # dc_rights: "MIT License"
+
+  # ISO 639 language code
+  # Example: "en", "es", "fr"
+  # Optional: Remove if not needed
+  # dc_language: "en"
+
+  #############################################################################
+  # OPTIONAL: Typed Dependencies (dc:relation)
+  #############################################################################
+
+  # Typed relationships to other capabilities
+  # See: docs/ontology/dublin-core-schema.md#8-dcrelation-optional
+  dc_relation:
+    # Hard dependencies (services that MUST be running)
+    # Relationship type: "runtime"
+    # Validation: Topological sort for startup order
+    requires:
+      - capability: chora.bootstrap.initialize  # TODO: Replace with actual dependency
+        version: ^1.0.0  # TODO: Set version constraint (^, ~, >=, etc.)
+        relationship: runtime
+        description: "Bootstrap service must start before this service"  # TODO: Explain why needed
+
+      # Add more runtime dependencies as needed
+      # - capability: chora.registry.lookup
+      #   version: ^1.0.0
+      #   relationship: runtime
+      #   description: "Registry required for service discovery"
+
+    # Soft dependencies (services that can be composed if available)
+    # Relationship type: "optional"
+    # Validation: Opportunistic discovery (use if available)
+    # Optional: Remove if no optional dependencies
+    optional:
+      - capability: chora.composition.saga  # TODO: Replace with actual optional dependency
+        version: ^1.0.0  # TODO: Set version constraint
+        relationship: optional
+        description: "Integrates with saga orchestration if available"  # TODO: Explain enhancement
+
+      # Add more optional dependencies as needed
+      # - capability: chora.monitoring.prometheus
+      #   version: ^2.0.0
+      #   relationship: optional
+      #   description: "Exports metrics if Prometheus available"
+
+    # Knowledge prerequisites (Pattern-type capabilities to read)
+    # Relationship type: "prerequisite" (advisory only, not enforced)
+    # Optional: Remove if no knowledge prerequisites
+    # prerequisite_knowledge:
+    #   - capability: chora.interface.multi
+    #     version: ^1.0.0
+    #     relationship: prerequisite
+    #     description: "⚠️ Read multi-interface patterns before deploying"
+
+  #############################################################################
+  # OPTIONAL: SKOS Taxonomy (dc:coverage)
+  #############################################################################
+
+  # SKOS taxonomy relationships (broader/narrower/related)
+  # See: W3C SKOS (Simple Knowledge Organization System)
+  # Optional: Remove if not needed
+  # dc_coverage:
+  #   # Parent capability in taxonomy hierarchy
+  #   broader:
+  #     - chora.devex.testing_framework
+  #
+  #   # Child capabilities in taxonomy hierarchy
+  #   narrower:
+  #     - chora.registry.health_monitor
+  #     - chora.registry.dependency_resolver
+  #
+  #   # Related capabilities (cross-cutting concerns)
+  #   related:
+  #     - chora.workflow.lifecycle
+
+  #############################################################################
+  # Legacy Alias (during migration from sap-catalog.json)
+  #############################################################################
+
+  # Legacy SAP ID (for backward compatibility during migration)
+  # Example: "SAP-044"
+  # Deprecated: v5.5.0 (Week 16), Removed: v6.0.0 (Q2 2026)
+  # Optional: Remove if new capability (not migrated from SAP-XXX)
+  # dc_identifier_legacy: SAP-XXX  # TODO: Set legacy SAP ID if migrating
+
+  # Last modification timestamp (chora extension)
+  # Format: ISO 8601 (YYYY-MM-DD or YYYY-MM-DDTHH:MM:SSZ)
+  # Optional: Remove if not tracking updates
+  # updated_at: "2025-11-15"
+
+#############################################################################
+# Status: Capability maturity level
+#############################################################################
+
+# Capability status (maturity level)
+# Values: active | pilot | draft | deprecated
+# - active: Production-ready, recommend freely
+# - pilot: Dogfooding phase, use with caution
+# - draft: Experimental, only recommend if requested
+# - deprecated: Don't recommend, suggest alternatives
+status: pilot  # TODO: Set appropriate status (typically start with "pilot")
+
+#############################################################################
+# Service-Type Specification (chora_service)
+#############################################################################
+
+spec:
+  chora_service:
+    ###########################################################################
+    # REQUIRED: Multi-Interface Specification
+    ###########################################################################
+
+    # Multi-interface support (CLI, REST, MCP)
+    # At least ONE interface is required
+    # See: SAP-043 (multi-interface patterns)
+    interfaces:
+      # CLI Interface (command-line tool)
+      - type: cli
+        command: chora-service  # TODO: Replace with CLI command name
+        entrypoint: chora.domain.capability.cli:main  # TODO: Replace with Python entrypoint
+        description: "CLI for service operations"  # TODO: Describe CLI functionality
+
+      # REST API Interface (HTTP server)
+      - type: rest
+        port: 8000  # TODO: Set HTTP port
+        openapi: /api/v1/openapi.json  # TODO: Set OpenAPI spec path
+        description: "REST API for programmatic access"  # TODO: Describe REST API
+
+      # MCP Interface (Model Context Protocol for Claude Desktop)
+      # Optional: Remove if MCP not supported
+      - type: mcp
+        transport: stdio  # or "sse" for server-sent events
+        server_info:
+          name: chora-service  # TODO: Replace with MCP server name
+          version: "1.0.0"  # TODO: Match dc_hasVersion
+        description: "MCP server for Claude Desktop integration"  # TODO: Describe MCP tools
+
+    ###########################################################################
+    # REQUIRED: Health Monitoring
+    ###########################################################################
+
+    # Health check configuration
+    # See: SAP-044 (registry patterns)
+    health:
+      # HTTP endpoint for health checks
+      endpoint: /health  # TODO: Confirm health endpoint path
+
+      # Health check frequency (duration)
+      # Format: {number}{unit} where unit is s (seconds), m (minutes), h (hours)
+      # Example: "10s", "1m", "5m"
+      interval: 10s  # TODO: Set check interval (typically 10s-60s)
+
+      # Maximum response time (duration)
+      # Format: Same as interval
+      # Example: "5s", "10s"
+      timeout: 5s  # TODO: Set timeout (should be < interval)
+
+      # Registry heartbeat TTL (duration)
+      # How long registry keeps service alive without heartbeat
+      # Format: Same as interval
+      # Example: "30s", "1m"
+      heartbeat_ttl: 30s  # TODO: Set TTL (typically 2-3x interval)
+
+      # Kubernetes-compatible probes (optional)
+      # Remove if not deploying to Kubernetes
+      liveness_probe: /health/live  # TODO: Confirm liveness endpoint
+      readiness_probe: /health/ready  # TODO: Confirm readiness endpoint
+
+    ###########################################################################
+    # REQUIRED: Distribution & Packaging
+    ###########################################################################
+
+    # Distribution packaging information
+    distribution:
+      # PyPI package name (REQUIRED)
+      # Format: chora-{domain}-{capability} or chora-{capability}
+      # Example: "chora-registry", "chora-bootstrap"
+      pypi_package: chora-service  # TODO: Replace with PyPI package name
+
+      # PyPI trove classifiers (OPTIONAL)
+      # See: https://pypi.org/classifiers/
+      # Remove if not publishing to PyPI yet
+      pypi_classifiers:
+        - "Development Status :: 4 - Beta"  # TODO: Update based on status
+        - "Intended Audience :: Developers"
+        - "Topic :: Software Development :: Libraries"
+        - "Programming Language :: Python :: 3"
+        - "Programming Language :: Python :: 3.11"
+        - "Programming Language :: Python :: 3.12"
+
+      # Docker image URL (OPTIONAL)
+      # Format: ghcr.io/chora-base/{image}:{version}
+      # Remove if no Docker image
+      docker_image: ghcr.io/chora-base/service:1.0.0  # TODO: Replace with image URL
+
+      # Supported Docker platforms (OPTIONAL)
+      # Remove if no Docker image
+      docker_platforms:
+        - linux/amd64
+        - linux/arm64
+
+  #############################################################################
+  # OPTIONAL: Adoption Metadata (chora_adoption)
+  #############################################################################
+
+  # Adoption metrics for Service-type capabilities
+  # Optional: Remove if not tracking adoption complexity
+  # chora_adoption:
+  #   effort_minutes: 60  # TODO: Estimated setup time
+  #   complexity: low  # TODO: low | medium | high
+
+#############################################################################
+# Notes and Best Practices
+#############################################################################
+
+# 1. Namespace Selection:
+#    - Use domain-taxonomy.md to choose appropriate domain
+#    - Follow naming conventions: snake_case, descriptive, no redundancy
+#    - Verify uniqueness before creating manifest
+#
+# 2. Dependency Management:
+#    - Use SemVer constraints: ^ (compatible), ~ (patch), >= (range)
+#    - Avoid circular dependencies (validated by topological sort)
+#    - Document why each dependency is needed
+#
+# 3. Interface Design:
+#    - Provide at least one interface (CLI recommended minimum)
+#    - REST API enables programmatic access
+#    - MCP enables Claude Desktop integration
+#    - See SAP-043 for multi-interface patterns
+#
+# 4. Health Monitoring:
+#    - Implement /health endpoint returning 200 OK when healthy
+#    - Use /health/live for liveness (service running)
+#    - Use /health/ready for readiness (dependencies healthy)
+#    - Send heartbeats to registry every {interval} seconds
+#
+# 5. Distribution:
+#    - Publish to PyPI with chora-* namespace
+#    - Provide Docker image for containerized deployments
+#    - Support linux/amd64 and linux/arm64 platforms
+#
+# 6. Validation:
+#    - Run: python scripts/validate-capability.py capabilities/chora.domain.capability.yaml
+#    - Pre-commit hook validates on commit
+#    - CI/CD validates on pull request
+#
+# 7. Documentation:
+#    - Update related SAP artifacts if migrating from SAP-XXX
+#    - Link to capability in README.md
+#    - Add examples to docs/user-docs/
+
+#############################################################################
+# Examples
+#############################################################################
+
+# See capabilities/SCHEMA-EXAMPLES.yaml for complete working examples:
+#   - Example 1: chora.registry.lookup (Service-type)
+#   - Example 3: Service → Pattern cross-type dependency
+#   - Example 5: All 7 relationship types

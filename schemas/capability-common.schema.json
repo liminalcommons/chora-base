@@ -1,0 +1,287 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://chora.dev/schemas/capability-common.schema.json",
+  "title": "Common Capability Schema",
+  "description": "Shared fields for both Service-type and Pattern-type capabilities",
+  "definitions": {
+    "namespace": {
+      "type": "string",
+      "pattern": "^chora\\.[a-z_]+\\.[a-z0-9_]{1,50}$",
+      "description": "3-level hierarchical namespace (chora.domain.capability)"
+    },
+    "semver": {
+      "type": "string",
+      "pattern": "^(0|[1-9]\\d*)\\.(0|[1-9]\\d*)\\.(0|[1-9]\\d*)(?:-((?:0|[1-9]\\d*|\\d*[a-zA-Z-][0-9a-zA-Z-]*)(?:\\.(?:0|[1-9]\\d*|\\d*[a-zA-Z-][0-9a-zA-Z-]*))*))?(?:\\+([0-9a-zA-Z-]+(?:\\.[0-9a-zA-Z-]+)*))?$",
+      "description": "Semantic version (SemVer 2.0.0)"
+    },
+    "semver_constraint": {
+      "type": "string",
+      "pattern": "^(\\^|~|>=|>|<=|<)?\\s*(0|[1-9]\\d*)\\.(0|[1-9]\\d*)\\.(0|[1-9]\\d*)(?:-((?:0|[1-9]\\d*|\\d*[a-zA-Z-][0-9a-zA-Z-]*)(?:\\.(?:0|[1-9]\\d*|\\d*[a-zA-Z-][0-9a-zA-Z-]*))*))?(?:\\+([0-9a-zA-Z-]+(?:\\.[0-9a-zA-Z-]+)*))?(?:\\s+<\\s*(0|[1-9]\\d*)\\.(0|[1-9]\\d*)\\.(0|[1-9]\\d*))?$",
+      "description": "SemVer constraint (^1.0.0, ~2.3.0, >=1.5.0 <2.0.0, etc.)"
+    },
+    "iso8601_date": {
+      "type": "string",
+      "pattern": "^\\d{4}(-\\d{2}(-\\d{2}(T\\d{2}:\\d{2}:\\d{2}(\\.\\d+)?(Z|[+-]\\d{2}:\\d{2})?)?)?)?$",
+      "description": "ISO 8601 date (YYYY, YYYY-MM, YYYY-MM-DD, or full datetime)"
+    },
+    "relationship_type_service": {
+      "type": "string",
+      "enum": [
+        "runtime",
+        "optional",
+        "conditional",
+        "prerequisite"
+      ],
+      "description": "Relationship types for Service-type capabilities"
+    },
+    "relationship_type_pattern": {
+      "type": "string",
+      "enum": [
+        "prerequisite",
+        "complementary",
+        "mutually_exclusive",
+        "extends",
+        "runtime"
+      ],
+      "description": "Relationship types for Pattern-type capabilities"
+    },
+    "dependency": {
+      "type": "object",
+      "required": [
+        "capability",
+        "relationship"
+      ],
+      "properties": {
+        "capability": {
+          "$ref": "#/definitions/namespace",
+          "description": "Namespace of dependent capability"
+        },
+        "version": {
+          "$ref": "#/definitions/semver_constraint",
+          "description": "Version constraint (SemVer)"
+        },
+        "relationship": {
+          "type": "string",
+          "description": "Relationship type (varies by capability type)"
+        },
+        "description": {
+          "type": "string",
+          "minLength": 10,
+          "maxLength": 250,
+          "description": "Explanation of why dependency is needed"
+        }
+      }
+    },
+    "metadata_common": {
+      "type": "object",
+      "required": [
+        "dc_identifier",
+        "dc_title",
+        "dc_description",
+        "dc_type",
+        "dc_hasVersion"
+      ],
+      "properties": {
+        "dc_identifier": {
+          "$ref": "#/definitions/namespace",
+          "description": "Unique capability namespace"
+        },
+        "dc_identifier_legacy": {
+          "type": "string",
+          "pattern": "^SAP-\\d{3}$",
+          "description": "Legacy SAP ID (e.g., SAP-041)"
+        },
+        "dc_title": {
+          "type": "string",
+          "minLength": 10,
+          "maxLength": 100,
+          "description": "Human-readable display name"
+        },
+        "dc_description": {
+          "type": "string",
+          "minLength": 20,
+          "maxLength": 250,
+          "description": "One-sentence summary"
+        },
+        "dc_type": {
+          "type": "string",
+          "enum": [
+            "Service",
+            "Pattern"
+          ],
+          "description": "Capability type"
+        },
+        "dc_hasVersion": {
+          "$ref": "#/definitions/semver",
+          "description": "Semantic version"
+        },
+        "dc_creator": {
+          "oneOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "array",
+              "items": {
+                "type": "string"
+              },
+              "minItems": 1
+            }
+          ],
+          "description": "Author or team (repeatable)"
+        },
+        "dc_date": {
+          "$ref": "#/definitions/iso8601_date",
+          "description": "Publication date (ISO 8601)"
+        },
+        "dc_format": {
+          "type": "string",
+          "description": "MIME type"
+        },
+        "dc_subject": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 2,
+            "maxLength": 50
+          },
+          "minItems": 1,
+          "description": "Keywords for discovery"
+        },
+        "dc_contributor": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "minItems": 1,
+          "description": "Additional contributors"
+        },
+        "dc_publisher": {
+          "type": "string",
+          "description": "Publishing organization"
+        },
+        "dc_rights": {
+          "type": "string",
+          "description": "License information"
+        },
+        "dc_language": {
+          "type": "string",
+          "pattern": "^[a-z]{2}(-[A-Z]{2})?$",
+          "description": "ISO 639 language code"
+        },
+        "dc_relation": {
+          "type": "object",
+          "properties": {
+            "requires": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/dependency"
+              },
+              "description": "Hard dependencies"
+            },
+            "optional": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/dependency"
+              },
+              "description": "Soft dependencies"
+            },
+            "conflicts": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/dependency"
+              },
+              "description": "Mutually exclusive capabilities"
+            },
+            "extends": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/dependency"
+              },
+              "description": "Parent capabilities (inheritance)"
+            },
+            "prerequisite_knowledge": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/dependency"
+              },
+              "description": "Knowledge prerequisites (Service → Pattern)"
+            }
+          },
+          "description": "Typed dependencies"
+        },
+        "dc_coverage": {
+          "type": "object",
+          "properties": {
+            "broader": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/namespace"
+              },
+              "description": "Parent in taxonomy hierarchy"
+            },
+            "narrower": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/namespace"
+              },
+              "description": "Children in taxonomy hierarchy"
+            },
+            "related": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/namespace"
+              },
+              "description": "Related capabilities"
+            }
+          },
+          "description": "SKOS taxonomy relationships"
+        },
+        "updated_at": {
+          "$ref": "#/definitions/iso8601_date",
+          "description": "Last modification timestamp"
+        }
+      }
+    },
+    "chora_adoption": {
+      "type": "object",
+      "properties": {
+        "effort_minutes": {
+          "type": "integer",
+          "minimum": 1,
+          "description": "Time to adopt (in minutes)"
+        },
+        "complexity": {
+          "type": "string",
+          "enum": [
+            "low",
+            "medium",
+            "high"
+          ],
+          "description": "Adoption complexity"
+        },
+        "time_savings_minutes": {
+          "type": "integer",
+          "minimum": 0,
+          "description": "Time saved after adoption (in minutes)"
+        },
+        "roi_percentage": {
+          "type": "number",
+          "minimum": -100,
+          "description": "Return on investment (%)"
+        },
+        "success_criteria": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 5,
+            "maxLength": 250
+          },
+          "minItems": 1,
+          "description": "Testable success conditions"
+        }
+      },
+      "description": "Adoption metadata"
+    }
+  }
+}

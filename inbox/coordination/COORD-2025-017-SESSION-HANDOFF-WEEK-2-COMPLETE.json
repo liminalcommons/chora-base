@@ -1,0 +1,141 @@
+{
+  "id": "COORD-2025-017",
+  "type": "session-handoff",
+  "status": "active",
+  "priority": "high",
+  "created_at": "2025-11-15T10:00:00Z",
+  "updated_at": "2025-11-15T10:00:00Z",
+  "title": "Session Handoff: Ecosystem Ontology Phase 1 - Week 2 Complete",
+  "description": "Computer transition handoff with complete context for continuing Ecosystem Ontology Phase 1 work. Week 1-2 completed (8/16 tasks), Week 3 ready to start.",
+  "context": {
+    "parent_coordination": "COORD-2025-015",
+    "phase": "Phase 1 - Foundation",
+    "week": "Week 2 Complete → Week 3 Ready",
+    "progress": "8/16 tasks (50%)",
+    "effort_completed": "53 hours",
+    "effort_remaining": "52 hours"
+  },
+  "deliverables_completed": [
+    {
+      "week": 1,
+      "tasks": 4,
+      "files": [
+        "docs/ontology/domain-taxonomy.md",
+        "docs/ontology/namespace-spec.md",
+        "docs/ontology/migration-guide.md",
+        "docs/ontology/capability-types.md"
+      ],
+      "size_kb": 85
+    },
+    {
+      "week": 2,
+      "tasks": 4,
+      "files": [
+        "docs/ontology/dublin-core-schema.md",
+        "capabilities/template-service.yaml",
+        "capabilities/template-pattern.yaml",
+        "schemas/capability-common.schema.json",
+        "schemas/capability-service.schema.json",
+        "schemas/capability-pattern.schema.json",
+        "schemas/README.md",
+        "docs/ontology/chora-extensions-spec.md"
+      ],
+      "size_kb": 107
+    }
+  ],
+  "next_tasks": [
+    {
+      "task_id": "ONT-009",
+      "beads_id": "chora-base-cv6",
+      "title": "Week 3.1: Implement pre-commit hook (namespace validation)",
+      "estimated_hours": 6,
+      "dependencies": ["ONT-005", "ONT-006", "ONT-007"]
+    },
+    {
+      "task_id": "ONT-010",
+      "beads_id": "chora-base-77q",
+      "title": "Week 3.2: Create CI/CD duplicate detection workflow",
+      "estimated_hours": 5,
+      "dependencies": ["ONT-009"]
+    },
+    {
+      "task_id": "ONT-011",
+      "beads_id": "chora-base-3il",
+      "title": "Week 3.3: Implement migration script (sap-catalog.json → YAML)",
+      "estimated_hours": 8,
+      "dependencies": ["ONT-003", "ONT-007"]
+    },
+    {
+      "task_id": "ONT-012",
+      "beads_id": "chora-base-jww",
+      "title": "Week 3.4: Create SAP artifact reference extractor",
+      "estimated_hours": 6,
+      "dependencies": ["ONT-008"]
+    }
+  ],
+  "continuity_file": "CONTINUITY-2025-11-15.md",
+  "resumption_instructions": {
+    "step_1": "git pull origin main",
+    "step_2": "Read CONTINUITY-2025-11-15.md for full context",
+    "step_3": "Verify deliverables: ls docs/ontology/*.md capabilities/template-*.yaml schemas/*.{json,md}",
+    "step_4": "Check beads status: bd list --label 'week-3' --json",
+    "step_5": "Start Week 3.1: bd update chora-base-cv6 --status in_progress"
+  },
+  "key_decisions": [
+    {
+      "decision": "3-level hierarchical namespace (chora.domain.capability)",
+      "rationale": "Scalable to 1000+ capabilities, domain-based organization",
+      "impact": "All 45 SAPs migrating to unified namespace"
+    },
+    {
+      "decision": "Dublin Core Metadata Element Set v1.1 (ISO 15836:2009)",
+      "rationale": "International standard, extensible, tool support",
+      "impact": "15 core elements standardized across all capabilities"
+    },
+    {
+      "decision": "Service-type vs Pattern-type distinction",
+      "rationale": "Runtime servers need different metadata than knowledge artifacts",
+      "impact": "Two JSON Schema validators, two YAML templates"
+    },
+    {
+      "decision": "7 typed dependency relationships",
+      "rationale": "Explicit dependency semantics for better validation and composition",
+      "impact": "Cross-type dependencies supported (Service ↔ Pattern)"
+    },
+    {
+      "decision": "3 extension namespaces (chora_service, chora_pattern, chora_adoption)",
+      "rationale": "Separate concerns, type-specific metadata, optional adoption tracking",
+      "impact": "Comprehensive metadata for both capability types"
+    }
+  ],
+  "validation_checklist": [
+    "All 6 ontology docs exist in docs/ontology/",
+    "Both templates exist in capabilities/",
+    "All 4 schema files exist in schemas/",
+    "Beads shows 8 closed tasks for Week 1-2",
+    "Beads shows 4 open tasks for Week 3",
+    "Git status is clean (all Week 1-2 work committed)",
+    "Coordination request COORD-2025-015 exists"
+  ],
+  "references": {
+    "vision": "docs/project-docs/initiatives/ECOSYSTEM-ONTOLOGY-AND-COMPOSITION-VISION.md",
+    "execution_plan": "docs/project-docs/plans/PHASE-1-2-EXECUTION-PLAN.md",
+    "parent_coordination": "inbox/coordination/COORD-2025-015-ECOSYSTEM-ONTOLOGY-PHASE-1.json",
+    "continuity_file": "CONTINUITY-2025-11-15.md"
+  },
+  "metrics": {
+    "documentation_created_kb": 192,
+    "documentation_files": 9,
+    "tasks_completed": 8,
+    "tasks_remaining": 8,
+    "progress_percentage": 50.0,
+    "estimated_hours_completed": 53,
+    "estimated_hours_remaining": 52
+  },
+  "agents": {
+    "creating_agent": "claude-sonnet-4.5",
+    "session_id": "2025-11-15-ontology-week-1-2",
+    "continuation_expected": true,
+    "continuation_agent": "claude-code (new computer)"
+  }
+}

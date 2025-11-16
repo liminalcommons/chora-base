@@ -1,0 +1,264 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://chora.dev/schemas/capability-pattern.schema.json",
+  "title": "Pattern-Type Capability Schema",
+  "description": "JSON Schema for Pattern-type capability manifests",
+  "type": "object",
+  "required": [
+    "apiVersion",
+    "kind",
+    "metadata",
+    "status",
+    "spec"
+  ],
+  "properties": {
+    "apiVersion": {
+      "type": "string",
+      "const": "chora.dev/v1",
+      "description": "API version (fixed)"
+    },
+    "kind": {
+      "type": "string",
+      "const": "Capability",
+      "description": "Resource kind (fixed)"
+    },
+    "metadata": {
+      "allOf": [
+        {
+          "$ref": "capability-common.schema.json#/definitions/metadata_common"
+        },
+        {
+          "properties": {
+            "dc_type": {
+              "const": "Pattern",
+              "description": "Must be 'Pattern' for Pattern-type capabilities"
+            },
+            "dc_format": {
+              "const": "text/markdown",
+              "description": "MIME type for Pattern-type capabilities"
+            }
+          },
+          "required": [
+            "dc_type"
+          ]
+        }
+      ]
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "active",
+        "pilot",
+        "draft",
+        "deprecated"
+      ],
+      "description": "Capability maturity level"
+    },
+    "spec": {
+      "type": "object",
+      "required": [
+        "chora_pattern"
+      ],
+      "properties": {
+        "chora_pattern": {
+          "type": "object",
+          "required": [
+            "artifacts"
+          ],
+          "properties": {
+            "artifacts": {
+              "type": "array",
+              "minItems": 5,
+              "maxItems": 5,
+              "items": {
+                "type": "object",
+                "required": [
+                  "type",
+                  "path"
+                ],
+                "properties": {
+                  "type": {
+                    "type": "string",
+                    "enum": [
+                      "capability-charter",
+                      "protocol-spec",
+                      "awareness-guide",
+                      "adoption-blueprint",
+                      "ledger"
+                    ],
+                    "description": "SAP artifact type"
+                  },
+                  "path": {
+                    "type": "string",
+                    "pattern": "^docs/skilled-awareness/[a-z][a-z0-9_-]*/[a-z][a-z0-9_-]*\\.md$",
+                    "description": "Relative path to artifact file"
+                  }
+                }
+              },
+              "description": "SAP artifact references (must be exactly 5)"
+            },
+            "chora_adoption": {
+              "$ref": "capability-common.schema.json#/definitions/chora_adoption",
+              "description": "Adoption metadata (recommended for Pattern-type)"
+            }
+          },
+          "description": "Pattern-type specification"
+        }
+      }
+    }
+  },
+  "additionalProperties": false,
+  "allOf": [
+    {
+      "description": "Validate that all 5 required artifact types are present",
+      "if": {
+        "properties": {
+          "spec": {
+            "type": "object"
+          }
+        }
+      },
+      "then": {
+        "properties": {
+          "spec": {
+            "properties": {
+              "chora_pattern": {
+                "properties": {
+                  "artifacts": {
+                    "contains": {
+                      "properties": {
+                        "type": {
+                          "const": "capability-charter"
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "spec": {
+            "type": "object"
+          }
+        }
+      },
+      "then": {
+        "properties": {
+          "spec": {
+            "properties": {
+              "chora_pattern": {
+                "properties": {
+                  "artifacts": {
+                    "contains": {
+                      "properties": {
+                        "type": {
+                          "const": "protocol-spec"
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "spec": {
+            "type": "object"
+          }
+        }
+      },
+      "then": {
+        "properties": {
+          "spec": {
+            "properties": {
+              "chora_pattern": {
+                "properties": {
+                  "artifacts": {
+                    "contains": {
+                      "properties": {
+                        "type": {
+                          "const": "awareness-guide"
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "spec": {
+            "type": "object"
+          }
+        }
+      },
+      "then": {
+        "properties": {
+          "spec": {
+            "properties": {
+              "chora_pattern": {
+                "properties": {
+                  "artifacts": {
+                    "contains": {
+                      "properties": {
+                        "type": {
+                          "const": "adoption-blueprint"
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "spec": {
+            "type": "object"
+          }
+        }
+      },
+      "then": {
+        "properties": {
+          "spec": {
+            "properties": {
+              "chora_pattern": {
+                "properties": {
+                  "artifacts": {
+                    "contains": {
+                      "properties": {
+                        "type": {
+                          "const": "ledger"
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  ]
+}

@@ -1,0 +1,273 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://chora.dev/schemas/capability-service.schema.json",
+  "title": "Service-Type Capability Schema",
+  "description": "JSON Schema for Service-type capability manifests",
+  "type": "object",
+  "required": [
+    "apiVersion",
+    "kind",
+    "metadata",
+    "status",
+    "spec"
+  ],
+  "properties": {
+    "apiVersion": {
+      "type": "string",
+      "const": "chora.dev/v1",
+      "description": "API version (fixed)"
+    },
+    "kind": {
+      "type": "string",
+      "const": "Capability",
+      "description": "Resource kind (fixed)"
+    },
+    "metadata": {
+      "allOf": [
+        {
+          "$ref": "capability-common.schema.json#/definitions/metadata_common"
+        },
+        {
+          "properties": {
+            "dc_type": {
+              "const": "Service",
+              "description": "Must be 'Service' for Service-type capabilities"
+            },
+            "dc_format": {
+              "const": "application/x-executable",
+              "description": "MIME type for Service-type capabilities"
+            }
+          },
+          "required": [
+            "dc_type"
+          ]
+        }
+      ]
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "active",
+        "pilot",
+        "draft",
+        "deprecated"
+      ],
+      "description": "Capability maturity level"
+    },
+    "spec": {
+      "type": "object",
+      "required": [
+        "chora_service"
+      ],
+      "properties": {
+        "chora_service": {
+          "type": "object",
+          "required": [
+            "interfaces",
+            "health",
+            "distribution"
+          ],
+          "properties": {
+            "interfaces": {
+              "type": "array",
+              "minItems": 1,
+              "items": {
+                "type": "object",
+                "required": [
+                  "type"
+                ],
+                "properties": {
+                  "type": {
+                    "type": "string",
+                    "enum": [
+                      "cli",
+                      "rest",
+                      "mcp"
+                    ],
+                    "description": "Interface type"
+                  },
+                  "command": {
+                    "type": "string",
+                    "description": "CLI command name (for cli type)"
+                  },
+                  "entrypoint": {
+                    "type": "string",
+                    "pattern": "^[a-z_][a-z0-9_]*(\\.[a-z_][a-z0-9_]*)*:[a-z_][a-z0-9_]*$",
+                    "description": "Python entrypoint (module.path:function)"
+                  },
+                  "port": {
+                    "type": "integer",
+                    "minimum": 1,
+                    "maximum": 65535,
+                    "description": "HTTP port (for rest type)"
+                  },
+                  "openapi": {
+                    "type": "string",
+                    "pattern": "^/.*",
+                    "description": "OpenAPI spec path (for rest type)"
+                  },
+                  "transport": {
+                    "type": "string",
+                    "enum": [
+                      "stdio",
+                      "sse"
+                    ],
+                    "description": "MCP transport (for mcp type)"
+                  },
+                  "server_info": {
+                    "type": "object",
+                    "properties": {
+                      "name": {
+                        "type": "string"
+                      },
+                      "version": {
+                        "$ref": "capability-common.schema.json#/definitions/semver"
+                      }
+                    },
+                    "required": [
+                      "name",
+                      "version"
+                    ],
+                    "description": "MCP server info (for mcp type)"
+                  },
+                  "description": {
+                    "type": "string",
+                    "minLength": 10,
+                    "maxLength": 250,
+                    "description": "Interface description"
+                  }
+                },
+                "allOf": [
+                  {
+                    "if": {
+                      "properties": {
+                        "type": {
+                          "const": "cli"
+                        }
+                      }
+                    },
+                    "then": {
+                      "required": [
+                        "command",
+                        "entrypoint"
+                      ]
+                    }
+                  },
+                  {
+                    "if": {
+                      "properties": {
+                        "type": {
+                          "const": "rest"
+                        }
+                      }
+                    },
+                    "then": {
+                      "required": [
+                        "port"
+                      ]
+                    }
+                  },
+                  {
+                    "if": {
+                      "properties": {
+                        "type": {
+                          "const": "mcp"
+                        }
+                      }
+                    },
+                    "then": {
+                      "required": [
+                        "transport",
+                        "server_info"
+                      ]
+                    }
+                  }
+                ]
+              },
+              "description": "Multi-interface specification"
+            },
+            "health": {
+              "type": "object",
+              "required": [
+                "endpoint"
+              ],
+              "properties": {
+                "endpoint": {
+                  "type": "string",
+                  "pattern": "^/.*",
+                  "description": "Health check HTTP endpoint"
+                },
+                "interval": {
+                  "type": "string",
+                  "pattern": "^\\d+[smh]$",
+                  "description": "Health check frequency (e.g., 10s, 1m, 5m)"
+                },
+                "timeout": {
+                  "type": "string",
+                  "pattern": "^\\d+[smh]$",
+                  "description": "Max response time (e.g., 5s, 10s)"
+                },
+                "heartbeat_ttl": {
+                  "type": "string",
+                  "pattern": "^\\d+[smh]$",
+                  "description": "Registry heartbeat TTL (e.g., 30s, 1m)"
+                },
+                "liveness_probe": {
+                  "type": "string",
+                  "pattern": "^/.*",
+                  "description": "Kubernetes liveness probe endpoint"
+                },
+                "readiness_probe": {
+                  "type": "string",
+                  "pattern": "^/.*",
+                  "description": "Kubernetes readiness probe endpoint"
+                }
+              },
+              "description": "Health monitoring configuration"
+            },
+            "distribution": {
+              "type": "object",
+              "required": [
+                "pypi_package"
+              ],
+              "properties": {
+                "pypi_package": {
+                  "type": "string",
+                  "pattern": "^chora-[a-z][a-z0-9-]*$",
+                  "description": "PyPI package name (must start with chora-)"
+                },
+                "pypi_classifiers": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  },
+                  "description": "PyPI trove classifiers"
+                },
+                "docker_image": {
+                  "type": "string",
+                  "pattern": "^[a-z0-9][a-z0-9._/-]*:[a-z0-9][a-z0-9._-]*$",
+                  "description": "Docker image URL with tag"
+                },
+                "docker_platforms": {
+                  "type": "array",
+                  "items": {
+                    "type": "string",
+                    "pattern": "^[a-z0-9]+/[a-z0-9]+$"
+                  },
+                  "description": "Supported Docker platforms (e.g., linux/amd64)"
+                }
+              },
+              "description": "Distribution packaging"
+            }
+          },
+          "description": "Service-type specification"
+        },
+        "chora_adoption": {
+          "$ref": "capability-common.schema.json#/definitions/chora_adoption",
+          "description": "Adoption metadata (optional for Service-type)"
+        }
+      }
+    }
+  },
+  "additionalProperties": false
+}

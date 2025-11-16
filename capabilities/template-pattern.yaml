@@ -1,0 +1,373 @@
+# Pattern-Type Capability Template
+#
+# This template provides a complete structure for Pattern-type capabilities.
+# Pattern-type capabilities are knowledge documentation (5 SAP artifacts).
+#
+# Usage:
+#   1. Copy this template: cp capabilities/template-pattern.yaml capabilities/chora.domain.capability.yaml
+#   2. Replace all placeholder values marked with TODO
+#   3. Remove optional sections if not needed
+#   4. Validate: python scripts/validate-capability.py capabilities/chora.domain.capability.yaml
+#   5. Commit: git add capabilities/chora.domain.capability.yaml && git commit
+#
+# Documentation:
+#   - Dublin Core Schema: docs/ontology/dublin-core-schema.md
+#   - Namespace Spec: docs/ontology/namespace-spec.md
+#   - Capability Types: docs/ontology/capability-types.md
+#   - Migration Guide: docs/ontology/migration-guide.md
+
+apiVersion: chora.dev/v1
+kind: Capability
+
+metadata:
+  #############################################################################
+  # REQUIRED: Dublin Core Core Elements
+  #############################################################################
+
+  # Unique namespace identifier (3-level hierarchical format)
+  # Format: chora.{domain}.{capability}
+  # Example: chora.react.form_validation
+  # Validation: Must be globally unique, lowercase, snake_case
+  dc_identifier: chora.domain.capability  # TODO: Replace with actual namespace
+
+  # Human-readable display name (10-100 characters)
+  # Example: "React Form Validation Patterns"
+  # Validation: Title Case, descriptive, unique
+  dc_title: "Pattern Display Name"  # TODO: Replace with pattern title
+
+  # One-sentence summary (20-250 characters)
+  # Example: "React Hook Form + Zod validation patterns for production apps"
+  # Validation: 1-2 sentences, describes what (not how)
+  dc_description: "Brief one-sentence description of what this pattern provides"  # TODO: Replace with description
+
+  # Capability type (FIXED for Pattern-type)
+  # Validation: Must be exactly "Pattern" (case-sensitive, quoted)
+  dc_type: "Pattern"
+
+  # Semantic version (SemVer 2.0.0)
+  # Format: "MAJOR.MINOR.PATCH"
+  # Example: "1.0.0", "2.3.1", "1.0.0-beta.1"
+  # Validation: SemVer format, quoted string
+  dc_hasVersion: "1.0.0"  # TODO: Set initial version
+
+  #############################################################################
+  # OPTIONAL: Dublin Core Extended Elements
+  #############################################################################
+
+  # Author or team responsible for pattern
+  # Example: "Chora Core Team"
+  # Repeatable: Yes (can be array)
+  dc_creator: "Chora Core Team"  # TODO: Replace with author/team name
+
+  # Publication or creation date (ISO 8601)
+  # Format: "YYYY-MM-DD"
+  # Example: "2025-11-15"
+  dc_date: "2025-11-15"  # TODO: Set publication date
+
+  # MIME type for Pattern-type capabilities (FIXED)
+  # Validation: Must be "text/markdown" for patterns
+  dc_format: "text/markdown"
+
+  # Keywords for discovery and search
+  # Repeatable: Yes (array of strings)
+  # Example: ["form validation", "React", "Zod", "TypeScript"]
+  dc_subject:
+    - "keyword1"  # TODO: Add relevant keywords
+    - "keyword2"
+    - "keyword3"
+
+  # Additional contributors (beyond dc_creator)
+  # Repeatable: Yes (array)
+  # Optional: Remove if not needed
+  # dc_contributor:
+  #   - "Jane Doe <jane@example.com>"
+  #   - "Bob Smith <bob@example.com>"
+
+  # Publishing organization
+  # Optional: Remove if not needed
+  # dc_publisher: "Chora Ecosystem"
+
+  # License information
+  # Example: "MIT License", "Apache-2.0"
+  # Optional: Remove if not needed
+  # dc_rights: "MIT License"
+
+  # ISO 639 language code
+  # Example: "en", "es", "fr"
+  # Optional: Remove if not needed
+  # dc_language: "en"
+
+  #############################################################################
+  # OPTIONAL: Typed Dependencies (dc:relation)
+  #############################################################################
+
+  # Typed relationships to other capabilities
+  # See: docs/ontology/dublin-core-schema.md#8-dcrelation-optional
+  dc_relation:
+    # Hard prerequisites (patterns that MUST be adopted first)
+    # Relationship type: "prerequisite"
+    # Validation: Topological sort for adoption order
+    requires:
+      - capability: chora.domain.prerequisite  # TODO: Replace with actual prerequisite
+        version: ^1.0.0  # TODO: Set version constraint (^, ~, >=, etc.)
+        relationship: prerequisite
+        description: "Prerequisite pattern must be adopted first"  # TODO: Explain why needed
+
+      # Add more prerequisites as needed
+      # - capability: chora.react.foundation
+      #   version: ^1.0.0
+      #   relationship: prerequisite
+      #   description: "Foundation stack required for React patterns"
+
+      # Pattern → Service dependencies (hard requirement)
+      # Use this when pattern adoption requires a service to be running
+      # Relationship type: "runtime"
+      # Validation: Check service health (error if unhealthy)
+      # Optional: Remove if no service dependencies
+      # - capability: chora.integration.compose
+      #   version: ">=3.0.0"
+      #   relationship: runtime
+      #   description: "chora-compose service must be running for code generation"
+
+    # Complementary patterns (recommended enhancements)
+    # Relationship type: "complementary"
+    # Validation: Suggestion only (not enforced)
+    # Optional: Remove if no complementary patterns
+    optional:
+      - capability: chora.domain.complementary  # TODO: Replace with complementary pattern
+        version: ^1.0.0  # TODO: Set version constraint
+        relationship: complementary
+        description: "Enhances with additional functionality"  # TODO: Explain enhancement
+
+      # Add more complementary patterns as needed
+      # - capability: chora.react.state_management
+      #   version: ^1.0.0
+      #   relationship: complementary
+      #   description: "Enhances with Zustand form state persistence"
+
+    # Mutually exclusive patterns (conflicts)
+    # Relationship type: "mutually_exclusive"
+    # Validation: Error if both patterns adopted
+    # Optional: Remove if no conflicts
+    # conflicts:
+    #   - capability: chora.domain.alternative
+    #     relationship: mutually_exclusive
+    #     description: "Cannot use both approaches simultaneously"
+
+    # Pattern inheritance (extends parent pattern)
+    # Relationship type: "extends"
+    # Validation: Inherit parent properties
+    # Optional: Remove if not extending another pattern
+    # extends:
+    #   - capability: chora.sap.framework_fundamentals
+    #     version: ^1.0.0
+    #     relationship: extends
+    #     description: "Inherits SAP framework properties"
+
+  #############################################################################
+  # OPTIONAL: SKOS Taxonomy (dc:coverage)
+  #############################################################################
+
+  # SKOS taxonomy relationships (broader/narrower/related)
+  # See: W3C SKOS (Simple Knowledge Organization System)
+  # Optional: Remove if not needed
+  # dc_coverage:
+  #   # Parent capability in taxonomy hierarchy
+  #   broader:
+  #     - chora.devex.testing_framework
+  #
+  #   # Child capabilities in taxonomy hierarchy
+  #   narrower:
+  #     - chora.react.testing
+  #     - chora.vue.testing
+  #
+  #   # Related capabilities (cross-cutting concerns)
+  #   related:
+  #     - chora.workflow.lifecycle
+
+  #############################################################################
+  # Legacy Alias (during migration from sap-catalog.json)
+  #############################################################################
+
+  # Legacy SAP ID (for backward compatibility during migration)
+  # Example: "SAP-041"
+  # Deprecated: v5.5.0 (Week 16), Removed: v6.0.0 (Q2 2026)
+  # Optional: Remove if new capability (not migrated from SAP-XXX)
+  # dc_identifier_legacy: SAP-XXX  # TODO: Set legacy SAP ID if migrating
+
+  # Last modification timestamp (chora extension)
+  # Format: ISO 8601 (YYYY-MM-DD or YYYY-MM-DDTHH:MM:SSZ)
+  # Optional: Remove if not tracking updates
+  # updated_at: "2025-11-15"
+
+#############################################################################
+# Status: Capability maturity level
+#############################################################################
+
+# Capability status (maturity level)
+# Values: active | pilot | draft | deprecated
+# - active: Production-ready, recommend freely
+# - pilot: Dogfooding phase, use with caution
+# - draft: Experimental, only recommend if requested
+# - deprecated: Don't recommend, suggest alternatives
+status: pilot  # TODO: Set appropriate status (typically start with "pilot")
+
+#############################################################################
+# Pattern-Type Specification (chora_pattern)
+#############################################################################
+
+spec:
+  chora_pattern:
+    ###########################################################################
+    # REQUIRED: SAP Artifact References (5 Standard Files)
+    ###########################################################################
+
+    # SAP artifact references (REQUIRED for Pattern-type)
+    # All 5 artifact types MUST be present
+    # Paths MUST exist and be readable
+    # See: SAP-000 (sap-framework)
+    artifacts:
+      # 1. Capability Charter (problem statement, solution design, success criteria)
+      - type: capability-charter
+        path: docs/skilled-awareness/domain/capability-charter.md  # TODO: Update path
+
+      # 2. Protocol Spec (complete technical specification, commands, workflows)
+      - type: protocol-spec
+        path: docs/skilled-awareness/domain/protocol-spec.md  # TODO: Update path
+
+      # 3. Awareness Guide (agent operating patterns, AGENTS.md or awareness-guide.md)
+      - type: awareness-guide
+        path: docs/skilled-awareness/domain/awareness-guide.md  # TODO: Update path
+
+      # 4. Adoption Blueprint (step-by-step installation guide)
+      - type: adoption-blueprint
+        path: docs/skilled-awareness/domain/adoption-blueprint.md  # TODO: Update path
+
+      # 5. Ledger (adoption tracking, metrics, feedback, version history)
+      - type: ledger
+        path: docs/skilled-awareness/domain/ledger.md  # TODO: Update path
+
+    ###########################################################################
+    # OPTIONAL: Adoption Metadata
+    ###########################################################################
+
+    # Adoption metrics and success criteria
+    # Optional: Remove if not tracking adoption metrics
+    chora_adoption:
+      # Time to adopt pattern (in minutes)
+      # Example: 120 (2 hours), 60 (1 hour), 480 (8 hours)
+      effort_minutes: 120  # TODO: Estimated adoption time
+
+      # Adoption complexity
+      # Values: low | medium | high
+      # - low: Simple, well-documented, minimal dependencies
+      # - medium: Moderate complexity, some configuration required
+      # - high: Complex, requires deep understanding, many dependencies
+      complexity: medium  # TODO: Set complexity level
+
+      # Time saved after adoption (in minutes)
+      # Example: 480 (8 hours saved per project)
+      # Used for ROI calculation
+      time_savings_minutes: 480  # TODO: Estimated time savings
+
+      # ROI percentage (auto-calculated or manual)
+      # Formula: ((time_savings - effort) / effort) * 100
+      # Example: ((480 - 120) / 120) * 100 = 300%
+      roi_percentage: 300.0  # TODO: Calculate or set ROI
+
+      # Testable success criteria (checklist)
+      # Each item should be verifiable
+      # Used for adoption validation
+      success_criteria:
+        - "Success criterion 1"  # TODO: Add specific criterion
+        - "Success criterion 2"  # TODO: Add specific criterion
+        - "Success criterion 3"  # TODO: Add specific criterion
+
+#############################################################################
+# Notes and Best Practices
+#############################################################################
+
+# 1. Namespace Selection:
+#    - Use domain-taxonomy.md to choose appropriate domain
+#    - Follow naming conventions: snake_case, descriptive, no redundancy
+#    - Verify uniqueness before creating manifest
+#
+# 2. Dependency Management:
+#    - Use SemVer constraints: ^ (compatible), ~ (patch), >= (range)
+#    - Avoid circular dependencies (validated by topological sort)
+#    - Document why each dependency is needed
+#    - Use "prerequisite" for Pattern → Pattern (learning path)
+#    - Use "runtime" for Pattern → Service (hard requirement)
+#
+# 3. SAP Artifacts:
+#    - All 5 artifacts MUST exist before committing manifest
+#    - Use SAP-000 framework as template for artifact structure
+#    - Follow naming convention: {type}.md (kebab-case)
+#    - Store in: docs/skilled-awareness/{domain}/
+#
+# 4. Adoption Metadata:
+#    - effort_minutes: Test with pilot adoption
+#    - time_savings_minutes: Measure in production use
+#    - roi_percentage: Validate with user feedback
+#    - success_criteria: Make testable and verifiable
+#
+# 5. Relationship Types:
+#    - prerequisite: Pattern MUST be adopted before this one
+#    - complementary: Pattern enhances this one (optional)
+#    - mutually_exclusive: Cannot adopt both patterns
+#    - extends: Inherits properties from parent pattern
+#    - runtime: Requires Service-type capability running
+#
+# 6. Validation:
+#    - Run: python scripts/validate-capability.py capabilities/chora.domain.capability.yaml
+#    - Pre-commit hook validates on commit
+#    - CI/CD validates on pull request
+#    - Artifact paths checked for existence
+#
+# 7. Documentation:
+#    - Create all 5 SAP artifacts before committing manifest
+#    - Use consistent structure across artifacts
+#    - Link to capability in README.md
+#    - Add examples to docs/user-docs/
+
+#############################################################################
+# SAP Artifact Structure (Quick Reference)
+#############################################################################
+
+# 1. capability-charter.md:
+#    - Problem Statement: What problem does this solve?
+#    - Solution Design: How does this pattern address it?
+#    - Success Criteria: How do we measure success?
+#
+# 2. protocol-spec.md:
+#    - Complete Technical Specification
+#    - Commands and Workflows
+#    - Configuration Options
+#    - Integration Patterns
+#
+# 3. awareness-guide.md (or AGENTS.md):
+#    - Agent Operating Patterns
+#    - Usage Examples
+#    - Common Pitfalls
+#    - Integration with Other SAPs
+#
+# 4. adoption-blueprint.md:
+#    - Step-by-Step Installation
+#    - Prerequisites
+#    - Configuration
+#    - Validation
+#
+# 5. ledger.md:
+#    - Adoption Tracking
+#    - Metrics and Feedback
+#    - Version History
+#    - Lessons Learned
+
+#############################################################################
+# Examples
+#############################################################################
+
+# See capabilities/SCHEMA-EXAMPLES.yaml for complete working examples:
+#   - Example 2: chora.react.form_validation (Pattern-type)
+#   - Example 4: Pattern → Service cross-type dependency
+#   - Example 5: All 7 relationship types
