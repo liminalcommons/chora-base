@@ -1,0 +1,45 @@
+{
+  "version": "1.0.0",
+  "aliases": {
+    "SAP-009": {
+      "namespace": "chora.awareness.agent_awareness",
+      "status": "deprecated",
+      "sunset_date": "2026-06-01"
+    },
+    "SAP-045": {
+      "namespace": "chora.devex.bootstrap",
+      "status": "deprecated",
+      "sunset_date": "2026-06-01"
+    },
+    "SAP-047": {
+      "namespace": "chora.devex.capability_server_template",
+      "status": "deprecated",
+      "sunset_date": "2026-06-01"
+    },
+    "SAP-042": {
+      "namespace": "chora.devex.interface_design",
+      "status": "deprecated",
+      "sunset_date": "2026-06-01"
+    },
+    "SAP-043": {
+      "namespace": "chora.devex.multi_interface",
+      "status": "deprecated",
+      "sunset_date": "2026-06-01"
+    },
+    "SAP-044": {
+      "namespace": "chora.devex.registry",
+      "status": "deprecated",
+      "sunset_date": "2026-06-01"
+    },
+    "SAP-004": {
+      "namespace": "chora.devex.testing_framework",
+      "status": "deprecated",
+      "sunset_date": "2026-06-01"
+    },
+    "SAP-041": {
+      "namespace": "chora.react.form_validation",
+      "status": "deprecated",
+      "sunset_date": "2026-06-01"
+    }
+  }
+}

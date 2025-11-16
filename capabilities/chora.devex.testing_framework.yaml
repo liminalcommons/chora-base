@@ -1,0 +1,44 @@
+apiVersion: chora.dev/v1
+kind: Capability
+metadata:
+  dc_identifier: chora.devex.testing_framework
+  dc_identifier_legacy: SAP-004
+  dc_title: Testing Framework
+  dc_description: pytest-based testing framework with 85%+ coverage patterns and async
+    support
+  dc_type: Pattern
+  dc_hasVersion: 1.0.0
+  dc_creator: chora-base
+  dc_date: '2025-11-15'
+  dc_format: text/markdown
+  dc_subject:
+  - testing
+  - quality
+  - python
+  - pytest
+dc_relation:
+  requires:
+  - capability: chora.SAP-000
+    relationship: prerequisite
+  - capability: chora.SAP-003
+    relationship: prerequisite
+chora_pattern:
+  artifacts:
+  - type: capability_charter
+    path: docs/skilled-awareness/testing-framework\capability-charter.md
+    format: text/markdown
+  - type: protocol_specification
+    path: docs/skilled-awareness/testing-framework\protocol-spec.md
+    format: text/markdown
+  - type: awareness_guide
+    path: docs/skilled-awareness/testing-framework\AGENTS.md
+    format: text/markdown
+  - type: awareness_guide
+    path: docs/skilled-awareness/testing-framework\awareness-guide.md
+    format: text/markdown
+  - type: adoption_blueprint
+    path: docs/skilled-awareness/testing-framework\adoption-blueprint.md
+    format: text/markdown
+  - type: adoption_ledger
+    path: docs/skilled-awareness/testing-framework\ledger.md
+    format: text/markdown

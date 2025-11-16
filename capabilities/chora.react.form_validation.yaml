@@ -1,0 +1,46 @@
+apiVersion: chora.dev/v1
+kind: Capability
+metadata:
+  dc_identifier: chora.react.form_validation
+  dc_identifier_legacy: SAP-041
+  dc_title: React Form Validation
+  dc_description: React Hook Form + Zod reducing setup from 2-3h to 20min (88.9% time
+    savings), type-safe validation, WCAG 2.2 Level AA accessibility, 5x fewer re-renders
+    than Formik, 50% smaller bundle
+  dc_type: Pattern
+  dc_hasVersion: 1.0.0
+  dc_creator: chora-base
+  dc_date: '2025-11-15'
+  dc_format: text/markdown
+  dc_subject:
+  - react
+  - nextjs
+  - forms
+  - validation
+  - technology-specific
+dc_relation:
+  requires:
+  - capability: chora.SAP-000
+    relationship: prerequisite
+  - capability: chora.SAP-020
+    relationship: prerequisite
+chora_pattern:
+  artifacts:
+  - type: capability_charter
+    path: docs/skilled-awareness/react-form-validation\capability-charter.md
+    format: text/markdown
+  - type: protocol_specification
+    path: docs/skilled-awareness/react-form-validation\protocol-spec.md
+    format: text/markdown
+  - type: awareness_guide
+    path: docs/skilled-awareness/react-form-validation\AGENTS.md
+    format: text/markdown
+  - type: awareness_guide
+    path: docs/skilled-awareness/react-form-validation\awareness-guide.md
+    format: text/markdown
+  - type: adoption_blueprint
+    path: docs/skilled-awareness/react-form-validation\adoption-blueprint.md
+    format: text/markdown
+  - type: adoption_ledger
+    path: docs/skilled-awareness/react-form-validation\ledger.md
+    format: text/markdown

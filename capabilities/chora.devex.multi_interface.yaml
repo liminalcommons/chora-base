@@ -1,0 +1,40 @@
+apiVersion: chora.dev/v1
+kind: Capability
+metadata:
+  dc_identifier: chora.devex.multi_interface
+  dc_identifier_legacy: SAP-043
+  dc_title: Multi-Interface Capability Servers
+  dc_description: Multi-interface patterns (CLI/REST/MCP) with FastAPI, Click, and
+    FastMCP integration, reducing interface development time by 75%
+  dc_type: Service
+  dc_hasVersion: 1.0.0
+  dc_creator: chora-base
+  dc_date: '2025-11-15'
+  dc_format: application/x-executable
+  dc_subject:
+  - multi-interface
+  - cli
+  - rest-api
+  - mcp
+  - capability-server
+chora_service:
+  interfaces:
+  - cli
+  - mcp
+  health:
+    endpoint: /health
+    interval: 10
+    timeout: 5
+    heartbeat_ttl: 30
+  distribution:
+    pypi:
+      package_name: chora-multi-interface
+      install_command: pip install chora-multi-interface
+dc_relation:
+  requires:
+  - capability: chora.SAP-000
+    version: ^1.0.0
+    relationship: runtime
+  - capability: chora.SAP-042
+    version: ^1.0.0
+    relationship: runtime

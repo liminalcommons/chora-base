@@ -1,0 +1,433 @@
+name: Validate Capability Manifests
+
+# Trigger on PRs that modify capability YAML files
+on:
+  pull_request:
+    branches: [main, develop]
+    paths:
+      - 'capabilities/**/*.yaml'
+      - 'capabilities/**/*.yml'
+      - 'docs/ontology/domain-taxonomy.md'
+      - 'schemas/*.json'
+      - 'scripts/validate-namespaces.py'
+  push:
+    branches: [main, develop]
+    paths:
+      - 'capabilities/**/*.yaml'
+      - 'capabilities/**/*.yml'
+  workflow_dispatch:  # Allow manual trigger
+
+# Prevent concurrent runs for the same PR
+concurrency:
+  group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  validate-namespaces:
+    name: Validate Capability Namespaces
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0  # Fetch full history for better diff analysis
+
+      - name: Set up Python 3.11
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.11'
+          cache: 'pip'
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install PyYAML
+
+      - name: Validate namespace format and uniqueness
+        id: validate-namespaces
+        run: |
+          echo "::group::Namespace Validation"
+          python scripts/validate-namespaces.py capabilities/ 2>&1 | tee validation-output.txt
+          VALIDATION_EXIT_CODE=${PIPESTATUS[0]}
+          echo "::endgroup::"
+
+          # Save validation results for PR comment
+          if [ $VALIDATION_EXIT_CODE -eq 0 ]; then
+            echo "status=success" >> $GITHUB_OUTPUT
+            echo "message<<EOF" >> $GITHUB_OUTPUT
+            cat validation-output.txt >> $GITHUB_OUTPUT
+            echo "EOF" >> $GITHUB_OUTPUT
+          else
+            echo "status=failure" >> $GITHUB_OUTPUT
+            echo "message<<EOF" >> $GITHUB_OUTPUT
+            cat validation-output.txt >> $GITHUB_OUTPUT
+            echo "EOF" >> $GITHUB_OUTPUT
+            exit $VALIDATION_EXIT_CODE
+          fi
+
+      - name: Upload validation results
+        if: always()
+        uses: actions/upload-artifact@v3
+        with:
+          name: validation-results
+          path: validation-output.txt
+          retention-days: 30
+
+  validate-json-schema:
+    name: Validate Against JSON Schema
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Python 3.11
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.11'
+          cache: 'pip'
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install PyYAML jsonschema
+
+      - name: Validate YAML against JSON Schema
+        id: validate-schema
+        run: |
+          echo "::group::JSON Schema Validation"
+
+          # Create validation script
+          cat > validate-schema.py << 'SCRIPT'
+          import yaml
+          import jsonschema
+          import json
+          import sys
+          from pathlib import Path
+
+          schema_dir = Path("schemas")
+          capabilities_dir = Path("capabilities")
+
+          # Load common schema
+          with open(schema_dir / "capability-common.schema.json") as f:
+              common_schema = json.load(f)
+
+          # Load type-specific schemas
+          with open(schema_dir / "capability-service.schema.json") as f:
+              service_schema = json.load(f)
+
+          with open(schema_dir / "capability-pattern.schema.json") as f:
+              pattern_schema = json.load(f)
+
+          errors = []
+          validated = 0
+          skipped = 0
+
+          # Validate each capability YAML file
+          for yaml_file in sorted(capabilities_dir.glob("*.yaml")):
+              with open(yaml_file) as f:
+                  data = yaml.safe_load(f)
+
+              if not data or "metadata" not in data:
+                  continue
+
+              # Skip template files
+              namespace = data["metadata"].get("dc_identifier", "")
+              if namespace in ["chora.domain.capability", "chora.example.service", "chora.example.pattern"]:
+                  skipped += 1
+                  continue
+
+              # Determine type and validate
+              dc_type = data["metadata"].get("dc_type", "")
+
+              if dc_type == "Service":
+                  schema = service_schema
+              elif dc_type == "Pattern":
+                  schema = pattern_schema
+              else:
+                  errors.append(f"{yaml_file}: Unknown dc_type '{dc_type}'")
+                  continue
+
+              try:
+                  jsonschema.validate(instance=data, schema=schema)
+                  validated += 1
+                  print(f"✓ {yaml_file.name}: Valid {dc_type}-type capability")
+              except jsonschema.ValidationError as e:
+                  errors.append(f"{yaml_file}: {e.message}")
+
+          # Print summary
+          print(f"\n{'='*80}")
+          print(f"JSON Schema Validation Summary")
+          print(f"{'='*80}")
+          print(f"Validated: {validated} capability/ies")
+          print(f"Skipped: {skipped} template(s)")
+
+          if errors:
+              print(f"\nErrors: {len(errors)}")
+              for error in errors:
+                  print(f"  - {error}")
+              print(f"{'='*80}\n")
+              sys.exit(1)
+          else:
+              print(f"✓ All capabilities valid against JSON Schema")
+              print(f"{'='*80}\n")
+              sys.exit(0)
+          SCRIPT
+
+          python validate-schema.py 2>&1 | tee schema-validation-output.txt
+          SCHEMA_EXIT_CODE=${PIPESTATUS[0]}
+          echo "::endgroup::"
+
+          if [ $SCHEMA_EXIT_CODE -eq 0 ]; then
+            echo "status=success" >> $GITHUB_OUTPUT
+          else
+            echo "status=failure" >> $GITHUB_OUTPUT
+            exit $SCHEMA_EXIT_CODE
+          fi
+
+      - name: Upload schema validation results
+        if: always()
+        uses: actions/upload-artifact@v3
+        with:
+          name: schema-validation-results
+          path: schema-validation-output.txt
+          retention-days: 30
+
+  check-collisions:
+    name: Check for Namespace Collisions
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Python 3.11
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.11'
+          cache: 'pip'
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install PyYAML
+
+      - name: Check for duplicate namespaces
+        id: check-collisions
+        run: |
+          echo "::group::Namespace Collision Detection"
+
+          # Create collision detection script
+          cat > check-collisions.py << 'SCRIPT'
+          import yaml
+          import sys
+          from pathlib import Path
+          from collections import defaultdict
+
+          capabilities_dir = Path("capabilities")
+          namespaces = defaultdict(list)
+
+          # Collect all namespaces
+          for yaml_file in sorted(capabilities_dir.glob("*.yaml")):
+              with open(yaml_file) as f:
+                  data = yaml.safe_load(f)
+
+              if not data or "metadata" not in data:
+                  continue
+
+              namespace = data["metadata"].get("dc_identifier", "")
+
+              # Skip template files
+              if namespace in ["chora.domain.capability", "chora.example.service", "chora.example.pattern"]:
+                  continue
+
+              if namespace:
+                  namespaces[namespace].append(yaml_file.name)
+
+          # Find duplicates
+          duplicates = {ns: files for ns, files in namespaces.items() if len(files) > 1}
+
+          # Print results
+          print(f"{'='*80}")
+          print(f"Namespace Collision Detection")
+          print(f"{'='*80}")
+          print(f"Total unique namespaces: {len(namespaces)}")
+
+          if duplicates:
+              print(f"\n❌ Found {len(duplicates)} namespace collision(s):\n")
+              for namespace, files in sorted(duplicates.items()):
+                  print(f"  Namespace: {namespace}")
+                  for file in files:
+                      print(f"    - {file}")
+                  print()
+              print(f"{'='*80}\n")
+              sys.exit(1)
+          else:
+              print(f"✓ No namespace collisions detected")
+              print(f"{'='*80}\n")
+              sys.exit(0)
+          SCRIPT
+
+          python check-collisions.py 2>&1 | tee collision-check-output.txt
+          COLLISION_EXIT_CODE=${PIPESTATUS[0]}
+          echo "::endgroup::"
+
+          if [ $COLLISION_EXIT_CODE -eq 0 ]; then
+            echo "status=success" >> $GITHUB_OUTPUT
+          else
+            echo "status=failure" >> $GITHUB_OUTPUT
+            exit $COLLISION_EXIT_CODE
+          fi
+
+      - name: Upload collision check results
+        if: always()
+        uses: actions/upload-artifact@v3
+        with:
+          name: collision-check-results
+          path: collision-check-output.txt
+          retention-days: 30
+
+  post-pr-comment:
+    name: Post Validation Results to PR
+    runs-on: ubuntu-latest
+    needs: [validate-namespaces, validate-json-schema, check-collisions]
+    if: always() && github.event_name == 'pull_request'
+
+    steps:
+      - name: Download validation artifacts
+        uses: actions/download-artifact@v3
+        with:
+          path: validation-artifacts
+
+      - name: Prepare PR comment
+        id: prepare-comment
+        run: |
+          # Combine all validation results
+          cat > pr-comment.md << 'COMMENT_START'
+          ## 🔍 Capability Validation Results
+
+          COMMENT_START
+
+          # Namespace validation status
+          if [ -f validation-artifacts/validation-results/validation-output.txt ]; then
+            echo "### Namespace Validation" >> pr-comment.md
+            if grep -q "SUCCESS" validation-artifacts/validation-results/validation-output.txt; then
+              echo "✅ **Passed** - All namespaces valid" >> pr-comment.md
+            else
+              echo "❌ **Failed** - Namespace validation errors found" >> pr-comment.md
+            fi
+            echo "" >> pr-comment.md
+            echo "<details><summary>View Details</summary>" >> pr-comment.md
+            echo "" >> pr-comment.md
+            echo '```' >> pr-comment.md
+            cat validation-artifacts/validation-results/validation-output.txt >> pr-comment.md
+            echo '```' >> pr-comment.md
+            echo "</details>" >> pr-comment.md
+            echo "" >> pr-comment.md
+          fi
+
+          # JSON Schema validation status
+          if [ -f validation-artifacts/schema-validation-results/schema-validation-output.txt ]; then
+            echo "### JSON Schema Validation" >> pr-comment.md
+            if grep -q "✓ All capabilities valid" validation-artifacts/schema-validation-results/schema-validation-output.txt; then
+              echo "✅ **Passed** - All manifests comply with JSON Schema" >> pr-comment.md
+            else
+              echo "❌ **Failed** - Schema validation errors found" >> pr-comment.md
+            fi
+            echo "" >> pr-comment.md
+            echo "<details><summary>View Details</summary>" >> pr-comment.md
+            echo "" >> pr-comment.md
+            echo '```' >> pr-comment.md
+            cat validation-artifacts/schema-validation-results/schema-validation-output.txt >> pr-comment.md
+            echo '```' >> pr-comment.md
+            echo "</details>" >> pr-comment.md
+            echo "" >> pr-comment.md
+          fi
+
+          # Collision detection status
+          if [ -f validation-artifacts/collision-check-results/collision-check-output.txt ]; then
+            echo "### Namespace Collision Detection" >> pr-comment.md
+            if grep -q "✓ No namespace collisions" validation-artifacts/collision-check-results/collision-check-output.txt; then
+              echo "✅ **Passed** - No duplicate namespaces found" >> pr-comment.md
+            else
+              echo "❌ **Failed** - Namespace collisions detected" >> pr-comment.md
+            fi
+            echo "" >> pr-comment.md
+            echo "<details><summary>View Details</summary>" >> pr-comment.md
+            echo "" >> pr-comment.md
+            echo '```' >> pr-comment.md
+            cat validation-artifacts/collision-check-results/collision-check-output.txt >> pr-comment.md
+            echo '```' >> pr-comment.md
+            echo "</details>" >> pr-comment.md
+            echo "" >> pr-comment.md
+          fi
+
+          echo "---" >> pr-comment.md
+          echo "_Automated validation from [Ecosystem Ontology & Composition Vision](docs/ontology/namespace-spec.md)_" >> pr-comment.md
+
+          # Save comment body for next step
+          echo "comment-body<<EOF" >> $GITHUB_OUTPUT
+          cat pr-comment.md >> $GITHUB_OUTPUT
+          echo "EOF" >> $GITHUB_OUTPUT
+
+      - name: Post comment to PR
+        uses: actions/github-script@v7
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          script: |
+            const commentBody = `${{ steps.prepare-comment.outputs.comment-body }}`;
+
+            // Find existing validation comment
+            const { data: comments } = await github.rest.issues.listComments({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: context.issue.number,
+            });
+
+            const botComment = comments.find(comment =>
+              comment.user.type === 'Bot' &&
+              comment.body.includes('🔍 Capability Validation Results')
+            );
+
+            // Update existing comment or create new one
+            if (botComment) {
+              await github.rest.issues.updateComment({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                comment_id: botComment.id,
+                body: commentBody
+              });
+            } else {
+              await github.rest.issues.createComment({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                issue_number: context.issue.number,
+                body: commentBody
+              });
+            }
+
+  summary:
+    name: Validation Summary
+    runs-on: ubuntu-latest
+    needs: [validate-namespaces, validate-json-schema, check-collisions]
+    if: always()
+
+    steps:
+      - name: Check validation results
+        run: |
+          echo "::group::Validation Summary"
+          echo "Namespace Validation: ${{ needs.validate-namespaces.result }}"
+          echo "JSON Schema Validation: ${{ needs.validate-json-schema.result }}"
+          echo "Collision Detection: ${{ needs.check-collisions.result }}"
+          echo "::endgroup::"
+
+          if [ "${{ needs.validate-namespaces.result }}" != "success" ] || \
+             [ "${{ needs.validate-json-schema.result }}" != "success" ] || \
+             [ "${{ needs.check-collisions.result }}" != "success" ]; then
+            echo "❌ One or more validation checks failed"
+            exit 1
+          else
+            echo "✅ All validation checks passed"
+            exit 0
+          fi

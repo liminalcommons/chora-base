@@ -1,0 +1,184 @@
+{
+  "version": "1.0.0",
+  "capabilities": {
+    "chora.awareness.agent_awareness": {
+      "title": "Agent Awareness System",
+      "type": "Pattern",
+      "version": "1.1.0",
+      "dependencies": [
+        {
+          "dependency": "chora.SAP-000",
+          "relationship": "prerequisite",
+          "version": "*"
+        },
+        {
+          "dependency": "chora.SAP-007",
+          "relationship": "prerequisite",
+          "version": "*"
+        }
+      ],
+      "dependents": []
+    },
+    "chora.devex.bootstrap": {
+      "title": "Bootstrap & Startup Sequence",
+      "type": "Service",
+      "version": "1.0.0",
+      "dependencies": [
+        {
+          "dependency": "chora.SAP-000",
+          "relationship": "runtime",
+          "version": "^1.0.0"
+        },
+        {
+          "dependency": "chora.SAP-044",
+          "relationship": "runtime",
+          "version": "^1.0.0"
+        }
+      ],
+      "dependents": []
+    },
+    "chora.devex.capability_server_template": {
+      "title": "Capability Server Template (Cookiecutter)",
+      "type": "Service",
+      "version": "1.0.0",
+      "dependencies": [
+        {
+          "dependency": "chora.SAP-000",
+          "relationship": "runtime",
+          "version": "^1.0.0"
+        },
+        {
+          "dependency": "chora.SAP-042",
+          "relationship": "runtime",
+          "version": "^1.0.0"
+        },
+        {
+          "dependency": "chora.SAP-043",
+          "relationship": "runtime",
+          "version": "^1.0.0"
+        },
+        {
+          "dependency": "chora.SAP-044",
+          "relationship": "runtime",
+          "version": "^1.0.0"
+        },
+        {
+          "dependency": "chora.SAP-045",
+          "relationship": "runtime",
+          "version": "^1.0.0"
+        },
+        {
+          "dependency": "chora.SAP-046",
+          "relationship": "runtime",
+          "version": "^1.0.0"
+        }
+      ],
+      "dependents": []
+    },
+    "chora.devex.interface_design": {
+      "title": "Interface Design Patterns",
+      "type": "Service",
+      "version": "1.0.0",
+      "dependencies": [
+        {
+          "dependency": "chora.SAP-000",
+          "relationship": "runtime",
+          "version": "^1.0.0"
+        }
+      ],
+      "dependents": []
+    },
+    "chora.devex.multi_interface": {
+      "title": "Multi-Interface Capability Servers",
+      "type": "Service",
+      "version": "1.0.0",
+      "dependencies": [
+        {
+          "dependency": "chora.SAP-000",
+          "relationship": "runtime",
+          "version": "^1.0.0"
+        },
+        {
+          "dependency": "chora.SAP-042",
+          "relationship": "runtime",
+          "version": "^1.0.0"
+        }
+      ],
+      "dependents": []
+    },
+    "chora.devex.registry": {
+      "title": "Capability Registry & Discovery",
+      "type": "Service",
+      "version": "1.0.0",
+      "dependencies": [
+        {
+          "dependency": "chora.SAP-000",
+          "relationship": "runtime",
+          "version": "^1.0.0"
+        },
+        {
+          "dependency": "chora.SAP-042",
+          "relationship": "runtime",
+          "version": "^1.0.0"
+        }
+      ],
+      "dependents": []
+    },
+    "chora.devex.testing_framework": {
+      "title": "Testing Framework",
+      "type": "Pattern",
+      "version": "1.0.0",
+      "dependencies": [
+        {
+          "dependency": "chora.SAP-000",
+          "relationship": "prerequisite",
+          "version": "*"
+        },
+        {
+          "dependency": "chora.SAP-003",
+          "relationship": "prerequisite",
+          "version": "*"
+        }
+      ],
+      "dependents": []
+    },
+    "chora.react.form_validation": {
+      "title": "React Form Validation",
+      "type": "Pattern",
+      "version": "1.0.0",
+      "dependencies": [
+        {
+          "dependency": "chora.SAP-000",
+          "relationship": "prerequisite",
+          "version": "*"
+        },
+        {
+          "dependency": "chora.SAP-020",
+          "relationship": "prerequisite",
+          "version": "*"
+        }
+      ],
+      "dependents": []
+    },
+    "chora.domain.capability": {
+      "title": "Service Display Name",
+      "type": "Service",
+      "version": "1.0.0",
+      "dependencies": [],
+      "dependents": []
+    }
+  },
+  "statistics": {
+    "total_capabilities": 10,
+    "service_type": 6,
+    "pattern_type": 4,
+    "total_dependencies": 19,
+    "service_to_pattern": 0,
+    "pattern_to_service": 0,
+    "service_to_service": 0,
+    "pattern_to_pattern": 0,
+    "circular_dependencies": 0,
+    "missing_dependencies": 0,
+    "invalid_relationships": 0
+  }
+}

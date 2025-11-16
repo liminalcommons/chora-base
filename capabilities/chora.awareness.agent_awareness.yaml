@@ -1,0 +1,43 @@
+apiVersion: chora.dev/v1
+kind: Capability
+metadata:
+  dc_identifier: chora.awareness.agent_awareness
+  dc_identifier_legacy: SAP-009
+  dc_title: Agent Awareness System
+  dc_description: AGENTS.md/CLAUDE.md patterns with bidirectional translation layer,
+    5 domain AGENTS.md files, and inbox protocol integration
+  dc_type: Pattern
+  dc_hasVersion: 1.1.0
+  dc_creator: chora-base
+  dc_date: '2025-11-15'
+  dc_format: text/markdown
+  dc_subject:
+  - agent-awareness
+  - ai-context
+  - documentation
+dc_relation:
+  requires:
+  - capability: chora.SAP-000
+    relationship: prerequisite
+  - capability: chora.SAP-007
+    relationship: prerequisite
+chora_pattern:
+  artifacts:
+  - type: capability_charter
+    path: docs/skilled-awareness/agent-awareness\capability-charter.md
+    format: text/markdown
+  - type: protocol_specification
+    path: docs/skilled-awareness/agent-awareness\protocol-spec.md
+    format: text/markdown
+  - type: awareness_guide
+    path: docs/skilled-awareness/agent-awareness\AGENTS.md
+    format: text/markdown
+  - type: awareness_guide
+    path: docs/skilled-awareness/agent-awareness\awareness-guide.md
+    format: text/markdown
+  - type: adoption_blueprint
+    path: docs/skilled-awareness/agent-awareness\adoption-blueprint.md
+    format: text/markdown
+  - type: adoption_ledger
+    path: docs/skilled-awareness/agent-awareness\ledger.md
+    format: text/markdown

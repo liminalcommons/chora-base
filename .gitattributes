@@ -84,3 +84,6 @@ Dockerfile text eol=lf
 *.json linguist-detectable
 docs/** linguist-documentation
 tests/** linguist-vendored=false
+
+# Use bd merge for beads JSONL files
+.beads/beads.jsonl merge=beads

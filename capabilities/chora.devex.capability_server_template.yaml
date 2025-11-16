@@ -1,0 +1,52 @@
+apiVersion: chora.dev/v1
+kind: Capability
+metadata:
+  dc_identifier: chora.devex.capability_server_template
+  dc_identifier_legacy: SAP-047
+  dc_title: Capability Server Template (Cookiecutter)
+  dc_description: Cookiecutter template generating production-ready capability servers
+    in 5 minutes, reducing development time from 40-60h to 4-8h (2,271% ROI)
+  dc_type: Service
+  dc_hasVersion: 1.0.0
+  dc_creator: chora-base
+  dc_date: '2025-11-15'
+  dc_format: application/x-executable
+  dc_subject:
+  - template
+  - cookiecutter
+  - capability-server
+  - scaffolding
+  - production-ready
+chora_service:
+  interfaces:
+  - cli
+  - mcp
+  health:
+    endpoint: /health
+    interval: 10
+    timeout: 5
+    heartbeat_ttl: 30
+  distribution:
+    pypi:
+      package_name: chora-capability-server-template
+      install_command: pip install chora-capability-server-template
+dc_relation:
+  requires:
+  - capability: chora.SAP-000
+    version: ^1.0.0
+    relationship: runtime
+  - capability: chora.SAP-042
+    version: ^1.0.0
+    relationship: runtime
+  - capability: chora.SAP-043
+    version: ^1.0.0
+    relationship: runtime
+  - capability: chora.SAP-044
+    version: ^1.0.0
+    relationship: runtime
+  - capability: chora.SAP-045
+    version: ^1.0.0
+    relationship: runtime
+  - capability: chora.SAP-046
+    version: ^1.0.0
+    relationship: runtime

@@ -1,0 +1,36 @@
+apiVersion: chora.dev/v1
+kind: Capability
+metadata:
+  dc_identifier: chora.devex.interface_design
+  dc_identifier_legacy: SAP-042
+  dc_title: Interface Design Patterns
+  dc_description: Core/interface separation pattern reducing coupling by 80%, enabling
+    multi-interface capability servers with shared business logic
+  dc_type: Service
+  dc_hasVersion: 1.0.0
+  dc_creator: chora-base
+  dc_date: '2025-11-15'
+  dc_format: application/x-executable
+  dc_subject:
+  - architecture
+  - design-patterns
+  - capability-server
+  - separation-of-concerns
+chora_service:
+  interfaces:
+  - cli
+  - mcp
+  health:
+    endpoint: /health
+    interval: 10
+    timeout: 5
+    heartbeat_ttl: 30
+  distribution:
+    pypi:
+      package_name: chora-interface-design
+      install_command: pip install chora-interface-design
+dc_relation:
+  requires:
+  - capability: chora.SAP-000
+    version: ^1.0.0
+    relationship: runtime

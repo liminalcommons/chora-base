@@ -1,0 +1,40 @@
+apiVersion: chora.dev/v1
+kind: Capability
+metadata:
+  dc_identifier: chora.devex.bootstrap
+  dc_identifier_legacy: SAP-045
+  dc_title: Bootstrap & Startup Sequence
+  dc_description: Dependency-ordered startup with registry registration, config loading,
+    and graceful shutdown, reducing startup failures by 90%
+  dc_type: Service
+  dc_hasVersion: 1.0.0
+  dc_creator: chora-base
+  dc_date: '2025-11-15'
+  dc_format: application/x-executable
+  dc_subject:
+  - bootstrap
+  - startup
+  - configuration
+  - capability-server
+  - lifecycle-management
+chora_service:
+  interfaces:
+  - cli
+  - mcp
+  health:
+    endpoint: /health
+    interval: 10
+    timeout: 5
+    heartbeat_ttl: 30
+  distribution:
+    pypi:
+      package_name: chora-bootstrap
+      install_command: pip install chora-bootstrap
+dc_relation:
+  requires:
+  - capability: chora.SAP-000
+    version: ^1.0.0
+    relationship: runtime
+  - capability: chora.SAP-044
+    version: ^1.0.0
+    relationship: runtime
