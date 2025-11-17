@@ -1,0 +1,118 @@
+name: Git Workflow Validation (SAP-051)
+
+on:
+  pull_request:
+    branches: [main, master]
+  push:
+    branches: [main, master, feature/*, bugfix/*, hotfix/*]
+
+jobs:
+  validate-commits:
+    name: Validate Commit Messages
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0  # Fetch all history for commit validation
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.11'
+
+      - name: Install Just
+        run: |
+          curl --proto '=https' --tlsv1.2 -sSf https://just.systems/install.sh | bash -s -- --to /usr/local/bin
+          just --version
+
+      - name: Validate commit messages
+        run: |
+          echo "Validating commits against Conventional Commits v1.0.0..."
+          just validate-commits HEAD~10
+        continue-on-error: false
+
+  validate-branch-name:
+    name: Validate Branch Name
+    runs-on: ubuntu-latest
+    if: github.event_name == 'pull_request'
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Install Just
+        run: |
+          curl --proto '=https' --tlsv1.2 -sSf https://just.systems/install.sh | bash -s -- --to /usr/local/bin
+
+      - name: Validate branch name
+        run: |
+          BRANCH_NAME="${{ github.head_ref }}"
+          echo "Validating branch name: $BRANCH_NAME"
+
+          # Check if branch follows convention: <type>/<identifier>-<description>
+          if [[ "$BRANCH_NAME" =~ ^(feature|bugfix|hotfix|chore|docs|refactor|test)/[a-zA-Z0-9\.\-\_]+ ]]; then
+            echo "✓ Branch name '$BRANCH_NAME' follows convention"
+            exit 0
+          else
+            echo "❌ Branch name '$BRANCH_NAME' doesn't follow convention"
+            echo ""
+            echo "Expected format: <type>/<identifier>-<description>"
+            echo "Valid types: feature, bugfix, hotfix, chore, docs, refactor, test"
+            echo ""
+            echo "Examples:"
+            echo "  - feature/SAP-051-git-workflow"
+            echo "  - bugfix/.beads-abc-fix"
+            echo "  - hotfix/urgent-security-patch"
+            exit 1
+          fi
+
+  git-health-check:
+    name: Git Workflow Health Check
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Install Just
+        run: |
+          curl --proto '=https' --tlsv1.2 -sSf https://just.systems/install.sh | bash -s -- --to /usr/local/bin
+
+      - name: Run git-check
+        run: |
+          echo "Running comprehensive git workflow health check..."
+          just git-check || echo "Health check completed with warnings"
+
+  generate-changelog-preview:
+    name: Generate Changelog Preview
+    runs-on: ubuntu-latest
+    if: github.event_name == 'pull_request'
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Install Just
+        run: |
+          curl --proto '=https' --tlsv1.2 -sSf https://just.systems/install.sh | bash -s -- --to /usr/local/bin
+
+      - name: Generate changelog preview
+        run: |
+          echo "Generating changelog preview for PR..."
+          just changelog origin/main CHANGELOG-preview.md || echo "No commits to include in changelog"
+
+          if [ -f CHANGELOG-preview.md ]; then
+            echo "## 📝 Changelog Preview" >> $GITHUB_STEP_SUMMARY
+            echo "" >> $GITHUB_STEP_SUMMARY
+            cat CHANGELOG-preview.md >> $GITHUB_STEP_SUMMARY
+          fi
+
+      - name: Upload changelog artifact
+        if: success()
+        uses: actions/upload-artifact@v3
+        with:
+          name: changelog-preview
+          path: CHANGELOG-preview.md
+          if-no-files-found: ignore
