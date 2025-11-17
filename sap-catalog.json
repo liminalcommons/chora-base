@@ -2514,7 +2514,7 @@
       "id": "SAP-056",
       "name": "lifecycle-traceability",
       "full_name": "Lifecycle Traceability",
-      "status": "draft",
+      "status": "pilot",
       "version": "1.0.0",
       "included_by_default": false,
       "size_kb": 450,

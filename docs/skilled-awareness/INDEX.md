@@ -10,23 +10,23 @@
 
 ## Overview
 
-This index tracks all **48 capabilities** organized across **6 domains** for improved discoverability and progressive adoption.
+This index tracks all **46 capabilities** organized across **6 domains** for improved discoverability and progressive adoption.
 
-**Total Coverage**: 48/48 SAPs (100%)
+**Total Coverage**: 46/46 SAPs (100%)
 
 **Domain Distribution**:
-- Infrastructure: 3 SAPs (6%) - Core framework and coordination
-- Developer Experience: 15 SAPs (31%) - Development workflow tools + capability server architecture
+- Infrastructure: 3 SAPs (7%) - Core framework and coordination
+- Developer Experience: 14 SAPs (30%) - Development workflow tools + capability server architecture
 - Foundation: 6 SAPs (13%) - Technology stack foundations (React + auth + database + forms)
 - User-Facing: 6 SAPs (13%) - User interaction patterns (state, styling, uploads, errors)
 - Advanced: 8 SAPs (17%) - Optimizations and integrations (real-time, i18n, e2e, monorepo)
-- Specialized: 12 SAPs (25%) - Meta-capabilities, process patterns, and awareness systems
+- Specialized: 11 SAPs (24%) - Meta-capabilities, process patterns, awareness systems, and governance (includes SAP-056 Lifecycle Traceability)
 
 **Status Distribution**:
-- Active: 24 SAPs (50%)
-- Pilot: 18 SAPs (38%) - SAP-015, SAP-028, SAP-029, SAP-033-047 (including capability server suite)
-- Draft: 5 SAPs (10%) - SAP-048, SAP-049, SAP-050 (new), 2 historical
-- Deprecated: 1 SAP (2%) - SAP-014 (replaced by SAP-047)
+- Active: 24 SAPs (52%)
+- Pilot: 13 SAPs (28%) - SAP-015, SAP-028, SAP-029, SAP-033-041, SAP-056 (lifecycle traceability)
+- Draft: 8 SAPs (17%) - SAP-042-050
+- Deprecated: 1 SAP (2%) - SAP-014 (replaced by capability server architecture)
 
 ---
 
@@ -496,6 +496,14 @@ Turborepo monorepo reducing setup from 7.5h to 30min (93.3% time savings), incre
 - **Location**: [sap-generation/](sap-generation/)
 - **Key Features**: Jinja2 template system (5 templates for 5 artifacts), MVP generation schema (9 fields), generator script (scripts/generate-sap.py), INDEX.md auto-update, validation integration
 
+### SAP-056: Lifecycle Traceability
+
+- **Status**: pilot | **Version**: 1.0.0 | **Domain**: Specialized
+- **Description**: Umbrella governance SAP for comprehensive traceability across 10 artifact types (Vision → Features → Requirements → Code → Tests → Docs → Git → Tasks → Events → Knowledge). Defines linkage schemas, validation rules, and compliance levels to achieve 100% traceability coverage
+- **Dependencies**: SAP-000, SAP-004, SAP-007, SAP-010, SAP-012, SAP-015
+- **Location**: [lifecycle-traceability/](lifecycle-traceability/)
+- **Key Features**: Feature manifest schema (YAML single source of truth), 10 validation rules (forward linkage, bidirectional, evidence, closed loop, orphan detection, schema, integrity, coverage), 4 adoption levels (L0-L3: no/partial/substantial/complete), automated validation script with 100% pass rate, auto-generation from git/beads, HTML dashboard, JSON Schema validation
+
 ---
 
 ## Domain Statistics
@@ -505,20 +513,20 @@ Turborepo monorepo reducing setup from 7.5h to 30min (93.3% time savings), incre
 | Domain | SAPs | Percentage | Status Breakdown |
 |--------|------|------------|------------------|
 | Infrastructure | 3 | 7% | 3 active |
-| Developer Experience | 14 | 31% | 7 active, 6 pilot, 1 deprecated |
+| Developer Experience | 14 | 30% | 7 active, 6 pilot, 1 deprecated |
 | Foundation | 6 | 13% | 3 active, 3 pilot |
 | User-Facing | 6 | 13% | 2 active, 4 pilot |
-| Advanced | 8 | 18% | 4 active, 4 pilot |
-| Specialized | 10 | 22% | 7 active, 3 pilot |
-| **Total** | **45** | **100%** | **24 active, 12 pilot, 8 draft, 1 deprecated** |
+| Advanced | 8 | 17% | 4 active, 4 pilot |
+| Specialized | 11 | 24% | 7 active, 4 pilot, 0 draft |
+| **Total** | **46** | **100%** | **24 active, 13 pilot, 8 draft, 1 deprecated** |
 
 ### By Status
 
 | Status | Count | Percentage | Domains |
 |--------|-------|------------|---------|
 | Active | 24 | 53% | All domains |
-| Pilot | 12 | 27% | Specialized (SAP-015, 028, 029), Foundation (SAP-033, 034, 041), User-Facing (SAP-035, 036), Advanced (SAP-037-040) |
-| Draft | 8 | 18% | Developer Experience (SAP-042-047: template implementation in progress), 2 historical |
+| Pilot | 13 | 28% | Specialized (SAP-015, 028, 029, 056), Foundation (SAP-033, 034, 041), User-Facing (SAP-035, 036), Advanced (SAP-037-040) |
+| Draft | 8 | 17% | Developer Experience (SAP-042-047: template implementation in progress), 2 historical |
 | Deprecated | 1 | 2% | Developer Experience (SAP-014) |
 
 ---
@@ -588,7 +596,7 @@ Choose your starting point based on project type and goals:
 
 1. **Infrastructure** (SAP-000, 002) - Framework foundation
 2. **Developer Experience** (SAP-004, 005, 006, 007, 008) - Testing, CI/CD, quality, docs
-3. **Specialized** (SAP-009, 010, 012, 013, 019, 027) - Full process stack
+3. **Specialized** (SAP-009, 010, 012, 015, 019, 027, 056) - Full process stack
 
 **Estimated Setup**: 4-6 days
 
@@ -650,7 +658,9 @@ Specialized Domain                         │
 ├─ SAP-019 (sap-self-evaluation)
 ├─ SAP-027 (dogfooding-patterns)
 ├─ SAP-028 (publishing-automation)
-└─ SAP-029 (sap-generation)
+├─ SAP-029 (sap-generation)
+└─ SAP-056 (lifecycle-traceability)
+   └─ Depends on: SAP-004, SAP-007, SAP-010, SAP-012, SAP-015
 ```
 
 **Key Dependencies**:
@@ -658,6 +668,7 @@ Specialized Domain                         │
 - **SAP-003 → SAP-004**: Testing depends on project structure
 - **SAP-004 → SAP-005, SAP-006**: CI/CD and quality depend on testing
 - **SAP-020 → SAP-021-026**: All React SAPs depend on foundation
+- **SAP-056** integrates 6 SAPs: testing (004), docs (007), memory (010), lifecycle (012), tasks (015)
 
 ---
 
@@ -681,7 +692,7 @@ Specialized Domain                         │
 → See: [Progressive Adoption Path 4](#path-4-cross-repository-coordination)
 
 ### Improving Process Maturity?
-→ Adopt **Specialized** domain (SAP-009, 010, 012, 015, 027)
+→ Adopt **Specialized** domain (SAP-009, 010, 012, 015, 019, 027, 056)
 → See: [Progressive Adoption Path 5](#path-5-process-maturity--best-practices)
 
 ### Need Performance Optimization?

@@ -1,0 +1,310 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://chora.dev/schemas/feature-manifest/v1.0.0",
+  "title": "Feature Manifest Schema",
+  "description": "Schema for feature-manifest.yaml - central traceability artifact for SAP-056 (Lifecycle Traceability)",
+  "type": "object",
+  "required": ["version", "project", "features"],
+  "properties": {
+    "version": {
+      "type": "string",
+      "description": "Schema version for feature-manifest.yaml",
+      "pattern": "^\\d+\\.\\d+\\.\\d+$",
+      "examples": ["1.0.0"]
+    },
+    "project": {
+      "type": "string",
+      "description": "Project name",
+      "minLength": 1,
+      "examples": ["chora-workspace", "my-awesome-project"]
+    },
+    "features": {
+      "type": "array",
+      "description": "List of features with complete traceability",
+      "items": {
+        "$ref": "#/definitions/feature"
+      },
+      "minItems": 0
+    }
+  },
+  "additionalProperties": false,
+  "definitions": {
+    "feature": {
+      "type": "object",
+      "description": "A single feature with complete traceability linkage",
+      "required": ["id", "name", "status"],
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Unique feature identifier",
+          "pattern": "^FEAT-[A-Z0-9-]+$",
+          "examples": ["FEAT-001", "FEAT-AUTH-001", "FEAT-SAP-056"]
+        },
+        "name": {
+          "type": "string",
+          "description": "Human-readable feature name",
+          "minLength": 1,
+          "examples": ["User Authentication", "Lifecycle Traceability"]
+        },
+        "vision_ref": {
+          "type": "string",
+          "description": "Reference to vision document outcome (CHARTER-XXX:Outcome-N)",
+          "pattern": "^[A-Z-]+:\\w+(-\\w+)*$",
+          "examples": ["CHARTER-001:Outcome-2", "SAP-056:Outcome-1"]
+        },
+        "status": {
+          "type": "string",
+          "description": "Current feature status",
+          "enum": ["planned", "in_progress", "implemented", "deprecated"],
+          "examples": ["implemented"]
+        },
+        "requirements": {
+          "type": "array",
+          "description": "List of requirements for this feature",
+          "items": {
+            "$ref": "#/definitions/requirement"
+          },
+          "minItems": 0
+        },
+        "code": {
+          "type": "array",
+          "description": "Code files implementing this feature",
+          "items": {
+            "$ref": "#/definitions/code_reference"
+          },
+          "minItems": 0
+        },
+        "tests": {
+          "type": "array",
+          "description": "Test cases validating this feature",
+          "items": {
+            "$ref": "#/definitions/test_reference"
+          },
+          "minItems": 0
+        },
+        "documentation": {
+          "type": "array",
+          "description": "Documentation files for this feature",
+          "items": {
+            "$ref": "#/definitions/doc_reference"
+          },
+          "minItems": 0
+        },
+        "metadata": {
+          "type": "object",
+          "description": "Optional metadata for this feature",
+          "properties": {
+            "created": {
+              "type": "string",
+              "format": "date",
+              "description": "Date feature was created (YYYY-MM-DD)"
+            },
+            "updated": {
+              "type": "string",
+              "format": "date",
+              "description": "Date feature was last updated (YYYY-MM-DD)"
+            },
+            "owner": {
+              "type": "string",
+              "description": "Feature owner or primary developer"
+            },
+            "tags": {
+              "type": "array",
+              "description": "Tags for categorization",
+              "items": {
+                "type": "string"
+              }
+            }
+          },
+          "additionalProperties": true
+        }
+      },
+      "additionalProperties": false
+    },
+    "requirement": {
+      "type": "object",
+      "description": "A single requirement for a feature",
+      "required": ["id", "description", "status"],
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Unique requirement identifier",
+          "pattern": "^REQ-[A-Z0-9-]+$",
+          "examples": ["REQ-001", "REQ-AUTH-001"]
+        },
+        "description": {
+          "type": "string",
+          "description": "Requirement description",
+          "minLength": 1,
+          "examples": ["Support email/password login", "Validate manifest schema"]
+        },
+        "status": {
+          "type": "string",
+          "description": "Requirement status",
+          "enum": ["planned", "in_progress", "implemented", "deprecated"],
+          "examples": ["implemented"]
+        },
+        "priority": {
+          "type": "string",
+          "description": "Requirement priority",
+          "enum": ["P0", "P1", "P2", "P3"],
+          "examples": ["P0"]
+        }
+      },
+      "additionalProperties": false
+    },
+    "code_reference": {
+      "type": "object",
+      "description": "Reference to a code file implementing the feature",
+      "required": ["path"],
+      "properties": {
+        "path": {
+          "type": "string",
+          "description": "Relative path to code file from project root",
+          "minLength": 1,
+          "examples": ["src/auth/providers.py", "lib/traceability/validator.ts"]
+        },
+        "lines": {
+          "type": "string",
+          "description": "Line range for this feature (optional)",
+          "pattern": "^\\d+(-\\d+)?$",
+          "examples": ["45-120", "78"]
+        },
+        "function": {
+          "type": "string",
+          "description": "Specific function or class name (optional)",
+          "examples": ["EmailAuthProvider", "validate_manifest"]
+        }
+      },
+      "additionalProperties": false
+    },
+    "test_reference": {
+      "type": "object",
+      "description": "Reference to a test case validating the feature",
+      "required": ["path", "type"],
+      "properties": {
+        "path": {
+          "type": "string",
+          "description": "Path to test file/case (use :: for pytest test cases)",
+          "minLength": 1,
+          "examples": ["tests/test_auth.py::test_email_login", "tests/integration/test_full_flow.py"]
+        },
+        "type": {
+          "type": "string",
+          "description": "Test type",
+          "enum": ["unit", "integration", "e2e", "performance", "security"],
+          "examples": ["unit", "integration"]
+        },
+        "requirement": {
+          "type": "string",
+          "description": "Requirement ID this test validates (optional)",
+          "pattern": "^REQ-[A-Z0-9-]+$",
+          "examples": ["REQ-001"]
+        },
+        "status": {
+          "type": "string",
+          "description": "Test status",
+          "enum": ["passing", "failing", "skipped", "pending"],
+          "examples": ["passing"]
+        }
+      },
+      "additionalProperties": false
+    },
+    "doc_reference": {
+      "type": "object",
+      "description": "Reference to documentation for the feature",
+      "required": ["path", "type"],
+      "properties": {
+        "path": {
+          "type": "string",
+          "description": "Relative path to documentation file from project root",
+          "minLength": 1,
+          "examples": ["docs/how-to/authentication.md", "README.md"]
+        },
+        "type": {
+          "type": "string",
+          "description": "Documentation type (Diátaxis framework)",
+          "enum": ["how-to", "tutorial", "reference", "explanation"],
+          "examples": ["how-to"]
+        },
+        "section": {
+          "type": "string",
+          "description": "Specific section or heading (optional)",
+          "examples": ["Email Authentication", "Usage"]
+        }
+      },
+      "additionalProperties": false
+    }
+  },
+  "examples": [
+    {
+      "version": "1.0.0",
+      "project": "chora-workspace",
+      "features": [
+        {
+          "id": "FEAT-001",
+          "name": "User Authentication",
+          "vision_ref": "CHARTER-001:Outcome-2",
+          "status": "implemented",
+          "requirements": [
+            {
+              "id": "REQ-001",
+              "description": "Support email/password login",
+              "status": "implemented",
+              "priority": "P0"
+            },
+            {
+              "id": "REQ-002",
+              "description": "Support OAuth2 providers (Google, GitHub)",
+              "status": "in_progress",
+              "priority": "P1"
+            }
+          ],
+          "code": [
+            {
+              "path": "src/auth/providers.py",
+              "lines": "45-120",
+              "function": "EmailAuthProvider"
+            },
+            {
+              "path": "src/auth/middleware.py",
+              "lines": "10-35",
+              "function": "authenticate_request"
+            }
+          ],
+          "tests": [
+            {
+              "path": "tests/test_auth.py::test_email_login",
+              "type": "unit",
+              "requirement": "REQ-001",
+              "status": "passing"
+            },
+            {
+              "path": "tests/test_auth_integration.py::test_full_auth_flow",
+              "type": "integration",
+              "requirement": "REQ-001",
+              "status": "passing"
+            }
+          ],
+          "documentation": [
+            {
+              "path": "docs/how-to/authentication.md",
+              "type": "how-to",
+              "section": "Email Authentication"
+            },
+            {
+              "path": "docs/reference/api/auth.md",
+              "type": "reference"
+            }
+          ],
+          "metadata": {
+            "created": "2025-10-01",
+            "updated": "2025-11-15",
+            "owner": "auth-team",
+            "tags": ["security", "authentication", "core"]
+          }
+        }
+      ]
+    }
+  ]
+}
