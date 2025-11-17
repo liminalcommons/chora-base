@@ -45,10 +45,6 @@ generate-sap-force SAP_ID:
 validate-prerequisites:
     python scripts/validate-prerequisites.py
 
-# Validate internal markdown links
-validate-links PATH=".":
-    python scripts/validate-links.py {{PATH}}
-
 # Check SAP awareness integration in adoption blueprint
 check-sap-awareness SAP_PATH:
     python scripts/check-sap-awareness-integration.py {{SAP_PATH}}
@@ -554,10 +550,11 @@ metrics-help:
 
 # Validate all markdown links in project
 # Example: just validate-links
-validate-links:
-    @echo "🔗 SAP-016: Validating all markdown links..."
+# Example: just validate-links docs/
+validate-links PATH=".":
+    @echo "🔗 SAP-016: Validating markdown links in {{PATH}}..."
     @echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
-    @python scripts/validate-links.py || echo "❌ Link validation failed (see broken links above)"
+    @python scripts/validate-links.py {{PATH}} || echo "❌ Link validation failed (see broken links above)"
 
 # Validate links in docs/ directory only
 # Example: just validate-links-docs
@@ -1576,4 +1573,124 @@ changelog SINCE="" OUTPUT="CHANGELOG.md":
     echo "✓ Changelog generated: $OUTPUT_FILE"
     echo "Preview:"
     head -30 "$OUTPUT_FILE"
+
+
+# ============================================================================
+# Level 2: Advanced Git Workflow Configuration
+# ============================================================================
+
+# Configure custom git workflow settings (commit types, lengths, strict mode)
+git-config-custom TYPES="" MAX_LENGTH="72" STRICT="false":
+    #!/usr/bin/env bash
+    set -e
+    echo "Configuring custom git workflow settings..."
+    
+    # Set custom commit types (if provided)
+    if [ -n "{{TYPES}}" ]; then
+        git config conventional-commits.types "{{TYPES}}"
+        echo "✓ Custom commit types: {{TYPES}}"
+    fi
+    
+    # Set max subject length
+    git config conventional-commits.max-subject-length "{{MAX_LENGTH}}"
+    echo "✓ Max subject length: {{MAX_LENGTH}}"
+    
+    # Set strict mode
+    git config conventional-commits.strict "{{STRICT}}"
+    echo "✓ Strict mode: {{STRICT}}"
+    
+    # Set branch naming max length
+    git config branch-naming.max-length "100"
+    echo "✓ Branch max length: 100"
+    
+    echo ""
+    echo "Custom configuration applied. Current settings:"
+    git config --get conventional-commits.types || echo "  commit types: (using defaults)"
+    git config --get conventional-commits.max-subject-length || echo "  max length: (using defaults)"
+    git config --get conventional-commits.strict || echo "  strict mode: (using defaults)"
+
+# Show current git workflow configuration
+git-config-show:
+    #!/usr/bin/env bash
+    echo "Current Git Workflow Configuration:"
+    echo "===================================="
+    echo ""
+    echo "Hooks:"
+    echo "  core.hooksPath = $(git config --get core.hooksPath || echo '(not set)')"
+    echo "  commit-msg enabled = $(git config --get hooks.commit-msg-enabled || echo 'false')"
+    echo "  pre-push enabled = $(git config --get hooks.pre-push-enabled || echo 'false')"
+    echo "  pre-commit enabled = $(git config --get hooks.pre-commit-enabled || echo 'false')"
+    echo ""
+    echo "Commit Message Rules:"
+    echo "  types = $(git config --get conventional-commits.types || echo 'feat,fix,docs,style,refactor,test,chore,perf,ci,build,revert')"
+    echo "  max subject length = $(git config --get conventional-commits.max-subject-length || echo '72')"
+    echo "  strict mode = $(git config --get conventional-commits.strict || echo 'false')"
+    echo ""
+    echo "Branch Naming Rules:"
+    echo "  types = $(git config --get branch-naming.types || echo 'feature,bugfix,hotfix,chore,docs,refactor,test')"
+    echo "  max length = $(git config --get branch-naming.max-length || echo '100')"
+    echo "  check conflicts = $(git config --get branch-naming.check-conflicts || echo 'false')"
+
+# Reset git workflow configuration to defaults
+git-config-reset:
+    #!/usr/bin/env bash
+    set -e
+    echo "Resetting git workflow configuration to defaults..."
+    
+    # Remove custom settings
+    git config --unset conventional-commits.types || true
+    git config --unset conventional-commits.max-subject-length || true
+    git config --unset conventional-commits.strict || true
+    git config --unset branch-naming.types || true
+    git config --unset branch-naming.max-length || true
+    git config --unset branch-naming.check-conflicts || true
+    
+    echo "✓ Configuration reset to defaults"
+    just git-config-show
+
+# Generate commit message template with SAP integration
+git-commit-template SCOPE="" TYPE="feat":
+    #!/usr/bin/env bash
+    # Generate a commit message template following Conventional Commits
+    # with optional SAP integration (COORD IDs, task IDs)
+    
+    BRANCH=$(git branch --show-current)
+    
+    # Extract SAP/COORD/Task IDs from branch name
+    SAP_ID=$(echo "$BRANCH" | grep -oE "SAP-[0-9]+" || echo "")
+    COORD_ID=$(echo "$BRANCH" | grep -oE "COORD-[0-9]+-[0-9]+" || echo "")
+    TASK_ID=$(echo "$BRANCH" | grep -oE "\.beads-[a-z0-9]+" || echo "")
+    
+    # Build references line
+    REFS=""
+    [ -n "$SAP_ID" ] && REFS="$SAP_ID"
+    [ -n "$COORD_ID" ] && REFS="$REFS${REFS:+, }$COORD_ID"
+    [ -n "$TASK_ID" ] && REFS="$REFS${REFS:+, }$TASK_ID"
+    
+    # Determine scope from branch or parameter
+    if [ -z "{{SCOPE}}" ]; then
+        SCOPE=$(echo "$BRANCH" | grep -oE "^(feature|bugfix|hotfix)/([a-zA-Z0-9\.\-\_]+)" | cut -d'/' -f2 | cut -d'-' -f1 || echo "")
+    else
+        SCOPE="{{SCOPE}}"
+    fi
+    
+    # Generate template
+    echo "{{TYPE}}${SCOPE:+($SCOPE)}: <description>"
+    echo ""
+    echo "<detailed explanation of changes>"
+    echo ""
+    if [ -n "$REFS" ]; then
+        echo "Refs: $REFS"
+    fi
+    echo ""
+    echo "# Conventional Commits Format:"
+    echo "# <type>(<scope>): <description>"
+    echo "#"
+    echo "# Types: feat, fix, docs, style, refactor, test, chore, perf, ci, build, revert"
+    echo "# Scope: Optional, describes what part of codebase (e.g., api, ui, hooks)"
+    echo "# Description: Brief summary in imperative mood (e.g., 'add feature' not 'added')"
+    echo "#"
+    echo "# Breaking changes: Add '!' after type/scope (e.g., 'feat!: breaking change')"
+    echo "#"
+    echo "# SAP Integration: Add 'Refs: SAP-XXX, COORD-YYYY-ZZ' in footer"
 
