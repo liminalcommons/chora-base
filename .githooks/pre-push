@@ -1,0 +1,102 @@
+#!/usr/bin/env bash
+# Git hook: pre-push
+# Validates branch names and checks for conflicts with main
+# Exit 0 = valid push, Exit 1 = invalid push (aborts)
+
+set -e
+
+# Color codes for output
+RED='\033[0;31m'
+GREEN='\033[0;32m'
+YELLOW='\033[1;33m'
+NC='\033[0m' # No Color
+
+# Configuration (can be overridden via git config)
+ENABLED=$(git config --get hooks.pre-push-enabled || echo "true")
+if [ "$ENABLED" != "true" ]; then
+    exit 0  # Hook disabled
+fi
+
+# Get allowed branch types from git config or use defaults
+BRANCH_TYPES=$(git config --get branch-naming.types || echo "feature,bugfix,hotfix,chore,docs,refactor,test")
+REQUIRE_IDENTIFIER=$(git config --get branch-naming.require-identifier || echo "true")
+MAX_LENGTH=$(git config --get branch-naming.max-length || echo "100")
+
+# Get current branch name
+CURRENT_BRANCH=$(git branch --show-current)
+
+# Skip validation for main/master branches
+if [ "$CURRENT_BRANCH" == "main" ] || [ "$CURRENT_BRANCH" == "master" ]; then
+    exit 0
+fi
+
+# Convert comma-separated types to regex alternation
+TYPES_REGEX=$(echo "$BRANCH_TYPES" | sed 's/,/|/g')
+
+# Branch naming pattern: <type>/<identifier>-<description>
+# - type: one of allowed types
+# - identifier: optional (but recommended), alphanumeric with dots/hyphens/underscores
+# - description: lowercase with hyphens
+if [ "$REQUIRE_IDENTIFIER" == "true" ]; then
+    PATTERN="^($TYPES_REGEX)\/[a-zA-Z0-9\.\-\_]+"
+else
+    PATTERN="^($TYPES_REGEX)\/"
+fi
+
+# Validate branch name format
+if ! echo "$CURRENT_BRANCH" | grep -qE "$PATTERN"; then
+    echo -e "${RED}❌ Branch name doesn't follow convention${NC}"
+    echo ""
+    echo "Expected: <type>/<identifier>-<description>"
+    echo ""
+    echo "Valid types: $BRANCH_TYPES"
+    echo ""
+    echo "Examples:"
+    echo "  feature/SAP-051-git-workflow-patterns"
+    echo "  bugfix/.beads-abc-fix-validation"
+    echo "  hotfix/urgent-security-patch"
+    echo "  chore/update-dependencies"
+    echo "  docs/sap-051-protocol-spec"
+    echo ""
+    echo "Your branch name:"
+    echo "  $CURRENT_BRANCH"
+    echo ""
+    echo "To fix, rename your branch:"
+    echo "  git branch -m <type>/<identifier>-<description>"
+    echo ""
+    echo "Push aborted."
+    exit 1
+fi
+
+# Validate branch name length
+BRANCH_LENGTH=${#CURRENT_BRANCH}
+if [ "$BRANCH_LENGTH" -gt "$MAX_LENGTH" ]; then
+    echo -e "${YELLOW}⚠ Warning: Branch name is $BRANCH_LENGTH characters (max recommended: $MAX_LENGTH)${NC}"
+    echo "  $CURRENT_BRANCH"
+fi
+
+# Check for conflicts with main branch (optional, requires network)
+CHECK_CONFLICTS=$(git config --get branch-naming.check-conflicts || echo "false")
+if [ "$CHECK_CONFLICTS" == "true" ]; then
+    # Fetch latest main silently
+    git fetch origin main --quiet 2>/dev/null || true
+
+    # Check if there are merge conflicts with main
+    CONFLICTS=$(git diff --check origin/main...HEAD 2>&1 || echo "")
+    if [ -n "$CONFLICTS" ]; then
+        echo -e "${YELLOW}⚠ Warning: Potential conflicts with main branch${NC}"
+        echo "  Consider rebasing: git rebase origin/main"
+        echo ""
+    fi
+fi
+
+# Debug output (if enabled)
+if [ "${GIT_WORKFLOW_DEBUG:-false}" == "true" ]; then
+    echo "Debug: pre-push hook validated successfully"
+    echo "  Branch: $CURRENT_BRANCH"
+    echo "  Length: $BRANCH_LENGTH"
+fi
+
+# Success
+echo -e "${GREEN}✓ pre-push validation passed${NC}"
+exit 0

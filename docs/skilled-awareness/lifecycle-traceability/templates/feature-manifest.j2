@@ -1,0 +1,142 @@
+{#
+  Feature Manifest Template (Jinja2)
+
+  This template generates a feature entry for feature-manifest.yaml
+  following SAP-056 (Lifecycle Traceability) schema.
+
+  Usage:
+    jinja2 feature-manifest.j2 -D feature_id=FEAT-001 -D name="User Authentication" > feature.yaml
+
+  Or use with Python:
+    from jinja2 import Template
+    template = Template(open("feature-manifest.j2").read())
+    output = template.render(
+        feature_id="FEAT-001",
+        name="User Authentication",
+        vision_ref="CHARTER-001:Outcome-2",
+        status="implemented",
+        requirements=[...],
+        code=[...],
+        tests=[...],
+        documentation=[...]
+    )
+
+  Variables:
+    - feature_id: str (required) - Feature identifier (FEAT-XXX format)
+    - name: str (required) - Human-readable feature name
+    - vision_ref: str (optional) - Vision document reference (CHARTER-XXX:Outcome-N)
+    - status: str (optional, default: "planned") - Feature status (planned, in_progress, implemented, deprecated)
+    - requirements: list[dict] (optional) - List of requirements
+    - code: list[str] (optional) - List of code file paths
+    - tests: list[dict] (optional) - List of test cases
+    - documentation: list[dict] (optional) - List of documentation files
+    - metadata: dict (optional) - Additional metadata
+#}
+- id: {{ feature_id }}
+  name: "{{ name }}"
+  {%- if vision_ref %}
+  vision_ref: "{{ vision_ref }}"
+  {%- else %}
+  vision_ref: "TBD"  # TODO: Link to vision document (CHARTER-XXX:Outcome-N)
+  {%- endif %}
+  status: {{ status | default("planned") }}
+
+  {%- if requirements %}
+  requirements:
+  {%- for req in requirements %}
+    - id: {{ req.id }}
+      description: "{{ req.description }}"
+      status: {{ req.status | default("planned") }}
+      {%- if req.priority %}
+      priority: {{ req.priority }}
+      {%- endif %}
+  {%- endfor %}
+  {%- else %}
+  requirements:
+    # TODO: Add requirements for this feature
+    # - id: REQ-001
+    #   description: "Requirement description"
+    #   status: planned
+    #   priority: P0
+  {%- endif %}
+
+  {%- if code %}
+  code:
+  {%- for code_file in code %}
+    {%- if code_file is string %}
+    - path: {{ code_file }}
+    {%- else %}
+    - path: {{ code_file.path }}
+      {%- if code_file.lines %}
+      lines: "{{ code_file.lines }}"
+      {%- endif %}
+      {%- if code_file.function %}
+      function: "{{ code_file.function }}"
+      {%- endif %}
+    {%- endif %}
+  {%- endfor %}
+  {%- else %}
+  code:
+    # TODO: Add code files implementing this feature
+    # - path: src/module/feature.py
+    #   lines: "45-120"
+    #   function: "FeatureClass"
+  {%- endif %}
+
+  {%- if tests %}
+  tests:
+  {%- for test in tests %}
+    - path: {{ test.path }}
+      type: {{ test.type | default("unit") }}
+      {%- if test.requirement %}
+      requirement: {{ test.requirement }}
+      {%- endif %}
+      {%- if test.status %}
+      status: {{ test.status }}
+      {%- endif %}
+  {%- endfor %}
+  {%- else %}
+  tests:
+    # TODO: Add test cases for this feature
+    # Remember to mark tests with @pytest.mark.feature("{{ feature_id }}")
+    # - path: tests/test_feature.py::test_feature_works
+    #   type: unit
+    #   requirement: REQ-001
+    #   status: passing
+  {%- endif %}
+
+  {%- if documentation %}
+  documentation:
+  {%- for doc in documentation %}
+    - path: {{ doc.path }}
+      type: {{ doc.type | default("how-to") }}
+      {%- if doc.section %}
+      section: "{{ doc.section }}"
+      {%- endif %}
+  {%- endfor %}
+  {%- else %}
+  documentation:
+    # TODO: Add documentation for this feature
+    # Remember to add feature_id to frontmatter
+    # - path: docs/how-to/feature-guide.md
+    #   type: how-to
+  {%- endif %}
+
+  {%- if metadata %}
+  metadata:
+    {%- if metadata.created %}
+    created: "{{ metadata.created }}"
+    {%- endif %}
+    {%- if metadata.updated %}
+    updated: "{{ metadata.updated }}"
+    {%- endif %}
+    {%- if metadata.owner %}
+    owner: "{{ metadata.owner }}"
+    {%- endif %}
+    {%- if metadata.tags %}
+    tags:
+    {%- for tag in metadata.tags %}
+      - {{ tag }}
+    {%- endfor %}
+    {%- endif %}
+  {%- endif %}

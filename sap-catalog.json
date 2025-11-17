@@ -1,10 +1,10 @@
 {
-  "version": "5.2.0",
+  "version": "5.3.0",
   "updated": "2025-11-16",
   "sap_sets_version": "2.0.0",
   "sap_sets_architecture": "domain-based",
   "description": "Machine-readable catalog of all Skilled Awareness Packages in chora-base with domain-based set architecture",
-  "total_saps": 48,
+  "total_saps": 49,
   "saps": [
     {
       "id": "SAP-000",
@@ -2507,6 +2507,70 @@
         {
           "date": "2025-11-16",
           "note": "Initial SAP creation. Formalizes SAP quality assurance patterns. Provides automated verification tool (sap_verify.py) for structure, completeness, and link validation. Defines objective quality gates for status promotion (draft → pilot → production). Pending dogfooding on all 47 SAPs."
+        }
+      ]
+    },
+    {
+      "id": "SAP-056",
+      "name": "lifecycle-traceability",
+      "full_name": "Lifecycle Traceability",
+      "status": "pilot",
+      "version": "1.0.0",
+      "included_by_default": false,
+      "size_kb": 450,
+      "description": "Umbrella governance SAP for comprehensive traceability across 10 artifact types (Vision → Features → Requirements → Code → Tests → Docs → Git → Tasks → Events → Knowledge). Defines linkage schemas, validation rules, and compliance levels to achieve 100% traceability coverage.",
+      "capabilities": [
+        "Traceability governance framework (10 artifact types)",
+        "Feature manifest schema (YAML-based single source of truth)",
+        "10 validation rules (forward linkage, bidirectional, evidence, closed loop, orphan detection, schema, integrity, coverage)",
+        "3 compliance levels (L0-L3: no/partial/substantial/complete traceability)",
+        "Integration specs for 5 SAPs (SAP-004, SAP-007, SAP-010, SAP-012, SAP-015)",
+        "Automated validation script (validate-traceability.py)",
+        "Auto-generation script (generate-feature-manifest.py from git/beads)",
+        "HTML dashboard (traceability-dashboard.py)",
+        "JSON Schema validation (feature-manifest + frontmatter)",
+        "Jinja2 template for feature entries"
+      ],
+      "dependencies": [
+        "SAP-000",
+        "SAP-004",
+        "SAP-007",
+        "SAP-010",
+        "SAP-012",
+        "SAP-015"
+      ],
+      "tags": [
+        "traceability",
+        "governance",
+        "lifecycle",
+        "feature-manifest",
+        "validation",
+        "compliance"
+      ],
+      "author": "chora-base",
+      "location": "docs/skilled-awareness/lifecycle-traceability",
+      "artifacts": {
+        "capability_charter": true,
+        "protocol_spec": true,
+        "awareness_guide": true,
+        "adoption_blueprint": true,
+        "ledger": true
+      },
+      "system_files": [
+        "schemas/feature-manifest.schema.json",
+        "schemas/traceability-frontmatter.schema.json",
+        "scripts/validate-traceability.py",
+        "scripts/generate-feature-manifest.py",
+        "scripts/traceability-dashboard.py",
+        "templates/feature-manifest.j2"
+      ],
+      "phase": "Phase 1",
+      "priority": "P0",
+      "domain": "Governance",
+      "notes": [
+        {
+          "date": "2025-11-16",
+          "note": "Initial SAP creation. Addresses ~40% current traceability coverage with 7 critical gaps. Defines umbrella governance framework with delegation to existing SAPs. Projected ROI: 93+ hours saved annually per project. Estimated break-even: 6-8 months for single project."
         }
       ]
     }

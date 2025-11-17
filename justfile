@@ -45,10 +45,6 @@ generate-sap-force SAP_ID:
 validate-prerequisites:
     python scripts/validate-prerequisites.py
 
-# Validate internal markdown links
-validate-links PATH=".":
-    python scripts/validate-links.py {{PATH}}
-
 # Check SAP awareness integration in adoption blueprint
 check-sap-awareness SAP_PATH:
     python scripts/check-sap-awareness-integration.py {{SAP_PATH}}
@@ -554,10 +550,11 @@ metrics-help:
 
 # Validate all markdown links in project
 # Example: just validate-links
-validate-links:
-    @echo "🔗 SAP-016: Validating all markdown links..."
+# Example: just validate-links docs/
+validate-links PATH=".":
+    @echo "🔗 SAP-016: Validating markdown links in {{PATH}}..."
     @echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
-    @python scripts/validate-links.py || echo "❌ Link validation failed (see broken links above)"
+    @python scripts/validate-links.py {{PATH}} || echo "❌ Link validation failed (see broken links above)"
 
 # Validate links in docs/ directory only
 # Example: just validate-links-docs
@@ -1344,3 +1341,356 @@ inbox-events N="20":
 # Example: just inbox-search "SAP-001"
 inbox-search QUERY:
     @grep -i "{{QUERY}}" inbox/coordination/*.jsonl 2>/dev/null || echo "No matching coordination items found"
+
+# ============================================================================
+# SAP-051: Git Workflow Patterns
+# ============================================================================
+# Standardized git workflows (branch naming, conventional commits, merge strategies, git hooks).
+# See: docs/skilled-awareness/git-workflow-patterns/
+
+# Install git hooks from .githooks/ directory
+git-setup:
+    #!/usr/bin/env bash
+    set -e
+    echo "Installing git hooks from .githooks/..."
+    
+    # Configure git to use .githooks/ for hooks
+    git config core.hooksPath .githooks
+    
+    # Enable hooks by default
+    git config hooks.commit-msg-enabled true
+    git config hooks.pre-push-enabled true
+    git config hooks.pre-commit-enabled false  # Disabled by default (optional)
+    
+    # Validate hooks are executable
+    chmod +x .githooks/*
+    
+    echo "✓ Configured git to use .githooks/ for hooks"
+    echo "✓ commit-msg hook active"
+    echo "✓ pre-push hook active"
+    echo "✓ pre-commit hook inactive (enable with: git config hooks.pre-commit-enabled true)"
+    echo "Git hooks installed successfully!"
+
+# Validate commit messages in current branch
+validate-commits REF="origin/main":
+    #!/usr/bin/env bash
+    set -e
+    
+    echo "Validating commits from {{REF}}..HEAD"
+    
+    # Get commit range
+    COMMITS=$(git log {{REF}}..HEAD --pretty=format:"%H" 2>/dev/null || echo "")
+    
+    if [ -z "$COMMITS" ]; then
+        echo "No commits to validate (branch is up to date with {{REF}})"
+        exit 0
+    fi
+    
+    # Count total commits
+    TOTAL=$(echo "$COMMITS" | wc -l | tr -d ' ')
+    VALID=0
+    INVALID=0
+    
+    # Conventional Commits pattern
+    PATTERN="^(feat|fix|docs|style|refactor|test|chore|perf|ci|build|revert)(\(.+\))?!?: .+"
+    
+    # Validate each commit message
+    while IFS= read -r COMMIT; do
+        MSG=$(git log -1 --pretty=format:"%s" "$COMMIT")
+        
+        # Skip merge commits
+        if echo "$MSG" | grep -qE "^Merge (branch|remote-tracking branch|pull request)"; then
+            continue
+        fi
+        
+        if echo "$MSG" | grep -qE "$PATTERN"; then
+            echo "✓ commit $COMMIT valid: $MSG"
+            VALID=$((VALID + 1))
+        else
+            echo "✗ commit $COMMIT invalid: $MSG"
+            INVALID=$((INVALID + 1))
+        fi
+    done <<< "$COMMITS"
+    
+    echo ""
+    echo "Validation complete: $VALID/$TOTAL commits valid"
+    
+    if [ "$INVALID" -gt 0 ]; then
+        echo "❌ $INVALID commits don't follow Conventional Commits format"
+        echo ""
+        echo "Fix with:"
+        echo "  git rebase -i {{REF}}"
+        echo "  # Edit commit messages to follow format: <type>(<scope>): <description>"
+        exit 1
+    fi
+    
+    echo "✓ All commits valid"
+
+# Quick validation (hooks + commits + branch name)
+git-check:
+    #!/usr/bin/env bash
+    set -e
+    
+    ERRORS=0
+    
+    # Check git hooks are installed
+    HOOKS_PATH=$(git config --get core.hooksPath || echo "")
+    if [ "$HOOKS_PATH" != ".githooks" ]; then
+        echo "❌ Git hooks not installed"
+        echo "   Run: just git-setup"
+        ERRORS=$((ERRORS + 1))
+    else
+        echo "✓ Git hooks installed"
+    fi
+    
+    # Check branch name is valid
+    BRANCH=$(git branch --show-current)
+    if [ "$BRANCH" != "main" ] && [ "$BRANCH" != "master" ]; then
+        PATTERN="^(feature|bugfix|hotfix|chore|docs|refactor|test)\/[a-zA-Z0-9\.\-\_]+"
+        if ! echo "$BRANCH" | grep -qE "$PATTERN"; then
+            echo "❌ Branch name doesn't follow convention: $BRANCH"
+            echo "   Expected: <type>/<identifier>-<description>"
+            ERRORS=$((ERRORS + 1))
+        else
+            echo "✓ Branch name valid: $BRANCH"
+        fi
+    fi
+    
+    # Check recent commits follow Conventional Commits
+    RECENT_COMMITS=$(git log -5 --pretty=format:"%s" 2>/dev/null || echo "")
+    if [ -n "$RECENT_COMMITS" ]; then
+        PATTERN="^(feat|fix|docs|style|refactor|test|chore|perf|ci|build|revert)(\(.+\))?!?: .+"
+        INVALID=$(echo "$RECENT_COMMITS" | grep -vE "$PATTERN|^Merge" | wc -l | tr -d ' ')
+        if [ "$INVALID" -gt 0 ]; then
+            echo "⚠ $INVALID recent commits don't follow Conventional Commits"
+            ERRORS=$((ERRORS + 1))
+        else
+            echo "✓ Recent commits follow Conventional Commits"
+        fi
+    fi
+    
+    echo ""
+    if [ "$ERRORS" -eq 0 ]; then
+        echo "All checks passed!"
+        exit 0
+    else
+        echo "❌ $ERRORS check(s) failed"
+        exit 1
+    fi
+
+# Generate changelog from conventional commits
+changelog SINCE="" OUTPUT="CHANGELOG.md":
+    #!/usr/bin/env bash
+    set -e
+    
+    # Determine changelog start point
+    if [ -z "{{SINCE}}" ]; then
+        # Use last tag if no SINCE provided
+        SINCE=$(git describe --tags --abbrev=0 2>/dev/null || echo "")
+        if [ -z "$SINCE" ]; then
+            echo "No tags found, generating changelog from all commits"
+            SINCE=$(git rev-list --max-parents=0 HEAD)
+        else
+            echo "Generating changelog since tag: $SINCE"
+        fi
+    else
+        SINCE="{{SINCE}}"
+        echo "Generating changelog since: $SINCE"
+    fi
+    
+    OUTPUT_FILE="{{OUTPUT}}"
+    
+    # Get commit range
+    COMMITS=$(git log "$SINCE"..HEAD --pretty=format:"%H|%s|%ad" --date=short 2>/dev/null || echo "")
+    
+    if [ -z "$COMMITS" ]; then
+        echo "No commits to generate changelog from"
+        exit 0
+    fi
+    
+    # Initialize changelog sections
+    declare -A SECTIONS
+    SECTIONS[feat]="### Features"
+    SECTIONS[fix]="### Bug Fixes"
+    SECTIONS[docs]="### Documentation"
+    SECTIONS[style]="### Code Style"
+    SECTIONS[refactor]="### Refactoring"
+    SECTIONS[test]="### Tests"
+    SECTIONS[chore]="### Chores"
+    SECTIONS[perf]="### Performance"
+    SECTIONS[ci]="### CI/CD"
+    SECTIONS[build]="### Build System"
+    
+    # Create temporary files for each section
+    mkdir -p /tmp/changelog-sections
+    rm -f /tmp/changelog-sections/*
+    
+    # Parse commits and categorize
+    while IFS='|' read -r COMMIT SUBJECT DATE; do
+        # Skip merge commits
+        if echo "$SUBJECT" | grep -qE "^Merge"; then
+            continue
+        fi
+        
+        # Extract type and scope
+        TYPE=$(echo "$SUBJECT" | grep -oE "^(feat|fix|docs|style|refactor|test|chore|perf|ci|build)" || echo "other")
+        SCOPE=$(echo "$SUBJECT" | grep -oE "\([^\)]+\)" | tr -d '()' || echo "")
+        DESC=$(echo "$SUBJECT" | sed -E "s/^(feat|fix|docs|style|refactor|test|chore|perf|ci|build)(\(.+\))?!?: //" || echo "$SUBJECT")
+        COMMIT_SHORT=$(echo "$COMMIT" | cut -c1-7)
+        
+        # Format changelog entry
+        if [ -n "$SCOPE" ]; then
+            ENTRY="- **$SCOPE**: $DESC ($COMMIT_SHORT)"
+        else
+            ENTRY="- $DESC ($COMMIT_SHORT)"
+        fi
+        
+        # Append to appropriate section file
+        echo "$ENTRY" >> "/tmp/changelog-sections/$TYPE"
+    done <<< "$COMMITS"
+    
+    # Generate changelog
+    {
+        echo "# Changelog"
+        echo ""
+        echo "## [Unreleased] - $(date +%Y-%m-%d)"
+        echo ""
+        
+        # Output sections in order
+        for TYPE in feat fix docs style refactor test perf ci build chore; do
+            SECTION_FILE="/tmp/changelog-sections/$TYPE"
+            if [ -f "$SECTION_FILE" ]; then
+                echo "${SECTIONS[$TYPE]}"
+                cat "$SECTION_FILE"
+                echo ""
+            fi
+        done
+    } > "$OUTPUT_FILE"
+    
+    # Cleanup
+    rm -rf /tmp/changelog-sections
+    
+    echo "✓ Changelog generated: $OUTPUT_FILE"
+    echo "Preview:"
+    head -30 "$OUTPUT_FILE"
+
+
+# ============================================================================
+# Level 2: Advanced Git Workflow Configuration
+# ============================================================================
+
+# Configure custom git workflow settings (commit types, lengths, strict mode)
+git-config-custom TYPES="" MAX_LENGTH="72" STRICT="false":
+    #!/usr/bin/env bash
+    set -e
+    echo "Configuring custom git workflow settings..."
+    
+    # Set custom commit types (if provided)
+    if [ -n "{{TYPES}}" ]; then
+        git config conventional-commits.types "{{TYPES}}"
+        echo "✓ Custom commit types: {{TYPES}}"
+    fi
+    
+    # Set max subject length
+    git config conventional-commits.max-subject-length "{{MAX_LENGTH}}"
+    echo "✓ Max subject length: {{MAX_LENGTH}}"
+    
+    # Set strict mode
+    git config conventional-commits.strict "{{STRICT}}"
+    echo "✓ Strict mode: {{STRICT}}"
+    
+    # Set branch naming max length
+    git config branch-naming.max-length "100"
+    echo "✓ Branch max length: 100"
+    
+    echo ""
+    echo "Custom configuration applied. Current settings:"
+    git config --get conventional-commits.types || echo "  commit types: (using defaults)"
+    git config --get conventional-commits.max-subject-length || echo "  max length: (using defaults)"
+    git config --get conventional-commits.strict || echo "  strict mode: (using defaults)"
+
+# Show current git workflow configuration
+git-config-show:
+    #!/usr/bin/env bash
+    echo "Current Git Workflow Configuration:"
+    echo "===================================="
+    echo ""
+    echo "Hooks:"
+    echo "  core.hooksPath = $(git config --get core.hooksPath || echo '(not set)')"
+    echo "  commit-msg enabled = $(git config --get hooks.commit-msg-enabled || echo 'false')"
+    echo "  pre-push enabled = $(git config --get hooks.pre-push-enabled || echo 'false')"
+    echo "  pre-commit enabled = $(git config --get hooks.pre-commit-enabled || echo 'false')"
+    echo ""
+    echo "Commit Message Rules:"
+    echo "  types = $(git config --get conventional-commits.types || echo 'feat,fix,docs,style,refactor,test,chore,perf,ci,build,revert')"
+    echo "  max subject length = $(git config --get conventional-commits.max-subject-length || echo '72')"
+    echo "  strict mode = $(git config --get conventional-commits.strict || echo 'false')"
+    echo ""
+    echo "Branch Naming Rules:"
+    echo "  types = $(git config --get branch-naming.types || echo 'feature,bugfix,hotfix,chore,docs,refactor,test')"
+    echo "  max length = $(git config --get branch-naming.max-length || echo '100')"
+    echo "  check conflicts = $(git config --get branch-naming.check-conflicts || echo 'false')"
+
+# Reset git workflow configuration to defaults
+git-config-reset:
+    #!/usr/bin/env bash
+    set -e
+    echo "Resetting git workflow configuration to defaults..."
+    
+    # Remove custom settings
+    git config --unset conventional-commits.types || true
+    git config --unset conventional-commits.max-subject-length || true
+    git config --unset conventional-commits.strict || true
+    git config --unset branch-naming.types || true
+    git config --unset branch-naming.max-length || true
+    git config --unset branch-naming.check-conflicts || true
+    
+    echo "✓ Configuration reset to defaults"
+    just git-config-show
+
+# Generate commit message template with SAP integration
+git-commit-template SCOPE="" TYPE="feat":
+    #!/usr/bin/env bash
+    # Generate a commit message template following Conventional Commits
+    # with optional SAP integration (COORD IDs, task IDs)
+    
+    BRANCH=$(git branch --show-current)
+    
+    # Extract SAP/COORD/Task IDs from branch name
+    SAP_ID=$(echo "$BRANCH" | grep -oE "SAP-[0-9]+" || echo "")
+    COORD_ID=$(echo "$BRANCH" | grep -oE "COORD-[0-9]+-[0-9]+" || echo "")
+    TASK_ID=$(echo "$BRANCH" | grep -oE "\.beads-[a-z0-9]+" || echo "")
+    
+    # Build references line
+    REFS=""
+    [ -n "$SAP_ID" ] && REFS="$SAP_ID"
+    [ -n "$COORD_ID" ] && REFS="$REFS${REFS:+, }$COORD_ID"
+    [ -n "$TASK_ID" ] && REFS="$REFS${REFS:+, }$TASK_ID"
+    
+    # Determine scope from branch or parameter
+    if [ -z "{{SCOPE}}" ]; then
+        SCOPE=$(echo "$BRANCH" | grep -oE "^(feature|bugfix|hotfix)/([a-zA-Z0-9\.\-\_]+)" | cut -d'/' -f2 | cut -d'-' -f1 || echo "")
+    else
+        SCOPE="{{SCOPE}}"
+    fi
+    
+    # Generate template
+    echo "{{TYPE}}${SCOPE:+($SCOPE)}: <description>"
+    echo ""
+    echo "<detailed explanation of changes>"
+    echo ""
+    if [ -n "$REFS" ]; then
+        echo "Refs: $REFS"
+    fi
+    echo ""
+    echo "# Conventional Commits Format:"
+    echo "# <type>(<scope>): <description>"
+    echo "#"
+    echo "# Types: feat, fix, docs, style, refactor, test, chore, perf, ci, build, revert"
+    echo "# Scope: Optional, describes what part of codebase (e.g., api, ui, hooks)"
+    echo "# Description: Brief summary in imperative mood (e.g., 'add feature' not 'added')"
+    echo "#"
+    echo "# Breaking changes: Add '!' after type/scope (e.g., 'feat!: breaking change')"
+    echo "#"
+    echo "# SAP Integration: Add 'Refs: SAP-XXX, COORD-YYYY-ZZ' in footer"
+
