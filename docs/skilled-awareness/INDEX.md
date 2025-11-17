@@ -10,20 +10,20 @@
 
 ## Overview
 
-This index tracks all **46 capabilities** organized across **6 domains** for improved discoverability and progressive adoption.
+This index tracks all **47 capabilities** organized across **6 domains** for improved discoverability and progressive adoption.
 
-**Total Coverage**: 46/46 SAPs (100%)
+**Total Coverage**: 47/47 SAPs (100%)
 
 **Domain Distribution**:
-- Infrastructure: 3 SAPs (7%) - Core framework and coordination
-- Developer Experience: 14 SAPs (30%) - Development workflow tools + capability server architecture
+- Infrastructure: 3 SAPs (6%) - Core framework and coordination
+- Developer Experience: 15 SAPs (32%) - Development workflow tools + capability server architecture + git workflow patterns
 - Foundation: 6 SAPs (13%) - Technology stack foundations (React + auth + database + forms)
 - User-Facing: 6 SAPs (13%) - User interaction patterns (state, styling, uploads, errors)
 - Advanced: 8 SAPs (17%) - Optimizations and integrations (real-time, i18n, e2e, monorepo)
-- Specialized: 11 SAPs (24%) - Meta-capabilities, process patterns, awareness systems, and governance (includes SAP-056 Lifecycle Traceability)
+- Specialized: 11 SAPs (23%) - Meta-capabilities, process patterns, awareness systems, and governance (includes SAP-056 Lifecycle Traceability)
 
 **Status Distribution**:
-- Active: 24 SAPs (52%)
+- Active: 25 SAPs (53%) - includes SAP-051 (git-workflow-patterns)
 - Pilot: 13 SAPs (28%) - SAP-015, SAP-028, SAP-029, SAP-033-041, SAP-056 (lifecycle traceability)
 - Draft: 8 SAPs (17%) - SAP-042-050
 - Deprecated: 1 SAP (2%) - SAP-014 (replaced by capability server architecture)
@@ -64,9 +64,9 @@ This index tracks all **46 capabilities** organized across **6 domains** for imp
 
 ## Developer Experience Domain
 
-**Purpose**: Accelerate development with testing, CI/CD, quality gates, tooling, and capability server architecture patterns
+**Purpose**: Accelerate development with testing, CI/CD, quality gates, tooling, capability server architecture, and git workflow patterns
 
-**SAPs**: 15 (31% of catalog)
+**SAPs**: 15 (32% of catalog)
 
 ### SAP-003: Project Bootstrap & Scaffolding
 
@@ -208,6 +208,14 @@ This index tracks all **46 capabilities** organized across **6 domains** for imp
 - **Dependencies**: SAP-000, SAP-009
 - **Location**: [sap-adoption-verification/](sap-adoption-verification/)
 - **Key Features**: Structure verification (validate 5 required artifacts), completeness verification (check required sections), link validation (detect broken cross-references), quality gate evaluation (objective criteria for status promotion), adoption metrics tracking (usage, feedback, issues), Python CLI tool (sap-verify), CI/CD integration patterns, pre-commit hook patterns
+
+#### SAP-051: Git Workflow Patterns
+
+- **Status**: active | **Version**: 1.0.0 | **Domain**: Multi-Developer Collaboration
+- **Description**: Standardized git workflows (branch naming, conventional commits, merge strategies, git hooks) enabling 30-50% conflict reduction and automated changelog generation
+- **Dependencies**: None
+- **Location**: [git-workflow-patterns/](git-workflow-patterns/)
+- **Key Features**: Branch naming conventions (feature/bugfix/hotfix/chore/docs), Conventional Commits v1.0.0 schema enforcement, client-side git hooks (commit-msg, pre-push, pre-commit), 12 justfile recipes (git-setup, validate-commits, changelog, custom configuration), Level 2 SAP integration (auto-extract IDs from branch names), Level 3 CI/CD workflow (GitHub Actions), team onboarding (5-10 min setup), A-MEM integration patterns, quarterly maintenance schedule
 
 ---
 
