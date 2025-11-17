@@ -20,10 +20,10 @@ def get_bash_path():
     Returns:
         str: Path to bash executable
     """
-    # Check if bash is in PATH first
+    # Check if bash is in PATH first - return FULL PATH not just 'bash'
     bash_in_path = shutil.which('bash')
     if bash_in_path:
-        return 'bash'
+        return bash_in_path  # Return full path, not 'bash'
 
     # Platform-specific bash locations
     if platform.system() == 'Windows':
