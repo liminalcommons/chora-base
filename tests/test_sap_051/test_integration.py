@@ -68,7 +68,7 @@ class TestCommitWorkflow:
         )
         assert result.returncode == 0
 
-    def test_commit_with_breaking_change(self, git_helper, hooks_dir):
+    def test_commit_with_breaking_change(self, git_helper, hooks_dir, bash_path):
         """Test commit with breaking change marker."""
         git_helper.install_hooks(hooks_dir)
 
@@ -88,7 +88,7 @@ class TestCommitWorkflow:
 class TestBranchWorkflow:
     """Test complete branch workflow with hooks."""
 
-    def test_invalid_branch_rejected_then_fixed(self, git_helper, hooks_dir):
+    def test_invalid_branch_rejected_then_fixed(self, git_helper, hooks_dir, bash_path):
         """Test workflow: invalid branch → rejection → fix → acceptance."""
         git_helper.install_hooks(hooks_dir)
 
@@ -98,7 +98,7 @@ class TestBranchWorkflow:
         # Step 2: Try to push (pre-push hook should reject)
         # Note: This test requires a remote, so we simulate the hook check
         result = subprocess.run(
-            ['bash', str(hooks_dir / 'pre-push')],
+            [bash_path, str(hooks_dir / 'pre-push')],
             cwd=git_helper.repo_path,
             capture_output=True,
             text=True
@@ -113,7 +113,7 @@ class TestBranchWorkflow:
 
         # Step 4: Try pre-push hook again
         result = subprocess.run(
-            ['bash', str(hooks_dir / 'pre-push')],
+            [bash_path, str(hooks_dir / 'pre-push')],
             cwd=git_helper.repo_path,
             capture_output=True,
             text=True
@@ -123,7 +123,7 @@ class TestBranchWorkflow:
         assert result.returncode == 0
         assert "validation passed" in result.stdout
 
-    def test_all_branch_types_workflow(self, git_helper, hooks_dir):
+    def test_all_branch_types_workflow(self, git_helper, hooks_dir, bash_path):
         """Test workflow with all branch types."""
         git_helper.install_hooks(hooks_dir)
 
@@ -143,7 +143,7 @@ class TestBranchWorkflow:
 
             # Verify with pre-push hook
             result = subprocess.run(
-                ['bash', str(hooks_dir / 'pre-push')],
+                [bash_path, str(hooks_dir / 'pre-push')],
                 cwd=git_helper.repo_path,
                 capture_output=True,
                 text=True
@@ -158,7 +158,7 @@ class TestBranchWorkflow:
 class TestFeatureDevelopmentWorkflow:
     """Test realistic feature development workflow."""
 
-    def test_complete_feature_workflow(self, git_helper, hooks_dir):
+    def test_complete_feature_workflow(self, git_helper, hooks_dir, bash_path):
         """Test: create branch → commits → validation → changelog."""
         # Setup
         git_helper.install_hooks(hooks_dir)
@@ -168,7 +168,7 @@ class TestFeatureDevelopmentWorkflow:
 
         # Verify branch name
         result = subprocess.run(
-            ['bash', str(hooks_dir / 'pre-push')],
+            [bash_path, str(hooks_dir / 'pre-push')],
             cwd=git_helper.repo_path,
             capture_output=True,
             text=True
@@ -254,7 +254,7 @@ class TestFeatureDevelopmentWorkflow:
 class TestMultiDeveloperScenarios:
     """Test scenarios with multiple developers."""
 
-    def test_parallel_feature_development(self, git_helper, hooks_dir):
+    def test_parallel_feature_development(self, git_helper, hooks_dir, bash_path):
         """Test two features developed in parallel."""
         git_helper.install_hooks(hooks_dir)
 
@@ -275,7 +275,7 @@ class TestMultiDeveloperScenarios:
         for branch in ['feature/SAP-051-feature-a', 'feature/SAP-051-feature-b']:
             git_helper.run(['git', 'checkout', branch])
             result = subprocess.run(
-                ['bash', str(hooks_dir / 'pre-push')],
+                [bash_path, str(hooks_dir / 'pre-push')],
                 cwd=git_helper.repo_path,
                 capture_output=True,
                 text=True

@@ -6,10 +6,43 @@ and test data generation.
 """
 
 import os
+import platform
 import subprocess
 import tempfile
 from pathlib import Path
 import pytest
+import shutil
+
+
+def get_bash_path():
+    """Get the correct bash path for the current platform.
+
+    Returns:
+        str: Path to bash executable
+    """
+    # Check if bash is in PATH first
+    bash_in_path = shutil.which('bash')
+    if bash_in_path:
+        return 'bash'
+
+    # Platform-specific bash locations
+    if platform.system() == 'Windows':
+        # Try common Git Bash locations on Windows
+        possible_paths = [
+            r'C:\Program Files\Git\bin\bash.exe',
+            r'C:\Program Files (x86)\Git\bin\bash.exe',
+            os.path.expanduser(r'~\AppData\Local\Programs\Git\bin\bash.exe'),
+        ]
+
+        for bash_path in possible_paths:
+            if os.path.exists(bash_path):
+                return bash_path
+
+        # Fall back to git bash (which should work if git is installed)
+        return 'bash'
+
+    # Unix-like systems (Linux, macOS)
+    return 'bash'
 
 
 @pytest.fixture
@@ -67,6 +100,15 @@ def pre_commit_hook(hooks_dir):
 def justfile_path(chora_base_root):
     """Path to justfile."""
     return chora_base_root / 'justfile'
+
+
+@pytest.fixture
+def bash_path():
+    """Get bash executable path for the current platform.
+
+    Returns the correct bash path for running git hooks on Windows or Unix-like systems.
+    """
+    return get_bash_path()
 
 
 class GitHelper:

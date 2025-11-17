@@ -19,7 +19,7 @@ class TestPrePushHook:
         """Path to pre-push hook."""
         return Path(__file__).parent.parent.parent / ".githooks" / "pre-push"
 
-    def run_hook_with_branch(self, hook_path, branch_name):
+    def run_hook_with_branch(self, hook_path, branch_name, bash_path='bash'):
         """Run pre-push hook with mocked branch name."""
         # Create a temporary git repository for testing
         with tempfile.TemporaryDirectory() as tmpdir:
@@ -38,120 +38,120 @@ class TestPrePushHook:
 
             # Run hook
             result = subprocess.run(
-                ['bash', str(hook_path)],
+                [bash_path, str(hook_path)],
                 capture_output=True,
                 text=True
             )
             return result
 
     # Valid branch names
-    def test_valid_feature_branch(self, hook_path):
+    def test_valid_feature_branch(self, hook_path, bash_path):
         """Test valid feature branch."""
-        result = self.run_hook_with_branch(hook_path, "feature/SAP-051-git-workflow")
+        result = self.run_hook_with_branch(hook_path, "feature/SAP-051-git-workflow", bash_path)
         assert result.returncode == 0
         assert "validation passed" in result.stdout
 
-    def test_valid_bugfix_branch(self, hook_path):
+    def test_valid_bugfix_branch(self, hook_path, bash_path):
         """Test valid bugfix branch."""
-        result = self.run_hook_with_branch(hook_path, "bugfix/.beads-abc-fix-validation")
+        result = self.run_hook_with_branch(hook_path, "bugfix/.beads-abc-fix-validation", bash_path)
         assert result.returncode == 0
 
-    def test_valid_hotfix_branch(self, hook_path):
+    def test_valid_hotfix_branch(self, hook_path, bash_path):
         """Test valid hotfix branch."""
-        result = self.run_hook_with_branch(hook_path, "hotfix/urgent-security-patch")
+        result = self.run_hook_with_branch(hook_path, "hotfix/urgent-security-patch", bash_path)
         assert result.returncode == 0
 
-    def test_valid_chore_branch(self, hook_path):
+    def test_valid_chore_branch(self, hook_path, bash_path):
         """Test valid chore branch."""
-        result = self.run_hook_with_branch(hook_path, "chore/update-dependencies")
+        result = self.run_hook_with_branch(hook_path, "chore/update-dependencies", bash_path)
         assert result.returncode == 0
 
-    def test_valid_docs_branch(self, hook_path):
+    def test_valid_docs_branch(self, hook_path, bash_path):
         """Test valid docs branch."""
-        result = self.run_hook_with_branch(hook_path, "docs/sap-051-protocol-spec")
+        result = self.run_hook_with_branch(hook_path, "docs/sap-051-protocol-spec", bash_path)
         assert result.returncode == 0
 
-    def test_valid_refactor_branch(self, hook_path):
+    def test_valid_refactor_branch(self, hook_path, bash_path):
         """Test valid refactor branch."""
-        result = self.run_hook_with_branch(hook_path, "refactor/simplify-hooks")
+        result = self.run_hook_with_branch(hook_path, "refactor/simplify-hooks", bash_path)
         assert result.returncode == 0
 
-    def test_valid_test_branch(self, hook_path):
+    def test_valid_test_branch(self, hook_path, bash_path):
         """Test valid test branch."""
-        result = self.run_hook_with_branch(hook_path, "test/add-validation-tests")
+        result = self.run_hook_with_branch(hook_path, "test/add-validation-tests", bash_path)
         assert result.returncode == 0
 
-    def test_valid_with_dots(self, hook_path):
+    def test_valid_with_dots(self, hook_path, bash_path):
         """Test valid branch with dots in identifier."""
-        result = self.run_hook_with_branch(hook_path, "feature/.beads-abc.def-test")
+        result = self.run_hook_with_branch(hook_path, "feature/.beads-abc.def-test", bash_path)
         assert result.returncode == 0
 
-    def test_valid_with_underscores(self, hook_path):
+    def test_valid_with_underscores(self, hook_path, bash_path):
         """Test valid branch with underscores."""
-        result = self.run_hook_with_branch(hook_path, "feature/TEST_123-description")
+        result = self.run_hook_with_branch(hook_path, "feature/TEST_123-description", bash_path)
         assert result.returncode == 0
 
-    def test_valid_long_description(self, hook_path):
+    def test_valid_long_description(self, hook_path, bash_path):
         """Test valid branch with long description."""
-        result = self.run_hook_with_branch(hook_path, "feature/SAP-051-git-workflow-patterns-for-multi-dev")
+        result = self.run_hook_with_branch(hook_path, "feature/SAP-051-git-workflow-patterns-for-multi-dev", bash_path)
         assert result.returncode == 0
 
     # Invalid branch names
-    def test_invalid_no_type(self, hook_path):
+    def test_invalid_no_type(self, hook_path, bash_path):
         """Test invalid branch without type prefix."""
-        result = self.run_hook_with_branch(hook_path, "my-feature-branch")
+        result = self.run_hook_with_branch(hook_path, "my-feature-branch", bash_path)
         assert result.returncode == 1
         assert "doesn't follow convention" in result.stdout
 
-    def test_invalid_wrong_type(self, hook_path):
+    def test_invalid_wrong_type(self, hook_path, bash_path):
         """Test invalid branch with wrong type."""
-        result = self.run_hook_with_branch(hook_path, "new-feature/SAP-051-test")
+        result = self.run_hook_with_branch(hook_path, "new-feature/SAP-051-test", bash_path)
         assert result.returncode == 1
 
-    def test_invalid_no_slash(self, hook_path):
+    def test_invalid_no_slash(self, hook_path, bash_path):
         """Test invalid branch without slash separator."""
-        result = self.run_hook_with_branch(hook_path, "feature-SAP-051-test")
+        result = self.run_hook_with_branch(hook_path, "feature-SAP-051-test", bash_path)
         assert result.returncode == 1
 
-    def test_invalid_no_identifier(self, hook_path):
+    def test_invalid_no_identifier(self, hook_path, bash_path):
         """Test invalid branch without identifier (just type/)."""
-        result = self.run_hook_with_branch(hook_path, "feature/")
+        result = self.run_hook_with_branch(hook_path, "feature/", bash_path)
         assert result.returncode == 1
 
-    def test_invalid_spaces(self, hook_path):
+    def test_invalid_spaces(self, hook_path, bash_path):
         """Test invalid branch with spaces."""
-        result = self.run_hook_with_branch(hook_path, "feature/my branch name")
+        result = self.run_hook_with_branch(hook_path, "feature/my branch name", bash_path)
         assert result.returncode == 1
 
-    def test_invalid_uppercase_type(self, hook_path):
+    def test_invalid_uppercase_type(self, hook_path, bash_path):
         """Test invalid branch with uppercase type."""
-        result = self.run_hook_with_branch(hook_path, "FEATURE/SAP-051-test")
+        result = self.run_hook_with_branch(hook_path, "FEATURE/SAP-051-test", bash_path)
         assert result.returncode == 1
 
     # Edge cases
-    def test_main_branch_skipped(self, hook_path):
+    def test_main_branch_skipped(self, hook_path, bash_path):
         """Test main branch is skipped (not validated)."""
         # This would require mocking git branch --show-current to return "main"
         # For now, test that main branch name is handled
         pass  # Skip test, requires special git setup
 
-    def test_master_branch_skipped(self, hook_path):
+    def test_master_branch_skipped(self, hook_path, bash_path):
         """Test master branch is skipped."""
         pass  # Skip test, requires special git setup
 
-    def test_branch_length_warning(self, hook_path):
+    def test_branch_length_warning(self, hook_path, bash_path):
         """Test branch length warning (>100 chars)."""
         long_branch = "feature/SAP-051-" + "a" * 100
-        result = self.run_hook_with_branch(hook_path, long_branch)
+        result = self.run_hook_with_branch(hook_path,long_branch)
         # Should pass with warning
         assert result.returncode == 0
 
     # All branch types
-    def test_all_branch_types(self, hook_path):
+    def test_all_branch_types(self, hook_path, bash_path):
         """Test all valid branch types."""
         types = ["feature", "bugfix", "hotfix", "chore", "docs", "refactor", "test"]
         for branch_type in types:
-            result = self.run_hook_with_branch(hook_path, f"{branch_type}/TEST-123-description")
+            result = self.run_hook_with_branch(hook_path,f"{branch_type}/TEST-123-description")
             assert result.returncode == 0, f"Branch type '{branch_type}' should be valid"
 
 
