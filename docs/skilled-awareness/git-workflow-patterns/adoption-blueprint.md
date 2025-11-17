@@ -405,6 +405,65 @@ git config --get conventional-commits.strict
 
 ---
 
+#### Step 2.5: Use Convenience Recipes (Level 2 Helpers)
+
+**Action**:
+Use justfile recipes for easier Level 2 configuration:
+
+```bash
+# Configure custom settings with one command
+just git-config-custom "feat,fix,docs,custom" "80" "true"
+
+# Show current configuration
+just git-config-show
+
+# Reset to defaults if needed
+just git-config-reset
+
+# Generate commit message template with SAP integration
+just git-commit-template "sap-051" "feat"
+# Auto-extracts SAP-051, COORD-XXX, .beads-xxx from branch name
+# Outputs: feat(sap-051): <description>
+#
+#          Refs: SAP-051
+```
+
+**Expected Output (git-config-show)**:
+```
+Current Git Workflow Configuration:
+====================================
+
+Hooks:
+  core.hooksPath = .githooks
+  commit-msg enabled = true
+  pre-push enabled = true
+  pre-commit enabled = false
+
+Commit Message Rules:
+  types = feat,fix,docs,custom
+  max subject length = 80
+  strict mode = true
+
+Branch Naming Rules:
+  types = feature,bugfix,hotfix,chore,docs,refactor,test
+  max length = 100
+  check conflicts = false
+```
+
+**Benefits**:
+- One-command configuration (no manual git config editing)
+- Visual confirmation of current settings
+- Easy reset to defaults
+- Auto-generate commit messages with SAP/COORD/beads IDs from branch names
+
+**Recipe Details**:
+- `git-config-custom TYPES MAX_LENGTH STRICT`: Configure commit types, max length, strict mode
+- `git-config-show`: Display current configuration in readable format
+- `git-config-reset`: Reset all git workflow config to defaults
+- `git-commit-template SCOPE TYPE`: Generate commit template extracting IDs from branch
+
+---
+
 ### Configuration
 
 #### Level 2 Git Configuration
