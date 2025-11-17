@@ -90,6 +90,14 @@
           },
           "minItems": 0
         },
+        "git": {
+          "type": "array",
+          "description": "Git commits related to this feature",
+          "items": {
+            "$ref": "#/definitions/git_reference"
+          },
+          "minItems": 0
+        },
         "metadata": {
           "type": "object",
           "description": "Optional metadata for this feature",
@@ -231,6 +239,32 @@
           "type": "string",
           "description": "Specific section or heading (optional)",
           "examples": ["Email Authentication", "Usage"]
+        }
+      },
+      "additionalProperties": false
+    },
+    "git_reference": {
+      "type": "object",
+      "description": "Reference to a git commit implementing the feature",
+      "required": ["commit", "message"],
+      "properties": {
+        "commit": {
+          "type": "string",
+          "description": "Git commit hash (short or long)",
+          "pattern": "^[0-9a-f]{7,40}$",
+          "examples": ["a3b5c7d", "a3b5c7d9e1f2a3b4c5d6e7f8a9b0c1d2e3f4a5b6"]
+        },
+        "message": {
+          "type": "string",
+          "description": "Git commit message",
+          "minLength": 1,
+          "examples": ["feat(auth): Add email/password authentication", "fix(traceability): Resolve schema validation issue"]
+        },
+        "date": {
+          "type": "string",
+          "format": "date",
+          "description": "Commit date (YYYY-MM-DD, optional)",
+          "examples": ["2025-11-16"]
         }
       },
       "additionalProperties": false

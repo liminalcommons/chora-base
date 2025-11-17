@@ -100,8 +100,8 @@ class TraceabilityValidator:
 
     def __init__(self, manifest_path: str, schema_path: Optional[str] = None):
         self.manifest_path = Path(manifest_path)
-        self.schema_path = Path(schema_path) if schema_path else self._find_schema()
         self.project_root = self.manifest_path.parent
+        self.schema_path = Path(schema_path) if schema_path else self._find_schema()
 
         # Load manifest
         try:
