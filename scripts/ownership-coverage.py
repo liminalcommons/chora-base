@@ -244,12 +244,44 @@ class OwnershipCoverageAnalyzer:
         self.parser = CodeownersParser(codeowners_path)
 
     def _should_ignore(self, file_path: str) -> bool:
-        """Check if file should be ignored based on ignore patterns."""
+        """Check if file should be ignored based on ignore patterns.
+
+        Supports glob patterns including:
+        - Simple wildcards: *.pyc, test_*.py
+        - Directory patterns: node_modules/, dist/
+        - Recursive globs: **/node_modules/**, **/dist/**
+        """
+        from pathlib import PurePath
+
+        path = PurePath(file_path)
+
         for pattern in self.ignore_patterns:
-            if fnmatch.fnmatch(file_path, pattern):
-                return True
-            if pattern.endswith("/") and file_path.startswith(pattern):
-                return True
+            # Try glob pattern matching with PurePath.match()
+            # This supports ** for recursive matching
+            try:
+                if path.match(pattern):
+                    return True
+            except ValueError:
+                # Invalid pattern, skip it
+                pass
+
+            # Also try with ** prefix/suffix for directory patterns
+            # e.g., "node_modules/" → "**/node_modules/**"
+            if pattern.endswith("/"):
+                # Directory pattern - match anywhere in path
+                dir_name = pattern.rstrip("/")
+                recursive_pattern = f"**/{dir_name}/**"
+                try:
+                    if path.match(recursive_pattern):
+                        return True
+                except ValueError:
+                    pass
+
+                # Also check if any path component matches exactly
+                # e.g., "node_modules/" matches "/foo/node_modules/bar.js"
+                if dir_name in path.parts:
+                    return True
+
         return False
 
     def _get_all_files(self) -> List[Path]:
