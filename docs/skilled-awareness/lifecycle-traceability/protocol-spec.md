@@ -22,7 +22,18 @@ requirement_refs:
 
 ## 1. Overview
 
-This protocol defines the **Lifecycle Traceability architecture** for achieving 100% linkage across 10 artifact types in software development: Vision → Features → Requirements → Code → Tests → Docs → Git → Tasks → Events → Knowledge.
+This protocol defines the **Lifecycle Traceability architecture** for achieving 100% linkage across 10 artifact types in software development.
+
+**Artifact Dependency Graph** (shows linkage, not creation order):
+```
+Vision → Features → Requirements
+                   → Documentation (SAP-012: created FIRST)
+                   → Tests (SAP-012: BDD from docs)
+                   → Code (SAP-012: TDD implementation)
+                   → Git Commits → Tasks → Events → Knowledge
+```
+
+**Important**: When following SAP-012 (development-lifecycle), artifacts are created in **Documentation-First** order: `Requirements → Docs → Tests → Code`. The manifest schema supports any creation order; validation only requires all artifacts are linked bidirectionally.
 
 **Core Guarantee**: Every artifact has provenance (why it exists), implementation evidence (what implements it), and validation proof (how it's tested/documented).
 

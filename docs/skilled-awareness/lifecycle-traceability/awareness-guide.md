@@ -32,7 +32,9 @@ A governance system ensuring every artifact (code, test, doc, task) has provenan
 - **Completeness Validation**: Verify feature has tests+docs before marking done
 - **Compliance**: Generate audit reports showing requirements→code→tests→docs linkage
 
-**Core Concept**: `feature-manifest.yaml` is single source of truth linking Vision → Features → Requirements → Code → Tests → Docs
+**Core Concept**: `feature-manifest.yaml` is single source of truth linking Vision, Features, Requirements, Documentation, Tests, and Code.
+
+**SAP-012 Alignment**: When creating features, follow Documentation-First workflow: write docs, extract BDD tests, implement with TDD. The manifest links all artifacts bidirectionally regardless of creation order
 
 ---
 

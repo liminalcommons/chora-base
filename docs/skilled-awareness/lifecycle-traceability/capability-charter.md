@@ -115,7 +115,9 @@ Development artifacts exist in isolation across the chora ecosystem: visions don
 
 ## 3. Proposed Solution
 
-A **comprehensive umbrella SAP** that governs traceability across 10 artifact types (Vision → Features → Requirements → Code → Tests → Docs → Git → Tasks → Events → Knowledge) while delegating implementation to existing SAPs with enhancements.
+A **comprehensive umbrella SAP** that governs traceability across 10 artifact types (Vision, Features, Requirements, Documentation, Tests, Code, Git Commits, Tasks, Events, Knowledge) while delegating implementation to existing SAPs with enhancements.
+
+**Creation Order**: When following SAP-012 (development-lifecycle), use Documentation-First pattern: `Requirements → Docs → Tests → Code`.
 
 **Key Principles**:
 1. **Governance, Not Implementation** - SAP-056 defines linkage schemas and validates compliance, but does NOT implement traceability (existing SAPs do)

@@ -41,9 +41,27 @@ requirement_refs:
 
 ### What is SAP-056?
 
-SAP-056 (Lifecycle Traceability) is an **umbrella governance SAP** that defines linkage schemas, validation rules, and compliance levels for tracing artifacts across 10 lifecycle stages:
+SAP-056 (Lifecycle Traceability) is an **umbrella governance SAP** that defines linkage schemas, validation rules, and compliance levels for tracing artifacts across 10 artifact types:
 
-**Vision → Features → Requirements → Code → Tests → Docs → Git Commits → Tasks → Events → Knowledge**
+```
+Vision
+  ↓
+Features ──┬──→ Requirements
+           │
+           ├──→ Documentation (SAP-012 Phase 3: Documentation-First)
+           │      ↓
+           ├──→ Tests (SAP-012 Phase 3-4: BDD scenarios from docs)
+           │      ↓
+           ├──→ Code (SAP-012 Phase 4: TDD implementation)
+           │
+           ├──→ Git Commits (SAP-012 Phase 6: Review)
+           │      ↓
+           ├──→ Tasks (SAP-015: beads tracking)
+           │      ↓
+           └──→ Events → Knowledge (SAP-010: A-MEM)
+```
+
+**Note**: This diagram shows **dependency linkage**, not temporal sequence. When following SAP-012 (development-lifecycle), artifacts are created in Documentation-First order: `Docs → Tests → Code`
 
 **Scope**: Governance only—SAP-056 does NOT implement traceability mechanisms. Instead, it delegates to existing SAPs with enhancement specifications:
 - **SAP-004** (testing-framework): Pytest markers for requirement/feature traceability
@@ -428,29 +446,42 @@ last_updated: 2025-11-16
 
 **Enhancement**: Feature manifest creation integrated into DDD→BDD→TDD
 
-**Integration**:
-- During feature planning (DDD phase): Create feature entry in manifest with requirements
-- During test writing (BDD→TDD phase): Add test cases to manifest tests[] array
-- During implementation: Add code files to manifest code[] array
-- Documentation phase: Add docs to manifest documentation[] array
+**Integration**: SAP-056 follows SAP-012's **Documentation-First** (L3) workflow:
+- **Phase 2 (Planning)**: Create feature entry in manifest with requirements
+- **Phase 3 (Documentation-First)**: Write how-to guides, add to manifest documentation[] array
+- **Phase 3 (BDD)**: Extract BDD scenarios from docs, add to manifest tests[] array
+- **Phase 4 (TDD)**: Implement code using TDD, add to manifest code[] array
 
-**Workflow**:
+**Workflow** (Documentation-First → BDD → TDD):
 ```bash
-# 1. Plan feature (DDD)
+# 1. Phase 2: Plan feature
 just feature-new "User Authentication"  # Creates manifest entry
 
-# 2. Write tests (BDD→TDD)
-pytest tests/test_auth.py  # Tests marked with @pytest.mark.feature
+# 2. Phase 3: Write documentation FIRST (SAP-012 L3 Documentation-First)
+cat > docs/how-to/authentication.md <<'EOF'
+---
+feature_id: FEAT-001
+---
+# How to Authenticate Users
+[Expected user behaviors documented]
+EOF
+# → Added to manifest documentation[] array
 
-# 3. Implement (TDD)
-# Code written, added to manifest code[] array
+# 3. Phase 3: Extract BDD scenarios from docs
+just doc-to-bdd docs/how-to/authentication.md
+# → Creates features/authentication.feature with Gherkin scenarios
+# → Added to manifest tests[] array
 
-# 4. Document
-# Docs created with frontmatter feature_id
+# 4. Phase 4: Implement using TDD
+pytest features/authentication.feature  # Confirm RED (not implemented)
+just tdd-cycle tests/test_auth.py       # Red → Green → Refactor
+# → Code added to manifest code[] array
 
-# 5. Validate
-just validate-traceability  # Ensure all linkages present
+# 5. Validate traceability
+just validate-traceability  # Ensure all linkages present (Docs ← → Code bidirectional)
 ```
+
+**Key Alignment**: The manifest schema is order-agnostic (code[], tests[], documentation[] are peer fields), but SAP-056 recommends following SAP-012's Documentation-First pattern for optimal quality outcomes (40-80% defect reduction)
 
 **Status**: Enhancement needed (PR to SAP-012)
 
