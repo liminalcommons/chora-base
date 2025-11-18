@@ -690,11 +690,16 @@ service:
   port: 8080
   log_level: "INFO"  # DEBUG, INFO, WARNING, ERROR
 
-# Registry
+# Registry (v5.2.0+: Production EtcdRegistryBackend)
 registry:
+  enabled: true
   manifest_url: "http://manifest:8080"
-  heartbeat_interval: 10  # seconds
-  registration_timeout: 30  # seconds
+  heartbeat_interval: 30  # seconds
+  heartbeat_timeout: 30  # seconds
+  # etcd connection (for chora-manifest EtcdRegistryBackend)
+  etcd_host: "localhost"  # Use 'etcd1' inside Docker network
+  etcd_port: 2379
+  auto_discovery: true
 
 # Capability-specific settings
 capability:
@@ -723,7 +728,164 @@ event_bus:
 
 ---
 
-### 3.3 Saga Definitions
+### 3.3 Configuration Loading Pattern
+
+**Pattern**: Centralized config loading with helper utilities for parsing YAML configuration.
+
+**File**: `src/{{namespace}}/{{project_slug}}/config/__init__.py`
+
+```python
+"""Configuration module for {{project_slug}}."""
+
+from .loader import load_config
+
+__all__ = ["load_config"]
+```
+
+**File**: `src/{{namespace}}/{{project_slug}}/config/loader.py`
+
+```python
+"""
+Configuration loader for {{project_slug}}.
+
+Loads runtime configuration from YAML file with sensible defaults.
+"""
+
+import yaml
+from pathlib import Path
+from typing import Dict, Optional
+
+
+def load_config(config_path: Optional[str] = None) -> Dict:
+    """
+    Load configuration from YAML file.
+
+    Args:
+        config_path: Path to config.yaml file. If None, uses default location
+                    (config/config.yaml relative to package root).
+
+    Returns:
+        Configuration dictionary with all settings.
+
+    Raises:
+        FileNotFoundError: If config file doesn't exist.
+        yaml.YAMLError: If config file has invalid YAML syntax.
+
+    Example:
+        >>> config = load_config()
+        >>> etcd_host = config['registry']['etcd_host']
+        >>> print(f"Connecting to etcd at {etcd_host}")
+    """
+    if config_path is None:
+        # Default: config/config.yaml relative to package root
+        # This file is at: src/{{namespace}}/{{project_slug}}/config/loader.py
+        # Package root is: ../../..
+        # Config file is: ../../../config/config.yaml
+        package_root = Path(__file__).parent.parent.parent.parent
+        config_path = package_root / "config" / "config.yaml"
+    else:
+        config_path = Path(config_path)
+
+    if not config_path.exists():
+        raise FileNotFoundError(
+            f"Configuration file not found: {config_path}\n"
+            f"Expected location: {config_path.absolute()}"
+        )
+
+    try:
+        with open(config_path, 'r', encoding='utf-8') as f:
+            config = yaml.safe_load(f)
+    except yaml.YAMLError as e:
+        raise yaml.YAMLError(
+            f"Invalid YAML syntax in {config_path}: {e}"
+        ) from e
+
+    if config is None:
+        config = {}
+
+    return config
+
+
+def get_registry_config(config: Dict) -> Dict:
+    """
+    Extract registry-specific configuration.
+
+    Args:
+        config: Full configuration dictionary.
+
+    Returns:
+        Registry configuration with etcd connection settings.
+    """
+    registry = config.get('registry', {})
+
+    return {
+        'enabled': registry.get('enabled', True),
+        'etcd_host': registry.get('etcd_host', 'localhost'),
+        'etcd_port': registry.get('etcd_port', 2379),
+        'heartbeat_timeout': registry.get('heartbeat_timeout', 30),
+        'heartbeat_interval': registry.get('heartbeat_interval', 30),
+    }
+
+
+def get_http_config(config: Dict) -> Dict:
+    """
+    Extract HTTP server configuration.
+
+    Args:
+        config: Full configuration dictionary.
+
+    Returns:
+        HTTP server configuration settings.
+    """
+    http = config.get('http', {})
+
+    return {
+        'host': http.get('host', '0.0.0.0'),
+        'port': http.get('port', 8080),
+        'cors_enabled': http.get('cors_enabled', True),
+    }
+```
+
+**Usage in CLI**:
+
+```python
+from ...config.loader import load_config, get_registry_config, get_http_config
+from ...bootstrap.startup import StartupSequence
+
+@main.command()
+@click.option("--config", default=None, help="Path to config.yaml file")
+@click.option("--port", default=None, help="Port (overrides config)")
+def serve(config: str, port: int):
+    """Start server with full registry integration."""
+    async def _serve():
+        # Load configuration
+        cfg = load_config(config)
+        http_config = get_http_config(cfg)
+
+        # Override port from CLI if provided
+        if port is None:
+            port = http_config.get('port', 8080)
+
+        # Initialize with StartupSequence
+        startup = StartupSequence(cfg)
+        await startup.initialize()
+
+        # Use startup.gateway, startup.orchestrator, etc.
+        # TODO: Start server with initialized components
+
+    asyncio.run(_serve())
+```
+
+**Benefits**:
+- Centralized configuration management
+- Sensible defaults for all settings
+- Easy to override via CLI options
+- Type-safe config parsing helpers
+- Clear error messages for missing/invalid config
+
+---
+
+### 3.4 Saga Definitions
 
 **File**: `config/sagas.yaml` (generated if `enable_saga=yes`)
 
