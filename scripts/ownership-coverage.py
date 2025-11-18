@@ -213,14 +213,32 @@ class OwnershipCoverageAnalyzer:
         """
         self.repo_path = repo_path
         self.include_git_history = include_git_history
-        self.ignore_patterns = ignore_patterns or [
+        # Default ignore patterns (can be overridden with ignore_patterns argument)
+        default_ignores = [
             ".git/",
             "__pycache__/",
             "*.pyc",
+            "*.pyo",
             "node_modules/",
             ".venv/",
             "venv/",
+            "env/",
+            ".env/",
+            "test-integration*/",  # Test virtual environments
+            "*/site-packages/*",   # Python packages
+            "*/Lib/*",             # Python library files (Windows)
+            "*/Scripts/*",         # Python scripts (Windows venv)
+            "*/bin/*",             # Binary files (Unix venv)
+            ".tox/",
+            ".pytest_cache/",
+            ".mypy_cache/",
+            ".coverage",
+            "htmlcov/",
+            "dist/",
+            "build/",
+            "*.egg-info/",
         ]
+        self.ignore_patterns = ignore_patterns if ignore_patterns is not None else default_ignores
 
         codeowners_path = repo_path / "CODEOWNERS"
         self.parser = CodeownersParser(codeowners_path)
