@@ -1,0 +1,49 @@
+# CODEOWNERS
+#
+# Defines code ownership for automatic reviewer assignment.
+# See: https://docs.github.com/en/repositories/managing-your-repositorys-settings-and-features/customizing-your-repository/about-code-owners
+#
+# Pattern format: <file-pattern> @username1 @username2
+# Last matching pattern determines ownership.
+#
+# Generated from: SAP-052 (Ownership Zones) template
+# Customized for: {{PROJECT_NAME}}
+
+# Root-level config files
+/*.yml {{OWNER}}
+/*.yaml {{OWNER}}
+/*.json {{OWNER}}
+/*.toml {{OWNER}}
+/*.ini {{OWNER}}
+/*.txt {{OWNER}}
+/*.py {{OWNER}}
+/*.sh {{OWNER}}
+/.* {{OWNER}}
+/justfile {{OWNER}}
+
+# Documentation domain
+/docs/ {{DOCS_OWNER}}
+*.md {{DOCS_OWNER}}
+
+# Scripts/Automation domain
+/scripts/ {{SCRIPTS_OWNER}}
+
+# Coordination/Inbox domain (if applicable)
+/inbox/ {{INBOX_OWNER}}
+
+# Memory system domain (if applicable)
+/.chora/ {{MEMORY_OWNER}}
+
+# Project management domain (if applicable)
+/project-docs/ {{PROJECT_DOCS_OWNER}}
+
+# Tests domain
+/tests/ {{TESTS_OWNER}}
+
+# Packages domain (submodules and workspace packages)
+/packages/ {{PACKAGES_OWNER}}
+
+# Shared files
+/AGENTS.md {{OWNER}}
+/CLAUDE.md {{OWNER}}
+/README.md {{OWNER}}

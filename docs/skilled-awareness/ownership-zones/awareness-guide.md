@@ -673,6 +673,299 @@ curl -H \"Authorization: token $GITHUB_TOKEN\" \\
 
 ---
 
+## 8. Pilot Validation Results
+
+### chora-workspace Pilot (Phase 3 - November 2025)
+
+**Date**: 2025-11-18
+**Duration**: 3 hours (0.4 days)
+**Status**: ✅ **SUCCESS** - All deliverables complete, zero blocking issues
+
+**Coverage Metrics**:
+- **Final Coverage**: 95.2% (11,845/12,444 files)
+- **Initial Coverage**: 22.9% (baseline before optimization)
+- **Improvement**: +72.3 percentage points
+- **Orphan Files**: 599 (4.8%) - Acceptable (system metadata, build artifacts)
+- **Target**: 80%+ (achieved, exceeded by 19%)
+
+**Test Scenarios**: 10+ scenarios executed, 100% pass rate
+- ✅ Single-domain PRs (docs, scripts, inbox, memory, project-docs)
+- ✅ Cross-domain PRs (multi-domain jurisdiction)
+- ✅ Root-level config files
+- ✅ Packages/submodules
+- ✅ Orphan file detection
+- ✅ Git integration
+
+**Critical Findings**:
+
+1. **`/packages/` pattern is essential for monorepos** - Contributed 76.3% of coverage
+   - Without this pattern: 22.9% coverage (failed 80% target)
+   - With this pattern: 95.2% coverage (exceeded target by 19%)
+
+2. **Root-level config patterns capture edge cases** - Added 0.4% coverage
+   - `/*.yml`, `/*.json`, `/*.toml`, etc.
+   - `/.*` for dotfiles at root
+
+3. **Single-owner configuration simplifies pilot** - All domains → @victorpiper
+   - Multi-domain PRs still flagged correctly
+   - No coordination overhead during pilot
+   - Easy to reassign domains when second developer joins
+
+**Edge Cases Discovered** (6 total, all low-impact):
+- Root-level files treated as separate "domains" (cosmetic)
+- Justfile classified as own domain (cosmetic)
+- Wildcard pattern behavior (`/*.txt` vs `*.md`)
+- 4.8% orphan files (acceptable for coordination repos)
+- Single owner simplifies multi-domain jurisdiction
+- Git diff defaults to main branch comparison
+
+**ROI Projection**:
+- **Effort**: 3 hours (Phase 3 only)
+- **Coverage**: 95.2% (exceeds target)
+- **Deliverables**: 7/7 complete (100%)
+- **Time Savings**: 1.5-3 hours/week (single developer), 3-6 hours/week (2 developers)
+- **Projected ROI**: 800-2800% in Year 1 (2-developer team)
+
+**Artifacts**:
+- **CODEOWNERS**: 95.2% coverage, 8 domains, 50 lines
+- **Template**: `templates/CODEOWNERS-template` (extracted from pilot)
+- **Pilot Report**: Available in pilot repo at `project-docs/metrics/sap-052-phase3-pilot-report.md`
+- **Best Practices**: Available in pilot repo at `.chora/memory/knowledge/notes/2025-11-18-sap-052-pilot-validation-findings.md`
+- **Coverage Reports**: Baseline (22.9%) and final (95.2%) JSON reports
+
+**Recommendations from Pilot**:
+1. **Always include `/packages/` pattern** for monorepos (critical for coverage)
+2. **Run coverage analysis before finalizing** (catches gaps early)
+3. **Test with 5-10 realistic scenarios** (validates reviewer assignment)
+4. **Document edge cases immediately** (prevents future confusion)
+5. **Start with single owner** (simplifies pilot, split later for multi-dev)
+
+**Templates Available**: See `templates/` directory for:
+- `CODEOWNERS-template` - Generalized template from chora-workspace pilot
+- `templates/README.md` - Usage guide, validation steps, best practices
+
+---
+
+## 9. Templates and Tooling
+
+### CODEOWNERS Template (New - Phase 4)
+
+**Location**: `templates/CODEOWNERS-template`
+
+**Based On**: chora-workspace pilot validation (95.2% coverage, 2025-11-18)
+
+**Template Variables**:
+- `{{PROJECT_NAME}}` - Project name
+- `{{OWNER}}` - Default owner for all domains
+- `{{DOCS_OWNER}}`, `{{SCRIPTS_OWNER}}`, etc. - Domain-specific owners
+
+**Usage**:
+
+**Option 1 - Automated (Recommended)**:
+```bash
+python3 packages/chora-base/scripts/codeowners-generator.py \
+  --template chora-workspace \
+  --owner @your-username \
+  --output CODEOWNERS
+```
+
+**Option 2 - Manual Substitution**:
+```bash
+cp templates/CODEOWNERS-template CODEOWNERS
+sed -i 's/{{PROJECT_NAME}}/your-project/g' CODEOWNERS
+sed -i 's/{{OWNER}}/@your-username/g' CODEOWNERS
+```
+
+**Validation After Generation**:
+```bash
+# Check coverage (target: 80%+)
+python3 packages/chora-base/scripts/ownership-coverage.py \
+  --repo /path/to/repo \
+  --codeowners /path/to/repo/CODEOWNERS
+
+# Test reviewer suggestions
+python3 packages/chora-base/scripts/reviewer-suggester.py \
+  --files docs/README.md scripts/validate.py
+```
+
+**Expected Coverage**: 80%+ (chora-workspace achieved 95.2%)
+
+**Critical Patterns** (from pilot findings):
+- `/packages/` - Essential for monorepos (76.3% of coverage in pilot)
+- `/*.yml`, `/*.json` - Root-level configs (0.4% of coverage)
+- `*.md` - All markdown files (1.5% of coverage)
+
+**See**: `templates/README.md` for complete usage guide
+
+---
+
+### Updated Tool Reference
+
+### CODEOWNERS Template Generator
+
+**Command**: `python3 packages/chora-base/scripts/codeowners-generator.py`
+
+**Templates Available**:
+- `chora-workspace` - Based on pilot validation (95.2% coverage, 8 domains)
+- `generic` - Minimal template for simple projects
+
+**Usage**:
+```bash
+# Generate with chora-workspace template
+python3 scripts/codeowners-generator.py \
+  --template chora-workspace \
+  --owner @victorpiper \
+  --output CODEOWNERS
+```
+
+---
+
+### Ownership Coverage Analysis
+
+**Command**: `python3 packages/chora-base/scripts/ownership-coverage.py`
+
+**Purpose**: Calculate ownership coverage metrics
+
+**Usage**:
+```bash
+# Analyze coverage (text output)
+python3 scripts/ownership-coverage.py \
+  --repo /path/to/repo \
+  --codeowners /path/to/repo/CODEOWNERS
+
+# JSON output for automation
+python3 scripts/ownership-coverage.py \
+  --repo /path/to/repo \
+  --codeowners /path/to/repo/CODEOWNERS \
+  --format json
+```
+
+**Output**: Coverage %, orphan files, domain breakdown
+**Exit Code**: 0 if coverage ≥ 80%, 1 otherwise (CI/CD friendly)
+
+---
+
+### Reviewer Suggester
+
+**Command**: `python3 packages/chora-base/scripts/reviewer-suggester.py`
+
+**Purpose**: Suggest reviewers based on CODEOWNERS file and changed files
+
+**Usage**:
+```bash
+# Suggest for specific files
+python3 scripts/reviewer-suggester.py \
+  --files docs/vision/mcp.md scripts/validate.py
+
+# Suggest for current branch vs main
+python3 scripts/reviewer-suggester.py
+
+# Suggest for specific branches
+python3 scripts/reviewer-suggester.py \
+  --base main \
+  --head feature/add-docs
+
+# JSON output for automation
+python3 scripts/reviewer-suggester.py \
+  --format json
+```
+
+**Output**:
+- Suggested reviewers
+- Domains touched
+- Jurisdiction type (single_domain, multi_domain, escalation)
+- Justification
+
+**Exit Code**: 0 if reviewers found, 1 otherwise
+
+---
+
+## 10. Quick Reference: Common Agent Workflows
+
+### Workflow: Generate CODEOWNERS for New Project
+
+**User Request**: "Create a CODEOWNERS file for this repo"
+
+**Agent Steps**:
+1. Check if CODEOWNERS already exists (avoid overwriting)
+2. Identify project structure (chora-workspace pattern? simple pattern?)
+3. Use template generator:
+   ```bash
+   python3 packages/chora-base/scripts/codeowners-generator.py \
+     --template chora-workspace \
+     --owner @victorpiper \
+     --output CODEOWNERS
+   ```
+4. Run coverage analysis:
+   ```bash
+   python3 packages/chora-base/scripts/ownership-coverage.py \
+     --repo . \
+     --codeowners CODEOWNERS
+   ```
+5. If coverage < 80%, identify orphan files and add patterns
+6. Commit CODEOWNERS to repo
+
+**Success Criteria**:
+- Coverage ≥ 80%
+- Critical files not orphaned (source, docs, tests)
+
+---
+
+### Workflow: Validate Reviewer Assignment
+
+**User Request**: "Who should review this PR?"
+
+**Agent Steps**:
+1. Get list of changed files (from user or `git diff`)
+2. Run reviewer-suggester:
+   ```bash
+   python3 packages/chora-base/scripts/reviewer-suggester.py \
+     --files <changed-files>
+   ```
+3. Parse output: suggested reviewers, domains touched, jurisdiction type
+4. If multi-domain jurisdiction:
+   - Explain consensus requirement (SAP-052 Contract 4)
+   - List all domain owners who must approve
+5. If no reviewers found (orphan files):
+   - Recommend updating CODEOWNERS
+   - Escalate to project lead
+
+**Output to User**:
+- "Suggested reviewers: @alice, @bob"
+- "Domains touched: docs (1 file), scripts (2 files)"
+- "Jurisdiction: Multi-domain (consensus required)"
+
+---
+
+### Workflow: Multi-Developer Onboarding
+
+**User Request**: "We're adding a second developer, how should we split ownership?"
+
+**Agent Steps**:
+1. Read current CODEOWNERS (identify all domains)
+2. Ask user: "What are the new developer's strengths?" (docs? scripts? backend?)
+3. Suggest domain split based on expertise:
+   - Strong in docs → Assign `/docs/`, `*.md`
+   - Strong in automation → Assign `/scripts/`, `/justfile`
+   - Strong in backend → Assign `/packages/backend/`
+4. Update CODEOWNERS with new assignments
+5. Explain consensus protocol for multi-domain PRs
+6. Run coverage analysis (ensure still ≥ 80%)
+
+**Example Split**:
+```
+# Original (single owner)
+/docs/ @victorpiper
+/scripts/ @victorpiper
+
+# After split (two owners)
+/docs/ @alice
+/scripts/ @victorpiper
+```
+
+---
+
 **Created**: 2025-11-17 by chora-base maintainer + Claude (AI peer)
-**Document Status**: Draft
-**Last Updated**: 2025-11-17
+**Document Status**: Production-Ready (Phase 4 Complete)
+**Last Updated**: 2025-11-18
+**Pilot Validation**: 2025-11-18 (chora-workspace, 95.2% coverage, 10+ test scenarios)
