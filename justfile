@@ -1694,3 +1694,34 @@ git-commit-template SCOPE="" TYPE="feat":
     echo "#"
     echo "# SAP Integration: Add 'Refs: SAP-XXX, COORD-YYYY-ZZ' in footer"
 
+# ============================================================================
+# SAP-053: Conflict Resolution
+# ============================================================================
+# Pre-merge conflict detection, classification, and automated resolution strategies.
+# See: docs/skilled-awareness/conflict-resolution/
+
+# Check for conflicts before creating PR (pre-merge detection)
+# Example: just conflict-check
+# Example: just conflict-check develop
+conflict-check BRANCH="main":
+    python scripts/conflict-checker.py --branch {{BRANCH}}
+
+# Check for conflicts with JSON output (for automation)
+# Example: just conflict-check-json
+# Example: just conflict-check-json develop
+conflict-check-json BRANCH="main":
+    python scripts/conflict-checker.py --branch {{BRANCH}} --json
+
+# Check for conflicts with verbose output (for debugging)
+# Example: just conflict-check-verbose
+conflict-check-verbose BRANCH="main":
+    python scripts/conflict-checker.py --branch {{BRANCH}} --verbose
+
+# Quick status check: are there conflicts? (exit code based)
+# Exit 0: Safe to merge
+# Exit 1: Manual review required
+# Exit 2: Auto-resolvable conflicts
+# Exit 3: Error
+conflict-status BRANCH="main":
+    @python scripts/conflict-checker.py --branch {{BRANCH}} --json | jq -r 'if .has_conflicts then "⚠️  Conflicts detected (\(.total_files) files)" else "✅ No conflicts - safe to merge" end' || echo "Error checking conflicts"
+
