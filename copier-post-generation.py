@@ -92,6 +92,39 @@ def initialize_git(project_dir: Path):
         return False
 
 
+def fix_copier_src_path(project_dir: Path):
+    """
+    Fix _src_path in .copier-answers.yml if it points to temp directory.
+
+    Copier clones templates to temp directories, which breaks 'copier update'.
+    This function detects temp paths and replaces them with the GitHub URL.
+    """
+    answers_file = project_dir / '.copier-answers.yml'
+    if not answers_file.exists():
+        return False
+
+    # Read current content
+    with open(answers_file, 'r') as f:
+        content = f.read()
+
+    # Check if _src_path points to temp directory
+    if '/T/copier' in content or '/tmp/copier' in content or '/var/folders' in content:
+        # Replace with GitHub URL
+        import re
+        # Look for _src_path line with temp directory
+        pattern = r'(_src_path:\s+)(/[^\n]+(?:tmp|T)/copier[^\n]*)'
+        replacement = r'\1https://github.com/liminalcommons/chora-base.git'
+        new_content = re.sub(pattern, replacement, content)
+
+        if new_content != content:
+            # Write back
+            with open(answers_file, 'w') as f:
+                f.write(new_content)
+            return True
+
+    return False
+
+
 def make_scripts_executable(project_dir: Path):
     """Make shell scripts executable."""
     script_files = [
@@ -214,22 +247,26 @@ def main():
 
     print("\n🔧 Running post-generation setup...\n")
 
-    # Step 1: Create directories
+    # Step 1: Fix copier _src_path (must run before git init to avoid dirty repo)
+    if fix_copier_src_path(project_dir):
+        print("✅ Fixed _src_path for copier update support")
+
+    # Step 2: Create directories
     num_dirs = create_directories(project_dir, config)
     print(f"✅ Created {num_dirs} directories")
 
-    # Step 2: Make scripts executable
+    # Step 3: Make scripts executable
     make_scripts_executable(project_dir)
     print("✅ Made scripts executable")
 
-    # Step 3: Initialize git (if enabled and not already initialized)
+    # Step 4: Initialize git (if enabled and not already initialized)
     if config.get('use_git') and not (project_dir / '.git').exists():
         if initialize_git(project_dir):
             print("✅ Initialized git repository")
         else:
             print("⚠️  Failed to initialize git repository (non-blocking)")
 
-    # Step 4: Display next steps
+    # Step 5: Display next steps
     display_next_steps(config)
 
 
