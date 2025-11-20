@@ -18,7 +18,40 @@ A production-ready Python project template designed FOR AI coding agents, not re
 
 ### Are you trying to CREATE A NEW PROJECT using chora-base?
 
-**✅ YES** → Use the fast-setup script (5 minutes):
+**✅ YES** → Two options available:
+
+#### Option 1: Copier Template (Recommended - v5.4.0+)
+
+**NEW**: Interactive template with SAP selection (3 minutes setup):
+
+```bash
+# Install copier (if not already installed)
+pip install copier
+
+# Generate new project
+copier copy https://github.com/liminalcommons/chora-base.git my-project
+
+# Follow the interactive questionnaire to select SAPs
+```
+
+**What you get**:
+- **3 preset modes**: Minimal (2 SAPs), Standard (4 SAPs), Comprehensive (8 SAPs)
+- **Custom mode**: Select individual SAPs
+- **Automated setup**: Git initialization, directory structure, permissions
+- **Update support**: `copier update` to receive template improvements
+- **8 SAPs available**: Inbox (001), Beads (015), Conflict Resolution (053), Memory (010), Pre-merge Validation (051), Code Ownership (052), Lifecycle Traceability (056), Automation Dashboard (008)
+
+**Documentation**: [Template Design](COPIER-QUESTIONNAIRE-DESIGN.md) | [Update Workflow](docs/DISTRIBUTION-STRATEGY.md)
+
+**Update your project later**:
+```bash
+cd my-project
+copier update  # Fetches latest template improvements
+```
+
+---
+
+#### Option 2: Fast-Setup Script (Legacy)
 
 ```bash
 # Unix/Mac:
