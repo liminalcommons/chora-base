@@ -313,3 +313,19 @@ just --list
 **Template Version**: chora-base v1.0.0 (Copier-based SAP Distribution)
 **Origin**: OPP-2025-022, CORD-2025-023, SAP-060 Strategic Opportunity Management
 **Generated**: {{ '%Y-%m-%d %H:%M:%S' | strftime }}
+
+## Troubleshooting
+
+Common issues and solutions:
+
+{% if _sap_053_enabled %}**Conflict Detection Issues**:
+- Ensure you're on a clean branch before running `just conflict-check`
+- Check that the target branch exists
+{% endif %}
+
+{% if _sap_001_enabled %}**Inbox Workflow Issues**:
+- Verify JSON schema in coordination requests
+- Check file permissions in inbox directories
+{% endif %}
+
+For more help, see `docs/GETTING-STARTED.md`.
