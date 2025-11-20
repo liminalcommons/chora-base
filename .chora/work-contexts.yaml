@@ -1,0 +1,32 @@
+work_contexts:
+- id: tab-1
+  type: tab
+  branch: feature/test
+  files:
+  - docs/skilled-awareness/work-context-coordination/**/*,scripts/who-is-working-on.sh,scripts/detect-conflicts.sh,justfile
+  - scripts/work-context-*.sh
+  - scripts/work-conflict-risk.sh
+  - justfile
+  started_at: 2025-11-20 10:32:43+00:00
+  last_activity: '2025-11-20T12:57:03Z'
+- id: tab-2
+  type: tab
+  branch: main
+  files:
+  - docs/skilled-awareness/conflict-resolution/**/*,scripts/conflict-checker.py,justfile
+  - docs/skilled-awareness/INDEX.md
+  - scripts/validate-ecosystem-integration.py
+  - .pre-commit-config.yaml
+  - justfile
+  - scripts/work-dashboard.sh
+  - docs/skilled-awareness/sap-ecosystem-integration/*
+  - .chora/work-contexts.yaml
+  started_at: 2025-11-20 10:34:56+00:00
+  last_activity: '2025-11-20T20:46:17Z'
+- id: tab-3
+  type: tab
+  branch: feature/new
+  files:
+  - scripts/**/*
+  started_at: 2025-11-20 12:57:34+00:00
+  last_activity: 2025-11-20 12:57:34+00:00
