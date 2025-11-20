@@ -39,10 +39,27 @@ def run_command(cmd: list, cwd: Path = None, check: bool = True) -> subprocess.C
 
 def create_directories(project_dir: Path, config: dict):
     """Create required directories based on enabled SAPs."""
+    # Compute SAP enablement (workaround for Copier limitation with derived variables)
+    sap_selection_mode = config.get('sap_selection_mode', 'minimal')
+
+    # Minimal mode: SAP-001, SAP-015
+    sap_001 = sap_selection_mode != 'custom' or config.get('include_sap_001', False)
+    sap_015 = sap_selection_mode != 'custom' or config.get('include_sap_015', False)
+
+    # Standard mode: adds SAP-053, SAP-010
+    sap_053 = sap_selection_mode in ['standard', 'comprehensive'] or (sap_selection_mode == 'custom' and config.get('include_sap_053', False))
+    sap_010 = sap_selection_mode in ['standard', 'comprehensive'] or (sap_selection_mode == 'custom' and config.get('include_sap_010', False))
+
+    # Comprehensive mode: adds SAP-051, SAP-052, SAP-056, SAP-008
+    sap_051 = sap_selection_mode == 'comprehensive' or (sap_selection_mode == 'custom' and config.get('include_sap_051', False))
+    sap_052 = sap_selection_mode == 'comprehensive' or (sap_selection_mode == 'custom' and config.get('include_sap_052', False))
+    sap_056 = sap_selection_mode == 'comprehensive' or (sap_selection_mode == 'custom' and config.get('include_sap_056', False))
+    sap_008 = sap_selection_mode == 'comprehensive' or (sap_selection_mode == 'custom' and config.get('include_sap_008', False))
+
     directories = []
 
     # SAP-001: Inbox Workflow
-    if config.get('_sap_001_enabled'):
+    if sap_001:
         directories.extend([
             'inbox/incoming/coordination',
             'inbox/incoming/tasks',
@@ -52,7 +69,7 @@ def create_directories(project_dir: Path, config: dict):
         ])
 
     # SAP-010: Memory System
-    if config.get('_sap_010_enabled'):
+    if sap_010:
         directories.extend([
             '.chora/memory/events',
             '.chora/memory/knowledge/notes',
@@ -61,7 +78,7 @@ def create_directories(project_dir: Path, config: dict):
         ])
 
     # SAP-008: Automation Dashboard
-    if config.get('_sap_008_enabled'):
+    if sap_008:
         directories.append('logs')
 
     # Create all directories
@@ -139,12 +156,31 @@ def make_scripts_executable(project_dir: Path):
 
 def display_next_steps(config: dict):
     """Display post-generation next steps."""
+    # Compute SAP enablement (workaround for Copier limitation with derived variables)
+    sap_selection_mode = config.get('sap_selection_mode', 'minimal')
+
+    # Minimal mode: SAP-001, SAP-015
+    sap_001 = sap_selection_mode != 'custom' or config.get('include_sap_001', False)
+    sap_015 = sap_selection_mode != 'custom' or config.get('include_sap_015', False)
+
+    # Standard mode: adds SAP-053, SAP-010
+    sap_053 = sap_selection_mode in ['standard', 'comprehensive'] or (sap_selection_mode == 'custom' and config.get('include_sap_053', False))
+    sap_010 = sap_selection_mode in ['standard', 'comprehensive'] or (sap_selection_mode == 'custom' and config.get('include_sap_010', False))
+
+    # Comprehensive mode: adds SAP-051, SAP-052, SAP-056, SAP-008
+    sap_051 = sap_selection_mode == 'comprehensive' or (sap_selection_mode == 'custom' and config.get('include_sap_051', False))
+    sap_052 = sap_selection_mode == 'comprehensive' or (sap_selection_mode == 'custom' and config.get('include_sap_052', False))
+    sap_056 = sap_selection_mode == 'comprehensive' or (sap_selection_mode == 'custom' and config.get('include_sap_056', False))
+    sap_008 = sap_selection_mode == 'comprehensive' or (sap_selection_mode == 'custom' and config.get('include_sap_008', False))
+
+    sap_total = sum([sap_001, sap_015, sap_053, sap_010, sap_051, sap_052, sap_056, sap_008])
+
     print("\n" + "=" * 70)
     print("✅ PROJECT GENERATED SUCCESSFULLY")
     print("=" * 70)
     print(f"\nProject: {config.get('project_name', 'Unknown')}")
     print(f"Location: {Path.cwd()}")
-    print(f"SAPs enabled: {config.get('_sap_count', 0)}")
+    print(f"SAPs enabled: {sap_total}")
     print("")
 
     print("📋 NEXT STEPS:")
@@ -178,17 +214,17 @@ def display_next_steps(config: dict):
         step += 1
 
     # Step: SAP-specific setup
-    if config.get('_sap_015_enabled'):
+    if sap_015:
         print(f"{step}. Set up Beads task management:")
         print("   bd list  # Verify Beads CLI installed")
         step += 1
 
-    if config.get('_sap_001_enabled'):
+    if sap_001:
         print(f"{step}. Check inbox status:")
         print("   just inbox-status")
         step += 1
 
-    if config.get('_sap_051_enabled'):
+    if sap_051:
         print(f"{step}. Install pre-push hook (optional):")
         print("   just pre-push-install")
         step += 1
@@ -197,7 +233,7 @@ def display_next_steps(config: dict):
     print(f"{step}. Read documentation:")
     print("   - README.md for project overview")
     print("   - docs/GETTING-STARTED.md for detailed setup")
-    if config.get('_sap_010_enabled'):
+    if sap_010:
         print("   - .chora/CLAUDE.md for Claude-specific guidance")
     step += 1
 
