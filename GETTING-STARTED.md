@@ -496,14 +496,25 @@ copier copy gh:liminalcommons/chora-base custom-project
 
 ## Version History
 
-- **v1.0.0** (2025-11-20): Initial production release
+- **v5.5.0** (2025-11-20): Phase 4.2 documentation release
+  - Comprehensive GETTING-STARTED.md user guide
+  - CHANGELOG.md template for generated projects
+  - SAP-061 ecosystem integration (Phase 2)
+  - Bug fixes (utility imports, indentation)
+
+- **v5.4.6** (2025-11-19): Template testing and validation
+  - 33 test cases (100% pass rate)
+  - copier update workflow validated
+  - Internal pilot (chora-workspace-pilot)
+
+- **v5.0.0** (2025-11-19): Copier template creation
   - 8 SAPs integrated
   - 3 selection modes (minimal, standard, comprehensive)
-  - Copier-based distribution
-  - Template update support
+  - 22 template files with conditional inclusion
+  - Post-generation hooks
 
 ---
 
 **Created:** 2025-11-20
-**Template Version:** chora-base v1.0.0
+**Template Version:** chora-base v5.5.0
 **Origin:** OPP-2025-022, CORD-2025-023, SAP-060
