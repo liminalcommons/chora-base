@@ -375,15 +375,20 @@ class TraceabilityValidator:
             # Check test paths
             for test_ref in (feature.get("tests") or []):
                 test_path = test_ref.get("path")
+                test_type = test_ref.get("type")
                 if test_path:
                     total_refs += 1
-                    # Extract file path (before ::)
-                    file_path = test_path.split("::")[0]
-                    full_path = self.project_root / file_path
-                    if full_path.exists():
+                    # Skip file existence check for manual tests
+                    if test_type == "manual" or test_path == "manual":
                         passed_refs += 1
                     else:
-                        failures.append(f"{feature_id}: Test file not found: {file_path}")
+                        # Extract file path (before ::)
+                        file_path = test_path.split("::")[0]
+                        full_path = self.project_root / file_path
+                        if full_path.exists():
+                            passed_refs += 1
+                        else:
+                            failures.append(f"{feature_id}: Test file not found: {file_path}")
 
             # Check doc paths
             for doc_ref in (feature.get("documentation") or []):
