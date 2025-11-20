@@ -1,0 +1,32 @@
+query_id,query_text,expected_type,domain,source,notes
+RW-001,show me the SAP-004 testing coverage implementation,CODE_FEATURE,scripts,event_logs,"Real session query: SAP-004 baseline audit and test writing"
+RW-002,how do we write tests for Python scripts,PATTERN_CONCEPT,scripts,knowledge,"Real session query: testing patterns for automation scripts"
+RW-003,when did we complete SAP-051 L3 adoption,HISTORICAL_EVENT,memory,event_logs,"Real session query: SAP-051 git workflow adoption timeline"
+RW-004,how do I run the coverage audit,AUTOMATION_RECIPE,scripts,justfile,"Real session query: baseline coverage audit workflow"
+RW-005,show me git workflow patterns documentation,CODE_FEATURE,docs,sap_051,"Real session query: SAP-051 implementation artifacts"
+RW-006,explain our conventional commit strategy,PATTERN_CONCEPT,docs,sap_051,"Real session query: git commit message patterns"
+RW-007,when did we deploy Phase B MCP tools,HISTORICAL_EVENT,memory,event_logs,"Real session query: Phase B deployment timeline"
+RW-008,how do I validate wikilinks in markdown files,AUTOMATION_RECIPE,scripts,justfile,"Real session query: documentation validation"
+RW-009,show me the automation dashboard implementation,CODE_FEATURE,scripts,sap_004,"Real session query: automation dashboard testing work"
+RW-010,what patterns exist for multi-developer coordination,PATTERN_CONCEPT,docs,knowledge,"Real session query: multi-dev patterns research"
+RW-011,when was the script refactoring phase completed,HISTORICAL_EVENT,memory,event_logs,"Real session query: Phase 3B refactoring completion"
+RW-012,how do I check inbox status,AUTOMATION_RECIPE,inbox,justfile,"Real session query: coordination dashboard access"
+RW-013,show me FEAT-002 unified discovery implementation,CODE_FEATURE,scripts,feat_002,"Real session query: discovery system code"
+RW-014,how do we handle fuzzy matching for query typos,PATTERN_CONCEPT,scripts,opp_003,"Real session query: fuzzy matching pattern from OPP-2025-003"
+RW-015,when did we deliver OPP-2025-002 knowledge indexes,HISTORICAL_EVENT,memory,event_logs,"Real session query: opportunity delivery timeline"
+EC-001,show me authentication,CODE_FEATURE,ambiguous,"edge_case_ambiguous",Could be code or pattern depending on context
+EC-002,workflow for testing,PATTERN_CONCEPT,ambiguous,"edge_case_ambiguous",Could be pattern or automation depending on phrasing
+EC-003,SAP metrics,CODE_FEATURE,ambiguous,"edge_case_ambiguous",Could be code feature or automation recipe
+EC-004,authentiction code,CODE_FEATURE,typo,"edge_case_typo",Typo: authentiction → authentication
+EC-005,wokflow patterns,PATTERN_CONCEPT,typo,"edge_case_typo",Typo: wokflow → workflow
+EC-006,validaton script,AUTOMATION_RECIPE,typo,"edge_case_typo",Typo: validaton → validation
+EC-007,fix bug in parser,HISTORICAL_EVENT,synonym,"edge_case_synonym",Synonym: fix bug → debug/troubleshoot
+EC-008,execute coverage report,AUTOMATION_RECIPE,synonym,"edge_case_synonym",Synonym: execute → run/generate
+EC-009,locate code for authentication,CODE_FEATURE,synonym,"edge_case_synonym",Synonym: locate → show/find
+EC-010,show me SAP adoption patterns and run metrics,CODE_FEATURE,multi_domain,"edge_case_multi","Spans code + automation, should route to primary intent"
+EC-011,explain testing workflow and show test files,PATTERN_CONCEPT,multi_domain,"edge_case_multi","Spans pattern + code, should route to primary intent"
+EC-012,when did we adopt SAP-015 and what were the tasks,HISTORICAL_EVENT,multi_domain,"edge_case_multi","Spans history + code, should route to primary intent"
+EC-013,random gibberish query xyz123,UNKNOWN,negative,"edge_case_negative",Should route to UNKNOWN (no clear intent)
+EC-014,delete everything now,UNKNOWN,negative,"edge_case_negative",Should route to UNKNOWN (destructive command)
+EC-015,what is the meaning of life,UNKNOWN,negative,"edge_case_negative",Should route to UNKNOWN (philosophical query unrelated to codebase)
+COV-001,generate comprehensive coverage report for all scripts,AUTOMATION_RECIPE,coverage,"coverage_validation",Tests coverage aggregation and reporting workflow

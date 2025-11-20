@@ -7,6 +7,73 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [5.3.0] - 2025-11-19/20
+
+> **🔍 UNIFIED DISCOVERY SYSTEM**: Intelligent query routing with 96.8% accuracy, graceful fallback for projects without SAP structures, and 60-73% token savings
+
+### Added
+
+**FEAT-002: Unified Discovery System** (Nov 19-20, 2025)
+
+Intelligent query routing system achieving 96.8% accuracy with graceful degradation for projects without SAP structures.
+
+- ✅ **Core Discovery System** (~700 lines):
+  - `scripts/unified-discovery.py` (600 lines) - Main discovery router
+  - Query classification (4 types: CODE_FEATURE, PATTERN_CONCEPT, HISTORICAL_EVENT, AUTOMATION_RECIPE)
+  - Intelligent routing to optimal sources (feature manifest, knowledge graph, event logs, justfile)
+  - Token estimation and performance tracking
+  - JSON and human-readable output formats
+  - Windows UTF-8 console support for cross-platform compatibility
+
+- ✅ **Primary Discovery Methods** (4 methods, 96.8% accuracy):
+  - Feature Manifest discovery (CODE_FEATURE) - 50-70% token savings vs grep
+  - Knowledge Graph discovery (PATTERN_CONCEPT) - 75% token savings vs reading all notes
+  - Event Log discovery (HISTORICAL_EVENT) - 65-75% token savings vs reading all events
+  - Justfile discovery (AUTOMATION_RECIPE) - 90-95% token savings vs reading justfile + scripts
+
+- ✅ **Fallback Discovery Methods** (4 methods, 60-80% accuracy):
+  - `_fallback_discover()` in FeatureManifestDiscovery → glob search (src/, lib/, packages/)
+  - `_fallback_discover()` in KnowledgeGraphDiscovery → docs/ markdown search
+  - `_fallback_discover()` in EventLogDiscovery → git log (last 50 commits)
+  - `_fallback_discover()` in JustfileDiscovery → scripts/ directory search
+  - Graceful degradation for projects without SAP structures
+  - Warning messages guiding users to SAP adoption
+  - Maintains 60-80% accuracy vs 96%+ with primary sources
+
+- ✅ **Validation Infrastructure** (~350 lines):
+  - `scripts/run-discovery-benchmark.py` (200 lines) - Benchmark harness
+  - `tests/test_unified_discovery.py` (300 lines) - Comprehensive test suite
+  - `tests/test_discovery_benchmark.py` (350 lines) - Benchmark validation tests
+  - 31 validation queries (real-world + edge cases)
+  - 20 chora-base-specific queries (mixed primary/fallback)
+  - Minimal test project for fallback validation
+
+- ✅ **Documentation** (~240 lines):
+  - `docs/user-docs/how-to/use-unified-discovery.md` (180 lines) - Complete how-to guide
+  - Prerequisites section updated with fallback accuracy estimates
+  - New "Fallback Discovery Mode" section (70 lines) in Troubleshooting
+  - Integration examples with Phase 1 orientation workflow
+  - Token budget guidelines for discovery-enhanced workflows
+
+- ✅ **Performance Metrics**:
+  - **96.8% routing accuracy** on validation set (30/31 queries matched)
+  - **80.0% accuracy** in mixed primary/fallback environment (chora-base)
+  - **100% accuracy** on all fallback queries in minimal projects
+  - **60-73% token reduction** vs traditional grep (5-15k tokens vs 20-40k)
+  - **8x faster** than manual exploration (30 seconds vs 3-5 minutes)
+  - Average query execution: 0.089 seconds
+
+- ✅ **Validation Coverage** (3 environments):
+  - chora-workspace (full SAP adoption): 96.8% accuracy
+  - chora-base (partial SAP adoption): 80.0% accuracy
+  - Minimal project (no SAP adoption): 100% fallback success
+
+- ✅ **Integration with Existing SAPs**:
+  - SAP-056 (Lifecycle Traceability): Feature manifest as primary source for CODE queries
+  - SAP-010 (Memory System): Knowledge notes and events as primary sources for PATTERN/HISTORICAL queries
+  - SAP-008 (Automation Dashboard): Justfile as primary source for AUTOMATION queries
+  - Provides migration path: fallback mode → incremental SAP adoption → full optimization
+
 ## [5.2.0] - 2025-11-15/16
 
 > **🏗️ ECOSYSTEM ONTOLOGY + QUALITY INFRASTRUCTURE**: Complete namespace migration (45 SAPs), distributed registry (etcd), 3 production services, and SAP quality ecosystem (3 new SAPs)

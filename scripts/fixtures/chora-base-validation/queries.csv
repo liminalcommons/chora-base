@@ -1,0 +1,21 @@
+query_id,query_text,expected_type,notes
+CB-001,show me sap evaluation code,CODE_FEATURE,Should find sap-evaluator.py
+CB-002,find codeowners generator script,CODE_FEATURE,Should find codeowners-generator.py
+CB-003,show me justfile validation,CODE_FEATURE,Should find justfile validation scripts
+CB-004,find template copier code,CODE_FEATURE,Should find template-related code
+CB-005,show me discovery scripts,CODE_FEATURE,Should find discovery-related scripts
+CB-006,how do we handle sap adoption,PATTERN_CONCEPT,Should find SAP adoption documentation
+CB-007,best practices for template design,PATTERN_CONCEPT,Should find template design patterns
+CB-008,explain our testing strategy,PATTERN_CONCEPT,Should find testing documentation
+CB-009,how do we structure agents.md files,PATTERN_CONCEPT,Should find AGENTS.md structure docs
+CB-010,what is our memory system,PATTERN_CONCEPT,Should find memory system documentation
+CB-011,when did we complete phase 2,HISTORICAL_EVENT,Should find phase 2 completion events
+CB-012,history of sap discoverability,HISTORICAL_EVENT,Should find SAP-DISCO events
+CB-013,when was test suite completed,HISTORICAL_EVENT,Should find test completion events
+CB-014,copier update validation history,HISTORICAL_EVENT,Should find copier update events
+CB-015,recent sap evaluations,HISTORICAL_EVENT,Should find recent SAP evaluation events
+CB-016,how do I run sap check,AUTOMATION_RECIPE,Should find sap-check recipe
+CB-017,validate codeowners syntax,AUTOMATION_RECIPE,Should find codeowners validation recipe
+CB-018,run discovery benchmark,AUTOMATION_RECIPE,Should find discover-benchmark recipe
+CB-019,generate coverage report,AUTOMATION_RECIPE,Should find coverage recipe
+CB-020,validate markdown links,AUTOMATION_RECIPE,Should find link validation recipe
