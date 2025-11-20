@@ -205,31 +205,40 @@ _tasks:
 # =============================================================================
 
 _message_after_copy: |
+  {% set sap_001 = sap_selection_mode != 'custom' or (include_sap_001 | default(false)) %}
+  {% set sap_015 = sap_selection_mode != 'custom' or (include_sap_015 | default(false)) %}
+  {% set sap_053 = sap_selection_mode in ['standard', 'comprehensive'] or (sap_selection_mode == 'custom' and (include_sap_053 | default(false))) %}
+  {% set sap_010 = sap_selection_mode in ['standard', 'comprehensive'] or (sap_selection_mode == 'custom' and (include_sap_010 | default(false))) %}
+  {% set sap_051 = sap_selection_mode == 'comprehensive' or (sap_selection_mode == 'custom' and (include_sap_051 | default(false))) %}
+  {% set sap_052 = sap_selection_mode == 'comprehensive' or (sap_selection_mode == 'custom' and (include_sap_052 | default(false))) %}
+  {% set sap_056 = sap_selection_mode == 'comprehensive' or (sap_selection_mode == 'custom' and (include_sap_056 | default(false))) %}
+  {% set sap_008 = sap_selection_mode == 'comprehensive' or (sap_selection_mode == 'custom' and (include_sap_008 | default(false))) %}
+  {% set sap_total = [sap_001, sap_015, sap_053, sap_010, sap_051, sap_052, sap_056, sap_008] | select | list | length %}
 
   ✅ Project "{{ project_name }}" created successfully!
 
-  📦 SAPs Included ({{ _sap_count }} total):
-  {% if _sap_001_enabled %}  ✓ SAP-001: Inbox Workflow{% endif %}
-  {% if _sap_015_enabled %}  ✓ SAP-015: Beads Task Management{% endif %}
-  {% if _sap_053_enabled %}  ✓ SAP-053: Conflict Resolution{% endif %}
-  {% if _sap_010_enabled %}  ✓ SAP-010: Memory System{% endif %}
-  {% if _sap_051_enabled %}  ✓ SAP-051: Pre-merge Validation{% endif %}
-  {% if _sap_052_enabled %}  ✓ SAP-052: Code Ownership{% endif %}
-  {% if _sap_056_enabled %}  ✓ SAP-056: Lifecycle Traceability{% endif %}
-  {% if _sap_008_enabled %}  ✓ SAP-008: Automation Dashboard{% endif %}
+  📦 SAPs Included ({{ sap_total }} total):
+  {% if sap_001 %}  ✓ SAP-001: Inbox Workflow{% endif %}
+  {% if sap_015 %}  ✓ SAP-015: Beads Task Management{% endif %}
+  {% if sap_053 %}  ✓ SAP-053: Conflict Resolution{% endif %}
+  {% if sap_010 %}  ✓ SAP-010: Memory System{% endif %}
+  {% if sap_051 %}  ✓ SAP-051: Pre-merge Validation{% endif %}
+  {% if sap_052 %}  ✓ SAP-052: Code Ownership{% endif %}
+  {% if sap_056 %}  ✓ SAP-056: Lifecycle Traceability{% endif %}
+  {% if sap_008 %}  ✓ SAP-008: Automation Dashboard{% endif %}
 
   🚀 Next Steps:
   1. cd {{ _project_slug }}
   {% if use_git %}2. git status  # Git repository initialized{% endif %}
-  {% if use_poetry and (_sap_053_enabled or _sap_056_enabled or _sap_008_enabled) %}3. poetry install  # Install Python dependencies{% endif %}
+  {% if use_poetry and (sap_053 or sap_056 or sap_008) %}3. poetry install  # Install Python dependencies{% endif %}
   4. just --list  # See available automation recipes
-  {% if _sap_001_enabled %}5. just inbox-status  # Check coordination inbox{% endif %}
-  {% if _sap_053_enabled %}6. just conflict-check  # Test conflict detection{% endif %}
+  {% if sap_001 %}5. just inbox-status  # Check coordination inbox{% endif %}
+  {% if sap_053 %}6. just conflict-check  # Test conflict detection{% endif %}
 
   📚 Documentation:
   - README.md: Project overview and quick start
-  {% if _sap_001_enabled %}- inbox/README.md: Coordination workflow{% endif %}
-  {% if _sap_010_enabled %}- .chora/CLAUDE.md: Agent awareness guide{% endif %}
+  {% if sap_001 %}- inbox/README.md: Coordination workflow{% endif %}
+  {% if sap_010 %}- .chora/CLAUDE.md: Agent awareness guide{% endif %}
 
   🔗 Resources:
   - chora-base: https://github.com/liminalcommons/chora-base

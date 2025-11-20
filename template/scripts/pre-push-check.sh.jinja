@@ -1,4 +1,14 @@
-{% if _sap_051_enabled %}#!/usr/bin/env bash
+{# Compute SAP enablement inline - workaround for Copier limitation with derived variables #}
+{% set sap_001 = sap_selection_mode != 'custom' or (include_sap_001 | default(false)) %}
+{% set sap_015 = sap_selection_mode != 'custom' or (include_sap_015 | default(false)) %}
+{% set sap_053 = sap_selection_mode in ['standard', 'comprehensive'] or (sap_selection_mode == 'custom' and (include_sap_053 | default(false))) %}
+{% set sap_010 = sap_selection_mode in ['standard', 'comprehensive'] or (sap_selection_mode == 'custom' and (include_sap_010 | default(false))) %}
+{% set sap_051 = sap_selection_mode == 'comprehensive' or (sap_selection_mode == 'custom' and (include_sap_051 | default(false))) %}
+{% set sap_052 = sap_selection_mode == 'comprehensive' or (sap_selection_mode == 'custom' and (include_sap_052 | default(false))) %}
+{% set sap_056 = sap_selection_mode == 'comprehensive' or (sap_selection_mode == 'custom' and (include_sap_056 | default(false))) %}
+{% set sap_008 = sap_selection_mode == 'comprehensive' or (sap_selection_mode == 'custom' and (include_sap_008 | default(false))) %}
+{% set sap_total = [sap_001, sap_015, sap_053, sap_010, sap_051, sap_052, sap_056, sap_008] | select | list | length %}
+{% if ((sap_selection_mode == 'comprehensive') or (sap_selection_mode == 'custom' and (include_sap_051 | default(false)))) %}#!/usr/bin/env bash
 # SAP-051: Pre-push Validation Script
 #
 # Purpose: Run validation checks before git push
@@ -15,8 +25,8 @@ echo ""
 # Track failed checks
 FAILED_CHECKS=0
 
-{% if _sap_053_enabled %}# Check 1: Conflict detection
-echo "▶️  Check 1/{{ 4 if (_sap_053_enabled and _sap_052_enabled and _sap_056_enabled) else 3 if (_sap_053_enabled and _sap_052_enabled) or (_sap_053_enabled and _sap_056_enabled) or (_sap_052_enabled and _sap_056_enabled) else 2 if _sap_053_enabled or _sap_052_enabled or _sap_056_enabled else 1 }}: Conflict detection..."
+{% if ((sap_selection_mode in ['standard', 'comprehensive']) or (sap_selection_mode == 'custom' and (include_sap_053 | default(false)))) %}# Check 1: Conflict detection
+echo "▶️  Check 1/{{ 4 if (sap_053 and sap_052 and sap_056) else 3 if (sap_053 and sap_052) or (sap_053 and sap_056) or (sap_052 and sap_056) else 2 if sap_053 or sap_052 or sap_056 else 1 }}: Conflict detection..."
 if {{ 'poetry run python' if use_poetry else 'python' + python_version }} scripts/conflict-checker.py --branch main > /dev/null 2>&1; then
     echo "   ✅ No conflicts detected"
 else
@@ -31,8 +41,8 @@ fi
 echo ""
 {% endif %}
 
-{% if _sap_052_enabled %}# Check 2: Code ownership coverage
-echo "▶️  Check 2/{{ 4 if (_sap_053_enabled and _sap_052_enabled and _sap_056_enabled) else 3 if (_sap_053_enabled and _sap_052_enabled) or (_sap_053_enabled and _sap_056_enabled) or (_sap_052_enabled and _sap_056_enabled) else 2 if _sap_053_enabled or _sap_052_enabled or _sap_056_enabled else 1 }}: Code ownership coverage..."
+{% if ((sap_selection_mode == 'comprehensive') or (sap_selection_mode == 'custom' and (include_sap_052 | default(false)))) %}# Check 2: Code ownership coverage
+echo "▶️  Check 2/{{ 4 if (sap_053 and sap_052 and sap_056) else 3 if (sap_053 and sap_052) or (sap_053 and sap_056) or (sap_052 and sap_056) else 2 if sap_053 or sap_052 or sap_056 else 1 }}: Code ownership coverage..."
 if {{ 'poetry run python' if use_poetry else 'python' + python_version }} scripts/ownership-coverage.py --quiet; then
     echo "   ✅ Code ownership coverage OK"
 else
@@ -41,8 +51,8 @@ fi
 echo ""
 {% endif %}
 
-{% if _sap_056_enabled %}# Check 3: Feature manifest validation
-echo "▶️  Check 3/{{ 4 if (_sap_053_enabled and _sap_052_enabled and _sap_056_enabled) else 3 if (_sap_053_enabled and _sap_052_enabled) or (_sap_053_enabled and _sap_056_enabled) or (_sap_052_enabled and _sap_056_enabled) else 2 if _sap_053_enabled or _sap_052_enabled or _sap_056_enabled else 1 }}: Feature manifest validation..."
+{% if ((sap_selection_mode == 'comprehensive') or (sap_selection_mode == 'custom' and (include_sap_056 | default(false)))) %}# Check 3: Feature manifest validation
+echo "▶️  Check 3/{{ 4 if (sap_053 and sap_052 and sap_056) else 3 if (sap_053 and sap_052) or (sap_053 and sap_056) or (sap_052 and sap_056) else 2 if sap_053 or sap_052 or sap_056 else 1 }}: Feature manifest validation..."
 if {{ 'poetry run python' if use_poetry else 'python' + python_version }} scripts/validate-manifest.py; then
     echo "   ✅ Feature manifest valid"
 else
@@ -51,8 +61,8 @@ fi
 echo ""
 {% endif %}
 
-# Check {{ 4 if (_sap_053_enabled and _sap_052_enabled and _sap_056_enabled) else 3 if (_sap_053_enabled and _sap_052_enabled) or (_sap_053_enabled and _sap_056_enabled) or (_sap_052_enabled and _sap_056_enabled) else 2 if _sap_053_enabled or _sap_052_enabled or _sap_056_enabled else 1 }}: Working directory status
-echo "▶️  Check {{ 4 if (_sap_053_enabled and _sap_052_enabled and _sap_056_enabled) else 3 if (_sap_053_enabled and _sap_052_enabled) or (_sap_053_enabled and _sap_056_enabled) or (_sap_052_enabled and _sap_056_enabled) else 2 if _sap_053_enabled or _sap_052_enabled or _sap_056_enabled else 1 }}/{{ 4 if (_sap_053_enabled and _sap_052_enabled and _sap_056_enabled) else 3 if (_sap_053_enabled and _sap_052_enabled) or (_sap_053_enabled and _sap_056_enabled) or (_sap_052_enabled and _sap_056_enabled) else 2 if _sap_053_enabled or _sap_052_enabled or _sap_056_enabled else 1 }}: Working directory status..."
+# Check {{ 4 if (sap_053 and sap_052 and sap_056) else 3 if (sap_053 and sap_052) or (sap_053 and sap_056) or (sap_052 and sap_056) else 2 if sap_053 or sap_052 or sap_056 else 1 }}: Working directory status
+echo "▶️  Check {{ 4 if (sap_053 and sap_052 and sap_056) else 3 if (sap_053 and sap_052) or (sap_053 and sap_056) or (sap_052 and sap_056) else 2 if sap_053 or sap_052 or sap_056 else 1 }}/{{ 4 if (sap_053 and sap_052 and sap_056) else 3 if (sap_053 and sap_052) or (sap_053 and sap_056) or (sap_052 and sap_056) else 2 if sap_053 or sap_052 or sap_056 else 1 }}: Working directory status..."
 if [ -z "$(git status --porcelain)" ]; then
     echo "   ✅ Working directory clean"
 else

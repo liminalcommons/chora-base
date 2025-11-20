@@ -1,3 +1,13 @@
+{# Compute SAP enablement inline - workaround for Copier limitation with derived variables #}
+{% set sap_001 = sap_selection_mode != 'custom' or (include_sap_001 | default(false)) %}
+{% set sap_015 = sap_selection_mode != 'custom' or (include_sap_015 | default(false)) %}
+{% set sap_053 = sap_selection_mode in ['standard', 'comprehensive'] or (sap_selection_mode == 'custom' and (include_sap_053 | default(false))) %}
+{% set sap_010 = sap_selection_mode in ['standard', 'comprehensive'] or (sap_selection_mode == 'custom' and (include_sap_010 | default(false))) %}
+{% set sap_051 = sap_selection_mode == 'comprehensive' or (sap_selection_mode == 'custom' and (include_sap_051 | default(false))) %}
+{% set sap_052 = sap_selection_mode == 'comprehensive' or (sap_selection_mode == 'custom' and (include_sap_052 | default(false))) %}
+{% set sap_056 = sap_selection_mode == 'comprehensive' or (sap_selection_mode == 'custom' and (include_sap_056 | default(false))) %}
+{% set sap_008 = sap_selection_mode == 'comprehensive' or (sap_selection_mode == 'custom' and (include_sap_008 | default(false))) %}
+{% set sap_total = [sap_001, sap_015, sap_053, sap_010, sap_051, sap_052, sap_056, sap_008] | select | list | length %}
 # {{ project_name }} - Automation Recipes
 # Generated: {{ '%Y-%m-%d' | strftime }}
 # Template: chora-base v1.0.0
@@ -7,7 +17,7 @@ default:
     @just --list
 
 # =============================================================================
-{% if _sap_001_enabled %}# SAP-001: Inbox Workflow
+{% if (sap_selection_mode != 'custom' or (include_sap_001 | default(false))) %}# SAP-001: Inbox Workflow
 # =============================================================================
 
 # Show coordination inbox status
@@ -32,7 +42,7 @@ inbox-create NAME:
 
 {% endif %}
 # =============================================================================
-{% if _sap_015_enabled %}# SAP-015: Beads Task Management
+{% if (sap_selection_mode != 'custom' or (include_sap_015 | default(false))) %}# SAP-015: Beads Task Management
 # =============================================================================
 
 # List all beads tasks
@@ -65,7 +75,7 @@ beads-close ID REASON:
 
 {% endif %}
 # =============================================================================
-{% if _sap_053_enabled %}# SAP-053: Conflict Resolution
+{% if ((sap_selection_mode in ['standard', 'comprehensive']) or (sap_selection_mode == 'custom' and (include_sap_053 | default(false)))) %}# SAP-053: Conflict Resolution
 # =============================================================================
 
 # Check for conflicts with target branch (default: main)
@@ -87,7 +97,7 @@ conflict-status BRANCH='main':
 
 {% endif %}
 # =============================================================================
-{% if _sap_010_enabled %}# SAP-010: Memory System
+{% if ((sap_selection_mode in ['standard', 'comprehensive']) or (sap_selection_mode == 'custom' and (include_sap_010 | default(false)))) %}# SAP-010: Memory System
 # =============================================================================
 
 # Show recent memory events (default: last 10)
@@ -131,7 +141,7 @@ memory-health:
 
 {% endif %}
 # =============================================================================
-{% if _sap_051_enabled %}# SAP-051: Pre-merge Validation
+{% if ((sap_selection_mode == 'comprehensive') or (sap_selection_mode == 'custom' and (include_sap_051 | default(false)))) %}# SAP-051: Pre-merge Validation
 # =============================================================================
 
 # Run pre-push validation checks
@@ -154,7 +164,7 @@ pre-push-uninstall:
 
 {% endif %}
 # =============================================================================
-{% if _sap_052_enabled %}# SAP-052: Code Ownership
+{% if ((sap_selection_mode == 'comprehensive') or (sap_selection_mode == 'custom' and (include_sap_052 | default(false)))) %}# SAP-052: Code Ownership
 # =============================================================================
 
 # Suggest reviewers for staged changes
@@ -184,7 +194,7 @@ ownership-show DIR:
 
 {% endif %}
 # =============================================================================
-{% if _sap_056_enabled %}# SAP-056: Lifecycle Traceability
+{% if ((sap_selection_mode == 'comprehensive') or (sap_selection_mode == 'custom' and (include_sap_056 | default(false)))) %}# SAP-056: Lifecycle Traceability
 # =============================================================================
 
 # Validate feature manifest
@@ -211,7 +221,7 @@ feature-find KEYWORD:
 
 {% endif %}
 # =============================================================================
-{% if _sap_008_enabled %}# SAP-008: Automation Dashboard
+{% if ((sap_selection_mode == 'comprehensive') or (sap_selection_mode == 'custom' and (include_sap_008 | default(false)))) %}# SAP-008: Automation Dashboard
 # =============================================================================
 
 # Show automation statistics
@@ -242,8 +252,8 @@ status:
     @echo "======================================"
     {% if use_git %}@echo "Git branch: $(git branch --show-current)"
     @echo "Git status: $(git status --short | wc -l) changed files"
-    {% endif %}{% if _sap_001_enabled %}@just inbox-status
-    {% endif %}{% if _sap_015_enabled %}@echo ""
+    {% endif %}{% if (sap_selection_mode != 'custom' or (include_sap_001 | default(false))) %}@just inbox-status
+    {% endif %}{% if (sap_selection_mode != 'custom' or (include_sap_015 | default(false))) %}@echo ""
     @echo "📋 Beads Tasks:"
     @bd list --status open | wc -l | xargs -I {} echo "  Open: {} tasks"
     @bd list --status in_progress | wc -l | xargs -I {} echo "  In Progress: {} tasks"
@@ -252,10 +262,10 @@ status:
 # Run all validation checks
 validate:
     @echo "🔍 Running all validation checks..."
-    {% if _sap_053_enabled %}@just conflict-check
-    {% endif %}{% if _sap_010_enabled %}@just memory-validate
-    {% endif %}{% if _sap_052_enabled %}@just ownership-validate
-    {% endif %}{% if _sap_056_enabled %}@just feature-manifest-validate
+    {% if ((sap_selection_mode in ['standard', 'comprehensive']) or (sap_selection_mode == 'custom' and (include_sap_053 | default(false)))) %}@just conflict-check
+    {% endif %}{% if ((sap_selection_mode in ['standard', 'comprehensive']) or (sap_selection_mode == 'custom' and (include_sap_010 | default(false)))) %}@just memory-validate
+    {% endif %}{% if ((sap_selection_mode == 'comprehensive') or (sap_selection_mode == 'custom' and (include_sap_052 | default(false)))) %}@just ownership-validate
+    {% endif %}{% if ((sap_selection_mode == 'comprehensive') or (sap_selection_mode == 'custom' and (include_sap_056 | default(false)))) %}@just feature-manifest-validate
     {% endif %}@echo "✅ All validations complete"
 
 # Clean temporary files and caches
@@ -281,13 +291,13 @@ help:
     @echo "Run 'just --list' to see all available recipes"
     @echo ""
     @echo "📚 SAPs Included:"
-    {% if _sap_001_enabled %}@echo "  ✓ SAP-001: Inbox Workflow (inbox-* recipes)"
-    {% endif %}{% if _sap_015_enabled %}@echo "  ✓ SAP-015: Beads Task Management (beads-* recipes)"
-    {% endif %}{% if _sap_053_enabled %}@echo "  ✓ SAP-053: Conflict Resolution (conflict-* recipes)"
-    {% endif %}{% if _sap_010_enabled %}@echo "  ✓ SAP-010: Memory System (memory-*, knowledge-* recipes)"
-    {% endif %}{% if _sap_051_enabled %}@echo "  ✓ SAP-051: Pre-merge Validation (pre-push-* recipes)"
-    {% endif %}{% if _sap_052_enabled %}@echo "  ✓ SAP-052: Code Ownership (ownership-* recipes)"
-    {% endif %}{% if _sap_056_enabled %}@echo "  ✓ SAP-056: Lifecycle Traceability (feature-manifest-* recipes)"
-    {% endif %}{% if _sap_008_enabled %}@echo "  ✓ SAP-008: Automation Dashboard (automation-* recipes)"
+    {% if (sap_selection_mode != 'custom' or (include_sap_001 | default(false))) %}@echo "  ✓ SAP-001: Inbox Workflow (inbox-* recipes)"
+    {% endif %}{% if (sap_selection_mode != 'custom' or (include_sap_015 | default(false))) %}@echo "  ✓ SAP-015: Beads Task Management (beads-* recipes)"
+    {% endif %}{% if ((sap_selection_mode in ['standard', 'comprehensive']) or (sap_selection_mode == 'custom' and (include_sap_053 | default(false)))) %}@echo "  ✓ SAP-053: Conflict Resolution (conflict-* recipes)"
+    {% endif %}{% if ((sap_selection_mode in ['standard', 'comprehensive']) or (sap_selection_mode == 'custom' and (include_sap_010 | default(false)))) %}@echo "  ✓ SAP-010: Memory System (memory-*, knowledge-* recipes)"
+    {% endif %}{% if ((sap_selection_mode == 'comprehensive') or (sap_selection_mode == 'custom' and (include_sap_051 | default(false)))) %}@echo "  ✓ SAP-051: Pre-merge Validation (pre-push-* recipes)"
+    {% endif %}{% if ((sap_selection_mode == 'comprehensive') or (sap_selection_mode == 'custom' and (include_sap_052 | default(false)))) %}@echo "  ✓ SAP-052: Code Ownership (ownership-* recipes)"
+    {% endif %}{% if ((sap_selection_mode == 'comprehensive') or (sap_selection_mode == 'custom' and (include_sap_056 | default(false)))) %}@echo "  ✓ SAP-056: Lifecycle Traceability (feature-manifest-* recipes)"
+    {% endif %}{% if ((sap_selection_mode == 'comprehensive') or (sap_selection_mode == 'custom' and (include_sap_008 | default(false)))) %}@echo "  ✓ SAP-008: Automation Dashboard (automation-* recipes)"
     {% endif %}@echo ""
     @echo "🔗 Documentation: README.md"

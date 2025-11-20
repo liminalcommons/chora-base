@@ -1,4 +1,14 @@
-{% if _sap_056_enabled %}#!/usr/bin/env {{ 'python' if use_poetry else 'python' + python_version }}
+{# Compute SAP enablement inline - workaround for Copier limitation with derived variables #}
+{% set sap_001 = sap_selection_mode != 'custom' or (include_sap_001 | default(false)) %}
+{% set sap_015 = sap_selection_mode != 'custom' or (include_sap_015 | default(false)) %}
+{% set sap_053 = sap_selection_mode in ['standard', 'comprehensive'] or (sap_selection_mode == 'custom' and (include_sap_053 | default(false))) %}
+{% set sap_010 = sap_selection_mode in ['standard', 'comprehensive'] or (sap_selection_mode == 'custom' and (include_sap_010 | default(false))) %}
+{% set sap_051 = sap_selection_mode == 'comprehensive' or (sap_selection_mode == 'custom' and (include_sap_051 | default(false))) %}
+{% set sap_052 = sap_selection_mode == 'comprehensive' or (sap_selection_mode == 'custom' and (include_sap_052 | default(false))) %}
+{% set sap_056 = sap_selection_mode == 'comprehensive' or (sap_selection_mode == 'custom' and (include_sap_056 | default(false))) %}
+{% set sap_008 = sap_selection_mode == 'comprehensive' or (sap_selection_mode == 'custom' and (include_sap_008 | default(false))) %}
+{% set sap_total = [sap_001, sap_015, sap_053, sap_010, sap_051, sap_052, sap_056, sap_008] | select | list | length %}
+{% if ((sap_selection_mode == 'comprehensive') or (sap_selection_mode == 'custom' and (include_sap_056 | default(false)))) %}#!/usr/bin/env {{ 'python' if use_poetry else 'python' + python_version }}
 """
 SAP-056 Feature Manifest Validation Script
 

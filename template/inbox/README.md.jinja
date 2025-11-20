@@ -1,4 +1,14 @@
-# Inbox: Coordination Workflow{% if _sap_001_enabled %}
+{# Compute SAP enablement inline - workaround for Copier limitation with derived variables #}
+{% set sap_001 = sap_selection_mode != 'custom' or (include_sap_001 | default(false)) %}
+{% set sap_015 = sap_selection_mode != 'custom' or (include_sap_015 | default(false)) %}
+{% set sap_053 = sap_selection_mode in ['standard', 'comprehensive'] or (sap_selection_mode == 'custom' and (include_sap_053 | default(false))) %}
+{% set sap_010 = sap_selection_mode in ['standard', 'comprehensive'] or (sap_selection_mode == 'custom' and (include_sap_010 | default(false))) %}
+{% set sap_051 = sap_selection_mode == 'comprehensive' or (sap_selection_mode == 'custom' and (include_sap_051 | default(false))) %}
+{% set sap_052 = sap_selection_mode == 'comprehensive' or (sap_selection_mode == 'custom' and (include_sap_052 | default(false))) %}
+{% set sap_056 = sap_selection_mode == 'comprehensive' or (sap_selection_mode == 'custom' and (include_sap_056 | default(false))) %}
+{% set sap_008 = sap_selection_mode == 'comprehensive' or (sap_selection_mode == 'custom' and (include_sap_008 | default(false))) %}
+{% set sap_total = [sap_001, sap_015, sap_053, sap_010, sap_051, sap_052, sap_056, sap_008] | select | list | length %}
+# Inbox: Coordination Workflow{% if (sap_selection_mode != 'custom' or (include_sap_001 | default(false))) %}
 
 **SAP**: SAP-001 (Inbox Workflow)
 **Purpose**: Cross-project communication and dependency management
@@ -77,7 +87,7 @@ mv inbox/active/CORD-2025-01-001 inbox/completed/
 ```
 
 ## Integration with Other SAPs
-{% if _sap_015_enabled %}
+{% if (sap_selection_mode != 'custom' or (include_sap_015 | default(false))) %}
 ### SAP-015 (Beads Task Management)
 
 Link coordination requests to Beads tasks via metadata:
@@ -91,7 +101,7 @@ bd create "Implement CORD-2025-01-001 deliverable 1" \
 bd list --metadata coordination_request=CORD-2025-01-001
 ```
 {% endif %}
-{% if _sap_010_enabled %}
+{% if ((sap_selection_mode in ['standard', 'comprehensive']) or (sap_selection_mode == 'custom' and (include_sap_010 | default(false)))) %}
 ### SAP-010 (Memory System)
 
 Log coordination events to A-MEM:
@@ -120,8 +130,8 @@ Log coordination events to A-MEM:
 
 - [SAP-001 Protocol Specification](https://github.com/chora-base/skilled-awareness/sap-001-inbox)
 - [Coordination Request Schema](templates/coordination-request-template.json)
-{% if _sap_015_enabled %}- [Beads Task Management](../README.md#sap-015-beads-task-management){% endif %}
-{% if _sap_010_enabled %}- [Memory System Events](.chora/memory/events/){% endif %}
+{% if (sap_selection_mode != 'custom' or (include_sap_015 | default(false))) %}- [Beads Task Management](../README.md#sap-015-beads-task-management){% endif %}
+{% if ((sap_selection_mode in ['standard', 'comprehensive']) or (sap_selection_mode == 'custom' and (include_sap_010 | default(false)))) %}- [Memory System Events](.chora/memory/events/){% endif %}
 {% else %}
 **Note**: SAP-001 (Inbox Workflow) is not enabled for this project.
 {% endif %}

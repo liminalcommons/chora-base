@@ -1,3 +1,13 @@
+{# Compute SAP enablement inline - workaround for Copier limitation with derived variables #}
+{% set sap_001 = sap_selection_mode != 'custom' or (include_sap_001 | default(false)) %}
+{% set sap_015 = sap_selection_mode != 'custom' or (include_sap_015 | default(false)) %}
+{% set sap_053 = sap_selection_mode in ['standard', 'comprehensive'] or (sap_selection_mode == 'custom' and (include_sap_053 | default(false))) %}
+{% set sap_010 = sap_selection_mode in ['standard', 'comprehensive'] or (sap_selection_mode == 'custom' and (include_sap_010 | default(false))) %}
+{% set sap_051 = sap_selection_mode == 'comprehensive' or (sap_selection_mode == 'custom' and (include_sap_051 | default(false))) %}
+{% set sap_052 = sap_selection_mode == 'comprehensive' or (sap_selection_mode == 'custom' and (include_sap_052 | default(false))) %}
+{% set sap_056 = sap_selection_mode == 'comprehensive' or (sap_selection_mode == 'custom' and (include_sap_056 | default(false))) %}
+{% set sap_008 = sap_selection_mode == 'comprehensive' or (sap_selection_mode == 'custom' and (include_sap_008 | default(false))) %}
+{% set sap_total = [sap_001, sap_015, sap_053, sap_010, sap_051, sap_052, sap_056, sap_008] | select | list | length %}
 # Template Generation Summary
 
 **Project**: {{ project_name }}
@@ -26,17 +36,17 @@
 ### SAP Selection
 
 **Mode**: {{ sap_selection_mode }}
-**Total SAPs**: {{ _sap_count }}
+**Total SAPs**: {{ sap_total }}
 
 Enabled SAPs:
-{% if _sap_001_enabled %}- ✅ SAP-001: Inbox Workflow{% endif %}
-{% if _sap_015_enabled %}- ✅ SAP-015: Beads Task Management{% endif %}
-{% if _sap_053_enabled %}- ✅ SAP-053: Conflict Resolution{% endif %}
-{% if _sap_010_enabled %}- ✅ SAP-010: Memory System{% endif %}
-{% if _sap_051_enabled %}- ✅ SAP-051: Pre-merge Validation{% endif %}
-{% if _sap_052_enabled %}- ✅ SAP-052: Code Ownership{% endif %}
-{% if _sap_056_enabled %}- ✅ SAP-056: Lifecycle Traceability{% endif %}
-{% if _sap_008_enabled %}- ✅ SAP-008: Automation Dashboard{% endif %}
+{% if (sap_selection_mode != 'custom' or (include_sap_001 | default(false))) %}- ✅ SAP-001: Inbox Workflow{% endif %}
+{% if (sap_selection_mode != 'custom' or (include_sap_015 | default(false))) %}- ✅ SAP-015: Beads Task Management{% endif %}
+{% if ((sap_selection_mode in ['standard', 'comprehensive']) or (sap_selection_mode == 'custom' and (include_sap_053 | default(false)))) %}- ✅ SAP-053: Conflict Resolution{% endif %}
+{% if ((sap_selection_mode in ['standard', 'comprehensive']) or (sap_selection_mode == 'custom' and (include_sap_010 | default(false)))) %}- ✅ SAP-010: Memory System{% endif %}
+{% if ((sap_selection_mode == 'comprehensive') or (sap_selection_mode == 'custom' and (include_sap_051 | default(false)))) %}- ✅ SAP-051: Pre-merge Validation{% endif %}
+{% if ((sap_selection_mode == 'comprehensive') or (sap_selection_mode == 'custom' and (include_sap_052 | default(false)))) %}- ✅ SAP-052: Code Ownership{% endif %}
+{% if ((sap_selection_mode == 'comprehensive') or (sap_selection_mode == 'custom' and (include_sap_056 | default(false)))) %}- ✅ SAP-056: Lifecycle Traceability{% endif %}
+{% if ((sap_selection_mode == 'comprehensive') or (sap_selection_mode == 'custom' and (include_sap_008 | default(false)))) %}- ✅ SAP-008: Automation Dashboard{% endif %}
 
 ---
 
@@ -44,7 +54,7 @@ Enabled SAPs:
 
 ### Core Files
 - `README.md` - Project documentation with SAP guides
-- `justfile` - Automation recipes ({{ _sap_count }} SAP sections)
+- `justfile` - Automation recipes ({{ sap_total }} SAP sections)
 - `.gitignore` - Conditional ignores
 {% if use_python %}- `pyproject.toml` - Python dependencies{% endif %}
 - `.copier-answers.yml` - Template metadata for updates
@@ -53,22 +63,22 @@ Enabled SAPs:
 - `docs/GETTING-STARTED.md` - Quick start guide
 
 ### Scripts
-{% if _sap_053_enabled %}- `scripts/conflict-checker.py` - Conflict detection{% endif %}
-{% if _sap_051_enabled %}- `scripts/pre-push-check.sh` - Pre-push validation{% endif %}
-{% if _sap_052_enabled %}- `scripts/ownership-coverage.py` - Code ownership coverage{% endif %}
-{% if _sap_056_enabled %}- `scripts/validate-manifest.py` - Feature manifest validation{% endif %}
+{% if ((sap_selection_mode in ['standard', 'comprehensive']) or (sap_selection_mode == 'custom' and (include_sap_053 | default(false)))) %}- `scripts/conflict-checker.py` - Conflict detection{% endif %}
+{% if ((sap_selection_mode == 'comprehensive') or (sap_selection_mode == 'custom' and (include_sap_051 | default(false)))) %}- `scripts/pre-push-check.sh` - Pre-push validation{% endif %}
+{% if ((sap_selection_mode == 'comprehensive') or (sap_selection_mode == 'custom' and (include_sap_052 | default(false)))) %}- `scripts/ownership-coverage.py` - Code ownership coverage{% endif %}
+{% if ((sap_selection_mode == 'comprehensive') or (sap_selection_mode == 'custom' and (include_sap_056 | default(false)))) %}- `scripts/validate-manifest.py` - Feature manifest validation{% endif %}
 
 ### SAP-Specific Directories
-{% if _sap_001_enabled %}- `inbox/` - Coordination workflow
+{% if (sap_selection_mode != 'custom' or (include_sap_001 | default(false))) %}- `inbox/` - Coordination workflow
   - `inbox/templates/` - Request templates
   - `inbox/incoming/coordination/` - New requests
   - `inbox/active/` - Work in progress
   - `inbox/completed/` - Finished work{% endif %}
-{% if _sap_010_enabled %}- `.chora/` - Memory system
+{% if ((sap_selection_mode in ['standard', 'comprehensive']) or (sap_selection_mode == 'custom' and (include_sap_010 | default(false)))) %}- `.chora/` - Memory system
   - `.chora/CLAUDE.md` - Claude awareness guide
   - `.chora/memory/events/` - Event logs (JSONL)
   - `.chora/memory/knowledge/notes/` - Knowledge notes{% endif %}
-{% if _sap_015_enabled %}- `.beads/` - Task management (Beads CLI){% endif %}
+{% if (sap_selection_mode != 'custom' or (include_sap_015 | default(false))) %}- `.beads/` - Task management (Beads CLI){% endif %}
 
 ---
 
@@ -101,15 +111,15 @@ Enabled SAPs:
    {% endif %}
 
 4. **Explore SAPs**:
-   {% if _sap_001_enabled %}- Run `just inbox-status` to see coordination workflow{% endif %}
-   {% if _sap_015_enabled %}- Run `bd list` to see Beads task management{% endif %}
-   {% if _sap_053_enabled %}- Run `just conflict-check` to test conflict detection{% endif %}
-   {% if _sap_010_enabled %}- Run `just memory-health` to check memory system{% endif %}
+   {% if (sap_selection_mode != 'custom' or (include_sap_001 | default(false))) %}- Run `just inbox-status` to see coordination workflow{% endif %}
+   {% if (sap_selection_mode != 'custom' or (include_sap_015 | default(false))) %}- Run `bd list` to see Beads task management{% endif %}
+   {% if ((sap_selection_mode in ['standard', 'comprehensive']) or (sap_selection_mode == 'custom' and (include_sap_053 | default(false)))) %}- Run `just conflict-check` to test conflict detection{% endif %}
+   {% if ((sap_selection_mode in ['standard', 'comprehensive']) or (sap_selection_mode == 'custom' and (include_sap_010 | default(false)))) %}- Run `just memory-health` to check memory system{% endif %}
 
 5. **Read Documentation**:
    - `README.md` for project overview
    - `docs/GETTING-STARTED.md` for detailed setup
-   {% if _sap_010_enabled %}- `.chora/CLAUDE.md` for Claude-specific guidance{% endif %}
+   {% if ((sap_selection_mode in ['standard', 'comprehensive']) or (sap_selection_mode == 'custom' and (include_sap_010 | default(false)))) %}- `.chora/CLAUDE.md` for Claude-specific guidance{% endif %}
 
 ---
 

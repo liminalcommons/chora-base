@@ -1,4 +1,14 @@
-{% if _sap_053_enabled or _sap_052_enabled or _sap_056_enabled or _sap_008_enabled or _sap_010_enabled %}[tool.poetry]
+{# Compute SAP enablement inline - workaround for Copier limitation with derived variables #}
+{% set sap_001 = sap_selection_mode != 'custom' or (include_sap_001 | default(false)) %}
+{% set sap_015 = sap_selection_mode != 'custom' or (include_sap_015 | default(false)) %}
+{% set sap_053 = sap_selection_mode in ['standard', 'comprehensive'] or (sap_selection_mode == 'custom' and (include_sap_053 | default(false))) %}
+{% set sap_010 = sap_selection_mode in ['standard', 'comprehensive'] or (sap_selection_mode == 'custom' and (include_sap_010 | default(false))) %}
+{% set sap_051 = sap_selection_mode == 'comprehensive' or (sap_selection_mode == 'custom' and (include_sap_051 | default(false))) %}
+{% set sap_052 = sap_selection_mode == 'comprehensive' or (sap_selection_mode == 'custom' and (include_sap_052 | default(false))) %}
+{% set sap_056 = sap_selection_mode == 'comprehensive' or (sap_selection_mode == 'custom' and (include_sap_056 | default(false))) %}
+{% set sap_008 = sap_selection_mode == 'comprehensive' or (sap_selection_mode == 'custom' and (include_sap_008 | default(false))) %}
+{% set sap_total = [sap_001, sap_015, sap_053, sap_010, sap_051, sap_052, sap_056, sap_008] | select | list | length %}
+{% if sap_053 or sap_052 or sap_056 or sap_008 or sap_010 %}[tool.poetry]
 name = "{{ project_slug }}"
 version = "0.1.0"
 description = "{{ project_name }} - Generated from chora-base template"
@@ -10,13 +20,13 @@ packages = [{include = "{{ project_slug }}"}]
 
 [tool.poetry.dependencies]
 python = "^{{ python_version }}"
-{% if _sap_053_enabled or _sap_052_enabled or _sap_056_enabled or _sap_008_enabled or _sap_010_enabled %}
+{% if sap_053 or sap_052 or sap_056 or sap_008 or sap_010 %}
 click = "^8.1.7"            # CLI framework for scripts
 {% endif %}
-{% if _sap_053_enabled or _sap_056_enabled %}
+{% if sap_053 or sap_056 %}
 pyyaml = "^6.0.1"           # YAML parsing for feature-manifest, CODEOWNERS
 {% endif %}
-{% if _sap_010_enabled %}
+{% if ((sap_selection_mode in ['standard', 'comprehensive']) or (sap_selection_mode == 'custom' and (include_sap_010 | default(false)))) %}
 python-dateutil = "^2.8.2"  # Date parsing for A-MEM events
 {% endif %}
 
@@ -26,7 +36,7 @@ pytest-cov = "^4.1.0"
 black = "^23.12.1"
 ruff = "^0.1.8"
 
-{% if _sap_053_enabled %}[tool.black]
+{% if ((sap_selection_mode in ['standard', 'comprehensive']) or (sap_selection_mode == 'custom' and (include_sap_053 | default(false)))) %}[tool.black]
 line-length = 100
 target-version = ['py{{ python_version.replace(".", "") }}']
 

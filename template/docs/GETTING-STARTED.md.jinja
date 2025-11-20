@@ -1,3 +1,13 @@
+{# Compute SAP enablement inline - workaround for Copier limitation with derived variables #}
+{% set sap_001 = sap_selection_mode != 'custom' or (include_sap_001 | default(false)) %}
+{% set sap_015 = sap_selection_mode != 'custom' or (include_sap_015 | default(false)) %}
+{% set sap_053 = sap_selection_mode in ['standard', 'comprehensive'] or (sap_selection_mode == 'custom' and (include_sap_053 | default(false))) %}
+{% set sap_010 = sap_selection_mode in ['standard', 'comprehensive'] or (sap_selection_mode == 'custom' and (include_sap_010 | default(false))) %}
+{% set sap_051 = sap_selection_mode == 'comprehensive' or (sap_selection_mode == 'custom' and (include_sap_051 | default(false))) %}
+{% set sap_052 = sap_selection_mode == 'comprehensive' or (sap_selection_mode == 'custom' and (include_sap_052 | default(false))) %}
+{% set sap_056 = sap_selection_mode == 'comprehensive' or (sap_selection_mode == 'custom' and (include_sap_056 | default(false))) %}
+{% set sap_008 = sap_selection_mode == 'comprehensive' or (sap_selection_mode == 'custom' and (include_sap_008 | default(false))) %}
+{% set sap_total = [sap_001, sap_015, sap_053, sap_010, sap_051, sap_052, sap_056, sap_008] | select | list | length %}
 # Getting Started with {{ project_name }}
 
 Welcome to {{ project_name }}! This guide will help you get up and running quickly.
@@ -8,7 +18,7 @@ Welcome to {{ project_name }}! This guide will help you get up and running quick
 - Poetry (install: `curl -sSL https://install.python-poetry.org | python3 -`){% endif %}{% endif %}
 {% if use_typescript %}- Node.js 18+ and npm/yarn{% endif %}
 {% if use_git %}- Git{% endif %}
-{% if _sap_015_enabled %}- Beads task manager (install: see [SAP-015 documentation](https://github.com/chora-base/skilled-awareness/sap-015-beads)){% endif %}
+{% if (sap_selection_mode != 'custom' or (include_sap_015 | default(false))) %}- Beads task manager (install: see [SAP-015 documentation](https://github.com/chora-base/skilled-awareness/sap-015-beads)){% endif %}
 - just command runner (install: `cargo install just` or `brew install just`)
 
 ## Installation
@@ -74,23 +84,23 @@ just status
 ├── README.md                  # Project overview
 ├── justfile                   # Automation recipes
 {% if use_python %}├── pyproject.toml            # Python dependencies{% endif %}
-{% if _sap_001_enabled %}├── inbox/                    # Coordination workflow (SAP-001)
+{% if (sap_selection_mode != 'custom' or (include_sap_001 | default(false))) %}├── inbox/                    # Coordination workflow (SAP-001)
 │   ├── incoming/
 │   ├── active/
 │   ├── completed/
 │   └── templates/{% endif %}
-{% if _sap_010_enabled %}├── .chora/                   # Memory system (SAP-010)
+{% if ((sap_selection_mode in ['standard', 'comprehensive']) or (sap_selection_mode == 'custom' and (include_sap_010 | default(false)))) %}├── .chora/                   # Memory system (SAP-010)
 │   ├── CLAUDE.md
 │   └── memory/
 │       ├── events/
 │       └── knowledge/{% endif %}
-{% if _sap_015_enabled %}├── .beads/                   # Task management (SAP-015){% endif %}
+{% if (sap_selection_mode != 'custom' or (include_sap_015 | default(false))) %}├── .beads/                   # Task management (SAP-015){% endif %}
 ├── docs/                     # Documentation
 └── scripts/                  # Automation scripts
 ```
 
 ## Quick Start
-{% if _sap_015_enabled %}
+{% if (sap_selection_mode != 'custom' or (include_sap_015 | default(false))) %}
 ### Create Your First Task
 
 ```bash
@@ -107,7 +117,7 @@ bd update <task-id> --status in_progress
 bd close <task-id> --reason "Environment configured"
 ```
 {% endif %}
-{% if _sap_001_enabled %}
+{% if (sap_selection_mode != 'custom' or (include_sap_001 | default(false))) %}
 ### Create Coordination Request
 
 ```bash
@@ -121,7 +131,7 @@ just inbox-create "my-feature"
 just inbox-status
 ```
 {% endif %}
-{% if _sap_053_enabled %}
+{% if ((sap_selection_mode in ['standard', 'comprehensive']) or (sap_selection_mode == 'custom' and (include_sap_053 | default(false)))) %}
 ### Check for Merge Conflicts
 
 ```bash
@@ -138,22 +148,22 @@ just conflict-check
 
 1. **Start of day**:
    ```bash
-   just status{% if _sap_015_enabled %}
+   just status{% if (sap_selection_mode != 'custom' or (include_sap_015 | default(false))) %}
    bd list --status in_progress{% endif %}
    ```
 
 2. **Before committing**:
    ```bash
-   just validate{% if _sap_053_enabled %}
+   just validate{% if ((sap_selection_mode in ['standard', 'comprehensive']) or (sap_selection_mode == 'custom' and (include_sap_053 | default(false)))) %}
    just conflict-check{% endif %}
    ```
 
 3. **End of day**:
-   {% if _sap_010_enabled %}```bash
+   {% if ((sap_selection_mode in ['standard', 'comprehensive']) or (sap_selection_mode == 'custom' and (include_sap_010 | default(false)))) %}```bash
    # Log completion events (optional)
    # Add to .chora/memory/events/YYYY-MM.jsonl
    ```{% endif %}
-{% if _sap_051_enabled %}
+{% if ((sap_selection_mode == 'comprehensive') or (sap_selection_mode == 'custom' and (include_sap_051 | default(false)))) %}
 ### Pre-Push Validation
 
 ```bash
@@ -164,7 +174,7 @@ just pre-push-check
 just pre-push-install
 ```
 {% endif %}
-{% if _sap_052_enabled %}
+{% if ((sap_selection_mode == 'comprehensive') or (sap_selection_mode == 'custom' and (include_sap_052 | default(false)))) %}
 ### Code Review Workflow
 
 ```bash
@@ -184,38 +194,38 @@ Run `just --list` to see all available recipes. Key commands:
 just status                     # Show project status
 just validate                   # Run all validation checks
 just clean                      # Clean temporary files
-{% if _sap_001_enabled %}
+{% if (sap_selection_mode != 'custom' or (include_sap_001 | default(false))) %}
 # Inbox workflow (SAP-001)
 just inbox-status              # Show coordination dashboard
 just inbox-list                # List all requests
 just inbox-create NAME         # Create new request{% endif %}
-{% if _sap_015_enabled %}
+{% if (sap_selection_mode != 'custom' or (include_sap_015 | default(false))) %}
 # Task management (SAP-015)
 just beads-list                # List all tasks
 just beads-open                # List open tasks
 just beads-create TITLE        # Create new task{% endif %}
-{% if _sap_053_enabled %}
+{% if ((sap_selection_mode in ['standard', 'comprehensive']) or (sap_selection_mode == 'custom' and (include_sap_053 | default(false)))) %}
 # Conflict resolution (SAP-053)
 just conflict-check            # Check for merge conflicts
 just conflict-status           # Quick conflict check{% endif %}
-{% if _sap_010_enabled %}
+{% if ((sap_selection_mode in ['standard', 'comprehensive']) or (sap_selection_mode == 'custom' and (include_sap_010 | default(false)))) %}
 # Memory system (SAP-010)
 just memory-events N           # Show recent N events
 just knowledge-list N          # List recent knowledge notes
 just memory-health             # Memory system health{% endif %}
-{% if _sap_051_enabled %}
+{% if ((sap_selection_mode == 'comprehensive') or (sap_selection_mode == 'custom' and (include_sap_051 | default(false)))) %}
 # Pre-merge validation (SAP-051)
 just pre-push-check            # Run validation checks
 just pre-push-install          # Install git hook{% endif %}
-{% if _sap_052_enabled %}
+{% if ((sap_selection_mode == 'comprehensive') or (sap_selection_mode == 'custom' and (include_sap_052 | default(false)))) %}
 # Code ownership (SAP-052)
 just ownership-coverage        # Check ownership coverage
 just ownership-validate        # Validate CODEOWNERS{% endif %}
-{% if _sap_056_enabled %}
+{% if ((sap_selection_mode == 'comprehensive') or (sap_selection_mode == 'custom' and (include_sap_056 | default(false)))) %}
 # Lifecycle traceability (SAP-056)
 just feature-manifest-validate # Validate feature manifest
 just feature-find KEYWORD      # Find feature by keyword{% endif %}
-{% if _sap_008_enabled %}
+{% if ((sap_selection_mode == 'comprehensive') or (sap_selection_mode == 'custom' and (include_sap_008 | default(false)))) %}
 # Automation dashboard (SAP-008)
 just automation-stats          # Show automation statistics
 just automation-usage-report   # Usage report (30 days){% endif %}
@@ -223,24 +233,24 @@ just automation-usage-report   # Usage report (30 days){% endif %}
 
 ## Enabled SAPs
 
-This project includes {{ _sap_count }} Skilled Awareness Packages (SAPs):
+This project includes {{ sap_total }} Skilled Awareness Packages (SAPs):
 
-{% if _sap_001_enabled %}- ✅ **SAP-001**: Inbox Workflow - Cross-project coordination{% endif %}
-{% if _sap_015_enabled %}- ✅ **SAP-015**: Beads Task Management - Git-backed tasks{% endif %}
-{% if _sap_053_enabled %}- ✅ **SAP-053**: Conflict Resolution - Pre-merge conflict detection{% endif %}
-{% if _sap_010_enabled %}- ✅ **SAP-010**: Memory System - Event logging and knowledge notes{% endif %}
-{% if _sap_051_enabled %}- ✅ **SAP-051**: Pre-merge Validation - Git hooks and validation{% endif %}
-{% if _sap_052_enabled %}- ✅ **SAP-052**: Code Ownership - CODEOWNERS management{% endif %}
-{% if _sap_056_enabled %}- ✅ **SAP-056**: Lifecycle Traceability - Feature manifest{% endif %}
-{% if _sap_008_enabled %}- ✅ **SAP-008**: Automation Dashboard - Recipe usage tracking{% endif %}
+{% if (sap_selection_mode != 'custom' or (include_sap_001 | default(false))) %}- ✅ **SAP-001**: Inbox Workflow - Cross-project coordination{% endif %}
+{% if (sap_selection_mode != 'custom' or (include_sap_015 | default(false))) %}- ✅ **SAP-015**: Beads Task Management - Git-backed tasks{% endif %}
+{% if ((sap_selection_mode in ['standard', 'comprehensive']) or (sap_selection_mode == 'custom' and (include_sap_053 | default(false)))) %}- ✅ **SAP-053**: Conflict Resolution - Pre-merge conflict detection{% endif %}
+{% if ((sap_selection_mode in ['standard', 'comprehensive']) or (sap_selection_mode == 'custom' and (include_sap_010 | default(false)))) %}- ✅ **SAP-010**: Memory System - Event logging and knowledge notes{% endif %}
+{% if ((sap_selection_mode == 'comprehensive') or (sap_selection_mode == 'custom' and (include_sap_051 | default(false)))) %}- ✅ **SAP-051**: Pre-merge Validation - Git hooks and validation{% endif %}
+{% if ((sap_selection_mode == 'comprehensive') or (sap_selection_mode == 'custom' and (include_sap_052 | default(false)))) %}- ✅ **SAP-052**: Code Ownership - CODEOWNERS management{% endif %}
+{% if ((sap_selection_mode == 'comprehensive') or (sap_selection_mode == 'custom' and (include_sap_056 | default(false)))) %}- ✅ **SAP-056**: Lifecycle Traceability - Feature manifest{% endif %}
+{% if ((sap_selection_mode == 'comprehensive') or (sap_selection_mode == 'custom' and (include_sap_008 | default(false)))) %}- ✅ **SAP-008**: Automation Dashboard - Recipe usage tracking{% endif %}
 
 See [README.md](../README.md) for details on each SAP.
 
 ## Next Steps
 
 1. ✅ Installation complete
-2. {% if _sap_015_enabled %}📋 Create your first task: `bd create "First task"`{% else %}📋 Review project structure{% endif %}
-3. {% if _sap_001_enabled %}📥 Set up coordination workflow: `just inbox-status`{% else %}📖 Read project documentation{% endif %}
+2. {% if (sap_selection_mode != 'custom' or (include_sap_015 | default(false))) %}📋 Create your first task: `bd create "First task"`{% else %}📋 Review project structure{% endif %}
+3. {% if (sap_selection_mode != 'custom' or (include_sap_001 | default(false))) %}📥 Set up coordination workflow: `just inbox-status`{% else %}📖 Read project documentation{% endif %}
 4. 🚀 Start developing!
 
 ## Troubleshooting
@@ -268,7 +278,7 @@ cargo install just
 # Or download binary:
 # https://github.com/casey/just/releases
 ```
-{% if _sap_015_enabled %}
+{% if (sap_selection_mode != 'custom' or (include_sap_015 | default(false))) %}
 ### Beads Not Found
 
 ```bash
