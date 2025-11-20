@@ -364,13 +364,18 @@ class TraceabilityValidator:
             # Check code paths
             for code_ref in (feature.get("code") or []):
                 code_path = code_ref.get("path")
+                code_function = code_ref.get("function", "")
                 if code_path:
                     total_refs += 1
-                    full_path = self.project_root / code_path
-                    if full_path.exists():
+                    # Skip file existence check for external dependencies
+                    if "external dependency" in code_function.lower() or code_path.startswith("C:/") or code_path.startswith("/usr/") or code_path.startswith("/opt/"):
                         passed_refs += 1
                     else:
-                        failures.append(f"{feature_id}: Code file not found: {code_path}")
+                        full_path = self.project_root / code_path
+                        if full_path.exists():
+                            passed_refs += 1
+                        else:
+                            failures.append(f"{feature_id}: Code file not found: {code_path}")
 
             # Check test paths
             for test_ref in (feature.get("tests") or []):
