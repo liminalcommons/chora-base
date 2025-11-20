@@ -268,21 +268,80 @@ just inbox-status
 - **Template Documentation**: [COPIER-QUESTIONNAIRE-DESIGN.md](https://github.com/liminalcommons/chora-base/blob/main/COPIER-QUESTIONNAIRE-DESIGN.md)
 
 ### Template Updates
-To update this project when the chora-base template improves:
+
+This project was generated from the chora-base Copier template. When the template improves, you can update your project to receive enhancements while preserving your customizations.
+
+#### When to Update
+
+Update your project when chora-base releases:
+- **New SAP features**: Enhanced scripts, recipes, or documentation
+- **Bug fixes**: Corrections to template files or scripts
+- **Security patches**: Critical updates to dependencies or workflows
+- **Major versions**: Significant template improvements (review changelog first)
+
+#### Update Workflow
 
 ```bash
-# Update to latest template version
+# 1. Ensure working directory is clean
+git status
+git stash  # If you have uncommitted changes
+
+# 2. Update to latest template version
 copier update
 
-# Review changes (resolve conflicts if any)
-git diff
+# 3. Review changes proposed by copier
+# Copier will show a diff of changes and prompt for conflicts
 
-# Test SAP scripts after update
+# 4. Resolve conflicts if any (see below)
+git diff
+git status
+
+# 5. Test SAP scripts after update
 {% if _sap_053_enabled %}just conflict-check{% endif %}
+{% if _sap_001_enabled %}just inbox-status{% endif %}
 just --list
+
+# 6. Commit merged result
+git add -A
+git commit -m "Update from chora-base template vX.Y.Z"
 ```
 
-**Update Guide**: See docs/template-updates.md (if exists)
+#### Conflict Resolution
+
+When template updates conflict with your customizations, copier uses git's 3-way merge. Common scenarios:
+
+**Low-Conflict (Automatic Merge)**:
+- Template adds new section to README → Your custom sections preserved
+- Template updates justfile recipe → Your recipes untouched
+- Template adds new file → Your custom files preserved
+
+**High-Conflict (Manual Resolution)**:
+- You and template both modified same section → Manual merge required
+- Template removes file you customized → Decide: keep or adopt template change
+
+**Resolution Strategy**:
+1. Review conflict markers in files (`<<<<<<<`, `=======`, `>>>>>>>`)
+2. Keep both changes when compatible (merge manually)
+3. Choose template change for bug fixes/security patches
+4. Keep your customization for project-specific logic
+5. Test thoroughly after resolution
+
+#### Rollback Strategy
+
+If update causes issues:
+
+```bash
+# Rollback to pre-update state
+git log --oneline  # Find commit before update
+git reset --hard <commit-before-update>
+
+# Or create a branch first (safer):
+git checkout -b template-update-vX.Y.Z
+copier update
+# Test, then merge to main when validated
+```
+
+**Update Guide**: For detailed conflict scenarios and resolution patterns, see [chora-base documentation](https://github.com/liminalcommons/chora-base)
 
 ---
 
