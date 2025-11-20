@@ -10,21 +10,21 @@
 
 ## Overview
 
-This index tracks all **47 capabilities** organized across **6 domains** for improved discoverability and progressive adoption.
+This index tracks all **48 capabilities** organized across **6 domains** for improved discoverability and progressive adoption.
 
-**Total Coverage**: 47/47 SAPs (100%)
+**Total Coverage**: 48/48 SAPs (100%)
 
 **Domain Distribution**:
 - Infrastructure: 3 SAPs (6%) - Core framework and coordination
-- Developer Experience: 15 SAPs (32%) - Development workflow tools + capability server architecture + git workflow patterns
+- Developer Experience: 16 SAPs (33%) - Development workflow tools + capability server architecture + git workflow patterns + conflict resolution
 - Foundation: 6 SAPs (13%) - Technology stack foundations (React + auth + database + forms)
 - User-Facing: 6 SAPs (13%) - User interaction patterns (state, styling, uploads, errors)
 - Advanced: 8 SAPs (17%) - Optimizations and integrations (real-time, i18n, e2e, monorepo)
 - Specialized: 11 SAPs (23%) - Meta-capabilities, process patterns, awareness systems, and governance (includes SAP-056 Lifecycle Traceability)
 
 **Status Distribution**:
-- Active: 25 SAPs (53%) - includes SAP-051 (git-workflow-patterns)
-- Pilot: 13 SAPs (28%) - SAP-015, SAP-028, SAP-029, SAP-033-041, SAP-056 (lifecycle traceability)
+- Active: 26 SAPs (54%) - includes SAP-051 (git-workflow-patterns), SAP-053 (conflict-resolution)
+- Pilot: 13 SAPs (27%) - SAP-015, SAP-028, SAP-029, SAP-033-041, SAP-056 (lifecycle traceability)
 - Draft: 8 SAPs (17%) - SAP-042-050
 - Deprecated: 1 SAP (2%) - SAP-014 (replaced by capability server architecture)
 
@@ -64,9 +64,9 @@ This index tracks all **47 capabilities** organized across **6 domains** for imp
 
 ## Developer Experience Domain
 
-**Purpose**: Accelerate development with testing, CI/CD, quality gates, tooling, capability server architecture, and git workflow patterns
+**Purpose**: Accelerate development with testing, CI/CD, quality gates, tooling, capability server architecture, git workflow patterns, and conflict resolution
 
-**SAPs**: 15 (32% of catalog)
+**SAPs**: 16 (33% of catalog)
 
 ### SAP-003: Project Bootstrap & Scaffolding
 
@@ -216,6 +216,14 @@ This index tracks all **47 capabilities** organized across **6 domains** for imp
 - **Dependencies**: None
 - **Location**: [git-workflow-patterns/](git-workflow-patterns/)
 - **Key Features**: Branch naming conventions (feature/bugfix/hotfix/chore/docs), Conventional Commits v1.0.0 schema enforcement, client-side git hooks (commit-msg, pre-push, pre-commit), 12 justfile recipes (git-setup, validate-commits, changelog, custom configuration), Level 2 SAP integration (auto-extract IDs from branch names), Level 3 CI/CD workflow (GitHub Actions), team onboarding (5-10 min setup), A-MEM integration patterns, quarterly maintenance schedule
+
+#### SAP-053: Conflict Resolution
+
+- **Status**: active | **Version**: 1.0.0 | **Domain**: Developer Experience
+- **Description**: Pre-merge conflict detection, prevention strategies, and automated resolution for multi-developer git workflows reducing resolution time by 50-70%
+- **Dependencies**: SAP-000, SAP-051, SAP-010
+- **Location**: [conflict-resolution/](conflict-resolution/)
+- **Key Features**: Pre-merge conflict detection (conflict-checker.py with 100% accuracy), resolution strategies by file type (docs, code, config, lockfiles, metadata), automated safe-case resolution (whitespace, formatting, lockfiles), A-MEM conflict history tracking, justfile integration (4 recipes: check, check-json, check-verbose, status), 6.6x performance target (2s vs 10s), L3 validated status
 
 ---
 
@@ -520,20 +528,20 @@ Turborepo monorepo reducing setup from 7.5h to 30min (93.3% time savings), incre
 
 | Domain | SAPs | Percentage | Status Breakdown |
 |--------|------|------------|------------------|
-| Infrastructure | 3 | 7% | 3 active |
-| Developer Experience | 14 | 30% | 7 active, 6 pilot, 1 deprecated |
+| Infrastructure | 3 | 6% | 3 active |
+| Developer Experience | 16 | 33% | 9 active, 6 pilot, 1 deprecated |
 | Foundation | 6 | 13% | 3 active, 3 pilot |
 | User-Facing | 6 | 13% | 2 active, 4 pilot |
 | Advanced | 8 | 17% | 4 active, 4 pilot |
-| Specialized | 11 | 24% | 7 active, 4 pilot, 0 draft |
-| **Total** | **46** | **100%** | **24 active, 13 pilot, 8 draft, 1 deprecated** |
+| Specialized | 11 | 23% | 7 active, 4 pilot, 0 draft |
+| **Total** | **48** | **100%** | **26 active, 13 pilot, 8 draft, 1 deprecated** |
 
 ### By Status
 
 | Status | Count | Percentage | Domains |
 |--------|-------|------------|---------|
-| Active | 24 | 53% | All domains |
-| Pilot | 13 | 28% | Specialized (SAP-015, 028, 029, 056), Foundation (SAP-033, 034, 041), User-Facing (SAP-035, 036), Advanced (SAP-037-040) |
+| Active | 26 | 54% | All domains |
+| Pilot | 13 | 27% | Specialized (SAP-015, 028, 029, 056), Foundation (SAP-033, 034, 041), User-Facing (SAP-035, 036), Advanced (SAP-037-040) |
 | Draft | 8 | 17% | Developer Experience (SAP-042-047: template implementation in progress), 2 historical |
 | Deprecated | 1 | 2% | Developer Experience (SAP-014) |
 
@@ -812,6 +820,7 @@ Specialized Domain                         │
 
 | Date | Change | Author | Trace ID |
 |------|--------|--------|----------|
+| 2025-11-20 | SAP-053: Conflict Resolution - Added SAP-053 to Developer Experience domain (47 → 48 SAPs total, 25 → 26 active). Pre-merge conflict detection with 100% accuracy, 50-70% resolution time reduction, justfile integration. Updated all domain statistics (Developer Experience: 15 → 16 SAPs, 33%). Phase 1 of CORD-2025-023 (SAP Development Lifecycle Meta-SAP Suite). | Claude Code | sap-development-lifecycle-meta-saps-2025-11-20 |
 | 2025-11-12 | SAP-042-047: Capability Server Architecture - Added 6 new SAPs for capability server development (30 → 45 SAPs total). Deprecated SAP-014 in favor of SAP-047 template. Added Path 1 (Capability Server Development) with 5-minute template generation. Updated all domain statistics and dependency graph. | Claude Code | chora-base-4if |
 | 2025-11-11 | Feature 6: Domain taxonomy organization - Reorganized 30 SAPs into 6 domains (Infrastructure, Developer Experience, Foundation, User-Facing, Advanced, Specialized) for improved discoverability | Claude Code | DISCO-V5 |
 | 2025-11-03 | SAP-027 (dogfooding-patterns) generated - Formalized 5-week dogfooding pilot methodology | Claude Code | - |
