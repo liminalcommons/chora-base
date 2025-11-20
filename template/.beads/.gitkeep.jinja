@@ -1,4 +1,4 @@
-{% if _sap_015_enabled %}# .beads directory for Beads task management (SAP-015)
+{% if (sap_selection_mode != 'custom' or (include_sap_015 | default(false))) %}# .beads directory for Beads task management (SAP-015)
 # This directory is managed by the Beads CLI
 # Files in this directory:
 # - issues.jsonl: Task storage (git-backed)

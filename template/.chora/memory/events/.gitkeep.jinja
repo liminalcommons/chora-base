@@ -1,4 +1,4 @@
-{% if _sap_010_enabled %}# A-MEM Event Logs (SAP-010)
+{% if ((sap_selection_mode in ['standard', 'comprehensive']) or (sap_selection_mode == 'custom' and (include_sap_010 | default(false)))) %}# A-MEM Event Logs (SAP-010)
 #
 # Event logs are stored as JSONL files (one JSON object per line)
 # Filename format: YYYY-MM.jsonl (e.g., 2025-01.jsonl)

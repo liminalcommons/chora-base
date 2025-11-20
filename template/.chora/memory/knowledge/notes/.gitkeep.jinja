@@ -1,4 +1,4 @@
-{% if _sap_010_enabled %}# Knowledge Notes (SAP-010)
+{% if ((sap_selection_mode in ['standard', 'comprehensive']) or (sap_selection_mode == 'custom' and (include_sap_010 | default(false)))) %}# Knowledge Notes (SAP-010)
 #
 # Knowledge notes capture patterns, lessons learned, and decisions
 # Filename format: YYYY-MM-DD-pattern-name.md

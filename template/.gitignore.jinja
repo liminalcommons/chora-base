@@ -264,7 +264,7 @@ GitHub.sublime-settings
 # SAP-Specific Ignores
 # =============================================================================
 
-{% if _sap_010_enabled %}# SAP-010: Memory System
+{% if ((sap_selection_mode in ['standard', 'comprehensive']) or (sap_selection_mode == 'custom' and (include_sap_010 | default(false)))) %}# SAP-010: Memory System
 # Archive old event logs (keep current month only)
 .chora/memory/events/archive/
 
@@ -272,7 +272,7 @@ GitHub.sublime-settings
 .chora/memory/.tmp/
 {% endif %}
 
-{% if _sap_015_enabled %}# SAP-015: Beads
+{% if (sap_selection_mode != 'custom' or (include_sap_015 | default(false))) %}# SAP-015: Beads
 # Beads daemon socket (if using daemon mode)
 .beads/.daemon.sock
 
@@ -280,12 +280,12 @@ GitHub.sublime-settings
 .beads/.tmp/
 {% endif %}
 
-{% if _sap_053_enabled %}# SAP-053: Conflict Resolution
+{% if ((sap_selection_mode in ['standard', 'comprehensive']) or (sap_selection_mode == 'custom' and (include_sap_053 | default(false)))) %}# SAP-053: Conflict Resolution
 # Conflict detection cache (optional, can be regenerated)
 .conflict-cache/
 {% endif %}
 
-{% if _sap_056_enabled %}# SAP-056: Lifecycle Traceability
+{% if ((sap_selection_mode == 'comprehensive') or (sap_selection_mode == 'custom' and (include_sap_056 | default(false)))) %}# SAP-056: Lifecycle Traceability
 # Generated feature manifest cache
 .feature-manifest-cache.json
 {% endif %}

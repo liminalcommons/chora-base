@@ -20,9 +20,9 @@ Welcome to {{ project_name }}! This file provides Claude-specific navigation and
 4. Use project automation via justfile recipes (`just --list`)
 
 **Returning to this project?**
-1. Check recent work: `just {% if _sap_010_enabled %}memory-events 10{% else %}--list{% endif %}`
+1. Check recent work: `just {% if ((sap_selection_mode in ['standard', 'comprehensive']) or (sap_selection_mode == 'custom' and (include_sap_010 | default(false)))) %}memory-events 10{% else %}--list{% endif %}`
 2. Review project status: `just status`
-3. Continue with current tasks{% if _sap_015_enabled %}: `bd list --status in_progress`{% endif %}
+3. Continue with current tasks{% if (sap_selection_mode != 'custom' or (include_sap_015 | default(false))) %}: `bd list --status in_progress`{% endif %}
 
 ---
 
@@ -36,14 +36,14 @@ Welcome to {{ project_name }}! This file provides Claude-specific navigation and
 {% if use_git %}- Git version control{% endif %}
 
 **Enabled SAPs**:
-{% if _sap_001_enabled %}- ✅ SAP-001: Inbox Workflow{% endif %}
-{% if _sap_015_enabled %}- ✅ SAP-015: Beads Task Management{% endif %}
-{% if _sap_053_enabled %}- ✅ SAP-053: Conflict Resolution{% endif %}
-{% if _sap_010_enabled %}- ✅ SAP-010: Memory System{% endif %}
-{% if _sap_051_enabled %}- ✅ SAP-051: Pre-merge Validation{% endif %}
-{% if _sap_052_enabled %}- ✅ SAP-052: Code Ownership{% endif %}
-{% if _sap_056_enabled %}- ✅ SAP-056: Lifecycle Traceability{% endif %}
-{% if _sap_008_enabled %}- ✅ SAP-008: Automation Dashboard{% endif %}
+{% if (sap_selection_mode != 'custom' or (include_sap_001 | default(false))) %}- ✅ SAP-001: Inbox Workflow{% endif %}
+{% if (sap_selection_mode != 'custom' or (include_sap_015 | default(false))) %}- ✅ SAP-015: Beads Task Management{% endif %}
+{% if ((sap_selection_mode in ['standard', 'comprehensive']) or (sap_selection_mode == 'custom' and (include_sap_053 | default(false)))) %}- ✅ SAP-053: Conflict Resolution{% endif %}
+{% if ((sap_selection_mode in ['standard', 'comprehensive']) or (sap_selection_mode == 'custom' and (include_sap_010 | default(false)))) %}- ✅ SAP-010: Memory System{% endif %}
+{% if ((sap_selection_mode == 'comprehensive') or (sap_selection_mode == 'custom' and (include_sap_051 | default(false)))) %}- ✅ SAP-051: Pre-merge Validation{% endif %}
+{% if ((sap_selection_mode == 'comprehensive') or (sap_selection_mode == 'custom' and (include_sap_052 | default(false)))) %}- ✅ SAP-052: Code Ownership{% endif %}
+{% if ((sap_selection_mode == 'comprehensive') or (sap_selection_mode == 'custom' and (include_sap_056 | default(false)))) %}- ✅ SAP-056: Lifecycle Traceability{% endif %}
+{% if ((sap_selection_mode == 'comprehensive') or (sap_selection_mode == 'custom' and (include_sap_008 | default(false)))) %}- ✅ SAP-008: Automation Dashboard{% endif %}
 
 ---
 
@@ -54,17 +54,17 @@ The project uses justfile for automation. Key recipes:
 ```bash
 # Project status
 just status                     # Show project overview
-{% if _sap_001_enabled %}just inbox-status              # Coordination requests{% endif %}
-{% if _sap_015_enabled %}just beads-list                # Task list{% endif %}
+{% if (sap_selection_mode != 'custom' or (include_sap_001 | default(false))) %}just inbox-status              # Coordination requests{% endif %}
+{% if (sap_selection_mode != 'custom' or (include_sap_015 | default(false))) %}just beads-list                # Task list{% endif %}
 
 # Development
-{% if _sap_053_enabled %}just conflict-check            # Check for merge conflicts{% endif %}
-{% if _sap_051_enabled %}just pre-push-check            # Run pre-push validation{% endif %}
+{% if ((sap_selection_mode in ['standard', 'comprehensive']) or (sap_selection_mode == 'custom' and (include_sap_053 | default(false)))) %}just conflict-check            # Check for merge conflicts{% endif %}
+{% if ((sap_selection_mode == 'comprehensive') or (sap_selection_mode == 'custom' and (include_sap_051 | default(false)))) %}just pre-push-check            # Run pre-push validation{% endif %}
 
 # Validation
 just validate                   # Run all validation checks
-{% if _sap_052_enabled %}just ownership-coverage        # Code ownership coverage{% endif %}
-{% if _sap_056_enabled %}just feature-manifest-validate # Feature traceability{% endif %}
+{% if ((sap_selection_mode == 'comprehensive') or (sap_selection_mode == 'custom' and (include_sap_052 | default(false)))) %}just ownership-coverage        # Code ownership coverage{% endif %}
+{% if ((sap_selection_mode == 'comprehensive') or (sap_selection_mode == 'custom' and (include_sap_056 | default(false)))) %}just feature-manifest-validate # Feature traceability{% endif %}
 
 # Cleanup
 just clean                      # Remove temporary files
@@ -73,7 +73,7 @@ just clean                      # Remove temporary files
 Run `just --list` to see all available recipes.
 
 ---
-{% if _sap_010_enabled %}
+{% if ((sap_selection_mode in ['standard', 'comprehensive']) or (sap_selection_mode == 'custom' and (include_sap_010 | default(false)))) %}
 ## Memory System (SAP-010)
 
 This project uses the A-MEM (Agent Memory) system for tracking work history and knowledge.
@@ -134,7 +134,7 @@ just memory-health
 
 ---
 {% endif %}
-{% if _sap_001_enabled %}
+{% if (sap_selection_mode != 'custom' or (include_sap_001 | default(false))) %}
 ## Inbox Workflow (SAP-001)
 
 Coordination requests are managed via the inbox/ directory:
@@ -169,7 +169,7 @@ just inbox-list
 
 ---
 {% endif %}
-{% if _sap_015_enabled %}
+{% if (sap_selection_mode != 'custom' or (include_sap_015 | default(false))) %}
 ## Task Management (SAP-015)
 
 Tasks are managed via Beads (git-backed task manager):
@@ -204,7 +204,7 @@ just beads-close TASK-ID "Completed"
 
 ---
 {% endif %}
-{% if _sap_053_enabled %}
+{% if ((sap_selection_mode in ['standard', 'comprehensive']) or (sap_selection_mode == 'custom' and (include_sap_053 | default(false)))) %}
 ## Conflict Resolution (SAP-053)
 
 Pre-merge conflict detection helps avoid merge conflicts:
@@ -243,7 +243,7 @@ just conflict-status
 
 ---
 {% endif %}
-{% if _sap_052_enabled %}
+{% if ((sap_selection_mode == 'comprehensive') or (sap_selection_mode == 'custom' and (include_sap_052 | default(false)))) %}
 ## Code Ownership (SAP-052)
 
 Code ownership is managed via CODEOWNERS file:
@@ -282,7 +282,7 @@ just ownership-show src/
 
 ---
 {% endif %}
-{% if _sap_056_enabled %}
+{% if ((sap_selection_mode == 'comprehensive') or (sap_selection_mode == 'custom' and (include_sap_056 | default(false)))) %}
 ## Lifecycle Traceability (SAP-056)
 
 Feature manifest provides bidirectional traceability:
@@ -312,7 +312,7 @@ just feature-find "authentication"
 
 ---
 {% endif %}
-{% if _sap_008_enabled %}
+{% if ((sap_selection_mode == 'comprehensive') or (sap_selection_mode == 'custom' and (include_sap_008 | default(false)))) %}
 ## Automation Dashboard (SAP-008)
 
 Track automation usage and ROI:
@@ -349,7 +349,7 @@ Claude has a 200k token window. Use progressive loading to optimize:
 1. This file (`.chora/CLAUDE.md`)
 2. Root [README.md](../README.md)
 3. Run `just --list` to see automation recipes
-{% if _sap_056_enabled %}4. Check `feature-manifest.yaml` for features{% endif %}
+{% if ((sap_selection_mode == 'comprehensive') or (sap_selection_mode == 'custom' and (include_sap_056 | default(false)))) %}4. Check `feature-manifest.yaml` for features{% endif %}
 
 **Token Budget**: ~5-10k tokens
 **Output**: Clear understanding of project structure
@@ -361,10 +361,10 @@ Claude has a 200k token window. Use progressive loading to optimize:
 **Goal**: Load detailed context for implementation
 
 **Read** (based on task type):
-{% if _sap_001_enabled %}- **Coordination tasks**: `inbox/` directory + templates{% endif %}
-{% if _sap_015_enabled %}- **Task management**: `bd list` output + task details{% endif %}
-{% if _sap_010_enabled %}- **Memory queries**: `.chora/memory/events/` + knowledge notes{% endif %}
-{% if _sap_053_enabled %}- **Conflict resolution**: `just conflict-check` output{% endif %}
+{% if (sap_selection_mode != 'custom' or (include_sap_001 | default(false))) %}- **Coordination tasks**: `inbox/` directory + templates{% endif %}
+{% if (sap_selection_mode != 'custom' or (include_sap_015 | default(false))) %}- **Task management**: `bd list` output + task details{% endif %}
+{% if ((sap_selection_mode in ['standard', 'comprehensive']) or (sap_selection_mode == 'custom' and (include_sap_010 | default(false)))) %}- **Memory queries**: `.chora/memory/events/` + knowledge notes{% endif %}
+{% if ((sap_selection_mode in ['standard', 'comprehensive']) or (sap_selection_mode == 'custom' and (include_sap_053 | default(false)))) %}- **Conflict resolution**: `just conflict-check` output{% endif %}
 - **Implementation**: Source code + tests + docs
 
 **Token Budget**: ~30-50k tokens total
@@ -378,8 +378,8 @@ Claude has a 200k token window. Use progressive loading to optimize:
 
 **Read**:
 - All source code
-{% if _sap_010_enabled %}- Complete event history (`.chora/memory/events/`){% endif %}
-{% if _sap_056_enabled %}- Complete feature manifest (`feature-manifest.yaml`){% endif %}
+{% if ((sap_selection_mode in ['standard', 'comprehensive']) or (sap_selection_mode == 'custom' and (include_sap_010 | default(false)))) %}- Complete event history (`.chora/memory/events/`){% endif %}
+{% if ((sap_selection_mode == 'comprehensive') or (sap_selection_mode == 'custom' and (include_sap_056 | default(false)))) %}- Complete feature manifest (`feature-manifest.yaml`){% endif %}
 - All tests and documentation
 - Git history
 
@@ -391,26 +391,26 @@ Claude has a 200k token window. Use progressive loading to optimize:
 ## Common Workflows
 
 ### Starting New Work
-{% if _sap_015_enabled %}
+{% if (sap_selection_mode != 'custom' or (include_sap_015 | default(false))) %}
 1. Create task: `bd create "Task description"`
 2. Set status: `bd update TASK-ID --status in_progress`
 {% endif %}
-3. {% if _sap_053_enabled %}Check for conflicts: `just conflict-check`{% endif %}
+3. {% if ((sap_selection_mode in ['standard', 'comprehensive']) or (sap_selection_mode == 'custom' and (include_sap_053 | default(false)))) %}Check for conflicts: `just conflict-check`{% endif %}
 4. Implement changes
 5. Run validation: `just validate`
-{% if _sap_015_enabled %}6. Complete task: `bd close TASK-ID --reason "Done"`{% endif %}
-{% if _sap_010_enabled %}7. Log event (optional): Add to `.chora/memory/events/`{% endif %}
+{% if (sap_selection_mode != 'custom' or (include_sap_015 | default(false))) %}6. Complete task: `bd close TASK-ID --reason "Done"`{% endif %}
+{% if ((sap_selection_mode in ['standard', 'comprehensive']) or (sap_selection_mode == 'custom' and (include_sap_010 | default(false)))) %}7. Log event (optional): Add to `.chora/memory/events/`{% endif %}
 
 ### Before Creating PR
 
-1. {% if _sap_053_enabled %}Check conflicts: `just conflict-check`{% endif %}
+1. {% if ((sap_selection_mode in ['standard', 'comprehensive']) or (sap_selection_mode == 'custom' and (include_sap_053 | default(false)))) %}Check conflicts: `just conflict-check`{% endif %}
 2. Run validation: `just validate`
-{% if _sap_051_enabled %}3. Run pre-push: `just pre-push-check`{% endif %}
-{% if _sap_052_enabled %}4. Check reviewers: `just ownership-suggest-reviewers-staged`{% endif %}
+{% if ((sap_selection_mode == 'comprehensive') or (sap_selection_mode == 'custom' and (include_sap_051 | default(false)))) %}3. Run pre-push: `just pre-push-check`{% endif %}
+{% if ((sap_selection_mode == 'comprehensive') or (sap_selection_mode == 'custom' and (include_sap_052 | default(false)))) %}4. Check reviewers: `just ownership-suggest-reviewers-staged`{% endif %}
 5. Create PR with suggested reviewers
 
 ### Creating Knowledge Note
-{% if _sap_010_enabled %}
+{% if ((sap_selection_mode in ['standard', 'comprehensive']) or (sap_selection_mode == 'custom' and (include_sap_010 | default(false)))) %}
 1. Create note: `just knowledge-create "pattern-name"`
 2. Edit `.chora/memory/knowledge/notes/YYYY-MM-DD-pattern-name.md`
 3. Add wikilinks: `[[related-pattern]]`
@@ -426,11 +426,11 @@ Claude has a 200k token window. Use progressive loading to optimize:
 ## Best Practices
 
 1. **Use justfile first**: Check `just --list` before writing scripts
-{% if _sap_010_enabled %}2. **Log important events**: Add to `.chora/memory/events/`{% endif %}
-{% if _sap_001_enabled %}3. **Coordinate cross-repo work**: Use `inbox/` for coordination{% endif %}
-{% if _sap_015_enabled %}4. **Track tasks with Beads**: Use `bd` for task management{% endif %}
-{% if _sap_053_enabled %}5. **Check conflicts early**: Run `just conflict-check` before PR{% endif %}
-{% if _sap_052_enabled %}6. **Add correct reviewers**: Use `just ownership-suggest-reviewers-staged`{% endif %}
+{% if ((sap_selection_mode in ['standard', 'comprehensive']) or (sap_selection_mode == 'custom' and (include_sap_010 | default(false)))) %}2. **Log important events**: Add to `.chora/memory/events/`{% endif %}
+{% if (sap_selection_mode != 'custom' or (include_sap_001 | default(false))) %}3. **Coordinate cross-repo work**: Use `inbox/` for coordination{% endif %}
+{% if (sap_selection_mode != 'custom' or (include_sap_015 | default(false))) %}4. **Track tasks with Beads**: Use `bd` for task management{% endif %}
+{% if ((sap_selection_mode in ['standard', 'comprehensive']) or (sap_selection_mode == 'custom' and (include_sap_053 | default(false)))) %}5. **Check conflicts early**: Run `just conflict-check` before PR{% endif %}
+{% if ((sap_selection_mode == 'comprehensive') or (sap_selection_mode == 'custom' and (include_sap_052 | default(false)))) %}6. **Add correct reviewers**: Use `just ownership-suggest-reviewers-staged`{% endif %}
 7. **Run validation**: Use `just validate` before committing
 
 ---
@@ -440,17 +440,17 @@ Claude has a 200k token window. Use progressive loading to optimize:
 **Project Documentation**:
 - Root README: [README.md](../README.md)
 - Justfile recipes: `just --list`
-{% if _sap_001_enabled %}- Inbox workflow: [inbox/README.md](../inbox/README.md){% endif %}
+{% if (sap_selection_mode != 'custom' or (include_sap_001 | default(false))) %}- Inbox workflow: [inbox/README.md](../inbox/README.md){% endif %}
 
 **SAP Documentation** (chora-base):
-{% if _sap_001_enabled %}- [SAP-001: Inbox Workflow](https://github.com/chora-base/skilled-awareness/sap-001-inbox){% endif %}
-{% if _sap_015_enabled %}- [SAP-015: Beads Task Management](https://github.com/chora-base/skilled-awareness/sap-015-beads){% endif %}
-{% if _sap_053_enabled %}- [SAP-053: Conflict Resolution](https://github.com/chora-base/skilled-awareness/sap-053-conflict-resolution){% endif %}
-{% if _sap_010_enabled %}- [SAP-010: Memory System](https://github.com/chora-base/skilled-awareness/sap-010-memory){% endif %}
-{% if _sap_051_enabled %}- [SAP-051: Pre-merge Validation](https://github.com/chora-base/skilled-awareness/sap-051-pre-merge){% endif %}
-{% if _sap_052_enabled %}- [SAP-052: Code Ownership](https://github.com/chora-base/skilled-awareness/sap-052-ownership){% endif %}
-{% if _sap_056_enabled %}- [SAP-056: Lifecycle Traceability](https://github.com/chora-base/skilled-awareness/sap-056-traceability){% endif %}
-{% if _sap_008_enabled %}- [SAP-008: Automation Dashboard](https://github.com/chora-base/skilled-awareness/sap-008-automation){% endif %}
+{% if (sap_selection_mode != 'custom' or (include_sap_001 | default(false))) %}- [SAP-001: Inbox Workflow](https://github.com/chora-base/skilled-awareness/sap-001-inbox){% endif %}
+{% if (sap_selection_mode != 'custom' or (include_sap_015 | default(false))) %}- [SAP-015: Beads Task Management](https://github.com/chora-base/skilled-awareness/sap-015-beads){% endif %}
+{% if ((sap_selection_mode in ['standard', 'comprehensive']) or (sap_selection_mode == 'custom' and (include_sap_053 | default(false)))) %}- [SAP-053: Conflict Resolution](https://github.com/chora-base/skilled-awareness/sap-053-conflict-resolution){% endif %}
+{% if ((sap_selection_mode in ['standard', 'comprehensive']) or (sap_selection_mode == 'custom' and (include_sap_010 | default(false)))) %}- [SAP-010: Memory System](https://github.com/chora-base/skilled-awareness/sap-010-memory){% endif %}
+{% if ((sap_selection_mode == 'comprehensive') or (sap_selection_mode == 'custom' and (include_sap_051 | default(false)))) %}- [SAP-051: Pre-merge Validation](https://github.com/chora-base/skilled-awareness/sap-051-pre-merge){% endif %}
+{% if ((sap_selection_mode == 'comprehensive') or (sap_selection_mode == 'custom' and (include_sap_052 | default(false)))) %}- [SAP-052: Code Ownership](https://github.com/chora-base/skilled-awareness/sap-052-ownership){% endif %}
+{% if ((sap_selection_mode == 'comprehensive') or (sap_selection_mode == 'custom' and (include_sap_056 | default(false)))) %}- [SAP-056: Lifecycle Traceability](https://github.com/chora-base/skilled-awareness/sap-056-traceability){% endif %}
+{% if ((sap_selection_mode == 'comprehensive') or (sap_selection_mode == 'custom' and (include_sap_008 | default(false)))) %}- [SAP-008: Automation Dashboard](https://github.com/chora-base/skilled-awareness/sap-008-automation){% endif %}
 
 ---
 
