@@ -1,0 +1,42 @@
+{# Jinja2 Macros for SAP Logic - chora-base v1.0.0 #}
+
+{# Macro to check if a SAP is enabled based on selection mode #}
+{% macro sap_enabled(sap_id) %}
+{%- if sap_id in ['001', '015'] -%}
+  {{- sap_selection_mode != 'custom' or get_include_sap(sap_id) -}}
+{%- elif sap_id in ['053', '010'] -%}
+  {{- sap_selection_mode in ['standard', 'comprehensive'] or (sap_selection_mode == 'custom' and get_include_sap(sap_id)) -}}
+{%- elif sap_id in ['051', '052', '056', '008'] -%}
+  {{- sap_selection_mode == 'comprehensive' or (sap_selection_mode == 'custom' and get_include_sap(sap_id)) -}}
+{%- else -%}
+  {{- false -}}
+{%- endif -%}
+{% endmacro %}
+
+{# Helper to safely get include_sap_XXX variable (handles undefined) #}
+{% macro get_include_sap(sap_id) %}
+{%- if sap_id == '001' -%}{{ include_sap_001 | default(false) }}
+{%- elif sap_id == '015' -%}{{ include_sap_015 | default(false) }}
+{%- elif sap_id == '053' -%}{{ include_sap_053 | default(false) }}
+{%- elif sap_id == '010' -%}{{ include_sap_010 | default(false) }}
+{%- elif sap_id == '051' -%}{{ include_sap_051 | default(false) }}
+{%- elif sap_id == '052' -%}{{ include_sap_052 | default(false) }}
+{%- elif sap_id == '056' -%}{{ include_sap_056 | default(false) }}
+{%- elif sap_id == '008' -%}{{ include_sap_008 | default(false) }}
+{%- else -%}{{ false }}
+{%- endif -%}
+{% endmacro %}
+
+{# Macro to calculate total SAP count #}
+{% macro sap_count() %}
+{%- set count = 0 -%}
+{%- if sap_enabled('001') -%}{% set count = count + 1 %}{% endif -%}
+{%- if sap_enabled('015') -%}{% set count = count + 1 %}{% endif -%}
+{%- if sap_enabled('053') -%}{% set count = count + 1 %}{% endif -%}
+{%- if sap_enabled('010') -%}{% set count = count + 1 %}{% endif -%}
+{%- if sap_enabled('051') -%}{% set count = count + 1 %}{% endif -%}
+{%- if sap_enabled('052') -%}{% set count = count + 1 %}{% endif -%}
+{%- if sap_enabled('056') -%}{% set count = count + 1 %}{% endif -%}
+{%- if sap_enabled('008') -%}{% set count = count + 1 %}{% endif -%}
+{{ count }}
+{%- endmacro %}

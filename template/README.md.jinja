@@ -1,3 +1,13 @@
+{# Compute SAP enablement inline #}
+{% set sap_001 = sap_selection_mode != 'custom' or (include_sap_001 | default(false)) %}
+{% set sap_015 = sap_selection_mode != 'custom' or (include_sap_015 | default(false)) %}
+{% set sap_053 = sap_selection_mode in ['standard', 'comprehensive'] or (sap_selection_mode == 'custom' and (include_sap_053 | default(false))) %}
+{% set sap_010 = sap_selection_mode in ['standard', 'comprehensive'] or (sap_selection_mode == 'custom' and (include_sap_010 | default(false))) %}
+{% set sap_051 = sap_selection_mode == 'comprehensive' or (sap_selection_mode == 'custom' and (include_sap_051 | default(false))) %}
+{% set sap_052 = sap_selection_mode == 'comprehensive' or (sap_selection_mode == 'custom' and (include_sap_052 | default(false))) %}
+{% set sap_056 = sap_selection_mode == 'comprehensive' or (sap_selection_mode == 'custom' and (include_sap_056 | default(false))) %}
+{% set sap_008 = sap_selection_mode == 'comprehensive' or (sap_selection_mode == 'custom' and (include_sap_008 | default(false))) %}
+{% set sap_total = [sap_001, sap_015, sap_053, sap_010, sap_051, sap_052, sap_056, sap_008] | select | list | length %}
 # {{ project_name }}
 
 {{ project_description }}
@@ -14,13 +24,13 @@
 # Show available automation recipes
 just --list
 
-{% if _sap_001_enabled %}# Check coordination inbox status
+{% if sap_001 %}# Check coordination inbox status
 just inbox-status
 {% endif %}
-{% if _sap_053_enabled %}# Run conflict detection
+{% if sap_053 %}# Run conflict detection
 just conflict-check
 {% endif %}
-{% if _sap_015_enabled %}# List beads tasks
+{% if sap_015 %}# List beads tasks
 bd list
 {% endif %}
 ```
@@ -31,21 +41,21 @@ bd list
 
 This section provides typical workflows for working with this project:
 
-{% if _sap_001_enabled %}**Coordination Workflow**:
+{% if sap_001 %}**Coordination Workflow**:
 1. Check inbox: `just inbox-status`
 2. Review coordination requests in `inbox/incoming/coordination/`
 3. Move to `inbox/active/` when starting work
 4. Move to `inbox/completed/` when done
 {% endif %}
 
-{% if _sap_053_enabled %}**Pre-merge Workflow**:
+{% if sap_053 %}**Pre-merge Workflow**:
 1. Make changes on feature branch
 2. Run `just conflict-check` before merging
 3. Address any conflicts detected
 4. Merge when clean
 {% endif %}
 
-{% if _sap_015_enabled %}**Task Management Workflow**:
+{% if sap_015 %}**Task Management Workflow**:
 1. Create task: `bd create "Task description"`
 2. List tasks: `bd list`
 3. Update task: `bd update <task-id> --status in_progress`
@@ -56,9 +66,9 @@ This section provides typical workflows for working with this project:
 
 ## SAPs Included
 
-This project includes {{ _sap_count }} Skilled Awareness Packages (SAPs) for workflow automation and coordination:
+This project includes {{ sap_total }} Skilled Awareness Packages (SAPs) for workflow automation and coordination:
 
-{% if _sap_001_enabled %}### SAP-001: Inbox Workflow
+{% if sap_001 %}### SAP-001: Inbox Workflow
 
 **Purpose**: Coordination request management and cross-project communication
 
@@ -76,7 +86,7 @@ just inbox-list           # List all requests
 **Documentation**: [inbox/README.md](inbox/README.md)
 
 {% endif %}
-{% if _sap_015_enabled %}### SAP-015: Beads Task Management
+{% if sap_015 %}### SAP-015: Beads Task Management
 
 **Purpose**: Git-backed issue tracking with JSONL storage
 
@@ -95,7 +105,7 @@ bd close <id> --reason "Done"    # Close task
 **Documentation**: Beads CLI help (`bd --help`)
 
 {% endif %}
-{% if _sap_053_enabled %}### SAP-053: Conflict Resolution
+{% if sap_053 %}### SAP-053: Conflict Resolution
 
 **Purpose**: Pre-merge conflict detection (v1.0.0)
 
@@ -114,7 +124,7 @@ just conflict-status             # Quick status check
 **Documentation**: [docs/conflict-resolution/README.md](docs/conflict-resolution/README.md)
 
 {% endif %}
-{% if _sap_010_enabled %}### SAP-010: Memory System
+{% if sap_010 %}### SAP-010: Memory System
 
 **Purpose**: A-MEM event logging and knowledge note management
 
@@ -133,7 +143,7 @@ just memory-validate             # Validate event schema
 **Documentation**: [.chora/CLAUDE.md](.chora/CLAUDE.md)
 
 {% endif %}
-{% if _sap_051_enabled %}### SAP-051: Pre-merge Validation
+{% if sap_051 %}### SAP-051: Pre-merge Validation
 
 **Purpose**: Git hooks for pre-push checks
 
@@ -149,7 +159,7 @@ just pre-push-check              # Run pre-push validation manually
 **Documentation**: [docs/pre-merge-validation/README.md](docs/pre-merge-validation/README.md)
 
 {% endif %}
-{% if _sap_052_enabled %}### SAP-052: Code Ownership
+{% if sap_052 %}### SAP-052: Code Ownership
 
 **Purpose**: CODEOWNERS and PR reviewer suggestions
 
@@ -166,7 +176,7 @@ just ownership-coverage                    # Check ownership coverage
 **Documentation**: [docs/code-ownership/README.md](docs/code-ownership/README.md)
 
 {% endif %}
-{% if _sap_056_enabled %}### SAP-056: Lifecycle Traceability
+{% if sap_056 %}### SAP-056: Lifecycle Traceability
 
 **Purpose**: Feature manifest and artifact linkage
 
@@ -183,7 +193,7 @@ just feature-manifest-generate    # Generate manifest from git/beads
 **Documentation**: [docs/lifecycle-traceability/README.md](docs/lifecycle-traceability/README.md)
 
 {% endif %}
-{% if _sap_008_enabled %}### SAP-008: Automation Dashboard
+{% if sap_008 %}### SAP-008: Automation Dashboard
 
 **Purpose**: Justfile recipes and metrics tracking
 
@@ -207,10 +217,10 @@ just automation-stats            # Show automation metrics
 
 ### Prerequisites
 
-{% if _sap_053_enabled or _sap_056_enabled or _sap_008_enabled %}- **Python {{ python_version }}+**: Required for SAP scripts
+{% if sap_053 or sap_056 or sap_008 %}- **Python {{ python_version }}+**: Required for SAP scripts
 {% if use_poetry %}- **Poetry**: Python dependency management{% endif %}
 {% endif %}{% if use_git %}- **Git**: Version control{% endif %}
-{% if _sap_015_enabled %}- **Beads CLI**: Task management (`go install github.com/liminalcommons/beads/cmd/bd@latest`){% endif %}
+{% if sap_015 %}- **Beads CLI**: Task management (`go install github.com/liminalcommons/beads/cmd/bd@latest`){% endif %}
 - **just**: Task runner (`brew install just` or see https://just.systems)
 
 ### Setup
@@ -219,13 +229,13 @@ just automation-stats            # Show automation metrics
 {% if use_git %}# 1. Git repository already initialized
 git status
 {% endif %}
-{% if use_poetry and (_sap_053_enabled or _sap_056_enabled or _sap_008_enabled) %}# 2. Install Python dependencies
+{% if use_poetry and (sap_053 or sap_056 or sap_008) %}# 2. Install Python dependencies
 poetry install
 {% endif %}
 # 3. View available recipes
 just --list
 
-{% if _sap_001_enabled %}# 4. Check inbox status
+{% if sap_001 %}# 4. Check inbox status
 just inbox-status
 {% endif %}
 ```
@@ -236,24 +246,24 @@ just inbox-status
 {{ _project_slug }}/
 ├── README.md                    # This file
 ├── justfile                     # Automation recipes
-{% if _sap_053_enabled or _sap_056_enabled or _sap_008_enabled %}├── pyproject.toml               # Python dependencies{% endif %}
+{% if sap_053 or sap_056 or sap_008 %}├── pyproject.toml               # Python dependencies{% endif %}
 ├── scripts/                     # SAP scripts
-{% if _sap_053_enabled %}│   ├── conflict-checker.py      # SAP-053{% endif %}
-{% if _sap_010_enabled %}│   ├── memory-health-check.py   # SAP-010{% endif %}
-{% if _sap_052_enabled %}│   ├── suggest-reviewers.py     # SAP-052{% endif %}
-{% if _sap_056_enabled %}│   ├── validate-manifest.py     # SAP-056{% endif %}
+{% if sap_053 %}│   ├── conflict-checker.py      # SAP-053{% endif %}
+{% if sap_010 %}│   ├── memory-health-check.py   # SAP-010{% endif %}
+{% if sap_052 %}│   ├── suggest-reviewers.py     # SAP-052{% endif %}
+{% if sap_056 %}│   ├── validate-manifest.py     # SAP-056{% endif %}
 │   └── ...
 ├── docs/                        # Documentation
-{% if _sap_001_enabled %}├── inbox/                       # SAP-001: Coordination requests
+{% if sap_001 %}├── inbox/                       # SAP-001: Coordination requests
 │   ├── incoming/
 │   ├── templates/
 │   └── README.md
-{% endif %}{% if _sap_010_enabled %}├── .chora/                      # SAP-010: Memory system
+{% endif %}{% if sap_010 %}├── .chora/                      # SAP-010: Memory system
 │   ├── memory/
 │   │   ├── events/
 │   │   └── knowledge/
 │   └── CLAUDE.md
-{% endif %}{% if _sap_015_enabled %}├── .beads/                      # SAP-015: Beads tasks
+{% endif %}{% if sap_015 %}├── .beads/                      # SAP-015: Beads tasks
 │   └── issues.jsonl
 {% endif %}{% if use_git %}└── .git/                        # Git repository{% endif %}
 ```
@@ -297,8 +307,8 @@ git diff
 git status
 
 # 5. Test SAP scripts after update
-{% if _sap_053_enabled %}just conflict-check{% endif %}
-{% if _sap_001_enabled %}just inbox-status{% endif %}
+{% if sap_053 %}just conflict-check{% endif %}
+{% if sap_001 %}just inbox-status{% endif %}
 just --list
 
 # 6. Commit merged result
@@ -348,7 +358,7 @@ copier update
 ## Contributing
 
 ### Adding New Features
-{% if _sap_015_enabled %}1. Create beads task: `bd create "Feature description"`
+{% if sap_015 %}1. Create beads task: `bd create "Feature description"`
 2. Implement feature
 3. Close task: `bd close <id> --reason "Implemented"`
 {% else %}1. Create issue/task for feature
@@ -357,7 +367,7 @@ copier update
 {% endif %}
 
 ### Reporting Issues
-{% if _sap_001_enabled %}- Create coordination request in `inbox/incoming/coordination/` (for cross-project issues)
+{% if sap_001 %}- Create coordination request in `inbox/incoming/coordination/` (for cross-project issues)
 {% endif %}- Open GitHub issue (if repository is public)
 - Contact maintainer: {{ project_author }}
 
@@ -377,12 +387,12 @@ copier update
 
 Common issues and solutions:
 
-{% if _sap_053_enabled %}**Conflict Detection Issues**:
+{% if sap_053 %}**Conflict Detection Issues**:
 - Ensure you're on a clean branch before running `just conflict-check`
 - Check that the target branch exists
 {% endif %}
 
-{% if _sap_001_enabled %}**Inbox Workflow Issues**:
+{% if sap_001 %}**Inbox Workflow Issues**:
 - Verify JSON schema in coordination requests
 - Check file permissions in inbox directories
 {% endif %}
