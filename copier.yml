@@ -152,18 +152,45 @@ use_poetry:
 # Derived Variables (Auto-calculated, not prompted)
 # =============================================================================
 
-_sap_001_enabled: "{{ sap_selection_mode != 'custom' or include_sap_001 }}"
-_sap_015_enabled: "{{ sap_selection_mode != 'custom' or include_sap_015 }}"
-_sap_053_enabled: "{{ (sap_selection_mode in ['standard', 'comprehensive']) or (sap_selection_mode == 'custom' and include_sap_053) }}"
-_sap_010_enabled: "{{ (sap_selection_mode in ['standard', 'comprehensive']) or (sap_selection_mode == 'custom' and include_sap_010) }}"
-_sap_051_enabled: "{{ (sap_selection_mode == 'comprehensive') or (sap_selection_mode == 'custom' and include_sap_051) }}"
-_sap_052_enabled: "{{ (sap_selection_mode == 'comprehensive') or (sap_selection_mode == 'custom' and include_sap_052) }}"
-_sap_056_enabled: "{{ (sap_selection_mode == 'comprehensive') or (sap_selection_mode == 'custom' and include_sap_056) }}"
-_sap_008_enabled: "{{ (sap_selection_mode == 'comprehensive') or (sap_selection_mode == 'custom' and include_sap_008) }}"
+_sap_001_enabled:
+  type: bool
+  default: "{{ sap_selection_mode != 'custom' or (include_sap_001 | default(false)) }}"
 
-_sap_count: "{{ (_sap_001_enabled|int) + (_sap_015_enabled|int) + (_sap_053_enabled|int) + (_sap_010_enabled|int) + (_sap_051_enabled|int) + (_sap_052_enabled|int) + (_sap_056_enabled|int) + (_sap_008_enabled|int) }}"
+_sap_015_enabled:
+  type: bool
+  default: "{{ sap_selection_mode != 'custom' or (include_sap_015 | default(false)) }}"
 
-_project_slug: "{{ project_name | lower | replace(' ', '-') | replace('_', '-') }}"
+_sap_053_enabled:
+  type: bool
+  default: "{{ (sap_selection_mode in ['standard', 'comprehensive']) or (sap_selection_mode == 'custom' and (include_sap_053 | default(false))) }}"
+
+_sap_010_enabled:
+  type: bool
+  default: "{{ (sap_selection_mode in ['standard', 'comprehensive']) or (sap_selection_mode == 'custom' and (include_sap_010 | default(false))) }}"
+
+_sap_051_enabled:
+  type: bool
+  default: "{{ (sap_selection_mode == 'comprehensive') or (sap_selection_mode == 'custom' and (include_sap_051 | default(false))) }}"
+
+_sap_052_enabled:
+  type: bool
+  default: "{{ (sap_selection_mode == 'comprehensive') or (sap_selection_mode == 'custom' and (include_sap_052 | default(false))) }}"
+
+_sap_056_enabled:
+  type: bool
+  default: "{{ (sap_selection_mode == 'comprehensive') or (sap_selection_mode == 'custom' and (include_sap_056 | default(false))) }}"
+
+_sap_008_enabled:
+  type: bool
+  default: "{{ (sap_selection_mode == 'comprehensive') or (sap_selection_mode == 'custom' and (include_sap_008 | default(false))) }}"
+
+_sap_count:
+  type: int
+  default: "{{ ([_sap_001_enabled, _sap_015_enabled, _sap_053_enabled, _sap_010_enabled, _sap_051_enabled, _sap_052_enabled, _sap_056_enabled, _sap_008_enabled] | select | list | length) }}"
+
+_project_slug:
+  type: str
+  default: "{{ project_name | lower | replace(' ', '-') | replace('_', '-') }}"
 
 # =============================================================================
 # Post-Generation Tasks
