@@ -1,0 +1,298 @@
+# Changelog
+
+All notable changes to {{ project_name }} will be documented in this file.
+
+The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
+and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
+
+---
+
+## [Unreleased]
+
+### Planned
+
+- Define future work items here
+- Example: Add new feature X
+- Example: Fix known issue Y
+
+---
+
+## [0.1.0] - {{ _copier_conf.answers_file.stat().st_mtime | strftime("%Y-%m-%d") }}
+
+### 🎉 Initial Release
+
+**{{ project_name }}** generated from [chora-base](https://github.com/liminalcommons/chora-base) template v1.0.0.
+
+**Project Configuration**:
+- **SAP Selection Mode**: {{ sap_selection_mode }}
+{% if sap_selection_mode == "minimal" %}
+- **SAPs Included** (2): SAP-001 (Inbox), SAP-015 (Beads)
+{% elif sap_selection_mode == "standard" %}
+- **SAPs Included** (4): SAP-001 (Inbox), SAP-015 (Beads), SAP-053 (Conflict Resolution), SAP-010 (Memory System)
+{% elif sap_selection_mode == "comprehensive" %}
+- **SAPs Included** (8): SAP-001, SAP-015, SAP-053, SAP-010, SAP-051 (Pre-merge Validation), SAP-052 (Code Ownership), SAP-056 (Lifecycle Traceability), SAP-008 (Automation Dashboard)
+{% else %}
+- **SAPs Included** (custom):
+  {% if include_sap_001 %}- SAP-001 (Inbox Workflow){% endif %}
+  {% if include_sap_015 %}- SAP-015 (Beads Task Management){% endif %}
+  {% if include_sap_053 %}- SAP-053 (Conflict Resolution){% endif %}
+  {% if include_sap_010 %}- SAP-010 (Memory System){% endif %}
+  {% if include_sap_051 %}- SAP-051 (Pre-merge Validation){% endif %}
+  {% if include_sap_052 %}- SAP-052 (Code Ownership){% endif %}
+  {% if include_sap_056 %}- SAP-056 (Lifecycle Traceability){% endif %}
+  {% if include_sap_008 %}- SAP-008 (Automation Dashboard){% endif %}
+{% endif %}
+- **Python Version**: {{ python_version }}
+{% if use_poetry %}
+- **Dependency Management**: Poetry
+{% endif %}
+- **Task Runner**: Just
+{% if use_git %}
+- **Version Control**: Git (initialized)
+{% endif %}
+
+---
+
+### Added
+
+#### Project Structure
+
+**Infrastructure**:
+- `README.md`: Project overview and quick start guide
+- `justfile`: Automation recipes for common tasks
+{% if use_poetry %}
+- `pyproject.toml`: Python project configuration
+{% endif %}
+{% if use_git %}
+- `.gitignore`: Comprehensive ignore patterns
+{% endif %}
+- `.copier-answers.yml`: Template configuration (enables `copier update`)
+
+**Documentation**:
+- `docs/GETTING-STARTED.md`: User onboarding guide
+- `CHANGELOG.md`: This file (version history)
+
+{% if include_sap_001 or sap_selection_mode in ["minimal", "standard", "comprehensive"] %}
+#### SAP-001: Inbox Workflow
+
+**Coordination request management and cross-project communication**
+
+**Directories**:
+- `inbox/incoming/`: New coordination requests
+- `inbox/active/`: In-progress work
+- `inbox/completed/`: Finished work
+- `inbox/templates/`: Request templates
+
+**Automation**:
+- `just inbox-status`: View coordination dashboard
+- `just inbox-list`: List all requests
+{% endif %}
+
+{% if include_sap_015 or sap_selection_mode in ["minimal", "standard", "comprehensive"] %}
+#### SAP-015: Beads Task Management
+
+**Git-backed issue tracking and local task management**
+
+**Configuration**:
+- `.beads/`: Beads task storage
+- Beads CLI integration
+
+**Usage**:
+- `bd create "task description"`: Create new task
+- `bd list`: List all tasks
+- `bd show TASK-ID`: Show task details
+{% endif %}
+
+{% if include_sap_053 or sap_selection_mode in ["standard", "comprehensive"] %}
+#### SAP-053: Conflict Resolution
+
+**Pre-merge conflict detection and resolution strategies**
+
+**Scripts**:
+- `scripts/conflict-checker.py`: Conflict detection tool
+
+**Automation**:
+- `just conflict-check`: Check for potential conflicts
+- `just conflict-resolve`: Guided conflict resolution
+{% endif %}
+
+{% if include_sap_010 or sap_selection_mode in ["standard", "comprehensive"] %}
+#### SAP-010: Memory System
+
+**Event logging, knowledge notes, and agent awareness**
+
+**Directories**:
+- `.chora/memory/events/`: Event logs (JSONL format)
+- `.chora/memory/knowledge/notes/`: Knowledge notes (markdown + wikilinks)
+- `.chora/CLAUDE.md`: Claude agent awareness guide
+- `AGENTS.md`: General agent patterns
+
+**Automation**:
+- `just memory-events N`: Show last N events
+- `just knowledge-list N`: List recent knowledge notes
+- `just memory-validate`: Validate event schema
+{% endif %}
+
+{% if include_sap_051 or sap_selection_mode == "comprehensive" %}
+#### SAP-051: Pre-merge Validation
+
+**Git hooks for automated pre-push checks**
+
+**Scripts**:
+- `scripts/pre-push-check.sh`: Pre-push validation
+
+**Automation**:
+- `just install-hooks`: Install git hooks
+- `just validate`: Run validation checks
+{% endif %}
+
+{% if include_sap_052 or sap_selection_mode == "comprehensive" %}
+#### SAP-052: Code Ownership
+
+**CODEOWNERS file and PR reviewer suggestions**
+
+**Scripts**:
+- `scripts/ownership-coverage.py`: Ownership analysis
+
+**Configuration**:
+- `CODEOWNERS`: Code ownership definitions
+
+**Automation**:
+- `just ownership-coverage`: Check coverage status
+- `just ownership-suggest-reviewers`: Get reviewer suggestions
+{% endif %}
+
+{% if include_sap_056 or sap_selection_mode == "comprehensive" %}
+#### SAP-056: Lifecycle Traceability
+
+**Feature manifest and artifact linkage (code → tests → docs)**
+
+**Scripts**:
+- `scripts/validate-manifest.py`: Manifest validation
+
+**Configuration**:
+- `feature-manifest.yaml`: Feature and artifact tracking
+
+**Automation**:
+- `just manifest-validate`: Validate manifest
+- `just manifest-coverage`: Check traceability coverage
+{% endif %}
+
+{% if include_sap_008 or sap_selection_mode == "comprehensive" %}
+#### SAP-008: Automation Dashboard
+
+**Recipe usage tracking and automation metrics**
+
+**Integration**:
+- Metrics-enhanced justfile recipes
+- Automatic usage tracking
+
+**Automation**:
+- `just automation-stats`: View automation metrics
+- `just recipe-usage`: Track recipe usage
+{% endif %}
+
+---
+
+### Documentation
+
+- **README.md**: Complete project overview with SAP catalog
+- **GETTING-STARTED.md**: Comprehensive user guide
+- **CHANGELOG.md**: Version history (this file)
+{% if include_sap_010 or sap_selection_mode in ["standard", "comprehensive"] %}
+- **.chora/CLAUDE.md**: Claude-specific workflows and patterns
+- **AGENTS.md**: General agent guidance
+{% endif %}
+
+---
+
+### Next Steps
+
+1. **Review generated files**:
+   ```bash
+   cat README.md
+   just --list
+   ```
+
+2. **Set up development environment**:
+{% if use_poetry %}
+   ```bash
+   poetry install              # Install dependencies
+   poetry shell                # Activate virtual environment
+   ```
+{% else %}
+   ```bash
+   # Install dependencies manually (no Poetry)
+   ```
+{% endif %}
+
+{% if include_sap_001 or sap_selection_mode in ["minimal", "standard", "comprehensive"] %}
+3. **Initialize workflows** (SAP-001):
+   ```bash
+   just inbox-status           # Check coordination inbox
+   ```
+{% endif %}
+
+{% if include_sap_015 or sap_selection_mode in ["minimal", "standard", "comprehensive"] %}
+4. **Create first task** (SAP-015):
+   ```bash
+   bd create "Set up CI/CD pipeline"
+   bd list
+   ```
+{% endif %}
+
+5. **Test automation**:
+   ```bash
+   just --list                 # View available recipes
+   just validate               # Run validation checks
+   ```
+
+6. **Read domain-specific docs**:
+   - `README.md`: Project overview
+{% if include_sap_001 or sap_selection_mode in ["minimal", "standard", "comprehensive"] %}
+   - `inbox/README.md`: Coordination workflow
+{% endif %}
+{% if include_sap_010 or sap_selection_mode in ["standard", "comprehensive"] %}
+   - `.chora/CLAUDE.md`: Agent awareness guide
+{% endif %}
+   - `docs/GETTING-STARTED.md`: User onboarding
+
+---
+
+## Updating This Project
+
+When the chora-base template improves (v1.0.0 → v1.1.0 → v2.0.0), propagate updates:
+
+```bash
+cd {{ project_name }}
+copier update
+```
+
+**What Gets Updated**:
+- Template files (justfile, scripts, docs)
+- SAP artifacts (if you selected them)
+- Configuration (pyproject.toml, .copier-answers.yml)
+
+**What's Preserved**:
+- Your custom code
+- Project-specific configuration
+- Git history
+- Local modifications
+
+**Handling Conflicts**:
+1. Review conflicts: `git status`, `git diff`
+2. Resolve manually in editor
+3. Test after resolution: `just validate`
+4. Commit: `git commit -m "chore: update to chora-base vX.Y.Z"`
+
+---
+
+## Version History
+
+- **0.1.0** ({{ _copier_conf.answers_file.stat().st_mtime | strftime("%Y-%m-%d") }}): Initial project generation from chora-base v1.0.0
+
+---
+
+**Generated**: {{ _copier_conf.answers_file.stat().st_mtime | strftime("%Y-%m-%d") }}
+**Template**: chora-base v1.0.0
+**Origin**: [chora-base](https://github.com/liminalcommons/chora-base)
