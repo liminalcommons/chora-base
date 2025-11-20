@@ -1,9 +1,9 @@
 # Traceability Ledger: SAP Framework
 
 **SAP ID**: SAP-000
-**Current Version**: 1.0.0
+**Current Version**: 1.1.0
 **Status**: Active (Level 3)
-**Last Updated**: 2025-11-04
+**Last Updated**: 2025-11-20
 
 ---
 
@@ -25,6 +25,7 @@
 
 | Version | Release Date | Type | Changes | Migration Required |
 |---------|--------------|------|---------|-------------------|
+| 1.1.0 | 2025-11-20 | MINOR | Added Section 2.6.6 Ecosystem Integration Requirements (5 integration points: INDEX.md, sap-catalog.json, Copier, adoption path, dependencies). Added references to SAP-061 (Ecosystem Integration), SAP-062 (Distribution & Versioning), SAP-050 (Verification & Lifecycle). Updated status to Active. | No (backward compatible) |
 | 1.0.0 | 2025-10-27 | MAJOR | Initial release: Root protocol, 5 framework SAP artifacts, templates, SAP Index | N/A (initial) |
 
 **Legend**:

@@ -1,9 +1,9 @@
 # Protocol Specification: SAP Framework
 
 **SAP ID**: SAP-000
-**Version**: 1.0.0
-**Status**: Draft → Active (Phase 1)
-**Last Updated**: 2025-10-27
+**Version**: 1.1.0
+**Status**: Active
+**Last Updated**: 2025-11-20
 
 ---
 
@@ -724,7 +724,75 @@ python scripts/validate-links.py --all
 python scripts/validate-production-quality.py --status active
 ```
 
-#### 2.6.6 Cross-SAP Integration
+#### 2.6.6 Ecosystem & Cross-SAP Integration
+
+All SAPs MUST integrate with the SAP ecosystem infrastructure and document integration patterns with other SAPs.
+
+**A. Ecosystem Integration Requirements**
+
+Before releasing a SAP (status: `active`), it MUST be integrated with 5 ecosystem integration points. See **[SAP-061: SAP Ecosystem Integration](../sap-ecosystem-integration/protocol-spec.md)** for complete specification.
+
+**5 Ecosystem Integration Points**:
+
+1. **INDEX.md Registration** (Required for all SAPs)
+   - **File**: `docs/skilled-awareness/INDEX.md`
+   - **Requirements**:
+     - ✅ SAP listed in appropriate domain section
+     - ✅ Includes status, version, domain, description, dependencies, location, key features
+     - ✅ Entry format matches INDEX.md schema (see SAP-061)
+   - **Validation**: `python scripts/validate-ecosystem-integration.py --check index --sap <sap-name>`
+
+2. **sap-catalog.json Entry** (Required for all SAPs)
+   - **File**: `sap-catalog.json` (root directory)
+   - **Requirements**:
+     - ✅ SAP metadata entry with id, namespace, version, status, capabilities
+     - ✅ Dependencies list matches INDEX.md and artifact cross-references
+     - ✅ Valid JSON schema (validates with `jq`)
+   - **Validation**: `python scripts/validate-ecosystem-integration.py --check catalog --sap <sap-name>`
+
+3. **Copier Template Integration** (Required for distributable SAPs)
+   - **File**: `copier.yml` or `template.yml` (for Copier-based projects)
+   - **Requirements**:
+     - ✅ SAP artifacts included in template file lists (if distributable)
+     - ✅ Conditional inclusion configured (optional vs required SAPs)
+     - ✅ Template variables defined for SAP-specific configuration
+   - **Validation**: `python scripts/validate-ecosystem-integration.py --check copier --sap <sap-name>`
+   - **Note**: See **[SAP-062: SAP Distribution & Versioning](../sap-distribution-versioning/protocol-spec.md)** for Copier template specifications
+
+4. **Progressive Adoption Path** (Required for foundational SAPs)
+   - **Requirement**: SAP mentioned in adoption path documentation (README.md "Progressive Adoption Path" sections of related SAPs)
+   - **Validation**: Check if SAP is referenced in related SAPs' adoption paths
+   - **Example**: SAP-020 (Next.js) mentioned in SAP-021 through SAP-041 adoption paths
+
+5. **Dependency Graph Integrity** (Required for all SAPs)
+   - **Requirement**: All SAP dependencies exist and are resolvable
+   - **Checks**:
+     - ✅ All SAPs listed in `dependencies` field exist in catalog
+     - ✅ No circular dependencies (or circular dependencies documented and justified)
+     - ✅ Dependency versions compatible (no version conflicts)
+   - **Validation**: `python scripts/validate-ecosystem-integration.py --check dependencies --sap <sap-name>`
+
+**Ecosystem Integration Enforcement**:
+
+- **Pre-commit Hook**: Blocks commits modifying SAP artifacts if ecosystem integration incomplete
+- **CI/CD Gate**: Prevents merging PRs for SAPs with missing integrations
+- **Status Requirement**: SAPs MUST complete ecosystem integration before promotion to `active` status
+
+**Complete Validation Command**:
+```bash
+# Validate all 5 integration points
+python scripts/validate-ecosystem-integration.py --sap <sap-name>
+
+# Exit codes:
+# 0 = All integrations valid
+# 1 = INDEX.md missing or invalid
+# 2 = sap-catalog.json missing or invalid
+# 3 = Copier integration missing (if required)
+# 4 = Broken dependencies detected
+# 5 = Adoption path references missing (if required)
+```
+
+**B. Cross-SAP Integration Requirements**
 
 SAPs that integrate with other SAPs MUST document integration patterns:
 
@@ -1484,6 +1552,8 @@ blueprint_step:
 - `Deprecated` SAPs MUST have migration blueprint
 - `Archived` SAPs MUST preserve documentation
 
+**See also**: **[SAP-050: SAP Adoption Verification & Quality Assurance](../sap-adoption-verification/protocol-spec.md)** provides phase completion criteria (Phase 1-4) and maturity progression tracking (L0-L5) for systematic SAP development.
+
 ### 5.2 Installation Workflow
 
 ```
@@ -2101,6 +2171,7 @@ SAP-017 focuses exclusively on chora-compose integration. The following topics a
 - [SAP Diataxis Decision Matrix](../../user-docs/reference/sap-diataxis-mapping.md) (to be created)
 - [Diataxis Framework Documentation](https://diataxis.fr/)
 - [SAP-007: Documentation Framework](../documentation-framework/) - Comprehensive Diataxis guidance
+- **[SAP-050: SAP Adoption Verification & Quality Assurance](../sap-adoption-verification/protocol-spec.md)** - Phase completion criteria, maturity progression (L0-L5), verification patterns
 
 ---
 

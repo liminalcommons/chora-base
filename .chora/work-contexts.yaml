@@ -22,9 +22,10 @@ work_contexts:
   - docs/skilled-awareness/sap-ecosystem-integration/*
   - docs/skilled-awareness/sap-distribution-versioning/*
   - docs/skilled-awareness/sap-adoption-verification/*
+  - docs/skilled-awareness/sap-framework/*
   - .chora/work-contexts.yaml
   started_at: 2025-11-20 10:34:56+00:00
-  last_activity: '2025-11-20T22:38:13Z'
+  last_activity: '2025-11-20T23:00:35Z'
 - id: tab-3
   type: tab
   branch: feature/new
