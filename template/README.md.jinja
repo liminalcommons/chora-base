@@ -1,0 +1,315 @@
+# {{ project_name }}
+
+{{ project_description }}
+
+**Author**: {{ project_author }}
+**Created**: {{ '%Y-%m-%d' | strftime }}
+**Template**: chora-base v1.0.0 (Copier-based SAP Distribution)
+
+---
+
+## Quick Start
+
+```bash
+# Show available automation recipes
+just --list
+
+{% if _sap_001_enabled %}# Check coordination inbox status
+just inbox-status
+{% endif %}
+{% if _sap_053_enabled %}# Run conflict detection
+just conflict-check
+{% endif %}
+{% if _sap_015_enabled %}# List beads tasks
+bd list
+{% endif %}
+```
+
+---
+
+## Common Workflows
+
+This section provides typical workflows for working with this project:
+
+{% if _sap_001_enabled %}**Coordination Workflow**:
+1. Check inbox: `just inbox-status`
+2. Review coordination requests in `inbox/incoming/coordination/`
+3. Move to `inbox/active/` when starting work
+4. Move to `inbox/completed/` when done
+{% endif %}
+
+{% if _sap_053_enabled %}**Pre-merge Workflow**:
+1. Make changes on feature branch
+2. Run `just conflict-check` before merging
+3. Address any conflicts detected
+4. Merge when clean
+{% endif %}
+
+{% if _sap_015_enabled %}**Task Management Workflow**:
+1. Create task: `bd create "Task description"`
+2. List tasks: `bd list`
+3. Update task: `bd update <task-id> --status in_progress`
+4. Complete task: `bd close <task-id>`
+{% endif %}
+
+---
+
+## SAPs Included
+
+This project includes {{ _sap_count }} Skilled Awareness Packages (SAPs) for workflow automation and coordination:
+
+{% if _sap_001_enabled %}### SAP-001: Inbox Workflow
+
+**Purpose**: Coordination request management and cross-project communication
+
+**Key Files**:
+- `inbox/incoming/coordination/` - New coordination requests
+- `inbox/templates/` - Request templates
+- `ECOSYSTEM_STATUS.yaml` - Status tracking
+
+**Recipes**:
+```bash
+just inbox-status         # Show coordination dashboard
+just inbox-list           # List all requests
+```
+
+**Documentation**: [inbox/README.md](inbox/README.md)
+
+{% endif %}
+{% if _sap_015_enabled %}### SAP-015: Beads Task Management
+
+**Purpose**: Git-backed issue tracking with JSONL storage
+
+**Key Files**:
+- `.beads/issues.jsonl` - Task storage
+- `.beads/` - Beads database
+
+**Recipes**:
+```bash
+bd create "Task title"           # Create new task
+bd list                          # List all tasks
+bd show <id>                     # Show task details
+bd close <id> --reason "Done"    # Close task
+```
+
+**Documentation**: Beads CLI help (`bd --help`)
+
+{% endif %}
+{% if _sap_053_enabled %}### SAP-053: Conflict Resolution
+
+**Purpose**: Pre-merge conflict detection (v1.0.0)
+
+**Key Files**:
+- `scripts/conflict-checker.py` - Conflict detection script
+- `docs/conflict-resolution/README.md` - Full documentation
+
+**Recipes**:
+```bash
+just conflict-check              # Check for conflicts with main
+just conflict-check-json         # JSON output for CI/CD
+just conflict-check-verbose      # Detailed output
+just conflict-status             # Quick status check
+```
+
+**Documentation**: [docs/conflict-resolution/README.md](docs/conflict-resolution/README.md)
+
+{% endif %}
+{% if _sap_010_enabled %}### SAP-010: Memory System
+
+**Purpose**: A-MEM event logging and knowledge note management
+
+**Key Files**:
+- `.chora/memory/events/` - Event logs (JSONL format)
+- `.chora/memory/knowledge/notes/` - Knowledge notes (markdown + wikilinks)
+- `.chora/CLAUDE.md` - Agent awareness guide
+
+**Recipes**:
+```bash
+just memory-events 10            # Show recent 10 events
+just knowledge-list 10           # List recent knowledge notes
+just memory-validate             # Validate event schema
+```
+
+**Documentation**: [.chora/CLAUDE.md](.chora/CLAUDE.md)
+
+{% endif %}
+{% if _sap_051_enabled %}### SAP-051: Pre-merge Validation
+
+**Purpose**: Git hooks for pre-push checks
+
+**Key Files**:
+- `.git/hooks/pre-push` - Pre-push validation hook
+- `scripts/pre-push-check.sh` - Validation script
+
+**Recipes**:
+```bash
+just pre-push-check              # Run pre-push validation manually
+```
+
+**Documentation**: [docs/pre-merge-validation/README.md](docs/pre-merge-validation/README.md)
+
+{% endif %}
+{% if _sap_052_enabled %}### SAP-052: Code Ownership
+
+**Purpose**: CODEOWNERS and PR reviewer suggestions
+
+**Key Files**:
+- `CODEOWNERS` - GitHub code ownership
+- `scripts/suggest-reviewers.py` - Reviewer suggestion script
+
+**Recipes**:
+```bash
+just ownership-suggest-reviewers-staged    # Suggest reviewers for staged changes
+just ownership-coverage                    # Check ownership coverage
+```
+
+**Documentation**: [docs/code-ownership/README.md](docs/code-ownership/README.md)
+
+{% endif %}
+{% if _sap_056_enabled %}### SAP-056: Lifecycle Traceability
+
+**Purpose**: Feature manifest and artifact linkage
+
+**Key Files**:
+- `feature-manifest.yaml` - Single source of truth for features
+- `scripts/validate-manifest.py` - Manifest validation script
+
+**Recipes**:
+```bash
+just feature-manifest-validate    # Validate feature manifest
+just feature-manifest-generate    # Generate manifest from git/beads
+```
+
+**Documentation**: [docs/lifecycle-traceability/README.md](docs/lifecycle-traceability/README.md)
+
+{% endif %}
+{% if _sap_008_enabled %}### SAP-008: Automation Dashboard
+
+**Purpose**: Justfile recipes and metrics tracking
+
+**Key Files**:
+- `justfile` - Automation recipes
+- `scripts/track-recipe-usage.py` - Usage tracking script
+
+**Recipes**:
+```bash
+just --list                      # Show all recipes
+just automation-stats            # Show automation metrics
+```
+
+**Documentation**: [docs/automation-dashboard/README.md](docs/automation-dashboard/README.md)
+
+{% endif %}
+
+---
+
+## Development
+
+### Prerequisites
+
+{% if _sap_053_enabled or _sap_056_enabled or _sap_008_enabled %}- **Python {{ python_version }}+**: Required for SAP scripts
+{% if use_poetry %}- **Poetry**: Python dependency management{% endif %}
+{% endif %}{% if use_git %}- **Git**: Version control{% endif %}
+{% if _sap_015_enabled %}- **Beads CLI**: Task management (`go install github.com/liminalcommons/beads/cmd/bd@latest`){% endif %}
+- **just**: Task runner (`brew install just` or see https://just.systems)
+
+### Setup
+
+```bash
+{% if use_git %}# 1. Git repository already initialized
+git status
+{% endif %}
+{% if use_poetry and (_sap_053_enabled or _sap_056_enabled or _sap_008_enabled) %}# 2. Install Python dependencies
+poetry install
+{% endif %}
+# 3. View available recipes
+just --list
+
+{% if _sap_001_enabled %}# 4. Check inbox status
+just inbox-status
+{% endif %}
+```
+
+### Project Structure
+
+```
+{{ _project_slug }}/
+├── README.md                    # This file
+├── justfile                     # Automation recipes
+{% if _sap_053_enabled or _sap_056_enabled or _sap_008_enabled %}├── pyproject.toml               # Python dependencies{% endif %}
+├── scripts/                     # SAP scripts
+{% if _sap_053_enabled %}│   ├── conflict-checker.py      # SAP-053{% endif %}
+{% if _sap_010_enabled %}│   ├── memory-health-check.py   # SAP-010{% endif %}
+{% if _sap_052_enabled %}│   ├── suggest-reviewers.py     # SAP-052{% endif %}
+{% if _sap_056_enabled %}│   ├── validate-manifest.py     # SAP-056{% endif %}
+│   └── ...
+├── docs/                        # Documentation
+{% if _sap_001_enabled %}├── inbox/                       # SAP-001: Coordination requests
+│   ├── incoming/
+│   ├── templates/
+│   └── README.md
+{% endif %}{% if _sap_010_enabled %}├── .chora/                      # SAP-010: Memory system
+│   ├── memory/
+│   │   ├── events/
+│   │   └── knowledge/
+│   └── CLAUDE.md
+{% endif %}{% if _sap_015_enabled %}├── .beads/                      # SAP-015: Beads tasks
+│   └── issues.jsonl
+{% endif %}{% if use_git %}└── .git/                        # Git repository{% endif %}
+```
+
+---
+
+## Resources
+
+### chora Ecosystem
+- **chora-base**: https://github.com/liminalcommons/chora-base
+- **SAP Catalog**: [packages/chora-base/docs/skilled-awareness/INDEX.md](https://github.com/liminalcommons/chora-base/blob/main/docs/skilled-awareness/INDEX.md)
+- **Template Documentation**: [COPIER-QUESTIONNAIRE-DESIGN.md](https://github.com/liminalcommons/chora-base/blob/main/COPIER-QUESTIONNAIRE-DESIGN.md)
+
+### Template Updates
+To update this project when the chora-base template improves:
+
+```bash
+# Update to latest template version
+copier update
+
+# Review changes (resolve conflicts if any)
+git diff
+
+# Test SAP scripts after update
+{% if _sap_053_enabled %}just conflict-check{% endif %}
+just --list
+```
+
+**Update Guide**: See docs/template-updates.md (if exists)
+
+---
+
+## Contributing
+
+### Adding New Features
+{% if _sap_015_enabled %}1. Create beads task: `bd create "Feature description"`
+2. Implement feature
+3. Close task: `bd close <id> --reason "Implemented"`
+{% else %}1. Create issue/task for feature
+2. Implement feature
+3. Close issue when complete
+{% endif %}
+
+### Reporting Issues
+{% if _sap_001_enabled %}- Create coordination request in `inbox/incoming/coordination/` (for cross-project issues)
+{% endif %}- Open GitHub issue (if repository is public)
+- Contact maintainer: {{ project_author }}
+
+---
+
+## License
+
+[Add your license here]
+
+---
+
+**Template Version**: chora-base v1.0.0 (Copier-based SAP Distribution)
+**Origin**: OPP-2025-022, CORD-2025-023, SAP-060 Strategic Opportunity Management
+**Generated**: {{ '%Y-%m-%d %H:%M:%S' | strftime }}
