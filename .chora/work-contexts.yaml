@@ -20,9 +20,10 @@ work_contexts:
   - justfile
   - scripts/work-dashboard.sh
   - docs/skilled-awareness/sap-ecosystem-integration/*
+  - docs/skilled-awareness/sap-distribution-versioning/*
   - .chora/work-contexts.yaml
   started_at: 2025-11-20 10:34:56+00:00
-  last_activity: '2025-11-20T20:46:17Z'
+  last_activity: '2025-11-20T22:12:55Z'
 - id: tab-3
   type: tab
   branch: feature/new
