@@ -1,0 +1,459 @@
+# {{ project_name }}: Claude Agent Awareness
+
+**Project**: {{ project_slug }}
+**Type**: {% if project_type == 'library' %}Library{% elif project_type == 'application' %}Application{% else %}Project{% endif %}
+**Claude Compatibility**: Sonnet 4.5+
+**Last Updated**: {{ '%Y-%m-%d' | strftime }}
+
+---
+
+## Quick Start for Claude
+
+Welcome to {{ project_name }}! This file provides Claude-specific navigation and context loading strategies.
+
+### First-Time Navigation
+
+**New to this project?**
+1. You're reading the right file (`.chora/CLAUDE.md`)
+2. Read root [README.md](../README.md) for project overview
+3. Check enabled SAPs (see below)
+4. Use project automation via justfile recipes (`just --list`)
+
+**Returning to this project?**
+1. Check recent work: `just {% if _sap_010_enabled %}memory-events 10{% else %}--list{% endif %}`
+2. Review project status: `just status`
+3. Continue with current tasks{% if _sap_015_enabled %}: `bd list --status in_progress`{% endif %}
+
+---
+
+## Project Overview
+
+{{ project_name }} is a {% if project_type == 'library' %}library{% elif project_type == 'application' %}application{% else %}project{% endif %} generated from chora-base template with {{ _sap_count }} SAPs enabled.
+
+**Technology Stack**:
+{% if use_python %}- Python {{ python_version }}{% if use_poetry %} (Poetry){% endif %}{% endif %}
+{% if use_typescript %}- TypeScript{% endif %}
+{% if use_git %}- Git version control{% endif %}
+
+**Enabled SAPs**:
+{% if _sap_001_enabled %}- ✅ SAP-001: Inbox Workflow{% endif %}
+{% if _sap_015_enabled %}- ✅ SAP-015: Beads Task Management{% endif %}
+{% if _sap_053_enabled %}- ✅ SAP-053: Conflict Resolution{% endif %}
+{% if _sap_010_enabled %}- ✅ SAP-010: Memory System{% endif %}
+{% if _sap_051_enabled %}- ✅ SAP-051: Pre-merge Validation{% endif %}
+{% if _sap_052_enabled %}- ✅ SAP-052: Code Ownership{% endif %}
+{% if _sap_056_enabled %}- ✅ SAP-056: Lifecycle Traceability{% endif %}
+{% if _sap_008_enabled %}- ✅ SAP-008: Automation Dashboard{% endif %}
+
+---
+
+## Quick Reference: Justfile Recipes
+
+The project uses justfile for automation. Key recipes:
+
+```bash
+# Project status
+just status                     # Show project overview
+{% if _sap_001_enabled %}just inbox-status              # Coordination requests{% endif %}
+{% if _sap_015_enabled %}just beads-list                # Task list{% endif %}
+
+# Development
+{% if _sap_053_enabled %}just conflict-check            # Check for merge conflicts{% endif %}
+{% if _sap_051_enabled %}just pre-push-check            # Run pre-push validation{% endif %}
+
+# Validation
+just validate                   # Run all validation checks
+{% if _sap_052_enabled %}just ownership-coverage        # Code ownership coverage{% endif %}
+{% if _sap_056_enabled %}just feature-manifest-validate # Feature traceability{% endif %}
+
+# Cleanup
+just clean                      # Remove temporary files
+```
+
+Run `just --list` to see all available recipes.
+
+---
+{% if _sap_010_enabled %}
+## Memory System (SAP-010)
+
+This project uses the A-MEM (Agent Memory) system for tracking work history and knowledge.
+
+### Event Logging
+
+Events are logged to `.chora/memory/events/YYYY-MM.jsonl`:
+
+```json
+{
+  "event_type": "task_completed",
+  "timestamp": "{{ '%Y-%m-%dT%H:%M:%SZ' | strftime }}",
+  "task_id": "{{ project_slug }}-abc123",
+  "description": "What was completed",
+  "trace_id": "sprint-1"
+}
+```
+
+### Knowledge Notes
+
+Patterns and learnings are captured in `.chora/memory/knowledge/notes/`:
+
+```bash
+# Create new knowledge note
+just knowledge-create "pattern-name"
+
+# List recent notes
+just knowledge-list 10
+
+# View recent events
+just memory-events 10
+```
+
+### Querying Memory
+
+```bash
+# Find events by type
+grep "task_completed" .chora/memory/events/*.jsonl
+
+# Find events by trace_id
+grep "trace_id.*sprint-1" .chora/memory/events/*.jsonl
+
+# Validate event schema
+just memory-validate
+```
+
+### Memory Health
+
+```bash
+# Check memory system health
+just memory-health
+
+# Output shows:
+# - Events this month
+# - Total knowledge notes
+# - Disk usage
+```
+
+---
+{% endif %}
+{% if _sap_001_enabled %}
+## Inbox Workflow (SAP-001)
+
+Coordination requests are managed via the inbox/ directory:
+
+```
+inbox/
+├── incoming/coordination/   # New requests
+├── active/                  # In progress
+├── completed/               # Done
+└── templates/               # Templates
+```
+
+### Creating Coordination Requests
+
+```bash
+# Create from template
+just inbox-create "brief-name"
+
+# Shows status
+just inbox-status
+
+# List all requests
+just inbox-list
+```
+
+### Triage Workflow
+
+1. Review: `just inbox-status`
+2. Move to active: `mv inbox/incoming/coordination/CORD-*.json inbox/active/`
+3. Work on request
+4. Move to completed: `mv inbox/active/CORD-* inbox/completed/`
+
+---
+{% endif %}
+{% if _sap_015_enabled %}
+## Task Management (SAP-015)
+
+Tasks are managed via Beads (git-backed task manager):
+
+```bash
+# List tasks
+bd list
+just beads-list
+
+# Create task
+bd create "Task description"
+just beads-create "Task description"
+
+# Show task details
+bd show TASK-ID
+just beads-show TASK-ID
+
+# Update task status
+bd update TASK-ID --status in_progress
+
+# Close task
+bd close TASK-ID --reason "Completed successfully"
+just beads-close TASK-ID "Completed"
+```
+
+### Task Statuses
+
+- `open`: Ready to start
+- `in_progress`: Currently working
+- `blocked`: Waiting on dependency
+- `closed`: Completed or canceled
+
+---
+{% endif %}
+{% if _sap_053_enabled %}
+## Conflict Resolution (SAP-053)
+
+Pre-merge conflict detection helps avoid merge conflicts:
+
+```bash
+# Check for conflicts with main branch
+just conflict-check
+
+# Check against specific branch
+just conflict-check develop
+
+# JSON output for automation
+just conflict-check-json
+
+# Verbose mode for debugging
+just conflict-check-verbose
+
+# Quick status check
+just conflict-status
+```
+
+### Exit Codes
+
+- `0`: No conflicts (safe to merge)
+- `1`: Conflicts detected (manual review required)
+- `2`: Conflicts detected (auto-resolvable)
+- `3`: Error during detection
+
+### Conflict Types
+
+- **Content**: Substantive code/doc changes (manual review)
+- **Lockfile**: Dependency lockfiles (regenerate from source)
+- **Formatting**: Auto-fixable formatting (black/prettier)
+- **Whitespace**: Whitespace only (auto-resolve)
+- **Metadata**: Cache files (delete and regenerate)
+
+---
+{% endif %}
+{% if _sap_052_enabled %}
+## Code Ownership (SAP-052)
+
+Code ownership is managed via CODEOWNERS file:
+
+```bash
+# Suggest reviewers for staged changes
+just ownership-suggest-reviewers-staged
+
+# Suggest reviewers for specific file
+just ownership-suggest-reviewers path/to/file.py
+
+# Check ownership coverage
+just ownership-coverage
+
+# Validate CODEOWNERS syntax
+just ownership-validate
+
+# Show ownership for directory
+just ownership-show src/
+```
+
+### CODEOWNERS Format
+
+```
+# Root ownership
+* @{{ author_name }}
+
+# Directory ownership
+/src/ @dev-team
+/docs/ @doc-team
+
+# File pattern ownership
+*.py @python-team
+*.ts @typescript-team
+```
+
+---
+{% endif %}
+{% if _sap_056_enabled %}
+## Lifecycle Traceability (SAP-056)
+
+Feature manifest provides bidirectional traceability:
+
+```bash
+# Validate feature manifest
+just feature-manifest-validate
+
+# Generate manifest from git and beads
+just feature-manifest-generate
+
+# Show statistics
+just feature-manifest-stats
+
+# Find feature by keyword
+just feature-find "authentication"
+```
+
+### Feature Manifest Structure
+
+`feature-manifest.yaml` links features to:
+- Requirements
+- Code files (with line ranges)
+- Tests
+- Documentation
+- Git commits
+
+---
+{% endif %}
+{% if _sap_008_enabled %}
+## Automation Dashboard (SAP-008)
+
+Track automation usage and ROI:
+
+```bash
+# Show automation statistics
+just automation-stats
+
+# Show recipe usage report (last 30 days)
+just automation-usage-report
+```
+
+### Recipe Usage Tracking
+
+Every justfile recipe logs usage to `logs/recipe-usage.log`:
+
+```csv
+2025-01-15 14:30:00,conflict-check
+2025-01-15 14:35:00,beads-list
+```
+
+---
+{% endif %}
+
+## Progressive Context Loading
+
+Claude has a 200k token window. Use progressive loading to optimize:
+
+### Phase 1: Orientation (0-10k tokens, <2 minutes)
+
+**Goal**: Understand project structure and locate relevant files
+
+**Always Read**:
+1. This file (`.chora/CLAUDE.md`)
+2. Root [README.md](../README.md)
+3. Run `just --list` to see automation recipes
+{% if _sap_056_enabled %}4. Check `feature-manifest.yaml` for features{% endif %}
+
+**Token Budget**: ~5-10k tokens
+**Output**: Clear understanding of project structure
+
+---
+
+### Phase 2: Specification (10-50k tokens, 5-10 minutes)
+
+**Goal**: Load detailed context for implementation
+
+**Read** (based on task type):
+{% if _sap_001_enabled %}- **Coordination tasks**: `inbox/` directory + templates{% endif %}
+{% if _sap_015_enabled %}- **Task management**: `bd list` output + task details{% endif %}
+{% if _sap_010_enabled %}- **Memory queries**: `.chora/memory/events/` + knowledge notes{% endif %}
+{% if _sap_053_enabled %}- **Conflict resolution**: `just conflict-check` output{% endif %}
+- **Implementation**: Source code + tests + docs
+
+**Token Budget**: ~30-50k tokens total
+**Output**: Complete technical understanding
+
+---
+
+### Phase 3: Deep Dive (50-200k tokens, 15-30 minutes)
+
+**Goal**: Comprehensive understanding for complex refactoring
+
+**Read**:
+- All source code
+{% if _sap_010_enabled %}- Complete event history (`.chora/memory/events/`){% endif %}
+{% if _sap_056_enabled %}- Complete feature manifest (`feature-manifest.yaml`){% endif %}
+- All tests and documentation
+- Git history
+
+**Token Budget**: ~150-200k tokens (near limit)
+**Output**: Deep understanding for strategic work
+
+---
+
+## Common Workflows
+
+### Starting New Work
+{% if _sap_015_enabled %}
+1. Create task: `bd create "Task description"`
+2. Set status: `bd update TASK-ID --status in_progress`
+{% endif %}
+3. {% if _sap_053_enabled %}Check for conflicts: `just conflict-check`{% endif %}
+4. Implement changes
+5. Run validation: `just validate`
+{% if _sap_015_enabled %}6. Complete task: `bd close TASK-ID --reason "Done"`{% endif %}
+{% if _sap_010_enabled %}7. Log event (optional): Add to `.chora/memory/events/`{% endif %}
+
+### Before Creating PR
+
+1. {% if _sap_053_enabled %}Check conflicts: `just conflict-check`{% endif %}
+2. Run validation: `just validate`
+{% if _sap_051_enabled %}3. Run pre-push: `just pre-push-check`{% endif %}
+{% if _sap_052_enabled %}4. Check reviewers: `just ownership-suggest-reviewers-staged`{% endif %}
+5. Create PR with suggested reviewers
+
+### Creating Knowledge Note
+{% if _sap_010_enabled %}
+1. Create note: `just knowledge-create "pattern-name"`
+2. Edit `.chora/memory/knowledge/notes/YYYY-MM-DD-pattern-name.md`
+3. Add wikilinks: `[[related-pattern]]`
+4. Commit: `git add .chora/memory/ && git commit -m "docs: add pattern-name note"`
+{% else %}
+1. Create markdown file in `docs/`
+2. Document pattern or learning
+3. Link to related docs
+{% endif %}
+
+---
+
+## Best Practices
+
+1. **Use justfile first**: Check `just --list` before writing scripts
+{% if _sap_010_enabled %}2. **Log important events**: Add to `.chora/memory/events/`{% endif %}
+{% if _sap_001_enabled %}3. **Coordinate cross-repo work**: Use `inbox/` for coordination{% endif %}
+{% if _sap_015_enabled %}4. **Track tasks with Beads**: Use `bd` for task management{% endif %}
+{% if _sap_053_enabled %}5. **Check conflicts early**: Run `just conflict-check` before PR{% endif %}
+{% if _sap_052_enabled %}6. **Add correct reviewers**: Use `just ownership-suggest-reviewers-staged`{% endif %}
+7. **Run validation**: Use `just validate` before committing
+
+---
+
+## Support & Resources
+
+**Project Documentation**:
+- Root README: [README.md](../README.md)
+- Justfile recipes: `just --list`
+{% if _sap_001_enabled %}- Inbox workflow: [inbox/README.md](../inbox/README.md){% endif %}
+
+**SAP Documentation** (chora-base):
+{% if _sap_001_enabled %}- [SAP-001: Inbox Workflow](https://github.com/chora-base/skilled-awareness/sap-001-inbox){% endif %}
+{% if _sap_015_enabled %}- [SAP-015: Beads Task Management](https://github.com/chora-base/skilled-awareness/sap-015-beads){% endif %}
+{% if _sap_053_enabled %}- [SAP-053: Conflict Resolution](https://github.com/chora-base/skilled-awareness/sap-053-conflict-resolution){% endif %}
+{% if _sap_010_enabled %}- [SAP-010: Memory System](https://github.com/chora-base/skilled-awareness/sap-010-memory){% endif %}
+{% if _sap_051_enabled %}- [SAP-051: Pre-merge Validation](https://github.com/chora-base/skilled-awareness/sap-051-pre-merge){% endif %}
+{% if _sap_052_enabled %}- [SAP-052: Code Ownership](https://github.com/chora-base/skilled-awareness/sap-052-ownership){% endif %}
+{% if _sap_056_enabled %}- [SAP-056: Lifecycle Traceability](https://github.com/chora-base/skilled-awareness/sap-056-traceability){% endif %}
+{% if _sap_008_enabled %}- [SAP-008: Automation Dashboard](https://github.com/chora-base/skilled-awareness/sap-008-automation){% endif %}
+
+---
+
+**Created**: {{ '%Y-%m-%d' | strftime }}
+**Template**: chora-base v1.0.0
+**For**: Claude Sonnet 4.5+ working in {{ project_name }}

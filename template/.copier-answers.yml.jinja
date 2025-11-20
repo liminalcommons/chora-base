@@ -1,0 +1,49 @@
+# Copier Answers File
+# This file records the answers from project generation
+# Used for: copier update (propagating template changes to existing projects)
+
+# Metadata
+_src_path: {{ _copier_conf.src_path }}
+_commit: {{ _copier_conf.vcs_ref_hash }}
+
+# Basic Project Info
+project_name: {{ project_name }}
+project_slug: {{ project_slug }}
+project_type: {{ project_type }}
+description: {{ description }}
+
+# Author Info
+author_name: {{ author_name }}
+author_email: {{ author_email }}
+
+# Technical Configuration
+use_git: {{ use_git }}
+use_python: {{ use_python }}
+{% if use_python %}python_version: "{{ python_version }}"{% endif %}
+{% if use_python %}use_poetry: {{ use_poetry }}{% endif %}
+use_typescript: {{ use_typescript }}
+
+# SAP Selection
+sap_selection_mode: {{ sap_selection_mode }}
+{% if sap_selection_mode == 'custom' %}
+# Individual SAP selection (custom mode)
+include_sap_001: {{ include_sap_001 }}
+include_sap_015: {{ include_sap_015 }}
+include_sap_053: {{ include_sap_053 }}
+include_sap_010: {{ include_sap_010 }}
+include_sap_051: {{ include_sap_051 }}
+include_sap_052: {{ include_sap_052 }}
+include_sap_056: {{ include_sap_056 }}
+include_sap_008: {{ include_sap_008 }}
+{% endif %}
+
+# Derived Variables (for template logic)
+_sap_001_enabled: {{ _sap_001_enabled }}
+_sap_015_enabled: {{ _sap_015_enabled }}
+_sap_053_enabled: {{ _sap_053_enabled }}
+_sap_010_enabled: {{ _sap_010_enabled }}
+_sap_051_enabled: {{ _sap_051_enabled }}
+_sap_052_enabled: {{ _sap_052_enabled }}
+_sap_056_enabled: {{ _sap_056_enabled }}
+_sap_008_enabled: {{ _sap_008_enabled }}
+_sap_count: {{ _sap_count }}

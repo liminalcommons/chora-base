@@ -1,0 +1,45 @@
+{% if _sap_053_enabled or _sap_052_enabled or _sap_056_enabled or _sap_008_enabled or _sap_010_enabled %}[tool.poetry]
+name = "{{ project_slug }}"
+version = "0.1.0"
+description = "{{ project_name }} - Generated from chora-base template"
+authors = ["{{ author_name }} <{{ author_email }}>"]
+readme = "README.md"
+{% if use_poetry %}
+packages = [{include = "{{ project_slug }}"}]
+{% endif %}
+
+[tool.poetry.dependencies]
+python = "^{{ python_version }}"
+{% if _sap_053_enabled or _sap_052_enabled or _sap_056_enabled or _sap_008_enabled or _sap_010_enabled %}
+click = "^8.1.7"            # CLI framework for scripts
+{% endif %}
+{% if _sap_053_enabled or _sap_056_enabled %}
+pyyaml = "^6.0.1"           # YAML parsing for feature-manifest, CODEOWNERS
+{% endif %}
+{% if _sap_010_enabled %}
+python-dateutil = "^2.8.2"  # Date parsing for A-MEM events
+{% endif %}
+
+[tool.poetry.group.dev.dependencies]
+pytest = "^7.4.3"
+pytest-cov = "^4.1.0"
+black = "^23.12.1"
+ruff = "^0.1.8"
+
+{% if _sap_053_enabled %}[tool.black]
+line-length = 100
+target-version = ['py{{ python_version.replace(".", "") }}']
+
+[tool.ruff]
+line-length = 100
+target-version = "py{{ python_version.replace('.', '') }}"
+select = ["E", "F", "I", "N", "W"]
+ignore = ["E501"]  # Line too long (handled by black)
+{% endif %}
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
+{% else %}# No Python-dependent SAPs enabled - pyproject.toml not needed
+# If you need Python dependencies, enable SAP-053, SAP-052, SAP-056, SAP-008, or SAP-010
+{% endif %}

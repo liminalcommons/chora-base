@@ -1,0 +1,289 @@
+# Getting Started with {{ project_name }}
+
+Welcome to {{ project_name }}! This guide will help you get up and running quickly.
+
+## Prerequisites
+
+{% if use_python %}- Python {{ python_version }} or higher{% if use_poetry %}
+- Poetry (install: `curl -sSL https://install.python-poetry.org | python3 -`){% endif %}{% endif %}
+{% if use_typescript %}- Node.js 18+ and npm/yarn{% endif %}
+{% if use_git %}- Git{% endif %}
+{% if _sap_015_enabled %}- Beads task manager (install: see [SAP-015 documentation](https://github.com/chora-base/skilled-awareness/sap-015-beads)){% endif %}
+- just command runner (install: `cargo install just` or `brew install just`)
+
+## Installation
+
+### 1. Clone Repository{% if use_git %}
+
+```bash
+git clone <repository-url> {{ project_slug }}
+cd {{ project_slug }}
+```
+{% else %}
+
+Extract the project archive and navigate to the directory.
+{% endif %}
+
+### 2. Install Dependencies
+{% if use_poetry %}
+```bash
+# Install Python dependencies with Poetry
+poetry install
+
+# Activate virtual environment
+poetry shell
+```
+{% elif use_python %}
+```bash
+# Create virtual environment
+{{ 'python' + python_version }} -m venv venv
+
+# Activate virtual environment
+# On macOS/Linux:
+source venv/bin/activate
+# On Windows:
+venv\Scripts\activate
+
+# Install dependencies
+pip install -r requirements.txt
+```
+{% endif %}
+{% if use_typescript %}
+```bash
+# Install Node.js dependencies
+npm install
+# or
+yarn install
+```
+{% endif %}
+
+### 3. Verify Installation
+
+```bash
+# Show available automation recipes
+just --list
+
+# Check project status
+just status
+```
+
+## Project Structure
+
+```
+{{ project_slug }}/
+├── README.md                  # Project overview
+├── justfile                   # Automation recipes
+{% if use_python %}├── pyproject.toml            # Python dependencies{% endif %}
+{% if _sap_001_enabled %}├── inbox/                    # Coordination workflow (SAP-001)
+│   ├── incoming/
+│   ├── active/
+│   ├── completed/
+│   └── templates/{% endif %}
+{% if _sap_010_enabled %}├── .chora/                   # Memory system (SAP-010)
+│   ├── CLAUDE.md
+│   └── memory/
+│       ├── events/
+│       └── knowledge/{% endif %}
+{% if _sap_015_enabled %}├── .beads/                   # Task management (SAP-015){% endif %}
+├── docs/                     # Documentation
+└── scripts/                  # Automation scripts
+```
+
+## Quick Start
+{% if _sap_015_enabled %}
+### Create Your First Task
+
+```bash
+# Create a task
+bd create "Set up development environment"
+
+# List tasks
+bd list
+
+# Update task status
+bd update <task-id> --status in_progress
+
+# Close task when done
+bd close <task-id> --reason "Environment configured"
+```
+{% endif %}
+{% if _sap_001_enabled %}
+### Create Coordination Request
+
+```bash
+# Create from template
+just inbox-create "my-feature"
+
+# Edit the created file in inbox/incoming/coordination/
+# Set priority, deliverables, dependencies
+
+# Check inbox status
+just inbox-status
+```
+{% endif %}
+{% if _sap_053_enabled %}
+### Check for Merge Conflicts
+
+```bash
+# Before creating a PR, check for conflicts
+just conflict-check
+
+# If conflicts detected, resolve them before merging
+```
+{% endif %}
+
+## Common Workflows
+
+### Daily Development Workflow
+
+1. **Start of day**:
+   ```bash
+   just status{% if _sap_015_enabled %}
+   bd list --status in_progress{% endif %}
+   ```
+
+2. **Before committing**:
+   ```bash
+   just validate{% if _sap_053_enabled %}
+   just conflict-check{% endif %}
+   ```
+
+3. **End of day**:
+   {% if _sap_010_enabled %}```bash
+   # Log completion events (optional)
+   # Add to .chora/memory/events/YYYY-MM.jsonl
+   ```{% endif %}
+{% if _sap_051_enabled %}
+### Pre-Push Validation
+
+```bash
+# Run pre-push checks
+just pre-push-check
+
+# Install git hook (runs automatically on git push)
+just pre-push-install
+```
+{% endif %}
+{% if _sap_052_enabled %}
+### Code Review Workflow
+
+```bash
+# Suggest reviewers for your changes
+just ownership-suggest-reviewers-staged
+
+# Add suggested reviewers to PR
+```
+{% endif %}
+
+## Available Automation
+
+Run `just --list` to see all available recipes. Key commands:
+
+```bash
+# Project management
+just status                     # Show project status
+just validate                   # Run all validation checks
+just clean                      # Clean temporary files
+{% if _sap_001_enabled %}
+# Inbox workflow (SAP-001)
+just inbox-status              # Show coordination dashboard
+just inbox-list                # List all requests
+just inbox-create NAME         # Create new request{% endif %}
+{% if _sap_015_enabled %}
+# Task management (SAP-015)
+just beads-list                # List all tasks
+just beads-open                # List open tasks
+just beads-create TITLE        # Create new task{% endif %}
+{% if _sap_053_enabled %}
+# Conflict resolution (SAP-053)
+just conflict-check            # Check for merge conflicts
+just conflict-status           # Quick conflict check{% endif %}
+{% if _sap_010_enabled %}
+# Memory system (SAP-010)
+just memory-events N           # Show recent N events
+just knowledge-list N          # List recent knowledge notes
+just memory-health             # Memory system health{% endif %}
+{% if _sap_051_enabled %}
+# Pre-merge validation (SAP-051)
+just pre-push-check            # Run validation checks
+just pre-push-install          # Install git hook{% endif %}
+{% if _sap_052_enabled %}
+# Code ownership (SAP-052)
+just ownership-coverage        # Check ownership coverage
+just ownership-validate        # Validate CODEOWNERS{% endif %}
+{% if _sap_056_enabled %}
+# Lifecycle traceability (SAP-056)
+just feature-manifest-validate # Validate feature manifest
+just feature-find KEYWORD      # Find feature by keyword{% endif %}
+{% if _sap_008_enabled %}
+# Automation dashboard (SAP-008)
+just automation-stats          # Show automation statistics
+just automation-usage-report   # Usage report (30 days){% endif %}
+```
+
+## Enabled SAPs
+
+This project includes {{ _sap_count }} Skilled Awareness Packages (SAPs):
+
+{% if _sap_001_enabled %}- ✅ **SAP-001**: Inbox Workflow - Cross-project coordination{% endif %}
+{% if _sap_015_enabled %}- ✅ **SAP-015**: Beads Task Management - Git-backed tasks{% endif %}
+{% if _sap_053_enabled %}- ✅ **SAP-053**: Conflict Resolution - Pre-merge conflict detection{% endif %}
+{% if _sap_010_enabled %}- ✅ **SAP-010**: Memory System - Event logging and knowledge notes{% endif %}
+{% if _sap_051_enabled %}- ✅ **SAP-051**: Pre-merge Validation - Git hooks and validation{% endif %}
+{% if _sap_052_enabled %}- ✅ **SAP-052**: Code Ownership - CODEOWNERS management{% endif %}
+{% if _sap_056_enabled %}- ✅ **SAP-056**: Lifecycle Traceability - Feature manifest{% endif %}
+{% if _sap_008_enabled %}- ✅ **SAP-008**: Automation Dashboard - Recipe usage tracking{% endif %}
+
+See [README.md](../README.md) for details on each SAP.
+
+## Next Steps
+
+1. ✅ Installation complete
+2. {% if _sap_015_enabled %}📋 Create your first task: `bd create "First task"`{% else %}📋 Review project structure{% endif %}
+3. {% if _sap_001_enabled %}📥 Set up coordination workflow: `just inbox-status`{% else %}📖 Read project documentation{% endif %}
+4. 🚀 Start developing!
+
+## Troubleshooting
+{% if use_poetry %}
+### Poetry Installation Issues
+
+```bash
+# If poetry not found:
+curl -sSL https://install.python-poetry.org | python3 -
+
+# Add to PATH (Linux/macOS):
+export PATH="$HOME/.local/bin:$PATH"
+```
+{% endif %}
+
+### Just Command Not Found
+
+```bash
+# Install just (macOS):
+brew install just
+
+# Install just (Linux):
+cargo install just
+
+# Or download binary:
+# https://github.com/casey/just/releases
+```
+{% if _sap_015_enabled %}
+### Beads Not Found
+
+```bash
+# Install beads
+# See: https://github.com/beads-project/beads#installation
+```
+{% endif %}
+
+## Getting Help
+
+- **Documentation**: See [docs/](.) directory
+- **Issues**: Report bugs via GitHub Issues
+- **SAP Documentation**: https://github.com/chora-base/skilled-awareness
+
+---
+
+**Generated**: {{ '%Y-%m-%d' | strftime }}
+**Template**: chora-base v1.0.0

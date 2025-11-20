@@ -1,0 +1,83 @@
+{% if _sap_051_enabled %}#!/usr/bin/env bash
+# SAP-051: Pre-push Validation Script
+#
+# Purpose: Run validation checks before git push
+# Usage: ./scripts/pre-push-check.sh
+# Exit codes:
+#   0 - All checks passed (safe to push)
+#   1 - One or more checks failed (fix before pushing)
+
+set -e  # Exit on error
+
+echo "🔍 Running pre-push validation checks..."
+echo ""
+
+# Track failed checks
+FAILED_CHECKS=0
+
+{% if _sap_053_enabled %}# Check 1: Conflict detection
+echo "▶️  Check 1/{{ 4 if (_sap_053_enabled and _sap_052_enabled and _sap_056_enabled) else 3 if (_sap_053_enabled and _sap_052_enabled) or (_sap_053_enabled and _sap_056_enabled) or (_sap_052_enabled and _sap_056_enabled) else 2 if _sap_053_enabled or _sap_052_enabled or _sap_056_enabled else 1 }}: Conflict detection..."
+if {{ 'poetry run python' if use_poetry else 'python' + python_version }} scripts/conflict-checker.py --branch main > /dev/null 2>&1; then
+    echo "   ✅ No conflicts detected"
+else
+    EXIT_CODE=$?
+    if [ $EXIT_CODE -eq 2 ]; then
+        echo "   ⚠️  Auto-resolvable conflicts detected"
+    else
+        echo "   ❌ Merge conflicts detected - resolve before pushing"
+        FAILED_CHECKS=$((FAILED_CHECKS + 1))
+    fi
+fi
+echo ""
+{% endif %}
+
+{% if _sap_052_enabled %}# Check 2: Code ownership coverage
+echo "▶️  Check 2/{{ 4 if (_sap_053_enabled and _sap_052_enabled and _sap_056_enabled) else 3 if (_sap_053_enabled and _sap_052_enabled) or (_sap_053_enabled and _sap_056_enabled) or (_sap_052_enabled and _sap_056_enabled) else 2 if _sap_053_enabled or _sap_052_enabled or _sap_056_enabled else 1 }}: Code ownership coverage..."
+if {{ 'poetry run python' if use_poetry else 'python' + python_version }} scripts/ownership-coverage.py --quiet; then
+    echo "   ✅ Code ownership coverage OK"
+else
+    echo "   ⚠️  Some files lack code ownership (not blocking)"
+fi
+echo ""
+{% endif %}
+
+{% if _sap_056_enabled %}# Check 3: Feature manifest validation
+echo "▶️  Check 3/{{ 4 if (_sap_053_enabled and _sap_052_enabled and _sap_056_enabled) else 3 if (_sap_053_enabled and _sap_052_enabled) or (_sap_053_enabled and _sap_056_enabled) or (_sap_052_enabled and _sap_056_enabled) else 2 if _sap_053_enabled or _sap_052_enabled or _sap_056_enabled else 1 }}: Feature manifest validation..."
+if {{ 'poetry run python' if use_poetry else 'python' + python_version }} scripts/validate-manifest.py; then
+    echo "   ✅ Feature manifest valid"
+else
+    echo "   ⚠️  Feature manifest validation warnings (not blocking)"
+fi
+echo ""
+{% endif %}
+
+# Check {{ 4 if (_sap_053_enabled and _sap_052_enabled and _sap_056_enabled) else 3 if (_sap_053_enabled and _sap_052_enabled) or (_sap_053_enabled and _sap_056_enabled) or (_sap_052_enabled and _sap_056_enabled) else 2 if _sap_053_enabled or _sap_052_enabled or _sap_056_enabled else 1 }}: Working directory status
+echo "▶️  Check {{ 4 if (_sap_053_enabled and _sap_052_enabled and _sap_056_enabled) else 3 if (_sap_053_enabled and _sap_052_enabled) or (_sap_053_enabled and _sap_056_enabled) or (_sap_052_enabled and _sap_056_enabled) else 2 if _sap_053_enabled or _sap_052_enabled or _sap_056_enabled else 1 }}/{{ 4 if (_sap_053_enabled and _sap_052_enabled and _sap_056_enabled) else 3 if (_sap_053_enabled and _sap_052_enabled) or (_sap_053_enabled and _sap_056_enabled) or (_sap_052_enabled and _sap_056_enabled) else 2 if _sap_053_enabled or _sap_052_enabled or _sap_056_enabled else 1 }}: Working directory status..."
+if [ -z "$(git status --porcelain)" ]; then
+    echo "   ✅ Working directory clean"
+else
+    # Check if there are only staged changes
+    if [ -z "$(git diff --name-only)" ]; then
+        echo "   ✅ All changes staged"
+    else
+        echo "   ⚠️  Unstaged changes present (will not be pushed)"
+    fi
+fi
+echo ""
+
+# Final result
+echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+if [ $FAILED_CHECKS -eq 0 ]; then
+    echo "✅ All validation checks passed - safe to push!"
+    echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+    exit 0
+else
+    echo "❌ $FAILED_CHECKS check(s) failed - fix issues before pushing"
+    echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+    exit 1
+fi
+{% else %}#!/usr/bin/env bash
+# SAP-051 (Pre-merge Validation) not enabled for this project
+echo "SAP-051 not enabled - no pre-push checks configured"
+exit 0
+{% endif %}

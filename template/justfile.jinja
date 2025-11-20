@@ -1,0 +1,293 @@
+# {{ project_name }} - Automation Recipes
+# Generated: {{ '%Y-%m-%d' | strftime }}
+# Template: chora-base v1.0.0
+
+# Show available recipes (default)
+default:
+    @just --list
+
+# =============================================================================
+{% if _sap_001_enabled %}# SAP-001: Inbox Workflow
+# =============================================================================
+
+# Show coordination inbox status
+inbox-status:
+    @echo "📥 Coordination Inbox Status"
+    @echo "=============================="
+    @ls -1 inbox/incoming/coordination/ | wc -l | xargs -I {} echo "Incoming: {} requests"
+    @ls -1 inbox/active/ 2>/dev/null | wc -l | xargs -I {} echo "Active: {} requests"
+    @ls -1 inbox/completed/ 2>/dev/null | wc -l | xargs -I {} echo "Completed: {} requests"
+
+# List all coordination requests
+inbox-list:
+    @echo "📋 All Coordination Requests"
+    @echo "=============================="
+    @find inbox/ -name "*.json" -type f | sort
+
+# Create new coordination request from template
+inbox-create NAME:
+    @echo "Creating coordination request: {{NAME}}"
+    @cp inbox/templates/coordination-request-template.json inbox/incoming/coordination/CORD-$(date +%Y-%m)-{{NAME}}.json
+    @echo "✅ Created: inbox/incoming/coordination/CORD-$(date +%Y-%m)-{{NAME}}.json"
+
+{% endif %}
+# =============================================================================
+{% if _sap_015_enabled %}# SAP-015: Beads Task Management
+# =============================================================================
+
+# List all beads tasks
+beads-list:
+    bd list
+
+# List open beads tasks
+beads-open:
+    bd list --status open
+
+# List in-progress beads tasks
+beads-in-progress:
+    bd list --status in_progress
+
+# Show beads task details
+beads-show ID:
+    bd show {{ID}}
+
+# Create new beads task
+beads-create TITLE:
+    bd create "{{TITLE}}"
+
+# Update beads task status
+beads-update ID STATUS:
+    bd update {{ID}} --status {{STATUS}}
+
+# Close beads task
+beads-close ID REASON:
+    bd close {{ID}} --reason "{{REASON}}"
+
+{% endif %}
+# =============================================================================
+{% if _sap_053_enabled %}# SAP-053: Conflict Resolution
+# =============================================================================
+
+# Check for conflicts with target branch (default: main)
+conflict-check BRANCH='main':
+    @echo "🔍 Checking for conflicts with {{BRANCH}}..."
+    {% if use_poetry %}poetry run python{% else %}python{{ python_version }}{% endif %} scripts/conflict-checker.py --branch {{BRANCH}}
+
+# Check for conflicts (JSON output for CI/CD)
+conflict-check-json BRANCH='main':
+    {% if use_poetry %}poetry run python{% else %}python{{ python_version }}{% endif %} scripts/conflict-checker.py --branch {{BRANCH}} --format json
+
+# Check for conflicts (verbose output with file details)
+conflict-check-verbose BRANCH='main':
+    {% if use_poetry %}poetry run python{% else %}python{{ python_version }}{% endif %} scripts/conflict-checker.py --branch {{BRANCH}} --verbose
+
+# Quick conflict status check (exit code only)
+conflict-status BRANCH='main':
+    @{% if use_poetry %}poetry run python{% else %}python{{ python_version }}{% endif %} scripts/conflict-checker.py --branch {{BRANCH}} --quiet && echo "✅ No conflicts" || echo "⚠️  Conflicts detected"
+
+{% endif %}
+# =============================================================================
+{% if _sap_010_enabled %}# SAP-010: Memory System
+# =============================================================================
+
+# Show recent memory events (default: last 10)
+memory-events N='10':
+    @echo "📜 Recent Memory Events (last {{N}})"
+    @echo "====================================="
+    @tail -{{N}} .chora/memory/events/$(date +%Y-%m).jsonl | python{{ python_version }} -m json.tool
+
+# List recent knowledge notes (default: last 10)
+knowledge-list N='10':
+    @echo "📚 Recent Knowledge Notes (last {{N}})"
+    @echo "======================================="
+    @ls -t .chora/memory/knowledge/notes/*.md | head -{{N}}
+
+# Create new knowledge note
+knowledge-create TITLE:
+    @echo "---" > .chora/memory/knowledge/notes/$(date +%Y-%m-%d)-{{TITLE}}.md
+    @echo "title: \"{{TITLE}}\"" >> .chora/memory/knowledge/notes/$(date +%Y-%m-%d)-{{TITLE}}.md
+    @echo "created: $(date +%Y-%m-%d)" >> .chora/memory/knowledge/notes/$(date +%Y-%m-%d)-{{TITLE}}.md
+    @echo "updated: $(date +%Y-%m-%d)" >> .chora/memory/knowledge/notes/$(date +%Y-%m-%d)-{{TITLE}}.md
+    @echo "type: note" >> .chora/memory/knowledge/notes/$(date +%Y-%m-%d)-{{TITLE}}.md
+    @echo "tags: []" >> .chora/memory/knowledge/notes/$(date +%Y-%m-%d)-{{TITLE}}.md
+    @echo "---" >> .chora/memory/knowledge/notes/$(date +%Y-%m-%d)-{{TITLE}}.md
+    @echo "" >> .chora/memory/knowledge/notes/$(date +%Y-%m-%d)-{{TITLE}}.md
+    @echo "# {{TITLE}}" >> .chora/memory/knowledge/notes/$(date +%Y-%m-%d)-{{TITLE}}.md
+    @echo "" >> .chora/memory/knowledge/notes/$(date +%Y-%m-%d)-{{TITLE}}.md
+    @echo "✅ Created: .chora/memory/knowledge/notes/$(date +%Y-%m-%d)-{{TITLE}}.md"
+
+# Validate memory event schema
+memory-validate:
+    @echo "🔍 Validating memory events..."
+    @cat .chora/memory/events/*.jsonl | python{{ python_version }} -c "import json, sys; [json.loads(line) for line in sys.stdin]" && echo "✅ All events valid JSON" || echo "❌ Invalid JSON found"
+
+# Memory system health check
+memory-health:
+    @echo "🏥 Memory System Health Check"
+    @echo "=============================="
+    @echo "Events this month: $(wc -l < .chora/memory/events/$(date +%Y-%m).jsonl)"
+    @echo "Total knowledge notes: $(find .chora/memory/knowledge/notes/ -name "*.md" | wc -l)"
+    @echo "Disk usage: $(du -sh .chora/memory/ | cut -f1)"
+
+{% endif %}
+# =============================================================================
+{% if _sap_051_enabled %}# SAP-051: Pre-merge Validation
+# =============================================================================
+
+# Run pre-push validation checks
+pre-push-check:
+    @echo "🔍 Running pre-push validation..."
+    @bash scripts/pre-push-check.sh
+
+# Install pre-push git hook
+pre-push-install:
+    @echo "📦 Installing pre-push hook..."
+    @cp scripts/pre-push-check.sh .git/hooks/pre-push
+    @chmod +x .git/hooks/pre-push
+    @echo "✅ Pre-push hook installed"
+
+# Uninstall pre-push git hook
+pre-push-uninstall:
+    @echo "🗑️  Uninstalling pre-push hook..."
+    @rm -f .git/hooks/pre-push
+    @echo "✅ Pre-push hook uninstalled"
+
+{% endif %}
+# =============================================================================
+{% if _sap_052_enabled %}# SAP-052: Code Ownership
+# =============================================================================
+
+# Suggest reviewers for staged changes
+ownership-suggest-reviewers-staged:
+    @echo "👥 Suggested Reviewers for Staged Changes"
+    @echo "=========================================="
+    {% if use_poetry %}poetry run python{% else %}python{{ python_version }}{% endif %} scripts/suggest-reviewers.py --staged
+
+# Suggest reviewers for specific file
+ownership-suggest-reviewers FILE:
+    {% if use_poetry %}poetry run python{% else %}python{{ python_version }}{% endif %} scripts/suggest-reviewers.py --file {{FILE}}
+
+# Check code ownership coverage
+ownership-coverage:
+    @echo "📊 Code Ownership Coverage"
+    @echo "=========================="
+    {% if use_poetry %}poetry run python{% else %}python{{ python_version }}{% endif %} scripts/ownership-coverage.py
+
+# Validate CODEOWNERS syntax
+ownership-validate:
+    @echo "🔍 Validating CODEOWNERS file..."
+    @cat CODEOWNERS | grep -v "^#" | grep -v "^$" && echo "✅ CODEOWNERS syntax valid" || echo "❌ CODEOWNERS syntax invalid"
+
+# Show ownership for specific directory
+ownership-show DIR:
+    @grep "{{DIR}}" CODEOWNERS || echo "No ownership defined for {{DIR}}"
+
+{% endif %}
+# =============================================================================
+{% if _sap_056_enabled %}# SAP-056: Lifecycle Traceability
+# =============================================================================
+
+# Validate feature manifest
+feature-manifest-validate:
+    @echo "🔍 Validating feature manifest..."
+    {% if use_poetry %}poetry run python{% else %}python{{ python_version }}{% endif %} scripts/validate-manifest.py
+
+# Generate feature manifest from git and beads
+feature-manifest-generate:
+    @echo "📦 Generating feature manifest..."
+    {% if use_poetry %}poetry run python{% else %}python{{ python_version }}{% endif %} scripts/generate-manifest.py
+
+# Show feature manifest statistics
+feature-manifest-stats:
+    @echo "📊 Feature Manifest Statistics"
+    @echo "==============================="
+    @grep "^  - id:" feature-manifest.yaml | wc -l | xargs -I {} echo "Total features: {}"
+    @echo "Coverage: See feature-manifest-validate output"
+
+# Find feature by keyword
+feature-find KEYWORD:
+    @echo "🔍 Searching for features matching '{{KEYWORD}}'..."
+    @grep -i "{{KEYWORD}}" feature-manifest.yaml -B 2 -A 10 || echo "No features found matching '{{KEYWORD}}'"
+
+{% endif %}
+# =============================================================================
+{% if _sap_008_enabled %}# SAP-008: Automation Dashboard
+# =============================================================================
+
+# Show automation statistics
+automation-stats:
+    @echo "📊 Automation Statistics"
+    @echo "========================"
+    @echo "Total recipes: $(just --list | tail -n +2 | wc -l)"
+    @echo "Most used recipes: See logs/recipe-usage.log"
+
+# Track recipe usage (call this from other recipes to log usage)
+track-recipe-usage RECIPE:
+    @echo "$(date +%Y-%m-%d\ %H:%M:%S),{{RECIPE}}" >> logs/recipe-usage.log
+
+# Show recipe usage report (last 30 days)
+automation-usage-report:
+    @echo "📈 Recipe Usage Report (Last 30 Days)"
+    @echo "======================================"
+    {% if use_poetry %}poetry run python{% else %}python{{ python_version }}{% endif %} scripts/recipe-usage-report.py
+
+{% endif %}
+# =============================================================================
+# Project Management
+# =============================================================================
+
+# Show project status summary
+status:
+    @echo "🎯 {{ project_name }} - Project Status"
+    @echo "======================================"
+    {% if use_git %}@echo "Git branch: $(git branch --show-current)"
+    @echo "Git status: $(git status --short | wc -l) changed files"
+    {% endif %}{% if _sap_001_enabled %}@just inbox-status
+    {% endif %}{% if _sap_015_enabled %}@echo ""
+    @echo "📋 Beads Tasks:"
+    @bd list --status open | wc -l | xargs -I {} echo "  Open: {} tasks"
+    @bd list --status in_progress | wc -l | xargs -I {} echo "  In Progress: {} tasks"
+    {% endif %}
+
+# Run all validation checks
+validate:
+    @echo "🔍 Running all validation checks..."
+    {% if _sap_053_enabled %}@just conflict-check
+    {% endif %}{% if _sap_010_enabled %}@just memory-validate
+    {% endif %}{% if _sap_052_enabled %}@just ownership-validate
+    {% endif %}{% if _sap_056_enabled %}@just feature-manifest-validate
+    {% endif %}@echo "✅ All validations complete"
+
+# Clean temporary files and caches
+clean:
+    @echo "🧹 Cleaning temporary files..."
+    @find . -type f -name "*.pyc" -delete
+    @find . -type d -name "__pycache__" -delete
+    @find . -type f -name ".DS_Store" -delete
+    @find . -type f -name "*.tmp" -delete
+    @echo "✅ Cleanup complete"
+
+# =============================================================================
+# Help and Documentation
+# =============================================================================
+
+# Show help for this justfile
+help:
+    @echo "{{ project_name }} - Automation Recipes"
+    @echo "======================================="
+    @echo ""
+    @echo "Usage: just <recipe>"
+    @echo ""
+    @echo "Run 'just --list' to see all available recipes"
+    @echo ""
+    @echo "📚 SAPs Included:"
+    {% if _sap_001_enabled %}@echo "  ✓ SAP-001: Inbox Workflow (inbox-* recipes)"
+    {% endif %}{% if _sap_015_enabled %}@echo "  ✓ SAP-015: Beads Task Management (beads-* recipes)"
+    {% endif %}{% if _sap_053_enabled %}@echo "  ✓ SAP-053: Conflict Resolution (conflict-* recipes)"
+    {% endif %}{% if _sap_010_enabled %}@echo "  ✓ SAP-010: Memory System (memory-*, knowledge-* recipes)"
+    {% endif %}{% if _sap_051_enabled %}@echo "  ✓ SAP-051: Pre-merge Validation (pre-push-* recipes)"
+    {% endif %}{% if _sap_052_enabled %}@echo "  ✓ SAP-052: Code Ownership (ownership-* recipes)"
+    {% endif %}{% if _sap_056_enabled %}@echo "  ✓ SAP-056: Lifecycle Traceability (feature-manifest-* recipes)"
+    {% endif %}{% if _sap_008_enabled %}@echo "  ✓ SAP-008: Automation Dashboard (automation-* recipes)"
+    {% endif %}@echo ""
+    @echo "🔗 Documentation: README.md"

@@ -1,0 +1,27 @@
+{% if _sap_010_enabled %}# Knowledge Notes (SAP-010)
+#
+# Knowledge notes capture patterns, lessons learned, and decisions
+# Filename format: YYYY-MM-DD-pattern-name.md
+#
+# Note template:
+# ---
+# title: "Pattern Name"
+# created: YYYY-MM-DD
+# updated: YYYY-MM-DD
+# type: note
+# tags: []
+# ---
+#
+# # Pattern Name
+#
+# ## Context
+# What problem does this solve?
+#
+# ## Solution
+# How does this pattern work?
+#
+# ## Related Patterns
+# - [[other-pattern]]
+# - [[related-concept]]
+{% else %}# .chora/memory/knowledge/notes/ directory
+{% endif %}

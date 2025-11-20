@@ -1,0 +1,127 @@
+# Inbox: Coordination Workflow{% if _sap_001_enabled %}
+
+**SAP**: SAP-001 (Inbox Workflow)
+**Purpose**: Cross-project communication and dependency management
+
+## Directory Structure
+
+```
+inbox/
+├── incoming/
+│   ├── coordination/     # Incoming coordination requests
+│   ├── tasks/            # Implementation tasks
+│   └── context/          # Reference materials
+├── active/               # Work in progress
+├── completed/            # Finished work
+├── templates/            # Request templates
+└── README.md
+```
+
+## Quick Start
+
+### Create Coordination Request
+
+```bash
+# Copy template
+cp inbox/templates/coordination-request-template.json \
+   inbox/incoming/coordination/CORD-$(date +%Y-%m)-001-brief-name.json
+
+# Edit request with details
+# Set priority (P0/P1/P2), urgency, deliverables
+```
+
+### Check Inbox Status
+
+```bash
+just inbox-status           # Show coordination dashboard
+just inbox-list             # List all requests
+```
+
+## Request Lifecycle
+
+1. **Incoming** (`inbox/incoming/coordination/`):
+   - New requests awaiting triage
+   - Priority: P0 (urgent), P1 (important), P2 (normal)
+   - Urgency: sprint (this sprint), backlog (future sprint), blocked (dependencies)
+
+2. **Active** (`inbox/active/`):
+   - Triaged requests under development
+   - Each request gets its own directory
+   - Contains coordination request JSON + work artifacts
+
+3. **Completed** (`inbox/completed/`):
+   - Finished work
+   - Archived for reference
+   - Event log captured for metrics
+
+## Priority Guidelines
+
+- **P0**: Critical cross-repo blocker (resolve within 1-2 days)
+- **P1**: Important coordination needed (plan for current sprint)
+- **P2**: Normal coordination (plan for next sprint)
+
+## Triage Workflow
+
+```bash
+# 1. Review incoming requests
+just inbox-list
+
+# 2. Move to active/ when ready to start
+mkdir inbox/active/CORD-2025-01-001
+mv inbox/incoming/coordination/CORD-2025-01-001*.json inbox/active/CORD-2025-01-001/
+
+# 3. Work on request (create deliverables in active/ directory)
+
+# 4. Move to completed/ when done
+mv inbox/active/CORD-2025-01-001 inbox/completed/
+```
+
+## Integration with Other SAPs
+{% if _sap_015_enabled %}
+### SAP-015 (Beads Task Management)
+
+Link coordination requests to Beads tasks via metadata:
+
+```bash
+# Create task linked to coordination request
+bd create "Implement CORD-2025-01-001 deliverable 1" \
+  --metadata '{"coordination_request": "CORD-2025-01-001"}'
+
+# Query tasks by coordination request
+bd list --metadata coordination_request=CORD-2025-01-001
+```
+{% endif %}
+{% if _sap_010_enabled %}
+### SAP-010 (Memory System)
+
+Log coordination events to A-MEM:
+
+```json
+{
+  "event_type": "coordination_request_created",
+  "timestamp": "2025-01-15T14:30:00Z",
+  "request_id": "CORD-2025-01-001",
+  "priority": "P1",
+  "trace_id": "coord-2025-01"
+}
+```
+{% endif %}
+
+## Best Practices
+
+1. **Use templates**: Always start with `coordination-request-template.json`
+2. **Set priority accurately**: P0/P1/P2 drives triage decisions
+3. **Define acceptance criteria**: Clear deliverables prevent scope creep
+4. **Estimate effort**: Hours estimate helps planning
+5. **Link dependencies**: Explicit dependencies prevent blocking work
+6. **Archive completed work**: Move to completed/ for metrics
+
+## See Also
+
+- [SAP-001 Protocol Specification](https://github.com/chora-base/skilled-awareness/sap-001-inbox)
+- [Coordination Request Schema](templates/coordination-request-template.json)
+{% if _sap_015_enabled %}- [Beads Task Management](../README.md#sap-015-beads-task-management){% endif %}
+{% if _sap_010_enabled %}- [Memory System Events](.chora/memory/events/){% endif %}
+{% else %}
+**Note**: SAP-001 (Inbox Workflow) is not enabled for this project.
+{% endif %}

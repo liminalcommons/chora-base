@@ -1,0 +1,142 @@
+# Template Generation Summary
+
+**Project**: {{ project_name }}
+**Template**: chora-base v1.0.0
+**Generated**: {{ '%Y-%m-%d %H:%M:%S' | strftime }}
+
+---
+
+## Configuration
+
+### Basic Info
+- **Project Name**: {{ project_name }}
+- **Project Slug**: {{ project_slug }}
+- **Project Type**: {{ project_type }}
+- **Description**: {{ description }}
+
+### Author
+- **Name**: {{ author_name }}
+- **Email**: {{ author_email }}
+
+### Technical Stack
+{% if use_git %}- ✅ Git version control{% endif %}
+{% if use_python %}- ✅ Python {{ python_version }}{% if use_poetry %} (Poetry){% endif %}{% endif %}
+{% if use_typescript %}- ✅ TypeScript{% endif %}
+
+### SAP Selection
+
+**Mode**: {{ sap_selection_mode }}
+**Total SAPs**: {{ _sap_count }}
+
+Enabled SAPs:
+{% if _sap_001_enabled %}- ✅ SAP-001: Inbox Workflow{% endif %}
+{% if _sap_015_enabled %}- ✅ SAP-015: Beads Task Management{% endif %}
+{% if _sap_053_enabled %}- ✅ SAP-053: Conflict Resolution{% endif %}
+{% if _sap_010_enabled %}- ✅ SAP-010: Memory System{% endif %}
+{% if _sap_051_enabled %}- ✅ SAP-051: Pre-merge Validation{% endif %}
+{% if _sap_052_enabled %}- ✅ SAP-052: Code Ownership{% endif %}
+{% if _sap_056_enabled %}- ✅ SAP-056: Lifecycle Traceability{% endif %}
+{% if _sap_008_enabled %}- ✅ SAP-008: Automation Dashboard{% endif %}
+
+---
+
+## Generated Files
+
+### Core Files
+- `README.md` - Project documentation with SAP guides
+- `justfile` - Automation recipes ({{ _sap_count }} SAP sections)
+- `.gitignore` - Conditional ignores
+{% if use_python %}- `pyproject.toml` - Python dependencies{% endif %}
+- `.copier-answers.yml` - Template metadata for updates
+
+### Documentation
+- `docs/GETTING-STARTED.md` - Quick start guide
+
+### Scripts
+{% if _sap_053_enabled %}- `scripts/conflict-checker.py` - Conflict detection{% endif %}
+{% if _sap_051_enabled %}- `scripts/pre-push-check.sh` - Pre-push validation{% endif %}
+{% if _sap_052_enabled %}- `scripts/ownership-coverage.py` - Code ownership coverage{% endif %}
+{% if _sap_056_enabled %}- `scripts/validate-manifest.py` - Feature manifest validation{% endif %}
+
+### SAP-Specific Directories
+{% if _sap_001_enabled %}- `inbox/` - Coordination workflow
+  - `inbox/templates/` - Request templates
+  - `inbox/incoming/coordination/` - New requests
+  - `inbox/active/` - Work in progress
+  - `inbox/completed/` - Finished work{% endif %}
+{% if _sap_010_enabled %}- `.chora/` - Memory system
+  - `.chora/CLAUDE.md` - Claude awareness guide
+  - `.chora/memory/events/` - Event logs (JSONL)
+  - `.chora/memory/knowledge/notes/` - Knowledge notes{% endif %}
+{% if _sap_015_enabled %}- `.beads/` - Task management (Beads CLI){% endif %}
+
+---
+
+## Next Steps
+
+1. **Review Generated Files**:
+   ```bash
+   cat README.md          # Project overview
+   just --list            # Available automation
+   ```
+
+2. **Install Dependencies**:
+   {% if use_poetry %}```bash
+   poetry install
+   poetry shell
+   ```{% elif use_python %}```bash
+   python{{ python_version }} -m venv venv
+   source venv/bin/activate  # macOS/Linux
+   # venv\Scripts\activate   # Windows
+   pip install -r requirements.txt
+   ```{% endif %}
+
+3. **Initialize Version Control**:
+   {% if use_git %}```bash
+   git init
+   git add .
+   git commit -m "Initial commit from chora-base template"
+   ```{% else %}
+   (Git not enabled for this project)
+   {% endif %}
+
+4. **Explore SAPs**:
+   {% if _sap_001_enabled %}- Run `just inbox-status` to see coordination workflow{% endif %}
+   {% if _sap_015_enabled %}- Run `bd list` to see Beads task management{% endif %}
+   {% if _sap_053_enabled %}- Run `just conflict-check` to test conflict detection{% endif %}
+   {% if _sap_010_enabled %}- Run `just memory-health` to check memory system{% endif %}
+
+5. **Read Documentation**:
+   - `README.md` for project overview
+   - `docs/GETTING-STARTED.md` for detailed setup
+   {% if _sap_010_enabled %}- `.chora/CLAUDE.md` for Claude-specific guidance{% endif %}
+
+---
+
+## Template Updates
+
+This project can be updated when the chora-base template evolves:
+
+```bash
+# Update to latest template version
+copier update
+
+# Review changes
+git diff
+
+# Commit or revert as needed
+```
+
+Your `.copier-answers.yml` file records your original configuration choices and enables safe template updates.
+
+---
+
+## Resources
+
+- **chora-base**: https://github.com/chora-base
+- **SAP Documentation**: https://github.com/chora-base/skilled-awareness
+- **Template Issues**: https://github.com/chora-base/issues
+
+---
+
+**Happy coding!** 🚀

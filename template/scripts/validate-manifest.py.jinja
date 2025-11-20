@@ -1,0 +1,134 @@
+{% if _sap_056_enabled %}#!/usr/bin/env {{ 'python' if use_poetry else 'python' + python_version }}
+"""
+SAP-056 Feature Manifest Validation Script
+
+Validate feature-manifest.yaml structure and check that referenced files exist.
+
+Usage:
+    {{ 'poetry run python' if use_poetry else 'python' + python_version }} scripts/validate-manifest.py
+"""
+
+import sys
+import yaml
+from pathlib import Path
+from typing import Dict, List
+
+
+def find_repo_root() -> Path:
+    """Find repository root."""
+    current = Path.cwd()
+    while current != current.parent:
+        if (current / 'feature-manifest.yaml').exists():
+            return current
+        current = current.parent
+    return Path.cwd()
+
+
+def load_manifest(repo_root: Path) -> Dict:
+    """Load and parse feature-manifest.yaml."""
+    manifest_file = repo_root / 'feature-manifest.yaml'
+
+    if not manifest_file.exists():
+        return None
+
+    try:
+        with open(manifest_file, 'r') as f:
+            return yaml.safe_load(f)
+    except yaml.YAMLError as e:
+        print(f"❌ YAML parsing error: {e}")
+        return None
+
+
+def validate_feature(feature: Dict, repo_root: Path) -> List[str]:
+    """Validate a single feature and return list of errors."""
+    errors = []
+
+    # Required fields
+    required_fields = ['id', 'name', 'description']
+    for field in required_fields:
+        if field not in feature:
+            errors.append(f"Missing required field: {field}")
+
+    # Validate code references
+    if 'code' in feature:
+        for code_ref in feature['code']:
+            if 'path' in code_ref:
+                file_path = repo_root / code_ref['path']
+                if not file_path.exists():
+                    errors.append(f"Code file not found: {code_ref['path']}")
+
+    # Validate test references
+    if 'tests' in feature:
+        for test_ref in feature['tests']:
+            if 'path' in test_ref:
+                file_path = repo_root / test_ref['path']
+                if not file_path.exists():
+                    errors.append(f"Test file not found: {test_ref['path']}")
+
+    # Validate documentation references
+    if 'documentation' in feature:
+        for doc_ref in feature['documentation']:
+            if 'path' in doc_ref:
+                file_path = repo_root / doc_ref['path']
+                if not file_path.exists():
+                    errors.append(f"Documentation file not found: {doc_ref['path']}")
+
+    return errors
+
+
+def main():
+    repo_root = find_repo_root()
+    manifest = load_manifest(repo_root)
+
+    if manifest is None:
+        print("⚠️  No feature-manifest.yaml found or parsing failed")
+        sys.exit(1)
+
+    print("=" * 60)
+    print("SAP-056 Feature Manifest Validation")
+    print("=" * 60)
+    print("")
+
+    # Validate structure
+    if 'version' not in manifest:
+        print("⚠️  No version field in manifest")
+
+    if 'features' not in manifest:
+        print("❌ No features field in manifest")
+        sys.exit(1)
+
+    features = manifest['features']
+    print(f"Found {len(features)} feature(s)")
+    print("")
+
+    # Validate each feature
+    total_errors = 0
+    for i, feature in enumerate(features, 1):
+        feature_id = feature.get('id', f'feature-{i}')
+        errors = validate_feature(feature, repo_root)
+
+        if errors:
+            print(f"❌ Feature {feature_id}:")
+            for error in errors:
+                print(f"   - {error}")
+            total_errors += len(errors)
+        else:
+            print(f"✅ Feature {feature_id}: OK")
+
+    print("")
+    print("=" * 60)
+
+    if total_errors == 0:
+        print("✅ Manifest validation passed")
+        sys.exit(0)
+    else:
+        print(f"❌ Manifest validation failed: {total_errors} error(s)")
+        sys.exit(1)
+
+
+if __name__ == '__main__':
+    main()
+{% else %}#!/usr/bin/env python3
+# SAP-056 (Lifecycle Traceability) not enabled for this project
+print("SAP-056 not enabled")
+{% endif %}

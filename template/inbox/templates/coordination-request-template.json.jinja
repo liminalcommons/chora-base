@@ -1,0 +1,48 @@
+{% raw %}{
+  "type": "coordination",
+  "request_id": "CORD-YYYY-NNN",
+  "title": "Brief descriptive title",
+  "created": "YYYY-MM-DD",
+  "from_repo": "{{ project_slug }}",
+  "from_contact": "@username",
+  "priority": "P2",
+  "urgency": "backlog",
+  "description": {
+    "problem": "What problem are we solving?",
+    "solution": "What is the proposed solution?",
+    "why_cross_repo": "Why does this require coordination across repos?"
+  },
+  "deliverables": [
+    {
+      "name": "Deliverable 1",
+      "description": "What needs to be delivered",
+      "acceptance_criteria": [
+        "Criterion 1",
+        "Criterion 2"
+      ],
+      "estimated_hours": 4
+    }
+  ],
+  "dependencies": {
+    "requires": [],
+    "blocks": [],
+    "related_to": []
+  },
+  "context": {
+    "related_saps": [],
+    "related_features": [],
+    "documentation": []
+  },
+  "estimated_effort": {
+    "hours": 0,
+    "complexity": "low"
+  },
+  "timeline": {
+    "requested_by": null,
+    "estimated_start": null,
+    "estimated_completion": null
+  },
+  "status": "incoming",
+  "trace_id": "coord-YYYY-MM"
+}
+{% endraw %}

@@ -1,0 +1,229 @@
+# chora-base Copier Template Configuration
+# SAP Distribution System v1.0.0
+# Origin: OPP-2025-022, CORD-2025-023
+
+# =============================================================================
+# Project Basics
+# =============================================================================
+
+_templates_suffix: .jinja
+_subdirectory: template
+_skip_if_exists:
+  - README.md
+  - .git/*
+
+project_name:
+  type: str
+  help: "Project name (lowercase, hyphenated)"
+  placeholder: "my-chora-project"
+  validator: "{% if not project_name %}Project name is required{% endif %}"
+
+project_description:
+  type: str
+  help: "Brief project description"
+  placeholder: "A chora-based project with selected SAPs"
+  default: "{{ project_name }} - A chora ecosystem project"
+
+project_author:
+  type: str
+  help: "Project author/maintainer"
+  placeholder: "Your Name"
+  default: "{{ 'Anonymous' }}"
+
+# =============================================================================
+# SAP Selection (Conditional Inclusion)
+# =============================================================================
+
+sap_selection_mode:
+  type: str
+  help: |
+    SAP selection mode:
+    - minimal: Essential SAPs only (2 SAPs: Inbox + Beads)
+    - standard: Common workflow SAPs (4 SAPs: adds Conflict Resolution + Memory)
+    - comprehensive: Full SAP suite (8 SAPs: adds Automation + Traceability + Ownership + Pre-merge Validation)
+    - custom: Choose individual SAPs
+  choices:
+    Minimal (2 SAPs - Quick start): minimal
+    Standard (4 SAPs - Recommended): standard
+    Comprehensive (8 SAPs - Full suite): comprehensive
+    Custom (Choose individual SAPs): custom
+  default: standard
+
+# -----------------------------------------------------------------------------
+# SAP-001: Inbox Workflow (P0 - Always included)
+# -----------------------------------------------------------------------------
+include_sap_001:
+  type: bool
+  help: "SAP-001: Inbox Workflow - Coordination request management"
+  default: true
+  when: "{{ sap_selection_mode == 'custom' }}"
+
+# -----------------------------------------------------------------------------
+# SAP-015: Beads Task Management (P0 - Always included)
+# -----------------------------------------------------------------------------
+include_sap_015:
+  type: bool
+  help: "SAP-015: Beads Task Management - Git-backed issue tracking"
+  default: true
+  when: "{{ sap_selection_mode == 'custom' }}"
+
+# -----------------------------------------------------------------------------
+# SAP-053: Conflict Resolution (P1 - Standard+)
+# -----------------------------------------------------------------------------
+include_sap_053:
+  type: bool
+  help: "SAP-053: Conflict Resolution - Pre-merge conflict detection (v1.0.0)"
+  default: "{{ sap_selection_mode in ['standard', 'comprehensive'] }}"
+  when: "{{ sap_selection_mode == 'custom' }}"
+
+# -----------------------------------------------------------------------------
+# SAP-010: Memory System (P1 - Standard+)
+# -----------------------------------------------------------------------------
+include_sap_010:
+  type: bool
+  help: "SAP-010: Memory System - A-MEM event logging and knowledge notes"
+  default: "{{ sap_selection_mode in ['standard', 'comprehensive'] }}"
+  when: "{{ sap_selection_mode == 'custom' }}"
+
+# -----------------------------------------------------------------------------
+# SAP-051: Pre-merge Validation (P2 - Comprehensive)
+# -----------------------------------------------------------------------------
+include_sap_051:
+  type: bool
+  help: "SAP-051: Pre-merge Validation - Git hooks for pre-push checks"
+  default: "{{ sap_selection_mode == 'comprehensive' }}"
+  when: "{{ sap_selection_mode == 'custom' }}"
+
+# -----------------------------------------------------------------------------
+# SAP-052: Code Ownership (P2 - Comprehensive)
+# -----------------------------------------------------------------------------
+include_sap_052:
+  type: bool
+  help: "SAP-052: Code Ownership - CODEOWNERS and PR reviewer suggestions"
+  default: "{{ sap_selection_mode == 'comprehensive' }}"
+  when: "{{ sap_selection_mode == 'custom' }}"
+
+# -----------------------------------------------------------------------------
+# SAP-056: Lifecycle Traceability (P2 - Comprehensive)
+# -----------------------------------------------------------------------------
+include_sap_056:
+  type: bool
+  help: "SAP-056: Lifecycle Traceability - Feature manifest and artifact linkage"
+  default: "{{ sap_selection_mode == 'comprehensive' }}"
+  when: "{{ sap_selection_mode == 'custom' }}"
+
+# -----------------------------------------------------------------------------
+# SAP-008: Automation Dashboard (P2 - Comprehensive)
+# -----------------------------------------------------------------------------
+include_sap_008:
+  type: bool
+  help: "SAP-008: Automation Dashboard - Justfile recipes and metrics tracking"
+  default: "{{ sap_selection_mode == 'comprehensive' }}"
+  when: "{{ sap_selection_mode == 'custom' }}"
+
+# =============================================================================
+# Project Configuration
+# =============================================================================
+
+python_version:
+  type: str
+  help: "Python version (for projects with Python scripts)"
+  choices:
+    Python 3.8: "3.8"
+    Python 3.9: "3.9"
+    Python 3.10: "3.10"
+    Python 3.11: "3.11"
+    Python 3.12: "3.12"
+  default: "3.11"
+  when: "{{ include_sap_053 or include_sap_056 or include_sap_008 }}"
+
+use_git:
+  type: bool
+  help: "Initialize git repository?"
+  default: true
+
+use_poetry:
+  type: bool
+  help: "Use Poetry for Python dependency management?"
+  default: true
+  when: "{{ include_sap_053 or include_sap_056 or include_sap_008 }}"
+
+# =============================================================================
+# Derived Variables (Auto-calculated, not prompted)
+# =============================================================================
+
+_sap_001_enabled: "{{ sap_selection_mode != 'custom' or include_sap_001 }}"
+_sap_015_enabled: "{{ sap_selection_mode != 'custom' or include_sap_015 }}"
+_sap_053_enabled: "{{ (sap_selection_mode in ['standard', 'comprehensive']) or (sap_selection_mode == 'custom' and include_sap_053) }}"
+_sap_010_enabled: "{{ (sap_selection_mode in ['standard', 'comprehensive']) or (sap_selection_mode == 'custom' and include_sap_010) }}"
+_sap_051_enabled: "{{ (sap_selection_mode == 'comprehensive') or (sap_selection_mode == 'custom' and include_sap_051) }}"
+_sap_052_enabled: "{{ (sap_selection_mode == 'comprehensive') or (sap_selection_mode == 'custom' and include_sap_052) }}"
+_sap_056_enabled: "{{ (sap_selection_mode == 'comprehensive') or (sap_selection_mode == 'custom' and include_sap_056) }}"
+_sap_008_enabled: "{{ (sap_selection_mode == 'comprehensive') or (sap_selection_mode == 'custom' and include_sap_008) }}"
+
+_sap_count: "{{ (_sap_001_enabled|int) + (_sap_015_enabled|int) + (_sap_053_enabled|int) + (_sap_010_enabled|int) + (_sap_051_enabled|int) + (_sap_052_enabled|int) + (_sap_056_enabled|int) + (_sap_008_enabled|int) }}"
+
+_project_slug: "{{ project_name | lower | replace(' ', '-') | replace('_', '-') }}"
+
+# =============================================================================
+# Post-Generation Tasks
+# =============================================================================
+
+_tasks:
+  - command: "python3 {{ _copier_conf.src_path }}/copier-post-generation.py"
+    description: "Running post-generation setup..."
+
+# =============================================================================
+# Post-Generation Messages
+# =============================================================================
+
+_message_after_copy: |
+
+  ✅ Project "{{ project_name }}" created successfully!
+
+  📦 SAPs Included ({{ _sap_count }} total):
+  {% if _sap_001_enabled %}  ✓ SAP-001: Inbox Workflow{% endif %}
+  {% if _sap_015_enabled %}  ✓ SAP-015: Beads Task Management{% endif %}
+  {% if _sap_053_enabled %}  ✓ SAP-053: Conflict Resolution{% endif %}
+  {% if _sap_010_enabled %}  ✓ SAP-010: Memory System{% endif %}
+  {% if _sap_051_enabled %}  ✓ SAP-051: Pre-merge Validation{% endif %}
+  {% if _sap_052_enabled %}  ✓ SAP-052: Code Ownership{% endif %}
+  {% if _sap_056_enabled %}  ✓ SAP-056: Lifecycle Traceability{% endif %}
+  {% if _sap_008_enabled %}  ✓ SAP-008: Automation Dashboard{% endif %}
+
+  🚀 Next Steps:
+  1. cd {{ _project_slug }}
+  {% if use_git %}2. git status  # Git repository initialized{% endif %}
+  {% if use_poetry and (_sap_053_enabled or _sap_056_enabled or _sap_008_enabled) %}3. poetry install  # Install Python dependencies{% endif %}
+  4. just --list  # See available automation recipes
+  {% if _sap_001_enabled %}5. just inbox-status  # Check coordination inbox{% endif %}
+  {% if _sap_053_enabled %}6. just conflict-check  # Test conflict detection{% endif %}
+
+  📚 Documentation:
+  - README.md: Project overview and quick start
+  {% if _sap_001_enabled %}- inbox/README.md: Coordination workflow{% endif %}
+  {% if _sap_010_enabled %}- .chora/CLAUDE.md: Agent awareness guide{% endif %}
+
+  🔗 Resources:
+  - chora-base: https://github.com/liminalcommons/chora-base
+  - SAP Catalog: packages/chora-base/docs/skilled-awareness/INDEX.md
+
+  🎯 Template Version: chora-base v1.0.0 (Copier-based SAP Distribution)
+  Origin: OPP-2025-022, CORD-2025-023, SAP-060 Strategic Opportunity Management
+
+  Happy building! 🎉
+
+_message_after_update: |
+
+  ✅ Template updated successfully!
+
+  📦 Changes Applied:
+  - Template version: Updated to latest chora-base
+  - SAP updates: Check CHANGELOG.md for SAP version changes
+
+  ⚠️  Manual Review Required:
+  - Resolve any merge conflicts (if present)
+  - Review .copier-answers.yml for configuration changes
+  - Test SAP scripts: just --list && just conflict-check (if SAP-053 enabled)
+
+  📚 Update Guide: See docs/template-updates.md
