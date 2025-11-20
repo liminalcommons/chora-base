@@ -3,16 +3,16 @@
 **Capability ID**: SAP-050
 **Modern Namespace**: chora.awareness.sap_adoption_verification
 **Type**: Pattern
-**Status**: Draft
-**Version**: 1.0.0
+**Status**: Active
+**Version**: 1.1.0
 **Created**: 2025-11-16
-**Last Updated**: 2025-11-16
+**Last Updated**: 2025-11-20
 
 ---
 
 ## Executive Summary
 
-**SAP-050: SAP Adoption Verification & Quality Assurance** formalizes agent awareness patterns for validating SAP structure, completeness, and quality. It provides standardized verification patterns, quality gates for status promotion (draft → pilot → production), and automated tooling for SAP validation.
+**SAP-050: SAP Adoption Verification & Quality Assurance** formalizes agent awareness patterns for validating SAP structure, completeness, and quality. It provides standardized verification patterns, quality gates for status promotion (draft → pilot → production), phase completion criteria for SAP lifecycle management, maturity progression tracking (L0-L5), checklist-driven development via the SAP Completion Matrix, and automated tooling for SAP validation.
 
 **Key Benefits**:
 - ✅ **Automated Verification**: Validate SAP structure and completeness automatically
@@ -20,6 +20,9 @@
 - 🚦 **Promotion Gates**: Clear criteria for draft → pilot → production status changes
 - 🔍 **Link Validation**: Detect broken cross-references and documentation links
 - 📈 **Adoption Tracking**: Monitor SAP adoption progress and metrics
+- 🎯 **Phase Gates**: Completion criteria for Phase 1-4 (Design → Infrastructure → Pilot → Distribution)
+- 📊 **Maturity Progression**: Track adoption from L0 (Aware) → L5 (Sustained) with time estimates
+- ☑️ **Completion Matrix**: Checklist-driven SAP development with programmatic tracking
 
 ---
 
@@ -69,13 +72,19 @@ The SAP framework (SAP-000) defines requirements for capability packaging, but l
 
 ### Approach
 
-SAP-050 formalizes 5 core verification patterns for SAP quality assurance:
+SAP-050 formalizes 8 core verification patterns for SAP quality assurance and lifecycle management:
 
+**Quality Assurance Patterns** (Real-time Verification):
 1. **Structure Verification Pattern**: Validate 5 required artifacts exist and follow naming conventions
 2. **Completeness Verification Pattern**: Check artifacts contain required sections and metadata
 3. **Link Validation Pattern**: Verify all cross-references and external links are valid
 4. **Quality Gate Pattern**: Define criteria for status promotion (draft → pilot → production)
 5. **Adoption Metrics Pattern**: Track SAP usage, feedback, and effectiveness
+
+**Lifecycle Management Patterns** (Development Progression):
+6. **Phase Completion Criteria Pattern**: Define completion gates for Phase 1-4 (Design → Infrastructure → Pilot → Distribution)
+7. **Maturity Progression Pattern**: Track adoption from L0 (Aware) → L5 (Sustained) with time estimates and criteria
+8. **SAP Completion Matrix Pattern**: Checklist-driven development with programmatic tracking and progress visualization
 
 ### Architecture
 
@@ -372,6 +381,208 @@ def track_adoption_metrics(sap_name: str) -> dict:
     return metrics
 ```
 
+**6. Phase Completion Criteria Pattern**
+
+Define completion gates for each SAP lifecycle phase:
+
+```python
+def verify_phase_completion(sap_name: str, target_phase: int) -> dict:
+    """
+    Verify SAP meets completion criteria for target phase
+
+    Args:
+        sap_name: SAP name (e.g., 'task-tracking')
+        target_phase: 1 (Design), 2 (Infrastructure), 3 (Pilot), 4 (Distribution)
+
+    Returns:
+        dict with passed (bool), unmet_criteria (list), next_steps (list)
+    """
+    unmet = []
+
+    # Phase 1: Design Completion (All 5 artifacts)
+    if target_phase >= 1:
+        structure = verify_structure(sap_name)
+        if not structure['passed']:
+            unmet.append(f"Phase 1: Missing artifacts: {structure['missing_artifacts']}")
+
+        # Total word count ≥2,000 words
+        total_words = sum(
+            len(Path(f'docs/skilled-awareness/{sap_name}/{artifact}').read_text().split())
+            for artifact in ['capability-charter.md', 'protocol-spec.md',
+                           'awareness-guide.md', 'adoption-blueprint.md', 'ledger.md']
+            if (Path(f'docs/skilled-awareness/{sap_name}/{artifact}')).exists()
+        )
+        if total_words < 2000:
+            unmet.append(f"Phase 1: Word count {total_words} < 2000")
+
+    # Phase 2: Infrastructure Completion
+    if target_phase >= 2:
+        # Must have adoption patterns in AGENTS.md
+        agents_file = Path(f'docs/skilled-awareness/{sap_name}/AGENTS.md')
+        if not agents_file.exists():
+            unmet.append("Phase 2: Missing AGENTS.md")
+
+    # Phase 3: Pilot Completion
+    if target_phase >= 3:
+        # Must have dogfooding evidence in ledger
+        ledger = Path(f'docs/skilled-awareness/{sap_name}/ledger.md')
+        if ledger.exists():
+            content = ledger.read_text()
+            if 'dogfooding' not in content.lower():
+                unmet.append("Phase 3: No dogfooding evidence in ledger")
+
+    # Phase 4: Distribution Completion
+    if target_phase >= 4:
+        # Must have INDEX.md entry
+        index = Path('docs/skilled-awareness/INDEX.md')
+        if index.exists():
+            if sap_name not in index.read_text():
+                unmet.append("Phase 4: Not listed in INDEX.md")
+
+        # Must have sap-catalog.json entry
+        catalog = Path('sap-catalog.json')
+        if catalog.exists():
+            if sap_name not in catalog.read_text():
+                unmet.append("Phase 4: Not in sap-catalog.json")
+
+    return {
+        'passed': len(unmet) == 0,
+        'target_phase': target_phase,
+        'unmet_criteria': unmet
+    }
+```
+
+**7. Maturity Progression Pattern**
+
+Track adoption from L0 (Aware) → L5 (Sustained):
+
+```python
+def verify_maturity_level(sap_name: str, target_level: str) -> dict:
+    """
+    Verify SAP meets criteria for target maturity level
+
+    Args:
+        sap_name: SAP name
+        target_level: 'L0', 'L1', 'L2', 'L3', 'L4', 'L5'
+
+    Returns:
+        dict with passed (bool), current_level (str), unmet_criteria (list)
+    """
+    unmet = []
+
+    # L0: Aware (capability-charter.md read)
+    charter = Path(f'docs/skilled-awareness/{sap_name}/capability-charter.md')
+    if target_level >= 'L0' and not charter.exists():
+        unmet.append("L0: Missing capability-charter.md")
+
+    # L1: Planned (all 5 artifacts read, adoption plan created)
+    if target_level >= 'L1':
+        structure = verify_structure(sap_name)
+        if not structure['passed']:
+            unmet.append(f"L1: Missing artifacts: {structure['missing_artifacts']}")
+
+    # L2: Implemented (SAP operational, workflows functional)
+    if target_level >= 'L2':
+        ledger = Path(f'docs/skilled-awareness/{sap_name}/ledger.md')
+        if ledger.exists():
+            content = ledger.read_text()
+            if 'L2' not in content and 'Implemented' not in content:
+                unmet.append("L2: No implementation evidence in ledger")
+
+    # L3: Validated (≥4 weeks usage, feedback collected)
+    if target_level >= 'L3':
+        if ledger.exists():
+            content = ledger.read_text()
+            if 'feedback' not in content.lower():
+                unmet.append("L3: No feedback evidence in ledger")
+
+    # L4: Distributed (ecosystem integration, ≥3 adoptions)
+    if target_level >= 'L4':
+        # Check INDEX.md and sap-catalog.json
+        index = Path('docs/skilled-awareness/INDEX.md')
+        if not (index.exists() and sap_name in index.read_text()):
+            unmet.append("L4: Not in INDEX.md")
+
+    # L5: Sustained (≥6 months in L4, quarterly reviews)
+    if target_level == 'L5':
+        if ledger.exists():
+            content = ledger.read_text()
+            if 'quarterly review' not in content.lower():
+                unmet.append("L5: No quarterly review evidence")
+
+    return {
+        'passed': len(unmet) == 0,
+        'target_level': target_level,
+        'unmet_criteria': unmet
+    }
+```
+
+**8. SAP Completion Matrix Pattern**
+
+Checklist-driven development with programmatic tracking:
+
+```python
+def generate_sap_completion_matrix(sap_name: str) -> dict:
+    """
+    Generate SAP Completion Matrix showing progress across phases and maturity levels
+
+    Returns:
+        dict with phase progress, maturity level, next milestone
+    """
+    from pathlib import Path
+
+    sap_dir = Path(f'docs/skilled-awareness/{sap_name}')
+
+    # Phase 1: Design (5 artifacts)
+    phase1_tasks = {
+        'capability-charter.md': (sap_dir / 'capability-charter.md').exists(),
+        'protocol-spec.md': (sap_dir / 'protocol-spec.md').exists(),
+        'awareness-guide.md': (sap_dir / 'AGENTS.md').exists() or (sap_dir / 'awareness-guide.md').exists(),
+        'adoption-blueprint.md': (sap_dir / 'adoption-blueprint.md').exists(),
+        'ledger.md': (sap_dir / 'ledger.md').exists(),
+    }
+    phase1_complete = sum(phase1_tasks.values()) == len(phase1_tasks)
+
+    # Phase 2: Infrastructure (AGENTS.md patterns)
+    agents_file = sap_dir / 'AGENTS.md'
+    phase2_complete = agents_file.exists()
+
+    # Phase 3: Pilot (dogfooding evidence)
+    ledger = sap_dir / 'ledger.md'
+    phase3_complete = False
+    if ledger.exists():
+        phase3_complete = 'dogfooding' in ledger.read_text().lower()
+
+    # Phase 4: Distribution (INDEX, catalog, template)
+    index = Path('docs/skilled-awareness/INDEX.md')
+    catalog = Path('sap-catalog.json')
+    phase4_complete = (
+        index.exists() and sap_name in index.read_text() and
+        catalog.exists() and sap_name in catalog.read_text()
+    )
+
+    # Determine next milestone
+    if not phase1_complete:
+        next_milestone = 'Complete Phase 1 (Design): Create remaining artifacts'
+    elif not phase2_complete:
+        next_milestone = 'Complete Phase 2 (Infrastructure): Add AGENTS.md patterns'
+    elif not phase3_complete:
+        next_milestone = 'Complete Phase 3 (Pilot): Dogfood and document in ledger'
+    elif not phase4_complete:
+        next_milestone = 'Complete Phase 4 (Distribution): Add to INDEX and catalog'
+    else:
+        next_milestone = 'Maintain L4-L5 maturity (quarterly reviews)'
+
+    return {
+        'sap_name': sap_name,
+        'phase1': {'complete': sum(phase1_tasks.values()), 'total': len(phase1_tasks)},
+        'phase2': {'complete': phase2_complete},
+        'phase3': {'complete': phase3_complete},
+        'phase4': {'complete': phase4_complete},
+        'next_milestone': next_milestone
+    }
+```
+
 ---
 
 ## Success Metrics
@@ -452,6 +663,6 @@ def track_adoption_metrics(sap_name: str) -> dict:
 
 ---
 
-**Version**: 1.0.0
-**Status**: Draft
-**Next Review**: After initial implementation (2 weeks)
+**Version**: 1.1.0
+**Status**: Active
+**Next Review**: After Phase 4 validation (3 months)

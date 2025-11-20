@@ -3,10 +3,10 @@
 **Capability ID**: SAP-050
 **Modern Namespace**: chora.awareness.sap_adoption_verification
 **Type**: Pattern
-**Status**: Draft
-**Version**: 1.0.0
-**Protocol Version**: 1.0.0
-**Last Updated**: 2025-11-16
+**Status**: Active
+**Version**: 1.1.0
+**Protocol Version**: 1.1.0
+**Last Updated**: 2025-11-20
 
 ---
 
@@ -166,6 +166,525 @@ capabilities/
 - [x] Documentation quality: No broken links, all examples tested
 
 **Purpose**: Production-ready, recommended for general adoption
+
+---
+
+## Phase Completion Criteria
+
+### Overview
+
+SAP development follows a 4-phase lifecycle. Each phase has specific completion criteria that must be met before proceeding to the next phase.
+
+**Phases**:
+1. **Phase 1: Design** - Create 5 core artifacts (charter, spec, awareness, blueprint, ledger)
+2. **Phase 2: Infrastructure** - Build scripts, tools, automation, tests
+3. **Phase 3: Pilot** - Real-world validation with ≥1 adoption, collect feedback
+4. **Phase 4: Distribution** - Ecosystem integration (INDEX, catalog, copier)
+
+---
+
+### Phase 1: Design Completion Criteria
+
+**Goal**: Complete specification and design documentation
+
+**Deliverables**:
+- [x] capability-charter.md created (~400-600 lines)
+  - Problem Statement section complete
+  - Solution Design section complete
+  - Success Metrics section complete
+  - Stakeholders section complete
+- [x] protocol-spec.md created (~600-1000 lines)
+  - Schema/Data Formats section complete
+  - Examples provided for all protocols
+  - Error handling documented
+- [x] awareness-guide.md (or AGENTS.md) created (~400-800 lines)
+  - ≥3 agent workflows documented
+  - Quick Reference Patterns section complete
+  - Common Pitfalls section complete
+- [x] adoption-blueprint.md created (~300-500 lines)
+  - Phase 1-3 adoption steps defined
+  - Prerequisites listed
+  - Validation steps provided
+- [x] ledger.md created (~200-400 lines)
+  - Version history table initialized
+  - Adoption tracking template created
+  - Baseline metrics documented (if applicable)
+
+**Success Criteria**:
+- ✅ All 5 artifacts exist
+- ✅ Total word count ≥2,000 words (comprehensive documentation)
+- ✅ All required sections present (per artifact requirements above)
+- ✅ Cross-references between artifacts validated
+- ✅ No placeholder content ("TBD", "TODO") in critical sections
+
+**Estimated Duration**: 3-6 hours (for new SAP), 1-2 hours (for existing SAP expansion)
+
+**Output**: SAP at status=draft, version=1.0.0
+
+---
+
+### Phase 2: Infrastructure Completion Criteria
+
+**Goal**: Build operational tools, scripts, tests, and automation
+
+**Deliverables**:
+- [x] Scripts/tools implemented (if SAP defines executable capabilities)
+  - Source code in `scripts/` or appropriate directory
+  - CLI interface defined (if applicable)
+  - Unit tests written (≥80% code coverage)
+- [x] Automation configured (if applicable)
+  - Justfile recipes added (if SAP defines workflows)
+  - Pre-commit hooks configured (if SAP defines quality gates)
+  - CI/CD integration documented
+- [x] Integration tests passing
+  - End-to-end workflows validated
+  - Error handling tested
+  - Performance benchmarks met (if defined)
+
+**Success Criteria**:
+- ✅ All scripts/tools executable without errors
+- ✅ Test suite passes (exit code 0)
+- ✅ Performance targets met (if defined in protocol-spec.md)
+- ✅ Justfile recipes validated (if applicable)
+- ✅ Documentation updated with infrastructure details
+
+**Estimated Duration**: 3-8 hours (varies by SAP complexity)
+
+**Output**: SAP remains status=draft, operational infrastructure ready for pilot
+
+**Note**: Phase 2 may be skipped for pattern-only SAPs (no executable code). In such cases, proceed directly to Phase 3.
+
+---
+
+### Phase 3: Pilot Completion Criteria
+
+**Goal**: Real-world validation with documented adoption and feedback
+
+**Deliverables**:
+- [x] Pilot adoption documented (≥1 real-world usage)
+  - Project name, adoption date, context recorded in ledger.md
+  - Adoption process followed (from adoption-blueprint.md)
+  - Validation steps completed
+- [x] Feedback collected (≥1 feedback entry in ledger.md)
+  - User experience documented
+  - Pain points identified
+  - Improvement suggestions captured
+- [x] Bugs/issues resolved
+  - Critical bugs fixed before pilot completion
+  - Known issues documented in ledger.md or GitHub issues
+- [x] Pilot validation report written
+  - What worked well
+  - Challenges encountered
+  - Lessons learned
+  - Recommendations for improvements
+
+**Success Criteria**:
+- ✅ ≥1 pilot adoption documented in ledger.md
+- ✅ ≥1 feedback entry captured
+- ✅ No critical bugs open (severity: high)
+- ✅ Pilot validation report written (≥200 words)
+- ✅ Adoption metrics tracked (time investment, value delivered)
+
+**Estimated Duration**: 2-4 hours (pilot execution + feedback collection)
+
+**Output**: SAP promoted to status=pilot, version=1.0.0 (or 1.1.0 if changes made)
+
+---
+
+### Phase 4: Distribution Completion Criteria
+
+**Goal**: Ecosystem integration and public availability
+
+**Deliverables**:
+- [x] INDEX.md entry added
+  - SAP listed in appropriate domain (e.g., "Developer Experience")
+  - Metadata complete (version, status, description, dependencies, location, features)
+- [x] sap-catalog.json entry added (if using machine-readable catalog)
+  - SAP metadata machine-parseable
+  - Dependencies declared
+  - Features tagged
+- [x] Copier template integration (if distributable via template)
+  - SAP selectable in copier questionnaire
+  - Conditional inclusion logic tested
+  - Post-generation hooks validated
+- [x] Adoption path documented (optional but recommended)
+  - Progressive adoption levels defined
+  - Entry points for different user personas
+- [x] Dependencies validated
+  - All referenced SAPs exist
+  - Version compatibility confirmed
+  - Circular dependencies avoided
+
+**Success Criteria**:
+- ✅ INDEX.md entry present and accurate
+- ✅ sap-catalog.json entry valid (if applicable)
+- ✅ Copier integration tested (if distributable)
+- ✅ Ecosystem validation script passes (`scripts/validate-ecosystem-integration.py`)
+- ✅ All documentation links validated (no broken cross-references)
+
+**Estimated Duration**: 30-60 minutes
+
+**Output**: SAP promoted to status=active (or production), version=1.0.0+
+
+**Note**: Phase 4 criteria align with SAP-061 (Ecosystem Integration) requirements. See [SAP-061](../sap-ecosystem-integration/) for automated validation details.
+
+---
+
+## Maturity Progression Rules (L0-L5)
+
+### Overview
+
+SAP adoption follows a 6-level maturity progression from awareness to sustained excellence.
+
+**Maturity Levels**:
+- **L0 (Aware)**: Problem understood, SAP discovered
+- **L1 (Planned)**: Adoption planned, design understood
+- **L2 (Implemented)**: SAP operational, basic usage
+- **L3 (Validated)**: Proven in real-world usage, feedback collected
+- **L4 (Distributed)**: Available ecosystem-wide, publicly accessible
+- **L5 (Sustained)**: Maintained long-term, continuous improvement
+
+**Progression Strategy**: SAPs progress through L0→L5 as adoption deepens. Levels align with quality gates (draft/pilot/production status) but measure adoption maturity rather than artifact completeness.
+
+---
+
+### L0: Aware
+
+**Definition**: Team/individual recognizes the problem SAP solves and has read the capability charter.
+
+**Criteria**:
+- [x] capability-charter.md read (~5-10 min)
+- [x] Problem statement resonates with current pain points
+- [x] Value proposition understood
+
+**Activities**:
+- Read Executive Summary
+- Identify stakeholders who would benefit
+- Assess relevance to current project needs
+
+**Time Investment**: 10-15 minutes
+
+**Output**: Decision to proceed with adoption (yes/no)
+
+---
+
+### L1: Planned
+
+**Definition**: Adoption plan created, design understood, prerequisites met.
+
+**Criteria**:
+- [x] All 5 core artifacts read
+  - capability-charter.md (problem + solution)
+  - protocol-spec.md (technical details)
+  - awareness-guide.md (agent patterns)
+  - adoption-blueprint.md (implementation steps)
+  - ledger.md (version history, metrics)
+- [x] Prerequisites satisfied (dependencies installed, access granted)
+- [x] Adoption timeline estimated (hours, days, weeks)
+- [x] Stakeholders aligned on adoption plan
+
+**Activities**:
+- Deep read of protocol-spec.md
+- Review adoption-blueprint.md checklist
+- Install prerequisites
+- Schedule adoption time
+
+**Time Investment**: 30-60 minutes (planning), varies by SAP
+
+**Output**: Adoption plan documented (checklist, timeline, responsible parties)
+
+---
+
+### L2: Implemented
+
+**Definition**: SAP operational, basic functionality working, team trained.
+
+**Criteria**:
+- [x] All adoption phases complete (Phase 1, 2, 3 from adoption-blueprint.md)
+- [x] Validation steps passed
+- [x] Team trained on usage patterns
+- [x] Basic workflows functional
+
+**Activities**:
+- Execute adoption-blueprint.md steps
+- Run validation tests
+- Train team members
+- Document local customizations (if any)
+
+**Time Investment**: Varies by SAP (30 min - 8 hours)
+
+**Output**: SAP functional in project, team capable of basic usage
+
+---
+
+### L3: Validated
+
+**Definition**: SAP proven in real-world usage, feedback collected, value demonstrated.
+
+**Criteria**:
+- [x] ≥4 weeks of real-world usage
+- [x] Feedback documented (what worked, pain points, improvements)
+- [x] Value metrics tracked (time saved, errors prevented, quality improved)
+- [x] Lessons learned captured
+
+**Activities**:
+- Use SAP in production workflows
+- Collect user feedback
+- Measure adoption impact (metrics from ledger.md)
+- Document lessons learned
+
+**Time Investment**: 4-8 weeks of usage + 1-2 hours documentation
+
+**Output**: Pilot validation report, metrics demonstrating value
+
+---
+
+### L4: Distributed
+
+**Definition**: SAP available to broader ecosystem, integrated into project templates, discoverable.
+
+**Criteria**:
+- [x] SAP integrated into project templates (Copier, Cookiecutter, etc.)
+- [x] SAP listed in ecosystem INDEX.md
+- [x] SAP distributable via package managers (if applicable)
+- [x] Documentation publicly accessible
+- [x] ≥3 adoptions outside original team
+
+**Activities**:
+- Complete Phase 4 (Distribution) criteria
+- Add to Copier template questionnaire
+- Promote in community channels
+- Support external adopters
+
+**Time Investment**: 2-4 hours (distribution setup) + ongoing support
+
+**Output**: SAP accessible ecosystem-wide, adoption growing
+
+---
+
+### L5: Sustained
+
+**Definition**: SAP maintained long-term, continuous improvement, community contributions.
+
+**Criteria**:
+- [x] ≥6 months in L4 (Distributed)
+- [x] Regular maintenance (quarterly reviews)
+- [x] Feedback loop operational (users report issues, improvements implemented)
+- [x] Version updates released (PATCH/MINOR/MAJOR per semantic versioning)
+- [x] Community contributions accepted (if open source)
+- [x] Adoption metrics tracked quarterly
+
+**Activities**:
+- Quarterly SAP review (metrics, feedback, issues)
+- Release version updates (bug fixes, features)
+- Respond to community feedback
+- Maintain documentation currency
+
+**Time Investment**: 2-4 hours/quarter
+
+**Output**: SAP remains valuable long-term, adoption sustained or growing
+
+---
+
+## SAP Completion Matrix
+
+### Overview
+
+The SAP Completion Matrix provides a checklist-driven approach to SAP development, showing exactly what tasks remain to achieve each milestone (Phase 1-4, L0-L5).
+
+**Use Cases**:
+- **SAP Creators**: Generate checklist for new SAP ("What do I need to finish Phase 1?")
+- **Project Managers**: Track SAP development progress across phases
+- **AI Agents**: Programmatic SAP completion validation
+
+---
+
+### Matrix Structure
+
+**Dimensions**:
+1. **Phases** (rows): Phase 1 (Design), Phase 2 (Infrastructure), Phase 3 (Pilot), Phase 4 (Distribution)
+2. **Status** (columns): draft, pilot, active/production
+3. **Maturity Levels** (overlaid): L0-L5 progression
+
+**Matrix Format** (Markdown checklist):
+
+```markdown
+## SAP-XXX Completion Matrix
+
+**Current Status**: draft
+**Current Phase**: Phase 1 (Design)
+**Current Maturity**: L0 (Aware)
+
+---
+
+### Phase 1: Design
+- [ ] capability-charter.md (400-600 lines)
+- [ ] protocol-spec.md (600-1000 lines)
+- [ ] awareness-guide.md or AGENTS.md (400-800 lines)
+- [ ] adoption-blueprint.md (300-500 lines)
+- [ ] ledger.md (200-400 lines)
+- [ ] Cross-references validated
+- [ ] No placeholder content in critical sections
+
+**Completion**: 0/7 tasks → Estimated 3-6 hours remaining
+
+---
+
+### Phase 2: Infrastructure
+- [ ] Scripts/tools implemented (if applicable)
+- [ ] Unit tests written (≥80% coverage)
+- [ ] Justfile recipes added
+- [ ] Integration tests passing
+- [ ] Performance benchmarks met
+
+**Completion**: 0/5 tasks → Estimated 3-8 hours (or skip if pattern-only SAP)
+
+---
+
+### Phase 3: Pilot
+- [ ] ≥1 pilot adoption documented
+- [ ] ≥1 feedback entry in ledger.md
+- [ ] Critical bugs resolved
+- [ ] Pilot validation report written
+
+**Completion**: 0/4 tasks → Estimated 2-4 hours
+
+---
+
+### Phase 4: Distribution
+- [ ] INDEX.md entry added
+- [ ] sap-catalog.json entry added
+- [ ] Copier integration tested (if distributable)
+- [ ] Ecosystem validation script passes
+- [ ] All links validated
+
+**Completion**: 0/5 tasks → Estimated 30-60 minutes
+
+---
+
+### Maturity Levels (L0-L5)
+- [x] L0 (Aware): Problem understood → **CURRENT**
+- [ ] L1 (Planned): Adoption planned
+- [ ] L2 (Implemented): SAP operational
+- [ ] L3 (Validated): Real-world usage proven
+- [ ] L4 (Distributed): Ecosystem-wide availability
+- [ ] L5 (Sustained): Long-term maintenance
+
+**Maturity Progression**: L0 → L5 estimated 3-12 months (varies by SAP complexity)
+```
+
+---
+
+### Programmatic Matrix Generation
+
+**Python Implementation**:
+
+```python
+def generate_sap_completion_matrix(sap_name: str) -> dict:
+    """Generate SAP Completion Matrix for a given SAP"""
+    from pathlib import Path
+
+    sap_dir = Path(f'docs/skilled-awareness/{sap_name}')
+    artifacts = ['capability-charter.md', 'protocol-spec.md',
+                 'awareness-guide.md', 'adoption-blueprint.md', 'ledger.md']
+
+    # Phase 1: Design
+    phase1_tasks = {
+        'capability-charter.md exists': (sap_dir / 'capability-charter.md').exists(),
+        'protocol-spec.md exists': (sap_dir / 'protocol-spec.md').exists(),
+        'awareness-guide.md exists': (sap_dir / 'awareness-guide.md').exists() or (sap_dir / 'AGENTS.md').exists(),
+        'adoption-blueprint.md exists': (sap_dir / 'adoption-blueprint.md').exists(),
+        'ledger.md exists': (sap_dir / 'ledger.md').exists(),
+    }
+
+    phase1_complete = sum(phase1_tasks.values())
+    phase1_total = len(phase1_tasks)
+
+    # Phase 4: Distribution
+    phase4_tasks = {
+        'INDEX.md entry': check_index_entry(sap_name),
+        'sap-catalog.json entry': check_catalog_entry(sap_name),
+        'Ecosystem validation passes': run_ecosystem_validation(sap_name),
+    }
+
+    phase4_complete = sum(phase4_tasks.values())
+    phase4_total = len(phase4_tasks)
+
+    return {
+        'sap_name': sap_name,
+        'phase1': {'complete': phase1_complete, 'total': phase1_total},
+        'phase4': {'complete': phase4_complete, 'total': phase4_total},
+        'next_milestone': determine_next_milestone(phase1_complete, phase4_complete),
+    }
+
+def check_index_entry(sap_name: str) -> bool:
+    """Check if SAP listed in INDEX.md"""
+    index_file = Path('docs/skilled-awareness/INDEX.md')
+    if not index_file.exists():
+        return False
+    content = index_file.read_text()
+    return sap_name in content
+
+def check_catalog_entry(sap_name: str) -> bool:
+    """Check if SAP listed in sap-catalog.json"""
+    catalog_file = Path('docs/sap-catalog.json')
+    if not catalog_file.exists():
+        return False
+    import json
+    catalog = json.loads(catalog_file.read_text())
+    return any(sap.get('id') == sap_name for sap in catalog.get('saps', []))
+
+def run_ecosystem_validation(sap_name: str) -> bool:
+    """Run ecosystem validation script"""
+    import subprocess
+    result = subprocess.run(
+        ['python', 'scripts/validate-ecosystem-integration.py', sap_name],
+        capture_output=True
+    )
+    return result.returncode == 0
+
+def determine_next_milestone(phase1_complete: int, phase4_complete: int) -> str:
+    """Determine next milestone based on completion"""
+    if phase1_complete < 5:
+        return "Complete Phase 1 (Design)"
+    elif phase4_complete < 3:
+        return "Complete Phase 4 (Distribution)"
+    else:
+        return "SAP Complete (L4+ maturity)"
+```
+
+---
+
+### Usage Example
+
+**CLI Command** (proposed):
+```bash
+# Generate completion matrix for SAP-053
+sap-verify completion-matrix task-tracking
+
+# Output:
+# SAP-053 Completion Matrix
+# =========================
+# Phase 1 (Design): 5/5 ✓
+# Phase 2 (Infrastructure): 3/5 (60%)
+# Phase 3 (Pilot): 1/4 (25%)
+# Phase 4 (Distribution): 0/5 (0%)
+#
+# Next Milestone: Complete Phase 2 (Infrastructure)
+# Estimated Time: 2-4 hours remaining
+```
+
+---
+
+### Integration with SAP-061
+
+The SAP Completion Matrix integrates with **SAP-061: Ecosystem Integration** validation:
+
+- **Phase 4 tasks** map directly to SAP-061 integration points (INDEX, catalog, copier)
+- **Ecosystem validation** uses `scripts/validate-ecosystem-integration.py` (SAP-061 deliverable)
+- **Automated quality gates** block Phase 4 completion until SAP-061 validation passes
+
+See [SAP-061: Ecosystem Integration](../sap-ecosystem-integration/) for validation details.
 
 ---
 
@@ -809,6 +1328,6 @@ jobs:
 
 ---
 
-**Version**: 1.0.0
-**Protocol Version**: 1.0.0
-**Status**: Draft
+**Version**: 1.1.0
+**Protocol Version**: 1.1.0
+**Status**: Active
