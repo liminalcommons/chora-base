@@ -35,6 +35,20 @@ repos:
         stages: [pre-commit]
         verbose: true
 
+      - id: validate-sap-ecosystem-integration
+        name: Validate SAP Ecosystem Integration
+        description: >
+          Validates SAP ecosystem integration across 5 integration points:
+          INDEX.md, sap-catalog.json, copier.yml, adoption paths, and
+          dependencies. Ensures SAPs are fully integrated before commit.
+          Part of SAP-061 (SAP Ecosystem Integration).
+        entry: python scripts/validate-ecosystem-integration.py --all
+        language: system
+        files: ^docs/skilled-awareness/.*/.*\.md$|^sap-catalog\.json$|^copier\.yml$|^docs/skilled-awareness/INDEX\.md$
+        pass_filenames: false
+        stages: [pre-commit]
+        verbose: false
+
   # ============================================================================
   # Standard Pre-commit Hooks
   # ============================================================================
