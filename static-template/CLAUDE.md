@@ -41,6 +41,17 @@ Load immediately:
 - **State management:** StatefulObject for persistence
 - **Testing:** pytest with fixtures in tests/conftest.py
 
+### Included Skilled Awareness Packages (SAPs)
+
+This project includes the following SAPs for enhanced development workflows:
+
+- **SAP-053 (Conflict Resolution)**: Pre-merge conflict detection
+  - Command: `just conflict-check` - Check for merge conflicts before creating PR
+  - Command: `just conflict-check-json` - JSON output for automation
+  - Command: `just conflict-check-verbose` - Detailed conflict information
+  - Command: `just conflict-status` - Quick status check
+  - See: `docs/skilled-awareness/conflict-resolution/` for full documentation
+
 ## Domain-Specific Context Management
 
 ### Essential Context for This Project (0-10k tokens)
