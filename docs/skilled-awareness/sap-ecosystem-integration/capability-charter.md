@@ -401,9 +401,20 @@ Define **SAP-061 (SAP Ecosystem Integration)** as a skilled awareness pattern pr
 
 **External References**:
 - SAP-000 (SAP Framework v1.0.0): `docs/skilled-awareness/sap-framework/`
-- SAP-050 (SAP Development Lifecycle): `docs/skilled-awareness/sap-adoption-verification/` (to be promoted)
 - SAP-053 (Conflict Resolution): `docs/skilled-awareness/conflict-resolution/`
 - CORD-2025-023 (SAP Development Lifecycle Meta-SAP Suite): `inbox/incoming/coordination/CORD-2025-023-sap-development-lifecycle-meta-saps.json`
+
+**SAP Lifecycle Integration**:
+
+SAP-061 is the **ecosystem integration step** in the **5-SAP development lifecycle**:
+
+- **SAP-029** (sap-generation) - Generate SAP artifacts from templates
+- **SAP-050** (sap-adoption-verification) - Verify generated SAP structure and quality
+- **SAP-061** (sap-ecosystem-integration) - Validate ecosystem integration points (this SAP)
+- **SAP-062** (sap-distribution-versioning) - Distribute validated SAPs via Copier templates
+- **SAP-019** (sap-self-evaluation) - Evaluate adoption depth and maturity
+
+**Integration**: SAP-061 validates ecosystem integration for SAPs verified by SAP-050, ensuring they're ready for SAP-062 distribution.
 
 ---
 

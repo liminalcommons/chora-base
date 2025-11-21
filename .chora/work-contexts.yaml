@@ -23,9 +23,12 @@ work_contexts:
   - docs/skilled-awareness/sap-distribution-versioning/*
   - docs/skilled-awareness/sap-adoption-verification/*
   - docs/skilled-awareness/sap-framework/*
+  - docs/skilled-awareness/sap-generation/*
+  - docs/skilled-awareness/sap-self-evaluation/*
+  - sap-catalog.json
   - .chora/work-contexts.yaml
   started_at: 2025-11-20 10:34:56+00:00
-  last_activity: '2025-11-20T23:00:35Z'
+  last_activity: '2025-11-20T23:06:59Z'
 - id: tab-3
   type: tab
   branch: feature/new

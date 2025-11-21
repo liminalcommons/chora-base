@@ -140,7 +140,11 @@ def get_sap_directory(sap_id: str) -> Optional[Path]:
         charter = sap_dir / "capability-charter.md"
         if charter.exists():
             content = charter.read_text()
-            if f"**SAP ID**: {sap_id}" in content or f"SAP ID: {sap_id}" in content:
+            # Support both "SAP ID" and "Capability ID" formats
+            if (f"**SAP ID**: {sap_id}" in content or
+                f"SAP ID: {sap_id}" in content or
+                f"**Capability ID**: {sap_id}" in content or
+                f"Capability ID: {sap_id}" in content):
                 return sap_dir
     return None
 

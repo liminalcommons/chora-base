@@ -203,8 +203,8 @@ This index tracks all **48 capabilities** organized across **6 domains** for imp
 
 #### SAP-050: SAP Adoption Verification & Quality Assurance
 
-- **Status**: draft | **Version**: 1.0.0 | **Domain**: Developer Experience
-- **Description**: Formalizes agent awareness patterns for validating SAP structure, completeness, and quality. Provides automated verification patterns, quality gates for status promotion (draft → pilot → production), and adoption metrics tracking.
+- **Status**: active | **Version**: 1.1.0 | **Domain**: Developer Experience
+- **Description**: Formalizes agent awareness patterns for validating SAP structure, completeness, and quality. Provides automated verification patterns, quality gates for status promotion (draft → pilot → production), phase completion criteria (Phase 1-4), and maturity progression tracking (L0-L5).
 - **Dependencies**: SAP-000, SAP-009
 - **Location**: [sap-adoption-verification/](sap-adoption-verification/)
 - **Key Features**: Structure verification (validate 5 required artifacts), completeness verification (check required sections), link validation (detect broken cross-references), quality gate evaluation (objective criteria for status promotion), adoption metrics tracking (usage, feedback, issues), Python CLI tool (sap-verify), CI/CD integration patterns, pre-commit hook patterns
@@ -224,6 +224,22 @@ This index tracks all **48 capabilities** organized across **6 domains** for imp
 - **Dependencies**: SAP-000, SAP-051, SAP-010
 - **Location**: [conflict-resolution/](conflict-resolution/)
 - **Key Features**: Pre-merge conflict detection (conflict-checker.py with 100% accuracy), resolution strategies by file type (docs, code, config, lockfiles, metadata), automated safe-case resolution (whitespace, formatting, lockfiles), A-MEM conflict history tracking, justfile integration (4 recipes: check, check-json, check-verbose, status), 6.6x performance target (2s vs 10s), L3 validated status
+
+#### SAP-061: SAP Ecosystem Integration
+
+- **Status**: draft | **Version**: 1.0.0 | **Domain**: Developer Experience
+- **Description**: Automated validation preventing INDEX.md/catalog gaps through 5 integration points (INDEX.md registration, sap-catalog.json entry, Copier template integration, progressive adoption path mentions, dependency graph integrity)
+- **Dependencies**: SAP-000, SAP-050
+- **Location**: [sap-ecosystem-integration/](sap-ecosystem-integration/)
+- **Key Features**: INDEX.md validation, sap-catalog.json validation, Copier integration checking, adoption path verification, dependency graph integrity, automated gap detection, ecosystem health monitoring
+
+#### SAP-062: SAP Distribution & Versioning
+
+- **Status**: draft | **Version**: 1.0.0 | **Domain**: Developer Experience
+- **Description**: Copier-based distribution with semantic versioning, changelog automation, and release workflows for distributing SAPs across the ecosystem
+- **Dependencies**: SAP-000, SAP-050, SAP-061
+- **Location**: [sap-distribution-versioning/](sap-distribution-versioning/)
+- **Key Features**: Copier template integration, semantic versioning enforcement, automated changelog generation, release workflow automation, version compatibility checks, distribution validation, cross-repository synchronization
 
 ---
 

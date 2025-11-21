@@ -281,6 +281,32 @@ This ledger tracks **SAP-053 adoption progress, metrics, and ROI** for {{REPOSIT
 
 **Phase 4 Effort**: {{PHASE_4_ACTUAL_EFFORT}} days (target: 2-3 days)
 
+### SAP Lifecycle Integration (Distribution Enablers)
+
+**SAP-061 (SAP Ecosystem Integration)**:
+- **Purpose**: Validates SAP-053's ecosystem integration points
+- **5 Integration Points**: INDEX.md, sap-catalog.json, Copier, adoption paths, dependencies
+- **Impact on SAP-053**: Ensures SAP-053 properly registered before distribution
+- **Status**: Draft (created 2025-11-20 as part of CORD-2025-023)
+- **Location**: `docs/skilled-awareness/sap-ecosystem-integration/`
+
+**SAP-062 (SAP Distribution & Versioning)**:
+- **Purpose**: Enables SAP-053 distribution via Copier templates
+- **Capabilities**: Semantic versioning, changelog automation, cross-repo sync
+- **Impact on SAP-053**: Unblocks Phase 4 Milestone 3 (chora-compose integration)
+- **Status**: Draft (created 2025-11-20 as part of CORD-2025-023)
+- **Location**: `docs/skilled-awareness/sap-distribution-versioning/`
+
+**5-SAP Lifecycle Context**:
+SAP-053 benefits from the complete 5-SAP development lifecycle:
+1. **SAP-029** (Generation) - Template-based SAP creation
+2. **SAP-050** (Verification) - Quality assurance (SAP-053 achieved L3 validated status)
+3. **SAP-061** (Ecosystem Integration) - Integration validation
+4. **SAP-062** (Distribution) - Copier-based distribution (unblocks Phase 4)
+5. **SAP-019** (Evaluation) - Adoption depth assessment
+
+**Related**: See [[2025-11-20-5-sap-ecosystem-architecture]] knowledge note for complete lifecycle documentation.
+
 ---
 
 ## 5. Knowledge Note Inventory

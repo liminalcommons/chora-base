@@ -317,15 +317,17 @@ As SAPs grow (10 → 20 → 50), manual distribution becomes impossible:
 - Copier template integration will unblock completion
 - Case study for SAP distribution (first SAP to use template)
 
-**SAP-061** (Ecosystem Integration):
-- Validation script ensures template-generated projects meet requirements
-- Pre-commit hook blocks commits with missing integrations
-- SAP-062 templates will be validated by SAP-061 scripts
+**SAP Lifecycle Integration**:
 
-**SAP-050** (Development Lifecycle):
-- Documents SAP development phases (Vision → DDD → BDD/TDD → Distribution)
-- Phase gates define when to promote SAPs (draft → pilot → active)
-- SAP-062 distribution aligns with Phase 4 (Distribution) requirements
+SAP-062 is the **distribution step** in the **5-SAP development lifecycle**:
+
+- **SAP-029** (sap-generation) - Generate SAP artifacts from templates
+- **SAP-050** (sap-adoption-verification) - Verify generated SAP structure and quality
+- **SAP-061** (sap-ecosystem-integration) - Validate ecosystem integration points
+- **SAP-062** (sap-distribution-versioning) - Distribute validated SAPs via Copier templates (this SAP)
+- **SAP-019** (sap-self-evaluation) - Evaluate adoption depth and maturity
+
+**Integration**: SAP-062 distributes SAPs that have been verified by SAP-050 and validated by SAP-061, making them available across the ecosystem via Copier templates.
 
 ---
 

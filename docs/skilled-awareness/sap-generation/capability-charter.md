@@ -341,7 +341,17 @@ Setup time: 7-11 hours one-time investment, 2 hours per SAP after (80% time savi
 - [SAP-027: Dogfooding Patterns](../dogfooding-patterns/capability-charter.md) - Validation methodology for SAP-029 pilot
 - [SAP-019: Self-Evaluation](../self-evaluation/capability-charter.md) - Validation integration for generated artifacts
 
+**SAP Lifecycle Integration**:
 
+SAP-029 initiates the **5-SAP development lifecycle**, generating SAPs that flow through verification, integration, distribution, and evaluation:
+
+- **SAP-029** (sap-generation) - Generate SAP artifacts from templates (this SAP)
+- **SAP-050** (sap-adoption-verification) - Verify generated SAP structure and quality
+- **SAP-061** (sap-ecosystem-integration) - Validate ecosystem integration points
+- **SAP-062** (sap-distribution-versioning) - Distribute SAPs via Copier templates
+- **SAP-019** (sap-self-evaluation) - Evaluate adoption depth and maturity
+
+**Integration**: Generated SAPs from SAP-029 flow through SAP-050 verification, SAP-061 ecosystem integration validation, SAP-062 distribution via Copier, and SAP-019 adoption evaluation to complete the lifecycle.
 
 **SAP Catalog**:
 - [sap-catalog.json](../../../sap-catalog.json) - Machine-readable SAP registry

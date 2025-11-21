@@ -342,6 +342,18 @@ Organizations and AI agents adopting chora-base SAPs (Skilled Awareness Patterns
 - **SAP-013** (metrics-tracking) - Where adoption metrics go
 - **SAP-012** (development-lifecycle) - When to evaluate (sprint/quarterly)
 
+### SAP Lifecycle Integration
+
+SAP-019 completes the **5-SAP development lifecycle**, evaluating SAPs after they've been verified and distributed:
+
+- **SAP-029** (sap-generation) - Generate SAP artifacts from templates
+- **SAP-050** (sap-adoption-verification) - Verify SAP structure and quality before distribution
+- **SAP-061** (sap-ecosystem-integration) - Validate ecosystem integration points
+- **SAP-062** (sap-distribution-versioning) - Distribute SAPs via Copier templates
+- **SAP-019** (sap-self-evaluation) - Evaluate adoption depth and maturity (this SAP)
+
+**Integration**: SAP-019 evaluates SAPs after they pass SAP-050 verification and SAP-062 distribution, completing the lifecycle with adoption assessment and strategic planning.
+
 ### Integration Points
 
 - **SAP-001** (inbox-coordination) - Coordination requests can reference adoption gaps
