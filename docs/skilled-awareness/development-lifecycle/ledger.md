@@ -567,3 +567,31 @@ _(Update after 3-6 months of adoption)_
 
 **Version History**:
 - **1.0.0** (2025-10-28): Initial ledger for development-lifecycle SAP
+
+---
+
+## 10. Automation Support
+
+**Status**: Operational SAP (low-frequency)
+**Expected Automation**: 1-5 recipes (monthly lifecycle workflows and sprint planning)
+**Current Automation**: 2 recipes ✅ (chora-workspace)
+**Operational Frequency**: Monthly (sprint planning, phase transitions, quarterly strategic planning)
+
+**Justification**: Development Lifecycle is methodology documentation used during sprint planning (monthly) and strategic planning (quarterly). Primary value is comprehensive workflow documentation (5,285+ lines across 6 files), templates, and Light+ planning model. Automation supports lifecycle validation, phase tracking, and health checks rather than daily operations. Focus is on quality methodology guidance, not operational automation.
+
+**Key Recipes**:
+- `lifecycle-phase`: Show current lifecycle phase (Vision, Planning, DDD, BDD, TDD, Implementation, Quality, Release)
+- `lifecycle-health`: Validate lifecycle compliance (DDD→BDD→TDD adherence, process metrics, sprint velocity)
+
+**Validation**: Manual review during sprint planning and retrospectives (metrics dashboard in PROCESS_METRICS.md)
+
+**Integration Patterns**: See [docs/SAP-INTEGRATION-PATTERNS.md](../../../docs/SAP-INTEGRATION-PATTERNS.md):
+- SAP-012 + SAP-015 (3 recipes): Sprint task tagging, Light+ planning constructs (Strategy → Releases → Features → Tasks)
+- SAP-012 + SAP-010 (1 recipe): Retrospective knowledge extraction, strategic vision storage in A-MEM
+- SAP-012 + SAP-001 (Light+ integration): CORD → intention analysis, Wave 1/Wave 2 assignment criteria
+
+**ROI**: Methodology ROI not measured in automation recipes, but in workflow efficiency (40-80% defect reduction, 50% release time reduction via GAP-003)
+
+**Light+ Planning Model** (v1.5.0): 4-construct hierarchy (Strategy → Releases → Features → Tasks) with L0-L5 maturity levels, quarterly strategic planning workflows, traceability from vision to shipped features.
+
+**Workflow Documentation**: 5,285+ lines across 6 workflow files (DEVELOPMENT_PROCESS.md, DDD_WORKFLOW.md, BDD_WORKFLOW.md, TDD_WORKFLOW.md, ANTI_PATTERNS.md, DEVELOPMENT_LIFECYCLE.md) - comprehensive methodology guidance.

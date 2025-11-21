@@ -1,0 +1,164 @@
+#!/usr/bin/env bash
+# Post-Checkout Work Context Hook
+#
+# Auto-updates work context branch after git checkout.
+# Part of chora.coordination.work_context (SAP L3 Phase 2.2)
+#
+# Installation:
+#   ln -s ../../scripts/git-hooks/post-checkout-work-context .git/hooks/post-checkout
+#   chmod +x .git/hooks/post-checkout
+#
+# Behavior:
+#   - Detects which work context is active (by matching branch)
+#   - Updates context's branch field after checkout
+#   - Updates last_activity timestamp
+#   - Notifies user of context switch
+#
+# Arguments (provided by git):
+#   $1 : Previous HEAD
+#   $2 : New HEAD
+#   $3 : Flag (1 = branch checkout, 0 = file checkout)
+#
+# Exit Codes:
+#   0 : Always (never block checkout)
+
+set -uo pipefail
+
+# ============================================================================
+# Configuration
+# ============================================================================
+
+PREV_HEAD="${1:-}"
+NEW_HEAD="${2:-}"
+BRANCH_CHECKOUT="${3:-0}"
+
+CONTEXTS_FILE=".chora/work-contexts.yaml"
+
+# Only process branch checkouts, not file checkouts
+if [ "$BRANCH_CHECKOUT" != "1" ]; then
+    exit 0
+fi
+
+# Check if work context coordination is set up
+if [ ! -f "$CONTEXTS_FILE" ]; then
+    exit 0
+fi
+
+# ============================================================================
+# Detect Current Branch
+# ============================================================================
+
+NEW_BRANCH=$(git branch --show-current 2>/dev/null || echo "")
+
+if [ -z "$NEW_BRANCH" ]; then
+    # Detached HEAD state
+    exit 0
+fi
+
+# ============================================================================
+# Find Matching Work Context
+# ============================================================================
+
+# Strategy: Find context whose branch matches the NEW branch we just checked out
+MATCHING_CONTEXT=""
+
+if command -v yq &> /dev/null; then
+    # Find context with old branch (before checkout)
+    PREV_BRANCH=$(git name-rev --name-only "$PREV_HEAD" 2>/dev/null | sed 's/^remotes\/origin\///' || echo "")
+
+    if [ -n "$PREV_BRANCH" ]; then
+        MATCHING_CONTEXT=$(yq eval ".work_contexts[] | select(.branch == \"$PREV_BRANCH\") | .id" "$CONTEXTS_FILE" 2>/dev/null | head -n 1 || echo "")
+    fi
+
+    # If no match on old branch, try matching by context ID containing branch name
+    if [ -z "$MATCHING_CONTEXT" ]; then
+        # Look for context with ID that suggests it's for this user/tab
+        # This is a fallback heuristic
+        MATCHING_CONTEXT=$(yq eval ".work_contexts[] | select(.type == \"tab\" or .type == \"dev\") | .id" "$CONTEXTS_FILE" 2>/dev/null | head -n 1 || echo "")
+    fi
+else
+    # Python fallback
+    PREV_BRANCH=$(git name-rev --name-only "$PREV_HEAD" 2>/dev/null | sed 's/^remotes\/origin\///' || echo "")
+
+    if [ -n "$PREV_BRANCH" ]; then
+        MATCHING_CONTEXT=$(python3 <<EOF 2>/dev/null || echo ""
+import yaml
+with open("$CONTEXTS_FILE", 'r') as f:
+    data = yaml.safe_load(f)
+for ctx in data.get('work_contexts', []):
+    if ctx.get('branch') == "$PREV_BRANCH":
+        print(ctx.get('id'))
+        break
+EOF
+)
+    fi
+
+    # Fallback: first tab/dev context
+    if [ -z "$MATCHING_CONTEXT" ]; then
+        MATCHING_CONTEXT=$(python3 <<EOF 2>/dev/null || echo ""
+import yaml
+with open("$CONTEXTS_FILE", 'r') as f:
+    data = yaml.safe_load(f)
+for ctx in data.get('work_contexts', []):
+    if ctx.get('type') in ('tab', 'dev'):
+        print(ctx.get('id'))
+        break
+EOF
+)
+    fi
+fi
+
+if [ -z "$MATCHING_CONTEXT" ]; then
+    # No matching context found
+    exit 0
+fi
+
+# ============================================================================
+# Update Work Context Branch
+# ============================================================================
+
+TIMESTAMP=$(date -u +"%Y-%m-%dT%H:%M:%SZ")
+
+if command -v yq &> /dev/null; then
+    # Update branch
+    yq eval "(.work_contexts[] | select(.id == \"$MATCHING_CONTEXT\") | .branch) = \"$NEW_BRANCH\"" -i "$CONTEXTS_FILE" 2>/dev/null || true
+
+    # Update last_activity
+    yq eval "(.work_contexts[] | select(.id == \"$MATCHING_CONTEXT\") | .last_activity) = \"$TIMESTAMP\"" -i "$CONTEXTS_FILE" 2>/dev/null || true
+else
+    # Python fallback
+    python3 <<EOF 2>/dev/null || true
+import yaml
+
+with open("$CONTEXTS_FILE", 'r') as f:
+    data = yaml.safe_load(f) or {}
+
+for ctx in data.get('work_contexts', []):
+    if ctx.get('id') == "$MATCHING_CONTEXT":
+        ctx['branch'] = "$NEW_BRANCH"
+        ctx['last_activity'] = "$TIMESTAMP"
+        break
+
+with open("$CONTEXTS_FILE", 'w') as f:
+    yaml.dump(data, f, default_flow_style=False, sort_keys=False)
+EOF
+fi
+
+# ============================================================================
+# Notify User
+# ============================================================================
+
+echo ""
+echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+echo "Work Context Updated"
+echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+echo "  Context:      $MATCHING_CONTEXT"
+echo "  New branch:   $NEW_BRANCH"
+echo "  Updated:      $TIMESTAMP"
+echo ""
+echo "View dashboard:  just work-dashboard"
+echo "Check conflicts: just who-is-working-on <file>"
+echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+echo ""
+
+exit 0

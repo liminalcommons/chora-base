@@ -1,0 +1,182 @@
+#!/usr/bin/env bash
+# Pre-Commit Work Context Hook
+#
+# Checks for work context conflicts before allowing commit.
+# Part of chora.coordination.work_context (SAP L3 Phase 2.1)
+#
+# Installation:
+#   ln -s ../../scripts/git-hooks/pre-commit-work-context .git/hooks/pre-commit
+#   chmod +x .git/hooks/pre-commit
+#
+# Behavior:
+#   - Checks staged files against work context registry
+#   - Blocks commit if file owned by another context
+#   - Allows commit if you own the file or it's unclaimed
+#   - Updates last_activity timestamp on successful commit
+#
+# Exit Codes:
+#   0 : No conflicts (allow commit)
+#   1 : Conflicts detected (block commit)
+
+set -uo pipefail
+
+# ============================================================================
+# Configuration
+# ============================================================================
+
+CONTEXTS_FILE=".chora/work-contexts.yaml"
+WHO_SCRIPT="scripts/who-is-working-on.sh"
+
+# Detect current context (if any)
+# Strategy: Look for context on current branch
+CURRENT_BRANCH=$(git branch --show-current 2>/dev/null || echo "")
+CURRENT_CONTEXT=""
+
+if [ -f "$CONTEXTS_FILE" ] && [ -n "$CURRENT_BRANCH" ]; then
+    if command -v yq &> /dev/null; then
+        # Find context matching current branch
+        CURRENT_CONTEXT=$(yq eval ".work_contexts[] | select(.branch == \"$CURRENT_BRANCH\") | .id" "$CONTEXTS_FILE" 2>/dev/null | head -n 1 || echo "")
+    else
+        # Python fallback
+        CURRENT_CONTEXT=$(python3 <<EOF 2>/dev/null || echo ""
+import yaml
+with open("$CONTEXTS_FILE", 'r') as f:
+    data = yaml.safe_load(f)
+for ctx in data.get('work_contexts', []):
+    if ctx.get('branch') == "$CURRENT_BRANCH":
+        print(ctx.get('id'))
+        break
+EOF
+)
+    fi
+fi
+
+# ============================================================================
+# Conflict Detection
+# ============================================================================
+
+echo "Checking work context conflicts..."
+
+# Get staged files
+STAGED_FILES=$(git diff --cached --name-only --diff-filter=ACM 2>/dev/null || echo "")
+
+if [ -z "$STAGED_FILES" ]; then
+    echo "  ℹ️  No files staged for commit"
+    exit 0
+fi
+
+# Check if work context coordination is set up
+if [ ! -f "$CONTEXTS_FILE" ]; then
+    echo "  ℹ️  No work contexts registered"
+    echo "  ✅ Commit allowed (work context coordination not active)"
+    exit 0
+fi
+
+if [ ! -f "$WHO_SCRIPT" ]; then
+    echo "  ⚠️  Warning: who-is-working-on.sh not found"
+    echo "  ✅ Commit allowed (cannot verify conflicts)"
+    exit 0
+fi
+
+# Check each staged file for conflicts
+CONFLICTS_FOUND=false
+CONFLICT_FILES=()
+
+while IFS= read -r file; do
+    [ -z "$file" ] && continue
+
+    # Check ownership
+    OWNER_OUTPUT=$(bash "$WHO_SCRIPT" "$file" 2>&1 || echo "")
+    OWNER_EXIT_CODE=$?
+
+    case $OWNER_EXIT_CODE in
+        0)
+            # Single owner
+            if [ -n "$CURRENT_CONTEXT" ]; then
+                # Check if we are the owner
+                if echo "$OWNER_OUTPUT" | grep -q "^$CURRENT_CONTEXT"; then
+                    echo "  ✅ $file (you own it: $CURRENT_CONTEXT)"
+                else
+                    echo "  ⚠️  $file (owned by: $OWNER_OUTPUT)"
+                    CONFLICTS_FOUND=true
+                    CONFLICT_FILES+=("$file")
+                fi
+            else
+                echo "  ⚠️  $file (owned by: $OWNER_OUTPUT, but you have no registered context)"
+                # Allow commit anyway (you're not in the coordination system)
+            fi
+            ;;
+        1)
+            # Multiple owners (conflict)
+            echo "  ❌ $file (CONFLICT: multiple owners)"
+            CONFLICTS_FOUND=true
+            CONFLICT_FILES+=("$file")
+            ;;
+        2)
+            # No owner (unclaimed)
+            echo "  ✅ $file (unclaimed, safe to commit)"
+            ;;
+        *)
+            # Error
+            echo "  ⚠️  $file (error checking ownership)"
+            # Allow commit anyway (don't block on errors)
+            ;;
+    esac
+done <<< "$STAGED_FILES"
+
+# ============================================================================
+# Decision: Allow or Block Commit
+# ============================================================================
+
+if [ "$CONFLICTS_FOUND" = true ]; then
+    echo ""
+    echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+    echo "❌ COMMIT BLOCKED: Work context conflicts detected"
+    echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+    echo ""
+    echo "The following files have conflicts:"
+    for file in "${CONFLICT_FILES[@]}"; do
+        echo "  - $file"
+    done
+    echo ""
+    echo "To resolve:"
+    echo "  1. Coordinate with other context owners before committing"
+    echo "  2. Check ownership: just who-is-working-on <file>"
+    echo "  3. View dashboard: just work-dashboard"
+    echo "  4. Update your context: just work-context-update $CURRENT_CONTEXT"
+    echo ""
+    echo "To bypass this check (not recommended):"
+    echo "  git commit --no-verify"
+    echo ""
+    exit 1
+else
+    echo ""
+    echo "✅ No conflicts detected - commit allowed"
+
+    # Update last_activity timestamp if we have a current context
+    if [ -n "$CURRENT_CONTEXT" ]; then
+        TIMESTAMP=$(date -u +"%Y-%m-%dT%H:%M:%SZ")
+
+        if command -v yq &> /dev/null; then
+            yq eval "(.work_contexts[] | select(.id == \"$CURRENT_CONTEXT\") | .last_activity) = \"$TIMESTAMP\"" -i "$CONTEXTS_FILE" 2>/dev/null || true
+        else
+            python3 <<EOF 2>/dev/null || true
+import yaml
+with open("$CONTEXTS_FILE", 'r') as f:
+    data = yaml.safe_load(f) or {}
+
+for ctx in data.get('work_contexts', []):
+    if ctx.get('id') == "$CURRENT_CONTEXT":
+        ctx['last_activity'] = "$TIMESTAMP"
+        break
+
+with open("$CONTEXTS_FILE", 'w') as f:
+    yaml.dump(data, f, default_flow_style=False, sort_keys=False)
+EOF
+        fi
+
+        echo "  ℹ️  Updated last_activity for context: $CURRENT_CONTEXT"
+    fi
+
+    exit 0
+fi

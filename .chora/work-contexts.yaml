@@ -13,7 +13,8 @@ work_contexts:
   type: tab
   branch: main
   files:
-  - docs/skilled-awareness/conflict-resolution/**/*,scripts/conflict-checker.py,justfile
+  - docs/skilled-awareness/conflict-resolution/*
+  - scripts/conflict-checker.py
   - docs/skilled-awareness/INDEX.md
   - scripts/validate-ecosystem-integration.py
   - .pre-commit-config.yaml

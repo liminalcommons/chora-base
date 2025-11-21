@@ -481,3 +481,37 @@ _None yet_ - SAP is new
 3. Add AI-powered template customization (Claude-driven feature selection)
 4. Create real-time dashboard with live project health monitoring
 5. Implement capability recommendation engine based on usage patterns
+
+---
+
+## 15. Automation Support
+
+**Status**: Documentation-only SAP
+**Expected Automation**: None (architectural documentation SAP)
+**Current Automation**: 0 recipes ✅ (by design)
+**Operational Frequency**: Not applicable (documentation/template SAP)
+
+**Justification**: SAP-002 (chora-base meta) is architectural documentation describing the chora-base template repository itself. This SAP has no runtime operations to automate - it documents the template structure, SAP framework, adoption registry, and capability roadmap. The SAP's value is comprehensive documentation (5 artifacts, 14 capabilities documented), not operational automation.
+
+**Primary Function**: Documentation and governance for:
+- Template architecture (14 capabilities)
+- SAP framework specification
+- Adopter registry and version tracking
+- Capability coverage roadmap (Phase 1-4)
+- Migration history and deprecation notices
+
+**Validation**: Human review of SAP documentation for accuracy and completeness during SAP updates.
+
+**Why No Automation**: 
+- SAP-002 describes the template itself, not operational workflows
+- No daily/weekly/monthly tasks exist for this SAP
+- Automation for template *users* lives in SAP-003 (project-bootstrap)
+- Template *generation* automation lives in SAP-029 (chora-compose integration)
+- Adopter tracking is manual via PR submission to adoption registry
+
+**Related SAPs with Automation**:
+- SAP-003 (project-bootstrap): Automates project generation from chora-base template
+- SAP-029 (chora-compose integration): Automates template distribution and updates
+- SAP-013 (metrics-tracking): ROI calculator and dashboard generation for template metrics
+
+**Adopter Metrics** (not automation metrics): 4 adopters, 14 capabilities, 7 template versions, 5-minute bootstrap time (vs 2-3h manual).

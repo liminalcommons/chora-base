@@ -1,0 +1,53 @@
+archived_contexts:
+  - id: tab-l3-test
+    type: tab
+    branch: main
+    started_at: 2025-11-20
+    last_activity: 11:43:57+00:00
+    archived_at: 2025-11-20T11:45:33Z
+    files:
+      - "2025-11-20 11:43:57+00:00 .DS_Store"
+      - ".chora/memory/events/2025-11.jsonl"
+      - ".chora/memory/knowledge/notes/2025-11-20-work-context-coordination-pilot.md"
+      - ".chora/work-contexts.yaml"
+      - "AGENTS.md"
+      - "README.md"
+      - "copier-post-generation.py"
+      - "docs/project-docs/verification/verification-runs/2025-11-09-fast-setup-l1-fifth/generated-project"
+      - "docs/skilled-awareness/INDEX.md"
+      - "docs/skilled-awareness/strategic-opportunity-management/**/*"
+      - "docs/skilled-awareness/work-context-coordination/**/*"
+      - "justfile"
+      - "scripts/deprecated/check-sap-awareness-integration.sh"
+      - "scripts/deprecated/fix-shell-syntax.sh"
+      - "scripts/deprecated/merge-upstream-structure.sh"
+      - "scripts/deprecated/README.md"
+      - "scripts/deprecated/rollback-migration.sh"
+      - "scripts/deprecated/validate-links.sh"
+      - "scripts/deprecated/validate-prerequisites.sh"
+      - "scripts/fixtures/chora-base-validation"
+      - "scripts/fixtures/feat-002-validation"
+      - "scripts/inbox_generator/__init__.py"
+      - "scripts/inbox_generator/core"
+      - "scripts/inbox_generator/generators"
+      - "scripts/inbox_generator/utils"
+      - "scripts/templates/deep-dive-prompt.md"
+      - "scripts/templates/quick-check-prompt.md"
+      - "scripts/templates/strategic-analysis-prompt.md"
+      - "services/gitops-sync/Dockerfile"
+      - "static-template/scripts/CLAUDE.md"
+  - id: tab-test-validation
+    type: 
+    branch: 
+    started_at: 
+    last_activity: 
+    archived_at: 2025-11-20T11:47:19Z
+    files:
+  - id: tab-test-final
+    type: tab
+    branch: main
+    started_at: 2025-11-20
+    last_activity: 11:47:53+00:00
+    archived_at: 2025-11-20T11:48:01Z
+    files:
+      - "2025-11-20 11:47:53+00:00 justfile"
