@@ -1,3 +1,14 @@
+---
+sap_id: SAP-004
+version: 1.0.0
+status: active
+last_updated: 2025-11-20
+progressive_loading:
+  phase_1: "0-5k tokens (quick reference, common commands)"
+  phase_2: "5-15k tokens (test patterns, workflows)"
+  phase_3: "15k+ tokens (comprehensive, advanced patterns)"
+---
+
 # Testing Framework (SAP-004) - Claude-Specific Awareness
 
 **SAP ID**: SAP-004

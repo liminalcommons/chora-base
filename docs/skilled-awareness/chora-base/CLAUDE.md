@@ -1,3 +1,14 @@
+---
+sap_id: SAP-002
+version: 1.0.0
+status: active
+last_updated: 2025-11-20
+progressive_loading:
+  phase_1: "0-4k tokens (quick reference)"
+  phase_2: "4-9k tokens (implementation)"
+  phase_3: "9k+ tokens (comprehensive)"
+---
+
 # Claude Code Awareness: chora-base Template Repository
 
 **SAP ID**: SAP-002

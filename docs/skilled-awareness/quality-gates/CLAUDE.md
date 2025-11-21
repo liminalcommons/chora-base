@@ -1,3 +1,14 @@
+---
+sap_id: SAP-006
+version: 1.0.0
+status: draft
+last_updated: 2025-11-20
+progressive_loading:
+  phase_1: "0-5k tokens (quick reference)"
+  phase_2: "5-15k tokens (implementation)"
+  phase_3: "15k+ tokens (comprehensive)"
+---
+
 # Quality Gates - Claude-Specific Awareness (SAP-006)
 
 **SAP ID**: SAP-006

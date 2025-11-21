@@ -1,3 +1,14 @@
+---
+sap_id: SAP-005
+version: 2.0.0
+status: draft
+last_updated: 2025-11-20
+progressive_loading:
+  phase_1: "0-5k tokens (quick reference, workflows)"
+  phase_2: "5-12k tokens (implementation patterns)"
+  phase_3: "12k+ tokens (comprehensive, CI optimization)"
+---
+
 # CI/CD Workflows (SAP-005) - Agent Awareness
 
 **SAP ID**: SAP-005

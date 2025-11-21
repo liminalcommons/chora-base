@@ -1,3 +1,14 @@
+---
+sap_id: SAP-006
+version: 1.0.0
+status: draft
+last_updated: 2025-11-20
+progressive_loading:
+  phase_1: "0-8k tokens (quick reference)"
+  phase_2: "8-20k tokens (implementation)"
+  phase_3: "20k+ tokens (comprehensive)"
+---
+
 # Quality Gates - Agent Awareness (SAP-006)
 
 **SAP ID**: SAP-006

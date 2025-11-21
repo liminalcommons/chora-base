@@ -1,3 +1,14 @@
+---
+sap_id: SAP-005
+version: 2.0.0
+status: draft
+last_updated: 2025-11-20
+progressive_loading:
+  phase_1: "0-5k tokens (quick reference, common commands)"
+  phase_2: "5-12k tokens (CI workflows, debugging)"
+  phase_3: "12k+ tokens (comprehensive, optimization)"
+---
+
 # CI/CD Workflows (SAP-005) - Claude-Specific Awareness
 
 **SAP ID**: SAP-005
