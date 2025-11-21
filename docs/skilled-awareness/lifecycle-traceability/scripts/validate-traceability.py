@@ -54,6 +54,15 @@ except ImportError:
 
 
 @dataclass
+class Classification:
+    """Classification of a validation failure for SAP-054 L1."""
+    category: str  # "auto_fixable" | "investigation" | "false_positive"
+    reason: str
+    auto_action: str
+    suggestion: str
+
+
+@dataclass
 class ValidationResult:
     """Result of a single validation rule."""
     rule_number: int
@@ -63,6 +72,7 @@ class ValidationResult:
     passed_items: int
     failures: List[str] = field(default_factory=list)
     warnings: List[str] = field(default_factory=list)
+    classifications: List[Dict[str, any]] = field(default_factory=list)  # SAP-054 L1
 
     @property
     def pass_rate(self) -> float:
@@ -132,6 +142,15 @@ class TraceabilityValidator:
                 return candidate
         return None
 
+    def _classify(self, category: str, reason: str, auto_action: str, suggestion: str) -> Dict[str, str]:
+        """Helper to create classification dict (SAP-054 L1)."""
+        return {
+            "category": category,
+            "reason": reason,
+            "auto_action": auto_action,
+            "suggestion": suggestion
+        }
+
     def validate_all(self, feature_filter: Optional[str] = None) -> ValidationReport:
         """Run all 10 validation rules."""
         features = self.manifest.get("features", [])
@@ -165,6 +184,7 @@ class TraceabilityValidator:
         """Rule 1: Every vision outcome → ≥1 feature."""
         passed_items = 0
         failures = []
+        classifications = []
 
         for feature in features:
             feature_id = feature.get("id", "UNKNOWN")
@@ -175,13 +195,26 @@ class TraceabilityValidator:
             else:
                 failures.append(f"{feature_id}: Missing vision_ref")
 
+                # SAP-054 L1: Classify missing vision_ref as auto-fixable
+                classifications.append({
+                    "feature_id": feature_id,
+                    "violation": "Missing vision_ref",
+                    "classification": self._classify(
+                        category="auto_fixable",
+                        reason="vision_ref can be inferred from feature scope or parent feature",
+                        auto_action="add_vision_ref",
+                        suggestion=f"Review {feature_id} scope to determine appropriate vision outcome linkage"
+                    )
+                })
+
         return ValidationResult(
             rule_number=1,
             rule_name="Forward Linkage",
             passed=len(failures) == 0,
             total_items=len(features),
             passed_items=passed_items,
-            failures=failures
+            failures=failures,
+            classifications=classifications
         )
 
     def rule_2_bidirectional_linkage(self, features: List[dict]) -> ValidationResult:
@@ -189,6 +222,7 @@ class TraceabilityValidator:
         passed_items = 0
         failures = []
         warnings = []
+        classifications = []
 
         # Build code→docs mapping from manifest
         code_to_docs = {}
@@ -236,6 +270,19 @@ class TraceabilityValidator:
                                     failures.append(f"{doc_path} references {code_ref}, but manifest doesn't list this linkage")
                                     bidirectional = False
 
+                                    # SAP-054 L1: Classify bidirectional linkage as investigation
+                                    classifications.append({
+                                        "doc_path": doc_path,
+                                        "code_ref": code_ref,
+                                        "violation": "Bidirectional linkage broken",
+                                        "classification": self._classify(
+                                            category="investigation",
+                                            reason="Requires manual manifest update to link doc and code",
+                                            auto_action="none",
+                                            suggestion=f"Add {doc_path} to manifest code reference for {code_ref}"
+                                        )
+                                    })
+
                             if bidirectional and code_refs:
                                 passed_items += 1
                 except Exception as e:
@@ -251,13 +298,15 @@ class TraceabilityValidator:
             total_items=docs_checked,
             passed_items=passed_items,
             failures=failures,
-            warnings=warnings
+            warnings=warnings,
+            classifications=classifications
         )
 
     def rule_3_evidence_requirement(self, features: List[dict]) -> ValidationResult:
         """Rule 3: Every feature → ≥1 test AND ≥1 doc."""
         passed_items = 0
         failures = []
+        classifications = []
 
         for feature in features:
             feature_id = feature.get("id", "UNKNOWN")
@@ -277,13 +326,39 @@ class TraceabilityValidator:
                     issues.append("no documentation")
                 failures.append(f"{feature_id}: {', '.join(issues)}")
 
+                # SAP-054 L1: Classify evidence violations
+                if not has_tests:
+                    classifications.append({
+                        "feature_id": feature_id,
+                        "violation": "No tests",
+                        "classification": self._classify(
+                            category="auto_fixable",
+                            reason="Skeleton test file can be generated automatically",
+                            auto_action="generate_test_skeleton",
+                            suggestion=f"Create test file tests/test_{feature_id.lower().replace('-', '_')}.py with TODO markers"
+                        )
+                    })
+
+                if not has_docs:
+                    classifications.append({
+                        "feature_id": feature_id,
+                        "violation": "No documentation",
+                        "classification": self._classify(
+                            category="investigation",
+                            reason="Documentation requires domain knowledge and manual authoring",
+                            auto_action="none",
+                            suggestion=f"Create documentation file docs/{feature_id}.md explaining feature purpose and usage"
+                        )
+                    })
+
         return ValidationResult(
             rule_number=3,
             rule_name="Evidence Requirement",
             passed=len(failures) == 0,
             total_items=len(features),
             passed_items=passed_items,
-            failures=failures
+            failures=failures,
+            classifications=classifications
         )
 
     def rule_4_closed_loop(self, features: List[dict]) -> ValidationResult:
@@ -303,6 +378,7 @@ class TraceabilityValidator:
     def rule_5_orphan_detection(self, features: List[dict]) -> ValidationResult:
         """Rule 5: No artifact without parent linkage."""
         failures = []
+        classifications = []
 
         # Check each feature has vision_ref
         for feature in features:
@@ -312,13 +388,26 @@ class TraceabilityValidator:
             if not vision_ref:
                 failures.append(f"{feature_id}: Orphaned (no vision_ref)")
 
+                # SAP-054 L1: Classify orphaned features as auto-fixable (same as Rule 1)
+                classifications.append({
+                    "feature_id": feature_id,
+                    "violation": "Orphaned (no vision_ref)",
+                    "classification": self._classify(
+                        category="auto_fixable",
+                        reason="vision_ref can be inferred from feature scope or parent feature",
+                        auto_action="add_vision_ref",
+                        suggestion=f"Review {feature_id} scope to determine appropriate vision outcome linkage"
+                    )
+                })
+
         return ValidationResult(
             rule_number=5,
             rule_name="Orphan Detection",
             passed=len(failures) == 0,
             total_items=len(features),
             passed_items=len(features) - len(failures),
-            failures=failures
+            failures=failures,
+            classifications=classifications
         )
 
     def rule_6_schema_compliance(self) -> ValidationResult:
@@ -343,13 +432,26 @@ class TraceabilityValidator:
                 passed_items=1
             )
         except jsonschema.ValidationError as e:
+            # SAP-054 L1: Classify schema errors
+            classifications = [{
+                "violation": "Schema validation failed",
+                "error_message": e.message,
+                "classification": self._classify(
+                    category="investigation",
+                    reason="Schema errors may indicate draft features or manifest structure issues",
+                    auto_action="none",
+                    suggestion="Review schema error details and fix manifest structure or update draft features"
+                )
+            }]
+
             return ValidationResult(
                 rule_number=6,
                 rule_name="Schema Compliance",
                 passed=False,
                 total_items=1,
                 passed_items=0,
-                failures=[f"Schema validation failed: {e.message}"]
+                failures=[f"Schema validation failed: {e.message}"],
+                classifications=classifications
             )
 
     def rule_7_reference_integrity(self, features: List[dict]) -> ValidationResult:
@@ -357,6 +459,7 @@ class TraceabilityValidator:
         total_refs = 0
         passed_refs = 0
         failures = []
+        classifications = []
 
         for feature in features:
             feature_id = feature.get("id", "UNKNOWN")
@@ -376,6 +479,19 @@ class TraceabilityValidator:
                             passed_refs += 1
                         else:
                             failures.append(f"{feature_id}: Code file not found: {code_path}")
+                            # SAP-054 L1: Missing file requires investigation
+                            classifications.append({
+                                "feature_id": feature_id,
+                                "reference_type": "code",
+                                "path": code_path,
+                                "violation": "Code file not found",
+                                "classification": self._classify(
+                                    category="investigation",
+                                    reason="File may have been moved, deleted, or path is incorrect",
+                                    auto_action="none",
+                                    suggestion=f"Search for {Path(code_path).name} to locate moved file, or remove from manifest if deleted"
+                                )
+                            })
 
             # Check test paths
             for test_ref in (feature.get("tests") or []):
@@ -394,6 +510,18 @@ class TraceabilityValidator:
                             passed_refs += 1
                         else:
                             failures.append(f"{feature_id}: Test file not found: {file_path}")
+                            classifications.append({
+                                "feature_id": feature_id,
+                                "reference_type": "test",
+                                "path": file_path,
+                                "violation": "Test file not found",
+                                "classification": self._classify(
+                                    category="investigation",
+                                    reason="File may have been moved, deleted, or path is incorrect",
+                                    auto_action="none",
+                                    suggestion=f"Search for {Path(file_path).name} to locate moved file, or remove from manifest if deleted"
+                                )
+                            })
 
             # Check doc paths
             for doc_ref in (feature.get("documentation") or []):
@@ -405,6 +533,18 @@ class TraceabilityValidator:
                         passed_refs += 1
                     else:
                         failures.append(f"{feature_id}: Documentation file not found: {doc_path}")
+                        classifications.append({
+                            "feature_id": feature_id,
+                            "reference_type": "documentation",
+                            "path": doc_path,
+                            "violation": "Documentation file not found",
+                            "classification": self._classify(
+                                category="investigation",
+                                reason="File may have been moved, deleted, or path is incorrect",
+                                auto_action="none",
+                                suggestion=f"Search for {Path(doc_path).name} to locate moved file, or remove from manifest if deleted"
+                            )
+                        })
 
         return ValidationResult(
             rule_number=7,
@@ -412,7 +552,8 @@ class TraceabilityValidator:
             passed=len(failures) == 0,
             total_items=total_refs,
             passed_items=passed_refs,
-            failures=failures
+            failures=failures,
+            classifications=classifications
         )
 
     def rule_8_requirement_coverage(self, features: List[dict]) -> ValidationResult:
@@ -420,6 +561,7 @@ class TraceabilityValidator:
         total_reqs = 0
         passed_reqs = 0
         failures = []
+        classifications = []
 
         for feature in features:
             feature_id = feature.get("id", "UNKNOWN")
@@ -438,13 +580,27 @@ class TraceabilityValidator:
                 else:
                     failures.append(f"{feature_id}/{req_id}: No test found")
 
+                    # SAP-054 L1: Missing test for requirement is auto-fixable
+                    classifications.append({
+                        "feature_id": feature_id,
+                        "requirement_id": req_id,
+                        "violation": "No test found for requirement",
+                        "classification": self._classify(
+                            category="auto_fixable",
+                            reason="Skeleton test with pytest marker can be generated automatically",
+                            auto_action="generate_requirement_test",
+                            suggestion=f"Create test function test_{req_id.lower().replace('-', '_')} with @pytest.mark.{req_id} marker"
+                        )
+                    })
+
         return ValidationResult(
             rule_number=8,
             rule_name="Requirement Coverage",
             passed=len(failures) == 0,
             total_items=total_reqs,
             passed_items=passed_reqs,
-            failures=failures
+            failures=failures,
+            classifications=classifications
         )
 
     def rule_9_documentation_coverage(self, features: List[dict]) -> ValidationResult:
@@ -452,6 +608,7 @@ class TraceabilityValidator:
         # This is equivalent to Rule 3 (docs part), but checks frontmatter
         passed_items = 0
         failures = []
+        classifications = []
 
         for feature in features:
             feature_id = feature.get("id", "UNKNOWN")
@@ -462,13 +619,26 @@ class TraceabilityValidator:
             else:
                 failures.append(f"{feature_id}: No documentation")
 
+                # SAP-054 L1: Missing documentation requires investigation
+                classifications.append({
+                    "feature_id": feature_id,
+                    "violation": "No documentation",
+                    "classification": self._classify(
+                        category="investigation",
+                        reason="Documentation requires domain knowledge and manual authoring",
+                        auto_action="none",
+                        suggestion=f"Create documentation file docs/{feature_id}.md explaining feature purpose and usage"
+                    )
+                })
+
         return ValidationResult(
             rule_number=9,
             rule_name="Documentation Coverage",
             passed=len(failures) == 0,
             total_items=len(features),
             passed_items=passed_items,
-            failures=failures
+            failures=failures,
+            classifications=classifications
         )
 
     def rule_10_event_correlation(self, features: List[dict]) -> ValidationResult:
@@ -548,7 +718,24 @@ def format_markdown(report: ValidationReport) -> str:
 
 
 def format_json(report: ValidationReport) -> str:
-    """Format validation report as JSON."""
+    """Format validation report as JSON (SAP-054 L1: includes classifications)."""
+    # Calculate classification breakdown across all rules
+    total_classifications = 0
+    auto_fixable = 0
+    investigation = 0
+    false_positive = 0
+
+    for rule in report.rules:
+        for classification in (rule.classifications or []):
+            total_classifications += 1
+            category = classification.get("classification", {}).get("category", "")
+            if category == "auto_fixable":
+                auto_fixable += 1
+            elif category == "investigation":
+                investigation += 1
+            elif category == "false_positive":
+                false_positive += 1
+
     return json.dumps({
         "timestamp": report.timestamp,
         "manifest_path": report.manifest_path,
@@ -565,10 +752,19 @@ def format_json(report: ValidationReport) -> str:
                 "passed_items": rule.passed_items,
                 "pass_rate": rule.pass_rate,
                 "failures": rule.failures,
-                "warnings": rule.warnings
+                "warnings": rule.warnings,
+                "classifications": rule.classifications  # SAP-054 L1
             }
             for rule in report.rules
-        ]
+        ],
+        "summary": {  # SAP-054 L1: Classification summary
+            "total_violations": total_classifications,
+            "classification_breakdown": {
+                "auto_fixable": auto_fixable,
+                "investigation": investigation,
+                "false_positive": false_positive
+            }
+        }
     }, indent=2)
 
 
