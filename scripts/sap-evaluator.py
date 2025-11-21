@@ -682,14 +682,14 @@ def main():
     except Exception as e:
         print(f"\n❌ Error: {e}", file=sys.stderr)
         import traceback
+        traceback.print_exc()
+        return 1
+
 
 # Configure UTF-8 output for Windows console compatibility
 if sys.platform == 'win32':
     sys.stdout.reconfigure(encoding='utf-8')
     sys.stderr.reconfigure(encoding='utf-8')
-
-        traceback.print_exc()
-        return 1
 
 
 if __name__ == "__main__":
