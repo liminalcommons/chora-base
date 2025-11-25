@@ -131,7 +131,7 @@ services:
     image: evildecay/etcdkeeper:latest
     container_name: etcd-ui
     ports:
-      - "8080:8080"
+      - "8090:8080"
     environment:
       - ETCD_ENDPOINTS=http://etcd1:2379,http://etcd2:2379,http://etcd3:2379
     networks:
@@ -149,8 +149,8 @@ services:
       dockerfile: services/gitops-sync/Dockerfile
     container_name: gitops-sync
     volumes:
-      # Mount capabilities directory (read-only)
-      - ../../capabilities:/app/capabilities:ro
+      # Mount capabilities directory (read-only) - FIXED: added packages/ prefix
+      - ../../../../packages/chora-base/capabilities:/app/capabilities:ro
     environment:
       - LOG_LEVEL=info
     networks:
@@ -168,8 +168,8 @@ services:
       dockerfile: Dockerfile
     container_name: registry-heartbeat
     volumes:
-      # Mount capabilities directory (read-only)
-      - ../../capabilities:/app/capabilities:ro
+      # Mount capabilities directory (read-only) - FIXED: added packages/ prefix
+      - ../../../../packages/chora-base/capabilities:/app/capabilities:ro
     environment:
       - LOG_LEVEL=info
     networks:
@@ -179,6 +179,26 @@ services:
       - etcd2
       - etcd3
       - gitops-sync
+    restart: unless-stopped
+
+  # Orchestration health monitor (auto-restart unhealthy services)
+  orchestration-health-monitor:
+    build:
+      context: ../../services/orchestration-health-monitor
+      dockerfile: Dockerfile
+    container_name: orchestration-health-monitor
+    volumes:
+      # Mount Docker socket to enable container restart
+      - /var/run/docker.sock:/var/run/docker.sock
+    environment:
+      - LOG_LEVEL=info
+    networks:
+      - chora-network
+    depends_on:
+      - etcd1
+      - etcd2
+      - etcd3
+      - heartbeat
     restart: unless-stopped
 
 volumes:

@@ -1,0 +1,39 @@
+# Namespace Declaration for chora-base
+# Python Project Template for AI-Agent-First Development
+
+namespace: chora.devex.project_template
+domain: devex
+capability: project_template
+type: pattern
+
+repository: chora-base
+purpose: Meta-repository and project template for AI-agent-first development
+
+description: |
+  chora-base (v1) is a production-ready Python project template designed for
+  AI coding agents. Provides copier-based template generation with interactive
+  SAP selection, zero-dependency setup, and cross-platform compatibility.
+
+capabilities:
+  - Copier-based project generation
+  - Interactive SAP selection (8 SAPs available)
+  - Cross-platform compatibility (Windows, macOS, Linux)
+  - Git initialization and directory scaffolding
+  - Template update workflow
+  - Multi-repo coordination patterns
+
+runtime: python
+protocol: Copier Template
+
+sap_catalog:
+  - Strategic Intake (SAP-001)
+  - Automation (SAP-008)
+  - Memory System (SAP-010)
+  - Beads (SAP-015)
+  - Pre-merge Validation (SAP-051)
+  - Ownership (SAP-052)
+  - Conflict Resolution (SAP-053)
+  - Lifecycle Traceability (SAP-056)
+
+created: 2025-11-23
+version: 5.4.0
